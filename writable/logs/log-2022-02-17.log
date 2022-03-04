@@ -1,0 +1,14 @@
+CRITICAL - 2022-02-17 00:32:01 --> syntax error, unexpected '?>'
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#1 C:\wamp64\www\FlexiGuest\system\View\View.php(424): CodeIgniter\View\View->render('Layout/AppView', NULL, true)
+#2 C:\wamp64\www\FlexiGuest\app\Views\Layout\SidePanel.php(2): CodeIgniter\View\View->include('Layout/AppView')
+#3 C:\wamp64\www\FlexiGuest\system\View\View.php(210): include('C:\\wamp64\\www\\F...')
+#4 C:\wamp64\www\FlexiGuest\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#5 C:\wamp64\www\FlexiGuest\system\View\View.php(226): CodeIgniter\View\View->render('Layout/SidePane...', Array, true)
+#6 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('Dashboard', Array, true)
+#7 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(9): view('Dashboard')
+#8 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#9 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#10 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#12 {main}

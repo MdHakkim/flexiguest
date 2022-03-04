@@ -1,0 +1,67 @@
+ERROR - 2022-02-27 02:22:41 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-27 02:22:41 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(35): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(26): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb', 'name_e,email,ag...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-02-27 02:22:57 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-27 02:22:57 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(35): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(26): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb', 'name_e,email,ag...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-02-27 02:27:42 --> Error connecting to the database: . 
+Login timeout expired
+A network-related or instance-specific error has occurred while establishing a connection to SQL Server. Server is not found or not accessible. Check if instance name is correct and if SQL Server is configured to allow remote connections. For more information see SQL Server Books Online.
+CRITICAL - 2022-02-27 02:27:42 --> Unable to connect to the database.
+Main connection [sqlsrv]: . 
+Login timeout expired
+A network-related or instance-specific error has occurred while establishing a connection to SQL Server. Server is not found or not accessible. Check if instance name is correct and if SQL Server is configured to allow remote connections. For more information see SQL Server Books Online.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(35): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(26): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb', 'name_e,email,ag...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-02-27 02:27:57 --> Error connecting to the database: . 
+Login timeout expired
+A network-related or instance-specific error has occurred while establishing a connection to SQL Server. Server is not found or not accessible. Check if instance name is correct and if SQL Server is configured to allow remote connections. For more information see SQL Server Books Online.
+CRITICAL - 2022-02-27 02:27:57 --> Unable to connect to the database.
+Main connection [sqlsrv]: . 
+Login timeout expired
+A network-related or instance-specific error has occurred while establishing a connection to SQL Server. Server is not found or not accessible. Check if instance name is correct and if SQL Server is configured to allow remote connections. For more information see SQL Server Books Online.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(35): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(26): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb', 'name_e,email,ag...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-02-27 02:28:08 --> Error connecting to the database: . 
+Login timeout expired
+A network-related or instance-specific error has occurred while establishing a connection to SQL Server. Server is not found or not accessible. Check if instance name is correct and if SQL Server is configured to allow remote connections. For more information see SQL Server Books Online.
+CRITICAL - 2022-02-27 02:28:08 --> Unable to connect to the database.
+Main connection [sqlsrv]: . 
+Login timeout expired
+A network-related or instance-specific error has occurred while establishing a connection to SQL Server. Server is not found or not accessible. Check if instance name is correct and if SQL Server is configured to allow remote connections. For more information see SQL Server Books Online.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(35): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(26): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb', 'name_e,email,ag...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}

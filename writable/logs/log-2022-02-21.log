@@ -1,0 +1,244 @@
+CRITICAL - 2022-02-21 23:02:31 --> Undefined index: RESV_CLOSED
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(46): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 46, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-02-21 23:04:36 --> Call to undefined method CodeIgniter\Database\SQLSRV\Connection::insert()
+#0 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-02-21 23:05:37 --> Undefined index: RESV_DAY_USE
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(47): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 47, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-02-21 23:06:28 --> Undefined index: RESV_DAY_USE
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(48): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 48, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-02-21 23:15:21 --> Call to undefined method CodeIgniter\Database\SQLSRV\Connection::insert()
+#0 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-02-21 23:15:36 --> Call to undefined method CodeIgniter\Database\SQLSRV\Connection::insert()
+#0 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-02-21 23:18:59 --> Undefined variable: sdfsdf
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(59): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 59, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-02-21 23:19:31 --> Call to undefined method CodeIgniter\Database\SQLSRV\Connection::insert()
+#0 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-02-21 23:25:04 --> Call to undefined function App\Controllers\table()
+#0 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+ERROR - 2022-02-21 23:25:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'flexiguest.dbo.FLXY_RESRVATION'.
+CRITICAL - 2022-02-21 23:25:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'flexiguest.dbo.FLXY_RESRVATION'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(60): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-21 23:25:22 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-21 23:29:30 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'flexiguest.dbo.FLXY_RESRVATION'.
+CRITICAL - 2022-02-21 23:29:30 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'flexiguest.dbo.FLXY_RESRVATION'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(61): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-21 23:29:30 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-21 23:32:44 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'flexiguest.dbo.FLXY_RESRVATION'.
+CRITICAL - 2022-02-21 23:32:44 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'flexiguest.dbo.FLXY_RESRVATION'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(61): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-21 23:32:44 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-21 23:34:52 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RESV_ID'.
+CRITICAL - 2022-02-21 23:34:52 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RESV_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(68): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-21 23:34:52 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-21 23:35:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (1).
+CRITICAL - 2022-02-21 23:35:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (1).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(68): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-21 23:35:22 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2022-02-21 23:44:58 --> syntax error, unexpected ';', expecting ')'
+#0 C:\wamp64\www\FlexiGuest\system\Autoloader\Autoloader.php(241): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\wamp64\\www\\F...')
+#1 C:\wamp64\www\FlexiGuest\system\Autoloader\Autoloader.php(219): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Controllers...')
+#2 [internal function]: CodeIgniter\Autoloader\Autoloader->loadClass('App\\Controllers...')
+#3 [internal function]: spl_autoload_call('App\\Controllers...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(790): class_exists('\\App\\Controller...', true)
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(399): CodeIgniter\CodeIgniter->startController()
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-21 23:45:21 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (1).
+CRITICAL - 2022-02-21 23:45:21 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (1).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(68): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-21 23:45:21 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-21 23:46:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (1).
+CRITICAL - 2022-02-21 23:46:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (1).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(66): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-21 23:46:46 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-21 23:48:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (1).
+CRITICAL - 2022-02-21 23:48:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (1).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(66): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-21 23:48:29 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
