@@ -1,0 +1,258 @@
+ERROR - 2022-03-01 01:43:27 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+CRITICAL - 2022-03-01 01:43:27 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT AGN_ID,A...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT AGN_ID,A...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(478): CodeIgniter\Database\BaseConnection->query('SELECT AGN_ID,A...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editAgent()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 01:43:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+CRITICAL - 2022-03-01 01:43:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT AGN_ID,A...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT AGN_ID,A...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(478): CodeIgniter\Database\BaseConnection->query('SELECT AGN_ID,A...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editAgent()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 01:44:10 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+CRITICAL - 2022-03-01 01:44:10 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT GRP_ID,G...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT GRP_ID,G...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(548): CodeIgniter\Database\BaseConnection->query('SELECT GRP_ID,G...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editGroup()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 01:45:30 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+CRITICAL - 2022-03-01 01:45:30 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT GRP_ID,G...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT GRP_ID,G...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(548): CodeIgniter\Database\BaseConnection->query('SELECT GRP_ID,G...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editGroup()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 01:47:18 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+CRITICAL - 2022-03-01 01:47:18 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT GRP_ID,G...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT GRP_ID,G...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(548): CodeIgniter\Database\BaseConnection->query('SELECT GRP_ID,G...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editGroup()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 01:49:09 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+CRITICAL - 2022-03-01 01:49:09 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT GRP_ID,G...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT GRP_ID,G...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(548): CodeIgniter\Database\BaseConnection->query('SELECT GRP_ID,G...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editGroup()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 01:49:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near ','.
+CRITICAL - 2022-03-01 01:49:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near ','.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT GRP_ID,G...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT GRP_ID,G...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(549): CodeIgniter\Database\BaseConnection->query('SELECT GRP_ID,G...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editGroup()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 01:49:43 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+CRITICAL - 2022-03-01 01:49:43 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT GRP_ID,G...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT GRP_ID,G...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(549): CodeIgniter\Database\BaseConnection->query('SELECT GRP_ID,G...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editGroup()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 01:50:04 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+CRITICAL - 2022-03-01 01:50:04 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT GRP_ID,G...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT GRP_ID,G...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(549): CodeIgniter\Database\BaseConnection->query('SELECT GRP_ID,G...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editGroup()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 01:51:35 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+CRITICAL - 2022-03-01 01:51:35 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'undefined' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT GRP_ID,G...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT GRP_ID,G...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(549): CodeIgniter\Database\BaseConnection->query('SELECT GRP_ID,G...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editGroup()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-03-01 01:54:10 --> Undefined index: ccode
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(96): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 96, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->cityList()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-01 01:54:17 --> Undefined index: ccode
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(96): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 96, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->cityList()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-01 02:16:16 --> Undefined index: COM_ID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(567): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 567, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertGroup()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-03-01 02:16:48 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'COM_UPDATE_UID'.
+CRITICAL - 2022-03-01 02:16:48 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'COM_UPDATE_UID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('UPDATE "flexigu...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE "flexigu...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1913): CodeIgniter\Database\BaseConnection->query('UPDATE "flexigu...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(589): CodeIgniter\Database\BaseBuilder->update(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertGroup()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-03-01 03:15:11 --> Undefined index: COM_ID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(682): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 682, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->agentList()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-01 03:15:12 --> Undefined index: COM_ID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(682): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 682, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->agentList()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-01 03:15:23 --> Undefined index: COM_ID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(682): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 682, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->agentList()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-01 05:46:16 --> Undefined index: GRP_ID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(724): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 724, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertBlock()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-01 05:48:17 --> Undefined index: GRP_ID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(724): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 724, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertBlock()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-01 05:49:10 --> Undefined index: GRP_ID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(724): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 724, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertBlock()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-01 05:49:27 --> Undefined variable: response
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(780): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 780, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertBlock()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-03-01 06:16:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+CRITICAL - 2022-03-01 06:16:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT BLK_ID,\n...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT BLK_ID,\n...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(797): CodeIgniter\Database\BaseConnection->query('SELECT BLK_ID,\n...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editBlock()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 06:17:25 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+CRITICAL - 2022-03-01 06:17:25 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT BLK_ID,\n...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT BLK_ID,\n...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(797): CodeIgniter\Database\BaseConnection->query('SELECT BLK_ID,\n...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editBlock()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 06:17:45 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+CRITICAL - 2022-03-01 06:17:45 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT BLK_ID,\n...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT BLK_ID,\n...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(797): CodeIgniter\Database\BaseConnection->query('SELECT BLK_ID,\n...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editBlock()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 06:18:19 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+CRITICAL - 2022-03-01 06:18:19 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT BLK_ID,\n...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT BLK_ID,\n...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(797): CodeIgniter\Database\BaseConnection->query('SELECT BLK_ID,\n...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editBlock()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 06:19:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+CRITICAL - 2022-03-01 06:19:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT BLK_ID,\n...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT BLK_ID,\n...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(797): CodeIgniter\Database\BaseConnection->query('SELECT BLK_ID,\n...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editBlock()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-01 06:20:54 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+CRITICAL - 2022-03-01 06:20:54 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Only one expression can be specified in the select list when the subquery is not introduced with EXISTS.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT BLK_ID,\n...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT BLK_ID,\n...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(797): CodeIgniter\Database\BaseConnection->query('SELECT BLK_ID,\n...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editBlock()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-03-01 23:16:58 --> Cannot redeclare App\Controllers\ApplicatioController::customerView()
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2022-03-01 23:21:51 --> Undefined index: RESV_ID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(78): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 78, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-01 23:22:53 --> Undefined variable: response
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(138): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 138, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}

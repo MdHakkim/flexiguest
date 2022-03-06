@@ -1,0 +1,67 @@
+.flxi_join{
+  display: inline-flex;
+  width: 100%;
+}
+.flxi_join .form-select:nth-child(1){
+  width: 50%;
+}
+.flxi_join .form-select:nth-child(2){
+  width: 100%;
+}
+.flxi_pad_view{
+  margin:8px auto !important;
+}
+.dataTables_filter input,.dataTables_length select,.dataTables_filter button { height: 35px !important }
+.dataTables_wrapper .pagination,.previous a, .next a{
+  padding:10px !important;
+}
+.flxi_ds_flx{
+  display:flex;
+}
+.flxi_flex{
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+.flxi_flex .position-relative{
+  width: 100%;
+}
+.flxi_flex .position-relative{
+  width: 100%;
+}
+.flxi_flex .flxi_btn{
+  width:40px;
+} 
+.flxi_btn{
+  position: relative !important;
+  width: 10px !important;
+  padding: 9px 20px 9px 10px !important;
+}
+#errorModal{
+  display: none;
+}
+#errorModal{
+    position: fixed;
+    top: 10px;
+    right: 22px;
+    z-index: 10000;
+    width: 500px;
+}
+.flx_top_lb{
+  margin-top: 36px !important;
+}
+.flxy_mgtop{
+  margin-top: 36px !important;
+}
+.modal-body > .close {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  padding: 0.5rem 0.75rem !important;
+  z-index: 1 !important;
+}
+button.close {
+  padding: 0 !important;
+  background-color: transparent !important;
+  border: 0 !important;
+}

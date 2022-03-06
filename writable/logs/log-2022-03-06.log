@@ -1,0 +1,69 @@
+CRITICAL - 2022-03-06 03:33:00 --> auth filter must have a matching alias defined.
+#0 C:\wamp64\www\FlexiGuest\system\Filters\Filters.php(340): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('auth')
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(377): CodeIgniter\Filters\Filters->enableFilter('auth', 'before')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-03-06 03:33:51 --> auth filter must have a matching alias defined.
+#0 C:\wamp64\www\FlexiGuest\system\Filters\Filters.php(340): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('auth')
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(377): CodeIgniter\Filters\Filters->enableFilter('auth', 'before')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-03-06 03:33:52 --> auth filter must have a matching alias defined.
+#0 C:\wamp64\www\FlexiGuest\system\Filters\Filters.php(340): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('auth')
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(377): CodeIgniter\Filters\Filters->enableFilter('auth', 'before')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-03-06 03:33:54 --> auth filter must have a matching alias defined.
+#0 C:\wamp64\www\FlexiGuest\system\Filters\Filters.php(340): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('auth')
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(377): CodeIgniter\Filters\Filters->enableFilter('auth', 'before')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-03-06 03:33:55 --> auth filter must have a matching alias defined.
+#0 C:\wamp64\www\FlexiGuest\system\Filters\Filters.php(340): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('auth')
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(377): CodeIgniter\Filters\Filters->enableFilter('auth', 'before')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-03-06 03:35:12 --> Invalid file: login.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('login.php')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('login', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(52): view('login')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-03-06 03:37:06 --> validateUser is not a valid rule.
+#0 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(300): CodeIgniter\Validation\Exceptions\ValidationException::forRuleNotFound('validateUser')
+#1 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(157): CodeIgniter\Validation\Validation->processRules('password', 'password', '12345678', Array, Array)
+#2 C:\wamp64\www\FlexiGuest\system\Controller.php(160): CodeIgniter\Validation\Validation->run()
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(27): CodeIgniter\Controller->validate(Array, Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-03-06 03:40:38 --> validateUser is not a valid rule.
+#0 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(300): CodeIgniter\Validation\Exceptions\ValidationException::forRuleNotFound('validateUser')
+#1 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(157): CodeIgniter\Validation\Validation->processRules('password', 'password', '12345678', Array, Array)
+#2 C:\wamp64\www\FlexiGuest\system\Controller.php(160): CodeIgniter\Validation\Validation->run()
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(27): CodeIgniter\Controller->validate(Array, Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-03-06 03:41:16 --> Class 'App\Models\UserModel' not found
+#0 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(292): App\Validation\Userrules->validateUser('12345678', 'email,password', Array, NULL)
+#1 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(157): CodeIgniter\Validation\Validation->processRules('password', 'password', '12345678', Array, Array)
+#2 C:\wamp64\www\FlexiGuest\system\Controller.php(160): CodeIgniter\Validation\Validation->run()
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(27): CodeIgniter\Controller->validate(Array, Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}

@@ -1,0 +1,258 @@
+CRITICAL - 2022-03-03 00:10:04 --> You must supply the parameters: from, to.
+#0 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(103): CodeIgniter\Router\RouteCollection->match(Array, 'ApplicatioContr...')
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-03 00:10:07 --> You must supply the parameters: from, to.
+#0 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(103): CodeIgniter\Router\RouteCollection->match(Array, 'ApplicatioContr...')
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-03-03 00:10:31 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+CRITICAL - 2022-03-03 00:10:31 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select BLK_ID,B...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select BLK_ID,B...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select BLK_ID,B...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(748): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_BLOCK', 'BLK_ID,BLK_CODE...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->BlockView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-03 00:11:42 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+CRITICAL - 2022-03-03 00:11:42 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select BLK_ID,B...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select BLK_ID,B...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select BLK_ID,B...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(748): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_BLOCK', 'BLK_ID,BLK_CODE...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->BlockView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-03 00:11:55 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+CRITICAL - 2022-03-03 00:11:55 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select BLK_ID,B...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select BLK_ID,B...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select BLK_ID,B...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(748): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_BLOCK', 'BLK_ID,BLK_CODE...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->BlockView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-03 00:13:13 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+CRITICAL - 2022-03-03 00:13:13 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select BLK_ID,B...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select BLK_ID,B...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select BLK_ID,B...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(748): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_BLOCK', 'BLK_ID,BLK_CODE...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->BlockView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-03 00:14:28 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+CRITICAL - 2022-03-03 00:14:28 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select BLK_ID,B...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select BLK_ID,B...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select BLK_ID,B...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(748): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_BLOCK', 'BLK_ID,BLK_CODE...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->BlockView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-03 00:15:04 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_DESC'.
+CRITICAL - 2022-03-03 00:15:04 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_DESC'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select BLK_ID,B...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select BLK_ID,B...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select BLK_ID,B...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(748): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_BLOCK', 'BLK_ID,BLK_CODE...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->BlockView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-03 00:15:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+CRITICAL - 2022-03-03 00:15:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select BLK_ID,B...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select BLK_ID,B...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select BLK_ID,B...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(748): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_BLOCK', 'BLK_ID,BLK_CODE...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->BlockView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-03 01:38:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_CODE'.
+CRITICAL - 2022-03-03 01:38:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT RM_CODE ...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT RM_CODE ...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(364): CodeIgniter\Database\BaseConnection->query('SELECT RM_CODE ...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->getSupportingReservationLov()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-03 01:56:35 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_CODE'.
+CRITICAL - 2022-03-03 01:56:35 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT RM_CODE ...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT RM_CODE ...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(364): CodeIgniter\Database\BaseConnection->query('SELECT RM_CODE ...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->getSupportingReservationLov()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-03 01:56:51 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_CODE'.
+CRITICAL - 2022-03-03 01:56:51 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT RM_CODE ...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT RM_CODE ...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(364): CodeIgniter\Database\BaseConnection->query('SELECT RM_CODE ...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->getSupportingReservationLov()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-03 02:48:27 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert duplicate key row in object 'dbo.FLXY_ROOM' with unique index 'IX_FLXY_ROOM'. The duplicate key value is (32).
+CRITICAL - 2022-03-03 02:48:27 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert duplicate key row in object 'dbo.FLXY_ROOM' with unique index 'IX_FLXY_ROOM'. The duplicate key value is (32).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(946): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRoom()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-03-03 03:17:52 --> Invalid file: RoomClassView.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('RoomClassView.p...')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('RoomClassView', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(982): view('RoomClassView')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->roomClass()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-03 03:18:30 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+CRITICAL - 2022-03-03 03:18:30 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_NO'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select RM_CL_ID...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select RM_CL_ID...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select RM_CL_ID...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(989): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_ROOM_CLASS', 'RM_CL_ID,RM_CL_...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->RoomClassView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-03-03 03:27:14 --> Undefined index: RM_CL_FEATURE
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1016): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 1016, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRoomClass()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-03 03:27:50 --> Undefined index: RM_CL_FEATURE
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1016): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 1016, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRoomClass()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-03 03:29:42 --> Undefined index: RM_CL_FEATURE
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1016): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 1016, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRoomClass()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-03-03 05:42:08 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TY_CODE'.
+CRITICAL - 2022-03-03 05:42:08 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TY_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select RM_CL_ID...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select RM_CL_ID...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select RM_CL_ID...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(989): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_ROOM_CLASS', 'RM_CL_ID,RM_CL_...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->RoomClassView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-03 05:42:13 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TY_CODE'.
+CRITICAL - 2022-03-03 05:42:13 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TY_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select RM_CL_ID...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select RM_CL_ID...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select RM_CL_ID...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(989): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_ROOM_CLASS', 'RM_CL_ID,RM_CL_...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->RoomClassView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-03-03 06:48:53 --> Invalid file: RoomFloorView.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('RoomFloorView.p...')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('RoomFloorView', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1130): view('RoomFloorView')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->roomFloor()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-03 06:49:44 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_FL_FEATURE'.
+CRITICAL - 2022-03-03 06:49:44 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_FL_FEATURE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select RM_FL_ID...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select RM_FL_ID...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select RM_FL_ID...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1137): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_ROOM_FLOOR', 'RM_FL_ID,RM_FL_...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->RoomFloorView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-03 06:49:51 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_FL_FEATURE'.
+CRITICAL - 2022-03-03 06:49:51 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_FL_FEATURE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select RM_FL_ID...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select RM_FL_ID...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select RM_FL_ID...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1137): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_ROOM_FLOOR', 'RM_FL_ID,RM_FL_...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->RoomFloorView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-03 06:51:51 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_FL_CODE'.
+CRITICAL - 2022-03-03 06:51:51 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_FL_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1166): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRoomFloor()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-03 23:54:43 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_FT_ID'.
+CRITICAL - 2022-03-03 23:54:43 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_FT_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT RM_FT_ID...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT RM_FT_ID...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1257): CodeIgniter\Database\BaseConnection->query('SELECT RM_FT_ID...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editRoomFeature()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-03 23:55:57 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_FT_CODE'.
+CRITICAL - 2022-03-03 23:55:57 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_FT_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1240): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRoomFeature()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}

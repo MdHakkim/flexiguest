@@ -1,0 +1,1228 @@
+CRITICAL - 2022-02-15 02:23:40 --> Undefined property: App\Controllers\MainController::$db
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined prope...', 'C:\\wamp64\\www\\F...', 27, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-02-15 02:25:01 --> Undefined property: App\Controllers\MainController::$db
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined prope...', 'C:\\wamp64\\www\\F...', 27, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-02-15 02:29:49 --> Undefined property: App\Controllers\MainController::$db
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined prope...', 'C:\\wamp64\\www\\F...', 27, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-02-15 02:35:09 --> Undefined property: App\Controllers\MainController::$db
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined prope...', 'C:\\wamp64\\www\\F...', 27, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-02-15 02:35:41 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 02:35:41 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 02:45:37 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 02:45:37 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 02:46:15 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 02:46:15 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 02:46:20 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 02:46:20 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 02:46:31 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 02:46:31 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 02:50:48 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 02:50:48 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 02:50:49 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 02:50:49 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 03:01:23 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 03:01:23 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 03:01:27 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 03:01:27 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 03:01:29 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 03:01:29 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 03:01:30 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 03:01:30 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 03:04:43 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 03:04:43 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 03:33:26 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 03:33:26 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 04:45:38 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 04:45:38 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 04:46:20 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-02-15 04:46:20 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:03:55 --> Error connecting to the database: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+CRITICAL - 2022-02-15 05:03:55 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:04:27 --> Error connecting to the database: Login failed for user 'FARNEK-HO/Mohamed.Hakkim'.
+CRITICAL - 2022-02-15 05:04:27 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'FARNEK-HO/Mohamed.Hakkim'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:04:54 --> Error connecting to the database: Login failed for user 'FARNEK-HO/Mohamed.Hakkim'.
+CRITICAL - 2022-02-15 05:04:54 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'FARNEK-HO/Mohamed.Hakkim'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:05:08 --> Error connecting to the database: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+CRITICAL - 2022-02-15 05:05:08 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:14:25 --> Error connecting to the database: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+CRITICAL - 2022-02-15 05:14:25 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:21:13 --> Error connecting to the database: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+CRITICAL - 2022-02-15 05:21:13 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:36:57 --> Error connecting to the database: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+CRITICAL - 2022-02-15 05:36:57 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:36:59 --> Error connecting to the database: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+CRITICAL - 2022-02-15 05:36:59 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:37:24 --> Error connecting to the database: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+CRITICAL - 2022-02-15 05:37:24 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:38:01 --> Error connecting to the database: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+CRITICAL - 2022-02-15 05:38:01 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:38:02 --> Error connecting to the database: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+CRITICAL - 2022-02-15 05:38:02 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:38:03 --> Error connecting to the database: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+CRITICAL - 2022-02-15 05:38:03 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-15 05:38:33 --> Error connecting to the database: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+CRITICAL - 2022-02-15 05:38:33 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'NT AUTHORITY\SYSTEM'.
+Cannot open database "flexiguest" requested by the login. The login failed.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-02-15 05:40:28 --> Call to undefined method CodeIgniter\Database\SQLSRV\Result::result_array()
+#0 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-02-15 05:40:29 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Error))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:17:26 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:17:26 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(34): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:17:26 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:17:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:17:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(34): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:17:41 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:18:13 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:18:13 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(34): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:18:13 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:18:28 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:18:28 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(34): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:18:28 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:18:52 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:18:52 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(35): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:18:52 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:19:37 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:19:37 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(35): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:19:37 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:21:02 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:21:02 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(35): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:21:02 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:21:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:21:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(35): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:21:41 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:23:07 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:23:07 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(35): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:23:07 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:30:55 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:30:55 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(35): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:30:55 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:32:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:32:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:32:41 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:32:48 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:32:48 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:32:48 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:33:01 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:33:01 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:33:01 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:35:51 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 06:35:51 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:35:51 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:36:55 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:36:55 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:36:55 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:37:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:37:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:37:22 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:37:24 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:37:24 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:37:24 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:37:33 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:37:33 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:37:33 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2022-02-15 06:38:09 --> Undefined variable: result
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(39): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 39, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-02-15 06:38:09 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(ErrorException))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:38:14 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+CRITICAL - 2022-02-15 06:38:14 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert the value NULL into column 'id', table 'Flexiguest.dbo.test_tb'; column does not allow nulls. INSERT fails.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:38:14 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:40:10 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+CRITICAL - 2022-02-15 06:40:10 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:40:11 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:40:12 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+CRITICAL - 2022-02-15 06:40:12 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:40:12 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:42:52 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+CRITICAL - 2022-02-15 06:42:52 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:42:52 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:43:38 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+CRITICAL - 2022-02-15 06:43:38 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:43:38 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:43:57 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+CRITICAL - 2022-02-15 06:43:57 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:43:57 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:43:58 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+CRITICAL - 2022-02-15 06:43:58 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:43:58 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:44:04 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+CRITICAL - 2022-02-15 06:44:04 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:44:04 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:44:21 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+CRITICAL - 2022-02-15 06:44:21 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (2).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:44:21 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:45:19 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 06:45:19 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:45:19 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:45:20 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 06:45:20 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(37): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:45:20 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2022-02-15 06:48:48 --> Undefined property: App\Controllers\MainController::$db
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(40): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined prope...', 'C:\\wamp64\\www\\F...', 40, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-02-15 06:49:10 --> Call to undefined method CodeIgniter\Database\SQLSRV\Connection::insert()
+#0 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#4 {main}
+ERROR - 2022-02-15 06:51:32 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 06:51:32 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO TES...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO TES...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(43): CodeIgniter\Database\BaseConnection->query('INSERT INTO TES...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:51:32 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:56:12 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 06:56:12 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into tes...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into tes...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(43): CodeIgniter\Database\BaseConnection->query('insert into tes...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:56:12 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:56:31 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 06:56:31 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into tes...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into tes...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(43): CodeIgniter\Database\BaseConnection->query('insert into tes...', true)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:56:31 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:59:58 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 06:59:58 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into tes...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into tes...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(43): CodeIgniter\Database\BaseConnection->query('insert into tes...', true)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:59:58 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 06:59:59 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 06:59:59 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into tes...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into tes...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(43): CodeIgniter\Database\BaseConnection->query('insert into tes...', true)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 06:59:59 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 07:00:00 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 07:00:00 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into tes...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into tes...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(43): CodeIgniter\Database\BaseConnection->query('insert into tes...', true)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 07:00:00 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 07:00:00 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 07:00:00 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into tes...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into tes...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(43): CodeIgniter\Database\BaseConnection->query('insert into tes...', true)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 07:00:00 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 07:00:01 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 07:00:01 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into tes...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into tes...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(43): CodeIgniter\Database\BaseConnection->query('insert into tes...', true)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 07:00:01 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 07:00:01 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 07:00:01 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into tes...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into tes...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(43): CodeIgniter\Database\BaseConnection->query('insert into tes...', true)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 07:00:01 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 07:00:36 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 07:00:36 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into tes...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into tes...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(43): CodeIgniter\Database\BaseConnection->query('insert into tes...', true)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 07:00:36 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 07:01:08 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+CRITICAL - 2022-02-15 07:01:08 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '`'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into tes...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into tes...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(43): CodeIgniter\Database\BaseConnection->query('insert into tes...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->insert()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-15 07:01:08 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-15 22:57:15 --> Error connecting to the database: Login failed for user 'FLEXIGUEST_MS'.
+CRITICAL - 2022-02-15 22:57:15 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'FLEXIGUEST_MS'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\MainController.php(27): CodeIgniter\Database\BaseConnection->query('SELECT * FROM T...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MainController->select()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MainController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}

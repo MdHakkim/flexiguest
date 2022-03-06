@@ -1,0 +1,428 @@
+CRITICAL - 2022-02-20 02:08:19 --> Invalid file: welcome_message.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('welcome_message...')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('welcome_message', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\Home.php(9): view('welcome_message')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\Home->index()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-20 02:08:57 --> Invalid file: welcome_message.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('welcome_message...')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('welcome_message', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\Home.php(9): view('welcome_message')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\Home->index()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-02-20 03:39:02 --> Undefined property: App\Libraries\ServerSideDataTable::$Db
+#0 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(8): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined prope...', 'C:\\wamp64\\www\\F...', 8, Array)
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-02-20 03:39:52 --> Undefined variable: DbQuery
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 15, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-02-20 03:40:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:40:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(8): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(16): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb', Object(CodeIgniter\Database\SQLSRV\Connection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:45:34 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:45:34 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:45:35 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:45:35 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:45:43 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:45:43 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:45:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:45:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:46:38 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:46:38 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:46:39 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:46:39 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:46:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:46:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:46:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:46:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:46:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:46:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:46:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:46:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:46:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:46:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:47:04 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+CRITICAL - 2022-02-20 03:47:04 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near '.test_tb.'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into '.t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into '.t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into '.t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-20 03:47:42 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (4).
+CRITICAL - 2022-02-20 03:47:42 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Violation of PRIMARY KEY constraint 'PK_test_tb'. Cannot insert duplicate key in object 'dbo.test_tb'. The duplicate key value is (4).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('insert into tes...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('insert into tes...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(12): CodeIgniter\Database\BaseConnection->query('insert into tes...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-20 03:48:45 --> Undefined index: draw
+#0 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(15): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 15, Array)
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-02-20 03:49:07 --> Undefined index: draw
+#0 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(15): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 15, Array)
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(15): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->index()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-02-20 03:59:33 --> Undefined variable: con
+#0 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(21): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 21, Array)
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(24): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-02-20 04:51:02 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+CRITICAL - 2022-02-20 04:51:02 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select count(*)...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(38): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(24): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-20 04:51:02 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-20 04:51:47 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+CRITICAL - 2022-02-20 04:51:47 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select count(*)...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(38): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(24): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-20 04:51:47 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-20 04:52:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+CRITICAL - 2022-02-20 04:52:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select count(*)...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(38): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(24): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-20 04:52:29 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-20 04:53:12 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+CRITICAL - 2022-02-20 04:53:12 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select count(*)...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(38): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(24): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-20 04:53:12 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-20 04:53:36 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+CRITICAL - 2022-02-20 04:53:36 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select count(*)...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(38): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(24): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-20 04:53:36 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-20 04:55:23 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+CRITICAL - 2022-02-20 04:55:23 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near '1'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select count(*)...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(38): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(24): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-20 04:55:23 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-20 04:58:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near 'order'.
+CRITICAL - 2022-02-20 04:58:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]An expression of non-boolean type specified in a context where a condition is expected, near 'order'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select * from t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(24): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-20 04:58:29 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-20 04:59:08 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near 'limit'.
+CRITICAL - 2022-02-20 04:59:08 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near 'limit'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select * from t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(24): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-20 04:59:08 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+ERROR - 2022-02-20 05:21:58 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'first_name'.
+CRITICAL - 2022-02-20 05:21:58 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'first_name'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select * from t...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select * from t...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(44): CodeIgniter\Database\BaseConnection->query('select * from t...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(24): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-20 05:21:58 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(Exception))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}
+CRITICAL - 2022-02-20 05:58:12 --> Undefined variable: data
+#0 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(60): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 60, Array)
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(25): App\Libraries\ServerSideDataTable->generate_DatatTable('test_tb', 'name_e,email,ag...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->datatableView()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-02-20 05:58:12 --> Uncaught CodeIgniter\Format\Exceptions\FormatException: Failed to parse json string, error: "Type is not supported". in C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php:41
+Stack trace:
+#0 C:\wamp64\www\FlexiGuest\system\Format\JSONFormatter.php(41): CodeIgniter\Format\Exceptions\FormatException::forInvalidJSON('Type is not sup...')
+#1 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(341): CodeIgniter\Format\JSONFormatter->format(Array)
+#2 C:\wamp64\www\FlexiGuest\system\API\ResponseTrait.php(99): CodeIgniter\Debug\Exceptions->format(Array)
+#3 C:\wamp64\www\FlexiGuest\system\Debug\Exceptions.php(115): CodeIgniter\Debug\Exceptions->respond(Array, 500)
+#4 [internal function]: CodeIgniter\Debug\Exceptions->exceptionHandler(Object(ErrorException))
+#5 {main}
+  thrown
+#0 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+#1 {main}

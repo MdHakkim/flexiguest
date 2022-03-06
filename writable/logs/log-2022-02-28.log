@@ -1,0 +1,116 @@
+CRITICAL - 2022-02-28 00:11:21 --> Undefined index: COM_UPDATE_UID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(321): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 321, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertCompAgent()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-02-28 00:11:37 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'COM_ACCOUNT'.
+CRITICAL - 2022-02-28 00:11:37 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'COM_ACCOUNT'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('UPDATE "flexigu...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE "flexigu...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1913): CodeIgniter\Database\BaseConnection->query('UPDATE "flexigu...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(324): CodeIgniter\Database\BaseBuilder->update(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertCompAgent()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-02-28 00:12:49 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'COM_ACCOUNT'.
+CRITICAL - 2022-02-28 00:12:49 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'COM_ACCOUNT'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('UPDATE "flexigu...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE "flexigu...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1913): CodeIgniter\Database\BaseConnection->query('UPDATE "flexigu...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(324): CodeIgniter\Database\BaseBuilder->update(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertCompAgent()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-02-28 04:10:43 --> View themes, no current section.
+#0 C:\wamp64\www\FlexiGuest\app\Views\CompanyAgent.php(119): CodeIgniter\View\View->endSection()
+#1 C:\wamp64\www\FlexiGuest\system\View\View.php(210): include('C:\\wamp64\\www\\F...')
+#2 C:\wamp64\www\FlexiGuest\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('CompanyAgent', Array, true)
+#4 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(370): view('CompanyAgent')
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->company()
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#7 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}
+CRITICAL - 2022-02-28 04:11:05 --> View themes, no current section.
+#0 C:\wamp64\www\FlexiGuest\app\Views\CompanyAgent.php(119): CodeIgniter\View\View->endSection()
+#1 C:\wamp64\www\FlexiGuest\system\View\View.php(210): include('C:\\wamp64\\www\\F...')
+#2 C:\wamp64\www\FlexiGuest\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#3 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('CompanyAgent', Array, true)
+#4 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(370): view('CompanyAgent')
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->company()
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#7 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#9 {main}
+CRITICAL - 2022-02-28 23:24:41 --> Undefined index: AGN_ID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(384): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 384, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertAgent()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-02-28 23:26:05 --> Undefined index: AGN_ACCOUNT
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(432): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 432, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertAgent()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-02-28 23:45:56 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near 'COM_COUNTRY_DESC'.
+CRITICAL - 2022-02-28 23:45:56 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near 'COM_COUNTRY_DESC'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT AGN_ID,A...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT AGN_ID,A...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(477): CodeIgniter\Database\BaseConnection->query('SELECT AGN_ID,A...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editAgent()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-02-28 23:46:19 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near the keyword 'as'.
+CRITICAL - 2022-02-28 23:46:19 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near the keyword 'as'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT AGN_ID,A...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT AGN_ID,A...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(477): CodeIgniter\Database\BaseConnection->query('SELECT AGN_ID,A...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editAgent()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-02-28 23:46:48 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near 'COM_STATE_DESC'.
+CRITICAL - 2022-02-28 23:46:48 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near 'COM_STATE_DESC'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT AGN_ID,A...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT AGN_ID,A...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(477): CodeIgniter\Database\BaseConnection->query('SELECT AGN_ID,A...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editAgent()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-02-28 23:46:52 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near 'COM_STATE_DESC'.
+CRITICAL - 2022-02-28 23:46:52 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near 'COM_STATE_DESC'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT AGN_ID,A...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT AGN_ID,A...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(477): CodeIgniter\Database\BaseConnection->query('SELECT AGN_ID,A...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editAgent()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-02-28 23:52:48 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'AGN_ID'.
+CRITICAL - 2022-02-28 23:52:48 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'AGN_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('DELETE FROM "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('DELETE FROM "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\SQLSRV\Builder.php(539): CodeIgniter\Database\BaseConnection->query('DELETE FROM "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(515): CodeIgniter\Database\SQLSRV\Builder->delete(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->deleteAgent()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(37): CodeIgniter\CodeIgniter->run()
+#8 {main}
