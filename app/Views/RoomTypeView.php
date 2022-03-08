@@ -36,7 +36,7 @@
             <!-- Modal Window -->
            
             <div class="modal fade" id="popModalWindow" tabindex="-1" aria-lableledby="popModalWindowlable" aria-hidden="true">
-              <div class="modal-dialog modal-sm">
+              <div class="modal-dialog modal-md">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="popModalWindowlable">New message</h5>
@@ -46,30 +46,79 @@
                     <form id="submitForm">
                       <div class="row g-3">
                         <input type="hidden" name="RM_TY_ID" id="RM_TY_ID" class="form-control"/>
-                        <div class="col-md-12">
-                          <lable class="form-lable">Room Type Code</lable>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Room Class</lable>
+                          <select name="RM_TY_ROOM_CLASS"  id="RM_TY_ROOM_CLASS" data-width="100%" class="selectpicker RM_TY_ROOM_CLASS" data-live-search="true">
+                              <option value="">Select</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Room Type</lable>
                           <input type="text" name="RM_TY_CODE" id="RM_TY_CODE" class="form-control" placeholder="room code" />
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                           <lable class="form-lable">Room Type Description</lable>
                           <input type="text" name="RM_TY_DESC" id="RM_TY_DESC" class="form-control" placeholder="room description" />
                         </div>
-                        <div class="col-md-12">
-                            <div class="input-group mb-3 radioBtnClass">
-                              <div class="form-check pe-2">
-                                <input class="form-check-input" type="radio" checked Value="SL" name="RM_TY_FEATURE" id="RM_TY_FEATURE">
-                                <lable class="form-check-lable"> Selected </lable>
-                              </div>
-                              <div class="form-check pe-2">
-                                <input class="form-check-input" type="radio" Value="NS" name="RM_TY_FEATURE" id="RM_TY_FEATURE">
-                                <lable class="form-check-lable"> Non-selected </lable>
-                              </div>
-                              <div class="form-check pe-2">
-                                <input class="form-check-input" Value="BT" type="radio" name="RM_TY_FEATURE" id="RM_TY_FEATURE">
-                                <lable class="form-check-lable"> Both </lable>
-                              </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Display Seq./Total Rooms</lable>
+                            <div class="input-group mb-3">
+                              <input type="number" name="RM_TY_DISP_SEQ" id="RM_TY_DISP_SEQ" class="form-control" placeholder="display seq." />
+                              <input type="number" name="RM_TY_TOTAL_ROOM" id="RM_TY_TOTAL_ROOM" class="form-control" placeholder="total rooms" />
                             </div>
                         </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Pub. Rate Amount</lable>
+                          <input type="text" name="RM_TY_PUBLIC_RATE_AMT" id="RM_TY_PUBLIC_RATE_AMT" class="form-control" placeholder="room description" />
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Pub. Rate Code</lable>
+                          <select name="RM_TY_PUBLIC_RATE_CODE" id="RM_TY_PUBLIC_RATE_CODE" class="select2 form-select" data-allow-clear="true">
+                            <option value="">Select</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Feature</lable>
+                          <select name="RM_TY_FEATURE" id="RM_TY_FEATURE" class="select2 form-select" data-allow-clear="true">
+                            <option value="">Select</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Default/Maximum Occupancy</lable>
+                            <div class="input-group mb-3">
+                              <input type="number" name="RM_TY_DEFUL_OCCUPANCY" id="RM_TY_DEFUL_OCCUPANCY" class="form-control" placeholder="display seq." />
+                              <input type="number" name="RM_TY_MAX_OCCUPANCY" id="RM_TY_MAX_OCCUPANCY" class="form-control" placeholder="total rooms" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Maximum Adults/Children</lable>
+                            <div class="input-group mb-3">
+                              <input type="number" name="RM_TY_MAX_ADULTS" id="RM_TY_MAX_ADULTS" class="form-control" placeholder="display seq." />
+                              <input type="number" name="RM_TY_MAX_CHILDREN" id="RM_TY_MAX_CHILDREN" class="form-control" placeholder="total rooms" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Minimum Occupancy</lable>
+                          <input type="text" name="RM_TY_MIN_OCCUPANCY" id="RM_TY_MIN_OCCUPANCY" class="form-control" placeholder="room description" />
+                        </div>
+                        <div class="col-md-12 flxi_ds_flx">
+                          <div class="form-check mt-3 me-1">
+                            <input class="form-check-input flxCheckBox" type="checkbox"  id="RM_TY_PSEUDO_RM_CHK">
+                            <input type="hidden" name="RM_TY_PSEUDO_RM" id="RM_TY_PSEUDO_RM" value="N" class="form-control" />
+                            <lable class="form-check-lable" for="defaultCheck1"> Pseudo Room </lable>
+                          </div>
+                          <div class="form-check mt-3 me-1">
+                            <input class="form-check-input flxCheckBox" type="checkbox" value="N" id="RM_TY_HOUSEKEEPING_CHK">
+                            <input type="hidden" name="RM_TY_HOUSEKEEPING" id="RM_TY_HOUSEKEEPING" value="N" class="form-control" />
+                            <lable class="form-check-lable" for="defaultCheck1"> Housekeeping </lable>
+                          </div>
+                          <div class="form-check mt-3">
+                            <input class="form-check-input flxCheckBox" type="checkbox" value="N" id="RM_TY_SEND_T_INTERF_CHK">
+                            <input type="hidden" name="RM_TY_SEND_T_INTERF" id="RM_TY_SEND_T_INTERF" value="N" class="form-control" />
+                            <lable class="form-check-lable" for="defaultCheck1"> Send to Interface </lable>
+                          </div>
+                        </div>
+                      
                       </div>
                     </form>
                   </div>
@@ -121,10 +170,44 @@
 
   });
 
+  function runInitialLevel(){
+    $.ajax({
+      url: '<?php echo base_url('/getSupportingRoomClassLov')?>',
+      type: "post",
+      headers: {'X-Requested-With': 'XMLHttpRequest'},
+      dataType:'json',
+      async:false,
+      success:function(respn){
+        var memData = respn[0];
+        var idArray = ['RM_TY_PUBLIC_RATE_CODE','RM_TY_FEATURE'];
+        $(respn).each(function(ind,data){
+          var option = '<option value="">Select</option>';
+          $.each(data,function(i,valu){
+            var value = $.trim(valu['CODE']);//fields.trim();
+            var desc = $.trim(valu['DESCS']);//datavals.trim();
+            option += '<option value="'+value+'">'+desc+'</option>';
+          });
+          $('#'+idArray[ind]).html(option);
+        });
+      }
+    });
+  }
+
+  $(document).on('click','.flxCheckBox',function(){
+    var checked = $(this).is(':checked');
+    var parent = $(this).parent();
+    if(checked){
+      parent.find('input[type=hidden]').val('Y');
+    }else{
+      parent.find('input[type=hidden]').val('N');
+    }
+  });
+
   function addForm(){
     $(':input','#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('#popModalWindow').modal('show');
+    runInitialLevel();
   }
 
   $(document).on('click','.delete-record',function(){
@@ -159,17 +242,23 @@
     });
   });
 
-  // $(document).on('click','.flxCheckBox',function(){
-  //   var checked = $(this).is(':checked');
-  //   var parent = $(this).parent();
-  //   if(checked){
-  //     parent.find('input[type=hidden]').val('Y');
-  //   }else{
-  //     parent.find('input[type=hidden]').val('N');
-  //   }
-  // });
+  $(document).on('keyup','.RM_TY_ROOM_CLASS .form-control',function(){
+    var search = $(this).val();
+    $.ajax({
+        url: '<?php echo base_url('/roomClassList')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{search:search},
+        // dataType:'json',
+        success:function(respn){
+          console.log(respn,"testing");
+          $('#RM_TY_ROOM_CLASS').html(respn).selectpicker('refresh');
+        }
+    });
+  });
 
   $(document).on('click','.editWindow',function(){
+    runInitialLevel();
     var sysid = $(this).attr('data_sysid');
     $('#popModalWindow').modal('show');
     var url = '<?php echo base_url('/editRoomType')?>';
@@ -184,13 +273,14 @@
             $.each(data,function(fields,datavals){
               var field = $.trim(fields);//fields.trim();
               var dataval = $.trim(datavals);//datavals.trim();
-              if(field=='RM_FEATURE'){
-                if(dataval=='SL'){
-                  $('.radioBtnClass .form-check').eq(0).find('[type="radio"]').prop('checked',true);
-                }else if(dataval=='NS'){
-                  $('.radioBtnClass .form-check').eq(1).find('[type="radio"]').prop('checked',true);
+              if(field=='RM_TY_ROOM_CLASS'){
+                var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
+                $('#'+field).html(option).selectpicker('refresh');
+              }else if(field=='RM_TY_PSEUDO_RM' || field=='RM_TY_HOUSEKEEPING' || field=='RM_TY_SEND_T_INTERF'){
+                if(dataval=='Y'){
+                  $('#'+field+'_CHK').prop('checked',true);
                 }else{
-                  $('.radioBtnClass .form-check').eq(2).find('[type="radio"]').prop('checked',true);
+                  $('#'+field+'_CHK').prop('checked',false)
                 }
               }else{
                 $('#'+field).val(dataval);

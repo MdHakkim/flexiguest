@@ -65,3 +65,13 @@ button.close {
   background-color: transparent !important;
   border: 0 !important;
 }
+.flxy_space{
+  justify-content: space-between !important;
+}
+.submitResr{
+  display: none !important;
+}
+.window-2{
+  display: none;
+  min-height: 26em;
+}

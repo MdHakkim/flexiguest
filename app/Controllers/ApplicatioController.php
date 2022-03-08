@@ -5,8 +5,10 @@ use  App\Libraries\ServerSideDataTable;
 class ApplicatioController extends BaseController
 {
     public $Db;
+    public $session;
     public function __construct(){
         $this->Db = \Config\Database::connect();
+        $this->session = \Config\Services::session();
         helper(['form']);
     }
     
@@ -828,7 +830,7 @@ class ApplicatioController extends BaseController
                     "BLK_RESER_METHOD" => $_POST["BLK_RESER_METHOD"],
                     "BLK_RATE_CODE" => $_POST["BLK_RATE_CODE"],
                     "BLK_PACKAGE" => $_POST["BLK_PACKAGE"],
-                    "BLK_UPDATE_UID" => null,
+                    "BLK_UPDATE_UID" => $this->session->name,
                     "BLK_UPDATE_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_BLOCK')->where('BLK_ID', $sysid)->update($data); 
@@ -930,16 +932,48 @@ class ApplicatioController extends BaseController
             $sysid = $_POST['RM_ID'];
             if(!empty($sysid)){
                 $data = ["RM_NO" => $_POST["RM_NO"],
+                    "RM_CLASS" => $_POST["RM_CLASS"],
                     "RM_DESC" => $_POST["RM_DESC"],
                     "RM_TYPE" => $_POST["RM_TYPE"],
-                    "RM_FEATURE" => $_POST["RM_FEATURE"]
+                    "RM_FEATURE" => $_POST["RM_FEATURE"],
+                    "RM_PUBLIC_RATE_CODE" => $_POST["RM_PUBLIC_RATE_CODE"],
+                    "RM_PUBLIC_RATE_AMOUNT" => $_POST["RM_PUBLIC_RATE_AMOUNT"],
+                    "RM_MAX_OCCUPANCY" => $_POST["RM_MAX_OCCUPANCY"],
+                    "RM_DISP_SEQ" => $_POST["RM_DISP_SEQ"],
+                    "RM_FLOOR_PREFERN" => $_POST["RM_FLOOR_PREFERN"],
+                    "RM_SMOKING_PREFERN" => $_POST["RM_SMOKING_PREFERN"],
+                    "RM_PHONE_NO" => $_POST["RM_PHONE_NO"],
+                    "RM_SQUARE_UNITS" => $_POST["RM_SQUARE_UNITS"],
+                    "RM_MEASUREMENT" => $_POST["RM_MEASUREMENT"],
+                    "RM_HOUSKP_DY_SECTION" => $_POST["RM_HOUSKP_DY_SECTION"],
+                    "RM_HOUSKP_EV_SECTION" => $_POST["RM_HOUSKP_EV_SECTION"],
+                    "RM_STAYOVER_CR" => $_POST["RM_STAYOVER_CR"],
+                    "RM_DEPARTURE_CR" => $_POST["RM_DEPARTURE_CR"],
+                    "RM_UPDATED_UID" => $this->session->name,
+                    "RM_UPDATED_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_ROOM')->where('RM_ID', $sysid)->update($data); 
             }else{
                 $data = ["RM_NO" => $_POST["RM_NO"],
+                    "RM_CLASS" => $_POST["RM_CLASS"],
                     "RM_DESC" => $_POST["RM_DESC"],
                     "RM_TYPE" => $_POST["RM_TYPE"],
-                    "RM_FEATURE" => $_POST["RM_FEATURE"]
+                    "RM_FEATURE" => $_POST["RM_FEATURE"],
+                    "RM_PUBLIC_RATE_CODE" => $_POST["RM_PUBLIC_RATE_CODE"],
+                    "RM_PUBLIC_RATE_AMOUNT" => $_POST["RM_PUBLIC_RATE_AMOUNT"],
+                    "RM_MAX_OCCUPANCY" => $_POST["RM_MAX_OCCUPANCY"],
+                    "RM_DISP_SEQ" => $_POST["RM_DISP_SEQ"],
+                    "RM_FLOOR_PREFERN" => $_POST["RM_FLOOR_PREFERN"],
+                    "RM_SMOKING_PREFERN" => $_POST["RM_SMOKING_PREFERN"],
+                    "RM_PHONE_NO" => $_POST["RM_PHONE_NO"],
+                    "RM_SQUARE_UNITS" => $_POST["RM_SQUARE_UNITS"],
+                    "RM_MEASUREMENT" => $_POST["RM_MEASUREMENT"],
+                    "RM_HOUSKP_DY_SECTION" => $_POST["RM_HOUSKP_DY_SECTION"],
+                    "RM_HOUSKP_EV_SECTION" => $_POST["RM_HOUSKP_EV_SECTION"],
+                    "RM_STAYOVER_CR" => $_POST["RM_STAYOVER_CR"],
+                    "RM_DEPARTURE_CR" => $_POST["RM_DEPARTURE_CR"],
+                    "RM_CREATED_UID" => $this->session->name,
+                    "RM_CREATED_DT" => date("d-M-Y")
                  ];
                 $return = $this->Db->table('FLXY_ROOM')->insert($data); 
             }
@@ -957,7 +991,10 @@ class ApplicatioController extends BaseController
 
     function editRoom(){
         $param = ['SYSID'=> $_POST['sysid']];
-        $sql = "SELECT RM_ID,RM_NO,RM_DESC,RM_TYPE,RM_FEATURE FROM FLXY_ROOM WHERE RM_ID=:SYSID:";
+        $sql = "SELECT RM_ID,RM_NO,RM_DESC,RM_CLASS,RM_TYPE,
+        (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RM_TYPE)RM_TYPE_DESC,
+        (SELECT RM_FT_DESC FROM FLXY_ROOM_FEATURE WHERE RM_FT_CODE=RM_FEATURE)RM_FEATURE_DESC,
+        RM_FEATURE,RM_PUBLIC_RATE_CODE,RM_PUBLIC_RATE_AMOUNT,RM_MAX_OCCUPANCY,RM_DISP_SEQ,RM_FLOOR_PREFERN,RM_SMOKING_PREFERN,RM_PHONE_NO,RM_SQUARE_UNITS,RM_MEASUREMENT,RM_HOUSKP_DY_SECTION,RM_HOUSKP_EV_SECTION,RM_STAYOVER_CR,RM_DEPARTURE_CR FROM FLXY_ROOM WHERE RM_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
@@ -1007,13 +1044,15 @@ class ApplicatioController extends BaseController
             if(!empty($sysid)){
                 $data = ["RM_CL_CODE" => $_POST["RM_CL_CODE"],
                     "RM_CL_DESC" => $_POST["RM_CL_DESC"],
-                    "RM_CL_FEATURE" => $_POST["RM_CL_FEATURE"]
+                    "RM_CL_DISPLY_SEQ" => $_POST["RM_CL_DISPLY_SEQ"],
+                    "RM_CL_TOTAL_ROOM" => $_POST["RM_CL_TOTAL_ROOM"]
                  ];
             $return = $this->Db->table('FLXY_ROOM_CLASS')->where('RM_CL_ID', $sysid)->update($data); 
             }else{
                 $data = ["RM_CL_CODE" => $_POST["RM_CL_CODE"],
                     "RM_CL_DESC" => $_POST["RM_CL_DESC"],
-                    "RM_CL_FEATURE" => $_POST["RM_CL_FEATURE"]
+                    "RM_CL_DISPLY_SEQ" => $_POST["RM_CL_DISPLY_SEQ"],
+                    "RM_CL_TOTAL_ROOM" => $_POST["RM_CL_TOTAL_ROOM"]
                  ];
                 $return = $this->Db->table('FLXY_ROOM_CLASS')->insert($data); 
             }
@@ -1031,7 +1070,7 @@ class ApplicatioController extends BaseController
 
     public function editRoomClass(){
         $param = ['SYSID'=> $_POST['sysid']];
-        $sql = "SELECT RM_CL_ID,RM_CL_CODE,RM_CL_DESC,RM_CL_FEATURE FROM FLXY_ROOM_CLASS WHERE RM_CL_ID=:SYSID:";
+        $sql = "SELECT RM_CL_ID,RM_CL_CODE,RM_CL_DESC,RM_CL_DISPLY_SEQ,RM_CL_TOTAL_ROOM FROM FLXY_ROOM_CLASS WHERE RM_CL_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
@@ -1079,15 +1118,47 @@ class ApplicatioController extends BaseController
             }
             $sysid = $_POST['RM_TY_ID'];
             if(!empty($sysid)){
-                $data = ["RM_TY_CODE" => $_POST["RM_TY_CODE"],
+                $data = ["RM_TY_ROOM_CLASS" => $_POST["RM_TY_ROOM_CLASS"],
+                    "RM_TY_CODE" => $_POST["RM_TY_CODE"],
                     "RM_TY_DESC" => $_POST["RM_TY_DESC"],
-                    "RM_TY_FEATURE" => $_POST["RM_TY_FEATURE"]
+                    "RM_TY_FEATURE" => $_POST["RM_TY_FEATURE"],
+                    "RM_TY_TOTAL_ROOM" => $_POST["RM_TY_TOTAL_ROOM"],
+                    "RM_TY_DISP_SEQ" => $_POST["RM_TY_DISP_SEQ"],
+                    "RM_TY_PUBLIC_RATE_CODE" => $_POST["RM_TY_PUBLIC_RATE_CODE"],
+                    "RM_TY_DEFUL_OCCUPANCY" => $_POST["RM_TY_DEFUL_OCCUPANCY"],
+                    "RM_TY_MAX_OCCUPANCY" => $_POST["RM_TY_MAX_OCCUPANCY"],
+                    "RM_TY_MAX_ADULTS" => $_POST["RM_TY_MAX_ADULTS"],
+                    "RM_TY_MAX_CHILDREN" => $_POST["RM_TY_MAX_CHILDREN"],
+                    "RM_TY_PSEUDO_RM" => $_POST["RM_TY_PSEUDO_RM"],
+                    "RM_TY_HOUSEKEEPING" => $_POST["RM_TY_HOUSEKEEPING"],
+                    "RM_TY_MIN_OCCUPANCY" => $_POST["RM_TY_MIN_OCCUPANCY"],
+                    "RM_TY_SEND_T_INTERF" => $_POST["RM_TY_SEND_T_INTERF"],
+                    "RM_TY_PUBLIC_RATE_AMT" => $_POST["RM_TY_PUBLIC_RATE_AMT"],
+                    "RM_TY_ACTIVE_DT" => null,
+                    "RM_TY_UPDATED_DT" => date("d-M-Y"),
+                    "RM_TY_UPDATED_UID" => $this->session->name,
                  ];
             $return = $this->Db->table('FLXY_ROOM_TYPE')->where('RM_TY_ID', $sysid)->update($data); 
             }else{
-                $data = ["RM_TY_CODE" => $_POST["RM_TY_CODE"],
+                $data = ["RM_TY_ROOM_CLASS" => $_POST["RM_TY_ROOM_CLASS"],
+                    "RM_TY_CODE" => $_POST["RM_TY_CODE"],
                     "RM_TY_DESC" => $_POST["RM_TY_DESC"],
-                    "RM_TY_FEATURE" => $_POST["RM_TY_FEATURE"]
+                    "RM_TY_FEATURE" => $_POST["RM_TY_FEATURE"],
+                    "RM_TY_TOTAL_ROOM" => $_POST["RM_TY_TOTAL_ROOM"],
+                    "RM_TY_DISP_SEQ" => $_POST["RM_TY_DISP_SEQ"],
+                    "RM_TY_PUBLIC_RATE_CODE" => $_POST["RM_TY_PUBLIC_RATE_CODE"],
+                    "RM_TY_DEFUL_OCCUPANCY" => $_POST["RM_TY_DEFUL_OCCUPANCY"],
+                    "RM_TY_MAX_OCCUPANCY" => $_POST["RM_TY_MAX_OCCUPANCY"],
+                    "RM_TY_MAX_ADULTS" => $_POST["RM_TY_MAX_ADULTS"],
+                    "RM_TY_MAX_CHILDREN" => $_POST["RM_TY_MAX_CHILDREN"],
+                    "RM_TY_PSEUDO_RM" => $_POST["RM_TY_PSEUDO_RM"],
+                    "RM_TY_HOUSEKEEPING" => $_POST["RM_TY_HOUSEKEEPING"],
+                    "RM_TY_MIN_OCCUPANCY" => $_POST["RM_TY_MIN_OCCUPANCY"],
+                    "RM_TY_SEND_T_INTERF" => $_POST["RM_TY_SEND_T_INTERF"],
+                    "RM_TY_PUBLIC_RATE_AMT" => $_POST["RM_TY_PUBLIC_RATE_AMT"],
+                    "RM_TY_ACTIVE_DT" => null,
+                    "RM_TY_CREATE_DT" => date("d-M-Y"),
+                    "RM_TY_CREATE_UID" => $this->session->name,
                  ];
                 $return = $this->Db->table('FLXY_ROOM_TYPE')->insert($data); 
             }
@@ -1103,11 +1174,91 @@ class ApplicatioController extends BaseController
         }
     }
 
+    public function roomClassList(){
+        $search = $_POST['search'];
+        $sql = "SELECT RM_CL_CODE,RM_CL_DESC FROM FLXY_ROOM_CLASS WHERE RM_CL_DESC like '%$search%'";
+        $response = $this->Db->query($sql)->getResultArray();
+        $option='<option value="">Select RoomClass</option>';
+        foreach($response as $row){
+            $option.= '<option value="'.$row['RM_CL_CODE'].'">'.$row['RM_CL_DESC'].'</option>';
+        }
+        echo $option;
+    }
+
+    function getSupportingRoomClassLov(){
+        $sql = 'SELECT RT_CD_CODE CODE,RT_CD_DESC DESCS FROM FLXY_RATE_CODE';
+        $respon1 = $this->Db->query($sql)->getResultArray();
+        $sql = 'SELECT RM_FT_CODE CODE,RM_FT_DESC DESCS FROM FLXY_ROOM_FEATURE';
+        $respon2 = $this->Db->query($sql)->getResultArray();
+        $data = [$respon1,$respon2];
+        echo json_encode($data);
+    }
+
+    function getSupportingRoomLov(){
+        $sql = 'SELECT RT_CD_CODE CODE,RT_CD_DESC DESCS FROM FLXY_RATE_CODE';
+        $respon1 = $this->Db->query($sql)->getResultArray();
+        $sql = 'SELECT RM_FL_CODE CODE,RM_FL_DESC DESCS FROM FLXY_ROOM_FLOOR';
+        $respon2 = $this->Db->query($sql)->getResultArray();
+        $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='SMK_PREF'";
+        $respon3 = $this->Db->query($sql)->getResultArray();
+        $data = [$respon1,$respon2,$respon3];
+        echo json_encode($data);
+    }
+
+    function getInitializeListReserv(){
+        $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='RESV_TYPE'";
+        $respon1 = $this->Db->query($sql)->getResultArray();
+        $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='BLK_MARKET'";
+        $respon2 = $this->Db->query($sql)->getResultArray();
+        $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='COM_SOURCE'";
+        $respon3 = $this->Db->query($sql)->getResultArray();
+        $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='ORIGIN'";
+        $respon4 = $this->Db->query($sql)->getResultArray();
+        $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='PAYMENT'";
+        $respon5 = $this->Db->query($sql)->getResultArray();
+        $data = [$respon1,$respon2,$respon3,$respon4,$respon5];
+        echo json_encode($data);
+    }
+
+
     public function editRoomType(){
         $param = ['SYSID'=> $_POST['sysid']];
-        $sql = "SELECT RM_TY_ID,RM_TY_CODE,RM_TY_DESC,RM_TY_FEATURE FROM FLXY_ROOM_TYPE WHERE RM_TY_ID=:SYSID:";
+        $sql = "SELECT RM_TY_ID,RM_TY_ROOM_CLASS,(SELECT RM_CL_DESC FROM FLXY_ROOM_CLASS WHERE RM_CL_CODE=RM_TY_ROOM_CLASS)RM_TY_ROOM_CLASS_DESC,RM_TY_CODE,RM_TY_DESC,RM_TY_FEATURE,RM_TY_TOTAL_ROOM,RM_TY_DISP_SEQ,RM_TY_PUBLIC_RATE_CODE,RM_TY_DEFUL_OCCUPANCY,RM_TY_MAX_OCCUPANCY,RM_TY_MAX_ADULTS,RM_TY_MAX_CHILDREN,RM_TY_PSEUDO_RM,RM_TY_HOUSEKEEPING,RM_TY_MIN_OCCUPANCY,RM_TY_SEND_T_INTERF,RM_TY_PUBLIC_RATE_AMT,RM_TY_ACTIVE_DT FROM FLXY_ROOM_TYPE WHERE RM_TY_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
+    }
+
+    public function roomTypeList(){
+        $search = $_POST['search'];
+        $sql = "SELECT RM_TY_ID,RM_TY_CODE,RM_TY_DESC,RM_TY_ROOM_CLASS FROM FLXY_ROOM_TYPE WHERE RM_TY_DESC like '%$search%'";
+        $response = $this->Db->query($sql)->getResultArray();
+        $option='<option value="">Select Room Type</option>';
+        foreach($response as $row){
+            $option.= '<option data-desc="'.trim($row['RM_TY_DESC']).'" data-rmclass="'.trim($row['RM_TY_ROOM_CLASS']).'" value="'.$row['RM_TY_CODE'].'">'.$row['RM_TY_DESC'].'</option>';
+        }
+        echo $option;
+    }
+
+    public function featureList(){
+        $search = $_POST['search'];
+        $sql = "SELECT RM_FT_ID,RM_FT_CODE,RM_FT_DESC FROM FLXY_ROOM_FEATURE WHERE RM_FT_DESC like '%$search%'";
+        $response = $this->Db->query($sql)->getResultArray();
+        $option='<option value="">Select Feature</option>';
+        foreach($response as $row){
+            $option.= '<option value="'.$row['RM_FT_CODE'].'">'.$row['RM_FT_DESC'].'</option>';
+        }
+        echo $option;
+    }
+
+    public function houseKeepSecionList(){
+        $search = $_POST['search'];
+        $sql = "SELECT SC_FL_CODE,SC_FL_DESC,SC_FL_ID FROM FLXY_SECTION WHERE SC_FL_DESC like '%$search%'";
+        $response = $this->Db->query($sql)->getResultArray();
+        $option='<option value="">Select Section</option>';
+        foreach($response as $row){
+            $option.= '<option value="'.$row['SC_FL_CODE'].'">'.$row['SC_FL_DESC'].'</option>';
+        }
+        echo $option;
     }
 
     public function deleteRoomType(){

@@ -55,6 +55,13 @@
                           <input type="text" name="RM_CL_DESC" id="RM_CL_DESC" class="form-control" placeholder="room description" />
                         </div>
                         <div class="col-md-12">
+                          <lable class="form-lable">Display Seq./Total Rooms</lable>
+                            <div class="input-group mb-3">
+                              <input type="number" name="RM_CL_DISPLY_SEQ" id="RM_CL_DISPLY_SEQ" class="form-control" placeholder="display seq." />
+                              <input type="number" name="RM_CL_TOTAL_ROOM" id="RM_CL_TOTAL_ROOM" class="form-control" placeholder="total rooms" />
+                            </div>
+                        </div>
+                        <!-- <div class="col-md-12">
                             <div class="input-group mb-3 radioBtnClass">
                               <div class="form-check pe-2">
                                 <input class="form-check-input" type="radio" checked Value="SL" name="RM_CL_FEATURE" id="RM_CL_FEATURE">
@@ -69,7 +76,7 @@
                                 <lable class="form-check-lable"> Both </lable>
                               </div>
                             </div>
-                        </div>
+                        </div> -->
                       </div>
                     </form>
                   </div>

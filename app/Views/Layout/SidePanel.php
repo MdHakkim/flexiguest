@@ -265,13 +265,23 @@
 
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="javascript:void(0);" class="menu-link">
+                  <a href="<?php echo base_url('reservation');?>" class="menu-link">
                     <div data-i18n="Create Reservation">Create Reservation</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="javascript:void(0);" class="menu-link">
-                    <div data-i18n="Search Reservations">Search Reservations</div>
+                  <a href="<?php echo base_url('roomClass');?>" class="menu-link">
+                    <div data-i18n="Create Reservation">Room Class</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('roomType');?>" class="menu-link">
+                    <div data-i18n="Create Reservation">Room Type</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('room');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Room</div>
                   </a>
                 </li>
 

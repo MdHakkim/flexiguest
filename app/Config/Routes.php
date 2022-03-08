@@ -56,6 +56,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertCustomer', 'ApplicatioController::insertCustomer');
     $routes->match(['post'],'/editReservation', 'ApplicatioController::editReservation');
     $routes->match(['post'],'/deleteReservation', 'ApplicatioController::deleteReservation');
+    $routes->match(['post'],'/getInitializeListReserv', 'ApplicatioController::getInitializeListReserv');
 
     $routes->get('/customer', 'ApplicatioController::Customer');
     $routes->match(['post'],'/customerView', 'ApplicatioController::customerView');
@@ -102,13 +103,18 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertRoom', 'ApplicatioController::insertRoom');
     $routes->match(['post'],'/editRoom', 'ApplicatioController::editRoom');
     $routes->match(['post'],'/deleteRoom', 'ApplicatioController::deleteRoom');
+    $routes->match(['post'],'/getSupportingRoomLov', 'ApplicatioController::getSupportingRoomLov');
+    $routes->match(['post'],'/roomTypeList', 'ApplicatioController::roomTypeList');
 
     $routes->get('/roomClass', 'ApplicatioController::roomClass');
     $routes->match(['post'],'/roomClassView', 'ApplicatioController::RoomClassView');
     $routes->match(['post'],'/insertRoomClass', 'ApplicatioController::insertRoomClass');
     $routes->match(['post'],'/editRoomClass', 'ApplicatioController::editRoomClass');
     $routes->match(['post'],'/deleteRoomClass', 'ApplicatioController::deleteRoomClass');
-
+    $routes->match(['post'],'/roomClassList', 'ApplicatioController::roomClassList');
+    $routes->match(['post'],'/getSupportingRoomClassLov', 'ApplicatioController::getSupportingRoomClassLov');
+    $routes->match(['post'],'/featureList', 'ApplicatioController::featureList');
+    $routes->match(['post'],'/houseKeepSecionList', 'ApplicatioController::houseKeepSecionList');
 
     $routes->get('/roomType', 'ApplicatioController::roomType');
     $routes->match(['post'],'/roomTypeView', 'ApplicatioController::RoomTypeView');

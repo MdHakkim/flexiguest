@@ -48,34 +48,86 @@
                       <div class="row g-3">
                         <input type="hidden" name="RM_ID" id="RM_ID" class="form-control"/>
                         <div class="col-md-6">
-                          <lable class="form-lable">Room No/Room Type</lable>
+                          <lable class="form-lable">Room No/Room Class</lable>
                             <div class="input-group mb-3">
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                   <input type="number" name="RM_NO" id="RM_NO" class="form-control" placeholder="room no" />
                                 </div>
-                                  <div class="col-md-7">
-                                  <input type="text" name="RM_TYPE" id="RM_TYPE" class="form-control" placeholder="room type" />
+                                  <div class="col-md-6">
+                                  <input type="text" readonly name="RM_CLASS" id="RM_CLASS" class="form-control" placeholder="room class" />
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Room Description</lable>
-                          <input type="text" name="RM_DESC" id="RM_DESC" class="form-control" placeholder="room description" />
+                          <lable class="form-lable">Room Type</lable>
+                          <input type="hidden" name="RM_DESC" id="RM_DESC" class="form-control"/>
+                          <select name="RM_TYPE"  id="RM_TYPE" data-width="100%" class="selectpicker RM_TYPE" data-live-search="true">
+                              <option value="">Select</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Pub. Rate Code</lable>
+                          <select name="RM_PUBLIC_RATE_CODE" id="RM_PUBLIC_RATE_CODE" class="select2 form-select" data-allow-clear="true">
+                            <option value="">Select</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Floor Preference</lable>
+                          <select name="RM_FLOOR_PREFERN" id="RM_FLOOR_PREFERN" class="select2 form-select" data-allow-clear="true">
+                            <option value="">Select</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Pub. Rate Amount</lable>
+                          <input type="text" name="RM_PUBLIC_RATE_AMOUNT" id="RM_PUBLIC_RATE_AMOUNT" class="form-control" placeholder="rate amount" />
+                        </div>  
+                        <div class="col-md-6">
+                          <lable class="form-lable">Smoking Preference</lable>
+                          <select name="RM_SMOKING_PREFERN" id="RM_SMOKING_PREFERN" class="select2 form-select" data-allow-clear="true">
+                            <option value="">Select</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Display Seq./Max Occupancy</lable>
+                            <div class="input-group mb-3">
+                              <input type="number" name="RM_DISP_SEQ" id="RM_DISP_SEQ" class="form-control" placeholder="display seq." />
+                              <input type="number" name="RM_MAX_OCCUPANCY" id="RM_MAX_OCCUPANCY" class="form-control" placeholder="max occupancy" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Measurement/Square Units</lable>
+                            <div class="input-group mb-3">
+                              <input type="number" name="RM_MEASUREMENT" id="RM_MEASUREMENT" class="form-control" placeholder="measurement" />
+                              <input type="number" name="RM_SQUARE_UNITS" id="RM_SQUARE_UNITS" class="form-control" placeholder="square units" />
+                            </div>
                         </div>
                         <div class="col-md-12">
-                            <div class="input-group mb-3 radioBtnClass">
-                              <div class="form-check pe-2">
-                                <input class="form-check-input flxCheckBox" type="radio" Value="SL" name="RM_FEATURE" id="RM_FEATURE">
-                                <lable class="form-check-lable"> Selected </lable>
-                              </div>
-                              <div class="form-check pe-2">
-                                <input class="form-check-input flxCheckBox" type="radio" Value="NS" name="RM_FEATURE" id="RM_FEATURE">
-                                <lable class="form-check-lable"> Non-selected </lable>
-                              </div>
-                              <div class="form-check pe-2">
-                                <input class="form-check-input flxCheckBox" Value="BT" type="radio" name="RM_FEATURE" id="RM_FEATURE">
-                                <lable class="form-check-lable"> Both </lable>
-                              </div>
+                          <lable class="form-lable">Features</lable>
+                          <select name="RM_FEATURE"  id="RM_FEATURE" data-width="100%" class="selectpicker RM_FEATURE" data-live-search="true">
+                              <option value="">Select</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Day section</lable>
+                          <select name="RM_HOUSKP_DY_SECTION"  id="RM_HOUSKP_DY_SECTION" data-width="100%" class="selectpicker RM_HOUSKP_DY_SECTION" data-live-search="true">
+                              <option value="">Select</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Evening section</lable>
+                          <select name="RM_HOUSKP_EV_SECTION"  id="RM_HOUSKP_EV_SECTION" data-width="100%" class="selectpicker RM_HOUSKP_EV_SECTION" data-live-search="true">
+                              <option value="">Select</option>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Phone No</lable>
+                          <input type="text" name="RM_PHONE_NO" id="RM_PHONE_NO" class="form-control" placeholder="phone" />
+                        </div>
+                        <div class="col-md-6">
+                          <lable class="form-lable">Stayover/Departure Credits</lable>
+                            <div class="input-group mb-3">
+                              <input type="number" name="RM_STAYOVER_CR" id="RM_STAYOVER_CR" class="form-control" placeholder="stayover" />
+                              <input type="number" name="RM_DEPARTURE_CR" id="RM_DEPARTURE_CR" class="form-control" placeholder="departure" />
                             </div>
                         </div>
                       </div>
@@ -134,6 +186,7 @@
     $(':input','#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('#popModalWindow').modal('show');
+    runInitialLevel();
   }
 
   $(document).on('click','.delete-record',function(){
@@ -168,6 +221,80 @@
     });
   });
 
+  function runInitialLevel(){
+    $.ajax({
+      url: '<?php echo base_url('/getSupportingRoomLov')?>',
+      type: "post",
+      headers: {'X-Requested-With': 'XMLHttpRequest'},
+      dataType:'json',
+      async:false,
+      success:function(respn){
+        var memData = respn[0];
+        var idArray = ['RM_PUBLIC_RATE_CODE','RM_FLOOR_PREFERN','RM_SMOKING_PREFERN'];
+        $(respn).each(function(ind,data){
+          var option = '<option value="">Select</option>';
+          $.each(data,function(i,valu){
+            var value = $.trim(valu['CODE']);//fields.trim();
+            var desc = $.trim(valu['DESCS']);//datavals.trim();
+            option += '<option value="'+value+'">'+desc+'</option>';
+          });
+          $('#'+idArray[ind]).html(option);
+        });
+      }
+    });
+  }
+
+  $(document).on('keyup','.RM_TYPE .form-control',function(){
+    var search = $(this).val();
+    $.ajax({
+        url: '<?php echo base_url('/roomTypeList')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{search:search},
+        // dataType:'json',
+        success:function(respn){
+          console.log(respn,"testing");
+          $('#RM_TYPE').html(respn).selectpicker('refresh');
+        }
+    });
+  });
+
+  $(document).on('change','#RM_TYPE',function(){
+    var value = $(this).find('option:selected').attr('data-rmclass');
+    var desc = $(this).find('option:selected').attr('data-desc');
+    $('#RM_DESC').val(desc);
+    $('#RM_CLASS').val(value);
+  });
+
+  $(document).on('keyup','.RM_FEATURE .form-control',function(){
+    var search = $(this).val();
+    $.ajax({
+        url: '<?php echo base_url('/featureList')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{search:search},
+        // dataType:'json',
+        success:function(respn){
+          console.log(respn,"testing");
+          $('#RM_FEATURE').html(respn).selectpicker('refresh');
+        }
+    });
+  });
+  $(document).on('keyup','.RM_HOUSKP_DY_SECTION,RM_HOUSKP_EV_SECTION .form-control',function(){
+    var search = $(this).val();
+    $.ajax({
+        url: '<?php echo base_url('/houseKeepSecionList')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{search:search},
+        // dataType:'json',
+        success:function(respn){
+          console.log(respn,"testing");
+          $('#RM_HOUSKP_DY_SECTION').html(respn).selectpicker('refresh');
+        }
+    });
+  });
+
   $(document).on('click','.flxCheckBox',function(){
     var checked = $(this).is(':checked');
     var parent = $(this).parent();
@@ -179,6 +306,7 @@
   });
 
   $(document).on('click','.editWindow',function(){
+    runInitialLevel();
     var sysid = $(this).attr('data_sysid');
     $('#popModalWindow').modal('show');
     var url = '<?php echo base_url('/editRoom')?>';
@@ -193,14 +321,12 @@
             $.each(data,function(fields,datavals){
               var field = $.trim(fields);//fields.trim();
               var dataval = $.trim(datavals);//datavals.trim();
-              if(field=='RM_FEATURE'){
-                if(dataval=='SL'){
-                  $('.radioBtnClass .form-check').eq(0).find('[type="radio"]').prop('checked',true);
-                }else if(dataval=='NS'){
-                  $('.radioBtnClass .form-check').eq(1).find('[type="radio"]').prop('checked',true);
-                }else{
-                  $('.radioBtnClass .form-check').eq(2).find('[type="radio"]').prop('checked',true);
-                }
+              if(field=='RM_TYPE'){
+                var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
+                $('#'+field).html(option).selectpicker('refresh');
+              }else if(field=='RM_FEATURE'){
+                var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
+                $('#'+field).html(option).selectpicker('refresh');
               }else{
                 $('#'+field).val(dataval);
               }

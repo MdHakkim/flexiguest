@@ -1,0 +1,58 @@
+ERROR - 2022-03-07 06:19:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert duplicate key row in object 'dbo.FLXY_ROOM_CLASS' with unique index 'IX_FLXY_ROOM_CLASS'. The duplicate key value is (R2        ).
+CRITICAL - 2022-03-07 06:19:29 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert duplicate key row in object 'dbo.FLXY_ROOM_CLASS' with unique index 'IX_FLXY_ROOM_CLASS'. The duplicate key value is (R2        ).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1020): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRoomClass()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-07 06:19:30 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert duplicate key row in object 'dbo.FLXY_ROOM_CLASS' with unique index 'IX_FLXY_ROOM_CLASS'. The duplicate key value is (R2        ).
+CRITICAL - 2022-03-07 06:19:31 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert duplicate key row in object 'dbo.FLXY_ROOM_CLASS' with unique index 'IX_FLXY_ROOM_CLASS'. The duplicate key value is (R2        ).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1020): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRoomClass()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-07 06:19:35 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert duplicate key row in object 'dbo.FLXY_ROOM_CLASS' with unique index 'IX_FLXY_ROOM_CLASS'. The duplicate key value is (R2        ).
+CRITICAL - 2022-03-07 06:19:35 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert duplicate key row in object 'dbo.FLXY_ROOM_CLASS' with unique index 'IX_FLXY_ROOM_CLASS'. The duplicate key value is (R2        ).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1020): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRoomClass()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-07 06:19:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert duplicate key row in object 'dbo.FLXY_ROOM_CLASS' with unique index 'IX_FLXY_ROOM_CLASS'. The duplicate key value is (R4        ).
+CRITICAL - 2022-03-07 06:19:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert duplicate key row in object 'dbo.FLXY_ROOM_CLASS' with unique index 'IX_FLXY_ROOM_CLASS'. The duplicate key value is (R4        ).
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1020): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRoomClass()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-03-07 22:56:09 --> Undefined variable: param
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1111): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 1111, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->roomClassList()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-07 23:51:59 --> Undefined index: RM_TY_ACTIVE_DT
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1124): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 1124, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRoomType()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
