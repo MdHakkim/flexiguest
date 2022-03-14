@@ -18,9 +18,9 @@
                   <table id="dataTable_view" class="table table-striped">
                     <thead>
                       <tr>
-                        <th>Feature Code</th>
-                        <th>Feature Description</th>
-                        <th>Feature</th>
+                        <th>Source Code</th>
+                        <th>Source Description</th>
+                        <th>Group</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -45,30 +45,24 @@
                   <div class="modal-body">
                     <form id="submitForm">
                       <div class="row g-3">
-                        <input type="hidden" name="RM_FT_ID" id="RM_FT_ID" class="form-control"/>
+                        <input type="hidden" name="SOR_ID" id="SOR_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <lable class="form-lable">Feature Code</lable>
-                          <input type="text" name="RM_FT_CODE" id="RM_FT_CODE" class="form-control" placeholder="feature code" />
+                          <lable class="form-lable">Source Code</lable>
+                          <input type="text" name="SOR_CODE" id="SOR_CODE" class="form-control" placeholder="section code" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Feature Description</lable>
-                          <input type="text" name="RM_FT_DESC" id="RM_FT_DESC" class="form-control" placeholder="feature description" />
+                          <lable class="form-lable">Source Description</lable>
+                          <input type="text" name="SOR_DESC" id="SOR_DESC" class="form-control" placeholder="section description" />
                         </div>
-                        <div class="col-md-12 " style="display:none;">
-                            <div class="input-group mb-3 radioBtnClass">
-                              <div class="form-check pe-2">
-                                <input class="form-check-input" type="radio" checked Value="SL" name="RM_FT_FEATURE" id="RM_FT_FEATURE">
-                                <lable class="form-check-lable"> Selected </lable>
-                              </div>
-                              <div class="form-check pe-2">
-                                <input class="form-check-input" type="radio" Value="NS" name="RM_FT_FEATURE" id="RM_FT_FEATURE">
-                                <lable class="form-check-lable"> Non-selected </lable>
-                              </div>
-                              <div class="form-check pe-2">
-                                <input class="form-check-input" Value="BT" type="radio" name="RM_FT_FEATURE" id="RM_FT_FEATURE">
-                                <lable class="form-check-lable"> Both </lable>
-                              </div>
-                            </div>
+                        <div class="col-md-12 ">
+                          <lable class="form-lable">Source Group</lable>
+                          <select name="SOR_GROUP"  id="SOR_GROUP" class="select2 form-select" data-allow-clear="true">
+                            <option value="">Select Group</option>
+                          </select>
+                        </div>
+                        <div class="col-md-12 ">
+                          <lable class="form-lable">Display Sequence</lable>
+                          <input type="number" name="SOR_DIS_SEQ" id="SOR_DIS_SEQ" class="form-control" placeholder="display sequence" />
                         </div>
                       </div>
                     </form>
@@ -95,20 +89,20 @@
         'serverSide': true,
         'serverMethod': 'post',
         'ajax': {
-            'url':'<?php echo base_url('/roomFeatureView')?>'
+            'url':'<?php echo base_url('/sourceView')?>'
         },
         'columns': [
-          { data: 'RM_FT_CODE' },
-          { data: 'RM_FT_DESC' },
-          { data: 'RM_FT_FEATURE' },
+          { data: 'SOR_CODE' },
+          { data: 'SOR_DESC' },
+          { data: 'SOR_GROUP' },
           { data: null , render : function ( data, type, row, meta ) {
             return (
               '<div class="d-inline-block">' +
                 '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                 '<ul class="dropdown-menu dropdown-menu-end">' +
-                  '<li><a href="javascript:;" data_sysid="'+data['RM_FT_ID']+'" class="dropdown-item editWindow">Edit</a></li>' +
+                  '<li><a href="javascript:;" data_sysid="'+data['SOR_ID']+'" class="dropdown-item editWindow">Edit</a></li>' +
                   '<div class="dropdown-divider"></div>' +
-                  '<li><a href="javascript:;" data_sysid="'+data['RM_FT_ID']+'" class="dropdown-item text-danger delete-record">Delete</a></li>' +
+                  '<li><a href="javascript:;" data_sysid="'+data['SOR_ID']+'" class="dropdown-item text-danger delete-record">Delete</a></li>' +
                 '</ul>' +
               '</div>'
             );
@@ -144,7 +138,7 @@
         callback: function (result) {
             if(result){
               $.ajax({
-                url: '<?php echo base_url('/deleteRoomFeature')?>',
+                url: '<?php echo base_url('/deleteSource')?>',
                 type: "post",
                 data: {sysid:sysid},
                 headers: {'X-Requested-With': 'XMLHttpRequest'},
@@ -172,7 +166,7 @@
   $(document).on('click','.editWindow',function(){
     var sysid = $(this).attr('data_sysid');
     $('#popModalWindow').modal('show');
-    var url = '<?php echo base_url('/editRoomFeature')?>';
+    var url = '<?php echo base_url('/editSource')?>';
     $.ajax({
         url: url,
         type: "post",
@@ -205,7 +199,7 @@
   function submitForm(id){
     $('#errorModal').hide();
     var formSerialization = $('#'+id).serializeArray();
-    var url = '<?php echo base_url('/insertRoomFeature')?>';
+    var url = '<?php echo base_url('/insertSource')?>';
     $.ajax({
         url: url,
         type: "post",

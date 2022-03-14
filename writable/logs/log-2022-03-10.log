@@ -1,0 +1,104 @@
+CRITICAL - 2022-03-10 04:50:27 --> Undefined index: SC_FL_ID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1495): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 1495, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertSection()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-10 04:50:35 --> Undefined index: SC_FL_ID
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1495): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 1495, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertSection()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-03-10 05:28:42 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RT_CL_CODE'.
+CRITICAL - 2022-03-10 05:28:42 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RT_CL_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select SC_FL_ID...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select SC_FL_ID...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select SC_FL_ID...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1556): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_SECTION', 'SC_FL_ID,SC_FL_...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->RateClassView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-03-10 05:45:48 --> Undefined index: RT_CL_BEGIN_DT
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1586): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 1586, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertRateClass()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-03-10 06:08:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+CRITICAL - 2022-03-10 06:08:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select SOR_ID,S...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select SOR_ID,S...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select SOR_ID,S...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1634): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_RATE_CLASS', 'SOR_ID,SOR_CODE...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->SourceView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-10 06:15:49 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+CRITICAL - 2022-03-10 06:15:49 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT SOR_ID,S...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT SOR_ID,S...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1684): CodeIgniter\Database\BaseConnection->query('SELECT SOR_ID,S...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editSource()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-10 06:15:55 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+CRITICAL - 2022-03-10 06:15:55 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT SOR_ID,S...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT SOR_ID,S...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1684): CodeIgniter\Database\BaseConnection->query('SELECT SOR_ID,S...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editSource()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-10 06:16:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+CRITICAL - 2022-03-10 06:16:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT SOR_ID,S...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT SOR_ID,S...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1684): CodeIgniter\Database\BaseConnection->query('SELECT SOR_ID,S...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editSource()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-10 06:16:56 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+CRITICAL - 2022-03-10 06:16:56 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT SOR_ID,S...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT SOR_ID,S...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1684): CodeIgniter\Database\BaseConnection->query('SELECT SOR_ID,S...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editSource()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-10 06:17:02 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+CRITICAL - 2022-03-10 06:17:02 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT SOR_ID,S...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT SOR_ID,S...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1684): CodeIgniter\Database\BaseConnection->query('SELECT SOR_ID,S...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editSource()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-10 06:29:27 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_CODE'.
+CRITICAL - 2022-03-10 06:29:27 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'SOR_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select SOR_GR_I...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select SOR_GR_I...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select SOR_GR_I...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1712): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_SOURCE_GRO...', 'SOR_GR_ID,SOR_G...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->SourceGroupView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}

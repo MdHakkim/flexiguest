@@ -18,9 +18,9 @@
                   <table id="dataTable_view" class="table table-striped">
                     <thead>
                       <tr>
-                        <th>Feature Code</th>
-                        <th>Feature Description</th>
-                        <th>Feature</th>
+                        <th>Group Code</th>
+                        <th>Description</th>
+                        <th>Sequence</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -45,30 +45,19 @@
                   <div class="modal-body">
                     <form id="submitForm">
                       <div class="row g-3">
-                        <input type="hidden" name="RM_FT_ID" id="RM_FT_ID" class="form-control"/>
+                        <input type="hidden" name="SOR_GR_ID" id="SOR_GR_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <lable class="form-lable">Feature Code</lable>
-                          <input type="text" name="RM_FT_CODE" id="RM_FT_CODE" class="form-control" placeholder="feature code" />
+                          <lable class="form-lable">Group Code</lable>
+                          <input type="text" name="SOR_GR_CODE" id="SOR_GR_CODE" class="form-control" placeholder="group code" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Feature Description</lable>
-                          <input type="text" name="RM_FT_DESC" id="RM_FT_DESC" class="form-control" placeholder="feature description" />
+                          <lable class="form-lable">Source Group Description</lable>
+                          <input type="text" name="SOR_GR_DESC" id="SOR_GR_DESC" class="form-control" placeholder="group description" />
                         </div>
-                        <div class="col-md-12 " style="display:none;">
-                            <div class="input-group mb-3 radioBtnClass">
-                              <div class="form-check pe-2">
-                                <input class="form-check-input" type="radio" checked Value="SL" name="RM_FT_FEATURE" id="RM_FT_FEATURE">
-                                <lable class="form-check-lable"> Selected </lable>
-                              </div>
-                              <div class="form-check pe-2">
-                                <input class="form-check-input" type="radio" Value="NS" name="RM_FT_FEATURE" id="RM_FT_FEATURE">
-                                <lable class="form-check-lable"> Non-selected </lable>
-                              </div>
-                              <div class="form-check pe-2">
-                                <input class="form-check-input" Value="BT" type="radio" name="RM_FT_FEATURE" id="RM_FT_FEATURE">
-                                <lable class="form-check-lable"> Both </lable>
-                              </div>
-                            </div>
+                      
+                        <div class="col-md-12 ">
+                          <lable class="form-lable">Display Sequence</lable>
+                          <input type="number" name="SOR_GR_DIS_SEQ" id="SOR_GR_DIS_SEQ" class="form-control" placeholder="group sequence" />
                         </div>
                       </div>
                     </form>
@@ -95,20 +84,20 @@
         'serverSide': true,
         'serverMethod': 'post',
         'ajax': {
-            'url':'<?php echo base_url('/roomFeatureView')?>'
+            'url':'<?php echo base_url('/sourceGroupView')?>'
         },
         'columns': [
-          { data: 'RM_FT_CODE' },
-          { data: 'RM_FT_DESC' },
-          { data: 'RM_FT_FEATURE' },
+          { data: 'SOR_GR_CODE' },
+          { data: 'SOR_GR_DESC' },
+          { data: 'SOR_GR_DIS_SEQ' },
           { data: null , render : function ( data, type, row, meta ) {
             return (
               '<div class="d-inline-block">' +
                 '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                 '<ul class="dropdown-menu dropdown-menu-end">' +
-                  '<li><a href="javascript:;" data_sysid="'+data['RM_FT_ID']+'" class="dropdown-item editWindow">Edit</a></li>' +
+                  '<li><a href="javascript:;" data_sysid="'+data['SOR_GR_ID']+'" class="dropdown-item editWindow">Edit</a></li>' +
                   '<div class="dropdown-divider"></div>' +
-                  '<li><a href="javascript:;" data_sysid="'+data['RM_FT_ID']+'" class="dropdown-item text-danger delete-record">Delete</a></li>' +
+                  '<li><a href="javascript:;" data_sysid="'+data['SOR_GR_ID']+'" class="dropdown-item text-danger delete-record">Delete</a></li>' +
                 '</ul>' +
               '</div>'
             );
@@ -144,7 +133,7 @@
         callback: function (result) {
             if(result){
               $.ajax({
-                url: '<?php echo base_url('/deleteRoomFeature')?>',
+                url: '<?php echo base_url('/deleteSourceGroup')?>',
                 type: "post",
                 data: {sysid:sysid},
                 headers: {'X-Requested-With': 'XMLHttpRequest'},
@@ -172,7 +161,7 @@
   $(document).on('click','.editWindow',function(){
     var sysid = $(this).attr('data_sysid');
     $('#popModalWindow').modal('show');
-    var url = '<?php echo base_url('/editRoomFeature')?>';
+    var url = '<?php echo base_url('/editSourceGroup')?>';
     $.ajax({
         url: url,
         type: "post",
@@ -205,7 +194,7 @@
   function submitForm(id){
     $('#errorModal').hide();
     var formSerialization = $('#'+id).serializeArray();
-    var url = '<?php echo base_url('/insertRoomFeature')?>';
+    var url = '<?php echo base_url('/insertSourceGroup')?>';
     $.ajax({
         url: url,
         type: "post",

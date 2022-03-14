@@ -22,7 +22,7 @@
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') ?>" />
-    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/flatpickr/.css')?>" />
+    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/flatpickr.css')?>" />
 
     <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/typeahead-js/typeahead.css') ?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/apex-charts/apex-charts.css') ?>" />
@@ -34,7 +34,10 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css')?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/css/dataTables.bootstrap5.min.css')?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-datepicker.min.css')?>" />
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-datetimepicker.min.css')?>" />
     <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-select.css')?>" />
+    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/select2/select2.css')?>" />
+    
     <!-- Page CSS -->
     <script src="<?php echo base_url('assets/js/jquery-3.6.0.min.js')?>"></script>
     <!-- Helpers -->

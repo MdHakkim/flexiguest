@@ -79,7 +79,7 @@
                         </div>
                         <div class="col-md-6">
                           <lable class="form-lable">Feature</lable>
-                          <select name="RM_TY_FEATURE" id="RM_TY_FEATURE" class="select2 form-select" data-allow-clear="true">
+                          <select name="RM_TY_FEATURE[]"id="RM_TY_FEATURE" class="select2 form-select" multiple>
                             <option value="">Select</option>
                           </select>
                         </div>
@@ -208,6 +208,7 @@
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('#popModalWindow').modal('show');
     runInitialLevel();
+    $('#RM_TY_FEATURE').val('').trigger('change');
   }
 
   $(document).on('click','.delete-record',function(){
@@ -282,6 +283,9 @@
                 }else{
                   $('#'+field+'_CHK').prop('checked',false)
                 }
+              }else if(field=='RM_TY_FEATURE'){
+                var feture = dataval.split(',');
+                $('#'+field).val(feture).trigger('change');
               }else{
                 $('#'+field).val(dataval);
               }

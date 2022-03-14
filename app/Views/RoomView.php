@@ -103,8 +103,11 @@
                         </div>
                         <div class="col-md-12">
                           <lable class="form-lable">Features</lable>
-                          <select name="RM_FEATURE"  id="RM_FEATURE" data-width="100%" class="selectpicker RM_FEATURE" data-live-search="true">
+                          <!-- <select name="RM_FEATURE"  id="RM_FEATURE" data-width="100%" class="selectpicker RM_FEATURE" data-live-search="true">
                               <option value="">Select</option>
+                          </select> -->
+                          <select name="RM_FEATURE[]"id="RM_FEATURE" class="select2 form-select" multiple>
+                            <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-6">
@@ -230,13 +233,13 @@
       async:false,
       success:function(respn){
         var memData = respn[0];
-        var idArray = ['RM_PUBLIC_RATE_CODE','RM_FLOOR_PREFERN','RM_SMOKING_PREFERN'];
+        var idArray = ['RM_PUBLIC_RATE_CODE','RM_FLOOR_PREFERN','RM_SMOKING_PREFERN','RM_FEATURE'];
         $(respn).each(function(ind,data){
           var option = '<option value="">Select</option>';
           $.each(data,function(i,valu){
             var value = $.trim(valu['CODE']);//fields.trim();
             var desc = $.trim(valu['DESCS']);//datavals.trim();
-            option += '<option value="'+value+'">'+desc+'</option>';
+            option += '<option value='+value+'>'+desc+'</option>';
           });
           $('#'+idArray[ind]).html(option);
         });
@@ -266,21 +269,22 @@
     $('#RM_CLASS').val(value);
   });
 
-  $(document).on('keyup','.RM_FEATURE .form-control',function(){
-    var search = $(this).val();
-    $.ajax({
-        url: '<?php echo base_url('/featureList')?>',
-        type: "post",
-        headers: {'X-Requested-With': 'XMLHttpRequest'},
-        data:{search:search},
-        // dataType:'json',
-        success:function(respn){
-          console.log(respn,"testing");
-          $('#RM_FEATURE').html(respn).selectpicker('refresh');
-        }
-    });
-  });
-  $(document).on('keyup','.RM_HOUSKP_DY_SECTION,RM_HOUSKP_EV_SECTION .form-control',function(){
+  // $(document).on('keyup','.RM_FEATURE .form-control',function(){
+  //   var search = $(this).val();
+  //   $.ajax({
+  //       url: '<?php echo base_url('/featureList')?>',
+  //       type: "post",
+  //       headers: {'X-Requested-With': 'XMLHttpRequest'},
+  //       data:{search:search},
+  //       // dataType:'json',
+  //       success:function(respn){
+  //         console.log(respn,"testing");
+  //         $('#RM_FEATURE').html(respn).selectpicker('refresh');
+  //       }
+  //   });
+  // });
+
+  $(document).on('keyup','.RM_HOUSKP_DY_SECTION,.RM_HOUSKP_EV_SECTION .form-control',function(){
     var search = $(this).val();
     $.ajax({
         url: '<?php echo base_url('/houseKeepSecionList')?>',
@@ -306,34 +310,36 @@
   });
 
   $(document).on('click','.editWindow',function(){
-    runInitialLevel();
-    var sysid = $(this).attr('data_sysid');
-    $('#popModalWindow').modal('show');
-    var url = '<?php echo base_url('/editRoom')?>';
-    $.ajax({
-        url: url,
-        type: "post",
-        headers: {'X-Requested-With': 'XMLHttpRequest'},
-        data:{sysid:sysid},
-        dataType:'json',
-        success:function(respn){
-          $(respn).each(function(inx,data){
-            $.each(data,function(fields,datavals){
-              var field = $.trim(fields);//fields.trim();
-              var dataval = $.trim(datavals);//datavals.trim();
-              if(field=='RM_TYPE'){
-                var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
-                $('#'+field).html(option).selectpicker('refresh');
-              }else if(field=='RM_FEATURE'){
-                var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
-                $('#'+field).html(option).selectpicker('refresh');
-              }else{
-                $('#'+field).val(dataval);
-              }
+    var thiss = $(this);
+    $.when(runInitialLevel()).done(function (){
+      var sysid = thiss.attr('data_sysid');
+      $('#popModalWindow').modal('show');
+      var url = '<?php echo base_url('/editRoom')?>';
+      $.ajax({
+          url: url,
+          type: "post",
+          headers: {'X-Requested-With': 'XMLHttpRequest'},
+          data:{sysid:sysid},
+          dataType:'json',
+          success:function(respn){
+            $(respn).each(function(inx,data){
+              $.each(data,function(fields,datavals){
+                var field = $.trim(fields);//fields.trim();
+                var dataval = $.trim(datavals);//datavals.trim();
+                if(field=='RM_TYPE'){
+                  var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
+                  $('#'+field).html(option).selectpicker('refresh');
+                }else if(field=='RM_FEATURE'){
+                  var feture = dataval.split(',');
+                  $('#'+field).val(feture).trigger('change');
+                }else{
+                  $('#'+field).val(dataval).trigger('change');
+                }
+              });
             });
-          });
-          $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
-        }
+            $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
+          }
+      });
     });
   });
 

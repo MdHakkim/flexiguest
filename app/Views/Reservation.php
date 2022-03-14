@@ -23,7 +23,7 @@
                         <th>Night</th>
                         <th>Departure Date</th>
                         <th>No of Room</th>
-                        <th>Feature</th>
+                        <!-- <th>Feature</th> -->
                         <th>Purpose</th>
                         <th>Action</th>
                       </tr>
@@ -52,15 +52,17 @@
                         <div class="row g-3">
                           <div class="col-md-3">
                             <input type="hidden" name="RESV_ID" id="RESV_ID" class="form-control"/>
+                            <input type="hidden" name="RESV_STATUS" id="RESV_STATUS" class="form-control"/>
+                            
                             <lable class="form-lable">Arrival/Departure Date</lable>
                               <div class="input-group mb-3">
-                                <input type="text" id="RESV_ARRIVAL_DT" class="form-control RESV_ARRIVAL_DT" placeholder="DD/MM/YYYY">
+                                <input type="text" id="RESV_ARRIVAL_DT" class="form-control RESV_ARRIVAL_DT" placeholder="DD-MM-YYYY">
                                 <span class="input-group-append">
                                   <span class="input-group-text bg-light d-block">
                                     <i class="fa fa-calendar"></i>
                                   </span>
                                 </span>
-                                <input type="text" id="RESV_DEPARTURE" class="form-control RESV_DEPARTURE" placeholder="YYYY-MM-DD">
+                                <input type="text" id="RESV_DEPARTURE" class="form-control RESV_DEPARTURE" placeholder="DD-MM-YYYY">
                                 <span class="input-group-append">
                                   <span class="input-group-text bg-light d-block">
                                     <i class="fa fa-calendar"></i>
@@ -137,17 +139,17 @@
                           <div class="col-md-3 flxi_ds_flx">
                             <div class="form-check mt-3 me-1">
                               <input class="form-check-input flxCheckBox" type="checkbox"  id="RESV_CLOSED_CHK">
-                              <input type="hidden" name="RESV_CLOSED" id="RESV_CLOSED" value="N" class="form-control" />
+                              <!-- <input type="hidden" name="RESV_CLOSED" id="RESV_CLOSED" value="N" class="form-control" /> -->
                               <lable class="form-check-lable" for="defaultCheck1"> Closed </lable>
                             </div>
                             <div class="form-check mt-3 me-1">
                               <input class="form-check-input flxCheckBox" type="checkbox" value="N" id="RESV_DAY_USE_CHK">
-                              <input type="hidden" name="RESV_DAY_USE" id="RESV_DAY_USE" value="N" class="form-control" />
+                              <!-- <input type="hidden" name="RESV_DAY_USE" id="RESV_DAY_USE" value="N" class="form-control" /> -->
                               <lable class="form-check-lable" for="defaultCheck1"> Day Use </lable>
                             </div>
                             <div class="form-check mt-3">
                               <input class="form-check-input flxCheckBox" type="checkbox" value="N" id="RESV_PSEUDO_CHK">
-                              <input type="hidden" name="RESV_PSEUDO" id="RESV_PSEUDO" value="N" class="form-control" />
+                              <!-- <input type="hidden" name="RESV_PSEUDO" id="RESV_PSEUDO" value="N" class="form-control" /> -->
                               <lable class="form-check-lable" for="defaultCheck1"> Pseudo </lable>
                             </div>
                           </div>
@@ -245,6 +247,10 @@
                             </select>
                           </div>
                           <div class="col-md-3">
+                            <lable class="form-lable">Member No</lable>
+                            <input type="text" name="RESV_MEMBER_NO" id="RESV_MEMBER_NO" class="form-control" placeholder="member no" />
+                          </div>
+                          <div class="col-md-3">
                             <lable class="form-lable">Company</lable>
                             <div class="input-group mb-3">
                               <select name="RESV_COMPANY"  id="RESV_COMPANY" class="selectpicker RESV_COMPANY" data-live-search="true">
@@ -268,22 +274,19 @@
                                   <option value="">Select</option>
                                 </select>
                           </div>
-                          <div class="col-md-3">
-                            <lable class="form-lable">Member No</lable>
-                            <input type="text" name="RESV_MEMBER_NO" id="RESV_MEMBER_NO" class="form-control" placeholder="member no" />
-                          </div>
+                          
                           <div class="col-md-6"></div>
                           <div class="col-md-3">
                             <input type="hidden" name="RESV_ID" id="RESV_ID" class="form-control"/>
                             <lable class="form-lable">Arrival/Departure Date</lable>
                               <div class="input-group mb-3">
-                                <input type="text" id="RESV_ARRIVAL_DT" name="RESV_ARRIVAL_DT" class="form-control RESV_ARRIVAL_DT" placeholder="DD/MM/YYYY">
+                                <input type="text" id="RESV_ARRIVAL_DT" name="RESV_ARRIVAL_DT" class="form-control RESV_ARRIVAL_DT" placeholder="DD-MM-YYYY">
                                 <span class="input-group-append">
                                   <span class="input-group-text bg-light d-block">
                                     <i class="fa fa-calendar"></i>
                                   </span>
                                 </span>
-                                <input type="text" id="RESV_DEPARTURE" name="RESV_DEPARTURE" class="form-control RESV_DEPARTURE" placeholder="YYYY-MM-DD" >
+                                <input type="text" id="RESV_DEPARTURE" name="RESV_DEPARTURE" class="form-control RESV_DEPARTURE" placeholder="DD-MM-YYYY" >
                                 <span class="input-group-append">
                                   <span class="input-group-text bg-light d-block">
                                     <i class="fa fa-calendar"></i>
@@ -339,13 +342,13 @@
                           <div class="col-md-3">
                             <lable class="form-lable">ETA - C/O Time</lable>
                             <div class="flxi_flex">
-                              <input type="text" name="RESV_ETA" id="RESV_ETA" class="form-control" placeholder="rta" />
-                              <input type="text" name="RESV_CO_TIME" id="RESV_CO_TIME" class="form-control" placeholder="co time" />
+                              <input type="time" name="RESV_ETA" id="RESV_ETA" class="form-control" placeholder="estime Time" />
+                              <input type="time" name="RESV_CO_TIME" id="RESV_CO_TIME" class="form-control" placeholder="co time" />
                             </div>
                           </div>
                           
                           <div class="col-md-3">
-                            <lable class="form-lable">RCT</lable>
+                            <lable class="form-lable">RTC</lable>
                             <select name="RESV_RTC"  id="RESV_RTC" data-width="100%" class="selectpicker RESV_RTC" data-live-search="true">
                                 <option value="">Select</option>
                             </select>
@@ -388,9 +391,7 @@
                           </div>
                           <div class="col-md-3">
                             <lable class="form-lable">Comments</lable>
-                            <select name="RESV_COMMENTS" id="RESV_COMMENTS" class="select2 form-select" data-allow-clear="true">
-                              <option value="">Select</option>
-                            </select>
+                            <textarea class="form-control" name="RESV_COMMENTS" id="RESV_COMMENTS" rows="1"></textarea>
                           </div>
                           <div class="col-md-3">
                             <lable class="form-lable">Item Inventory</lable>
@@ -424,7 +425,7 @@
                       </div>
                     </form>
                   </div>
-                  <div class="modal-footer flxy_space">
+                  <div class="modal-footer flxyFooter flxy_space">
                     <button type="button" id="previousbtn" onClick="previous()" class="btn btn-primary"><i class="fa-solid fa-angle-left"></i> Previous</button>
                     <button type="button" id="submitResrBtn" onClick="submitForm('reservationForm','R')" class="btn btn-primary submitResr">Save</button>
                     <button type="button" id="nextbtn" onClick="next()" class="btn btn-primary"> Next <i class="fa-solid fa-angle-right"></i></button>
@@ -617,7 +618,7 @@
           { data: 'RESV_NIGHT' },
           { data: 'RESV_DEPARTURE'},
           { data: 'RESV_NO_F_ROOM'},
-          { data: 'RESV_FEATURE'},
+          // { data: 'RESV_FEATURE'},
           { data: 'RESV_PURPOSE_STAY'},
           { data: null , render : function ( data, type, row, meta ) {
             return (
@@ -648,6 +649,9 @@
         format: 'd-M-yyyy',
         autoclose: true
     });
+    // $('#RESV_ETA').datetimepicker({
+    //   format: 'hh:mm:ss a'
+    // });    
 
   });
 
@@ -678,6 +682,11 @@
   
   $(document).on('click','.editReserWindow',function(){
     runSupportingResevationLov();
+    runInitializeConfig();
+    $('.window-1,#nextbtn,#previousbtn').hide();
+    $('.window-2').show();
+    $('.flxyFooter').removeClass('flxy_space');
+    $('#submitResrBtn').removeClass('submitResr');
     var sysid = $(this).attr('data_sysid');
     $('#reservationW').modal('show');
     $.ajax({
@@ -693,17 +702,17 @@
               var field = $.trim(fields);//fields.trim();
               var dataval = $.trim(datavals);//datavals.trim();
               if(field=='RESV_NAME_DESC' || field=='RESV_COMPANY_DESC' || field=='RESV_AGENT_DESC' || field=='RESV_BLOCK_DESC'){ return true; };
-              if(field=='RESV_NAME' || field=='RESV_COMPANY' || field=='RESV_AGENT' || field=='RESV_BLOCK'){
+              if(field=='RESV_NAME' || field=='RESV_COMPANY' || field=='RESV_AGENT' || field=='RESV_BLOCK' || field=='CUST_COUNTRY' || field=='RESV_RM_TYPE' || field=='RESV_ROOM' || field=='RESV_RTC'){
                 var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
-                $('#'+field).html(option).selectpicker('refresh');
-              }else if(field=='RESV_CLOSED' || field=='RESV_DAY_USE' || field=='RESV_PSEUDO'){
+                $('*#'+field).html(option).selectpicker('refresh');
+              }else if(field=='RESV_CONFIRM_YN'){
                 if(dataval=='Y'){
                   $('#'+field+'_CHK').prop('checked',true);
                 }else{
                   $('#'+field+'_CHK').prop('checked',false)
                 }
               }else{
-                $('#'+field).val(dataval);
+                $('*#'+field).val(dataval).trigger('change');
               }
             });
           });
@@ -755,6 +764,11 @@
     $('#RESV_NAME,#RESV_COMPANY,#RESV_AGENT,#RESV_BLOCK').html('<option value="">Select</option>').selectpicker('refresh');
     $('#reservationW').modal('show');
     runSupportingResevationLov();
+    $('.window-1,#nextbtn,#previousbtn').show();
+    $('.flxyFooter').addClass('flxy_space');
+    $('#submitResrBtn').addClass('submitResr');
+    $('#submitResrBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
+    $('.window-2').hide();
   }
 
   $(document).on('click','.flxCheckBox',function(){
@@ -765,6 +779,31 @@
     }else{
       parent.find('input[type=hidden]').val('N');
     }
+  });
+
+  $(document).on('change','*#RESV_NAME',function(){
+    var custId = $(this).find('option:selected').val();
+    var url = '<?php echo base_url('/getCustomerDetail')?>';
+    $.ajax({
+        url: url,
+        type: "post",
+        data: {custId:custId},
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        dataType:'json',
+        success:function(respn){
+          if(respn!=''){
+            var json = respn[0];
+            console.log(json.CUST_COUNTRY,json.CUST_VIP,"GJLKES");
+            $('#CUST_FIRST_NAME').val($.trim(json.CUST_FIRST_NAME))
+            $('#CUST_TITLE').val($.trim(json.CUST_TITLE));
+            $('#CUST_COUNTRY').val($.trim(json.CUST_COUNTRY)).selectpicker('refresh');
+            $('#CUST_VIP').val($.trim(json.CUST_VIP));
+            $('#CUST_PHONE').val($.trim(json.CUST_PHONE));
+          }else{
+            $('#CUST_FIRST_NAME,#CUST_TITLE,#CUST_COUNTRY,#CUST_VIP,#CUST_PHONE').val('');
+          }
+        }
+      });
   });
 
   function submitForm(id,mode){
@@ -837,18 +876,18 @@
           var option = '<option value="">Select Vip</option>';
           var option2 = '<option value="">Select Segment</option>';
           $(vipData).each(function(ind,data){
-            option += '<option value="'+data['VIP_ID']+'">'+data['VIP_DESC']+'</option>';
+            option+= '<option value="'+data['VIP_ID']+'">'+data['VIP_DESC']+'</option>';
           });
           $(busegmt).each(function(ind,data){
-            option2 += '<option value="'+data['BUS_SEG_CODE']+'">'+data['BUS_SEG_DESC']+'</option>';
+            option2+= '<option value="'+data['BUS_SEG_CODE']+'">'+data['BUS_SEG_DESC']+'</option>';
           });
-          $('#CUST_VIP').html(option);
-          $('#CUST_BUS_SEGMENT').html(option);
+          $('*#CUST_VIP').html(option);
+          $('#CUST_BUS_SEGMENT').html(option2);
         }
     });
   }
 
-  $(document).on('keyup','.RESV_RM_TYPE .form-control',function(){
+  $(document).on('keyup','.RESV_RM_TYPE,.RESV_RTC .form-control',function(){
     var search = $(this).val();
     $.ajax({
         url: '<?php echo base_url('/roomTypeList')?>',
@@ -858,7 +897,7 @@
         // dataType:'json',
         success:function(respn){
           console.log(respn,"testing");
-          $('#RESV_RM_TYPE').html(respn).selectpicker('refresh');
+          $('#RESV_RM_TYPE,#RESV_RTC').html(respn).selectpicker('refresh');
         }
     });
   });
@@ -924,6 +963,22 @@
     });
   });
 
+  $(document).on('keyup','.RESV_ROOM .form-control',function(){
+    var search = $(this).val();
+    $.ajax({
+        url: '<?php echo base_url('/roomList')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{search:search},
+        // dataType:'json',
+        success:function(respn){
+          console.log(respn,"testing");
+          $('*#RESV_ROOM').html(respn).selectpicker('refresh');
+        }
+    });
+  });
+
+
   $(document).on('change','#CUST_COUNTRY',function(){
     var ccode = $(this).val();
     $.ajax({
@@ -961,7 +1016,7 @@
       async:false,
       success:function(respn){
         var memData = respn[0];
-        var idArray = ['RESV_MEMBER_TY','RESV_RATE_CLASS','RESV_RATE_CODE','RESV_ROOM_CLASS','RESV_FEATURE','RESV_PURPOSE_STAY'];
+        var idArray = ['RESV_MEMBER_TY','RESV_RATE_CLASS','RESV_RATE_CODE','RESV_ROOM_CLASS','RESV_FEATURE','RESV_PURPOSE_STAY','CUST_VIP'];
         $(respn).each(function(ind,data){
           var option = '<option value="">Select</option>';
           $.each(data,function(i,valu){
@@ -997,7 +1052,7 @@
           $.each(data,function(i,valu){
             var value = $.trim(valu['CODE']);//fields.trim();
             var desc = $.trim(valu['DESCS']);//datavals.trim();
-            option += '<option value="'+value+'">'+desc+'</option>';
+            option += '<option value='+value+'>'+desc+'</option>';
           });
           $('#'+idArray[ind]).html(option);
         });

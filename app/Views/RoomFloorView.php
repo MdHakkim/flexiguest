@@ -54,7 +54,7 @@
                           <lable class="form-lable">Floor Description</lable>
                           <input type="text" name="RM_FL_DESC" id="RM_FL_DESC" class="form-control" placeholder="floor description" />
                         </div>
-                        <div class="col-md-12">
+                        <!-- <div class="col-md-12">
                             <div class="input-group mb-3 radioBtnClass">
                               <div class="form-check pe-2">
                                 <input class="form-check-input" type="radio" checked Value="SL" name="RM_FL_FEATURE" id="RM_FL_FEATURE">
@@ -69,7 +69,7 @@
                                 <lable class="form-check-lable"> Both </lable>
                               </div>
                             </div>
-                        </div>
+                        </div> -->
                       </div>
                     </form>
                   </div>

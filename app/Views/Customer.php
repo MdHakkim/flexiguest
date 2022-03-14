@@ -306,7 +306,7 @@
             option2 += '<option value="'+data['BUS_SEG_CODE']+'">'+data['BUS_SEG_DESC']+'</option>';
           });
           $('#CUST_VIP').html(option);
-          $('#CUST_BUS_SEGMENT').html(option);
+          $('#CUST_BUS_SEGMENT').html(option2);
         }
     });
   }

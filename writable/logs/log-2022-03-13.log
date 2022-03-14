@@ -1,0 +1,122 @@
+CRITICAL - 2022-03-13 00:35:32 --> Undefined index: sysid
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1044): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 1044, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editRoom()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-13 00:36:07 --> Undefined index: sysid
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1044): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 1044, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editRoom()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-13 00:37:16 --> Undefined index: sysid
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(1044): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 1044, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editRoom()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-13 03:26:26 --> Undefined index: RESV_STATUS
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(168): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 168, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-13 03:29:18 --> Undefined index: RESV_FIXED_RATE
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(175): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 175, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-13 04:02:56 --> Call to undefined function App\Controllers\removeNullJson()
+#0 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editReservation()
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-03-13 04:07:48 --> Call to undefined function App\Controllers\array_filter_recursive()
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(73): App\Controllers\ApplicatioController->removeNullJson(Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-03-13 04:51:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RESV_RM_TYPE_DESC'.
+CRITICAL - 2022-03-13 04:51:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RESV_RM_TYPE_DESC'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT RESV_ID,...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT RESV_ID,...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(76): CodeIgniter\Database\BaseConnection->query('SELECT RESV_ID,...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editReservation()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-13 04:51:50 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RESV_RM_TYPE_DESC'.
+CRITICAL - 2022-03-13 04:51:50 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RESV_RM_TYPE_DESC'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT RESV_ID,...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT RESV_ID,...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(76): CodeIgniter\Database\BaseConnection->query('SELECT RESV_ID,...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editReservation()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-03-13 04:53:26 --> Undefined index: RESV_STATUS
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(130): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 130, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-13 04:54:44 --> Undefined index: RESV_FIXED_RATE
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(137): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 137, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-13 06:22:15 --> Undefined index: RESV_RM_TYPE
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(181): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 181, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-03-13 06:22:38 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'RES' to data type int.
+CRITICAL - 2022-03-13 06:22:38 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'RES' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(204): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-13 06:23:07 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'RES' to data type int.
+CRITICAL - 2022-03-13 06:23:07 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'RES' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(204): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-13 06:23:49 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'RES' to data type int.
+CRITICAL - 2022-03-13 06:23:49 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Conversion failed when converting the varchar value 'RES' to data type int.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(204): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}

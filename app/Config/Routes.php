@@ -57,6 +57,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/editReservation', 'ApplicatioController::editReservation');
     $routes->match(['post'],'/deleteReservation', 'ApplicatioController::deleteReservation');
     $routes->match(['post'],'/getInitializeListReserv', 'ApplicatioController::getInitializeListReserv');
+    $routes->match(['post'],'/roomList', 'ApplicatioController::roomList');
 
     $routes->get('/customer', 'ApplicatioController::Customer');
     $routes->match(['post'],'/customerView', 'ApplicatioController::customerView');
@@ -66,6 +67,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/customerList', 'ApplicatioController::customerList');
     $routes->match(['post'],'/getSupportingReservationLov', 'ApplicatioController::getSupportingReservationLov');
     $routes->match(['post'],'/insertCompAgent', 'ApplicatioController::insertCompAgent');
+    $routes->match(['post'],'/getCustomerDetail', 'ApplicatioController::getCustomerDetail');
 
     $routes->get('/company', 'ApplicatioController::company');
     $routes->match(['post'],'/companyView', 'ApplicatioController::companyView');
@@ -133,6 +135,30 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertRoomFeature', 'ApplicatioController::insertRoomFeature');
     $routes->match(['post'],'/editRoomFeature', 'ApplicatioController::editRoomFeature');
     $routes->match(['post'],'/deleteRoomFeature', 'ApplicatioController::deleteRoomFeature');
+
+    $routes->get('/section', 'ApplicatioController::section');
+    $routes->match(['post'],'/sectionView', 'ApplicatioController::SectionView');
+    $routes->match(['post'],'/insertSection', 'ApplicatioController::insertSection');
+    $routes->match(['post'],'/editSection', 'ApplicatioController::editSection');
+    $routes->match(['post'],'/deleteSection', 'ApplicatioController::deleteSection');
+
+    $routes->get('/rateClass', 'ApplicatioController::rateClass');
+    $routes->match(['post'],'/rateClassView', 'ApplicatioController::RateClassView');
+    $routes->match(['post'],'/insertRateClass', 'ApplicatioController::insertRateClass');
+    $routes->match(['post'],'/editRateClass', 'ApplicatioController::editRateClass');
+    $routes->match(['post'],'/deleteRateClass', 'ApplicatioController::deleteRateClass');
+
+    $routes->get('/source', 'ApplicatioController::source');
+    $routes->match(['post'],'/sourceView', 'ApplicatioController::SourceView');
+    $routes->match(['post'],'/insertSource', 'ApplicatioController::insertSource');
+    $routes->match(['post'],'/editSource', 'ApplicatioController::editSource');
+    $routes->match(['post'],'/deleteSource', 'ApplicatioController::deleteSource');
+
+    $routes->get('/sourceGroup', 'ApplicatioController::sourceGroup');
+    $routes->match(['post'],'/sourceGroupView', 'ApplicatioController::SourceGroupView');
+    $routes->match(['post'],'/insertSourceGroup', 'ApplicatioController::insertSourceGroup');
+    $routes->match(['post'],'/editSourceGroup', 'ApplicatioController::editSourceGroup');
+    $routes->match(['post'],'/deleteSourceGroup', 'ApplicatioController::deleteSourceGroup');
 
 });
 /*

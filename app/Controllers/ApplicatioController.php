@@ -64,13 +64,25 @@ class ApplicatioController extends BaseController
     function editReservation(){
         $param = ['SYSID'=> $_POST['sysid']];
         $sql = "SELECT RESV_ID,RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,RESV_DEPARTURE,RESV_NO_F_ROOM,
-        RESV_NAME,(SELECT CUST_FIRST_NAME+' '+CUST_LAST_NAME FROM FLXY_CUSTOMER WHERE CUST_ID=RESV_NAME)RESV_NAME_DESC,RESV_MEMBER_TY,
+        RESV_NAME,(CUST_FIRST_NAME+' '+CUST_LAST_NAME)RESV_NAME_DESC,RESV_MEMBER_TY,
         RESV_COMPANY,(SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY)RESV_COMPANY_DESC,
         RESV_AGENT,(SELECT AGN_ACCOUNT FROM FLXY_AGENT_PROFILE WHERE AGN_ID=RESV_AGENT)RESV_AGENT_DESC,
         RESV_BLOCK,(SELECT BLK_NAME+' - '+BLK_CODE+' - '+BLK_START_DT+' - '+BLK_END_DT AS BLOCKDESC FROM FLXY_BLOCK WHERE BLK_ID=RESV_BLOCK)RESV_BLOCK_DESC,RESV_MEMBER_NO,RESV_CORP_NO,RESV_IATA_NO,RESV_CLOSED,RESV_DAY_USE,
-        RESV_PSEUDO,RESV_RATE_CLASS,RESV_RATE_CATEGORY,RESV_RATE_CODE,RESV_ROOM_CLASS,RESV_FEATURE,RESV_PACKAGES,RESV_PURPOSE_STAY,RESV_STATUS FROM FLXY_RESERVATION WHERE RESV_ID=:SYSID:";
+        RESV_PSEUDO,RESV_RATE_CLASS,RESV_RATE_CATEGORY,RESV_RATE_CODE,RESV_ROOM_CLASS,RESV_FEATURE,RESV_PACKAGES,RESV_PURPOSE_STAY,RESV_STATUS,RESV_RM_TYPE,
+        (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RESV_RM_TYPE_DESC,
+        (SELECT RM_DESC FROM FLXY_ROOM WHERE RM_NO=RESV_ROOM)RESV_ROOM_DESC,(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RTC) RESV_RTC_DESC,
+        RESV_ROOM,RESV_RATE,RESV_ETA,RESV_CO_TIME,RESV_RTC,RESV_FIXED_RATE,RESV_RESRV_TYPE,RESV_MARKET,RESV_SOURCE,RESV_ORIGIN,RESV_PAYMENT_TYPE,RESV_SPECIALS,RESV_COMMENTS,RESV_ITEM_INVT,RESV_BOKR_LAST,RESV_BOKR_FIRST,RESV_BOKR_EMAIL,RESV_BOKR_PHONE,RESV_CONFIRM_YN,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
+        (SELECT CNAME FROM COUNTRY WHERE ISO2=CUST_COUNTRY)CUST_COUNTRY_DESC,CUST_VIP,CUST_PHONE FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:SYSID: AND CUST_ID=RESV_NAME";
         $response = $this->Db->query($sql,$param)->getResultArray();
+        $response = $this->removeNullJson($response);
         echo json_encode($response);
+    }
+
+    public function removeNullJson($value){
+        array_walk_recursive($value, function (&$item, $key) {
+            $item = null === $item ? '' : $item;
+        });
+        return $value;
     }
 
     function insertReservation(){
@@ -105,9 +117,9 @@ class ApplicatioController extends BaseController
                 "RESV_MEMBER_NO" => $_POST["RESV_MEMBER_NO"],
                 "RESV_CORP_NO" => $_POST["RESV_CORP_NO"],
                 "RESV_IATA_NO" => $_POST["RESV_IATA_NO"],
-                "RESV_CLOSED" => $_POST["RESV_CLOSED"],
-                "RESV_DAY_USE" => $_POST["RESV_DAY_USE"],
-                "RESV_PSEUDO" => $_POST["RESV_PSEUDO"],
+                // "RESV_CLOSED" => $_POST["RESV_CLOSED"],
+                // "RESV_DAY_USE" => $_POST["RESV_DAY_USE"],
+                // "RESV_PSEUDO" => $_POST["RESV_PSEUDO"],
                 "RESV_RATE_CLASS" => $_POST["RESV_RATE_CLASS"],
                 "RESV_RATE_CATEGORY" => $_POST["RESV_RATE_CATEGORY"],
                 "RESV_RATE_CODE" => $_POST["RESV_RATE_CODE"],
@@ -115,7 +127,28 @@ class ApplicatioController extends BaseController
                 "RESV_FEATURE" => $_POST["RESV_FEATURE"],
                 "RESV_PACKAGES" => $_POST["RESV_PACKAGES"],
                 "RESV_PURPOSE_STAY" => $_POST["RESV_PURPOSE_STAY"],
-                "RESV_UPDATE_UID" => null,
+                "RESV_STATUS" => $_POST["RESV_STATUS"],
+                "RESV_RM_TYPE" => $_POST["RESV_RM_TYPE"],
+                "RESV_ROOM" => $_POST["RESV_ROOM"],
+                "RESV_RATE" => $_POST["RESV_RATE"],
+                "RESV_ETA" => $_POST["RESV_ETA"],
+                "RESV_CO_TIME" => $_POST["RESV_CO_TIME"],
+                "RESV_RTC" => $_POST["RESV_RTC"],
+                "RESV_FIXED_RATE" => (empty($_POST["RESV_FIXED_RATE"]) ? '' : $_POST["RESV_FIXED_RATE"]),
+                "RESV_RESRV_TYPE" => $_POST["RESV_RESRV_TYPE"],
+                "RESV_MARKET" => $_POST["RESV_MARKET"],
+                "RESV_SOURCE" => $_POST["RESV_SOURCE"],
+                "RESV_ORIGIN" => $_POST["RESV_ORIGIN"],
+                "RESV_PAYMENT_TYPE" => $_POST["RESV_PAYMENT_TYPE"],
+                "RESV_SPECIALS" => $_POST["RESV_SPECIALS"],
+                "RESV_COMMENTS" => $_POST["RESV_COMMENTS"],
+                "RESV_ITEM_INVT" => $_POST["RESV_ITEM_INVT"],
+                "RESV_BOKR_LAST" => $_POST["RESV_BOKR_LAST"],
+                "RESV_BOKR_FIRST" => $_POST["RESV_BOKR_FIRST"],
+                "RESV_BOKR_EMAIL" => $_POST["RESV_BOKR_EMAIL"],
+                "RESV_BOKR_PHONE" => $_POST["RESV_BOKR_PHONE"],
+                "RESV_CONFIRM_YN" => $_POST["RESV_CONFIRM_YN"],
+                "RESV_UPDATE_UID" => $this->session->name,
                 "RESV_UPDATE_DT" => date("d-M-Y")
                 ];
                 $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data); 
@@ -134,9 +167,9 @@ class ApplicatioController extends BaseController
                     "RESV_MEMBER_NO" => $_POST["RESV_MEMBER_NO"],
                     "RESV_CORP_NO" => $_POST["RESV_CORP_NO"],
                     "RESV_IATA_NO" => $_POST["RESV_IATA_NO"],
-                    "RESV_CLOSED" => $_POST["RESV_CLOSED"],
-                    "RESV_DAY_USE" => $_POST["RESV_DAY_USE"],
-                    "RESV_PSEUDO" => $_POST["RESV_PSEUDO"],
+                    // "RESV_CLOSED" => $_POST["RESV_CLOSED"],
+                    // "RESV_DAY_USE" => $_POST["RESV_DAY_USE"],
+                    // "RESV_PSEUDO" => $_POST["RESV_PSEUDO"],
                     "RESV_RATE_CLASS" => $_POST["RESV_RATE_CLASS"],
                     "RESV_RATE_CATEGORY" => $_POST["RESV_RATE_CATEGORY"],
                     "RESV_RATE_CODE" => $_POST["RESV_RATE_CODE"],
@@ -144,7 +177,28 @@ class ApplicatioController extends BaseController
                     "RESV_FEATURE" => $_POST["RESV_FEATURE"],
                     "RESV_PACKAGES" => $_POST["RESV_PACKAGES"],
                     "RESV_PURPOSE_STAY" => $_POST["RESV_PURPOSE_STAY"],
-                    "RESV_CREATE_UID" => null,
+                    "RESV_STATUS" => "PRE-CHECKIN",
+                    "RESV_RM_TYPE" => $_POST["RESV_RM_TYPE"],
+                    "RESV_ROOM" => $_POST["RESV_ROOM"],
+                    "RESV_RATE" => $_POST["RESV_RATE"],
+                    "RESV_ETA" => $_POST["RESV_ETA"],
+                    "RESV_CO_TIME" => $_POST["RESV_CO_TIME"],
+                    "RESV_RTC" => $_POST["RESV_RTC"],
+                    "RESV_FIXED_RATE" => (empty($_POST["RESV_FIXED_RATE"]) ? '' : $_POST["RESV_FIXED_RATE"]),
+                    "RESV_RESRV_TYPE" => $_POST["RESV_RESRV_TYPE"],
+                    "RESV_MARKET" => $_POST["RESV_MARKET"],
+                    "RESV_SOURCE" => $_POST["RESV_SOURCE"],
+                    "RESV_ORIGIN" => $_POST["RESV_ORIGIN"],
+                    "RESV_PAYMENT_TYPE" => $_POST["RESV_PAYMENT_TYPE"],
+                    "RESV_SPECIALS" => $_POST["RESV_SPECIALS"],
+                    "RESV_COMMENTS" => $_POST["RESV_COMMENTS"],
+                    "RESV_ITEM_INVT" => $_POST["RESV_ITEM_INVT"],
+                    "RESV_BOKR_LAST" => $_POST["RESV_BOKR_LAST"],
+                    "RESV_BOKR_FIRST" => $_POST["RESV_BOKR_FIRST"],
+                    "RESV_BOKR_EMAIL" => $_POST["RESV_BOKR_EMAIL"],
+                    "RESV_BOKR_PHONE" => $_POST["RESV_BOKR_PHONE"],
+                    "RESV_CONFIRM_YN" => $_POST["RESV_CONFIRM_YN"],
+                    "RESV_CREATE_UID" => $this->session->name,
                     "RESV_CREATE_DT" => date("d-M-Y")
                 ];
                 $return = $this->Db->table('FLXY_RESERVATION')->insert($data); 
@@ -160,6 +214,10 @@ class ApplicatioController extends BaseController
         }catch (Exception $e){
             return $this->respond($e->errors());
         }
+    }
+
+    public function updateCustomerShortData(){
+        
     }
 
     function test(){
@@ -340,6 +398,13 @@ class ApplicatioController extends BaseController
         echo json_encode($data);
     }
 
+    function getCustomerDetail(){
+        $param = ['SYSID'=> $_POST['custId']];
+        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,CUST_VIP,CUST_PHONE FROM FLXY_CUSTOMER WHERE CUST_ID=:SYSID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+
     function customerList(){
         try{
             $search = $_POST['search'];
@@ -368,7 +433,9 @@ class ApplicatioController extends BaseController
         $respon5 = $this->Db->query($sql)->getResultArray();
         $sql = 'SELECT PUR_ST_ID CODE,PUR_ST_DESC DESCS FROM FLXY_PURPOSE_STAY';
         $respon6 = $this->Db->query($sql)->getResultArray();
-        $data = [$respon1,$respon2,$respon3,$respon4,$respon5,$respon6];
+        $sql = 'SELECT VIP_ID CODE,VIP_DESC DESCS FROM FLXY_VIP';
+        $respon7 = $this->Db->query($sql)->getResultArray();
+        $data = [$respon1,$respon2,$respon3,$respon4,$respon5,$respon6,$respon7];
         echo json_encode($data);
     }
 
@@ -407,7 +474,7 @@ class ApplicatioController extends BaseController
                     "COM_ACTIVE" => $_POST["COM_ACTIVE"],
                     "COM_COMMUNI_CODE" => $_POST["COM_COMMUNI_CODE"],
                     "COM_COMMUNI_DESC" => $_POST["COM_COMMUNI_DESC"],
-                    "COM_UPDATE_UID" => null,
+                    "COM_UPDATE_UID" => $this->session->name,
                     "COM_UPDATE_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_COMPANY_PROFILE')->where('COM_ID', $sysid)->update($data); 
@@ -488,7 +555,7 @@ class ApplicatioController extends BaseController
                     "AGN_ACTIVE" => $_POST["COM_ACTIVE"],
                     "AGN_COMMUNI_CODE" => $_POST["COM_COMMUNI_CODE"],
                     "AGN_COMMUNI_DESC" => $_POST["COM_COMMUNI_DESC"],
-                    "AGN_UPDATE_UID" => null,
+                    "AGN_UPDATE_UID" => $this->session->name,
                     "AGN_UPDATE_DT" => date("d-M-Y")
                  ];
                 //  print_r($_POST);exit;
@@ -671,7 +738,7 @@ class ApplicatioController extends BaseController
                     "GRP_COMMUNI_DESC" => $_POST["GRP_COMMUNI_DESC"],
                     "GRP_NOTES" => $_POST["GRP_NOTES"],
                     "GRP_ACTIVE" => $_POST["GRP_ACTIVE"],
-                    "GRP_UPDATE_UID" => null,
+                    "GRP_UPDATE_UID" => $this->session->name,
                     "GRP_UPDATE_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_GROUP')->where('GRP_ID', $sysid)->update($data); 
@@ -693,7 +760,7 @@ class ApplicatioController extends BaseController
                     "GRP_COMMUNI_DESC" => $_POST["GRP_COMMUNI_DESC"],
                     "GRP_NOTES" => $_POST["GRP_NOTES"],
                     "GRP_ACTIVE" => $_POST["GRP_ACTIVE"],
-                    "GRP_CREATE_UID" => null,
+                    "GRP_CREATE_UID" => $this->session->name,
                     "GRP_CREATE_DT" => date("d-M-Y")
                  ];
                 $return = $this->Db->table('FLXY_GROUP')->insert($data); 
@@ -853,7 +920,7 @@ class ApplicatioController extends BaseController
                     "BLK_RESER_METHOD" => $_POST["BLK_RESER_METHOD"],
                     "BLK_RATE_CODE" => $_POST["BLK_RATE_CODE"],
                     "BLK_PACKAGE" => $_POST["BLK_PACKAGE"],
-                    "BLK_CREATE_UID" => null,
+                    "BLK_CREATE_UID" => $this->session->name,
                     "BLK_CREATE_DT" => date("d-M-Y")
                  ];
                 $return = $this->Db->table('FLXY_BLOCK')->insert($data); 
@@ -930,12 +997,14 @@ class ApplicatioController extends BaseController
                 exit;
             }
             $sysid = $_POST['RM_ID'];
+            $RM_FEATURE = $_POST["RM_FEATURE"];
+            $RM_FEATURE = implode(",",$RM_FEATURE);
             if(!empty($sysid)){
                 $data = ["RM_NO" => $_POST["RM_NO"],
                     "RM_CLASS" => $_POST["RM_CLASS"],
                     "RM_DESC" => $_POST["RM_DESC"],
                     "RM_TYPE" => $_POST["RM_TYPE"],
-                    "RM_FEATURE" => $_POST["RM_FEATURE"],
+                    "RM_FEATURE" => $RM_FEATURE,
                     "RM_PUBLIC_RATE_CODE" => $_POST["RM_PUBLIC_RATE_CODE"],
                     "RM_PUBLIC_RATE_AMOUNT" => $_POST["RM_PUBLIC_RATE_AMOUNT"],
                     "RM_MAX_OCCUPANCY" => $_POST["RM_MAX_OCCUPANCY"],
@@ -958,7 +1027,7 @@ class ApplicatioController extends BaseController
                     "RM_CLASS" => $_POST["RM_CLASS"],
                     "RM_DESC" => $_POST["RM_DESC"],
                     "RM_TYPE" => $_POST["RM_TYPE"],
-                    "RM_FEATURE" => $_POST["RM_FEATURE"],
+                    "RM_FEATURE" => $RM_FEATURE,
                     "RM_PUBLIC_RATE_CODE" => $_POST["RM_PUBLIC_RATE_CODE"],
                     "RM_PUBLIC_RATE_AMOUNT" => $_POST["RM_PUBLIC_RATE_AMOUNT"],
                     "RM_MAX_OCCUPANCY" => $_POST["RM_MAX_OCCUPANCY"],
@@ -997,6 +1066,17 @@ class ApplicatioController extends BaseController
         RM_FEATURE,RM_PUBLIC_RATE_CODE,RM_PUBLIC_RATE_AMOUNT,RM_MAX_OCCUPANCY,RM_DISP_SEQ,RM_FLOOR_PREFERN,RM_SMOKING_PREFERN,RM_PHONE_NO,RM_SQUARE_UNITS,RM_MEASUREMENT,RM_HOUSKP_DY_SECTION,RM_HOUSKP_EV_SECTION,RM_STAYOVER_CR,RM_DEPARTURE_CR FROM FLXY_ROOM WHERE RM_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
+    }
+
+    public function roomList(){
+        $search = $_POST['search'];
+        $sql = "SELECT RM_NO,RM_DESC FROM FLXY_ROOM WHERE RM_DESC like '%$search%'";
+        $response = $this->Db->query($sql)->getResultArray();
+        $option='<option value="">Select Room</option>';
+        foreach($response as $row){
+            $option.= '<option value="'.$row['RM_NO'].'">'.$row['RM_NO'].' - '.$row['RM_DESC'].'</option>';
+        }
+        echo $option;
     }
 
     public function deleteRoom(){
@@ -1117,11 +1197,13 @@ class ApplicatioController extends BaseController
                 exit;
             }
             $sysid = $_POST['RM_TY_ID'];
+            $RM_TY_FEATURE = $_POST['RM_TY_FEATURE'];
+            $RM_TY_FEATURE = implode(",",$RM_TY_FEATURE);
             if(!empty($sysid)){
                 $data = ["RM_TY_ROOM_CLASS" => $_POST["RM_TY_ROOM_CLASS"],
                     "RM_TY_CODE" => $_POST["RM_TY_CODE"],
                     "RM_TY_DESC" => $_POST["RM_TY_DESC"],
-                    "RM_TY_FEATURE" => $_POST["RM_TY_FEATURE"],
+                    "RM_TY_FEATURE" => $RM_TY_FEATURE,
                     "RM_TY_TOTAL_ROOM" => $_POST["RM_TY_TOTAL_ROOM"],
                     "RM_TY_DISP_SEQ" => $_POST["RM_TY_DISP_SEQ"],
                     "RM_TY_PUBLIC_RATE_CODE" => $_POST["RM_TY_PUBLIC_RATE_CODE"],
@@ -1143,7 +1225,7 @@ class ApplicatioController extends BaseController
                 $data = ["RM_TY_ROOM_CLASS" => $_POST["RM_TY_ROOM_CLASS"],
                     "RM_TY_CODE" => $_POST["RM_TY_CODE"],
                     "RM_TY_DESC" => $_POST["RM_TY_DESC"],
-                    "RM_TY_FEATURE" => $_POST["RM_TY_FEATURE"],
+                    "RM_TY_FEATURE" => $RM_TY_FEATURE,
                     "RM_TY_TOTAL_ROOM" => $_POST["RM_TY_TOTAL_ROOM"],
                     "RM_TY_DISP_SEQ" => $_POST["RM_TY_DISP_SEQ"],
                     "RM_TY_PUBLIC_RATE_CODE" => $_POST["RM_TY_PUBLIC_RATE_CODE"],
@@ -1201,7 +1283,9 @@ class ApplicatioController extends BaseController
         $respon2 = $this->Db->query($sql)->getResultArray();
         $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='SMK_PREF'";
         $respon3 = $this->Db->query($sql)->getResultArray();
-        $data = [$respon1,$respon2,$respon3];
+        $sql="SELECT RM_FT_CODE CODE,RM_FT_DESC DESCS FROM FLXY_ROOM_FEATURE";
+        $respon4 = $this->Db->query($sql)->getResultArray();
+        $data = [$respon1,$respon2,$respon3,$respon4];
         echo json_encode($data);
     }
 
@@ -1306,13 +1390,13 @@ class ApplicatioController extends BaseController
             if(!empty($sysid)){
                 $data = ["RM_FL_CODE" => $_POST["RM_FL_CODE"],
                     "RM_FL_DESC" => $_POST["RM_FL_DESC"],
-                    "RM_FL_FEATURE" => $_POST["RM_FL_FEATURE"]
+                    "RM_FL_FEATURE" => ""
                  ];
             $return = $this->Db->table('FLXY_ROOM_FLOOR')->where('RM_FL_ID', $sysid)->update($data); 
             }else{
                 $data = ["RM_FL_CODE" => $_POST["RM_FL_CODE"],
                     "RM_FL_DESC" => $_POST["RM_FL_DESC"],
-                    "RM_FL_FEATURE" => $_POST["RM_FL_FEATURE"]
+                    "RM_FL_FEATURE" => ""
                  ];
                 $return = $this->Db->table('FLXY_ROOM_FLOOR')->insert($data); 
             }
@@ -1424,4 +1508,315 @@ class ApplicatioController extends BaseController
             return $this->respond($e->errors());
         }
     }
+
+    public function section(){
+        return view('SectionView');
+    }
+
+    public function SectionView(){
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_SECTION';
+        $columns = 'SC_FL_ID,SC_FL_CODE,SC_FL_DESC,SC_FL_TARGET_CREDIT,SC_FL_DISPLAY_SEQ,SC_FL_ACTIVE';
+        $mine->generate_DatatTable($tableName,$columns);
+        exit;
+    }
+
+    public function insertSection(){
+        try{
+            $validate = $this->validate([
+                'SC_FL_CODE' => 'required'
+            ]);
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $sysid = $_POST['SC_FL_ID'];
+            if(!empty($sysid)){
+                $data = ["SC_FL_CODE" => $_POST["SC_FL_CODE"],
+                    "SC_FL_DESC" => $_POST["SC_FL_DESC"],
+                    "SC_FL_TARGET_CREDIT" => $_POST["SC_FL_TARGET_CREDIT"],
+                    "SC_FL_DISPLAY_SEQ" => $_POST["SC_FL_DISPLAY_SEQ"],
+                    "SC_FL_ACTIVE" => null
+                 ];
+            $return = $this->Db->table('FLXY_SECTION')->where('SC_FL_ID', $sysid)->update($data); 
+            }else{
+                $data = ["SC_FL_CODE" => $_POST["SC_FL_CODE"],
+                    "SC_FL_DESC" => $_POST["SC_FL_DESC"],
+                    "SC_FL_TARGET_CREDIT" => $_POST["SC_FL_TARGET_CREDIT"],
+                    "SC_FL_DISPLAY_SEQ" => $_POST["SC_FL_DISPLAY_SEQ"],
+                    "SC_FL_ACTIVE" => null
+                 ];
+                $return = $this->Db->table('FLXY_SECTION')->insert($data); 
+            }
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444","db insert not success",$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function editSection(){
+        $param = ['SYSID'=> $_POST['sysid']];
+        $sql = "SELECT SC_FL_ID,SC_FL_CODE,SC_FL_DESC,SC_FL_TARGET_CREDIT,SC_FL_DISPLAY_SEQ,SC_FL_ACTIVE FROM FLXY_SECTION WHERE SC_FL_ID=:SYSID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteSection(){
+        $sysid = $_POST['sysid'];
+        try{
+            $return = $this->Db->table('FLXY_SECTION')->delete(['SC_FL_ID' => $sysid]); 
+            if($return){
+                $result = $this->responseJson("1","0",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-402","Record not deleted");
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function rateClass(){
+        return view('RateClassView');
+    }
+
+    public function RateClassView(){
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_RATE_CLASS';
+        $columns = 'RT_CL_ID,RT_CL_CODE,RT_CL_DESC,RT_CL_DIS_SEQ,RT_CL_BEGIN_DT,RT_CL_END_DT';
+        $mine->generate_DatatTable($tableName,$columns);
+        exit;
+    }
+
+    public function insertRateClass(){
+        try{
+            $validate = $this->validate([
+                'RT_CL_CODE' => 'required'
+            ]);
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $sysid = $_POST['RT_CL_ID'];
+            if(!empty($sysid)){
+                $data = ["RT_CL_CODE" => $_POST["RT_CL_CODE"],
+                    "RT_CL_DESC" => $_POST["RT_CL_DESC"],
+                    "RT_CL_DIS_SEQ" => $_POST["RT_CL_DIS_SEQ"],
+                    "RT_CL_BEGIN_DT" => $_POST["RT_CL_BEGIN_DT"],
+                    "RT_CL_END_DT" => $_POST["RT_CL_END_DT"]
+                 ];
+            $return = $this->Db->table('FLXY_RATE_CLASS')->where('RT_CL_ID', $sysid)->update($data); 
+            }else{
+                $data = ["RT_CL_CODE" => $_POST["RT_CL_CODE"],
+                    "RT_CL_DESC" => $_POST["RT_CL_DESC"],
+                    "RT_CL_DIS_SEQ" => $_POST["RT_CL_DIS_SEQ"],
+                    "RT_CL_BEGIN_DT" => $_POST["RT_CL_BEGIN_DT"],
+                    "RT_CL_END_DT" => $_POST["RT_CL_END_DT"]
+                 ];
+                $return = $this->Db->table('FLXY_RATE_CLASS')->insert($data); 
+            }
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444","db insert not success",$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function editRateClass(){
+        $param = ['SYSID'=> $_POST['sysid']];
+        $sql = "SELECT RT_CL_ID,RT_CL_CODE,RT_CL_DESC,RT_CL_DIS_SEQ,RT_CL_BEGIN_DT,RT_CL_END_DT FROM FLXY_RATE_CLASS WHERE RT_CL_ID=:SYSID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteRateClass(){
+        $sysid = $_POST['sysid'];
+        try{
+            $return = $this->Db->table('FLXY_RATE_CLASS')->delete(['RT_CL_ID' => $sysid]); 
+            if($return){
+                $result = $this->responseJson("1","0",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-402","Record not deleted");
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function source(){
+        return view('SourceView');
+    }
+
+    public function SourceView(){
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_SOURCE';
+        $columns = 'SOR_ID,SOR_CODE,SOR_DESC,SOR_GROUP,SOR_DIS_SEQ,SOR_ACTIVE';
+        $mine->generate_DatatTable($tableName,$columns);
+        exit;
+    }
+
+    public function insertSource(){
+        try{
+            $validate = $this->validate([
+                'SOR_CODE' => 'required'
+            ]);
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $sysid = $_POST['SOR_ID'];
+            if(!empty($sysid)){
+                $data = ["SOR_CODE" => $_POST["SOR_CODE"],
+                    "SOR_DESC" => $_POST["SOR_DESC"],
+                    "SOR_GROUP" => $_POST["SOR_GROUP"],
+                    "SOR_DIS_SEQ" => $_POST["SOR_DIS_SEQ"],
+                    "SOR_ACTIVE" => 'Y'
+                 ];
+            $return = $this->Db->table('FLXY_SOURCE')->where('SOR_ID', $sysid)->update($data); 
+            }else{
+                $data = ["SOR_CODE" => $_POST["SOR_CODE"],
+                    "SOR_DESC" => $_POST["SOR_DESC"],
+                    "SOR_GROUP" => $_POST["SOR_GROUP"],
+                    "SOR_DIS_SEQ" => $_POST["SOR_DIS_SEQ"],
+                    "SOR_ACTIVE" => 'Y'
+                 ];
+                $return = $this->Db->table('FLXY_SOURCE')->insert($data); 
+            }
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444","db insert not success",$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function editSource(){
+        $param = ['SYSID'=> $_POST['sysid']];
+        $sql = "SELECT SOR_ID,SOR_CODE,SOR_DESC,SOR_GROUP,SOR_DIS_SEQ,SOR_ACTIVE FROM FLXY_SOURCE WHERE SOR_ID=:SYSID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteSource(){
+        $sysid = $_POST['sysid'];
+        try{
+            $return = $this->Db->table('FLXY_SOURCE')->delete(['SOR_ID' => $sysid]); 
+            if($return){
+                $result = $this->responseJson("1","0",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-402","Record not deleted");
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function sourceGroup(){
+        return view('SourceGroupView');
+    }
+
+    public function SourceGroupView(){
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_SOURCE_GROUP';
+        $columns = 'SOR_GR_ID,SOR_GR_CODE,SOR_GR_DESC,SOR_GR_DIS_SEQ,SOR_GR_ACTIVE';
+        $mine->generate_DatatTable($tableName,$columns);
+        exit;
+    }
+
+    public function insertSourceGroup(){
+        try{
+            $validate = $this->validate([
+                'SOR_GR_CODE' => 'required'
+            ]);
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $sysid = $_POST['SOR_GR_ID'];
+            if(!empty($sysid)){
+                $data = ["SOR_GR_CODE" => $_POST["SOR_GR_CODE"],
+                    "SOR_GR_DESC" => $_POST["SOR_GR_DESC"],
+                    "SOR_GR_DIS_SEQ" => $_POST["SOR_GR_DIS_SEQ"],
+                    "SOR_GR_ACTIVE" => 'Y'
+                 ];
+            $return = $this->Db->table('FLXY_SOURCE_GROUP')->where('SOR_GR_ID', $sysid)->update($data); 
+            }else{
+                $data = ["SOR_GR_CODE" => $_POST["SOR_GR_CODE"],
+                    "SOR_GR_DESC" => $_POST["SOR_GR_DESC"],
+                    "SOR_GR_DIS_SEQ" => $_POST["SOR_GR_DIS_SEQ"],
+                    "SOR_GR_ACTIVE" => 'Y'
+                 ];
+                $return = $this->Db->table('FLXY_SOURCE_GROUP')->insert($data); 
+            }
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444","db insert not success",$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function editSourceGroup(){
+        $param = ['SYSID'=> $_POST['sysid']];
+        $sql = "SELECT SOR_GR_ID,SOR_GR_CODE,SOR_GR_DESC,SOR_GR_DIS_SEQ,SOR_GR_ACTIVE FROM FLXY_SOURCE_GROUP WHERE SOR_GR_ID=:SYSID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteSourceGroup(){
+        $sysid = $_POST['sysid'];
+        try{
+            $return = $this->Db->table('FLXY_SOURCE_GROUP')->delete(['SOR_GR_ID' => $sysid]); 
+            if($return){
+                $result = $this->responseJson("1","0",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-402","Record not deleted");
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
 }
