@@ -41,7 +41,7 @@ $routes->setAutoRoute(true);
 
 $routes->match(['get', 'post'], 'login', 'UserController::login', ["filter" => "noauth"]);
 // Admin routes
-
+$routes->get("/test", "ApplicatioController::test");
 $routes->get('/', 'DashboardController::index',["filter" => "auth"]);
 $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('logout', 'UserController::logout');

@@ -290,6 +290,11 @@
                   </a>
                 </li>
                 <li class="menu-item">
+                  <a href="<?php echo base_url('rateClass');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Class Rate</div>
+                  </a>
+                </li>
+                <li class="menu-item">
                   <a href="javascript:void(0);" class="menu-link">
                     <div data-i18n="Search My Reservations">Search My Reservations</div>
                   </a>

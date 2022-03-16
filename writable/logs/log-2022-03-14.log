@@ -1,0 +1,182 @@
+CRITICAL - 2022-03-14 01:19:32 --> Call to protected method App\Libraries\EmailLibrary::preCheckInEmail() from context 'App\Controllers\ApplicatioController'
+#0 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#4 {main}
+CRITICAL - 2022-03-14 01:24:36 --> Undefined variable: email
+#0 C:\wamp64\www\FlexiGuest\app\Libraries\EmailLibrary.php(10): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 10, Array)
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(211): App\Libraries\EmailLibrary->preCheckInEmail()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-14 02:47:57 --> Invalid file: CompanyAgentModal.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('CompanyAgentMod...')
+#1 C:\wamp64\www\FlexiGuest\system\View\View.php(424): CodeIgniter\View\View->render('CompanyAgentMod...', NULL, true)
+#2 C:\wamp64\www\FlexiGuest\app\Views\Reservation\Reservation.php(602): CodeIgniter\View\View->include('CompanyAgentMod...')
+#3 C:\wamp64\www\FlexiGuest\system\View\View.php(210): include('C:\\wamp64\\www\\F...')
+#4 C:\wamp64\www\FlexiGuest\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#5 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('Reservation/Res...', Array, true)
+#6 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(21): view('Reservation/Res...')
+#7 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->Reservation()
+#8 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#9 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#11 {main}
+CRITICAL - 2022-03-14 02:48:08 --> Invalid file: CompanyAgentModal.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('CompanyAgentMod...')
+#1 C:\wamp64\www\FlexiGuest\system\View\View.php(424): CodeIgniter\View\View->render('CompanyAgentMod...', NULL, true)
+#2 C:\wamp64\www\FlexiGuest\app\Views\Reservation\Reservation.php(602): CodeIgniter\View\View->include('CompanyAgentMod...')
+#3 C:\wamp64\www\FlexiGuest\system\View\View.php(210): include('C:\\wamp64\\www\\F...')
+#4 C:\wamp64\www\FlexiGuest\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#5 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('Reservation\\Res...', Array, true)
+#6 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(21): view('Reservation\\Res...')
+#7 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->Reservation()
+#8 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#9 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#11 {main}
+CRITICAL - 2022-03-14 02:48:16 --> Invalid file: CompanyAgentModal.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('CompanyAgentMod...')
+#1 C:\wamp64\www\FlexiGuest\system\View\View.php(424): CodeIgniter\View\View->render('CompanyAgentMod...', NULL, true)
+#2 C:\wamp64\www\FlexiGuest\app\Views\Reservation\Reservation.php(602): CodeIgniter\View\View->include('CompanyAgentMod...')
+#3 C:\wamp64\www\FlexiGuest\system\View\View.php(210): include('C:\\wamp64\\www\\F...')
+#4 C:\wamp64\www\FlexiGuest\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#5 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('Reservation/Res...', Array, true)
+#6 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(21): view('Reservation/Res...')
+#7 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->Reservation()
+#8 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#9 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#11 {main}
+CRITICAL - 2022-03-14 02:48:42 --> Invalid file: CompanyAgentModal.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('CompanyAgentMod...')
+#1 C:\wamp64\www\FlexiGuest\system\View\View.php(424): CodeIgniter\View\View->render('CompanyAgentMod...', NULL, true)
+#2 C:\wamp64\www\FlexiGuest\app\Views\Reservation\Reservation.php(602): CodeIgniter\View\View->include('CompanyAgentMod...')
+#3 C:\wamp64\www\FlexiGuest\system\View\View.php(210): include('C:\\wamp64\\www\\F...')
+#4 C:\wamp64\www\FlexiGuest\system\View\View.php(213): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+#5 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('Reservation/Res...', Array, true)
+#6 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(21): view('Reservation/Res...')
+#7 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->Reservation()
+#8 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#9 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#11 {main}
+CRITICAL - 2022-03-14 03:26:54 --> Undefined variable: email
+#0 C:\wamp64\www\FlexiGuest\app\Libraries\EmailLibrary.php(14): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 14, Array)
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(211): App\Libraries\EmailLibrary->preCheckInEmail()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-14 03:27:53 --> Undefined variable: email
+#0 C:\wamp64\www\FlexiGuest\app\Libraries\EmailLibrary.php(14): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 14, Array)
+#1 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(211): App\Libraries\EmailLibrary->preCheckInEmail()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-14 07:43:39 --> Undefined variable: param
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(211): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 211, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-14 07:45:13 --> Undefined index: sysid
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(210): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 210, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertReservation()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-14 07:54:59 --> Invalid file: Dashboard.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('Dashboard.php')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('Dashboard', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\DashboardController.php(18): view('Dashboard')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\DashboardController->index()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\DashboardController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-03-14 07:55:31 --> Undefined index: CUST_BUS_SEGMENT
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(305): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 305, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertCustomer()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-14 07:55:36 --> Invalid file: login.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('login.php')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('login', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(52): view('login')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-03-14 07:55:39 --> Undefined index: CUST_BUS_SEGMENT
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(305): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined index...', 'C:\\wamp64\\www\\F...', 305, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertCustomer()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+CRITICAL - 2022-03-14 12:19:58 --> Invalid file: login.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('login.php')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('login', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(52): view('login')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-03-14 12:20:02 --> Invalid file: login.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('login.php')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('login', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(52): view('login')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-03-14 12:21:57 --> Invalid file: login.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('login.php')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('login', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(52): view('login')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-03-14 12:21:59 --> Invalid file: login.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('login.php')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('login', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(52): view('login')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-03-14 12:22:00 --> Invalid file: login.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('login.php')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('login', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(52): view('login')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+CRITICAL - 2022-03-14 12:23:10 --> Invalid file: Dashboard.php
+#0 C:\wamp64\www\FlexiGuest\system\View\View.php(198): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('Dashboard.php')
+#1 C:\wamp64\www\FlexiGuest\system\Common.php(1089): CodeIgniter\View\View->render('Dashboard', Array, true)
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\DashboardController.php(18): view('Dashboard')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\DashboardController->index()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\DashboardController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}

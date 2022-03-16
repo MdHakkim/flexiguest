@@ -26,7 +26,7 @@ class UserController extends BaseController
 
             if (!$this->validate($rules, $errors)) {
 
-                return view('login', [
+                return view('login/login', [
                     "validation" => $this->validator,
                 ]);
 
@@ -49,7 +49,7 @@ class UserController extends BaseController
                 }
             }
         }
-        return view('login');
+        return view('login/login');
     }
 
     private function setUserSession($user)

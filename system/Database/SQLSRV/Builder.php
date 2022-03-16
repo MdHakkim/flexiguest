@@ -166,7 +166,6 @@ class Builder extends BaseBuilder
 
         // insert statement
         $statement = 'INSERT INTO ' . $fullTableName . ' (' . implode(',', $keys) . ') VALUES (' . implode(', ', $unescapedKeys) . ')';
-
         return $this->keyPermission ? $this->addIdentity($fullTableName, $statement) : $statement;
     }
 

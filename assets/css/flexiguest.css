@@ -75,3 +75,8 @@ button.close {
   display: none;
   min-height: 26em;
 }
+.flxyFooter{
+  display: flex;
+  margin-top: 22px;
+  justify-content: end;
+}

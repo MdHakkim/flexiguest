@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use  App\Libraries\ServerSideDataTable;
+use  App\Libraries\EmailLibrary;
 class ApplicatioController extends BaseController
 {
     public $Db;
@@ -17,7 +18,7 @@ class ApplicatioController extends BaseController
     // }
 
     public function Reservation(){
-        return view('Reservation');
+        return view('Reservation/Reservation');
     }
 
     public function blockList(){
@@ -202,22 +203,39 @@ class ApplicatioController extends BaseController
                     "RESV_CREATE_DT" => date("d-M-Y")
                 ];
                 $return = $this->Db->table('FLXY_RESERVATION')->insert($data); 
+                $sysid = $this->Db->insertID();
             }
             if($return){
+                $custId = $_POST['RESV_NAME'];
+                $this->updateCustomerData($custId);
+                $return = $this->Db->table('FLXY_RESERVATION')->select('RESV_NO')->where('RESV_ID',$sysid)->get()->getResultArray();
+                $param = ['SYSID'=> $sysid];
+                $sql="SELECT RESV_ID,RESV_NO,RESV_ARRIVAL_DT,RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_FEATURE,CUST_FIRST_NAME,CUST_EMAIL FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:SYSID: AND RESV_NAME=CUST_ID";
+                $reservationInfo = $this->Db->query($sql,$param)->getResultArray();
+                $emailCall = new EmailLibrary();
+                $emailResp = $emailCall->preCheckInEmail($reservationInfo);
                 $result = $this->responseJson("1","0",$return);
                 echo json_encode($result);
             }else{
                 $result = $this->responseJson("-444","db insert not success");
                 echo json_encode($result);
             }
-            // $return = $this->Db->query($sql);
         }catch (Exception $e){
             return $this->respond($e->errors());
         }
     }
 
-    public function updateCustomerShortData(){
-        
+    public function updateCustomerData($custId){
+        $data = ["CUST_FIRST_NAME" => $_POST["CUST_FIRST_NAME"],
+            "CUST_TITLE" => $_POST["CUST_TITLE"],
+            "CUST_COUNTRY" => $_POST["CUST_COUNTRY"],
+            "CUST_VIP" => $_POST["CUST_VIP"],
+            "CUST_PHONE" => $_POST["CUST_PHONE"],
+            "CUST_UPDATE_UID" => $this->session->name,
+            "CUST_UPDATE_DT" => date("d-M-Y")
+        ];
+        $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $custId)->update($data); 
+        return true;
     }
 
     function test(){
@@ -367,7 +385,7 @@ class ApplicatioController extends BaseController
     }
 
     public function Customer(){
-        return view('Customer');
+        return view('Reservation/Customer');
     }
 
     public function customerView(){
@@ -604,7 +622,7 @@ class ApplicatioController extends BaseController
     }
     // company modal 
     public function company(){
-        return view('Company');
+        return view('Reservation/Company');
     }
 
     public function companyView(){
@@ -654,7 +672,7 @@ class ApplicatioController extends BaseController
     // agent modal
 
     public function agent(){
-        return view('Agent');
+        return view('Reservation/Agent');
     }
 
     public function AgentView(){
@@ -683,7 +701,7 @@ class ApplicatioController extends BaseController
     // agent modal
     // Group modal
     public function group(){
-        return view('Group');
+        return view('Reservation/Group');
     }
     public function GroupView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
@@ -808,7 +826,7 @@ class ApplicatioController extends BaseController
     // Group modal
     // Block modal
     public function block(){
-        return view('BlockView');
+        return view('Reservation/BlockView');
     }
     public function BlockView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
@@ -972,7 +990,7 @@ class ApplicatioController extends BaseController
     }
 
     public function room(){
-        return view('RoomView');
+        return view('Reservation/RoomView');
     }
 
     public function RoomView(){
@@ -1096,7 +1114,7 @@ class ApplicatioController extends BaseController
     }
 
     public function roomClass(){
-        return view('RoomClassView');
+        return view('Reservation/RoomClassView');
     }
 
     public function RoomClassView(){
@@ -1172,7 +1190,7 @@ class ApplicatioController extends BaseController
     }
 
     public function roomType(){
-        return view('RoomTypeView');
+        return view('Reservation/RoomTypeView');
     }
 
     public function RoomTypeView(){
@@ -1314,11 +1332,11 @@ class ApplicatioController extends BaseController
 
     public function roomTypeList(){
         $search = $_POST['search'];
-        $sql = "SELECT RM_TY_ID,RM_TY_CODE,RM_TY_DESC,RM_TY_ROOM_CLASS FROM FLXY_ROOM_TYPE WHERE RM_TY_DESC like '%$search%'";
+        $sql = "SELECT RM_TY_ID,RM_TY_CODE,RM_TY_DESC,RM_TY_ROOM_CLASS,RM_TY_FEATURE FROM FLXY_ROOM_TYPE WHERE RM_TY_DESC like '%$search%'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select Room Type</option>';
         foreach($response as $row){
-            $option.= '<option data-desc="'.trim($row['RM_TY_DESC']).'" data-rmclass="'.trim($row['RM_TY_ROOM_CLASS']).'" value="'.$row['RM_TY_CODE'].'">'.$row['RM_TY_DESC'].'</option>';
+            $option.= '<option data-feture="'.trim($row['RM_TY_FEATURE']).'" data-desc="'.trim($row['RM_TY_DESC']).'" data-rmclass="'.trim($row['RM_TY_ROOM_CLASS']).'" value="'.$row['RM_TY_CODE'].'">'.$row['RM_TY_DESC'].'</option>';
         }
         echo $option;
     }
@@ -1362,7 +1380,7 @@ class ApplicatioController extends BaseController
     }
 
     public function roomFloor(){
-        return view('RoomFloorView');
+        return view('Reservation/RoomFloorView');
     }
 
     public function RoomFloorView(){
@@ -1436,7 +1454,7 @@ class ApplicatioController extends BaseController
     }
 
     public function roomFeature(){
-        return view('RoomFeatureView');
+        return view('Reservation/RoomFeatureView');
     }
 
     public function RoomFeatureView(){
@@ -1510,7 +1528,7 @@ class ApplicatioController extends BaseController
     }
 
     public function section(){
-        return view('SectionView');
+        return view('Reservation/SectionView');
     }
 
     public function SectionView(){
@@ -1588,7 +1606,7 @@ class ApplicatioController extends BaseController
     }
 
     public function rateClass(){
-        return view('RateClassView');
+        return view('Reservation/RateClassView');
     }
 
     public function RateClassView(){
@@ -1666,7 +1684,7 @@ class ApplicatioController extends BaseController
     }
 
     public function source(){
-        return view('SourceView');
+        return view('Reservation/SourceView');
     }
 
     public function SourceView(){
@@ -1744,7 +1762,7 @@ class ApplicatioController extends BaseController
     }
 
     public function sourceGroup(){
-        return view('SourceGroupView');
+        return view('Reservation/SourceGroupView');
     }
 
     public function SourceGroupView(){
