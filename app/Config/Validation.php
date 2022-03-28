@@ -7,6 +7,7 @@ use CodeIgniter\Validation\FileRules;
 use CodeIgniter\Validation\FormatRules;
 use CodeIgniter\Validation\Rules;
 use App\Validation\Userrules;
+use App\Validation\CustomRules;
 
 class Validation
 {
@@ -26,6 +27,7 @@ class Validation
         FileRules::class,
         CreditCardRules::class,
         Userrules::class,
+        CustomRules::class,
     ];
 
     /**

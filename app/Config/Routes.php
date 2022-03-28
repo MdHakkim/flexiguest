@@ -143,12 +143,6 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/editSection', 'ApplicatioController::editSection');
     $routes->match(['post'],'/deleteSection', 'ApplicatioController::deleteSection');
 
-    $routes->get('/rateClass', 'ApplicatioController::rateClass');
-    $routes->match(['post'],'/rateClassView', 'ApplicatioController::RateClassView');
-    $routes->match(['post'],'/insertRateClass', 'ApplicatioController::insertRateClass');
-    $routes->match(['post'],'/editRateClass', 'ApplicatioController::editRateClass');
-    $routes->match(['post'],'/deleteRateClass', 'ApplicatioController::deleteRateClass');
-
     $routes->get('/source', 'ApplicatioController::source');
     $routes->match(['post'],'/sourceView', 'ApplicatioController::SourceView');
     $routes->match(['post'],'/insertSource', 'ApplicatioController::insertSource');
@@ -188,6 +182,28 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
     $routes->match(['post'],'/getSupportingOverbookingLov', 'ApplicatioController::getSupportingOverbookingLov');
     $routes->match(['post'],'/getRoomType', 'ApplicatioController::getRoomType');
+
+    //Changes by Deleep Bose
+
+    $routes->get('/rateClass', 'MastersController::rateClass');
+    $routes->match(['post'],'/rateClassView', 'MastersController::RateClassView');
+    $routes->match(['post'],'/insertRateClass', 'MastersController::insertRateClass');
+    $routes->match(['post'],'/copyRateClass', 'MastersController::copyRateClass');
+    $routes->match(['post'],'/editRateClass', 'MastersController::editRateClass');
+    $routes->match(['post'],'/deleteRateClass', 'MastersController::deleteRateClass');  
+    
+    $routes->get('/getAssocRateCategories', 'MastersController::getAssocRateCategories');    
+
+    $routes->get('/rateCategory', 'MastersController::rateCategory');
+    $routes->match(['post'],'/rateCategoryView', 'MastersController::RateCategoryView');
+    $routes->match(['post'],'/insertRateCategory', 'MastersController::insertRateCategory');
+    $routes->match(['post'],'/copyRateCategory', 'MastersController::copyRateCategory');
+    $routes->match(['post'],'/editRateCategory', 'MastersController::editRateCategory');
+    $routes->match(['post'],'/deleteRateCategory', 'MastersController::deleteRateCategory');  
+   
+    $routes->get('/rateCode', 'MastersController::rateCode');
+    $routes->get('/addRateCode', 'MastersController::addRateCode');
+    $routes->get('/editRateCode', 'MastersController::editRateCode');
 });
 /*
  * --------------------------------------------------------------------
