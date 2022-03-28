@@ -1,0 +1,143 @@
+ERROR - 2022-03-26 02:30:18 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'PYM_ID'.
+CRITICAL - 2022-03-26 02:30:18 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'PYM_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2173): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertOverBooking()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-26 02:30:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'PYM_ID'.
+CRITICAL - 2022-03-26 02:30:46 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'PYM_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2173): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertOverBooking()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-26 02:31:28 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert explicit value for identity column in table 'FLXY_OVERBOOKING' when IDENTITY_INSERT is set to OFF.
+CRITICAL - 2022-03-26 02:31:28 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot insert explicit value for identity column in table 'FLXY_OVERBOOKING' when IDENTITY_INSERT is set to OFF.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('INSERT INTO "fl...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO "fl...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1771): CodeIgniter\Database\BaseConnection->query('INSERT INTO "fl...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2173): CodeIgniter\Database\BaseBuilder->insert(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertOverBooking()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-03-26 02:35:27 --> Undefined variable: array
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2174): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 2174, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertOverBooking()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-03-26 02:37:27 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'OB_RM_CLS'.
+CRITICAL - 2022-03-26 02:37:27 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'OB_RM_CLS'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT OB_ID,OB...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT OB_ID,OB...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2191): CodeIgniter\Database\BaseConnection->query('SELECT OB_ID,OB...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editOverBooking()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-26 02:42:41 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'OB_RM_CLS'.
+CRITICAL - 2022-03-26 02:42:42 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'OB_RM_CLS'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT OB_ID,OB...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT OB_ID,OB...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2198): CodeIgniter\Database\BaseConnection->query('SELECT OB_ID,OB...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editOverBooking()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-26 02:46:34 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TYPE'.
+CRITICAL - 2022-03-26 02:46:34 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TYPE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select OB_ID,OB...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select OB_ID,OB...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select OB_ID,OB...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2131): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_OVERBOOKIN...', 'OB_ID,OB_FROM_D...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->OverBookingView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-26 02:46:39 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TYPE'.
+CRITICAL - 2022-03-26 02:46:39 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TYPE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select OB_ID,OB...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select OB_ID,OB...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select OB_ID,OB...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2131): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_OVERBOOKIN...', 'OB_ID,OB_FROM_D...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->OverBookingView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-26 02:47:20 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near ','.
+CRITICAL - 2022-03-26 02:47:20 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near ','.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT OB_ID,OB...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT OB_ID,OB...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2200): CodeIgniter\Database\BaseConnection->query('SELECT OB_ID,OB...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editOverBooking()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-26 02:47:52 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near ','.
+CRITICAL - 2022-03-26 02:47:52 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Incorrect syntax near ','.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT OB_ID,OB...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT OB_ID,OB...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2200): CodeIgniter\Database\BaseConnection->query('SELECT OB_ID,OB...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editOverBooking()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-26 02:48:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TYPE'.
+CRITICAL - 2022-03-26 02:48:40 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TYPE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT OB_ID,OB...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT OB_ID,OB...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2200): CodeIgniter\Database\BaseConnection->query('SELECT OB_ID,OB...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editOverBooking()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-26 02:49:59 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TYPE_CODE'.
+CRITICAL - 2022-03-26 02:49:59 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TYPE_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT OB_ID,OB...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT OB_ID,OB...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2200): CodeIgniter\Database\BaseConnection->query('SELECT OB_ID,OB...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editOverBooking()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-26 02:51:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TYPE_CODE'.
+CRITICAL - 2022-03-26 02:51:22 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TYPE_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT OB_ID,OB...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT OB_ID,OB...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2200): CodeIgniter\Database\BaseConnection->query('SELECT OB_ID,OB...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->editOverBooking()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}
+ERROR - 2022-03-26 03:34:56 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot update identity column 'OB_ID'.
+CRITICAL - 2022-03-26 03:34:56 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Cannot update identity column 'OB_ID'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('UPDATE "flexigu...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('UPDATE "flexigu...')
+#2 C:\wamp64\www\FlexiGuest\system\Database\BaseBuilder.php(1913): CodeIgniter\Database\BaseConnection->query('UPDATE "flexigu...', Array, false)
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2172): CodeIgniter\Database\BaseBuilder->update(Array)
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->insertOverBooking()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}

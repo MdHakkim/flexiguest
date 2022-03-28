@@ -115,10 +115,34 @@
 
   });
 
+  function runInitialLevel(){
+    $.ajax({
+      url: '<?php echo base_url('/initalConfigLovSource')?>',
+      type: "post",
+      headers: {'X-Requested-With': 'XMLHttpRequest'},
+      dataType:'json',
+      async:false,
+      success:function(respn){
+        var memData = respn[0];
+        var idArray = ['SOR_GROUP'];
+        $(respn).each(function(ind,data){
+          var option = '<option value="">Select</option>';
+          $.each(data,function(i,valu){
+            var value = $.trim(valu['CODE']);//fields.trim();
+            var desc = $.trim(valu['DESCS']);//datavals.trim();
+            option += '<option value="'+value+'">'+desc+'</option>';
+          });
+          $('#'+idArray[ind]).html(option).trigger('change');
+        });
+      }
+    });
+  }
+
   function addForm(){
     $(':input','#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('#popModalWindow').modal('show');
+    runInitialLevel();
   }
 
   $(document).on('click','.delete-record',function(){

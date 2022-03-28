@@ -58,6 +58,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/deleteReservation', 'ApplicatioController::deleteReservation');
     $routes->match(['post'],'/getInitializeListReserv', 'ApplicatioController::getInitializeListReserv');
     $routes->match(['post'],'/roomList', 'ApplicatioController::roomList');
+    $routes->match(['post'],'/getRateQueryData', 'ApplicatioController::getRateQueryData');
 
     $routes->get('/customer', 'ApplicatioController::Customer');
     $routes->match(['post'],'/customerView', 'ApplicatioController::customerView');
@@ -153,6 +154,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertSource', 'ApplicatioController::insertSource');
     $routes->match(['post'],'/editSource', 'ApplicatioController::editSource');
     $routes->match(['post'],'/deleteSource', 'ApplicatioController::deleteSource');
+    $routes->match(['post'],'/initalConfigLovSource', 'ApplicatioController::initalConfigLovSource');
 
     $routes->get('/sourceGroup', 'ApplicatioController::sourceGroup');
     $routes->match(['post'],'/sourceGroupView', 'ApplicatioController::SourceGroupView');
@@ -160,6 +162,32 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/editSourceGroup', 'ApplicatioController::editSourceGroup');
     $routes->match(['post'],'/deleteSourceGroup', 'ApplicatioController::deleteSourceGroup');
 
+    $routes->get('/reservationType', 'ApplicatioController::reservationType');
+    $routes->match(['post'],'/reservationTypeView', 'ApplicatioController::ReservationTypeView');
+    $routes->match(['post'],'/insertReservationType', 'ApplicatioController::insertReservationType');
+    $routes->match(['post'],'/editReservationType', 'ApplicatioController::editReservationType');
+    $routes->match(['post'],'/deleteReservationType', 'ApplicatioController::deleteReservationType');
+
+    $routes->get('/purposeStay', 'ApplicatioController::purposeStay');
+    $routes->match(['post'],'/purposeStayView', 'ApplicatioController::PurposeStayView');
+    $routes->match(['post'],'/insertPurposeStay', 'ApplicatioController::insertPurposeStay');
+    $routes->match(['post'],'/editPurposeStay', 'ApplicatioController::editPurposeStay');
+    $routes->match(['post'],'/deletePurposeStay', 'ApplicatioController::deletePurposeStay');
+
+    $routes->get('/payment', 'ApplicatioController::payment');
+    $routes->match(['post'],'/paymentView', 'ApplicatioController::PaymentView');
+    $routes->match(['post'],'/insertPayment', 'ApplicatioController::insertPayment');
+    $routes->match(['post'],'/editPayment', 'ApplicatioController::editPayment');
+    $routes->match(['post'],'/deletePayment', 'ApplicatioController::deletePayment');
+
+    $routes->get('/overBooking', 'ApplicatioController::overBooking');
+    $routes->match(['post'],'/overBookingView', 'ApplicatioController::OverBookingView');
+    $routes->match(['post'],'/insertOverBooking', 'ApplicatioController::insertOverBooking');
+    $routes->match(['post'],'/editOverBooking', 'ApplicatioController::editOverBooking');
+    $routes->match(['post'],'/deleteOverBooking', 'ApplicatioController::deleteOverBooking');
+
+    $routes->match(['post'],'/getSupportingOverbookingLov', 'ApplicatioController::getSupportingOverbookingLov');
+    $routes->match(['post'],'/getRoomType', 'ApplicatioController::getRoomType');
 });
 /*
  * --------------------------------------------------------------------

@@ -1,0 +1,39 @@
+ERROR - 2022-03-25 02:46:51 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'PYM_CODE'.
+CRITICAL - 2022-03-25 02:46:51 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'PYM_CODE'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select OB_ID,OB...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select OB_ID,OB...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select OB_ID,OB...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2129): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_OVERBOOKIN...', 'OB_ID,OB_FROM_D...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->OverBookingView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-25 06:23:02 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'OB_RM_CLS'.
+CRITICAL - 2022-03-25 06:23:02 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'OB_RM_CLS'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select OB_ID,OB...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select OB_ID,OB...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(46): CodeIgniter\Database\BaseConnection->query('select OB_ID,OB...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2129): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_OVERBOOKIN...', 'OB_ID,OB_FROM_D...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->OverBookingView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-03-25 06:59:17 --> Undefined variable: param
+#0 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2135): CodeIgniter\Debug\Exceptions->errorHandler(8, 'Undefined varia...', 'C:\\wamp64\\www\\F...', 2135, Array)
+#1 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->getSupportingOverbookingLov()
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#4 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#5 {main}
+ERROR - 2022-03-25 07:16:49 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TY_ROOM_CLASS'.
+CRITICAL - 2022-03-25 07:16:49 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'RM_TY_ROOM_CLASS'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('SELECT RM_CL_CO...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT RM_CL_CO...')
+#2 C:\wamp64\www\FlexiGuest\app\Controllers\ApplicatioController.php(2146): CodeIgniter\Database\BaseConnection->query('SELECT RM_CL_CO...', Array)
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\ApplicatioController->getRoomType()
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ApplicatioController))
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#7 {main}

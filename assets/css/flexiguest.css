@@ -80,3 +80,22 @@ button.close {
   margin-top: 22px;
   justify-content: end;
 }
+.flxy_horiz_scroll{
+  overflow-y: auto;
+  min-width: 100%;
+}
+.flxy_inlineblk{
+  display: flex;
+}
+.flxy_labstick{
+  display: block;
+}
+.flxy_fixed{
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+.flxy_join{
+  display: block;
+width: 45px;
+}

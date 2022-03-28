@@ -189,6 +189,8 @@
     $(':input','#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('#popModalWindow').modal('show');
+    $('#RM_TYPE,#RM_HOUSKP_DY_SECTION,#RM_HOUSKP_EV_SECTION').html('<option value="">Select</option>').selectpicker('refresh');
+    $('#RM_FEATURE').val('').trigger('change');
     runInitialLevel();
   }
 
@@ -284,8 +286,9 @@
   //   });
   // });
 
-  $(document).on('keyup','.RM_HOUSKP_DY_SECTION,.RM_HOUSKP_EV_SECTION .form-control',function(){
+  $(document).on('keyup','.RM_HOUSKP_DY_SECTION .form-control,.RM_HOUSKP_EV_SECTION .form-control',function(){
     var search = $(this).val();
+    var fieldName = $(this).parents('.bootstrap-select')[0].classList[2];
     $.ajax({
         url: '<?php echo base_url('/houseKeepSecionList')?>',
         type: "post",
@@ -294,7 +297,7 @@
         // dataType:'json',
         success:function(respn){
           console.log(respn,"testing");
-          $('#RM_HOUSKP_DY_SECTION').html(respn).selectpicker('refresh');
+          $('#'+fieldName).html(respn).selectpicker('refresh');
         }
     });
   });

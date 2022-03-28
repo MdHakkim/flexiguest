@@ -9,7 +9,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Basic</h4>
+              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservation /</span> Reservation</h4>
 
               <!-- DataTable with Buttons -->
               <div class="card">
@@ -50,10 +50,8 @@
                     <form id="reservationForm" novalidate>
                       <div class="window-1">
                         <div class="row g-3">
-                          <div class="col-md-3">
-                            <!-- <input type="hidden" name="RESV_ID" id="RESV_ID" class="form-control"/> -->
+                          <div class="col-md-6">
                             <input type="hidden" name="RESV_STATUS" id="RESV_STATUS" class="form-control"/>
-                            
                             <lable class="form-lable">Arrival/Departure Date</lable>
                               <div class="input-group mb-3">
                                 <input type="text" id="RESV_ARRIVAL_DT" class="form-control RESV_ARRIVAL_DT" placeholder="DD-MM-YYYY">
@@ -84,7 +82,6 @@
                                 <input type="number"  id="RESV_CHILDREN" class="form-control RESV_CHILDREN" placeholder="children" />
                               </div>
                           </div>
-                          <div class="col-md-2"></div>
                           <div class="col-md-3">
                             <lable class="form-lable">Guest Name</lable>
                               <div class="input-group mb-3">
@@ -202,7 +199,7 @@
                           <div class="col-md-3">
                             <lable class="form-lable">Guest Name</lable>
                               <div class="input-group mb-3">
-                                <select name="RESV_NAME"  id="RESV_NAME" class="selectpicker RESV_NAME" data-live-search="true" required>
+                                <select name="RESV_NAME"  id="RESV_NAME" class="selectpicker RESV_NAME activeName" data-live-search="true" required>
                                   <option value="">Select</option>
                                 </select>
                                 <div class="invalid-feedback">
@@ -284,7 +281,7 @@
                           </div>
                           
                           <div class="col-md-6"></div>
-                          <div class="col-md-3">
+                          <div class="col-md-6">
                             <input type="hidden" name="RESV_FEATURE" id="RESV_FEATURE" class="form-control"/>
                             <input type="hidden" name="RESV_ID" id="RESV_ID" class="form-control"/>
                             <lable class="form-lable">Arrival/Departure Date</lable>
@@ -645,6 +642,34 @@
             </div>
             <!-- /Modal window -->
             
+            <!-- Rate Query Modal window -->
+            <div class="modal fade" id="rateQueryWindow" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="rateQueryWindowLable">New message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form id="rateQueryForm">
+                      <div class="row g-3">
+                        <div class="col-md-12 flxy_horiz_scroll">
+                          <table class="table table-bordered" style="table-layout:fixed;">
+                            <tbody id="rateQueryTable">
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <!-- <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" onClick="submitForm('rateQueryForm',event)" class="btn btn-primary">Save</button>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+            <!-- Rate Query Modal window end -->
             <div class="content-backdrop fade"></div>
           </div>
           <!-- Content wrapper -->
@@ -698,18 +723,32 @@
         format: 'd-M-yyyy',
         autoclose: true
     });
-    // $('#RESV_ETA').datetimepicker({
-    //   format: 'hh:mm:ss a'
-    // });    
-
+    
   });
 
+  function generateRateQuery(){
+    $.ajax({
+        url: '<?php echo base_url('/getRateQueryData')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        // data:{sysid:sysid},
+        dataType:'json',
+        success:function(respn){
+          console.log(respn,"SDFDSF");
+          $('#rateQueryTable').html(respn[0]);
+        }
+      });
+  }
+
   function next(){
-    $('.window-1,#nextbtn').hide();
-    $('.window-2').show();
-    $('#submitResrBtn').removeClass('submitResr');
-    runCountryList();
-    runInitializeConfig();
+    // rateQueryTable
+    generateRateQuery();
+    $('#rateQueryWindow').modal('show');
+
+    // $('.window-1,#nextbtn').hide();
+    // $('.window-2').show();
+    // $('#submitResrBtn').removeClass('submitResr');
+    // runInitializeConfig();
   }
   function previous(){
     $('.window-1,#nextbtn').show();
@@ -818,6 +857,7 @@
     $('#submitResrBtn').addClass('submitResr');
     $('#submitResrBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('.window-2').hide();
+    runCountryList();
   }
 
   $(document).on('click','.flxCheckBox',function(){
@@ -832,6 +872,8 @@
 
   $(document).on('change','*#RESV_NAME',function(){
     var custId = $(this).find('option:selected').val();
+    var thisActive = $(this).hasClass('activeName')
+    thisActive ? '' : $('[name="RESV_NAME"]').val(custId).selectpicker('refresh');
     var url = '<?php echo base_url('/getCustomerDetail')?>';
     $.ajax({
         url: url,
@@ -856,12 +898,12 @@
   });
 
   // validation start //
-  function reservationValidate(event,id){
+  function reservationValidate(event,id,mode){
     event.preventDefault();
-    // alert();
     var form = document.getElementById(id);
+    var condition = (mode=='R' ? !form.checkValidity() || !checkArrivalDate() || !checkArrivalDate() : !form.checkValidity());
     form.classList.add('was-validated');
-    if (!form.checkValidity() || !checkArrivalDate() || !checkArrivalDate()) {
+    if (condition) {
           return false;
     } else {
         return true;
@@ -918,7 +960,7 @@
   // validation end //
 
   function submitForm(id,mode,event){
-    var validate = reservationValidate(event,id);
+    var validate = reservationValidate(event,id,mode);
     if(!validate){
       return false;
     }
@@ -1120,7 +1162,7 @@
   });
   $(document).on('change','#CUST_STATE',function(){
     var scode = $(this).val();
-    var ccode = $('#CUST_COUNTRY').find('option:selected').val();
+    var ccode = $('#customerForm #CUST_COUNTRY').find('option:selected').val();
     $.ajax({
         url: '<?php echo base_url('/cityList')?>',
         type: "post",

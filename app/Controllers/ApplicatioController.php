@@ -7,10 +7,12 @@ class ApplicatioController extends BaseController
 {
     public $Db;
     public $session;
+    public $request;
     public function __construct(){
         $this->Db = \Config\Database::connect();
         $this->session = \Config\Services::session();
         helper(['form']);
+        $this->request = \Config\Services::request();
     }
     
     // public function index(){
@@ -23,7 +25,7 @@ class ApplicatioController extends BaseController
 
     public function blockList(){
         try{
-            $search = $_POST['search'];
+            $search = $this->request->getPost("search");
             $sql = "SELECT BLK_ID,BLK_NAME,BLK_CODE,BLK_START_DT,BLK_END_DT,BLK_STATUS FROM FLXY_BLOCK WHERE (BLK_NAME LIKE '%$search%' OR BLK_AGENT LIKE '%$search%' OR BLK_GROUP LIKE '%$search%' OR BLK_CODE LIKE '%$search%')";
             $response = $this->Db->query($sql)->getResultArray();
             $option='<option value="">Select Block</option>';
@@ -38,7 +40,7 @@ class ApplicatioController extends BaseController
     }
 
     function deleteReservation(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_RESERVATION')->delete(['RESV_ID' => $sysid]); 
             if($return){
@@ -63,7 +65,7 @@ class ApplicatioController extends BaseController
     }
 
     function editReservation(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT RESV_ID,RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,RESV_DEPARTURE,RESV_NO_F_ROOM,
         RESV_NAME,(CUST_FIRST_NAME+' '+CUST_LAST_NAME)RESV_NAME_DESC,RESV_MEMBER_TY,
         RESV_COMPANY,(SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY)RESV_COMPANY_DESC,
@@ -102,103 +104,103 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['RESV_ID'];
+            $sysid = $this->request->getPost("RESV_ID");
             if(!empty($sysid)){
-            $data = ["RESV_ARRIVAL_DT" => $_POST["RESV_ARRIVAL_DT"],
-                "RESV_NIGHT" => $_POST["RESV_NIGHT"],
-                "RESV_ADULTS" => $_POST["RESV_ADULTS"],
-                "RESV_CHILDREN" => $_POST["RESV_CHILDREN"],
-                "RESV_DEPARTURE" => $_POST["RESV_DEPARTURE"],
-                "RESV_NO_F_ROOM" => $_POST["RESV_NO_F_ROOM"],
-                "RESV_NAME" => $_POST["RESV_NAME"],
-                "RESV_MEMBER_TY" => $_POST["RESV_MEMBER_TY"],
-                "RESV_COMPANY" => $_POST["RESV_COMPANY"],
-                "RESV_AGENT" => $_POST["RESV_AGENT"],
-                "RESV_BLOCK" => $_POST["RESV_BLOCK"],
-                "RESV_MEMBER_NO" => $_POST["RESV_MEMBER_NO"],
-                "RESV_CORP_NO" => $_POST["RESV_CORP_NO"],
-                "RESV_IATA_NO" => $_POST["RESV_IATA_NO"],
-                // "RESV_CLOSED" => $_POST["RESV_CLOSED"],
-                // "RESV_DAY_USE" => $_POST["RESV_DAY_USE"],
-                // "RESV_PSEUDO" => $_POST["RESV_PSEUDO"],
-                "RESV_RATE_CLASS" => $_POST["RESV_RATE_CLASS"],
-                "RESV_RATE_CATEGORY" => $_POST["RESV_RATE_CATEGORY"],
-                "RESV_RATE_CODE" => $_POST["RESV_RATE_CODE"],
-                "RESV_ROOM_CLASS" => $_POST["RESV_ROOM_CLASS"],
-                "RESV_FEATURE" => $_POST["RESV_FEATURE"],
-                "RESV_PACKAGES" => $_POST["RESV_PACKAGES"],
-                "RESV_PURPOSE_STAY" => $_POST["RESV_PURPOSE_STAY"],
-                "RESV_STATUS" => $_POST["RESV_STATUS"],
-                "RESV_RM_TYPE" => $_POST["RESV_RM_TYPE"],
-                "RESV_ROOM" => $_POST["RESV_ROOM"],
-                "RESV_RATE" => $_POST["RESV_RATE"],
-                "RESV_ETA" => $_POST["RESV_ETA"],
-                "RESV_CO_TIME" => $_POST["RESV_CO_TIME"],
-                "RESV_RTC" => $_POST["RESV_RTC"],
-                "RESV_FIXED_RATE" => (empty($_POST["RESV_FIXED_RATE"]) ? '' : $_POST["RESV_FIXED_RATE"]),
-                "RESV_RESRV_TYPE" => $_POST["RESV_RESRV_TYPE"],
-                "RESV_MARKET" => $_POST["RESV_MARKET"],
-                "RESV_SOURCE" => $_POST["RESV_SOURCE"],
-                "RESV_ORIGIN" => $_POST["RESV_ORIGIN"],
-                "RESV_PAYMENT_TYPE" => $_POST["RESV_PAYMENT_TYPE"],
-                "RESV_SPECIALS" => $_POST["RESV_SPECIALS"],
-                "RESV_COMMENTS" => $_POST["RESV_COMMENTS"],
-                "RESV_ITEM_INVT" => $_POST["RESV_ITEM_INVT"],
-                "RESV_BOKR_LAST" => $_POST["RESV_BOKR_LAST"],
-                "RESV_BOKR_FIRST" => $_POST["RESV_BOKR_FIRST"],
-                "RESV_BOKR_EMAIL" => $_POST["RESV_BOKR_EMAIL"],
-                "RESV_BOKR_PHONE" => $_POST["RESV_BOKR_PHONE"],
-                "RESV_CONFIRM_YN" => $_POST["RESV_CONFIRM_YN"],
+            $data = ["RESV_ARRIVAL_DT" => $this->request->getPost("RESV_ARRIVAL_DT"),
+                "RESV_NIGHT" => $this->request->getPost("RESV_NIGHT"),
+                "RESV_ADULTS" => $this->request->getPost("RESV_ADULTS"),
+                "RESV_CHILDREN" => $this->request->getPost("RESV_CHILDREN"),
+                "RESV_DEPARTURE" => $this->request->getPost("RESV_DEPARTURE"),
+                "RESV_NO_F_ROOM" => $this->request->getPost("RESV_NO_F_ROOM"),
+                "RESV_NAME" => $this->request->getPost("RESV_NAME"),
+                "RESV_MEMBER_TY" => $this->request->getPost("RESV_MEMBER_TY"),
+                "RESV_COMPANY" => $this->request->getPost("RESV_COMPANY"),
+                "RESV_AGENT" => $this->request->getPost("RESV_AGENT"),
+                "RESV_BLOCK" => $this->request->getPost("RESV_BLOCK"),
+                "RESV_MEMBER_NO" => $this->request->getPost("RESV_MEMBER_NO"),
+                "RESV_CORP_NO" => $this->request->getPost("RESV_CORP_NO"),
+                "RESV_IATA_NO" => $this->request->getPost("RESV_IATA_NO"),
+                // "RESV_CLOSED" => $this->request->getPost("RESV_CLOSED"),
+                // "RESV_DAY_USE" => $this->request->getPost("RESV_DAY_USE"),
+                // "RESV_PSEUDO" => $this->request->getPost("RESV_PSEUDO"),
+                "RESV_RATE_CLASS" => $this->request->getPost("RESV_RATE_CLASS"),
+                "RESV_RATE_CATEGORY" => $this->request->getPost("RESV_RATE_CATEGORY"),
+                "RESV_RATE_CODE" => $this->request->getPost("RESV_RATE_CODE"),
+                "RESV_ROOM_CLASS" => $this->request->getPost("RESV_ROOM_CLASS"),
+                "RESV_FEATURE" => $this->request->getPost("RESV_FEATURE"),
+                "RESV_PACKAGES" => $this->request->getPost("RESV_PACKAGES"),
+                "RESV_PURPOSE_STAY" => $this->request->getPost("RESV_PURPOSE_STAY"),
+                "RESV_STATUS" => $this->request->getPost("RESV_STATUS"),
+                "RESV_RM_TYPE" => $this->request->getPost("RESV_RM_TYPE"),
+                "RESV_ROOM" => $this->request->getPost("RESV_ROOM"),
+                "RESV_RATE" => $this->request->getPost("RESV_RATE"),
+                "RESV_ETA" => $this->request->getPost("RESV_ETA"),
+                "RESV_CO_TIME" => $this->request->getPost("RESV_CO_TIME"),
+                "RESV_RTC" => $this->request->getPost("RESV_RTC"),
+                "RESV_FIXED_RATE" => (empty($this->request->getPost("RESV_FIXED_RATE")) ? '' : $this->request->getPost("RESV_FIXED_RATE")),
+                "RESV_RESRV_TYPE" => $this->request->getPost("RESV_RESRV_TYPE"),
+                "RESV_MARKET" => $this->request->getPost("RESV_MARKET"),
+                "RESV_SOURCE" => $this->request->getPost("RESV_SOURCE"),
+                "RESV_ORIGIN" => $this->request->getPost("RESV_ORIGIN"),
+                "RESV_PAYMENT_TYPE" => $this->request->getPost("RESV_PAYMENT_TYPE"),
+                "RESV_SPECIALS" => $this->request->getPost("RESV_SPECIALS"),
+                "RESV_COMMENTS" => $this->request->getPost("RESV_COMMENTS"),
+                "RESV_ITEM_INVT" => $this->request->getPost("RESV_ITEM_INVT"),
+                "RESV_BOKR_LAST" => $this->request->getPost("RESV_BOKR_LAST"),
+                "RESV_BOKR_FIRST" => $this->request->getPost("RESV_BOKR_FIRST"),
+                "RESV_BOKR_EMAIL" => $this->request->getPost("RESV_BOKR_EMAIL"),
+                "RESV_BOKR_PHONE" => $this->request->getPost("RESV_BOKR_PHONE"),
+                "RESV_CONFIRM_YN" => $this->request->getPost("RESV_CONFIRM_YN"),
                 "RESV_UPDATE_UID" => $this->session->name,
                 "RESV_UPDATE_DT" => date("d-M-Y")
                 ];
                 $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data); 
             }else{
-                $data = ["RESV_ARRIVAL_DT" => $_POST["RESV_ARRIVAL_DT"],
-                    "RESV_NIGHT" => $_POST["RESV_NIGHT"],
-                    "RESV_ADULTS" => $_POST["RESV_ADULTS"],
-                    "RESV_CHILDREN" => $_POST["RESV_CHILDREN"],
-                    "RESV_DEPARTURE" => $_POST["RESV_DEPARTURE"],
-                    "RESV_NO_F_ROOM" => $_POST["RESV_NO_F_ROOM"],
-                    "RESV_NAME" => $_POST["RESV_NAME"],
-                    "RESV_MEMBER_TY" => $_POST["RESV_MEMBER_TY"],
-                    "RESV_COMPANY" => $_POST["RESV_COMPANY"],
-                    "RESV_AGENT" => $_POST["RESV_AGENT"],
-                    "RESV_BLOCK" => $_POST["RESV_BLOCK"],
-                    "RESV_MEMBER_NO" => $_POST["RESV_MEMBER_NO"],
-                    "RESV_CORP_NO" => $_POST["RESV_CORP_NO"],
-                    "RESV_IATA_NO" => $_POST["RESV_IATA_NO"],
-                    // "RESV_CLOSED" => $_POST["RESV_CLOSED"],
-                    // "RESV_DAY_USE" => $_POST["RESV_DAY_USE"],
-                    // "RESV_PSEUDO" => $_POST["RESV_PSEUDO"],
-                    "RESV_RATE_CLASS" => $_POST["RESV_RATE_CLASS"],
-                    "RESV_RATE_CATEGORY" => $_POST["RESV_RATE_CATEGORY"],
-                    "RESV_RATE_CODE" => $_POST["RESV_RATE_CODE"],
-                    "RESV_ROOM_CLASS" => $_POST["RESV_ROOM_CLASS"],
-                    "RESV_FEATURE" => $_POST["RESV_FEATURE"],
-                    "RESV_PACKAGES" => $_POST["RESV_PACKAGES"],
-                    "RESV_PURPOSE_STAY" => $_POST["RESV_PURPOSE_STAY"],
+                $data = ["RESV_ARRIVAL_DT" => $this->request->getPost("RESV_ARRIVAL_DT"),
+                    "RESV_NIGHT" => $this->request->getPost("RESV_NIGHT"),
+                    "RESV_ADULTS" => $this->request->getPost("RESV_ADULTS"),
+                    "RESV_CHILDREN" => $this->request->getPost("RESV_CHILDREN"),
+                    "RESV_DEPARTURE" => $this->request->getPost("RESV_DEPARTURE"),
+                    "RESV_NO_F_ROOM" => $this->request->getPost("RESV_NO_F_ROOM"),
+                    "RESV_NAME" => $this->request->getPost("RESV_NAME"),
+                    "RESV_MEMBER_TY" => $this->request->getPost("RESV_MEMBER_TY"),
+                    "RESV_COMPANY" => $this->request->getPost("RESV_COMPANY"),
+                    "RESV_AGENT" => $this->request->getPost("RESV_AGENT"),
+                    "RESV_BLOCK" => $this->request->getPost("RESV_BLOCK"),
+                    "RESV_MEMBER_NO" => $this->request->getPost("RESV_MEMBER_NO"),
+                    "RESV_CORP_NO" => $this->request->getPost("RESV_CORP_NO"),
+                    "RESV_IATA_NO" => $this->request->getPost("RESV_IATA_NO"),
+                    // "RESV_CLOSED" => $this->request->getPost("RESV_CLOSED"),
+                    // "RESV_DAY_USE" => $this->request->getPost("RESV_DAY_USE"),
+                    // "RESV_PSEUDO" => $this->request->getPost("RESV_PSEUDO"),
+                    "RESV_RATE_CLASS" => $this->request->getPost("RESV_RATE_CLASS"),
+                    "RESV_RATE_CATEGORY" => $this->request->getPost("RESV_RATE_CATEGORY"),
+                    "RESV_RATE_CODE" => $this->request->getPost("RESV_RATE_CODE"),
+                    "RESV_ROOM_CLASS" => $this->request->getPost("RESV_ROOM_CLASS"),
+                    "RESV_FEATURE" => $this->request->getPost("RESV_FEATURE"),
+                    "RESV_PACKAGES" => $this->request->getPost("RESV_PACKAGES"),
+                    "RESV_PURPOSE_STAY" => $this->request->getPost("RESV_PURPOSE_STAY"),
                     "RESV_STATUS" => "PRE-CHECKIN",
-                    "RESV_RM_TYPE" => $_POST["RESV_RM_TYPE"],
-                    "RESV_ROOM" => $_POST["RESV_ROOM"],
-                    "RESV_RATE" => $_POST["RESV_RATE"],
-                    "RESV_ETA" => $_POST["RESV_ETA"],
-                    "RESV_CO_TIME" => $_POST["RESV_CO_TIME"],
-                    "RESV_RTC" => $_POST["RESV_RTC"],
-                    "RESV_FIXED_RATE" => (empty($_POST["RESV_FIXED_RATE"]) ? '' : $_POST["RESV_FIXED_RATE"]),
-                    "RESV_RESRV_TYPE" => $_POST["RESV_RESRV_TYPE"],
-                    "RESV_MARKET" => $_POST["RESV_MARKET"],
-                    "RESV_SOURCE" => $_POST["RESV_SOURCE"],
-                    "RESV_ORIGIN" => $_POST["RESV_ORIGIN"],
-                    "RESV_PAYMENT_TYPE" => $_POST["RESV_PAYMENT_TYPE"],
-                    "RESV_SPECIALS" => $_POST["RESV_SPECIALS"],
-                    "RESV_COMMENTS" => $_POST["RESV_COMMENTS"],
-                    "RESV_ITEM_INVT" => $_POST["RESV_ITEM_INVT"],
-                    "RESV_BOKR_LAST" => $_POST["RESV_BOKR_LAST"],
-                    "RESV_BOKR_FIRST" => $_POST["RESV_BOKR_FIRST"],
-                    "RESV_BOKR_EMAIL" => $_POST["RESV_BOKR_EMAIL"],
-                    "RESV_BOKR_PHONE" => $_POST["RESV_BOKR_PHONE"],
-                    "RESV_CONFIRM_YN" => $_POST["RESV_CONFIRM_YN"],
+                    "RESV_RM_TYPE" => $this->request->getPost("RESV_RM_TYPE"),
+                    "RESV_ROOM" => $this->request->getPost("RESV_ROOM"),
+                    "RESV_RATE" => $this->request->getPost("RESV_RATE"),
+                    "RESV_ETA" => $this->request->getPost("RESV_ETA"),
+                    "RESV_CO_TIME" => $this->request->getPost("RESV_CO_TIME"),
+                    "RESV_RTC" => $this->request->getPost("RESV_RTC"),
+                    "RESV_FIXED_RATE" => (empty($this->request->getPost("RESV_FIXED_RATE")) ? '' : $this->request->getPost("RESV_FIXED_RATE")),
+                    "RESV_RESRV_TYPE" => $this->request->getPost("RESV_RESRV_TYPE"),
+                    "RESV_MARKET" => $this->request->getPost("RESV_MARKET"),
+                    "RESV_SOURCE" => $this->request->getPost("RESV_SOURCE"),
+                    "RESV_ORIGIN" => $this->request->getPost("RESV_ORIGIN"),
+                    "RESV_PAYMENT_TYPE" => $this->request->getPost("RESV_PAYMENT_TYPE"),
+                    "RESV_SPECIALS" => $this->request->getPost("RESV_SPECIALS"),
+                    "RESV_COMMENTS" => $this->request->getPost("RESV_COMMENTS"),
+                    "RESV_ITEM_INVT" => $this->request->getPost("RESV_ITEM_INVT"),
+                    "RESV_BOKR_LAST" => $this->request->getPost("RESV_BOKR_LAST"),
+                    "RESV_BOKR_FIRST" => $this->request->getPost("RESV_BOKR_FIRST"),
+                    "RESV_BOKR_EMAIL" => $this->request->getPost("RESV_BOKR_EMAIL"),
+                    "RESV_BOKR_PHONE" => $this->request->getPost("RESV_BOKR_PHONE"),
+                    "RESV_CONFIRM_YN" => $this->request->getPost("RESV_CONFIRM_YN"),
                     "RESV_CREATE_UID" => $this->session->name,
                     "RESV_CREATE_DT" => date("d-M-Y")
                 ];
@@ -206,7 +208,7 @@ class ApplicatioController extends BaseController
                 $sysid = $this->Db->insertID();
             }
             if($return){
-                $custId = $_POST['RESV_NAME'];
+                $custId = $this->request->getPost("RESV_NAME");
                 $this->updateCustomerData($custId);
                 $return = $this->Db->table('FLXY_RESERVATION')->select('RESV_NO')->where('RESV_ID',$sysid)->get()->getResultArray();
                 $param = ['SYSID'=> $sysid];
@@ -226,11 +228,11 @@ class ApplicatioController extends BaseController
     }
 
     public function updateCustomerData($custId){
-        $data = ["CUST_FIRST_NAME" => $_POST["CUST_FIRST_NAME"],
-            "CUST_TITLE" => $_POST["CUST_TITLE"],
-            "CUST_COUNTRY" => $_POST["CUST_COUNTRY"],
-            "CUST_VIP" => $_POST["CUST_VIP"],
-            "CUST_PHONE" => $_POST["CUST_PHONE"],
+        $data = ["CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
+            "CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
+            "CUST_COUNTRY" => $this->request->getPost("CUST_COUNTRY"),
+            "CUST_VIP" => $this->request->getPost("CUST_VIP"),
+            "CUST_PHONE" => $this->request->getPost("CUST_PHONE"),
             "CUST_UPDATE_UID" => $this->session->name,
             "CUST_UPDATE_DT" => date("d-M-Y")
         ];
@@ -252,7 +254,7 @@ class ApplicatioController extends BaseController
     }
 
     function stateList(){
-        $ccode = $_POST['ccode'];
+        $ccode = $this->request->getPost("ccode");
         $sql = "SELECT sname,state_code FROM STATE WHERE COUNTRY_CODE='$ccode'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select State</option>';
@@ -263,8 +265,8 @@ class ApplicatioController extends BaseController
     }
 
     function cityList(){
-        $ccode = $_POST['ccode'];
-        $scode = $_POST['scode'];
+        $ccode = $this->request->getPost("ccode");
+        $scode = $this->request->getPost("scode");
         $sql = "SELECT ctname,id FROM CITY WHERE COUNTRY_CODE='$ccode' AND STATE_CODE='$scode'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select City</option>';
@@ -291,67 +293,67 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['CUST_ID'];
+            $sysid = $this->request->getPost("CUST_ID");
             if(!empty($sysid)){
-                $data = ["CUST_FIRST_NAME" => $_POST["CUST_FIRST_NAME"],
-                    "CUST_MIDDLE_NAME" => $_POST["CUST_MIDDLE_NAME"],
-                    "CUST_LAST_NAME" => $_POST["CUST_LAST_NAME"],
-                    "CUST_LANG" => $_POST["CUST_LANG"],
-                    "CUST_TITLE" => $_POST["CUST_TITLE"],
-                    "CUST_DOB" => $_POST["CUST_DOB"],
-                    "CUST_PASSPORT" => $_POST["CUST_PASSPORT"],
-                    "CUST_ADDRESS_1" => $_POST["CUST_ADDRESS_1"],
-                    "CUST_ADDRESS_2" => $_POST["CUST_ADDRESS_2"],
-                    "CUST_ADDRESS_3" => $_POST["CUST_ADDRESS_3"],
-                    "CUST_COUNTRY" => $_POST["CUST_COUNTRY"],
-                    "CUST_STATE" => $_POST["CUST_STATE"],
-                    "CUST_CITY" => $_POST["CUST_CITY"],
-                    "CUST_EMAIL" => $_POST["CUST_EMAIL"],
-                    "CUST_MOBILE" => $_POST["CUST_MOBILE"],
-                    "CUST_PHONE" => $_POST["CUST_PHONE"],
-                    "CUST_CLIENT_ID" => $_POST["CUST_CLIENT_ID"],
-                    "CUST_POSTAL_CODE" => $_POST["CUST_POSTAL_CODE"],
-                    "CUST_VIP" => $_POST["CUST_VIP"],
-                    "CUST_NATIONALITY" => $_POST["CUST_NATIONALITY"],
-                    "CUST_BUS_SEGMENT" => $_POST["CUST_BUS_SEGMENT"],
-                    "CUST_COMMUNICATION" => $_POST["CUST_COMMUNICATION"],
-                    "CUST_COMMUNICATION_DESC" => $_POST["CUST_COMMUNICATION_DESC"],
-                    "CUST_ACTIVE" => $_POST["CUST_ACTIVE"],
+                $data = ["CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
+                    "CUST_MIDDLE_NAME" => $this->request->getPost("CUST_MIDDLE_NAME"),
+                    "CUST_LAST_NAME" => $this->request->getPost("CUST_LAST_NAME"),
+                    "CUST_LANG" => $this->request->getPost("CUST_LANG"),
+                    "CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
+                    "CUST_DOB" => $this->request->getPost("CUST_DOB"),
+                    "CUST_PASSPORT" => $this->request->getPost("CUST_PASSPORT"),
+                    "CUST_ADDRESS_1" => $this->request->getPost("CUST_ADDRESS_1"),
+                    "CUST_ADDRESS_2" => $this->request->getPost("CUST_ADDRESS_2"),
+                    "CUST_ADDRESS_3" => $this->request->getPost("CUST_ADDRESS_3"),
+                    "CUST_COUNTRY" => $this->request->getPost("CUST_COUNTRY"),
+                    "CUST_STATE" => $this->request->getPost("CUST_STATE"),
+                    "CUST_CITY" => $this->request->getPost("CUST_CITY"),
+                    "CUST_EMAIL" => $this->request->getPost("CUST_EMAIL"),
+                    "CUST_MOBILE" => $this->request->getPost("CUST_MOBILE"),
+                    "CUST_PHONE" => $this->request->getPost("CUST_PHONE"),
+                    "CUST_CLIENT_ID" => $this->request->getPost("CUST_CLIENT_ID"),
+                    "CUST_POSTAL_CODE" => $this->request->getPost("CUST_POSTAL_CODE"),
+                    "CUST_VIP" => $this->request->getPost("CUST_VIP"),
+                    "CUST_NATIONALITY" => $this->request->getPost("CUST_NATIONALITY"),
+                    "CUST_BUS_SEGMENT" => $this->request->getPost("CUST_BUS_SEGMENT"),
+                    "CUST_COMMUNICATION" => $this->request->getPost("CUST_COMMUNICATION"),
+                    "CUST_COMMUNICATION_DESC" => $this->request->getPost("CUST_COMMUNICATION_DESC"),
+                    "CUST_ACTIVE" => $this->request->getPost("CUST_ACTIVE"),
                     "CUST_UPDATE_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $sysid)->update($data); 
             }else{
-                $data = ["CUST_FIRST_NAME" => $_POST["CUST_FIRST_NAME"],
-                    "CUST_MIDDLE_NAME" => $_POST["CUST_MIDDLE_NAME"],
-                    "CUST_LAST_NAME" => $_POST["CUST_LAST_NAME"],
-                    "CUST_LANG" => $_POST["CUST_LANG"],
-                    "CUST_TITLE" => $_POST["CUST_TITLE"],
-                    "CUST_DOB" => $_POST["CUST_DOB"],
-                    "CUST_PASSPORT" => $_POST["CUST_PASSPORT"],
-                    "CUST_ADDRESS_1" => $_POST["CUST_ADDRESS_1"],
-                    "CUST_ADDRESS_2" => $_POST["CUST_ADDRESS_2"],
-                    "CUST_ADDRESS_3" => $_POST["CUST_ADDRESS_3"],
-                    "CUST_COUNTRY" => $_POST["CUST_COUNTRY"],
-                    "CUST_STATE" => $_POST["CUST_STATE"],
-                    "CUST_CITY" => $_POST["CUST_CITY"],
-                    "CUST_EMAIL" => $_POST["CUST_EMAIL"],
-                    "CUST_MOBILE" => $_POST["CUST_MOBILE"],
-                    "CUST_PHONE" => $_POST["CUST_PHONE"],
-                    "CUST_CLIENT_ID" => $_POST["CUST_CLIENT_ID"],
-                    "CUST_POSTAL_CODE" => $_POST["CUST_POSTAL_CODE"],
-                    "CUST_VIP" => $_POST["CUST_VIP"],
-                    "CUST_NATIONALITY" => $_POST["CUST_NATIONALITY"],
-                    "CUST_BUS_SEGMENT" => $_POST["CUST_BUS_SEGMENT"],
-                    "CUST_COMMUNICATION" => $_POST["CUST_COMMUNICATION"],
-                    "CUST_COMMUNICATION_DESC" => $_POST["CUST_COMMUNICATION_DESC"],
-                    "CUST_ACTIVE" => $_POST["CUST_ACTIVE"],
+                $data = ["CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
+                    "CUST_MIDDLE_NAME" => $this->request->getPost("CUST_MIDDLE_NAME"),
+                    "CUST_LAST_NAME" => $this->request->getPost("CUST_LAST_NAME"),
+                    "CUST_LANG" => $this->request->getPost("CUST_LANG"),
+                    "CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
+                    "CUST_DOB" => $this->request->getPost("CUST_DOB"),
+                    "CUST_PASSPORT" => $this->request->getPost("CUST_PASSPORT"),
+                    "CUST_ADDRESS_1" => $this->request->getPost("CUST_ADDRESS_1"),
+                    "CUST_ADDRESS_2" => $this->request->getPost("CUST_ADDRESS_2"),
+                    "CUST_ADDRESS_3" => $this->request->getPost("CUST_ADDRESS_3"),
+                    "CUST_COUNTRY" => $this->request->getPost("CUST_COUNTRY"),
+                    "CUST_STATE" => $this->request->getPost("CUST_STATE"),
+                    "CUST_CITY" => $this->request->getPost("CUST_CITY"),
+                    "CUST_EMAIL" => $this->request->getPost("CUST_EMAIL"),
+                    "CUST_MOBILE" => $this->request->getPost("CUST_MOBILE"),
+                    "CUST_PHONE" => $this->request->getPost("CUST_PHONE"),
+                    "CUST_CLIENT_ID" => $this->request->getPost("CUST_CLIENT_ID"),
+                    "CUST_POSTAL_CODE" => $this->request->getPost("CUST_POSTAL_CODE"),
+                    "CUST_VIP" => $this->request->getPost("CUST_VIP"),
+                    "CUST_NATIONALITY" => $this->request->getPost("CUST_NATIONALITY"),
+                    "CUST_BUS_SEGMENT" => $this->request->getPost("CUST_BUS_SEGMENT"),
+                    "CUST_COMMUNICATION" => $this->request->getPost("CUST_COMMUNICATION"),
+                    "CUST_COMMUNICATION_DESC" => $this->request->getPost("CUST_COMMUNICATION_DESC"),
+                    "CUST_ACTIVE" => $this->request->getPost("CUST_ACTIVE"),
                     "CUST_CREATE_DT" => date("d-M-Y")
                 ];
                 $return = $this->Db->table('FLXY_CUSTOMER')->insert($data); 
             }
             if($return){
                 if(empty($sysid)){
-                    $fullname = $_POST["CUST_FIRST_NAME"].' '.$_POST["CUST_LAST_NAME"];
+                    $fullname = $this->request->getPost("CUST_FIRST_NAME").' '.$this->request->getPost("CUST_LAST_NAME");
                     $id = $this->Db->insertID();
                     $response = array("ID"=>$id,"FULLNAME"=>$fullname);
                 }else{
@@ -369,7 +371,7 @@ class ApplicatioController extends BaseController
     }
 
     function deleteCustomer(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_CUSTOMER')->delete(['CUST_ID' => $sysid]); 
             if($return){
@@ -398,7 +400,7 @@ class ApplicatioController extends BaseController
     }
 
     function editCustomer(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_LANG,CUST_TITLE,CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
         CUST_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC
         ,CUST_STATE,(SELECT sname FROM STATE WHERE STATE_CODE=CUST_STATE AND COUNTRY_CODE=CUST_COUNTRY) CUST_STATE_DESC
@@ -417,7 +419,7 @@ class ApplicatioController extends BaseController
     }
 
     function getCustomerDetail(){
-        $param = ['SYSID'=> $_POST['custId']];
+        $param = ['SYSID'=> $this->request->getPost("custId")];
         $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,CUST_VIP,CUST_PHONE FROM FLXY_CUSTOMER WHERE CUST_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
@@ -425,7 +427,7 @@ class ApplicatioController extends BaseController
 
     function customerList(){
         try{
-            $search = $_POST['search'];
+            $search = $this->request->getPost("search");
             $sql = "SELECT CUST_FIRST_NAME+' '+CUST_LAST_NAME AS FULLNAME,CUST_ID FROM FLXY_CUSTOMER WHERE (CUST_FIRST_NAME LIKE '%$search%' OR CUST_MIDDLE_NAME LIKE '%$search%' OR CUST_LAST_NAME LIKE '%$search%')";
             $response = $this->Db->query($sql)->getResultArray();
             $option='<option value="">Select Guest</option>';
@@ -473,57 +475,57 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['COM_ID'];
+            $sysid = $this->request->getPost("COM_ID");
             if(!empty($sysid)){
-                $data = ["COM_ACCOUNT" => $_POST["COM_ACCOUNT"],
-                    "COM_ADDRESS1" => $_POST["COM_ADDRESS1"],
-                    "COM_ADDRESS2" => $_POST["COM_ADDRESS2"],
-                    "COM_ADDRESS3" => $_POST["COM_ADDRESS3"],
-                    "COM_COUNTRY" => $_POST["COM_COUNTRY"],
-                    "COM_STATE" => $_POST["COM_STATE"],
-                    "COM_CITY" => $_POST["COM_CITY"],
-                    "COM_POSTAL" => $_POST["COM_POSTAL"],
-                    "COM_CONTACT_FR" => $_POST["COM_CONTACT_FR"],
-                    "COM_CONTACT_LT" => $_POST["COM_CONTACT_LT"],
-                    "COM_CONTACT_NO" => $_POST["COM_CONTACT_NO"],
-                    "COM_CONTACT_EMAIL" => $_POST["COM_CONTACT_EMAIL"],
-                    "COM_TYPE" => $_POST["COM_TYPE"],
-                    "COM_CORP_ID" => $_POST["COM_CORP_ID"],
-                    "COM_ACTIVE" => $_POST["COM_ACTIVE"],
-                    "COM_COMMUNI_CODE" => $_POST["COM_COMMUNI_CODE"],
-                    "COM_COMMUNI_DESC" => $_POST["COM_COMMUNI_DESC"],
+                $data = ["COM_ACCOUNT" => $this->request->getPost("COM_ACCOUNT"),
+                    "COM_ADDRESS1" => $this->request->getPost("COM_ADDRESS1"),
+                    "COM_ADDRESS2" => $this->request->getPost("COM_ADDRESS2"),
+                    "COM_ADDRESS3" => $this->request->getPost("COM_ADDRESS3"),
+                    "COM_COUNTRY" => $this->request->getPost("COM_COUNTRY"),
+                    "COM_STATE" => $this->request->getPost("COM_STATE"),
+                    "COM_CITY" => $this->request->getPost("COM_CITY"),
+                    "COM_POSTAL" => $this->request->getPost("COM_POSTAL"),
+                    "COM_CONTACT_FR" => $this->request->getPost("COM_CONTACT_FR"),
+                    "COM_CONTACT_LT" => $this->request->getPost("COM_CONTACT_LT"),
+                    "COM_CONTACT_NO" => $this->request->getPost("COM_CONTACT_NO"),
+                    "COM_CONTACT_EMAIL" => $this->request->getPost("COM_CONTACT_EMAIL"),
+                    "COM_TYPE" => $this->request->getPost("COM_TYPE"),
+                    "COM_CORP_ID" => $this->request->getPost("COM_CORP_ID"),
+                    "COM_ACTIVE" => $this->request->getPost("COM_ACTIVE"),
+                    "COM_COMMUNI_CODE" => $this->request->getPost("COM_COMMUNI_CODE"),
+                    "COM_COMMUNI_DESC" => $this->request->getPost("COM_COMMUNI_DESC"),
                     "COM_UPDATE_UID" => $this->session->name,
                     "COM_UPDATE_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_COMPANY_PROFILE')->where('COM_ID', $sysid)->update($data); 
             }else{
-                $data = ["COM_ACCOUNT" => $_POST["COM_ACCOUNT"],
-                    "COM_ADDRESS1" => $_POST["COM_ADDRESS1"],
-                    "COM_ADDRESS2" => $_POST["COM_ADDRESS2"],
-                    "COM_ADDRESS3" => $_POST["COM_ADDRESS3"],
-                    "COM_COUNTRY" => $_POST["COM_COUNTRY"],
-                    "COM_STATE" => $_POST["COM_STATE"],
-                    "COM_CITY" => $_POST["COM_CITY"],
-                    "COM_POSTAL" => $_POST["COM_POSTAL"],
-                    "COM_CONTACT_FR" => $_POST["COM_CONTACT_FR"],
-                    "COM_CONTACT_LT" => $_POST["COM_CONTACT_LT"],
-                    "COM_CONTACT_NO" => $_POST["COM_CONTACT_NO"],
-                    "COM_CONTACT_EMAIL" => $_POST["COM_CONTACT_EMAIL"],
-                    "COM_TYPE" => $_POST["COM_TYPE"],
-                    "COM_CORP_ID" => $_POST["COM_CORP_ID"],
-                    "COM_ACTIVE" => $_POST["COM_ACTIVE"],
-                    "COM_COMMUNI_CODE" => $_POST["COM_COMMUNI_CODE"],
-                    "COM_COMMUNI_DESC" => $_POST["COM_COMMUNI_DESC"],
-                    "COM_CREATE_UID" => (!empty($_POST["COM_CREATE_UID"]) ? $_POST["COM_CREATE_UID"]:null),
+                $data = ["COM_ACCOUNT" => $this->request->getPost("COM_ACCOUNT"),
+                    "COM_ADDRESS1" => $this->request->getPost("COM_ADDRESS1"),
+                    "COM_ADDRESS2" => $this->request->getPost("COM_ADDRESS2"),
+                    "COM_ADDRESS3" => $this->request->getPost("COM_ADDRESS3"),
+                    "COM_COUNTRY" => $this->request->getPost("COM_COUNTRY"),
+                    "COM_STATE" => $this->request->getPost("COM_STATE"),
+                    "COM_CITY" => $this->request->getPost("COM_CITY"),
+                    "COM_POSTAL" => $this->request->getPost("COM_POSTAL"),
+                    "COM_CONTACT_FR" => $this->request->getPost("COM_CONTACT_FR"),
+                    "COM_CONTACT_LT" => $this->request->getPost("COM_CONTACT_LT"),
+                    "COM_CONTACT_NO" => $this->request->getPost("COM_CONTACT_NO"),
+                    "COM_CONTACT_EMAIL" => $this->request->getPost("COM_CONTACT_EMAIL"),
+                    "COM_TYPE" => $this->request->getPost("COM_TYPE"),
+                    "COM_CORP_ID" => $this->request->getPost("COM_CORP_ID"),
+                    "COM_ACTIVE" => $this->request->getPost("COM_ACTIVE"),
+                    "COM_COMMUNI_CODE" => $this->request->getPost("COM_COMMUNI_CODE"),
+                    "COM_COMMUNI_DESC" => $this->request->getPost("COM_COMMUNI_DESC"),
+                    "COM_CREATE_UID" => (!empty($this->request->getPost("COM_CREATE_UID")) ? $this->request->getPost("COM_CREATE_UID"):null),
                     "COM_CREATE_DT" => date("d-M-Y"),
-                    "COM_UPDATE_UID" => (!empty($_POST["COM_UPDATE_UID"]) ? $_POST["COM_UPDATE_UID"]:null),
-                    "COM_UPDATE_DT" => (!empty($_POST["COM_UPDATE_DT"]) ? $_POST["COM_UPDATE_DT"]:null)
+                    "COM_UPDATE_UID" => (!empty($this->request->getPost("COM_UPDATE_UID")) ? $this->request->getPost("COM_UPDATE_UID"):null),
+                    "COM_UPDATE_DT" => (!empty($this->request->getPost("COM_UPDATE_DT")) ? $this->request->getPost("COM_UPDATE_DT"):null)
                 ];
                 $return = $this->Db->table('FLXY_COMPANY_PROFILE')->insert($data); 
             }
             if($return){
                 if(empty($sysid)){
-                    $fullname = $_POST["COM_ACCOUNT"];
+                    $fullname = $this->request->getPost("COM_ACCOUNT");
                     $id = $this->Db->insertID();
                     $response = array("ID"=>$id,"FULLNAME"=>$fullname);
                 }else{
@@ -555,56 +557,56 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['AGN_ID'];
+            $sysid = $this->request->getPost("AGN_ID");
             if(!empty($sysid)){
-                $data = ["AGN_ACCOUNT" => $_POST["COM_ACCOUNT"],
-                    "AGN_ADDRESS1" => $_POST["COM_ADDRESS1"],
-                    "AGN_ADDRESS2" => $_POST["COM_ADDRESS2"],
-                    "AGN_ADDRESS3" => $_POST["COM_ADDRESS3"],
-                    "AGN_COUNTRY" => $_POST["COM_COUNTRY"],
-                    "AGN_STATE" => $_POST["COM_STATE"],
-                    "AGN_CITY" => $_POST["COM_CITY"],
-                    "AGN_POSTAL" => $_POST["COM_POSTAL"],
-                    "AGN_TERRITORY" => $_POST["COM_TERRITORY"],
-                    "AGN_IATA" => $_POST["COM_IATA"],
-                    "AGN_CONTACT_EMAIL" => $_POST["COM_CONTACT_EMAIL"],
-                    "AGN_TYPE" => $_POST["COM_TYPE"],
-                    "AGN_CONTACT_NO" => $_POST["COM_CONTACT_NO"],
-                    "AGN_ACTIVE" => $_POST["COM_ACTIVE"],
-                    "AGN_COMMUNI_CODE" => $_POST["COM_COMMUNI_CODE"],
-                    "AGN_COMMUNI_DESC" => $_POST["COM_COMMUNI_DESC"],
+                $data = ["AGN_ACCOUNT" => $this->request->getPost("COM_ACCOUNT"),
+                    "AGN_ADDRESS1" => $this->request->getPost("COM_ADDRESS1"),
+                    "AGN_ADDRESS2" => $this->request->getPost("COM_ADDRESS2"),
+                    "AGN_ADDRESS3" => $this->request->getPost("COM_ADDRESS3"),
+                    "AGN_COUNTRY" => $this->request->getPost("COM_COUNTRY"),
+                    "AGN_STATE" => $this->request->getPost("COM_STATE"),
+                    "AGN_CITY" => $this->request->getPost("COM_CITY"),
+                    "AGN_POSTAL" => $this->request->getPost("COM_POSTAL"),
+                    "AGN_TERRITORY" => $this->request->getPost("COM_TERRITORY"),
+                    "AGN_IATA" => $this->request->getPost("COM_IATA"),
+                    "AGN_CONTACT_EMAIL" => $this->request->getPost("COM_CONTACT_EMAIL"),
+                    "AGN_TYPE" => $this->request->getPost("COM_TYPE"),
+                    "AGN_CONTACT_NO" => $this->request->getPost("COM_CONTACT_NO"),
+                    "AGN_ACTIVE" => $this->request->getPost("COM_ACTIVE"),
+                    "AGN_COMMUNI_CODE" => $this->request->getPost("COM_COMMUNI_CODE"),
+                    "AGN_COMMUNI_DESC" => $this->request->getPost("COM_COMMUNI_DESC"),
                     "AGN_UPDATE_UID" => $this->session->name,
                     "AGN_UPDATE_DT" => date("d-M-Y")
                  ];
                 //  print_r($_POST);exit;
             $return = $this->Db->table('FLXY_AGENT_PROFILE')->where('AGN_ID', $sysid)->update($data); 
             }else{
-                $data = ["AGN_ACCOUNT" => $_POST["COM_ACCOUNT"],
-                    "AGN_ADDRESS1" => $_POST["COM_ADDRESS1"],
-                    "AGN_ADDRESS2" => $_POST["COM_ADDRESS2"],
-                    "AGN_ADDRESS3" => $_POST["COM_ADDRESS3"],
-                    "AGN_COUNTRY" => $_POST["COM_COUNTRY"],
-                    "AGN_STATE" => $_POST["COM_STATE"],
-                    "AGN_CITY" => $_POST["COM_CITY"],
-                    "AGN_POSTAL" => $_POST["COM_POSTAL"],
-                    "AGN_TERRITORY" => $_POST["COM_TERRITORY"],
-                    "AGN_IATA" => $_POST["COM_IATA"],
-                    "AGN_CONTACT_NO" => $_POST["COM_CONTACT_NO"],
-                    "AGN_CONTACT_EMAIL" => $_POST["COM_CONTACT_EMAIL"],
-                    "AGN_TYPE" => $_POST["COM_TYPE"],
-                    "AGN_ACTIVE" => $_POST["COM_ACTIVE"],
-                    "AGN_COMMUNI_CODE" => $_POST["COM_COMMUNI_CODE"],
-                    "AGN_COMMUNI_DESC" => $_POST["COM_COMMUNI_DESC"],
-                    "AGN_CREATE_UID" => (!empty($_POST["COM_CREATE_UID"]) ? $_POST["COM_CREATE_UID"]:null),
+                $data = ["AGN_ACCOUNT" => $this->request->getPost("COM_ACCOUNT"),
+                    "AGN_ADDRESS1" => $this->request->getPost("COM_ADDRESS1"),
+                    "AGN_ADDRESS2" => $this->request->getPost("COM_ADDRESS2"),
+                    "AGN_ADDRESS3" => $this->request->getPost("COM_ADDRESS3"),
+                    "AGN_COUNTRY" => $this->request->getPost("COM_COUNTRY"),
+                    "AGN_STATE" => $this->request->getPost("COM_STATE"),
+                    "AGN_CITY" => $this->request->getPost("COM_CITY"),
+                    "AGN_POSTAL" => $this->request->getPost("COM_POSTAL"),
+                    "AGN_TERRITORY" => $this->request->getPost("COM_TERRITORY"),
+                    "AGN_IATA" => $this->request->getPost("COM_IATA"),
+                    "AGN_CONTACT_NO" => $this->request->getPost("COM_CONTACT_NO"),
+                    "AGN_CONTACT_EMAIL" => $this->request->getPost("COM_CONTACT_EMAIL"),
+                    "AGN_TYPE" => $this->request->getPost("COM_TYPE"),
+                    "AGN_ACTIVE" => $this->request->getPost("COM_ACTIVE"),
+                    "AGN_COMMUNI_CODE" => $this->request->getPost("COM_COMMUNI_CODE"),
+                    "AGN_COMMUNI_DESC" => $this->request->getPost("COM_COMMUNI_DESC"),
+                    "AGN_CREATE_UID" => (!empty($this->request->getPost("COM_CREATE_UID")) ? $this->request->getPost("COM_CREATE_UID"):null),
                     "AGN_CREATE_DT" => date("d-M-Y"),
-                    "AGN_UPDATE_UID" => (!empty($_POST["COM_UPDATE_UID"]) ? $_POST["COM_UPDATE_UID"]:null),
-                    "AGN_UPDATE_DT" => (!empty($_POST["COM_UPDATE_DT"]) ? $_POST["COM_UPDATE_DT"]:null)
+                    "AGN_UPDATE_UID" => (!empty($this->request->getPost("COM_UPDATE_UID")) ? $this->request->getPost("COM_UPDATE_UID"):null),
+                    "AGN_UPDATE_DT" => (!empty($this->request->getPost("COM_UPDATE_DT")) ? $this->request->getPost("COM_UPDATE_DT"):null)
                 ];
                 $return = $this->Db->table('FLXY_AGENT_PROFILE')->insert($data); 
             }
             if($return){
                 if(empty($sysid)){
-                    $fullname = $_POST["COM_ACCOUNT"];
+                    $fullname = $this->request->getPost("COM_ACCOUNT");
                     $id = $this->Db->insertID();
                     $response = array("ID"=>$id,"FULLNAME"=>$fullname);
                 }else{
@@ -634,7 +636,7 @@ class ApplicatioController extends BaseController
     }
 
     function editCompany(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT COM_ID,COM_ACCOUNT,COM_ADDRESS1,COM_ADDRESS2,COM_ADDRESS3,
         COM_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=COM_COUNTRY) COM_COUNTRY_DESC
         ,COM_STATE,(SELECT sname FROM STATE WHERE STATE_CODE=COM_STATE AND COUNTRY_CODE=COM_COUNTRY)COM_STATE_DESC
@@ -645,7 +647,7 @@ class ApplicatioController extends BaseController
     }
 
     function editAgent(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT AGN_ID,AGN_ACCOUNT COM_ACCOUNT,AGN_ADDRESS1 COM_ADDRESS1,AGN_ADDRESS2 COM_ADDRESS2,AGN_ADDRESS3 COM_ADDRESS3,AGN_COUNTRY COM_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=AGN_COUNTRY) COM_COUNTRY_DESC
         ,AGN_STATE COM_STATE,(SELECT sname FROM STATE WHERE STATE_CODE=AGN_STATE AND COUNTRY_CODE=AGN_COUNTRY) COM_STATE_DESC,AGN_CITY COM_CITY,(SELECT ctname FROM CITY WHERE ID=AGN_CITY) COM_CITY_DESC
         ,AGN_POSTAL COM_POSTAL,AGN_TERRITORY COM_TERRITORY,AGN_IATA COM_IATA,AGN_CONTACT_NO COM_CONTACT_NO,AGN_CONTACT_EMAIL COM_CONTACT_EMAIL,AGN_TYPE COM_TYPE,AGN_ACTIVE COM_ACTIVE,AGN_COMMUNI_CODE COM_COMMUNI_CODE,AGN_COMMUNI_DESC COM_COMMUNI_DESC FROM FLXY_AGENT_PROFILE WHERE AGN_ID=:SYSID:";
@@ -654,7 +656,7 @@ class ApplicatioController extends BaseController
     }
 
     function deleteCompany(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_COMPANY_PROFILE')->delete(['COM_ID' => $sysid]); 
             if($return){
@@ -684,7 +686,7 @@ class ApplicatioController extends BaseController
     }
 
     function deleteAgent(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_AGENT_PROFILE')->delete(['AGN_ID' => $sysid]); 
             if($return){
@@ -712,7 +714,7 @@ class ApplicatioController extends BaseController
     }
     
     function editGroup(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT GRP_ID,GRP_NAME,GRP_LANG,GRP_ADDRESS1,GRP_ADDRESS2,GRP_ADDRESS3,
         GRP_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=GRP_COUNTRY) GRP_COUNTRY_DESC
         ,GRP_STATE,(SELECT sname FROM STATE WHERE STATE_CODE=GRP_STATE AND COUNTRY_CODE=GRP_COUNTRY)GRP_STATE_DESC
@@ -737,47 +739,47 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['GRP_ID'];
+            $sysid = $this->request->getPost("GRP_ID");
             if(!empty($sysid)){
-                $data = ["GRP_NAME" => $_POST["GRP_NAME"],
-                    "GRP_LANG" => $_POST["GRP_LANG"],
-                    "GRP_ADDRESS1" => $_POST["GRP_ADDRESS1"],
-                    "GRP_ADDRESS2" => $_POST["GRP_ADDRESS2"],
-                    "GRP_ADDRESS3" => $_POST["GRP_ADDRESS3"],
-                    "GRP_COUNTRY" => $_POST["GRP_COUNTRY"],
-                    "GRP_STATE" => $_POST["GRP_STATE"],
-                    "GRP_CITY" => $_POST["GRP_CITY"],
-                    "GRP_POSTAL" => $_POST["GRP_POSTAL"],
-                    "GRP_CONTACT_NO" => $_POST["GRP_CONTACT_NO"],
-                    "GRP_EMAIL" => $_POST["GRP_EMAIL"],
-                    "GRP_VIP" => $_POST["GRP_VIP"],
-                    "GRP_CURR" => $_POST["GRP_CURR"],
-                    "GRP_COMMUNI_CODE" => $_POST["GRP_COMMUNI_CODE"],
-                    "GRP_COMMUNI_DESC" => $_POST["GRP_COMMUNI_DESC"],
-                    "GRP_NOTES" => $_POST["GRP_NOTES"],
-                    "GRP_ACTIVE" => $_POST["GRP_ACTIVE"],
+                $data = ["GRP_NAME" => $this->request->getPost("GRP_NAME"),
+                    "GRP_LANG" => $this->request->getPost("GRP_LANG"),
+                    "GRP_ADDRESS1" => $this->request->getPost("GRP_ADDRESS1"),
+                    "GRP_ADDRESS2" => $this->request->getPost("GRP_ADDRESS2"),
+                    "GRP_ADDRESS3" => $this->request->getPost("GRP_ADDRESS3"),
+                    "GRP_COUNTRY" => $this->request->getPost("GRP_COUNTRY"),
+                    "GRP_STATE" => $this->request->getPost("GRP_STATE"),
+                    "GRP_CITY" => $this->request->getPost("GRP_CITY"),
+                    "GRP_POSTAL" => $this->request->getPost("GRP_POSTAL"),
+                    "GRP_CONTACT_NO" => $this->request->getPost("GRP_CONTACT_NO"),
+                    "GRP_EMAIL" => $this->request->getPost("GRP_EMAIL"),
+                    "GRP_VIP" => $this->request->getPost("GRP_VIP"),
+                    "GRP_CURR" => $this->request->getPost("GRP_CURR"),
+                    "GRP_COMMUNI_CODE" => $this->request->getPost("GRP_COMMUNI_CODE"),
+                    "GRP_COMMUNI_DESC" => $this->request->getPost("GRP_COMMUNI_DESC"),
+                    "GRP_NOTES" => $this->request->getPost("GRP_NOTES"),
+                    "GRP_ACTIVE" => $this->request->getPost("GRP_ACTIVE"),
                     "GRP_UPDATE_UID" => $this->session->name,
                     "GRP_UPDATE_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_GROUP')->where('GRP_ID', $sysid)->update($data); 
             }else{
-                $data = ["GRP_NAME" => $_POST["GRP_NAME"],
-                    "GRP_LANG" => $_POST["GRP_LANG"],
-                    "GRP_ADDRESS1" => $_POST["GRP_ADDRESS1"],
-                    "GRP_ADDRESS2" => $_POST["GRP_ADDRESS2"],
-                    "GRP_ADDRESS3" => $_POST["GRP_ADDRESS3"],
-                    "GRP_COUNTRY" => $_POST["GRP_COUNTRY"],
-                    "GRP_STATE" => $_POST["GRP_STATE"],
-                    "GRP_CITY" => $_POST["GRP_CITY"],
-                    "GRP_POSTAL" => $_POST["GRP_POSTAL"],
-                    "GRP_CONTACT_NO" => $_POST["GRP_CONTACT_NO"],
-                    "GRP_EMAIL" => $_POST["GRP_EMAIL"],
-                    "GRP_VIP" => $_POST["GRP_VIP"],
-                    "GRP_CURR" => $_POST["GRP_CURR"],
-                    "GRP_COMMUNI_CODE" => $_POST["GRP_COMMUNI_CODE"],
-                    "GRP_COMMUNI_DESC" => $_POST["GRP_COMMUNI_DESC"],
-                    "GRP_NOTES" => $_POST["GRP_NOTES"],
-                    "GRP_ACTIVE" => $_POST["GRP_ACTIVE"],
+                $data = ["GRP_NAME" => $this->request->getPost("GRP_NAME"),
+                    "GRP_LANG" => $this->request->getPost("GRP_LANG"),
+                    "GRP_ADDRESS1" => $this->request->getPost("GRP_ADDRESS1"),
+                    "GRP_ADDRESS2" => $this->request->getPost("GRP_ADDRESS2"),
+                    "GRP_ADDRESS3" => $this->request->getPost("GRP_ADDRESS3"),
+                    "GRP_COUNTRY" => $this->request->getPost("GRP_COUNTRY"),
+                    "GRP_STATE" => $this->request->getPost("GRP_STATE"),
+                    "GRP_CITY" => $this->request->getPost("GRP_CITY"),
+                    "GRP_POSTAL" => $this->request->getPost("GRP_POSTAL"),
+                    "GRP_CONTACT_NO" => $this->request->getPost("GRP_CONTACT_NO"),
+                    "GRP_EMAIL" => $this->request->getPost("GRP_EMAIL"),
+                    "GRP_VIP" => $this->request->getPost("GRP_VIP"),
+                    "GRP_CURR" => $this->request->getPost("GRP_CURR"),
+                    "GRP_COMMUNI_CODE" => $this->request->getPost("GRP_COMMUNI_CODE"),
+                    "GRP_COMMUNI_DESC" => $this->request->getPost("GRP_COMMUNI_DESC"),
+                    "GRP_NOTES" => $this->request->getPost("GRP_NOTES"),
+                    "GRP_ACTIVE" => $this->request->getPost("GRP_ACTIVE"),
                     "GRP_CREATE_UID" => $this->session->name,
                     "GRP_CREATE_DT" => date("d-M-Y")
                  ];
@@ -785,7 +787,7 @@ class ApplicatioController extends BaseController
             }
             if($return){
                 if(empty($sysid)){
-                    $fullname = $_POST["GRP_NAME"];
+                    $fullname = $this->request->getPost("GRP_NAME");
                     $id = $this->Db->insertID();
                     $response = array("ID"=>$id,"FULLNAME"=>$fullname);
                 }else{
@@ -809,7 +811,7 @@ class ApplicatioController extends BaseController
     }
 
     function deleteGroup(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_GROUP')->delete(['GRP_ID' => $sysid]); 
             if($return){
@@ -837,7 +839,7 @@ class ApplicatioController extends BaseController
     }
 
     public function companyList(){
-        $search = $_POST['search'];
+        $search = $this->request->getPost("search");
         $sql = "SELECT COM_ID,COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ACCOUNT like '%$search%'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select Company</option>';
@@ -848,7 +850,7 @@ class ApplicatioController extends BaseController
     }
 
     public function agentList(){
-        $search = $_POST['search'];
+        $search = $this->request->getPost("search");
         $sql = "SELECT AGN_ID,AGN_ACCOUNT FROM FLXY_AGENT_PROFILE WHERE AGN_ACCOUNT like '%$search%'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select Agent</option>';
@@ -859,7 +861,7 @@ class ApplicatioController extends BaseController
     }
 
     public function groupList(){
-        $search = $_POST['search'];
+        $search = $this->request->getPost("search");
         $sql = "SELECT GRP_ID,GRP_NAME FROM FLXY_GROUP WHERE GRP_NAME like '%$search%'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select Group</option>';
@@ -895,49 +897,49 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['BLK_ID'];
+            $sysid = $this->request->getPost("BLK_ID");
             if(!empty($sysid)){
-                $data = ["BLK_COMP" => $_POST["BLK_COMP"],
-                    "BLK_AGENT" => $_POST["BLK_AGENT"],
-                    "BLK_GROUP" => $_POST["BLK_GROUP"],
-                    "BLK_NAME" => $_POST["BLK_NAME"],
-                    "BLK_START_DT" => $_POST["BLK_START_DT"],
-                    "BLK_NIGHT" => $_POST["BLK_NIGHT"],
-                    "BLK_END_DT" => $_POST["BLK_END_DT"],
-                    "BLK_CODE" => $_POST["BLK_CODE"],
-                    "BLK_STATUS" => $_POST["BLK_STATUS"],
-                    "BLK_RESER_TYPE" => $_POST["BLK_RESER_TYPE"],
-                    "BLK_MARKET" => $_POST["BLK_MARKET"],
-                    "BLK_SOURCE" => $_POST["BLK_SOURCE"],
-                    "BLK_ELASTIC" => $_POST["BLK_ELASTIC"],
-                    "BLK_CUTOFF_DAYS" => $_POST["BLK_CUTOFF_DAYS"],
-                    "BLK_CUTOFF_DT" => $_POST["BLK_CUTOFF_DT"],
-                    "BLK_RESER_METHOD" => $_POST["BLK_RESER_METHOD"],
-                    "BLK_RATE_CODE" => $_POST["BLK_RATE_CODE"],
-                    "BLK_PACKAGE" => $_POST["BLK_PACKAGE"],
+                $data = ["BLK_COMP" => $this->request->getPost("BLK_COMP"),
+                    "BLK_AGENT" => $this->request->getPost("BLK_AGENT"),
+                    "BLK_GROUP" => $this->request->getPost("BLK_GROUP"),
+                    "BLK_NAME" => $this->request->getPost("BLK_NAME"),
+                    "BLK_START_DT" => $this->request->getPost("BLK_START_DT"),
+                    "BLK_NIGHT" => $this->request->getPost("BLK_NIGHT"),
+                    "BLK_END_DT" => $this->request->getPost("BLK_END_DT"),
+                    "BLK_CODE" => $this->request->getPost("BLK_CODE"),
+                    "BLK_STATUS" => $this->request->getPost("BLK_STATUS"),
+                    "BLK_RESER_TYPE" => $this->request->getPost("BLK_RESER_TYPE"),
+                    "BLK_MARKET" => $this->request->getPost("BLK_MARKET"),
+                    "BLK_SOURCE" => $this->request->getPost("BLK_SOURCE"),
+                    "BLK_ELASTIC" => $this->request->getPost("BLK_ELASTIC"),
+                    "BLK_CUTOFF_DAYS" => $this->request->getPost("BLK_CUTOFF_DAYS"),
+                    "BLK_CUTOFF_DT" => $this->request->getPost("BLK_CUTOFF_DT"),
+                    "BLK_RESER_METHOD" => $this->request->getPost("BLK_RESER_METHOD"),
+                    "BLK_RATE_CODE" => $this->request->getPost("BLK_RATE_CODE"),
+                    "BLK_PACKAGE" => $this->request->getPost("BLK_PACKAGE"),
                     "BLK_UPDATE_UID" => $this->session->name,
                     "BLK_UPDATE_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_BLOCK')->where('BLK_ID', $sysid)->update($data); 
             }else{
-                $data = ["BLK_COMP" => $_POST["BLK_COMP"],
-                    "BLK_AGENT" => $_POST["BLK_AGENT"],
-                    "BLK_GROUP" => $_POST["BLK_GROUP"],
-                    "BLK_NAME" => $_POST["BLK_NAME"],
-                    "BLK_START_DT" => $_POST["BLK_START_DT"],
-                    "BLK_NIGHT" => $_POST["BLK_NIGHT"],
-                    "BLK_END_DT" => $_POST["BLK_END_DT"],
-                    "BLK_CODE" => $_POST["BLK_CODE"],
-                    "BLK_STATUS" => $_POST["BLK_STATUS"],
-                    "BLK_RESER_TYPE" => $_POST["BLK_RESER_TYPE"],
-                    "BLK_MARKET" => $_POST["BLK_MARKET"],
-                    "BLK_SOURCE" => $_POST["BLK_SOURCE"],
-                    "BLK_ELASTIC" => $_POST["BLK_ELASTIC"],
-                    "BLK_CUTOFF_DAYS" => $_POST["BLK_CUTOFF_DAYS"],
-                    "BLK_CUTOFF_DT" => $_POST["BLK_CUTOFF_DT"],
-                    "BLK_RESER_METHOD" => $_POST["BLK_RESER_METHOD"],
-                    "BLK_RATE_CODE" => $_POST["BLK_RATE_CODE"],
-                    "BLK_PACKAGE" => $_POST["BLK_PACKAGE"],
+                $data = ["BLK_COMP" => $this->request->getPost("BLK_COMP"),
+                    "BLK_AGENT" => $this->request->getPost("BLK_AGENT"),
+                    "BLK_GROUP" => $this->request->getPost("BLK_GROUP"),
+                    "BLK_NAME" => $this->request->getPost("BLK_NAME"),
+                    "BLK_START_DT" => $this->request->getPost("BLK_START_DT"),
+                    "BLK_NIGHT" => $this->request->getPost("BLK_NIGHT"),
+                    "BLK_END_DT" => $this->request->getPost("BLK_END_DT"),
+                    "BLK_CODE" => $this->request->getPost("BLK_CODE"),
+                    "BLK_STATUS" => $this->request->getPost("BLK_STATUS"),
+                    "BLK_RESER_TYPE" => $this->request->getPost("BLK_RESER_TYPE"),
+                    "BLK_MARKET" => $this->request->getPost("BLK_MARKET"),
+                    "BLK_SOURCE" => $this->request->getPost("BLK_SOURCE"),
+                    "BLK_ELASTIC" => $this->request->getPost("BLK_ELASTIC"),
+                    "BLK_CUTOFF_DAYS" => $this->request->getPost("BLK_CUTOFF_DAYS"),
+                    "BLK_CUTOFF_DT" => $this->request->getPost("BLK_CUTOFF_DT"),
+                    "BLK_RESER_METHOD" => $this->request->getPost("BLK_RESER_METHOD"),
+                    "BLK_RATE_CODE" => $this->request->getPost("BLK_RATE_CODE"),
+                    "BLK_PACKAGE" => $this->request->getPost("BLK_PACKAGE"),
                     "BLK_CREATE_UID" => $this->session->name,
                     "BLK_CREATE_DT" => date("d-M-Y")
                  ];
@@ -945,7 +947,7 @@ class ApplicatioController extends BaseController
             }
             if($return){
                 // if(empty($sysid)){
-                //     $fullname = $_POST["GRP_NAME"];
+                //     $fullname = $this->request->getPost("GRP_NAME");
                 //     $id = $this->Db->insertID();
                 //     $response = array("ID"=>$id,"FULLNAME"=>$fullname);
                 // }else{
@@ -963,7 +965,7 @@ class ApplicatioController extends BaseController
     }
 
     function editBlock(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT BLK_ID,
         BLK_COMP,(SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE BLK_COMP=COM_ID)BLK_COMP_DESC,
         BLK_AGENT,(SELECT AGN_ACCOUNT FROM FLXY_AGENT_PROFILE WHERE BLK_AGENT=AGN_ID)BLK_AGENT_DESC,
@@ -974,7 +976,7 @@ class ApplicatioController extends BaseController
     }
 
     function deleteBlock(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_BLOCK')->delete(['BLK_ID' => $sysid]); 
             if($return){
@@ -1014,51 +1016,51 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['RM_ID'];
-            $RM_FEATURE = $_POST["RM_FEATURE"];
+            $sysid = $this->request->getPost("RM_ID");
+            $RM_FEATURE = $this->request->getPost("RM_FEATURE");
             $RM_FEATURE = implode(",",$RM_FEATURE);
             if(!empty($sysid)){
-                $data = ["RM_NO" => $_POST["RM_NO"],
-                    "RM_CLASS" => $_POST["RM_CLASS"],
-                    "RM_DESC" => $_POST["RM_DESC"],
-                    "RM_TYPE" => $_POST["RM_TYPE"],
+                $data = ["RM_NO" => $this->request->getPost("RM_NO"),
+                    "RM_CLASS" => $this->request->getPost("RM_CLASS"),
+                    "RM_DESC" => $this->request->getPost("RM_DESC"),
+                    "RM_TYPE" => $this->request->getPost("RM_TYPE"),
                     "RM_FEATURE" => $RM_FEATURE,
-                    "RM_PUBLIC_RATE_CODE" => $_POST["RM_PUBLIC_RATE_CODE"],
-                    "RM_PUBLIC_RATE_AMOUNT" => $_POST["RM_PUBLIC_RATE_AMOUNT"],
-                    "RM_MAX_OCCUPANCY" => $_POST["RM_MAX_OCCUPANCY"],
-                    "RM_DISP_SEQ" => $_POST["RM_DISP_SEQ"],
-                    "RM_FLOOR_PREFERN" => $_POST["RM_FLOOR_PREFERN"],
-                    "RM_SMOKING_PREFERN" => $_POST["RM_SMOKING_PREFERN"],
-                    "RM_PHONE_NO" => $_POST["RM_PHONE_NO"],
-                    "RM_SQUARE_UNITS" => $_POST["RM_SQUARE_UNITS"],
-                    "RM_MEASUREMENT" => $_POST["RM_MEASUREMENT"],
-                    "RM_HOUSKP_DY_SECTION" => $_POST["RM_HOUSKP_DY_SECTION"],
-                    "RM_HOUSKP_EV_SECTION" => $_POST["RM_HOUSKP_EV_SECTION"],
-                    "RM_STAYOVER_CR" => $_POST["RM_STAYOVER_CR"],
-                    "RM_DEPARTURE_CR" => $_POST["RM_DEPARTURE_CR"],
+                    "RM_PUBLIC_RATE_CODE" => $this->request->getPost("RM_PUBLIC_RATE_CODE"),
+                    "RM_PUBLIC_RATE_AMOUNT" => $this->request->getPost("RM_PUBLIC_RATE_AMOUNT"),
+                    "RM_MAX_OCCUPANCY" => $this->request->getPost("RM_MAX_OCCUPANCY"),
+                    "RM_DISP_SEQ" => $this->request->getPost("RM_DISP_SEQ"),
+                    "RM_FLOOR_PREFERN" => $this->request->getPost("RM_FLOOR_PREFERN"),
+                    "RM_SMOKING_PREFERN" => $this->request->getPost("RM_SMOKING_PREFERN"),
+                    "RM_PHONE_NO" => $this->request->getPost("RM_PHONE_NO"),
+                    "RM_SQUARE_UNITS" => $this->request->getPost("RM_SQUARE_UNITS"),
+                    "RM_MEASUREMENT" => $this->request->getPost("RM_MEASUREMENT"),
+                    "RM_HOUSKP_DY_SECTION" => $this->request->getPost("RM_HOUSKP_DY_SECTION"),
+                    "RM_HOUSKP_EV_SECTION" => $this->request->getPost("RM_HOUSKP_EV_SECTION"),
+                    "RM_STAYOVER_CR" => $this->request->getPost("RM_STAYOVER_CR"),
+                    "RM_DEPARTURE_CR" => $this->request->getPost("RM_DEPARTURE_CR"),
                     "RM_UPDATED_UID" => $this->session->name,
                     "RM_UPDATED_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_ROOM')->where('RM_ID', $sysid)->update($data); 
             }else{
-                $data = ["RM_NO" => $_POST["RM_NO"],
-                    "RM_CLASS" => $_POST["RM_CLASS"],
-                    "RM_DESC" => $_POST["RM_DESC"],
-                    "RM_TYPE" => $_POST["RM_TYPE"],
+                $data = ["RM_NO" => $this->request->getPost("RM_NO"),
+                    "RM_CLASS" => $this->request->getPost("RM_CLASS"),
+                    "RM_DESC" => $this->request->getPost("RM_DESC"),
+                    "RM_TYPE" => $this->request->getPost("RM_TYPE"),
                     "RM_FEATURE" => $RM_FEATURE,
-                    "RM_PUBLIC_RATE_CODE" => $_POST["RM_PUBLIC_RATE_CODE"],
-                    "RM_PUBLIC_RATE_AMOUNT" => $_POST["RM_PUBLIC_RATE_AMOUNT"],
-                    "RM_MAX_OCCUPANCY" => $_POST["RM_MAX_OCCUPANCY"],
-                    "RM_DISP_SEQ" => $_POST["RM_DISP_SEQ"],
-                    "RM_FLOOR_PREFERN" => $_POST["RM_FLOOR_PREFERN"],
-                    "RM_SMOKING_PREFERN" => $_POST["RM_SMOKING_PREFERN"],
-                    "RM_PHONE_NO" => $_POST["RM_PHONE_NO"],
-                    "RM_SQUARE_UNITS" => $_POST["RM_SQUARE_UNITS"],
-                    "RM_MEASUREMENT" => $_POST["RM_MEASUREMENT"],
-                    "RM_HOUSKP_DY_SECTION" => $_POST["RM_HOUSKP_DY_SECTION"],
-                    "RM_HOUSKP_EV_SECTION" => $_POST["RM_HOUSKP_EV_SECTION"],
-                    "RM_STAYOVER_CR" => $_POST["RM_STAYOVER_CR"],
-                    "RM_DEPARTURE_CR" => $_POST["RM_DEPARTURE_CR"],
+                    "RM_PUBLIC_RATE_CODE" => $this->request->getPost("RM_PUBLIC_RATE_CODE"),
+                    "RM_PUBLIC_RATE_AMOUNT" => $this->request->getPost("RM_PUBLIC_RATE_AMOUNT"),
+                    "RM_MAX_OCCUPANCY" => $this->request->getPost("RM_MAX_OCCUPANCY"),
+                    "RM_DISP_SEQ" => $this->request->getPost("RM_DISP_SEQ"),
+                    "RM_FLOOR_PREFERN" => $this->request->getPost("RM_FLOOR_PREFERN"),
+                    "RM_SMOKING_PREFERN" => $this->request->getPost("RM_SMOKING_PREFERN"),
+                    "RM_PHONE_NO" => $this->request->getPost("RM_PHONE_NO"),
+                    "RM_SQUARE_UNITS" => $this->request->getPost("RM_SQUARE_UNITS"),
+                    "RM_MEASUREMENT" => $this->request->getPost("RM_MEASUREMENT"),
+                    "RM_HOUSKP_DY_SECTION" => $this->request->getPost("RM_HOUSKP_DY_SECTION"),
+                    "RM_HOUSKP_EV_SECTION" => $this->request->getPost("RM_HOUSKP_EV_SECTION"),
+                    "RM_STAYOVER_CR" => $this->request->getPost("RM_STAYOVER_CR"),
+                    "RM_DEPARTURE_CR" => $this->request->getPost("RM_DEPARTURE_CR"),
                     "RM_CREATED_UID" => $this->session->name,
                     "RM_CREATED_DT" => date("d-M-Y")
                  ];
@@ -1077,7 +1079,7 @@ class ApplicatioController extends BaseController
     }
 
     function editRoom(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT RM_ID,RM_NO,RM_DESC,RM_CLASS,RM_TYPE,
         (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RM_TYPE)RM_TYPE_DESC,
         (SELECT RM_FT_DESC FROM FLXY_ROOM_FEATURE WHERE RM_FT_CODE=RM_FEATURE)RM_FEATURE_DESC,
@@ -1087,7 +1089,7 @@ class ApplicatioController extends BaseController
     }
 
     public function roomList(){
-        $search = $_POST['search'];
+        $search = $this->request->getPost("search");
         $sql = "SELECT RM_NO,RM_DESC FROM FLXY_ROOM WHERE RM_DESC like '%$search%'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select Room</option>';
@@ -1098,7 +1100,7 @@ class ApplicatioController extends BaseController
     }
 
     public function deleteRoom(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_ROOM')->delete(['RM_ID' => $sysid]); 
             if($return){
@@ -1127,6 +1129,8 @@ class ApplicatioController extends BaseController
 
     public function insertRoomClass(){
         try{
+            // $data = $this->request->getRawInput();
+            echo $test = $this->request->getPost("RM_CL_CODE");
             $validate = $this->validate([
                 'RM_CL_CODE' => 'required'
             ]);
@@ -1138,19 +1142,19 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['RM_CL_ID'];
+            $sysid = $this->request->getPost("RM_CL_ID");
             if(!empty($sysid)){
-                $data = ["RM_CL_CODE" => $_POST["RM_CL_CODE"],
-                    "RM_CL_DESC" => $_POST["RM_CL_DESC"],
-                    "RM_CL_DISPLY_SEQ" => $_POST["RM_CL_DISPLY_SEQ"],
-                    "RM_CL_TOTAL_ROOM" => $_POST["RM_CL_TOTAL_ROOM"]
+                $data = ["RM_CL_CODE" => $this->request->getPost("RM_CL_CODE"),
+                    "RM_CL_DESC" => $this->request->getPost("RM_CL_DESC"),
+                    "RM_CL_DISPLY_SEQ" => $this->request->getPost("RM_CL_DISPLY_SEQ"),
+                    "RM_CL_TOTAL_ROOM" => $this->request->getPost("RM_CL_TOTAL_ROOM")
                  ];
             $return = $this->Db->table('FLXY_ROOM_CLASS')->where('RM_CL_ID', $sysid)->update($data); 
             }else{
-                $data = ["RM_CL_CODE" => $_POST["RM_CL_CODE"],
-                    "RM_CL_DESC" => $_POST["RM_CL_DESC"],
-                    "RM_CL_DISPLY_SEQ" => $_POST["RM_CL_DISPLY_SEQ"],
-                    "RM_CL_TOTAL_ROOM" => $_POST["RM_CL_TOTAL_ROOM"]
+                $data = ["RM_CL_CODE" => $this->request->getPost("RM_CL_CODE"),
+                    "RM_CL_DESC" => $this->request->getPost("RM_CL_DESC"),
+                    "RM_CL_DISPLY_SEQ" => $this->request->getPost("RM_CL_DISPLY_SEQ"),
+                    "RM_CL_TOTAL_ROOM" => $this->request->getPost("RM_CL_TOTAL_ROOM")
                  ];
                 $return = $this->Db->table('FLXY_ROOM_CLASS')->insert($data); 
             }
@@ -1167,14 +1171,14 @@ class ApplicatioController extends BaseController
     }
 
     public function editRoomClass(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT RM_CL_ID,RM_CL_CODE,RM_CL_DESC,RM_CL_DISPLY_SEQ,RM_CL_TOTAL_ROOM FROM FLXY_ROOM_CLASS WHERE RM_CL_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
 
     public function deleteRoomClass(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_ROOM_CLASS')->delete(['RM_CL_ID' => $sysid]); 
             if($return){
@@ -1214,48 +1218,48 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['RM_TY_ID'];
-            $RM_TY_FEATURE = $_POST['RM_TY_FEATURE'];
+            $sysid = $this->request->getPost("RM_TY_ID");
+            $RM_TY_FEATURE = $this->request->getPost("RM_TY_FEATURE");
             $RM_TY_FEATURE = implode(",",$RM_TY_FEATURE);
             if(!empty($sysid)){
-                $data = ["RM_TY_ROOM_CLASS" => $_POST["RM_TY_ROOM_CLASS"],
-                    "RM_TY_CODE" => $_POST["RM_TY_CODE"],
-                    "RM_TY_DESC" => $_POST["RM_TY_DESC"],
+                $data = ["RM_TY_ROOM_CLASS" => $this->request->getPost("RM_TY_ROOM_CLASS"),
+                    "RM_TY_CODE" => $this->request->getPost("RM_TY_CODE"),
+                    "RM_TY_DESC" => $this->request->getPost("RM_TY_DESC"),
                     "RM_TY_FEATURE" => $RM_TY_FEATURE,
-                    "RM_TY_TOTAL_ROOM" => $_POST["RM_TY_TOTAL_ROOM"],
-                    "RM_TY_DISP_SEQ" => $_POST["RM_TY_DISP_SEQ"],
-                    "RM_TY_PUBLIC_RATE_CODE" => $_POST["RM_TY_PUBLIC_RATE_CODE"],
-                    "RM_TY_DEFUL_OCCUPANCY" => $_POST["RM_TY_DEFUL_OCCUPANCY"],
-                    "RM_TY_MAX_OCCUPANCY" => $_POST["RM_TY_MAX_OCCUPANCY"],
-                    "RM_TY_MAX_ADULTS" => $_POST["RM_TY_MAX_ADULTS"],
-                    "RM_TY_MAX_CHILDREN" => $_POST["RM_TY_MAX_CHILDREN"],
-                    "RM_TY_PSEUDO_RM" => $_POST["RM_TY_PSEUDO_RM"],
-                    "RM_TY_HOUSEKEEPING" => $_POST["RM_TY_HOUSEKEEPING"],
-                    "RM_TY_MIN_OCCUPANCY" => $_POST["RM_TY_MIN_OCCUPANCY"],
-                    "RM_TY_SEND_T_INTERF" => $_POST["RM_TY_SEND_T_INTERF"],
-                    "RM_TY_PUBLIC_RATE_AMT" => $_POST["RM_TY_PUBLIC_RATE_AMT"],
+                    "RM_TY_TOTAL_ROOM" => $this->request->getPost("RM_TY_TOTAL_ROOM"),
+                    "RM_TY_DISP_SEQ" => $this->request->getPost("RM_TY_DISP_SEQ"),
+                    "RM_TY_PUBLIC_RATE_CODE" => $this->request->getPost("RM_TY_PUBLIC_RATE_CODE"),
+                    "RM_TY_DEFUL_OCCUPANCY" => $this->request->getPost("RM_TY_DEFUL_OCCUPANCY"),
+                    "RM_TY_MAX_OCCUPANCY" => $this->request->getPost("RM_TY_MAX_OCCUPANCY"),
+                    "RM_TY_MAX_ADULTS" => $this->request->getPost("RM_TY_MAX_ADULTS"),
+                    "RM_TY_MAX_CHILDREN" => $this->request->getPost("RM_TY_MAX_CHILDREN"),
+                    "RM_TY_PSEUDO_RM" => $this->request->getPost("RM_TY_PSEUDO_RM"),
+                    "RM_TY_HOUSEKEEPING" => $this->request->getPost("RM_TY_HOUSEKEEPING"),
+                    "RM_TY_MIN_OCCUPANCY" => $this->request->getPost("RM_TY_MIN_OCCUPANCY"),
+                    "RM_TY_SEND_T_INTERF" => $this->request->getPost("RM_TY_SEND_T_INTERF"),
+                    "RM_TY_PUBLIC_RATE_AMT" => $this->request->getPost("RM_TY_PUBLIC_RATE_AMT"),
                     "RM_TY_ACTIVE_DT" => null,
                     "RM_TY_UPDATED_DT" => date("d-M-Y"),
                     "RM_TY_UPDATED_UID" => $this->session->name,
                  ];
             $return = $this->Db->table('FLXY_ROOM_TYPE')->where('RM_TY_ID', $sysid)->update($data); 
             }else{
-                $data = ["RM_TY_ROOM_CLASS" => $_POST["RM_TY_ROOM_CLASS"],
-                    "RM_TY_CODE" => $_POST["RM_TY_CODE"],
-                    "RM_TY_DESC" => $_POST["RM_TY_DESC"],
+                $data = ["RM_TY_ROOM_CLASS" => $this->request->getPost("RM_TY_ROOM_CLASS"),
+                    "RM_TY_CODE" => $this->request->getPost("RM_TY_CODE"),
+                    "RM_TY_DESC" => $this->request->getPost("RM_TY_DESC"),
                     "RM_TY_FEATURE" => $RM_TY_FEATURE,
-                    "RM_TY_TOTAL_ROOM" => $_POST["RM_TY_TOTAL_ROOM"],
-                    "RM_TY_DISP_SEQ" => $_POST["RM_TY_DISP_SEQ"],
-                    "RM_TY_PUBLIC_RATE_CODE" => $_POST["RM_TY_PUBLIC_RATE_CODE"],
-                    "RM_TY_DEFUL_OCCUPANCY" => $_POST["RM_TY_DEFUL_OCCUPANCY"],
-                    "RM_TY_MAX_OCCUPANCY" => $_POST["RM_TY_MAX_OCCUPANCY"],
-                    "RM_TY_MAX_ADULTS" => $_POST["RM_TY_MAX_ADULTS"],
-                    "RM_TY_MAX_CHILDREN" => $_POST["RM_TY_MAX_CHILDREN"],
-                    "RM_TY_PSEUDO_RM" => $_POST["RM_TY_PSEUDO_RM"],
-                    "RM_TY_HOUSEKEEPING" => $_POST["RM_TY_HOUSEKEEPING"],
-                    "RM_TY_MIN_OCCUPANCY" => $_POST["RM_TY_MIN_OCCUPANCY"],
-                    "RM_TY_SEND_T_INTERF" => $_POST["RM_TY_SEND_T_INTERF"],
-                    "RM_TY_PUBLIC_RATE_AMT" => $_POST["RM_TY_PUBLIC_RATE_AMT"],
+                    "RM_TY_TOTAL_ROOM" => $this->request->getPost("RM_TY_TOTAL_ROOM"),
+                    "RM_TY_DISP_SEQ" => $this->request->getPost("RM_TY_DISP_SEQ"),
+                    "RM_TY_PUBLIC_RATE_CODE" => $this->request->getPost("RM_TY_PUBLIC_RATE_CODE"),
+                    "RM_TY_DEFUL_OCCUPANCY" => $this->request->getPost("RM_TY_DEFUL_OCCUPANCY"),
+                    "RM_TY_MAX_OCCUPANCY" => $this->request->getPost("RM_TY_MAX_OCCUPANCY"),
+                    "RM_TY_MAX_ADULTS" => $this->request->getPost("RM_TY_MAX_ADULTS"),
+                    "RM_TY_MAX_CHILDREN" => $this->request->getPost("RM_TY_MAX_CHILDREN"),
+                    "RM_TY_PSEUDO_RM" => $this->request->getPost("RM_TY_PSEUDO_RM"),
+                    "RM_TY_HOUSEKEEPING" => $this->request->getPost("RM_TY_HOUSEKEEPING"),
+                    "RM_TY_MIN_OCCUPANCY" => $this->request->getPost("RM_TY_MIN_OCCUPANCY"),
+                    "RM_TY_SEND_T_INTERF" => $this->request->getPost("RM_TY_SEND_T_INTERF"),
+                    "RM_TY_PUBLIC_RATE_AMT" => $this->request->getPost("RM_TY_PUBLIC_RATE_AMT"),
                     "RM_TY_ACTIVE_DT" => null,
                     "RM_TY_CREATE_DT" => date("d-M-Y"),
                     "RM_TY_CREATE_UID" => $this->session->name,
@@ -1275,7 +1279,7 @@ class ApplicatioController extends BaseController
     }
 
     public function roomClassList(){
-        $search = $_POST['search'];
+        $search = $this->request->getPost("search");
         $sql = "SELECT RM_CL_CODE,RM_CL_DESC FROM FLXY_ROOM_CLASS WHERE RM_CL_DESC like '%$search%'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select RoomClass</option>';
@@ -1308,30 +1312,37 @@ class ApplicatioController extends BaseController
     }
 
     function getInitializeListReserv(){
-        $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='RESV_TYPE'";
+        $sql = "SELECT RESV_TY_CODE CODE,RESV_TY_DESC DESCS FROM FLXY_RESERVATION_TYPE";
         $respon1 = $this->Db->query($sql)->getResultArray();
         $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='BLK_MARKET'";
         $respon2 = $this->Db->query($sql)->getResultArray();
-        $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='COM_SOURCE'";
+        $sql = "SELECT SOR_CODE CODE,SOR_DESC DESCS FROM FLXY_SOURCE";
         $respon3 = $this->Db->query($sql)->getResultArray();
         $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='ORIGIN'";
         $respon4 = $this->Db->query($sql)->getResultArray();
-        $sql = "SELECT LOV_SET_CODE CODE,LOV_SET_DESC DESCS FROM FLXY_LOV_SET WHERE LOV_SET_PARAMS='PAYMENT'";
+        $sql = "SELECT PYM_CODE CODE,PYM_DESC DESCS FROM FLXY_PAYMENT";
         $respon5 = $this->Db->query($sql)->getResultArray();
         $data = [$respon1,$respon2,$respon3,$respon4,$respon5];
         echo json_encode($data);
     }
 
+    function initalConfigLovSource(){
+        $sql = "SELECT SOR_GR_CODE CODE,SOR_GR_DESC DESCS FROM FLXY_SOURCE_GROUP";
+        $respon1 = $this->Db->query($sql)->getResultArray();
+        $data = [$respon1];
+        echo json_encode($data);
+    }
+
 
     public function editRoomType(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT RM_TY_ID,RM_TY_ROOM_CLASS,(SELECT RM_CL_DESC FROM FLXY_ROOM_CLASS WHERE RM_CL_CODE=RM_TY_ROOM_CLASS)RM_TY_ROOM_CLASS_DESC,RM_TY_CODE,RM_TY_DESC,RM_TY_FEATURE,RM_TY_TOTAL_ROOM,RM_TY_DISP_SEQ,RM_TY_PUBLIC_RATE_CODE,RM_TY_DEFUL_OCCUPANCY,RM_TY_MAX_OCCUPANCY,RM_TY_MAX_ADULTS,RM_TY_MAX_CHILDREN,RM_TY_PSEUDO_RM,RM_TY_HOUSEKEEPING,RM_TY_MIN_OCCUPANCY,RM_TY_SEND_T_INTERF,RM_TY_PUBLIC_RATE_AMT,RM_TY_ACTIVE_DT FROM FLXY_ROOM_TYPE WHERE RM_TY_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
 
     public function roomTypeList(){
-        $search = $_POST['search'];
+        $search = $this->request->getPost("search");
         $sql = "SELECT RM_TY_ID,RM_TY_CODE,RM_TY_DESC,RM_TY_ROOM_CLASS,RM_TY_FEATURE FROM FLXY_ROOM_TYPE WHERE RM_TY_DESC like '%$search%'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select Room Type</option>';
@@ -1342,7 +1353,7 @@ class ApplicatioController extends BaseController
     }
 
     public function featureList(){
-        $search = $_POST['search'];
+        $search = $this->request->getPost("search");
         $sql = "SELECT RM_FT_ID,RM_FT_CODE,RM_FT_DESC FROM FLXY_ROOM_FEATURE WHERE RM_FT_DESC like '%$search%'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select Feature</option>';
@@ -1353,7 +1364,7 @@ class ApplicatioController extends BaseController
     }
 
     public function houseKeepSecionList(){
-        $search = $_POST['search'];
+        $search = $this->request->getPost("search");
         $sql = "SELECT SC_FL_CODE,SC_FL_DESC,SC_FL_ID FROM FLXY_SECTION WHERE SC_FL_DESC like '%$search%'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select Section</option>';
@@ -1364,7 +1375,7 @@ class ApplicatioController extends BaseController
     }
 
     public function deleteRoomType(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_ROOM_TYPE')->delete(['RM_TY_ID' => $sysid]); 
             if($return){
@@ -1404,16 +1415,16 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['RM_FL_ID'];
+            $sysid = $this->request->getPost("RM_FL_ID");
             if(!empty($sysid)){
-                $data = ["RM_FL_CODE" => $_POST["RM_FL_CODE"],
-                    "RM_FL_DESC" => $_POST["RM_FL_DESC"],
+                $data = ["RM_FL_CODE" => $this->request->getPost("RM_FL_CODE"),
+                    "RM_FL_DESC" => $this->request->getPost("RM_FL_DESC"),
                     "RM_FL_FEATURE" => ""
                  ];
             $return = $this->Db->table('FLXY_ROOM_FLOOR')->where('RM_FL_ID', $sysid)->update($data); 
             }else{
-                $data = ["RM_FL_CODE" => $_POST["RM_FL_CODE"],
-                    "RM_FL_DESC" => $_POST["RM_FL_DESC"],
+                $data = ["RM_FL_CODE" => $this->request->getPost("RM_FL_CODE"),
+                    "RM_FL_DESC" => $this->request->getPost("RM_FL_DESC"),
                     "RM_FL_FEATURE" => ""
                  ];
                 $return = $this->Db->table('FLXY_ROOM_FLOOR')->insert($data); 
@@ -1431,14 +1442,14 @@ class ApplicatioController extends BaseController
     }
 
     public function editRoomFloor(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT RM_FL_ID,RM_FL_CODE,RM_FL_DESC,RM_FL_FEATURE FROM FLXY_ROOM_FLOOR WHERE RM_FL_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
 
     public function deleteRoomFloor(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_ROOM_FLOOR')->delete(['RM_FL_ID' => $sysid]); 
             if($return){
@@ -1478,17 +1489,17 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['RM_FT_ID'];
+            $sysid = $this->request->getPost("RM_FT_ID");
             if(!empty($sysid)){
-                $data = ["RM_FT_CODE" => $_POST["RM_FT_CODE"],
-                    "RM_FT_DESC" => $_POST["RM_FT_DESC"],
-                    "RM_FT_FEATURE" => $_POST["RM_FT_FEATURE"]
+                $data = ["RM_FT_CODE" => $this->request->getPost("RM_FT_CODE"),
+                    "RM_FT_DESC" => $this->request->getPost("RM_FT_DESC"),
+                    "RM_FT_FEATURE" => $this->request->getPost("RM_FT_FEATURE")
                  ];
             $return = $this->Db->table('FLXY_ROOM_FEATURE')->where('RM_FT_ID', $sysid)->update($data); 
             }else{
-                $data = ["RM_FT_CODE" => $_POST["RM_FT_CODE"],
-                    "RM_FT_DESC" => $_POST["RM_FT_DESC"],
-                    "RM_FT_FEATURE" => $_POST["RM_FT_FEATURE"]
+                $data = ["RM_FT_CODE" => $this->request->getPost("RM_FT_CODE"),
+                    "RM_FT_DESC" => $this->request->getPost("RM_FT_DESC"),
+                    "RM_FT_FEATURE" => $this->request->getPost("RM_FT_FEATURE")
                  ];
                 $return = $this->Db->table('FLXY_ROOM_FEATURE')->insert($data); 
             }
@@ -1505,14 +1516,14 @@ class ApplicatioController extends BaseController
     }
 
     public function editRoomFeature(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT RM_FT_ID,RM_FT_CODE,RM_FT_DESC,RM_FT_FEATURE FROM FLXY_ROOM_FEATURE WHERE RM_FT_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
 
     public function deleteRoomFeature(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_ROOM_FEATURE')->delete(['RM_FT_ID' => $sysid]); 
             if($return){
@@ -1552,20 +1563,20 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['SC_FL_ID'];
+            $sysid = $this->request->getPost("SC_FL_ID");
             if(!empty($sysid)){
-                $data = ["SC_FL_CODE" => $_POST["SC_FL_CODE"],
-                    "SC_FL_DESC" => $_POST["SC_FL_DESC"],
-                    "SC_FL_TARGET_CREDIT" => $_POST["SC_FL_TARGET_CREDIT"],
-                    "SC_FL_DISPLAY_SEQ" => $_POST["SC_FL_DISPLAY_SEQ"],
+                $data = ["SC_FL_CODE" => $this->request->getPost("SC_FL_CODE"),
+                    "SC_FL_DESC" => $this->request->getPost("SC_FL_DESC"),
+                    "SC_FL_TARGET_CREDIT" => $this->request->getPost("SC_FL_TARGET_CREDIT"),
+                    "SC_FL_DISPLAY_SEQ" => $this->request->getPost("SC_FL_DISPLAY_SEQ"),
                     "SC_FL_ACTIVE" => null
                  ];
             $return = $this->Db->table('FLXY_SECTION')->where('SC_FL_ID', $sysid)->update($data); 
             }else{
-                $data = ["SC_FL_CODE" => $_POST["SC_FL_CODE"],
-                    "SC_FL_DESC" => $_POST["SC_FL_DESC"],
-                    "SC_FL_TARGET_CREDIT" => $_POST["SC_FL_TARGET_CREDIT"],
-                    "SC_FL_DISPLAY_SEQ" => $_POST["SC_FL_DISPLAY_SEQ"],
+                $data = ["SC_FL_CODE" => $this->request->getPost("SC_FL_CODE"),
+                    "SC_FL_DESC" => $this->request->getPost("SC_FL_DESC"),
+                    "SC_FL_TARGET_CREDIT" => $this->request->getPost("SC_FL_TARGET_CREDIT"),
+                    "SC_FL_DISPLAY_SEQ" => $this->request->getPost("SC_FL_DISPLAY_SEQ"),
                     "SC_FL_ACTIVE" => null
                  ];
                 $return = $this->Db->table('FLXY_SECTION')->insert($data); 
@@ -1583,14 +1594,14 @@ class ApplicatioController extends BaseController
     }
 
     public function editSection(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT SC_FL_ID,SC_FL_CODE,SC_FL_DESC,SC_FL_TARGET_CREDIT,SC_FL_DISPLAY_SEQ,SC_FL_ACTIVE FROM FLXY_SECTION WHERE SC_FL_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
 
     public function deleteSection(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_SECTION')->delete(['SC_FL_ID' => $sysid]); 
             if($return){
@@ -1630,21 +1641,21 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['RT_CL_ID'];
+            $sysid = $this->request->getPost("RT_CL_ID");
             if(!empty($sysid)){
-                $data = ["RT_CL_CODE" => $_POST["RT_CL_CODE"],
-                    "RT_CL_DESC" => $_POST["RT_CL_DESC"],
-                    "RT_CL_DIS_SEQ" => $_POST["RT_CL_DIS_SEQ"],
-                    "RT_CL_BEGIN_DT" => $_POST["RT_CL_BEGIN_DT"],
-                    "RT_CL_END_DT" => $_POST["RT_CL_END_DT"]
+                $data = ["RT_CL_CODE" => $this->request->getPost("RT_CL_CODE"),
+                    "RT_CL_DESC" => $this->request->getPost("RT_CL_DESC"),
+                    "RT_CL_DIS_SEQ" => $this->request->getPost("RT_CL_DIS_SEQ"),
+                    "RT_CL_BEGIN_DT" => $this->request->getPost("RT_CL_BEGIN_DT"),
+                    "RT_CL_END_DT" => $this->request->getPost("RT_CL_END_DT")
                  ];
             $return = $this->Db->table('FLXY_RATE_CLASS')->where('RT_CL_ID', $sysid)->update($data); 
             }else{
-                $data = ["RT_CL_CODE" => $_POST["RT_CL_CODE"],
-                    "RT_CL_DESC" => $_POST["RT_CL_DESC"],
-                    "RT_CL_DIS_SEQ" => $_POST["RT_CL_DIS_SEQ"],
-                    "RT_CL_BEGIN_DT" => $_POST["RT_CL_BEGIN_DT"],
-                    "RT_CL_END_DT" => $_POST["RT_CL_END_DT"]
+                $data = ["RT_CL_CODE" => $this->request->getPost("RT_CL_CODE"),
+                    "RT_CL_DESC" => $this->request->getPost("RT_CL_DESC"),
+                    "RT_CL_DIS_SEQ" => $this->request->getPost("RT_CL_DIS_SEQ"),
+                    "RT_CL_BEGIN_DT" => $this->request->getPost("RT_CL_BEGIN_DT"),
+                    "RT_CL_END_DT" => $this->request->getPost("RT_CL_END_DT")
                  ];
                 $return = $this->Db->table('FLXY_RATE_CLASS')->insert($data); 
             }
@@ -1661,14 +1672,14 @@ class ApplicatioController extends BaseController
     }
 
     public function editRateClass(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT RT_CL_ID,RT_CL_CODE,RT_CL_DESC,RT_CL_DIS_SEQ,RT_CL_BEGIN_DT,RT_CL_END_DT FROM FLXY_RATE_CLASS WHERE RT_CL_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
 
     public function deleteRateClass(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_RATE_CLASS')->delete(['RT_CL_ID' => $sysid]); 
             if($return){
@@ -1708,20 +1719,20 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['SOR_ID'];
+            $sysid = $this->request->getPost("SOR_ID");
             if(!empty($sysid)){
-                $data = ["SOR_CODE" => $_POST["SOR_CODE"],
-                    "SOR_DESC" => $_POST["SOR_DESC"],
-                    "SOR_GROUP" => $_POST["SOR_GROUP"],
-                    "SOR_DIS_SEQ" => $_POST["SOR_DIS_SEQ"],
+                $data = ["SOR_CODE" => $this->request->getPost("SOR_CODE"),
+                    "SOR_DESC" => $this->request->getPost("SOR_DESC"),
+                    "SOR_GROUP" => $this->request->getPost("SOR_GROUP"),
+                    "SOR_DIS_SEQ" => $this->request->getPost("SOR_DIS_SEQ"),
                     "SOR_ACTIVE" => 'Y'
                  ];
             $return = $this->Db->table('FLXY_SOURCE')->where('SOR_ID', $sysid)->update($data); 
             }else{
-                $data = ["SOR_CODE" => $_POST["SOR_CODE"],
-                    "SOR_DESC" => $_POST["SOR_DESC"],
-                    "SOR_GROUP" => $_POST["SOR_GROUP"],
-                    "SOR_DIS_SEQ" => $_POST["SOR_DIS_SEQ"],
+                $data = ["SOR_CODE" => $this->request->getPost("SOR_CODE"),
+                    "SOR_DESC" => $this->request->getPost("SOR_DESC"),
+                    "SOR_GROUP" => $this->request->getPost("SOR_GROUP"),
+                    "SOR_DIS_SEQ" => $this->request->getPost("SOR_DIS_SEQ"),
                     "SOR_ACTIVE" => 'Y'
                  ];
                 $return = $this->Db->table('FLXY_SOURCE')->insert($data); 
@@ -1739,14 +1750,14 @@ class ApplicatioController extends BaseController
     }
 
     public function editSource(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT SOR_ID,SOR_CODE,SOR_DESC,SOR_GROUP,SOR_DIS_SEQ,SOR_ACTIVE FROM FLXY_SOURCE WHERE SOR_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
 
     public function deleteSource(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_SOURCE')->delete(['SOR_ID' => $sysid]); 
             if($return){
@@ -1786,18 +1797,18 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $_POST['SOR_GR_ID'];
+            $sysid = $this->request->getPost("SOR_GR_ID");
             if(!empty($sysid)){
-                $data = ["SOR_GR_CODE" => $_POST["SOR_GR_CODE"],
-                    "SOR_GR_DESC" => $_POST["SOR_GR_DESC"],
-                    "SOR_GR_DIS_SEQ" => $_POST["SOR_GR_DIS_SEQ"],
+                $data = ["SOR_GR_CODE" => $this->request->getPost("SOR_GR_CODE"),
+                    "SOR_GR_DESC" => $this->request->getPost("SOR_GR_DESC"),
+                    "SOR_GR_DIS_SEQ" => $this->request->getPost("SOR_GR_DIS_SEQ"),
                     "SOR_GR_ACTIVE" => 'Y'
                  ];
             $return = $this->Db->table('FLXY_SOURCE_GROUP')->where('SOR_GR_ID', $sysid)->update($data); 
             }else{
-                $data = ["SOR_GR_CODE" => $_POST["SOR_GR_CODE"],
-                    "SOR_GR_DESC" => $_POST["SOR_GR_DESC"],
-                    "SOR_GR_DIS_SEQ" => $_POST["SOR_GR_DIS_SEQ"],
+                $data = ["SOR_GR_CODE" => $this->request->getPost("SOR_GR_CODE"),
+                    "SOR_GR_DESC" => $this->request->getPost("SOR_GR_DESC"),
+                    "SOR_GR_DIS_SEQ" => $this->request->getPost("SOR_GR_DIS_SEQ"),
                     "SOR_GR_ACTIVE" => 'Y'
                  ];
                 $return = $this->Db->table('FLXY_SOURCE_GROUP')->insert($data); 
@@ -1815,16 +1826,391 @@ class ApplicatioController extends BaseController
     }
 
     public function editSourceGroup(){
-        $param = ['SYSID'=> $_POST['sysid']];
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT SOR_GR_ID,SOR_GR_CODE,SOR_GR_DESC,SOR_GR_DIS_SEQ,SOR_GR_ACTIVE FROM FLXY_SOURCE_GROUP WHERE SOR_GR_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
 
     public function deleteSourceGroup(){
-        $sysid = $_POST['sysid'];
+        $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_SOURCE_GROUP')->delete(['SOR_GR_ID' => $sysid]); 
+            if($return){
+                $result = $this->responseJson("1","0",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-402","Record not deleted");
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function reservationType(){
+        return view('Reservation/ReservationType');
+    }
+
+    public function ReservationTypeView(){
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_RESERVATION_TYPE';
+        $columns = 'RESV_TY_ID,RESV_TY_DESC,RESV_TY_SEQ,RESV_TY_CODE';
+        $mine->generate_DatatTable($tableName,$columns);
+        exit;
+    }
+
+    public function insertReservationType(){
+        try{
+            $validate = $this->validate([
+                'RESV_TY_CODE' => 'required'
+            ]);
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $sysid = $this->request->getPost("RESV_TY_ID");
+            if(!empty($sysid)){
+                $data = ["RESV_TY_CODE" => $this->request->getPost("RESV_TY_CODE"),
+                    "RESV_TY_DESC" => $this->request->getPost("RESV_TY_DESC"),
+                    "RESV_TY_SEQ" => $this->request->getPost("RESV_TY_SEQ")
+                ];
+            $return = $this->Db->table('FLXY_RESERVATION_TYPE')->where('RESV_TY_ID', $sysid)->update($data); 
+            }else{
+                $data = ["RESV_TY_CODE" => $this->request->getPost("RESV_TY_CODE"),
+                    "RESV_TY_DESC" => $this->request->getPost("RESV_TY_DESC"),
+                    "RESV_TY_SEQ" => $this->request->getPost("RESV_TY_SEQ")
+                ];
+                $return = $this->Db->table('FLXY_RESERVATION_TYPE')->insert($data); 
+            }
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444","db insert not success",$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function editReservationType(){
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
+        $sql = "SELECT RESV_TY_ID,RESV_TY_DESC,RESV_TY_SEQ,RESV_TY_CODE FROM FLXY_RESERVATION_TYPE WHERE RESV_TY_ID=:SYSID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteReservationType(){
+        $sysid = $this->request->getPost("sysid");
+        try{
+            $return = $this->Db->table('FLXY_RESERVATION_TYPE')->delete(['RESV_TY_ID' => $sysid]); 
+            if($return){
+                $result = $this->responseJson("1","0",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-402","Record not deleted");
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function purposeStay(){
+        return view('Reservation/PurposeStay');
+    }
+
+    public function PurposeStayView(){
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_PURPOSE_STAY';
+        $columns = 'PUR_ST_ID,PUR_ST_CODE,PUR_ST_DESC,PUR_ST_SEQ';
+        $mine->generate_DatatTable($tableName,$columns);
+        exit;
+    }
+
+    public function insertPurposeStay(){
+        try{
+            $validate = $this->validate([
+                'PUR_ST_CODE' => 'required'
+            ]);
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $sysid = $this->request->getPost("PUR_ST_ID");
+            if(!empty($sysid)){
+                $data = ["PUR_ST_CODE" => $this->request->getPost("PUR_ST_CODE"),
+                    "PUR_ST_DESC" => $this->request->getPost("PUR_ST_DESC"),
+                    "PUR_ST_SEQ" => $this->request->getPost("PUR_ST_SEQ")
+                ];
+            $return = $this->Db->table('FLXY_PURPOSE_STAY')->where('PUR_ST_ID', $sysid)->update($data); 
+            }else{
+                $data = ["PUR_ST_CODE" => $this->request->getPost("PUR_ST_CODE"),
+                    "PUR_ST_DESC" => $this->request->getPost("PUR_ST_DESC"),
+                    "PUR_ST_SEQ" => $this->request->getPost("PUR_ST_SEQ")
+                ];
+                $return = $this->Db->table('FLXY_PURPOSE_STAY')->insert($data); 
+            }
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444","db insert not success",$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function editPurposeStay(){
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
+        $sql = "SELECT PUR_ST_ID,PUR_ST_CODE,PUR_ST_DESC,PUR_ST_SEQ FROM FLXY_PURPOSE_STAY WHERE PUR_ST_ID=:SYSID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deletePurposeStay(){
+        $sysid = $this->request->getPost("sysid");
+        try{
+            $return = $this->Db->table('FLXY_PURPOSE_STAY')->delete(['PUR_ST_ID' => $sysid]); 
+            if($return){
+                $result = $this->responseJson("1","0",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-402","Record not deleted");
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function payment(){
+        return view('Reservation/PaymentView');
+    }
+
+    public function PaymentView(){
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_PAYMENT';
+        $columns = 'PYM_ID,PYM_CODE,PYM_DESC,PYM_TXN_CODE';
+        $mine->generate_DatatTable($tableName,$columns);
+        exit;
+    }
+
+    public function insertPayment(){
+        try{
+            $validate = $this->validate([
+                'PYM_CODE' => 'required'
+            ]);
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $sysid = $this->request->getPost("PYM_ID");
+            if(!empty($sysid)){
+                $data = ["PYM_CODE" => $this->request->getPost("PYM_CODE"),
+                    "PYM_DESC" => $this->request->getPost("PYM_DESC"),
+                    "PYM_TXN_CODE" => $this->request->getPost("PYM_TXN_CODE")
+                ];
+            $return = $this->Db->table('FLXY_PAYMENT')->where('PYM_ID', $sysid)->update($data); 
+            }else{
+                $data = ["PYM_CODE" => $this->request->getPost("PYM_CODE"),
+                    "PYM_DESC" => $this->request->getPost("PYM_DESC"),
+                    "PYM_TXN_CODE" => $this->request->getPost("PYM_TXN_CODE")
+                ];
+                $return = $this->Db->table('FLXY_PAYMENT')->insert($data); 
+            }
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444","db insert not success",$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function editPayment(){
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
+        $sql = "SELECT PYM_ID,PYM_CODE,PYM_DESC,PYM_TXN_CODE FROM FLXY_PAYMENT WHERE PYM_ID=:SYSID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deletePayment(){
+        $sysid = $this->request->getPost("sysid");
+        try{
+            $return = $this->Db->table('FLXY_PAYMENT')->delete(['PYM_ID' => $sysid]); 
+            if($return){
+                $result = $this->responseJson("1","0",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-402","Record not deleted");
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function getRateQueryData(){
+        // $sysid = $this->request->getPost("sysid");
+        try{
+            $sql="SELECT RM_TYPE,RM_TY_TOTAL_ROOM,RM_FEATURE FROM FLXY_ROOM ROOMTB,FLXY_ROOM_TYPE ROOMTYTB WHERE RM_TYPE_REF_ID=RM_TY_ID";
+            $response = $this->Db->query($sql)->getResultArray();
+            $sqlRate="SELECT (SELECT RT_CD_CODE FROM FLXY_RATE_CODE WHERE RT_CD_REF_ID=RT_CD_ID)RT_DESCRIPTION ,RATEQUERY.*,
+                CASE 
+                WHEN 1 = '4' THEN RT_DT_ADULT_1
+                WHEN 2 = '4' THEN RT_DT_ADULT_2
+                WHEN 3 = '4' THEN RT_DT_ADULT_3
+                ELSE (CAST(RT_DT_ADULT_3 AS INT)+CAST(RT_DT_ADULT_2 AS INT)) END AS ACTUAL_ADULT_PRICE
+                FROM (
+                SELECT * FROM RATE_DETAIL_CODE WHERE EXISTS( SELECT RT_CD_ID FROM FLXY_RATE_CODE WHERE
+                '2022-23-3' BETWEEN RT_CD_BEGIN_SELL_DT AND RD_CD_END_SELL_DT AND RT_CD_ID=RT_CD_REF_ID)) RATEQUERY 
+                WHERE (RT_DT_FROM_DT <='2022-22-3' AND '2022-22-3'<=RT_DT_TO_DT) AND (RT_DT_FROM_DT <='2022-25-3' AND '2022-25-3'<=RT_DT_TO_DT)";
+            $rateresult = $this->Db->query($sqlRate)->getResultArray();  
+            $roomType='';
+            $physicalinv='';
+            $feature='';
+            $roomtypeStore=[];
+            foreach($response as $row){
+                $roomtypeStore[]=$row['RM_TYPE'];
+                $roomType.='<td style="width:120px;">'.$row['RM_TYPE'].'</td>';
+                $physicalinv.='<td style="width:100px;word-wrap: break-word;">'.$row['RM_TY_TOTAL_ROOM'].'</td>';
+                $feature.='<td style="width:100px;word-wrap: break-word;">'.$row['RM_FEATURE'].'</td>';
+            }
+            $trRow = '<tr><td style="width:210px;">Room Type</td>'.$roomType.'</tr>';
+            $trRow .= '<tr><td style="width:210px;">Physical  Inventory</td>'.$physicalinv.'</tr>';
+            $trRow .= '<tr><td style="width:210px;">Include Overbooking</td>'.$feature.'</tr>';
+            $trRow .='<tr>';
+            foreach($rateresult as $row){
+                $trRow .='<td>'.$row['RT_DESCRIPTION'].'</td>';
+                foreach($roomtypeStore as $room){
+                    if (strpos($row['RT_DT_FEATURE'], $room) !== false) { 
+                        $trRow .='<td>'.$row['ACTUAL_ADULT_PRICE'].'</td>';
+                    }else{
+                        $trRow .='<td></td>';
+                    }
+                }
+                $trRow .='</tr>';
+            }
+            $tables[]=$trRow;
+            echo json_encode($tables);
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function overBooking(){
+        return view('Reservation/OverBookingView');
+    }
+
+    public function OverBookingView(){
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_OVERBOOKING';
+        $columns = 'OB_ID,OB_FROM_DT,OB_UPTO_DT,OB_RM_CLASS,OB_RM_TYPE,OB_OVER_BK_COUNT,OB_FORMULA';
+        $mine->generate_DatatTable($tableName,$columns);
+        exit;
+    }
+
+    function getSupportingOverbookingLov(){
+        $sql = "SELECT RM_CL_CODE,RM_CL_DESC FROM FLXY_ROOM_CLASS";
+        $response = $this->Db->query($sql)->getResultArray();
+        $option='<option value="">Select Section</option>';
+        foreach($response as $row){
+            $option.= '<option value="'.trim($row['RM_CL_CODE']).'">'.$row['RM_CL_DESC'].'</option>';
+        }
+        echo $option;
+    }
+
+    function getRoomType(){
+        $param = ['ROOMCLASS'=> $this->request->getPost("rmclass")];
+        $sql = "SELECT RM_TY_CODE,RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_ROOM_CLASS=:ROOMCLASS:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        $option='<option value="">Select Section</option>';
+        foreach($response as $row){
+            $option.= '<option value="'.$row['RM_TY_CODE'].'">'.$row['RM_TY_DESC'].'</option>';
+        }
+        echo $option;
+    }
+
+    public function insertOverBooking(){
+        try{
+            $validate = $this->validate([
+                'OB_FROM_DT' => 'required'
+            ]);
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $sysid = $this->request->getPost("OB_ID");
+            $days = $this->request->getPost("OB_DAYS");
+            $dayes = implode(" ",$days);
+            if(!empty($sysid)){
+                $data = ["OB_FROM_DT" => $this->request->getPost("OB_FROM_DT"),
+                    "OB_UPTO_DT" => $this->request->getPost("OB_UPTO_DT"),
+                    "OB_RM_CLASS" => $this->request->getPost("OB_RM_CLASS"),
+                    "OB_RM_TYPE" => $this->request->getPost("OB_RM_TYPE"),
+                    "OB_OVER_BK_COUNT" => $this->request->getPost("OB_OVER_BK_COUNT"),
+                    "OB_DAYS" => $dayes
+                ];
+                $return = $this->Db->table('FLXY_OVERBOOKING')->where('OB_ID', $sysid)->update($data); 
+            }else{
+                $data = ["OB_FROM_DT" => $this->request->getPost("OB_FROM_DT"),
+                    "OB_UPTO_DT" => $this->request->getPost("OB_UPTO_DT"),
+                    "OB_RM_CLASS" => $this->request->getPost("OB_RM_CLASS"),
+                    "OB_RM_TYPE" => $this->request->getPost("OB_RM_TYPE"),
+                    "OB_OVER_BK_COUNT" => $this->request->getPost("OB_OVER_BK_COUNT"),
+                    "OB_DAYS" => $dayes
+                ];
+                $return = $this->Db->table('FLXY_OVERBOOKING')->insert($data); 
+            }
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444","db insert not success",$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function editOverBooking(){
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
+        $sql = "SELECT OB_ID,FORMAT(OB_FROM_DT,'dd-MMM-yyyy') OB_FROM_DT,FORMAT(OB_UPTO_DT,'dd-MMM-yyyy')OB_UPTO_DT,OB_RM_CLASS,OB_RM_TYPE,OB_DAYS,
+        (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=OB_RM_TYPE)OB_RM_TYPE_DESC,
+        OB_OVER_BK_COUNT,OB_FORMULA FROM FLXY_OVERBOOKING WHERE OB_ID=:SYSID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteOverBooking(){
+        $sysid = $this->request->getPost("sysid");
+        try{
+            $return = $this->Db->table('FLXY_OVERBOOKING')->delete(['OB_ID' => $sysid]); 
             if($return){
                 $result = $this->responseJson("1","0",$return);
                 echo json_encode($result);

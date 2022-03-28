@@ -18,9 +18,9 @@
                   <table id="dataTable_view" class="table table-striped">
                     <thead>
                       <tr>
-                        <th>Room Type Code</th>
-                        <th>Room Type Description</th>
-                        <th>Feature</th>
+                        <th>Payment Id</th>
+                        <th>Payment Description</th>
+                        <th>Txn code</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -36,7 +36,7 @@
             <!-- Modal Window -->
            
             <div class="modal fade" id="popModalWindow" tabindex="-1" aria-lableledby="popModalWindowlable" aria-hidden="true">
-              <div class="modal-dialog modal-md">
+              <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="popModalWindowlable">New message</h5>
@@ -45,80 +45,42 @@
                   <div class="modal-body">
                     <form id="submitForm">
                       <div class="row g-3">
-                        <input type="hidden" name="RM_TY_ID" id="RM_TY_ID" class="form-control"/>
-                        <div class="col-md-6">
-                          <lable class="form-lable">Room Class</lable>
-                          <select name="RM_TY_ROOM_CLASS"  id="RM_TY_ROOM_CLASS" data-width="100%" class="selectpicker RM_TY_ROOM_CLASS" data-live-search="true">
-                              <option value="">Select</option>
-                          </select>
+                        <input type="hidden" name="PYM_ID" id="PYM_ID" class="form-control"/>
+                        <div class="col-md-12">
+                          <lable class="form-lable">Payment Type</lable>
+                          <input type="text" name="PYM_CODE" id="PYM_CODE" class="form-control" placeholder="reservation type" />
                         </div>
-                        <div class="col-md-6">
-                          <lable class="form-lable">Room Type</lable>
-                          <input type="text" name="RM_TY_CODE" id="RM_TY_CODE" class="form-control" placeholder="room code" />
+                        <div class="col-md-12">
+                          <lable class="form-lable">Payment Description</lable>
+                          <input type="text" name="PYM_DESC" id="PYM_DESC" class="form-control" placeholder="reservation desc." />
                         </div>
-                        <div class="col-md-6">
-                          <lable class="form-lable">Room Type Description</lable>
-                          <input type="text" name="RM_TY_DESC" id="RM_TY_DESC" class="form-control" placeholder="room description" />
-                        </div>
-                        <div class="col-md-6">
-                          <lable class="form-lable">Display Seq./Total Rooms</lable>
+                        <div class="col-md-12">
+                          <lable class="form-lable">Txn Code</lable>
                             <div class="input-group mb-3">
-                              <input type="number" name="RM_TY_DISP_SEQ" id="RM_TY_DISP_SEQ" class="form-control" placeholder="display seq." />
-                              <input type="number" name="RM_TY_TOTAL_ROOM" id="RM_TY_TOTAL_ROOM" class="form-control" placeholder="total rooms" />
+                              <select  id="PYM_TXN_CODE" name="PYM_TXN_CODE"  data-width="100%" class="selectpicker PYM_TXN_CODE" data-live-search="true">
+                                <option value="">Select</option>
+                              </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                          <lable class="form-lable">Pub. Rate Amount</lable>
-                          <input type="text" name="RM_TY_PUBLIC_RATE_AMT" id="RM_TY_PUBLIC_RATE_AMT" class="form-control" placeholder="room description" />
+                        <div class="col-md-12">
+                          <lable class="form-lable">Credit Limit</lable>
+                          <input type="text" class="form-control" placeholder="reservation type" />
                         </div>
-                        <div class="col-md-6">
-                          <lable class="form-lable">Pub. Rate Code</lable>
-                          <select name="RM_TY_PUBLIC_RATE_CODE" id="RM_TY_PUBLIC_RATE_CODE" class="select2 form-select" data-allow-clear="true">
-                            <option value="">Select</option>
-                          </select>
-                        </div>
-                        <div class="col-md-6">
-                          <lable class="form-lable">Feature</lable>
-                          <select name="RM_TY_FEATURE[]"id="RM_TY_FEATURE" class="select2 form-select" multiple>
-                            <!-- <option value="">Select</option> -->
-                          </select>
-                        </div>
-                        <div class="col-md-6">
-                          <lable class="form-lable">Default/Maximum Occupancy</lable>
+                        <div class="col-md-12">
+                          <lable class="form-lable">IFC CC Type</lable>
                             <div class="input-group mb-3">
-                              <input type="number" name="RM_TY_DEFUL_OCCUPANCY" id="RM_TY_DEFUL_OCCUPANCY" class="form-control" placeholder="display seq." />
-                              <input type="number" name="RM_TY_MAX_OCCUPANCY" id="RM_TY_MAX_OCCUPANCY" class="form-control" placeholder="maximum occupany" />
+                              <select  data-width="100%" class="selectpicker PYM_TXN_CODE" data-live-search="true">
+                                <option value="">Select</option>
+                                <option value="AB">Australian Bank Card</option>
+                                <option value="AM">Amaco</option>
+                                <option value="AX">American Express</option>
+                              </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                          <lable class="form-lable">Maximum Adults/Children</lable>
-                            <div class="input-group mb-3">
-                              <input type="number" name="RM_TY_MAX_ADULTS" id="RM_TY_MAX_ADULTS" class="form-control" placeholder="max adults" />
-                              <input type="number" name="RM_TY_MAX_CHILDREN" id="RM_TY_MAX_CHILDREN" class="form-control" placeholder="max children" />
-                            </div>
+                        <div class="col-md-12">
+                          <lable class="form-lable">Merchant Number</lable>
+                          <input type="text" class="form-control" placeholder="reservation type" />
                         </div>
-                        <div class="col-md-6">
-                          <lable class="form-lable">Minimum Occupancy</lable>
-                          <input type="text" name="RM_TY_MIN_OCCUPANCY" id="RM_TY_MIN_OCCUPANCY" class="form-control" placeholder="minimum occpancy" />
-                        </div>
-                        <div class="col-md-12 flxi_ds_flx">
-                          <div class="form-check mt-3 me-1">
-                            <input class="form-check-input flxCheckBox" type="checkbox"  id="RM_TY_PSEUDO_RM_CHK">
-                            <input type="hidden" name="RM_TY_PSEUDO_RM" id="RM_TY_PSEUDO_RM" value="N" class="form-control" />
-                            <lable class="form-check-lable" for="defaultCheck1"> Pseudo Room </lable>
-                          </div>
-                          <div class="form-check mt-3 me-1">
-                            <input class="form-check-input flxCheckBox" type="checkbox" value="N" id="RM_TY_HOUSEKEEPING_CHK">
-                            <input type="hidden" name="RM_TY_HOUSEKEEPING" id="RM_TY_HOUSEKEEPING" value="N" class="form-control" />
-                            <lable class="form-check-lable" for="defaultCheck1"> Housekeeping </lable>
-                          </div>
-                          <div class="form-check mt-3">
-                            <input class="form-check-input flxCheckBox" type="checkbox" value="N" id="RM_TY_SEND_T_INTERF_CHK">
-                            <input type="hidden" name="RM_TY_SEND_T_INTERF" id="RM_TY_SEND_T_INTERF" value="N" class="form-control" />
-                            <lable class="form-check-lable" for="defaultCheck1"> Send to Interface </lable>
-                          </div>
-                        </div>
-                      
                       </div>
                     </form>
                   </div>
@@ -144,20 +106,20 @@
         'serverSide': true,
         'serverMethod': 'post',
         'ajax': {
-            'url':'<?php echo base_url('/roomTypeView')?>'
+            'url':'<?php echo base_url('/paymentView')?>'
         },
         'columns': [
-          { data: 'RM_TY_CODE' },
-          { data: 'RM_TY_DESC' },
-          { data: 'RM_TY_FEATURE' },
+          { data: 'PYM_CODE' },
+          { data: 'PYM_DESC' },
+          { data: 'PYM_TXN_CODE' },
           { data: null , render : function ( data, type, row, meta ) {
             return (
               '<div class="d-inline-block">' +
                 '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                 '<ul class="dropdown-menu dropdown-menu-end">' +
-                  '<li><a href="javascript:;" data_sysid="'+data['RM_TY_ID']+'" class="dropdown-item editWindow">Edit</a></li>' +
+                  '<li><a href="javascript:;" data_sysid="'+data['PYM_ID']+'" class="dropdown-item editWindow">Edit</a></li>' +
                   '<div class="dropdown-divider"></div>' +
-                  '<li><a href="javascript:;" data_sysid="'+data['RM_TY_ID']+'" class="dropdown-item text-danger delete-record">Delete</a></li>' +
+                  '<li><a href="javascript:;" data_sysid="'+data['PYM_ID']+'" class="dropdown-item text-danger delete-record">Delete</a></li>' +
                 '</ul>' +
               '</div>'
             );
@@ -181,7 +143,7 @@
         var memData = respn[0];
         var idArray = ['RM_TY_PUBLIC_RATE_CODE','RM_TY_FEATURE'];
         $(respn).each(function(ind,data){
-          var option = (idArray[ind]=='RM_TY_FEATURE' ? '' : '<option value="">Select</option>');
+          var option = '<option value="">Select</option>';
           $.each(data,function(i,valu){
             var value = $.trim(valu['CODE']);//fields.trim();
             var desc = $.trim(valu['DESCS']);//datavals.trim();
@@ -207,8 +169,6 @@
     $(':input','#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('#popModalWindow').modal('show');
-    runInitialLevel();
-    $('#RM_TY_FEATURE').val('').trigger('change');
   }
 
   $(document).on('click','.delete-record',function(){
@@ -228,7 +188,7 @@
         callback: function (result) {
             if(result){
               $.ajax({
-                url: '<?php echo base_url('/deleteRoomType')?>',
+                url: '<?php echo base_url('/deletePayment')?>',
                 type: "post",
                 data: {sysid:sysid},
                 headers: {'X-Requested-With': 'XMLHttpRequest'},
@@ -262,7 +222,7 @@
     runInitialLevel();
     var sysid = $(this).attr('data_sysid');
     $('#popModalWindow').modal('show');
-    var url = '<?php echo base_url('/editRoomType')?>';
+    var url = '<?php echo base_url('/editPayment')?>';
     $.ajax({
         url: url,
         type: "post",
@@ -299,7 +259,7 @@
   function submitForm(id){
     $('#errorModal').hide();
     var formSerialization = $('#'+id).serializeArray();
-    var url = '<?php echo base_url('/insertRoomType')?>';
+    var url = '<?php echo base_url('/insertPayment')?>';
     $.ajax({
         url: url,
         type: "post",
