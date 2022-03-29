@@ -23,7 +23,7 @@ $routes->setTranslateURIDashes(false);
 $routes->set404Override();
 $routes->setAutoRoute(true);
 
-$whichRoute = $request->uri->getSegment(2);
+$whichRoute = $request->uri->getSegment(1);
 if($whichRoute!='api'){
     if (file_exists(SYSTEMPATH . 'Config/Routes.php')) {
         require ROOTPATH . 'app/Config/RouteWeb.php';
