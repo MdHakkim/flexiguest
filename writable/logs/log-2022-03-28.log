@@ -1,0 +1,49 @@
+ERROR - 2022-03-28 00:37:35 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'FLXY_RATE_CATEGORY'.
+CRITICAL - 2022-03-28 00:37:35 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'FLXY_RATE_CATEGORY'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select count(*)...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(35): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\MastersController.php(212): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_RATE_CATEG...', 'RT_CT_ID,RT_CT_...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MastersController->RateCategoryView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MastersController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-28 00:48:28 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'FLXY_RATE_CATEGORY'.
+CRITICAL - 2022-03-28 00:48:28 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'FLXY_RATE_CATEGORY'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select count(*)...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(35): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\MastersController.php(212): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_RATE_CATEG...', 'RT_CT_ID,RT_CT_...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MastersController->RateCategoryView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MastersController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+ERROR - 2022-03-28 01:02:09 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'FLXY_RATE_CATEGORY'.
+CRITICAL - 2022-03-28 01:02:09 --> [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid object name 'FLXY_RATE_CATEGORY'.
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(670): CodeIgniter\Database\SQLSRV\Connection->execute('select count(*)...')
+#1 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(598): CodeIgniter\Database\BaseConnection->simpleQuery('select count(*)...')
+#2 C:\wamp64\www\FlexiGuest\app\Libraries\ServerSideDataTable.php(35): CodeIgniter\Database\BaseConnection->query('select count(*)...')
+#3 C:\wamp64\www\FlexiGuest\app\Controllers\MastersController.php(212): App\Libraries\ServerSideDataTable->generate_DatatTable('FLXY_RATE_CATEG...', 'RT_CT_ID,RT_CT_...')
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\MastersController->RateCategoryView()
+#5 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MastersController))
+#6 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#7 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#8 {main}
+CRITICAL - 2022-03-28 06:13:47 --> scandir(C:\wamp64\www\FlexiGuest\Modules/): The system cannot find the file specified. (code: 2)
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'scandir(C:\\wamp...', 'C:\\wamp64\\www\\F...', 9, Array)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(9): scandir('C:\\wamp64\\www\\F...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-28 06:13:53 --> scandir(C:\wamp64\www\FlexiGuest\Modules/): The system cannot find the file specified. (code: 2)
+#0 [internal function]: CodeIgniter\Debug\Exceptions->errorHandler(2, 'scandir(C:\\wamp...', 'C:\\wamp64\\www\\F...', 9, Array)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(9): scandir('C:\\wamp64\\www\\F...')
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}

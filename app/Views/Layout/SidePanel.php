@@ -295,8 +295,23 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="javascript:void(0);" class="menu-link">
-                    <div data-i18n="Search My Reservations">Search My Reservations</div>
+                  <a href="<?php echo base_url('section');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Section</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('sourceGroup');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Source Group</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('source');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Source</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('overBooking');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">OverBooking</div>
                   </a>
                 </li>
                 <li class="menu-item">
