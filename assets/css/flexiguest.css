@@ -97,5 +97,34 @@ button.close {
 }
 .flxy_join{
   display: block;
-width: 45px;
+  width: 45px;
+}
+.flxy_row{
+  display: flex;
+  list-style-type:none;
+  font-weight: bold;
+  margin:0;
+  padding-left: 16px;
+} 
+#rateQueryTable tr:nth-child(1),#rateQueryTable tr:nth-child(2),#rateQueryTable tr:nth-child(3){
+  background: #747171;
+  color: white;
+}
+.ratePrice td:nth-child(n+2){
+  cursor: pointer;
+}
+.ratePrice td:nth-child(n+2):hover{
+  background: #bed8ff;
+}
+.ratePrice td.active{
+  background: #bed8ff;
+}
+#rateQueryForm table{
+  font-size: 13px;
+}
+.flxy_paddng{
+  padding: 0px 12px 4px 0px !important;
+}
+.flxy_padding{
+  padding: 16px !important;
 }
