@@ -14,10 +14,6 @@ class ApplicatioController extends BaseController
         helper(['form']);
         $this->request = \Config\Services::request();
     }
-    
-    // public function index(){
-    //     return view('Reservation');
-    // }
 
     public function Reservation(){
         return view('Reservation/Reservation');
@@ -1848,6 +1844,80 @@ class ApplicatioController extends BaseController
         }
     }
 
+    public function special(){
+        return view('Reservation/SpecialView');
+    }
+
+    public function SpecialView(){
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_SPECIAL_CODE';
+        $columns = 'SPC_ID,SPC_CODE,SPC_DESC,SPC_SEQ';
+        $mine->generate_DatatTable($tableName,$columns);
+        exit;
+    }
+
+    public function insertSpecial(){
+        try{
+            $validate = $this->validate([
+                'SPC_CODE' => 'required'
+            ]);
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $sysid = $this->request->getPost("SPC_ID");
+            if(!empty($sysid)){
+                $data = ["SPC_CODE" => $this->request->getPost("SPC_CODE"),
+                    "SPC_DESC" => $this->request->getPost("SPC_DESC"),
+                    "SPC_SEQ" => $this->request->getPost("SPC_SEQ")
+                 ];
+            $return = $this->Db->table('FLXY_SPECIAL_CODE')->where('SPC_ID', $sysid)->update($data); 
+            }else{
+                $data = ["SPC_CODE" => $this->request->getPost("SPC_CODE"),
+                    "SPC_DESC" => $this->request->getPost("SPC_DESC"),
+                    "SPC_SEQ" => $this->request->getPost("SPC_SEQ")
+                 ];
+                $return = $this->Db->table('FLXY_SPECIAL_CODE')->insert($data); 
+            }
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444","db insert not success",$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function editSpecial(){
+        $param = ['SYSID'=> $this->request->getPost("sysid")];
+        $sql = "SELECT SPC_ID,SPC_CODE,SPC_DESC,SPC_SEQ FROM FLXY_SPECIAL_CODE WHERE SPC_ID=:SYSID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteSpecial(){
+        $sysid = $this->request->getPost("sysid");
+        try{
+            $return = $this->Db->table('FLXY_SPECIAL_CODE')->delete(['SPC_ID' => $sysid]); 
+            if($return){
+                $result = $this->responseJson("1","0",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-402","Record not deleted");
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
     public function reservationType(){
         return view('Reservation/ReservationType');
     }
@@ -2071,9 +2141,9 @@ class ApplicatioController extends BaseController
     }
 
     public function getRateQueryData(){
-        // $sysid = $this->request->getPost("sysid");
         try{
-            $sql="SELECT RM_TYPE,RM_TY_TOTAL_ROOM,RM_FEATURE FROM FLXY_ROOM ROOMTB,FLXY_ROOM_TYPE ROOMTYTB WHERE RM_TYPE_REF_ID=RM_TY_ID";
+            $sql="SELECT RM_TY_CODE,RM_TY_TOTAL_ROOM,OB_OVER_BK_COUNT,ISNULL(OB_OVER_BK_COUNT,0)+RM_TY_TOTAL_ROOM TOTAL_OVER_BOOKING FROM FLXY_OVERBOOKING OVERBTB RIGHT JOIN 
+            FLXY_ROOM_TYPE ROOMTYTB ON RM_TY_CODE=OB_RM_TYPE";
             $response = $this->Db->query($sql)->getResultArray();
             $sqlRate="SELECT (SELECT RT_CD_CODE FROM FLXY_RATE_CODE WHERE RT_CD_REF_ID=RT_CD_ID)RT_DESCRIPTION ,RATEQUERY.*,
                 CASE 
@@ -2091,22 +2161,24 @@ class ApplicatioController extends BaseController
             $feature='';
             $roomtypeStore=[];
             foreach($response as $row){
-                $roomtypeStore[]=$row['RM_TYPE'];
-                $roomType.='<td style="width:120px;">'.$row['RM_TYPE'].'</td>';
+                $roomtypeStore[]=$row['RM_TY_CODE'];
+                $roomType.='<td style="width:120px;">'.$row['RM_TY_CODE'].'</td>';
                 $physicalinv.='<td style="width:100px;word-wrap: break-word;">'.$row['RM_TY_TOTAL_ROOM'].'</td>';
-                $feature.='<td style="width:100px;word-wrap: break-word;">'.$row['RM_FEATURE'].'</td>';
+                $feature.='<td style="width:100px;word-wrap: break-word;">'.$row['TOTAL_OVER_BOOKING'].'</td>';
             }
             $trRow = '<tr><td style="width:210px;">Room Type</td>'.$roomType.'</tr>';
             $trRow .= '<tr><td style="width:210px;">Physical  Inventory</td>'.$physicalinv.'</tr>';
             $trRow .= '<tr><td style="width:210px;">Include Overbooking</td>'.$feature.'</tr>';
-            $trRow .='<tr>';
+            $trRow .='<tr class="ratePrice">';
             foreach($rateresult as $row){
-                $trRow .='<td>'.$row['RT_DESCRIPTION'].'</td>';
+                $trRow .='<td><input type="hidden" id="RT_DESCRIPTION" value="'.trim($row['RT_DESCRIPTION']).'">'.$row['RT_DESCRIPTION'].'</td>';
                 foreach($roomtypeStore as $room){
                     if (strpos($row['RT_DT_FEATURE'], $room) !== false) { 
-                        $trRow .='<td>'.$row['ACTUAL_ADULT_PRICE'].'</td>';
+                        $trRow .='<td class="clickPrice">'
+                        .'<input type="hidden" id="ACTUAL_ADULT_PRICE" value="'.$row['ACTUAL_ADULT_PRICE'].'">'
+                        .'<input type="hidden" id="ROOMTYPE" value="'.$room.'">'.$row['ACTUAL_ADULT_PRICE'].'</td>';
                     }else{
-                        $trRow .='<td></td>';
+                        $trRow .='<td><input type="hidden" value="'.$room.'"></td>';
                     }
                 }
                 $trRow .='</tr>';
@@ -2221,6 +2293,13 @@ class ApplicatioController extends BaseController
         }catch (Exception $e){
             return $this->respond($e->errors());
         }
+    }
+
+    function getRoomTypeDetails(){
+        $param = ['ROOMTYPE'=> $this->request->getPost("rmtype")];
+        $sql = "SELECT RM_TY_CODE,RM_TY_DESC,RM_TY_FEATURE,RM_TY_ROOM_CLASS FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=:ROOMTYPE:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
     }
 
 }

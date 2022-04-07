@@ -346,16 +346,14 @@
                           </div>
                           <div class="col-md-3">
                             <lable class="form-lable">Rate Code</lable>
-                            <select name="RESV_RATE_CODE"  id="RESV_RATE_CODE" data-width="100%" class="selectpicker RESV_RATE_CODE" data-live-search="true">
-                                <option value="">Select</option>
-                            </select>
+                            <div class="input-group mb-3">
+                              <input type="text" readonly name="RESV_RATE_CODE" id="RESV_RATE_CODE" class="form-control" placeholder="rate" />
+                              <button type="button" onClick="getRateQuery()" class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                            </div>
                           </div>
                           <div class="col-md-3">
                             <lable class="form-lable">Rate</lable>
-                              <div class="input-group mb-3">
-                                <input type="number" name="RESV_RATE" id="RESV_RATE" class="form-control" placeholder="rate" />
-                                <button type="button" onClick="companyAgentClick('COMPANY')" class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i></button>
-                              </div>
+                            <input type="number" name="RESV_RATE" id="RESV_RATE" class="form-control" placeholder="rate" />
                           </div>
                           <div class="col-md-3">
                             <lable class="form-lable">Package</lable>
@@ -444,7 +442,6 @@
                               <lable class="form-check-lable" for="defaultCheck1"> Confimation</lable>
                             </div>
                         </div> 
-                         
                         </div>
                       </div>
                       <div class="flxyFooter flxy_space">
@@ -455,12 +452,6 @@
                       </div>
                     </form>
                   </div>
-                  <!-- <div class="modal-footer flxyFooter flxy_space"> -->
-                    <!-- <button type="button" id="previousbtn" onClick="previous()" class="btn btn-primary"><i class="fa-solid fa-angle-left"></i> Previous</button> -->
-                    <!-- <button type="submit" id="submitResrBtn" class="btn btn-primary submitResr">Save</button> -->
-                    <!-- onClick="submitForm('reservationForm','R')" -->
-                    <!-- <button type="button" id="nextbtn" onClick="next()" class="btn btn-primary"> Next <i class="fa-solid fa-angle-right"></i></button> -->
-                  <!-- </div> -->
                 </div>
               </div>
             </div>
@@ -646,11 +637,12 @@
             <div class="modal fade" id="rateQueryWindow" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
               <div class="modal-dialog modal-xl">
                 <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="rateQueryWindowLable">New message</h5>
+                  <div class="modal-header flxy_padding">
+                    <h5 class="modal-title" id="rateQueryWindowLable">Rate Query</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                   </div>
-                  <div class="modal-body">
+                  <div id="userInfoDate"></div>
+                  <div class="modal-body flxy_padding">
                     <form id="rateQueryForm">
                       <div class="row g-3">
                         <div class="col-md-12 flxy_horiz_scroll">
@@ -662,10 +654,10 @@
                       </div>
                     </form>
                   </div>
-                  <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" onClick="submitForm('rateQueryForm',event)" class="btn btn-primary">Save</button>
-                  </div> -->
+                  <div class="modal-footer flxy_paddng">
+                    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                    <button type="button" onClick="selectRate(event)" class="btn btn-primary">Ok</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -710,14 +702,14 @@
         autowidth:true
     });
     $("#dataTable_view_wrapper .row:first").before('<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addResvation()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>');
-
+   
     $('.RESV_ARRIVAL_DT').datepicker({
         format: 'd-M-yyyy',
-        autoclose: true
+        autoclose: true,
     });
     $('.RESV_DEPARTURE').datepicker({
         format: 'd-M-yyyy',
-        autoclose: true
+        autoclose: true,
     });
     $('.CUST_DOB').datepicker({
         format: 'd-M-yyyy',
@@ -734,22 +726,75 @@
         // data:{sysid:sysid},
         dataType:'json',
         success:function(respn){
-          console.log(respn,"SDFDSF");
+          // console.log(respn,"SDFDSF");
           $('#rateQueryTable').html(respn[0]);
         }
       });
   }
 
+  function avaiableDatePeriod(){
+    var arrival = $('#RESV_ARRIVAL_DT').val();
+    var departure = $('#RESV_DEPARTURE').val();
+    var night = $('#RESV_NIGHT').val();
+    var nofroom = $('#RESV_NO_F_ROOM').val();
+    var adult = $('#RESV_ADULTS').val();
+    var children = $('#RESV_CHILDREN').val();
+    var ulli = '<li>'+moment(arrival,'DD-MMM-YYYY').format('dddd')+' ,</li>';
+    ulli+='<li>&nbsp;'+moment(arrival,'DD-MMM-YYYY').format('MMMM D YYYY')+' ,</li>';
+    ulli+='<li>&nbsp;'+night+' Night ,</li>';
+    ulli+='<li>&nbsp;'+nofroom+' Rooms ,</li>';
+    ulli+='<li>&nbsp;'+adult+' Adults </li>';
+    ulli+=(children!=0 ? '<li>,&nbsp;'+children+' Children</li>' : '');
+    return '<ul class="flxy_row">'+ulli+'</ul>';
+  }
+
   function next(){
-    // rateQueryTable
+    var fetchInfo = avaiableDatePeriod();
+    $('#userInfoDate').html(fetchInfo);
     generateRateQuery();
     $('#rateQueryWindow').modal('show');
-
-    // $('.window-1,#nextbtn').hide();
-    // $('.window-2').show();
-    // $('#submitResrBtn').removeClass('submitResr');
-    // runInitializeConfig();
   }
+
+  function getRateQuery(){
+    var fetchInfo = avaiableDatePeriod();
+    $('#userInfoDate').html(fetchInfo);
+    generateRateQuery();
+    $('#rateQueryWindow').modal('show');
+  }
+
+  $(document).on('click','.clickPrice',function(){
+      $('#rateQueryTable .active').removeClass('active');
+      $(this).addClass('active');
+      var value = $(this).find('input').val();
+      console.log(value);
+  });
+
+  function selectRate(){
+    $('#rateQueryWindow').modal('hide');
+    $('.window-1,#nextbtn').hide();
+    $('.window-2').show();
+    $('#submitResrBtn').removeClass('submitResr');
+    runInitializeConfig();
+    var activeRow = $('.clickPrice.active');
+    var rmtype = $(activeRow).find('#ROOMTYPE').val();
+    var rmprice = $(activeRow).find('#ACTUAL_ADULT_PRICE').val();
+    var rateCode = $(activeRow).parent('.ratePrice').find('#RT_DESCRIPTION').val();
+    $('[name="RESV_RATE_CODE"]').val(rateCode);
+    $('#RESV_RATE').val(rmprice);
+    $.ajax({
+        url: '<?php echo base_url('/getRoomTypeDetails')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{rmtype:rmtype},
+        dataType:'json',
+        success:function(respn){
+          var dataSet = respn[0];
+          var option= '<option data-feture="'+$.trim(dataSet['RM_TY_FEATURE'])+'" data-desc="'+$.trim(dataSet['RM_TY_DESC'])+'" data-rmclass="'+$.trim(dataSet['RM_TY_ROOM_CLASS'])+'" value="'+dataSet['RM_TY_CODE']+'">'+dataSet['RM_TY_DESC']+'</option>';
+          $('#RESV_RM_TYPE,#RESV_RTC').html(option).selectpicker('refresh');
+        }
+      });
+  }
+
   function previous(){
     $('.window-1,#nextbtn').show();
     $('.window-2').hide();
@@ -858,6 +903,11 @@
     $('#submitResrBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('.window-2').hide();
     runCountryList();
+    var today = moment().format('DD-MM-YYYY');
+    var end = moment().add(1,'days').format('DD-MM-YYYY');
+    $('.RESV_ARRIVAL_DT').datepicker().datepicker("setDate",today);
+    $('.RESV_DEPARTURE').datepicker().datepicker("setDate",end);
+    $('#RESV_NIGHT,#RESV_NO_F_ROOM,#RESV_ADULTS').val('1');
   }
 
   $(document).on('click','.flxCheckBox',function(){

@@ -127,6 +127,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/editSourceGroup', 'ApplicatioController::editSourceGroup');
     $routes->match(['post'],'/deleteSourceGroup', 'ApplicatioController::deleteSourceGroup');
 
+    $routes->get('/special', 'ApplicatioController::special');
+    $routes->match(['post'],'/specialView', 'ApplicatioController::SpecialView');
+    $routes->match(['post'],'/insertSpecial', 'ApplicatioController::insertSpecial');
+    $routes->match(['post'],'/editSpecial', 'ApplicatioController::editSpecial');
+    $routes->match(['post'],'/deleteSpecial', 'ApplicatioController::deleteSpecial');
+
     $routes->get('/reservationType', 'ApplicatioController::reservationType');
     $routes->match(['post'],'/reservationTypeView', 'ApplicatioController::ReservationTypeView');
     $routes->match(['post'],'/insertReservationType', 'ApplicatioController::insertReservationType');
@@ -153,6 +159,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
     $routes->match(['post'],'/getSupportingOverbookingLov', 'ApplicatioController::getSupportingOverbookingLov');
     $routes->match(['post'],'/getRoomType', 'ApplicatioController::getRoomType');
+    $routes->match(['post'],'/getRoomTypeDetails', 'ApplicatioController::getRoomTypeDetails');
+
     
     //Changes by Deleep Bose
     $routes->get('/rateClass', 'MastersController::rateClass');

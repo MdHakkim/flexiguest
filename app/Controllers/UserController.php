@@ -32,18 +32,18 @@ class UserController extends BaseController
 
             } else {
                 $model = new UserModel();
-                $user = $model->where('email', $this->request->getVar('email'))
+                $user = $model->where('USR_EMAIL', $this->request->getVar('email'))
                     ->first();
 
                 // Stroing session values
                 $this->setUserSession($user);
 
                 // Redirecting to dashboard after login
-                if($user['role'] == "admin"){
+                if($user['USR_ROLE'] == "admin"){
 
                     return redirect()->to(base_url('/'));
 
-                }elseif($user['role'] == "editor"){
+                }elseif($user['USR_ROLE'] == "editor"){
 
                     return redirect()->to(base_url('editor'));
                 }
@@ -55,12 +55,12 @@ class UserController extends BaseController
     private function setUserSession($user)
     {
         $data = [
-            'id' => $user['id'],
-            'name' => $user['name'],
-            'phone_no' => $user['phone_no'],
-            'email' => $user['email'],
+            'USR_ID' => $user['USR_ID'],
+            'USR_NAME' => $user['USR_NAME'],
+            'USR_PHONE' => $user['USR_PHONE'],
+            'USR_EMAIL' => $user['USR_EMAIL'],
             'isLoggedIn' => true,
-            "role" => $user['role'],
+            "USR_ROLE" => $user['USR_ROLE'],
         ];
 
         session()->set($data);

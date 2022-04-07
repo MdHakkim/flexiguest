@@ -73,7 +73,7 @@
                         <div class="col-md-12">
                           <input type="hidden" name="OB_DAYS[]" id="OB_DAYS" class="form-control"/>
                           <div class="flxy_inlineblk">
-                            <?php $days=['S','M','T','W','TH','F','SA']; foreach($days as $day){ ?>
+                            <?php $days=['SU','MO','TU','WE','TH','FR','SA']; foreach($days as $day){ ?>
                               <div class="flxy_join">
                                 <span class="flxy_fixed">
                                   <lable class="flxy_labstick"><?php echo $day;?></lable>
@@ -297,22 +297,22 @@
                   dayArray.push(data);
                   console.log(dayArray,data,"data SETS");
                   switch (data) {
-                    case 'S':
+                    case 'SU':
                       $('.switch-input:eq(0)').prop('checked',false);
                       break;
-                    case 'M':
+                    case 'MO':
                       $('.switch-input:eq(1)').prop('checked',false);
                       break;
-                    case 'T':
+                    case 'TU':
                       $('.switch-input:eq(2)').prop('checked',false);
                       break;
-                    case 'W':
+                    case 'WE':
                       $('.switch-input:eq(3)').prop('checked',false);
                       break;
                     case 'TH':
                       $('.switch-input:eq(4)').prop('checked',false);
                       break;
-                    case 'F':
+                    case 'FR':
                       $('.switch-input:eq(5)').prop('checked',false);
                       break;
                     case 'SA':

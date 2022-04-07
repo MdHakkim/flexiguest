@@ -11,11 +11,11 @@ class Noauth implements FilterInterface
     {
         if (session()->get('isLoggedIn')) {
 
-			if (session()->get('role') == "admin") {
+			if (session()->get('USR_ROLE') == "admin") {
 				return redirect()->to(base_url('admin'));
 			}
 
-			if (session()->get('role') == "editor") {
+			if (session()->get('USR_ROLE') == "editor") {
 				return redirect()->to(base_url('editor'));
 			}
         }

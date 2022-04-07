@@ -8,7 +8,7 @@ class EditorController extends BaseController
 {
     public function __construct()
     {
-        if (session()->get('role') != "editor") {
+        if (session()->get('USR_ROLE') != "editor") {
             echo 'Access denied';
             exit;
         }

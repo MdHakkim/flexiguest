@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class UserModel extends Model
 {
 	protected $DBGroup              = 'default';
-	protected $table                = 'tbl_users';
+	protected $table                = 'FLXY_USERS';
 	protected $primaryKey           = 'id';
 	protected $useAutoIncrement     = true;
 	protected $insertID             = 0;
@@ -15,18 +15,18 @@ class UserModel extends Model
 	protected $useSoftDelete        = false;
 	protected $protectFields        = true;
 	protected $allowedFields        = [
-		"name",
-		"email",
-		"phone_no",
-		"password",
-		"role"
+		"USR_NAME",
+		"USR_EMAIL",
+		"USR_PHONE",
+		"USR_PASSWORD",
+		"USR_ROLE"
 	];
 
 	// Dates
 	protected $useTimestamps        = false;
 	protected $dateFormat           = 'datetime';
-	protected $createdField         = 'created_at';
-	protected $updatedField         = 'updated_at';
+	protected $createdField         = 'USR_CREATED_DT';
+	protected $updatedField         = 'USR_UPDATED_DT';
 	protected $deletedField         = 'deleted_at';
 
 	// Validation

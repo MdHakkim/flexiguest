@@ -8,7 +8,7 @@ class AdminController extends BaseController
 {
     public function __construct()
     {
-        if (session()->get('role') != "admin") {
+        if (session()->get('USR_ROLE') != "admin") {
             echo 'Access denied';
             exit;
         }
