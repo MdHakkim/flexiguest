@@ -493,3 +493,276 @@ CRITICAL - 2022-03-29 02:35:33 --> Request URI segment is out of range: 1
 #4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
 #5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
 #6 {main}
+CRITICAL - 2022-03-29 03:42:38 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\system\CLI\Console.php(48): CodeIgniter\CodeIgniter->run()
+#6 C:\wamp64\www\FlexiGuest\spark(63): CodeIgniter\CLI\Console->run()
+#7 {main}
+CRITICAL - 2022-03-29 03:45:53 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 03:47:10 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 03:48:18 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:20:16 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\system\CLI\Console.php(48): CodeIgniter\CodeIgniter->run()
+#6 C:\wamp64\www\FlexiGuest\spark(63): CodeIgniter\CLI\Console->run()
+#7 {main}
+CRITICAL - 2022-03-29 07:23:07 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:23:17 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:23:55 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:23:57 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:23:58 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:23:58 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:23:58 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:23:58 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:23:58 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:23:58 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:23:59 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:24:15 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:24:16 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:24:17 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:24:17 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:24:17 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:24:18 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:24:18 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:24:18 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:24:18 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:24:18 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+CRITICAL - 2022-03-29 07:25:48 --> Request URI segment is out of range: 1
+#0 C:\wamp64\www\FlexiGuest\system\HTTP\URI.php(529): CodeIgniter\HTTP\Exceptions\HTTPException::forURISegmentOutOfRange(1)
+#1 C:\wamp64\www\FlexiGuest\app\Config\Routes.php(26): CodeIgniter\HTTP\URI->getSegment(1)
+#2 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(706): require('C:\\wamp64\\www\\F...')
+#3 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(361): CodeIgniter\CodeIgniter->tryToRouteIt(Object(CodeIgniter\Router\RouteCollection))
+#4 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#5 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#6 {main}
+ERROR - 2022-03-29 07:30:54 --> Error connecting to the database: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+CRITICAL - 2022-03-29 07:30:54 --> Unable to connect to the database.
+Main connection [sqlsrv]: Call to undefined function CodeIgniter\Database\SQLSRV\sqlsrv_configure()
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\system\Database\SQLSRV\Builder.php(613): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 C:\wamp64\www\FlexiGuest\system\Model.php(210): CodeIgniter\Database\SQLSRV\Builder->get()
+#3 C:\wamp64\www\FlexiGuest\system\BaseModel.php(622): CodeIgniter\Model->doFirst()
+#4 C:\wamp64\www\FlexiGuest\app\Validation\Userrules.php(12): CodeIgniter\BaseModel->first()
+#5 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(292): App\Validation\Userrules->validateUser('12345678', 'email,password', Array, NULL)
+#6 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(157): CodeIgniter\Validation\Validation->processRules('password', 'password', '12345678', Array, Array)
+#7 C:\wamp64\www\FlexiGuest\system\Controller.php(160): CodeIgniter\Validation\Validation->run()
+#8 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(27): CodeIgniter\Controller->validate(Array, Array)
+#9 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#10 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#11 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#13 {main}
+ERROR - 2022-03-29 07:37:26 --> Error connecting to the database: Login failed for user 'test'.
+ Driver's SQLSetConnectAttr failed
+CRITICAL - 2022-03-29 07:37:26 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'test'.
+ Driver's SQLSetConnectAttr failed
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\system\Database\SQLSRV\Builder.php(613): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 C:\wamp64\www\FlexiGuest\system\Model.php(210): CodeIgniter\Database\SQLSRV\Builder->get()
+#3 C:\wamp64\www\FlexiGuest\system\BaseModel.php(622): CodeIgniter\Model->doFirst()
+#4 C:\wamp64\www\FlexiGuest\app\Validation\Userrules.php(12): CodeIgniter\BaseModel->first()
+#5 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(292): App\Validation\Userrules->validateUser('12345678', 'email,password', Array, NULL)
+#6 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(157): CodeIgniter\Validation\Validation->processRules('password', 'password', '12345678', Array, Array)
+#7 C:\wamp64\www\FlexiGuest\system\Controller.php(160): CodeIgniter\Validation\Validation->run()
+#8 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(27): CodeIgniter\Controller->validate(Array, Array)
+#9 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#10 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#11 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#13 {main}
+ERROR - 2022-03-29 07:38:14 --> Error connecting to the database: Login failed for user 'test'.
+ Driver's SQLSetConnectAttr failed
+CRITICAL - 2022-03-29 07:38:14 --> Unable to connect to the database.
+Main connection [sqlsrv]: Login failed for user 'test'.
+ Driver's SQLSetConnectAttr failed
+#0 C:\wamp64\www\FlexiGuest\system\Database\BaseConnection.php(577): CodeIgniter\Database\BaseConnection->initialize()
+#1 C:\wamp64\www\FlexiGuest\system\Database\SQLSRV\Builder.php(613): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM "...', Array, false)
+#2 C:\wamp64\www\FlexiGuest\system\Model.php(210): CodeIgniter\Database\SQLSRV\Builder->get()
+#3 C:\wamp64\www\FlexiGuest\system\BaseModel.php(622): CodeIgniter\Model->doFirst()
+#4 C:\wamp64\www\FlexiGuest\app\Validation\Userrules.php(12): CodeIgniter\BaseModel->first()
+#5 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(292): App\Validation\Userrules->validateUser('12345678', 'email,password', Array, NULL)
+#6 C:\wamp64\www\FlexiGuest\system\Validation\Validation.php(157): CodeIgniter\Validation\Validation->processRules('password', 'password', '12345678', Array, Array)
+#7 C:\wamp64\www\FlexiGuest\system\Controller.php(160): CodeIgniter\Validation\Validation->run()
+#8 C:\wamp64\www\FlexiGuest\app\Controllers\UserController.php(27): CodeIgniter\Controller->validate(Array, Array)
+#9 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(825): App\Controllers\UserController->login()
+#10 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(412): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+#11 C:\wamp64\www\FlexiGuest\system\CodeIgniter.php(320): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\wamp64\www\FlexiGuest\index.php(38): CodeIgniter\CodeIgniter->run()
+#13 {main}
