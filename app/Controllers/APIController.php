@@ -143,6 +143,8 @@ class APIController extends ResourceController
                 $sql = "SELECT * FROM FlXY_USERS WHERE USR_EMAIL=:email:";
                 $param = ['email'=> $this->request->getVar("email")];
                 $userdata = $this->Db->query($sql,$param)->getRowArray();
+                
+               
                 if (!empty($userdata)) {
     
                     if (password_verify($this->request->getVar("password"), $userdata['USR_PASSWORD'])) {
@@ -201,16 +203,17 @@ class APIController extends ResourceController
         return true;
     }
 
-    // ----------------------------------------------------------CHECKIN API START -------------------------------------------//
+    // -----------------------------------------------------------------------CHECKIN API START -------------------------------------------//
     
-    /* 
+    /*  ---------------------------------------------------
 
     Function : List all reservations with details
     METHOD: GET , 
     INPUT : Header Authorization- Token
-    OUTPUT : Reservation details like Reservation_no,checkin _date,checkout_date,|apartment_details,apartment no| ,status ,name ,night, adult,childern count, document uploaded or not
+    OUTPUT: Reservation details like Reservation_no,checkin _date,checkout_date,apartment_details,apartment no ,status ,name ,
+            night, adult,childern count, document uploaded or not
     
-    */ 
+     --------------------------------------------------- */ 
     public function listReservationsAPI()
     {
         try {
@@ -257,7 +260,16 @@ class APIController extends ResourceController
         }
     }
 
-    public function passportUploadAPI()
+    /*  ---------------------------------------------------
+
+    Function : TO UPLOAD DOCUMENTS OF GUEST ON LOGIN
+    METHOD: POST , 
+    INPUT : Header Authorization- Token
+    OUTPUT: PATH OF UPLAODED DOCUMENT
+    
+    --------------------------------------------------- */ 
+
+    public function passportUploadAPI() // add validation for pdf,and size.
     {
         helper('upload_helper');
         try{
@@ -271,21 +283,62 @@ class APIController extends ResourceController
            
             if(!empty($decoded)) {
 
+                
+
                 // DOC_PASS - passport DOC_VACCINE- vaccination
                 
                 if(!empty($this->request->getFile("passport"))){
 
                     $fileGetName = 'passport';
+                    $file = $this->validate([
+                        'passport' => [
+                            'uploaded[passport]',
+                            'mime_in[passport,image/png, image/jpeg]',
+                            'max_size[passport,500]',
+                        ]
+    
+                    ]);
                   
                 }else if(!empty($this->request->getFile("vaccination"))){
 
                     $fileGetName = 'vaccination';
+                    $file = $this->validate([
+                        
+                        'vaccination' => [
+                            'uploaded[vaccination]',
+                            'mime_in[vaccination,image/png, image/jpeg,application/pdf]',
+                            'max_size[vaccination,500]',
+                        ],
+                       
+    
+                    ]);
                     
                 }else{
 
                     $fileGetName = 'DOC3';
+                    $file = $this->validate([
+                       
+                        'DOC3' => [
+                            'uploaded[vaccination]',
+                            'mime_in[vaccination,image/png, image/jpeg]',
+                            'max_size[vaccination,500]',
+                        ],
+    
+                    ]);
                     
                 }
+                // adding validatoion to the files
+
+            
+                if (!$file) {
+                    
+                    $validate = $this->validator->getErrors();
+                    $result["SUCCESS"] = "-402";
+                    $result[]["ERROR"] = $validate;
+                    $result = responseJson("-402",$validate);
+                    echo json_encode($result);
+                    exit;
+            }
                 
 
                 $doc_file = $this->request->getFile($fileGetName);
@@ -361,17 +414,207 @@ class APIController extends ResourceController
         
     }
 
+    /* ---------------------------------------------------
+
+    FUNCTION : SAVE GUEST DETAILS FROM THE IMAGE UPLOADED.
+    METHOD: POST , 
+    INPUT : Header Authorization- Token
+    OUTPUT : UPDATED STATUS.
+    
+    ------------------------------------------------------- */ 
+    public function saveDocDetails()
+    {
+        
+        try {
+
+            // get Token
+            $token = getJWTFromRequest();  
+
+            // decoded token information and userdata information from the table.
+            $decoded =  validateJWTFromRequest($token);
+           
+            // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
+           
+            if(!empty($decoded)) {
+
+                    $validate = $this->validate([
+                        'title' => 'required',
+                        'firstName' => 'required',
+                        'email' => 'required|valid_email',
+                        'countryOfResidence' => 'required',
+                        'DOB' => 'required',
+                        'phn' => 'required',
+                        'gender' => 'required',
+                        'docType' => 'required',
+                        'address1' => 'required',
+                        'nationality' => 'required',
+                        'docNumber' => 'required',
+                        'expiryDate' => 'required',
+                        'issueDate' => 'required',
+                        'city' => 'required',
+                    ]);
+
+                    
+
+                    if(!$validate){
+
+                        $validate = $this->validator->getErrors();
+                        $result["SUCCESS"] = "-402";
+                        $result[]["ERROR"] = $validate;
+                        $result = responseJson("-402",$validate);
+                        echo json_encode($result);
+                        exit;
+                    }
+
+                    
+                    $custId = $this->request->getPost("CUST_ID");
+                    $CUST_ID = $decoded['token_info']->data->USR_CUST_ID;
+                
+                    // checking the id from token and id from post values are same
+
+                    if($custId != $CUST_ID){
+
+                        $validate = "Token details and updating details mismactch";
+                        $result["SUCCESS"] = "-400";
+                        $result[]["ERROR"] = $validate;
+                        $result = responseJson("-400",$validate);
+                        echo json_encode($result);
+                        exit;
+                       
+                    }
+
+                    $custId = $CUST_ID;
+                    
+                    if($this->request->getPost("expiryDate") < $this->request->getPost("issueDate") && $this->request->getPost("expiryDate") <  date("d-M-Y")){
+                        
+                        $validate = "Your Document is expired";
+                        $result["SUCCESS"] = "-402";
+                        $result[]["ERROR"] = $validate;
+                        $result = responseJson("-402",$validate);
+                        echo json_encode($result);
+                        exit;
+                    }
+                   
+                    
+                    $data = 
+                    ["CUST_FIRST_NAME" => $this->request->getPost("firstName"),
+                        "CUST_MIDDLE_NAME" => $this->request->getPost("middleName"),
+                        "CUST_LAST_NAME" => $this->request->getPost("lastName"),
+                        "CUST_TITLE" => $this->request->getPost("title"),
+                        "CUST_COUNTRY" => $this->request->getPost("countryOfResidence"),
+                        "CUST_DOC_TYPE" => $this->request->getPost("docType"),
+                        "CUST_DOC_NUMBER" => $this->request->getPost("docNumber"),
+                        "CUST_GENDER" => $this->request->getPost("gender"),
+                        "CUST_NATIONALITY" => $this->request->getPost("nationality"),
+                        "CUST_DOB" => date("d-M-Y", strtotime($this->request->getPost("DOB"))),
+                        "CUST_DOC_EXPIRY" => date("d-M-Y", strtotime($this->request->getPost("expiryDate"))),
+                        "CUST_DOC_ISSUE" => date("d-M-Y", strtotime($this->request->getPost("issueDate"))),
+                        "CUST_PHONE" => $this->request->getPost("phn"),
+                        "CUST_EMAIL" => $this->request->getPost("email"),
+                        "CUST_ADDRESS_1" => $this->request->getPost("address1"),
+                        "CUST_ADDRESS_2" => $this->request->getPost("address2"),
+                        "CUST_CITY" => $this->request->getPost("city"),
+                        "CUST_UPDATE_UID" => $custId,
+                        "CUST_UPDATE_DT" => date("d-M-Y")
+                    ];
+
+
+                    $update = $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $custId)->update($data); 
+                    if($update){
+
+                        $result = responseJson(200,true,"updated the guest details",[]);
+                        echo json_encode($result);die;
+
+                    }else {
+
+                        $result = responseJson(500,true,"updation Failed",[]);
+                        echo json_encode($result);die;
+                    }
+            }
+
+        } catch (Exception $e){
+
+            return $this->respond($e->errors());
+        }
+        
+    }
+
     /* 
 
     FUNCTION : DELETE THE UPLOADED DOC
-    METHOD: DELETE , 
+    METHOD: DELETE 
     INPUT : Header Authorization- Token
     OUTPUT : DELETED STATUS.
     
     */ 
     public function deleteUploadedDOC()
     {
+        try{
+
+            $doctype = $this->request->getPost("doctype");
+            $filename = $this->request->getPost("filename"); // or path
+
+            // get Token
+            $token = getJWTFromRequest();  
+
+            // decoded token information and userdata information from the table.
+            $decoded =  validateJWTFromRequest($token);
+            // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
         
+            if(!empty($decoded)) {
+
+                $CUST_ID = $decoded['token_info']->data->USR_CUST_ID;
+
+                // fetch details from db
+                $doc_data = $this->Db->table('FLXY_DOCUMENTS')->select('*')->where(['CUST_NAME' => $CUST_ID])->get()->getRowArray(); 
+               
+                
+                if($doctype == 'passport'){
+
+                    $doc_column = 'DOC_PASS';
+                    $data['DOC_PASS'] = null;
+
+                }else if($doctype == 'vaccination'){
+
+                    $doc_column = 'DOC_VACCINEPASS';
+                    $data['DOC_VACCINE'] = null;
+                
+                }else {
+                    
+                    $doc_column = 'DOC3';
+                    $data['DOC3'] = null;
+                }
+                $filename = $doc_data[$doc_column];
+                $filename = explode('/',$filename);
+                $file = end($filename);
+                
+
+                // Unlink the file from the folder
+                $folderPath = "assets/userDocuments/".$doctype."/".$file ;
+               
+                if(file_exists( $folderPath )){
+                    
+                    if(unlink($folderPath)){
+
+                        $return = $this->Db->table('FLXY_DOCUMENTS')->where(['CUST_NAME' => $CUST_ID])->update($data); 
+                        if($return){
+
+                            $result = responseJson(200,"Documents deleted successfully",$return);
+                            echo json_encode($result);
+
+                        }else{
+
+                            $result = responseJson("-402","Record not deleted");
+                            echo json_encode($result);
+                        }
+                    }
+
+                }
+                
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
     }
     
     // ----------- END API FOR FLEXIGUEST ----------------//

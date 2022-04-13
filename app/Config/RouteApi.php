@@ -20,11 +20,16 @@ $routes->group("api", ["filter" => "authapi"], function ($routes) {
 
     $routes->get("profile", "APIController::profileAPI"); // user profile 
     
-//---------------------------------------CHECK-IN ----------------------------------------//
+//-----------------------------------------------------------------------------CHECK-IN --------------------------------------------------------------------//
 
-    // API to list ALL reservations of the user
+    // API to list ALL reservations of the loggined user
     $routes->get("checkin/listReservations", "APIController::listReservationsAPI"); 
+    // API to upload the  documnets for checkin 
     $routes->post("checkin/docUplaod", "APIController::passportUploadAPI"); 
+    // API to update the guest details from the doc uploaded.
+    $routes->post("checkin/saveDoc", "APIController::saveDocDetails"); 
+    // API to Delete doc uploaded.
+    $routes->post("checkin/deleteDoc", "APIController::deleteUploadedDOC"); 
 
 
     

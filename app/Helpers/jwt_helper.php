@@ -33,8 +33,8 @@ function validateJWTFromRequest(string $encodedToken)
     $decodedToken = JWT::decode($encodedToken, new Key($key, 'HS256'));
     
     $Db = \Config\Database::connect();
-    $userdata = $Db->table('FLXY_USERS')->where('USR_EMAIL',$decodedToken->data->USR_EMAIL)->get()->getRow();
-    unset($userdata->USR_PASSWORD);
+    $userdata = $Db->table('FLXY_USERS')->select('USR_NAME,USR_ID,USR_EMAIL,USR_PHONE,USR_ROLE,USR_CUST_ID')->where('USR_EMAIL',$decodedToken->data->USR_EMAIL)->get()->getRow();
+    
     return ["token_info"=> $decodedToken,"table_info"=> $userdata];
     
 }

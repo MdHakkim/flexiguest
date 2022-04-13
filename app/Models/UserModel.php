@@ -19,7 +19,8 @@ class UserModel extends Model
 		"USR_EMAIL",
 		"USR_PHONE",
 		"USR_PASSWORD",
-		"USR_ROLE"
+		"USR_ROLE",
+		"USR_CUST_ID"
 	];
 
 	// Dates
@@ -45,4 +46,8 @@ class UserModel extends Model
 	protected $afterFind            = [];
 	protected $beforeDelete         = [];
 	protected $afterDelete          = [];
+
 }
+
+?>
+	
