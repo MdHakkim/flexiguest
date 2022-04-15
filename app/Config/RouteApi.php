@@ -45,12 +45,14 @@ $routes->group("api", ["filter" => "authapi"], function ($routes) {
     $routes->get("maintenance/listRequests/(:segment)", "APIController::listRequests/$1");
     // API to fetch all requests
     $routes->get("maintenance/listRequests", "APIController::listRequests"); 
-     
-
 
 //----------------------------------------------------------------------------- Maintenance Request --------------------------------------------------------------------//
 
 
+// ---------------------------------------------------------------------------- Feedback --------------------------------------------------------------------------------//
+    // API to fetch all requests
+    $routes->post("addFeedback", "APIController::addFeedBack"); 
+// ---------------------------------------------------------------------------- Feedback --------------------------------------------------------------------------------//
 
     
 });

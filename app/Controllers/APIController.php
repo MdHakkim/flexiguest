@@ -988,6 +988,77 @@ public function listRequests($reqID = null)
     }
 }
 
+/* 
+
+    FUNCTION : FEEDBACK ADDING FROM GUEST
+    METHOD: POST 
+    INPUT : Header Authorization- Token
+    OUTPUT : RESPONSE OD ADDITION
+    
+*/ 
+
+public function addFeedBack()
+{
+    try {
+        // get Token
+        $token = getJWTFromRequest();  
+
+        // decoded token information and userdata information from the table.
+        $decoded =  validateJWTFromRequest($token);
+        // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
+       
+        if(!empty($decoded)) {
+
+            $validate = $this->validate([
+                
+                'rating' => 'required|min_length[1]|less_than_equal_to[5]|not_in_list[0]',
+                
+            ]);
+
+            if(!$validate){
+
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            
+            $CUST_ID = $decoded['token_info']->data->USR_CUST_ID;
+
+            $data = 
+            [
+                "FB_RATINGS" => $this->request->getPost("rating"),
+                "FB_DESCRIPTION" => $this->request->getPost("comments"),
+                "FB_CREATE_DT" => date("d-M-Y"),
+                "FB_CREATE_UID" => $CUST_ID,
+                "FB_UPDATE_DT" => date("d-M-Y"),
+                "FB_UPDATE_UID" => $CUST_ID
+            ];
+
+            $ins = $this->Db->table('FLXY_FEEDBACK')->insert($data); 
+            if($ins){
+
+                $result = responseJson(200,false,"Feedback Added",[]);
+                echo json_encode($result);die;
+
+            }else {
+
+                $result = responseJson(500,true,"Feedback addition Failed",[]);
+                echo json_encode($result);die;
+            }
+        }else{
+
+            $result = responseJson(500,true,"User information not available",[]);
+            echo json_encode($result);die;
+        }
+
+    } catch (Exception $e){
+
+        return $this->respond($e->errors());
+    }
+}
 
 
     
