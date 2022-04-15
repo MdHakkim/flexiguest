@@ -24,6 +24,7 @@ class APIController extends ResourceController
         helper(['form']);
         helper('responsejson');
         helper('jwt');
+        helper('upload');
         $this->request = \Config\Services::request();
     }
     
@@ -214,7 +215,7 @@ class APIController extends ResourceController
             night, adult,childern count, document uploaded or not
     
      --------------------------------------------------- */ 
-    public function listReservationsAPI()
+    public function listReservationsAPI($resID = null)
     {
         try {
        
@@ -231,14 +232,30 @@ class APIController extends ResourceController
 
                 if(!empty($cust_id)){
 
-                    $param = ['RESV_NAME' => $cust_id];
-                    
-                    $sql = "SELECT c.DOC_PASS,c.DOC_VACCINE, a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
+                    if($resID){
+
+                        $param = ['RESV_ID' => $resID];
+
+                        $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
+                            LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
+                            LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM 
+                            LEFT JOIN FLXY_DOCUMENTS c ON c.CUST_NAME = a.RESV_NAME WHERE RESV_ID=:RESV_ID:";
+                           
+                           $data = $this->Db->query($sql,$param)->getRowArray();
+
+                    }else{
+
+                        $param = ['RESV_NAME' => $cust_id];
+
+                        $sql = "SELECT c.DOC_PASS,c.DOC_VACCINE, a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
                             LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
                             LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM 
                             LEFT JOIN FLXY_DOCUMENTS c ON c.CUST_NAME = a.RESV_NAME WHERE RESV_NAME=:RESV_NAME:";
+
+                            $data = $this->Db->query($sql,$param)->getResultArray();
+                    }        
                 
-                    $data = $this->Db->query($sql,$param)->getResultArray();
+                    
                     
                     if(!empty($data)){
                         
@@ -426,7 +443,6 @@ class APIController extends ResourceController
     {
         
         try {
-
             // get Token
             $token = getJWTFromRequest();  
 
@@ -551,6 +567,7 @@ class APIController extends ResourceController
     {
         try{
 
+            $isUpdateVaccineTable = false; 
             $doctype = $this->request->getPost("doctype");
             $filename = $this->request->getPost("filename"); // or path
 
@@ -578,6 +595,7 @@ class APIController extends ResourceController
 
                     $doc_column = 'DOC_VACCINEPASS';
                     $data['DOC_VACCINE'] = null;
+                    $isUpdateVaccineTable = true;
                 
                 }else {
                     
@@ -599,8 +617,17 @@ class APIController extends ResourceController
                         $return = $this->Db->table('FLXY_DOCUMENTS')->where(['CUST_NAME' => $CUST_ID])->update($data); 
                         if($return){
 
-                            $result = responseJson(200,"Documents deleted successfully",$return);
-                            echo json_encode($result);
+                            $data =[ 'VACCINE_DOC_ISNOT'=> 0];
+
+                            // update the vaccine details table with document removed
+                            $doc_status_update = $this->Db->table('FLXY_VACCINE_DETAILS')->where(['CUST_ID' => $CUST_ID])->update($data); 
+
+                            if($doc_status_update){
+
+                                $result = responseJson(200,"Documents deleted successfully",$return);
+                                echo json_encode($result);  
+                            }
+                            
 
                         }else{
 
@@ -616,6 +643,353 @@ class APIController extends ResourceController
             return $this->respond($e->errors());
         }
     }
+/* 
+
+    FUNCTION : Vaccination Form
+    METHOD: POST 
+    INPUT : Header Authorization- Token
+    OUTPUT : Update the Vaccination details in table.
+    
+*/ 
+
+public function vaccineForm()
+{
+    try{
+        // get Token
+        $token = getJWTFromRequest();  
+
+        // decoded token information and userdata information from the table.
+        $decoded =  validateJWTFromRequest($token);
+       
+        // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
+       
+        if(!empty($decoded)) {
+
+            $CUST_ID = $decoded['token_info']->data->USR_CUST_ID;
+
+            $validate = $this->validate([
+
+                'vaccineDetail' => 'required',
+                'lastVaccineDate' => 'required',
+                'VaccineName' => 'required',
+                'cerIssuanceCountry' => 'required',
+                
+            ]);
+    
+            if(!$validate){
+    
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+    
+            $vaccineUploadedOrNot = $this->request->getPost("vaccineUploadedOrNot");
+
+            $data = 
+            [
+                "CUST_ID" => $CUST_ID,
+                "VACCINED_DETAILS" => $this->request->getPost("vaccineDetail"), //vaccinated, medicallyExempt, vaccinationLater 
+                "LAST_VACCINE_DT" => $this->request->getPost("lastVaccineDate"),
+                "VACCINE_NAME" => $this->request->getPost("VaccineName"),
+                "ISSUED_COUNTRY" => $this->request->getPost("cerIssuanceCountry"),
+                "VACCINE_DOC_ISNOT" => $vaccineUploadedOrNot,
+                "VACC_CREATE_UID" =>$CUST_ID,
+                "VACC_CREATE_DT" => date("d-M-Y"), 
+                "VACC_UPDATE_UID" => $CUST_ID,
+                "VACC_UPDATE_DT" => date("d-M-Y")
+            ];
+
+
+            $insert = $this->Db->table('FLXY_VACCINE_DETAILS')->insert($data); 
+            if($insert){
+
+                $result = responseJson(200,true,"Added the guest vaccine details",[]);
+                echo json_encode($result);die;
+
+            }else {
+
+                $result = responseJson(500,true,"Insertion  Failed",[]);
+                echo json_encode($result);die;
+            }
+
+
+        }else{
+
+            $result = responseJson(500," Token is not valid ",[]);
+            echo json_encode($result);
+        }
+
+        
+
+
+    }catch(Exception $e){
+
+        return $this->respond($e->errors());
+    }
+  
+}
+/* 
+
+    FUNCTION : CHECKIN COMPLETE (Accepting terms and uploading the signature)
+    METHOD: POST 
+    INPUT : Header Authorization- Token
+    OUTPUT : update the signature.
+    
+*/ 
+public function acceptAndSignatureUpload()
+{
+    try{
+        // get Token
+        $token = getJWTFromRequest();  
+        // decoded token information and userdata information from the table.
+        $decoded =  validateJWTFromRequest($token);  
+        // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
+       
+        if(!empty($decoded)) {
+
+            
+            $USR_ID = $decoded['token_info']->data->USR_ID;
+
+            $validate = $this->validate([ 
+                'estimatedTimeOfArrival' => 'required', 
+                'signature' =>  [
+                    'uploaded[signature]',
+                    'mime_in[signature,image/png, image/jpeg]',
+                    'max_size[signature,500]',
+                ],
+            ]);
+          
+            if(!$validate){
+
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $data = [
+
+                "RESV_ETA" => $this->request->getPost("estimatedTimeOfArrival"), 
+                "RESV_UPDATE_UID" => $USR_ID,
+                "RESV_UPDATE_DT" => date("d-M-Y")
+            ];
+            
+            // update the signature in the documents table
+            $doc_file = $this->request->getFile('signature');
+            $doc_name = $doc_file->getName();
+            
+            $folderPath = "assets/userDocuments/signature";
+            $cusUserID = $decoded['token_info']->data->USR_CUST_ID;
+
+            $doc_up = documentUpload($doc_file ,$doc_name, $cusUserID , $folderPath);
+            
+            if($doc_up['SUCCESS'] == 200){
+
+                // check wheather there is any entry with this user. 
+                $doc_data = $this->Db->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_PASS,DOC_VACCINE,DOC3')->where('CUST_NAME',$cusUserID)->get()->getRowArray();
+                // echo $this->Db->getLastQuery()->getQuery();die;
+                
+
+                if(!empty($doc_data)){
+
+                    $filepath = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                    $data = [
+                        "SIGNATURE_IMG" => $filepath ,
+                        "DOC_UPDATE_UID" => $cusUserID,
+                        "DOC_UPDATE_DT" => date("d-M-Y") ];
+                
+                    $update_data = $this->Db->table('FLXY_DOCUMENTS')->where('DOC_ID',$doc_data['DOC_ID'])->update($data);
+                    if ( $update_data ){
+
+                        $result = responseJson(200,false,"File uploaded successfully", ["path"=> $filepath]);
+                        echo json_encode($result);die;
+                        
+                    } else {
+
+                        $result = responseJson(500,true,"Failed to upload image",[]);
+                        echo json_encode($result);die;
+                    }
+                }else{
+
+                    $result = responseJson(404,true,"User details not found",[]);
+                    echo json_encode($result);die;
+                }
+            }                            
+        }
+                    
+    }catch(Exception $e){
+
+        return $this->respond($e->errors());
+    }    
+}
+
+// ----------------------------------------------------------------------- MAINTENANCE REQUEST API -------------------------------------------//
+
+/* 
+
+    FUNCTION : CREATE MAINTENANCE REQUEST
+    METHOD: POST 
+    INPUT : Header Authorization- Token
+    OUTPUT : -
+    
+*/ 
+public function createRequest()
+{
+    try {
+        // get Token
+        $token = getJWTFromRequest();  
+
+        // decoded token information and userdata information from the table.
+        $decoded =  validateJWTFromRequest($token);
+        // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
+       
+        if(!empty($decoded)) {
+
+            $validate = $this->validate([
+                
+                'type' => 'required',
+                'category' => 'required',
+                'subCategory' => 'required',
+                'preferredTime' => 'required',
+                'preferredDate' => 'required',
+                'attachement' =>  [
+                    'uploaded[attachement]',
+                    'mime_in[attachement,image/png, image/jpeg]',
+                    'max_size[attachement,500]',
+                ],
+                
+            ]);
+
+            if(!$validate){
+
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            
+            $CUST_ID = $decoded['token_info']->data->USR_CUST_ID;
+            
+            $doc_file = $this->request->getFile('attachement');
+            $doc_name = $doc_file->getName();
+        
+            $folderPath = "assets/maintenance";
+            $doc_up = documentUpload($doc_file ,$doc_name, $CUST_ID , $folderPath);
+        
+            if($doc_up['SUCCESS'] == 200){
+               
+                $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+
+                $data = 
+                [
+                    "MAINT_TYPE" => $this->request->getPost("type"),
+                    "MAINT_CATEGORY" => $this->request->getPost("category"),
+                    "MAINT_SUB_CATEGORY" => $this->request->getPost("subCategory"),
+                    "MAINT_DETAILS" => $this->request->getPost("details"),
+                    "MAINT_PREFERRED_DT" => date("d-M-Y", strtotime($this->request->getPost("preferredDate"))),
+                    "MAINT_PREFERRED_TIME" => date("d-M-Y H:i:s", strtotime($this->request->getPost("preferredTime"))),
+                    "MAINT_ATTACHMENT" => $attached_path ,
+                    "MAINT_CREATE_DT" => date("d-M-Y"),
+                    "MAINT_CREATE_UID" => $CUST_ID,
+                    "MAINT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_UPDATE_UID" => $CUST_ID
+                ];
+
+                $ins = $this->Db->table('FLXY_MAINTENANCE')->insert($data); 
+                if($ins){
+
+                    $result = responseJson(200,true,"Maintenance request created",[]);
+                    echo json_encode($result);die;
+
+                }else {
+
+                    $result = responseJson(500,true,"Creation Failed",[]);
+                    echo json_encode($result);die;
+                }
+        }else{
+
+            $result = responseJson(500,true,"USER information not available",[]);
+            echo json_encode($result);die;
+        }
+    }
+
+    } catch (Exception $e){
+
+        return $this->respond($e->errors());
+    }
+}
+
+/* 
+
+    FUNCTION : LIST MAINTENANCE REQUEST
+    METHOD: POST 
+    INPUT : Header Authorization- Token
+    OUTPUT : LIST OF ALL MAINTENANCE REQUEST ADDED.
+    
+*/ 
+
+public function listRequests($reqID = null)
+{
+    
+    try {
+        // get Token
+        $token = getJWTFromRequest();  
+
+        // decoded token information and userdata information from the table.
+        $decoded =  validateJWTFromRequest($token);
+        // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
+       
+        if(!empty($decoded)) {
+            
+             $cust_id = $decoded['token_info']->data->USR_CUST_ID;
+
+            if(!empty($cust_id)){
+
+                if($reqID){
+                    
+                    $param = ['MAINT_ID' => $reqID];
+
+                    $sql = "SELECT a.MAINT_ID, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,a.MAINT_SUB_CATEGORY,a.MAINT_DETAILS,a.MAINT_ACKNOWEDGE_TIME FROM FLXY_MAINTENANCE a 
+                        LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.CUST_NAME 
+                        WHERE MAINT_ID=:MAINT_ID:";
+                        
+                    $data = $this->Db->query($sql,$param)->getRowArray();
+                    
+                }else{
+
+                    $param = ['CUST_NAME' => $cust_id];
+                    $sql = "SELECT a.MAINT_ID, a.MAINT_SUB_CATEGORY,a.MAINT_DETAILS,a.MAINT_ACKNOWEDGE_TIME FROM FLXY_MAINTENANCE a WHERE a.CUST_NAME=:CUST_NAME:";
+                       
+                    $data = $this->Db->query($sql,$param)->getResultArray();
+                }        
+            
+                if(!empty($data)){
+                    
+                    $result = responseJson(200,false,"Reservation fetched Successfully",[$data]);
+                    echo json_encode($result);die;
+                }
+                            
+            }else{
+
+                $result = responseJson(401,true,"No user details Found",[]);
+                echo json_encode($result);die;
+            }
+        }
+    }catch (Exception $ex) {
+        
+        echo json_encode($ex->errors());
+    }
+}
+
+
+
     
     // ----------- END API FOR FLEXIGUEST ----------------//
 
