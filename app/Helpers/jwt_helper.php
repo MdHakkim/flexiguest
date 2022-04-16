@@ -33,9 +33,14 @@ function validateJWTFromRequest(string $encodedToken)
     $decodedToken = JWT::decode($encodedToken, new Key($key, 'HS256'));
     
     $Db = \Config\Database::connect();
-    $userdata = $Db->table('FLXY_USERS')->select('USR_NAME,USR_ID,USR_EMAIL,USR_PHONE,USR_ROLE,USR_CUST_ID')->where('USR_EMAIL',$decodedToken->data->USR_EMAIL)->get()->getRow();
-    
-    return ["token_info"=> $decodedToken,"table_info"=> $userdata];
+    $param =['USR_EMAIL'=>$decodedToken->data->USR_EMAIL];
+        
+    $sql = "SELECT u.USR_NAME,u.USR_ID,u.USR_EMAIL,u.USR_PHONE,u.USR_ROLE,u.USR_CUST_ID, a.RESV_ID,a.RESV_NO,a.RESV_NAME,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_USERS u
+            LEFT JOIN FLXY_RESERVATION a ON a.RESV_NAME = u.USR_CUST_ID
+            LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = u.USR_CUST_ID
+            LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM WHERE USR_EMAIL=:USR_EMAIL:";
+    $data = $Db->query($sql,$param)->getRowArray();
+    return ["token_info"=> $decodedToken,"table_info"=>  $data ];
     
 }
 

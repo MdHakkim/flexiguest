@@ -13,7 +13,7 @@ $routes->group("api", function ($routes) {
     
     $routes->post("register", "APIController::registerAPI");
     $routes->post("login", "APIController::loginAPI");
-
+    
 });
 
 $routes->group("api", ["filter" => "authapi"], function ($routes) {
