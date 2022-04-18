@@ -123,8 +123,102 @@ button.close {
   font-size: 13px;
 }
 .flxy_paddng{
-  padding: 0px 12px 4px 0px !important;
+  padding: 0px 10px 6px 10px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  justify-content: space-between;
 }
 .flxy_padding{
   padding: 16px !important;
+}
+.flxy_tab_header{
+  display: block;
+  padding:12px;
+}
+.mainform .col-md-3{
+  margin:0px !important; 
+}
+.flxy_opertion{
+  display: block;
+  width: 100%;
+}
+.flxy_right{
+  text-align: right;
+}
+.flxy_radio{
+  display: flex;
+  flex-direction: row;
+}
+.flxy_equal{
+  width: 138px !important;
+}
+.flxy_equal1{
+  width: 122px !important;
+}
+.flxy_opt1{
+  background-color: #fffece;
+  padding: 16px;
+}
+.flxy_option_view .dropdown-item{
+  padding: 5px 5px 5px 12px;
+  font-size: 14px;
+}
+.flxy_option_view .dropdown-menu{
+  min-width: 8rem !important;
+}
+.flxy_opt_btn .btn{
+  padding:8px;
+  width:120px;
+  margin:1px;
+}
+.flxy_table_resp{
+  display: block;
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: auto;
+  min-height: 150px;
+}
+.flxy_table_resp .table-bordered{
+  table-layout: fixed;
+  word-wrap: break-word;
+  padding: 12px;
+}
+.flxy_table_resp .table-bordered th,td{
+  padding: 12px !important;
+}
+#searchRecord .activeTr{
+  background-color: #d1e7ff !important;
+  --bs-table-striped-bg:none;
+}
+#accompanyTd .activeTrDetch{
+  background-color: #fde8c8 !important;
+  --bs-table-striped-bg:none;
+}
+.flxy_join{
+  display: inline;
+  width: 100%;
+}
+.flxy_fxcolm{
+  flex-flow: row !important;
+}
+.flxy_fixdate{
+  display: flex;
+}
+.flxy_date_vald {
+  position: absolute;
+  bottom: -18px;
+  width: 100%;
+}
+/* select.select2 {
+  display: block;
+  visibility: visible;
+  position: absolute;
+  margin-top: 4px;
+  margin-left: 4px;
+  width: 190px;
+  height: 20px;
+ } */
+.input-validation-error ~ .select2 .select2-selection__rendered {
+  border: 1px solid red;
 }
