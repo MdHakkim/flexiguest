@@ -8,6 +8,7 @@ use CodeIgniter\Validation\FormatRules;
 use CodeIgniter\Validation\Rules;
 use App\Validation\Userrules;
 use App\Validation\CustomRules;
+use App\Validation\CommonValidation;
 
 class Validation
 {
@@ -28,6 +29,7 @@ class Validation
         CreditCardRules::class,
         Userrules::class,
         CustomRules::class,
+        CommonValidation::class
     ];
 
     /**

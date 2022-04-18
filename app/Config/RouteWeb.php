@@ -24,6 +24,10 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/getInitializeListReserv', 'ApplicatioController::getInitializeListReserv');
     $routes->match(['post'],'/roomList', 'ApplicatioController::roomList');
     $routes->match(['post'],'/getRateQueryData', 'ApplicatioController::getRateQueryData');
+    $routes->match(['post'],'/searchProfile', 'ApplicatioController::searchProfile');
+    $routes->match(['post'],'/getExistingAppcompany', 'ApplicatioController::getExistingAppcompany');
+    $routes->match(['post'],'/appcompanyProfileSetup', 'ApplicatioController::appcompanyProfileSetup');
+    $routes->match(['post'],'/getExistCustomer', 'ApplicatioController::getExistCustomer');
 
     $routes->get('/customer', 'ApplicatioController::Customer');
     $routes->match(['post'],'/customerView', 'ApplicatioController::customerView');
