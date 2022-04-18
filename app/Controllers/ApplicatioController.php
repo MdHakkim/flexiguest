@@ -105,6 +105,7 @@ class ApplicatioController extends BaseController
                 exit;
             }
             $sysid = $this->request->getPost("RESV_ID");
+            $emailProc = '';
             if(!empty($sysid)){
             $data = ["RESV_ARRIVAL_DT" => $this->request->getPost("RESV_ARRIVAL_DT"),
                 "RESV_NIGHT" => $this->request->getPost("RESV_NIGHT"),
@@ -252,12 +253,13 @@ class ApplicatioController extends BaseController
                 ];
                 $return = $this->Db->table('FLXY_RESERVATION')->insert($data); 
                 $sysid = $this->Db->insertID();
+                $emailProc='S';
             }
             if($return){
                 $custId = $this->request->getPost("RESV_NAME");
                 $this->updateCustomerData($custId);
                 $return = $this->Db->table('FLXY_RESERVATION')->select('RESV_NO')->where('RESV_ID',$sysid)->get()->getResultArray();
-                if(empty($sysid)){
+                if($emailProc=='S'){
                     $this->triggerReservationEmail($sysid);
                 }
                 $result = $this->responseJson("1","0",$return);
@@ -273,7 +275,7 @@ class ApplicatioController extends BaseController
 
     public function triggerReservationEmail($sysid){
         $param = ['SYSID'=> $sysid];
-        $sql="SELECT RESV_ID,RESV_NO,RESV_ARRIVAL_DT,RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_FEATURE,CUST_FIRST_NAME,CUST_EMAIL FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:SYSID: AND RESV_NAME=CUST_ID";
+        $sql="SELECT RESV_ID,RESV_NO,RESV_ARRIVAL_DT,RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_FEATURE,CUST_FIRST_NAME+' '+CUST_LAST_NAME FULLNAME,CUST_EMAIL FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:SYSID: AND RESV_NAME=CUST_ID";
         $reservationInfo = $this->Db->query($sql,$param)->getResultArray();
         $emailCall = new EmailLibrary();
         $emailResp = $emailCall->preCheckInEmail($reservationInfo);
@@ -2249,9 +2251,9 @@ class ApplicatioController extends BaseController
             //     :TODAYDATE: BETWEEN RT_CD_BEGIN_SELL_DT AND RT_CD_END_SELL_DT AND RT_CD_ID=RT_DETAIL.RT_CD_ID)) RATEQUERY 
             //     WHERE (:ARRIVAL_DT: BETWEEN  RT_CD_START_DT AND RT_CD_END_DT AND :DEPARTURE_DT: BETWEEN  RT_CD_START_DT AND RT_CD_END_DT) AND 1=(SELECT [dbo].RATE_DETAIL_DAYS(RT_CD_DT_DAYS)) ORDER BY RT_CD_ID";
             if($RESV_MODE=='AVG'){
-                $operation = ' AVG(ACTUAL_ADULT_PRICE)ACTUAL_ADULT_PRICE';
+                $operation = ' CAST(AVG(ACTUAL_ADULT_PRICE)AS DECIMAL(10, 2))ACTUAL_ADULT_PRICE';
             }elseif($RESV_MODE=='TOT'){
-                $operation = ' SUM(ACTUAL_ADULT_PRICE)*'.$RESV_NIGHT.'ACTUAL_ADULT_PRICE';
+                $operation = ' CAST(SUM(ACTUAL_ADULT_PRICE)*'.$RESV_NIGHT.'AS DECIMAL(10, 2))ACTUAL_ADULT_PRICE';
             }
             $sqlRate="SELECT RT_DESCRIPTION,RT_CD_ID,value as ROOM_TYPE,$operation,COUNT(value) TOTAL
             FROM (SELECT(SELECT RT_CD_CODE FROM FLXY_RATE_CODE WHERE RATEQUERY.RT_CD_ID=RT_CD_ID)RT_DESCRIPTION ,RATEQUERY.*,
@@ -2468,7 +2470,7 @@ class ApplicatioController extends BaseController
         $CUST_MOBILE= $this->request->getPost("CUST_MOBILE")? $this->request->getPost("CUST_MOBILE") : 'NULL';
         $CUST_COMMUNICATION_DESC= $this->request->getPost("CUST_COMMUNICATION_DESC")? $this->request->getPost("CUST_COMMUNICATION_DESC") : 'NULL';
         $CUST_PASSPORT= $this->request->getPost("CUST_PASSPORT")? $this->request->getPost("CUST_PASSPORT") : 'NULL';
-        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_FIRST_NAME+' '+CUST_FIRST_NAME NAMES,CUST_LAST_NAME,CUST_DOB,CUST_PASSPORT,CUST_NATIONALITY,CUST_VIP,CUST_ADDRESS_1,CUST_CITY,CUST_EMAIL,CUST_MOBILE FROM FLXY_CUSTOMER WHERE (CUST_FIRST_NAME like '%$CUST_FIRST_NAME%' OR CUST_LAST_NAME like '%$CUST_LAST_NAME%' OR CUST_CITY like '%$CUST_CITY%' OR CUST_EMAIL like '%$CUST_EMAIL%' OR CUST_CLIENT_ID like '%$CUST_CLIENT_ID%' OR CUST_MOBILE like '%$CUST_MOBILE%' OR CUST_COMMUNICATION_DESC like '%$CUST_COMMUNICATION_DESC%' OR CUST_PASSPORT like '%$CUST_PASSPORT%')";
+        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_FIRST_NAME+' '+CUST_FIRST_NAME NAMES,CUST_LAST_NAME,FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_NATIONALITY,CUST_VIP,CUST_ADDRESS_1,CUST_CITY,CUST_EMAIL,CUST_MOBILE FROM FLXY_CUSTOMER WHERE (CUST_FIRST_NAME like '%$CUST_FIRST_NAME%' OR CUST_LAST_NAME like '%$CUST_LAST_NAME%' OR CUST_CITY like '%$CUST_CITY%' OR CUST_EMAIL like '%$CUST_EMAIL%' OR CUST_CLIENT_ID like '%$CUST_CLIENT_ID%' OR CUST_MOBILE like '%$CUST_MOBILE%' OR CUST_COMMUNICATION_DESC like '%$CUST_COMMUNICATION_DESC%' OR CUST_PASSPORT like '%$CUST_PASSPORT%')";
         $response = $this->Db->query($sql)->getResultArray();
         $table='';
         if(empty($response)){

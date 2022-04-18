@@ -198,8 +198,8 @@
                         <div class="row g-3">
                           <div class="col-md-3">
                             <lable class="form-lable">Guest Name</lable>
-                              <div class="input-group mb-3" required>
-                                <select name="RESV_NAME"  id="RESV_NAME" class="selectpicker RESV_NAME activeName" data-live-search="true">
+                              <div class="input-group mb-3">
+                                <select name="RESV_NAME"  id="RESV_NAME" class="selectpicker RESV_NAME activeName" data-live-search="true" required>
                                   <option value="">Select</option>
                                 </select>
                                 <div class="invalid-feedback">
@@ -546,7 +546,7 @@
                                 <div class="col-md-3 ">
                                   <lable class="form-lable">Arrival Date</lable>
                                     <div class="input-group ">
-                                      <input type="text" id="RESV_ARRIVAL_DT_PK" name="RESV_ARRIVAL_DT_PK" class="form-control" placeholder="DD-MM-YYYY" required>
+                                      <input type="text" id="RESV_ARRIVAL_DT_PK" name="RESV_ARRIVAL_DT_PK" class="form-control" placeholder="DD-MM-YYYY">
                                       <span class="input-group-append">
                                         <span class="input-group-text bg-light d-block">
                                           <i class="fa fa-calendar"></i>
@@ -595,7 +595,7 @@
                                 <div class="col-md-3 ">
                                   <lable class="form-lable">Arrival Date</lable>
                                   <div class="input-group">
-                                    <input type="text" id="RESV_ARRIVAL_DT_DO" name="RESV_ARRIVAL_DT_DO" class="form-control" placeholder="DD-MM-YYYY" required>
+                                    <input type="text" id="RESV_ARRIVAL_DT_DO" name="RESV_ARRIVAL_DT_DO" class="form-control" placeholder="DD-MM-YYYY">
                                       <span class="input-group-append">
                                         <span class="input-group-text bg-light d-block">
                                           <i class="fa fa-calendar"></i>
@@ -1412,8 +1412,12 @@
   }
 
   function checkPaymentValid(){
-    var payment = $('#RESV_PAYMENT_TYPE');
-    console.log(payment.val(),"SDF");
+    var payment = $('#RESV_PAYMENT_TYPE').val();
+    if(payment==''){
+      $('#RESV_PAYMENT_TYPE').parent('div').removeClass('is-valid').addClass('is-invalid');
+    }else{
+      $('#RESV_PAYMENT_TYPE').parent('div').removeClass('is-invalid').addClass('is-valid');
+    }
   }
 
   $(document).on('change','#RESV_ARRIVAL_DT',function(){
@@ -1503,7 +1507,7 @@
               $('#reservationChild').modal('hide');
               var option = '<option value="'+response['ID']+'">'+response['FULLNAME']+'</option>';
               $('*#RESV_NAME').html(option).selectpicker('refresh');
-              if(windowmode=='AC'){
+              if(windowmode=='AC-N'){
                 custId=response['ID'];
                 $('#customeTrigger').trigger('click');
               }
@@ -1801,11 +1805,12 @@
       $('#customerForm').find('input,select').val('');
       $('.profileCreate').show();
       $('.profileSearch').hide();
+      windowmode='AC-N';
     }
   }
   var custId ='';
   $(document).on('click','.activeRow,#customeTrigger',function(){
-    if(windowmode!='AC'){
+    if(windowmode!='AC-N'){
       $('.activeRow').removeClass('activeTr');
       $(this).addClass('activeTr');
       custId = $(this).attr('data_sysid');

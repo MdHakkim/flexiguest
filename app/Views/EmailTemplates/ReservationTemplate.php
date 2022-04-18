@@ -40,7 +40,7 @@
                                         </tr>
                                         <tr style="padding-bottom:6px;">
                                           <td><p>Guest Name </p></td>
-                                          <td><p>: <?php echo $data['CUST_FIRST_NAME'];?></p></td>
+                                          <td><p>: <?php echo $data['FULLNAME'];?></p></td>
                                         </tr>
                                         <tr style="padding-bottom:6px;">
                                           <td><p>Check-in Date</p></td>
