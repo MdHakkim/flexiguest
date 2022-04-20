@@ -6,6 +6,7 @@ use CodeIgniter\API\ResponseTrait;
 use App\Models\UserModel;
 use \Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use  App\Libraries\EmailLibrary;
 
 class APIController extends ResourceController
 {
@@ -210,6 +211,96 @@ class APIController extends ResourceController
             echo json_encode($ex->errors());
         }
     }
+    /*  FUNCTION : list of accompanying persons.
+        METHOD : POST , 
+        INPUT  : Header Authorization- Token
+        OUTPUT : list and details of the accompanying the persons   */ 
+        public function getGuestAccompanyProfiles()
+        {
+            try{
+                // get Token
+                $token = getJWTFromRequest();  
+                // decoded token information and userdata information from the table.
+                $decoded =  validateJWTFromRequest($token);
+                // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
+                if(!empty($decoded)) {
+                    $resID = $decoded['table_info']['RESV_ID'];
+                    
+                    // an indicator to inform this is accompanying person
+                    $sql = "SELECT concat(b.CUST_FIRST_NAME,' ',b.CUST_MIDDLE_NAME,' ',b.CUST_LAST_NAME)NAME,c.DOC_PASS,a.ACCOMP_STATUS FROM FLXY_ACCOMPANY_PROFILE a
+                    LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.ACCOMP_CUST_ID
+                    LEFT JOIN FLXY_DOCUMENTS c ON c.CUST_NAME = a.ACCOMP_CUST_ID WHERE a.ACCOMP_REF_RESV_ID =:ACCOMP_REF_RESV_ID:";
+                    $param = ['ACCOMP_REF_RESV_ID' => $resID ];
+                    $data = $this->Db->query($sql,$param)->getResultArray();
+                    // print_r($data);
+                    // // echo "<pre>";die;
+                    // echo $this->Db->getLastQuery()->getQuery();die;
+                    if(!empty($data)){
+                        $result = responseJson(200,false,"Accompany list for the reservation", [$data]);
+                        echo json_encode($result);die; 
+                    }
+                }else{
+                    $result = responseJson(200,false,"No user found", []);
+                    echo json_encode($result);die; 
+                }
+            }catch(Execption $ex){
+                echo json_encode($ex->errors());
+            }
+        }
+        /*  FUNCTION : send email to accompany person for uplaod document self 
+        METHOD : POST , 
+        INPUT  : Header Authorization- Token
+        OUTPUT : list and details of the accompanying the persons   */ 
+        public function requestSelfUpload()
+        {
+            try{
+                // get Token
+                $token = getJWTFromRequest();  
+                // decoded token information and userdata information from the table.
+                $decoded =  validateJWTFromRequest($token);
+                // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
+                if(!empty($decoded)) {
+                    $resID = $decoded['table_info']['RESV_ID'];
+                    $validate = $this->validate([
+                        'firstName' => 'required',
+                        'lastName' => 'required',
+                        'email' => 'required|valid_email',
+
+                    ]);
+                    if(!$validate){
+
+                        $validate = $this->validator->getErrors();
+                        $result["SUCCESS"] = "-402";
+                        $result[]["ERROR"] = $validate;
+                        $result = responseJson("-402",$validate);
+                        echo json_encode($result);
+                        exit;
+                    }
+                    $firstName = $this->request->getPost("firstName");
+                    $lastName = $this->request->getPost("lastName");
+                    $email = $this->request->getPost("email");
+                    
+                    // email sending to the accompany person
+                    $param = ['RESV_ID'=> $resID];
+                    $sql="SELECT RESV_ID,RESV_NO,RESV_ARRIVAL_DT,RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_FEATURE,CUST_FIRST_NAME,CUST_EMAIL FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:RESV_ID: AND RESV_NAME=CUST_ID";
+                    $reservationInfo = $this->Db->query($sql,$param)->getResultArray();
+                    $emailCall = new EmailLibrary();
+                    $emailResp = $emailCall->requestDocUploadEmail($reservationInfo,$email , $firstName." ".$lastName);
+                    if($emailResp){
+                        $result = responseJson(200,false,"Email send Successfully", []);
+                        echo json_encode($result);die; 
+                    }else{
+                        $result = responseJson(500,false,"Email sending failed", []);
+                        echo json_encode($result);die;
+                    }
+                }else{
+                    $result = responseJson(200,false,"No user found", []);
+                    echo json_encode($result);die; 
+                }
+            }catch(Execption $ex){
+                echo json_encode($ex->errors());
+            }
+        }
 
     /*  Function : TO UPLOAD DOCUMENTS OF GUEST ON LOGIN
         METHOD: POST , 
@@ -577,7 +668,6 @@ public function acceptAndSignatureUpload()
             if($doc_up['SUCCESS'] == 200){
                 // check wheather there is any entry with this user. 
                 $doc_data = $this->Db->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_PASS,DOC_VACCINE,DOC3')->where('CUST_NAME',$cusUserID)->get()->getRowArray();
-                // echo $this->Db->getLastQuery()->getQuery();die;
                 if(!empty($doc_data)){
                     $filepath = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
                     $data = [

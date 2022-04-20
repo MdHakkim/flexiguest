@@ -21,4 +21,21 @@ class EmailLibrary{
             return $data;
         }
     }
+
+    public function requestDocUploadEmail($rawparam , $accompanyemail, $name){
+        $paramraw['data'] = $rawparam[0];
+        $paramraw['name'] = $name;
+        $toEmail = $accompanyemail;
+        $html = view('EmailTemplates/RequestSelfDocUpload',$paramraw);
+        $this->email->setFrom('notifications@farnek.com', 'FlexiGuest | Hitek');
+        $this->email->setTo($toEmail);
+        $this->email->setSubject('Request to upload the pre-checkin documents');
+        $this->email->setMessage($html);//your message here
+        if ($this->email->send()) {
+            return true;
+        } else {
+            $data = $this->email->printDebugger(['headers']);
+            return $data;
+        }
+    }
 }
