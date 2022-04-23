@@ -9,13 +9,13 @@
                 <tbody>
                   <tr>
                     <td align="center" style="padding: 0;">
-                      <table border="0" width="700" cellspacing="0" cellpadding="0" >
+                      <table border="0" width="700" style="border-collapse:collapse;" cellspacing="0" cellpadding="0" >
                         <tbody>
                           <tr>
                             <td><img src="https://keysuite.farnek.com:9021/upload/assets/hotel-logo.png"/></td>
                           </tr>
                           <tr>
-                            <td style="padding: 10px 0px;"><h1>Hello <?php echo $data['CUST_FIRST_NAME'];?>,</h1></td>
+                            <td style="padding: 10px 0px;"><h1>Hello <?php echo $data['FULLNAME'];?>,</h1></td>
                           </tr>
                           <tr>
                             <td style="padding: 10px 0px;"><h1>Greetings from Hotel!</h1></td>
@@ -56,21 +56,27 @@
                                         </tr>
                                         <tr style="padding-bottom:6px;">
                                           <td><p>Apartment Details</p></td>
-                                          <td><p>: <?php echo $data['RESV_FEATURE'];?></p></td>
+                                          <td><p>: <?php echo $data['RM_TY_DESC'];?></p></td>
                                         </tr>
                                         <tr style="padding-bottom:6px;">
                                           <td><p>Click here for Pre-Check-in</p></td>
                                           <td><p>: </p></td>
                                         </tr>
                                         <tr style="padding-bottom:6px;">
-                                          <td>
-                                            <div style="display: flex;">
-                                              <div style=""><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//play-store.png"></a></div>
-                                              <div style=""><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//app-store.png"></a></div>
-                                            </div>
-                                          </td>
-                                          <td>
-                                            <div style="background: black;padding: 10px;text-align: center;width: 160px;color: white;border-radius: 7px;position: relative;top: -3px;"><a style="color: white;text-decoration: none;" href="https://keysuite.farnek.com:9021//Navigate/Guest/MzA2NTQ=">Click Pre Check-In</a></div>
+                                          <td colspan="3">
+                                            <table style="width:100%">
+                                              <tbody>
+                                                <tr style="padding-bottom:32px;">
+                                                  <td>
+                                                    <div style="display: flex;">
+                                                      <div style=""><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//play-store.png"></a></div>
+                                                      <div style="margin-left: 12px;"><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//app-store.png"></a></div>
+                                                      <div style="background: #1f29bd;margin-left: 12px;padding: 2px;text-align: center;width: 160px;color: white;border-radius: 7px;line-height: 2.2;height: 39px;"><a style="color: white;text-decoration: none;" href="http://flexiguest.com/webline/ReservationDetail/<?php echo $token.'/'.$data['RESV_ID'];?>">Pre Check-In Web</a></div>
+                                                    </div>
+                                                  </td>
+                                                </tr>
+                                              </tbody>
+                                            </table>
                                           </td>
                                         </tr>
                                         </tbody>

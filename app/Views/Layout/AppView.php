@@ -18,6 +18,7 @@
       <?= $this->include('Layout/HeaderScript') ?>
       <body>
         <!-- Layout wrapper -->
+          <div id="loader_flex_bg"><div class="loader_flexi"></div></div>
           <div class="layout-wrapper layout-content-navbar">
               <div class="layout-container">
                 <!-- Menu -->

@@ -20,7 +20,7 @@
                       <tr>
                         <th>Room Code</th>
                         <th>Room Description</th>
-                        <th>Feature</th>
+                        <th>Total Room</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -107,7 +107,7 @@
         'columns': [
           { data: 'RM_CL_CODE' },
           { data: 'RM_CL_DESC' },
-          { data: 'RM_CL_FEATURE' },
+          { data: 'RM_CL_TOTAL_ROOM' },
           { data: null , render : function ( data, type, row, meta ) {
             return (
               '<div class="d-inline-block">' +

@@ -37,7 +37,7 @@
             
             <div class="content-backdrop fade"></div>
           </div>
-          <?=$this->include("CompanyAgentModal")?>
+          <?=$this->include("Reservation/CompanyAgentModal")?>
           <!-- Content wrapper -->
 <script>
   var compAgntMode='';

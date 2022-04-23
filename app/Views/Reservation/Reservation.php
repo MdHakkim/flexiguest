@@ -1,6 +1,5 @@
 
 
-
 <?=$this->extend("Layout/AppView")?>
 <?=$this->section("contentRender")?>
 <?= $this->include('Layout/ErrorReport') ?>
@@ -10,7 +9,6 @@
 
             <div class="container-xxl flex-grow-1 container-p-y">
               <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservation /</span> Reservation</h4>
-
               <!-- DataTable with Buttons -->
               <div class="card">
                 <!-- <h5 class="card-header">Responsive Datatable</h5> -->
@@ -18,12 +16,12 @@
                   <table id="dataTable_view" class="table table-striped">
                     <thead>
                       <tr>
+                        <th>Reservation No</th>
                         <th>Reservation Name</th>
                         <th>Arrival Date</th>
-                        <th>Night</th>
                         <th>Departure Date</th>
+                        <th>Night</th>
                         <th>No of Room</th>
-                        <!-- <th>Feature</th> -->
                         <th>Purpose</th>
                         <th>Action</th>
                       </tr>
@@ -32,7 +30,7 @@
                   </table>
                 </div>
               </div>
-             
+              <div id="triggCopyReserv"></div>
               <!--/ Multilingual -->
             </div>
             <!-- / Content -->
@@ -136,7 +134,6 @@
                           <div class="col-md-3 flxi_ds_flx">
                             <div class="form-check mt-3 me-1">
                               <input class="form-check-input flxCheckBox" type="checkbox"  id="RESV_CLOSED_CHK">
-                              <!-- <input type="hidden" name="RESV_CLOSED" id="RESV_CLOSED" value="N" class="form-control" /> -->
                               <lable class="form-check-lable" for="defaultCheck1"> Closed </lable>
                             </div>
                             <div class="form-check mt-3 me-1">
@@ -933,11 +930,15 @@
                   <div class="modal-body flxy_padding">
                     <form id="rateQueryForm">
                       <div class="row g-3">
-                        <div class="col-md-12 flxy_horiz_scroll">
+                        <div class="col-md-10 flxy_horiz_scroll">
                           <table class="table table-bordered" style="table-layout:fixed;">
                             <tbody id="rateQueryTable">
                             </tbody>
                           </table>
+                        </div>
+                        <div class="col-md-2 flxy_border_over">
+                          <button type="button" onClick="detailOption('OB')" class="btn btn-secondary d-grid gap-2  mx-auto"><span class="btnName">Overbooking Detail</span></button>
+                          <!-- <button type="button" onClick="submitForm('customerForm','C',event)" class="btn btn-primary">Save</button> -->
                         </div>
                       </div>
                     </form>
@@ -1007,15 +1008,153 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                   </div>
                   <div class="modal-body">
-                      <div class="flxy_opt_btn">
-                          <button type="button" onClick="childReservation()" class="btn btn-primary">Accompanying</button>
-                          <button type="button" onClick="selectRate(event)" class="btn btn-primary">Add On</button>
-                          <button type="button" onClick="selectRate(event)" class="btn btn-primary">Changes</button>
+                    <div id="Accompany">
+                      <div class="flxy_opt_btn text-center">
+                        <button type="button" onClick="reservExtraOption('ACP')" class="btn btn-primary">Accompanying</button>
+                        <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add On</button>
+                        <button type="button" onClick="reservExtraOption('CHG')" class="btn btn-primary">Changes</button>
                       </div>
+                    </div>
+                    <div id="Addon">
+                      <div id="flxy_add_content">
+                          <p>Which of these reservation attributes do you want to copy?</p>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="col-md-12">
+                                <lable class="form-lable col-md-12">Room Type</lable>
+                                <select name="COPY_RM_TYPE"  id="COPY_RM_TYPE" data-width="100%" class="selectpicker COPY_RM_TYPE" data-live-search="true">
+                                  <option value="">Select</option>
+                                </select>
+                              </div> 
+                              <div class="form-check mt-3 p-0">
+                                <label class="switch">
+                                  <input type="checkbox" class="switch-input copyReser" checked id="COPY_PAYMENT" method="PM" />
+                                  <span class="switch-toggle-slider">
+                                    <span class="switch-on">
+                                      <i class="bx bx-check"></i>
+                                    </span>
+                                    <span class="switch-off">
+                                      <i class="bx bx-x"></i>
+                                    </span>
+                                  </span>
+                                </label>
+                                <lable class="form-check-lable flxy_lab_left"> Payment Method</lable>
+                              </div>
+                              <div class="form-check mt-3 p-0">
+                                <label class="switch">
+                                  <input type="checkbox" class="switch-input copyReser" checked id="COPY_SPECIALS" method="SP" />
+                                  <span class="switch-toggle-slider">
+                                    <span class="switch-on">
+                                      <i class="bx bx-check"></i>
+                                    </span>
+                                    <span class="switch-off">
+                                      <i class="bx bx-x"></i>
+                                    </span>
+                                  </span>
+                                </label>
+                                <lable class="form-check-lable flxy_lab_left"> Specials</lable>
+                              </div>
+                              <div class="form-check mt-3 p-0">
+                                <label class="switch">
+                                  <input type="checkbox" class="switch-input copyReser" checked id="COPY_CUST_REF" method="CR"  />
+                                  <span class="switch-toggle-slider">
+                                    <span class="switch-on">
+                                      <i class="bx bx-check"></i>
+                                    </span>
+                                    <span class="switch-off">
+                                      <i class="bx bx-x"></i>
+                                    </span>
+                                  </span>
+                                </label>
+                                <lable class="form-check-lable flxy_lab_left"> Custome Referance</lable>
+                              </div>
+                              <div class="form-check mt-3 p-0">
+                                <label class="switch">
+                                  <input type="checkbox" class="switch-input copyReser" checked id="COPTY_ROUTING" method="RU" />
+                                  <span class="switch-toggle-slider">
+                                    <span class="switch-on">
+                                      <i class="bx bx-check"></i>
+                                    </span>
+                                    <span class="switch-off">
+                                      <i class="bx bx-x"></i>
+                                    </span>
+                                  </span>
+                                </label>
+                                <lable class="form-check-lable flxy_lab_left"> Window/Room Routing instr.</lable>
+                              </div>
+                              <div class="form-check mt-3 p-0">
+                                <label class="switch">
+                                  <input type="checkbox" class="switch-input copyReser" checked id="COPTY_ROUTING" method="CM"  />
+                                  <span class="switch-toggle-slider">
+                                    <span class="switch-on">
+                                      <i class="bx bx-check"></i>
+                                    </span>
+                                    <span class="switch-off">
+                                      <i class="bx bx-x"></i>
+                                    </span>
+                                  </span>
+                                </label>
+                                <lable class="form-check-lable flxy_lab_left"> Comments</lable>
+                              </div>
+                            </div>
+                            <div class="col-md-6">
+                              <div class="col-md-6 mb-5"></div>
+                              <div class="form-check mt-3 p-0">
+                                <label class="switch">
+                                  <input type="checkbox" class="switch-input copyReser" checked id="COPY_PACKAGE" method="PK" />
+                                  <span class="switch-toggle-slider">
+                                    <span class="switch-on">
+                                      <i class="bx bx-check"></i>
+                                    </span>
+                                    <span class="switch-off">
+                                      <i class="bx bx-x"></i>
+                                    </span>
+                                  </span>
+                                </label>
+                                <lable class="form-check-lable flxy_lab_left"> Packages</lable>
+                              </div>
+                              <div class="form-check mt-3 p-0">
+                                <label class="switch">
+                                  <input type="checkbox" class="switch-input copyReser" checked id="COPY_ITEM_INV" method="IN" />
+                                  <span class="switch-toggle-slider">
+                                    <span class="switch-on">
+                                      <i class="bx bx-check"></i>
+                                    </span>
+                                    <span class="switch-off">
+                                      <i class="bx bx-x"></i>
+                                    </span>
+                                  </span>
+                                </label>
+                                <lable class="form-check-lable flxy_lab_left"> Item Inventory</lable>
+                              </div>
+                              <div class="form-check mt-3 p-0">
+                                <label class="switch">
+                                  <input type="checkbox" class="switch-input copyReser" checked id="COPY_GUEST_NAME" method="GU"/>
+                                  <span class="switch-toggle-slider">
+                                    <span class="switch-on">
+                                      <i class="bx bx-check"></i>
+                                    </span>
+                                    <span class="switch-off">
+                                      <i class="bx bx-x"></i>
+                                    </span>
+                                  </span>
+                                </label>
+                                <lable class="form-check-lable flxy_lab_left"> Guest Name</lable>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-12" style="text-align:right;">
+                              <button type="button" onClick="copyReservation()" class="btn btn-primary">Save</button>
+                              <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">Close</button>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="modal-footer">
+                  <!-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -1031,7 +1170,7 @@
                   </div>
                   <div class="modal-body">
                     <div id="customeTrigger"></div>
-                    <div class="row mt-4">
+                    <div class="row">
                       <table class="table table-striped">
                         <thead class="table-dark">
                           <tr>
@@ -1054,6 +1193,38 @@
               </div>
             </div>
             <!-- option window end -->
+
+            <!-- RateQuery Detail window -->
+            <div class="modal fade" id="reteQueryDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="rateQueryWindowLable">Overbooking Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row flxy_height">
+                      <table class="table table-striped">
+                        <thead class="table-dark">
+                          <tr>
+                            <th>Name</th>
+                            <th>Room Type</th>
+                            <th>Overbooking</th>
+                          </tr>
+                        </thead>
+                        <tbody id="reteQueryDetailTd">
+                          <tr><td class="text-center" colspan="3">No data</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--  RateQuery Detail window end -->
             <div class="content-backdrop fade"></div>
           </div>
           <!-- Content wrapper -->
@@ -1061,8 +1232,10 @@
 <script>
   var compAgntMode='';
   var linkMode='';
+  var windowmode='';
   $(document).ready(function() {
     linkMode='EX';
+    $('#loader_flex_bg').show();
     $('#dataTable_view').DataTable({
         'processing': true,
         'serverSide': true,
@@ -1071,10 +1244,11 @@
             'url':'<?php echo base_url('/reservationView')?>'
         },
         'columns': [
+          { data: 'RESV_NO' },
           { data: 'FULLNAME' },
           { data: 'RESV_ARRIVAL_DT'},
-          { data: 'RESV_NIGHT' },
           { data: 'RESV_DEPARTURE'},
+          { data: 'RESV_NIGHT' },
           { data: 'RESV_NO_F_ROOM'},
           // { data: 'RESV_FEATURE'},
           { data: 'RESV_PURPOSE_STAY'},
@@ -1084,7 +1258,7 @@
                 '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                 '<ul class="dropdown-menu dropdown-menu-end">' +
                   '<li><a href="javascript:;" data_sysid="'+data['RESV_ID']+'" class="dropdown-item editReserWindow"><i class="fas fa-edit"></i> Edit</a></li>' +
-                  '<li><a href="javascript:;" data_sysid="'+data['RESV_ID']+'" class="dropdown-item reserOption"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
+                  '<li><a href="javascript:;" data_sysid="'+data['RESV_ID']+'" rmtype="'+data['RESV_RM_TYPE']+'" rmtypedesc="'+data['RM_TY_DESC']+'"  class="dropdown-item reserOption"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
                   // '<div class="dropdown-divider"></div>' +
                   '<li><a href="javascript:;" data_sysid="'+data['RESV_ID']+'" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>' +
                 '</ul>' +
@@ -1092,7 +1266,11 @@
             );
           }},
         ],
-        autowidth:true
+        'autowidth':true,
+        'order': [[ 0, "desc" ]],
+        "fnInitComplete": function (oSettings, json) {
+          $('#loader_flex_bg').hide();
+        }
     });
     $("#dataTable_view_wrapper .row:first").before('<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addResvation()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>');
    
@@ -1135,8 +1313,8 @@
         data:formData,
         dataType:'json',
         success:function(respn){
-          // console.log(respn,"SDFDSF");
           $('#rateQueryTable').html(respn[0]);
+          checkArrivalDate();
         }
       });
   }
@@ -1232,27 +1410,44 @@
       $('#RESV_FIXED_RATE').val('Y');
   });
   var ressysId='';
+  var roomType='';
+  var roomTypedesc='';
   $(document).on('click','.reserOption',function(){
       ressysId=$(this).attr('data_sysid');
+      roomType = $(this).attr('rmtype');
+      roomTypedesc = $(this).attr('rmtypedesc');
+      $('#Accompany').show();
+      $('#Addon').hide();
       $('#optionWindow').modal('show');
       $('.profileSearch').find('input,select').val('');
       windowmode='AC';
+      customPop='';
   });
   
-  $(document).on('click','.editReserWindow',function(){
+  $(document).on('click','.editReserWindow,#triggCopyReserv',function(event,param,paramArr,rmtype){
+    $(':input','#reservationForm').val('').prop('checked', false).prop('selected', false);
+    $('#RESV_NAME,#RESV_COMPANY,#RESV_AGENT,#RESV_BLOCK').html('<option value="">Select</option>').selectpicker('refresh');
     runSupportingResevationLov();
     runInitializeConfig();
     $('.window-1,#nextbtn,#previousbtn').hide();
     $('.window-2').show();
     $('.flxyFooter').removeClass('flxy_space');
     $('#submitResrBtn').removeClass('submitResr');
-    var sysid = $(this).attr('data_sysid');
     $('#reservationW').modal('show');
+    var sysid = $(this).attr('data_sysid');
+    var mode='';
+    if(param){
+      sysid = param;
+      mode='CPY';
+      $('#submitResrBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
+    }else{
+      $('#submitResrBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
+    }
     $.ajax({
         url: '<?php echo base_url('/editReservation')?>',
         type: "post",
         headers: {'X-Requested-With': 'XMLHttpRequest'},
-        data:{sysid:sysid},
+        data:{sysid:sysid,mode:mode,paramArr:paramArr},
         dataType:'json',
         success:function(respn){
           // console.log(respn,"testing");
@@ -1276,7 +1471,7 @@
               }
             });
           });
-          $('#submitResrBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
+          checkArrivalDate();
         }
     });
   });
@@ -1331,6 +1526,7 @@
     if(param=='C'){
       $('#customerForm').find('input,select').val('');
       windowmode='C';
+      customPop='';
     }
     $('.profileCreate').hide();
     $('.profileSearch').show();
@@ -1428,15 +1624,14 @@
   });
 
   function checkArrivalDate() {
-    // alert();
     var startField = $('[name="RESV_ARRIVAL_DT"]');
     var endField = $('[name="RESV_DEPARTURE"]');
     var startDt = $(startField).val();
     var endDt = $(endField).val();
     var startDtFmt = moment(startDt,'DD-MMM-YYYY');
     var endDtFmt = moment(endDt,'DD-MMM-YYYY');
+    console.log(startDtFmt,endDtFmt,"startDtFmt TREU SDFF");
     if(startDtFmt<endDtFmt){
-      console.log("TREU SDFF");
       $(startField).removeClass("is-invalid");
       $(startField).addClass("is-valid");
       $(startField)[0].setCustomValidity("");
@@ -1445,7 +1640,6 @@
       $(startField).removeClass("is-valid");
       $(startField).addClass("is-invalid");
       $(startField)[0].setCustomValidity("invalid");
-      console.log("FALSE");
       return false;
     }
   }
@@ -1480,6 +1674,7 @@
     }else{
       var url = '<?php echo base_url('/insertCustomer')?>';
     }
+    $('#loader_flex_bg').show();
     $('#errorModal').hide();
     var formSerialization = $('#'+id).serializeArray();
     $.ajax({
@@ -1489,8 +1684,8 @@
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         dataType:'json',
         success:function(respn){
-          console.log(respn,"testing");
           var response = respn['SUCCESS'];
+          $('#loader_flex_bg').hide();
           if(response!='1'){
             $('#errorModal').show();
             var ERROR = respn['RESPONSE']['ERROR'];
@@ -1507,7 +1702,13 @@
               $('#reservationChild').modal('hide');
               var option = '<option value="'+response['ID']+'">'+response['FULLNAME']+'</option>';
               $('*#RESV_NAME').html(option).selectpicker('refresh');
-              if(windowmode=='AC-N'){
+              $('*#CUST_TITLE').val(response['CUST_TITLE']);
+              $('*#CUST_FIRST_NAME').val(response['CUST_FIRST_NAME']);
+              $('*#CUST_VIP').val(response['CUST_VIP']);
+              $('*#CUST_PHONE').val(response['CUST_PHONE']);
+              $('*#CUST_COUNTRY').val(response['CUST_COUNTRY']).selectpicker('refresh');
+              var joinVaribl = windowmode+customPop;
+              if(joinVaribl=='AC-N'){
                 custId=response['ID'];
                 $('#customeTrigger').trigger('click');
               }
@@ -1564,6 +1765,20 @@
         }
     });
   }
+  
+  $(document).on('keyup','.COPY_RM_TYPE .form-control',function(){
+    var search = $(this).val();
+    $.ajax({
+        url: '<?php echo base_url('/roomTypeList')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{search:search},
+        // dataType:'json',
+        success:function(respn){
+          $('#COPY_RM_TYPE').html(respn).selectpicker('refresh');
+        }
+    });
+  });
 
   $(document).on('keyup','.RESV_RM_TYPE,.RESV_RTC .form-control',function(){
     var search = $(this).val();
@@ -1776,7 +1991,7 @@
     }
   });
 
-  var windowmode='';
+  var customPop='';
   function searchData(form,mode,event){
     if(mode=='C'){
       $('.'+form).find('input,select').val('');
@@ -1805,12 +2020,13 @@
       $('#customerForm').find('input,select').val('');
       $('.profileCreate').show();
       $('.profileSearch').hide();
-      windowmode='AC-N';
+      customPop='-N';
     }
   }
   var custId ='';
   $(document).on('click','.activeRow,#customeTrigger',function(){
-    if(windowmode!='AC-N'){
+    var joinVaribl = windowmode+customPop;
+    if(joinVaribl!='AC-N'){
       $('.activeRow').removeClass('activeTr');
       $(this).addClass('activeTr');
       custId = $(this).attr('data_sysid');
@@ -1871,7 +2087,59 @@
     $(this).addClass('activeTrDetch');
     ACCOPM_SYSID = $(this).attr('data_sysid');
   });
+
+  var copyresr=[];
+  function reservExtraOption(param){
+    if(param=='ACP'){
+      childReservation();
+      $('#Addon').hide();
+      $('#Accompany').show();
+    }else if(param=='ADO'){
+      $('#Accompany').hide();
+      $('#Addon').show();
+      copyresr=[];
+      copyresr.push('PM','SP','CR','RU','CM','PK','IN','GU');
+      $('#COPY_RM_TYPE').html('<option value="'+roomType+'">'+roomTypedesc+'</option>').selectpicker('refresh');
+    }
+  }
+
   
+  $(document).on('change','.copyReser',function(){
+    var checkedMe = $(this).is(':checked');
+    var newData = $(this).attr('method');
+    if(checkedMe){
+      copyresr.push(newData);
+    }else{
+      copyresr = jQuery.grep(copyresr, function(value) { return value != newData; });
+    }
+  });
+
+  function copyReservation(){
+    var roomType = $('#COPY_RM_TYPE').val();
+    $("#triggCopyReserv").trigger('click',[ressysId,copyresr,roomType]);
+    $('#optionWindow').modal('hide');
+    $('.copyReser').prop('checked',true);
+    windowmode='C';
+    customPop='';
+  }
+
+  function detailOption(mode){
+    var roomType=$('#rateQueryTable .active').find('#ROOMTYPE').val();
+    var fromdate = $('#RESV_ARRIVAL_DT').val();
+    var uptodate = $('#RESV_DEPARTURE').val();
+    $('#reteQueryDetail').modal('show');
+    $.ajax({
+      url: '<?php echo base_url('/rateQueryDetailOption')?>',
+      type: "post",
+      headers: {'X-Requested-With': 'XMLHttpRequest'},
+      data:{mode:mode,fromdate:fromdate,uptodate:uptodate,roomType:roomType},
+      dataType:'json',
+      success:function(respn){
+        var respone = respn['table'];
+        $('#reteQueryDetailTd').html(respone);
+      }
+    });
+  }
 </script>
 
 <?=$this->endSection()?>

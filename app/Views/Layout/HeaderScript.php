@@ -24,7 +24,6 @@
 
 <!-- Vendors CSS -->
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') ?>" />
-<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/flatpickr.css')?>" />
 
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/typeahead-js/typeahead.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/apex-charts/apex-charts.css') ?>" />

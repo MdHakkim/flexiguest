@@ -266,7 +266,7 @@
               <ul class="menu-sub">
                 <li class="menu-item">
                   <a href="<?php echo base_url('reservation');?>" class="menu-link">
-                    <div data-i18n="Create Reservation">Create Reservation</div>
+                    <div data-i18n="Create Reservation">New Reservation</div>
                   </a>
                 </li>
                 <li class="menu-item">
@@ -282,6 +282,16 @@
                 <li class="menu-item">
                   <a href="<?php echo base_url('room');?>" class="menu-link">
                     <div data-i18n="Search Reservations">Room</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('roomFloor');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Floor</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('roomFeature');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Feature</div>
                   </a>
                 </li>
                 <li class="menu-item">
@@ -312,6 +322,41 @@
                 <li class="menu-item">
                   <a href="<?php echo base_url('overBooking');?>" class="menu-link">
                     <div data-i18n="Search Reservations">OverBooking</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('company');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Company</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('agent');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Agent</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('group');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Group</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('special');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Special</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('reservationType');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Reservation Type</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('purposeStay');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Purpose Of Stay</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="<?php echo base_url('payment');?>" class="menu-link">
+                    <div data-i18n="Search Reservations">Payment</div>
                   </a>
                 </li>
                 <li class="menu-item">

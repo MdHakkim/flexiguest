@@ -28,6 +28,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/getExistingAppcompany', 'ApplicatioController::getExistingAppcompany');
     $routes->match(['post'],'/appcompanyProfileSetup', 'ApplicatioController::appcompanyProfileSetup');
     $routes->match(['post'],'/getExistCustomer', 'ApplicatioController::getExistCustomer');
+    $routes->match(['post'],'/rateQueryDetailOption', 'ApplicatioController::rateQueryDetailOption');
+
+    $routes->match(['get'],'/testingApi/(:segment)', 'ApplicatioController::triggerReservationEmail/$1');
 
     $routes->get('/customer', 'ApplicatioController::Customer');
     $routes->match(['post'],'/customerView', 'ApplicatioController::customerView');
@@ -164,7 +167,6 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/getSupportingOverbookingLov', 'ApplicatioController::getSupportingOverbookingLov');
     $routes->match(['post'],'/getRoomType', 'ApplicatioController::getRoomType');
     $routes->match(['post'],'/getRoomTypeDetails', 'ApplicatioController::getRoomTypeDetails');
-
     
     //Changes by Deleep Bose
     $routes->get('/rateClass', 'MastersController::rateClass');
@@ -254,3 +256,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/deleteRequest', 'FacilityController::deleteRequest');  
     $routes->match(['post'],'/getCustomerFromRoomNo', 'FacilityController::getCustomerFromRoomNo');  
 });
+
+//Web Link Reservation
+$routes->group("webline", ["filter" => "weblinkauth"], function ($routes) {
+    $routes->match(['get'],'ReservationDetail/(:any)', 'ApplicatioController::webLineReservation/$1');
+});
+$routes->get('autherropage', 'ApplicatioController::AuthErroPage');

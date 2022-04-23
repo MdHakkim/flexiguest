@@ -6,7 +6,7 @@ class ServerSideDataTable{
     public function __construct(){
         $this->Db = \Config\Database::connect();
     }
-    public function generate_DatatTable($table,$columns,$init_cond=array()){
+    public function generate_DatatTable($table,$columns,$init_cond=array(),$formatby=','){
         $draw = $_POST['draw'];
         $row = $_POST['start'];
         // exit;
@@ -34,7 +34,9 @@ class ServerSideDataTable{
         $searchQuery = "";
 
         if($searchValue != ''){
+			$fields = explode("$formatby",$columns);            
             $joinQr = '';
+            
             foreach($fields as $key=>$name){
                 if ($key === array_key_last($fields)) {
                     $or="";
@@ -55,26 +57,26 @@ class ServerSideDataTable{
         // $records = mysqli_fetch_assoc($sel);
         $totalRecordwithFilter = $result1[0]['allcount'];
         ## Fetch records
-        $empQuery="select $columns from $table".$searchQuery." order by ".$columnName." ".$columnSortOrder." OFFSET ".$row." ROWS FETCH NEXT ".$rowperpage." ROWS ONLY";
+        $formatColumns = str_replace("|",",",$columns);
+        $empQuery="select $formatColumns from $table".$searchQuery." order by ".$columnName." ".$columnSortOrder." OFFSET ".$row." ROWS FETCH NEXT ".$rowperpage." ROWS ONLY";
         // exit;
         $empRecords = $this->Db->query($empQuery)->getResultArray();
 
         $return = [];
-        $fields = explode(",",$columns);
+        $fields = explode("$formatby",$columns);
         foreach($empRecords as $key=>$row){
             $designArr=[];
             foreach($fields as $name){
+                if($formatby!=','){
+                    if(strpos($name, ')') !== false){
+                        $extName = explode(")",$name);
+                        $name=$extName[1];
+                    }
+                }
                $designArr[$name] = $row[$name];
             }
             $return[]=$designArr;
-            // $return[] = array( 
-            //     "name_e"=>$row['name_e'],
-            //     "email"=>$row['email'],
-            //     "age"=>$row['age']
-            // );
         }
-        // print_r($return);
-        // exit;
         ## Response
         $response = array(
           "draw" => intval($draw),

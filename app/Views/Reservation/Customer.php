@@ -85,7 +85,7 @@
                         <div class="col-md-3">
                           <label class="form-label">DOB</label>
                             <div class="input-group mb-3">
-                              <input type="text" id="CUST_DOB" name="CUST_DOB" class="form-control flatpickr-input" placeholder="YYYY-MM-DD" readonly="readonly">
+                              <input type="text" id="CUST_DOB" name="CUST_DOB" class="form-control flatpickr-input" placeholder="YYYY-MM-DD">
                                 <span class="input-group-append">
                                   <span class="input-group-text bg-light d-block">
                                     <i class="fa fa-calendar"></i>
