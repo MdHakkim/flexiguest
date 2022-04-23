@@ -1,18 +1,14 @@
 <?=$this->extend("Layout/AppView")?>
 <?=$this->section("contentRender")?>
+<?= $this->include('Layout/ErrorReport') ?>
+<?= $this->include('Layout/SuccessReport') ?>
 
 <!-- Content wrapper -->
 <div class="content-wrapper">
-
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        
-        <?= $this->include('Layout/ErrorReport') ?>
-        <?= $this->include('Layout/SuccessReport') ?>
-
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Rate Management / Rate
-                Classifications /</span> Rate Codes</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Package Groups</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -22,13 +18,9 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Seq.</th>
-                            <th>Rate Code</th>
+                            <th>Package Group Code</th>
+                            <th>Short Description</th>
                             <th>Description</th>
-                            <th>Rate Category</th>
-                            <th>Start Sell</th>
-                            <th>End Sell</th>
-                            <th>Status</th>
                             <th class="all">Action</th>
                         </tr>
                     </thead>
@@ -42,54 +34,66 @@
 
     <!-- Modal Window -->
 
-    <div class="modal fade" id="copyModalWindow" data-backdrop="static" data-keyboard="false"
-        aria-lableledby="copyModalWindowlable">
+    <div class="modal fade" id="popModalWindow" data-backdrop="static" data-keyboard="false"
+        aria-lableledby="popModalWindowlable">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="copyModalWindowlabel">Create Rate Code Copies</h4>
+                    <h4 class="modal-title" id="popModalWindowlabel">Package Group</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
                 <div class="modal-body">
-
-                    <form id="copyForm" class="form-repeater needs-validation" novalidate>
-                        <div data-repeater-list="group-a">
-                            <div data-repeater-item>
-                                <div class="row">
-                                    <div class="col-12 col-md-8 mb-0 mb-3">
-                                        <label class="form-label" for="form-repeater-1-1"><b>Rate Code *</b></label>
-                                        <input type="text" name="RT_CD_CODE" id="form-repeater-1-1" class="form-control"
-                                            maxlength="12" placeholder="eg: OTA" required />
-                                    </div>
-
-                                    <div class="d-flex col-12 col-md-4 align-items-center mb-0 mb-3">
-                                        <button class="btn btn-label-danger mt-4" data-repeater-delete>
-                                            <i class="bx bx-x"></i>
-                                            <span class="align-left">Delete</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <hr />
+                    <form id="submitForm" class="needs-validation" novalidate>
+                        <div class="row g-3">
+                            <input type="hidden" name="PKG_GR_ID" id="PKG_GR_ID" class="form-control" />
+                            <div class="col-md-6">
+                                <lable class="form-lable"><b>Package Group Code *</b></lable>
+                                <input type="text" name="PKG_GR_CODE" id="PKG_GR_CODE"
+                                    class="form-control bootstrap-maxlength" maxlength="10" placeholder="eg: FULL"
+                                    required />
                             </div>
-                        </div>
-                        <div class="mb-0" style="float: left;">
-                            <button class="btn btn-primary" data-repeater-create>
-                                <i class="bx bx-plus"></i>
-                                <span class="align-middle">Add New</span>
-                            </button>
-                        </div>
-                        <div style="float: right;">
-                            <input type="hidden" name="main_RT_CD_ID" id="main_RT_CD_ID" class="form-control" />
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" id="copyBtn" onClick="copyForm('copyForm')"
-                                class="btn btn-primary">Save</button>
+                            <div class="col-md-8">
+                                <lable class="form-lable">Short Description</lable>
+                                <input type="text" name="PKG_GR_SHORT_DESC" id="PKG_GR_SHORT_DESC"
+                                    class="form-control bootstrap-maxlength" maxlength="50" placeholder="eg: Full Meal"
+                                    required />
+                            </div>
+                            <div class="col-md-10">
+                                <lable class="form-lable"><b>Description *</b></lable>
+                                <input type="text" name="PKG_GR_DESC" id="PKG_GR_DESC"
+                                    class="form-control bootstrap-maxlength" maxlength="255"
+                                    placeholder="eg: Provides Full Meals for a whole day" required />
+                            </div>
+                            <div class="col-md-12">
+                                <label for="form-lable"><b>Package List *</b></label>
+                                <input id="PKG_CODES" name="TagifyPkgGroupList" class="form-control TagifyPkgGroupList"
+                                    value="FOOD" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="switch">
+                                    <input id="PKG_GR_SELL_SEP" name="PKG_GR_SELL_SEP" type="checkbox" value="1"
+                                        class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="bx bx-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="bx bx-x"></i>
+                                        </span>
+                                    </span>
+                                    <span class="switch-label">Sell Separately</span>
+                                </label>
+                            </div>
+
                         </div>
                     </form>
-                    <div class="form-text" style="clear: both; padding-top: 20px;">Rate Code Description & Dates will be
-                        copied from original </div>
-
                 </div>
-
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="submitBtn" onClick="submitForm('submitForm')"
+                        class="btn btn-primary">Save</button>
+                </div>
             </div>
         </div>
     </div>
@@ -103,6 +107,7 @@
 <script>
 var compAgntMode = '';
 var linkMode = '';
+
 $(document).ready(function() {
     linkMode = 'EX';
 
@@ -111,31 +116,19 @@ $(document).ready(function() {
         'serverSide': true,
         'serverMethod': 'post',
         'ajax': {
-            'url': '<?php echo base_url('/rateCodeView')?>'
+            'url': '<?php echo base_url('/packageGroupView')?>'
         },
         'columns': [{
                 data: ''
             },
             {
-                data: 'RT_CD_DIS_SEQ'
+                data: 'PKG_GR_CODE'
             },
             {
-                data: 'RT_CD_CODE'
+                data: 'PKG_GR_SHORT_DESC'
             },
             {
-                data: 'RT_CD_DESC'
-            },
-            {
-                data: 'RT_CT_CODE'
-            },
-            {
-                data: 'RT_CD_BEGIN_SELL_DT'
-            },
-            {
-                data: 'RT_CD_END_SELL_DT'
-            },
-            {
-                data: 'RT_CD_STATUS'
+                data: 'PKG_GR_DESC'
             },
             {
                 data: null,
@@ -145,15 +138,10 @@ $(document).ready(function() {
                         '<div class="d-inline-block">' +
                         '<a href="javascript:;" title="Edit or Delete" class="btn btn-label-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                         '<ul class="dropdown-menu dropdown-menu-end">' +
-                        '<li><a href="editRateCode/' + data['RT_CD_ID'] +
-                        '" data_sysid="' + data['RT_CD_ID'] +
-                        '" class="dropdown-item text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>' +
+                        '<li><a href="javascript:;" data_sysid="' + data['PKG_GR_ID'] +
+                        '" class="dropdown-item editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
-                        '<li><a href="javascript:;" data_sysid="' + data['RT_CD_ID'] +
-                        '" data_rtcode="' + data['RT_CD_CODE'] +
-                        '" class="dropdown-item copyWindow text-success"><i class="fa-solid fa-copy"></i> Copy</a></li>' +
-                        '<div class="dropdown-divider"></div>' +
-                        '<li><a href="javascript:;" data_sysid="' + data['RT_CD_ID'] +
+                        '<li><a href="javascript:;" data_sysid="' + data['PKG_GR_ID'] +
                         '" class="dropdown-item text-danger delete-record"><i class="fa-solid fa-ban"></i> Delete</a></li>' +
                         '</ul>' +
                         '</div>'
@@ -172,46 +160,13 @@ $(document).ready(function() {
                 return '';
             }
         }, {
-            width: "15%"
+            width: "20%"
         }, {
-            width: "18%"
+            width: "25%"
         }, {
-            width: "8%"
+            width: "35%"
         }, {
-            width: "8%"
-        }, {
-            width: "15%"
-        }, {
-            width: "10%"
-        }, {
-            // Label
-            targets: -2,
-            width: "10%",
-            render: function(data, type, full, meta) {
-                var $status_number = full['RT_CD_STATUS'];
-                var $status = {
-                    0: {
-                        title: 'Inactive',
-                        class: 'bg-label-danger'
-                    },
-                    1: {
-                        title: 'Active',
-                        class: 'bg-label-success'
-                    }
-                };
-                if (typeof $status[$status_number] === 'undefined') {
-                    return data;
-                }
-                return (
-                    '<span class="badge rounded-pill ' +
-                    $status[$status_number].class +
-                    '">' +
-                    $status[$status_number].title +
-                    '</span>'
-                );
-            }
-        }, {
-            width: "8%"
+            width: "13%"
         }],
         "order": [
             [1, "asc"]
@@ -223,7 +178,7 @@ $(document).ready(function() {
                 display: $.fn.dataTable.Responsive.display.modal({
                     header: function(row) {
                         var data = row.data();
-                        return 'Details of ' + data['RT_CD_CODE'];
+                        return 'Details of ' + data['PKG_GR_CODE'];
                     }
                 }),
                 type: 'column',
@@ -271,23 +226,22 @@ function showModalAlert(modalType, modalContent) {
         '</ul>');
 }
 
-// Show Add Rate Code Form
+// Show Add Package Group Form
 
 function addForm() {
-    /*
-      $(':input', '#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
-      $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-      $('#popModalWindowlabel').html('Add New Rate Code');
-      $("#RT_CD_CODE").prop("readonly", false);
-      $("#RT_CD_BEGIN_DT").datepicker("setDate", "<?php date('d-M-Y'); ?>");
-      $("#RT_CD_END_DT").datepicker("setDate", "<?php date('d-M-Y', strtotime('+1 day')); ?>");
+    $(':input', '#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
+    //$('.select2').val(null).trigger('change');
 
-      $('#popModalWindow').modal('show');
-    */
-    location.href = 'addRateCode';
+    $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
+    $('#popModalWindowlabel').html('Add New Package Group');
+    $("#PKG_GR_CODE").prop("readonly", false);
+
+    $('#popModalWindow').modal('show');
+    $("#PKG_GR_SELL_SEP").prop('checked', 'checked');
+
 }
 
-// Delete Rate Code
+// Delete Package Group
 
 $(document).on('click', '.delete-record', function() {
     hideModalAlerts();
@@ -309,7 +263,7 @@ $(document).on('click', '.delete-record', function() {
         callback: function(result) {
             if (result) {
                 $.ajax({
-                    url: '<?php echo base_url('/deleteRateCode')?>',
+                    url: '<?php echo base_url('/deletePackageGroup')?>',
                     type: "post",
                     data: {
                         sysid: sysid
@@ -319,9 +273,18 @@ $(document).on('click', '.delete-record', function() {
                     },
                     dataType: 'json',
                     success: function(respn) {
-                        showModalAlert('warning',
-                            '<li>The Rate Code has been deleted</li>');
-                        $('#dataTable_view').dataTable().fnDraw();
+
+                        var response = respn['SUCCESS'];
+                        if (response != '1') {
+                            var ERROR = respn['ERROR'];
+                            var mcontent = '';
+                            mcontent += '<li>' + ERROR + '</li>';
+                            showModalAlert('error', mcontent);
+                        } else {
+                            showModalAlert('warning',
+                                '<li>The Package Group has been deleted</li>');
+                            $('#dataTable_view').dataTable().fnDraw();
+                        }
                     }
                 });
             }
@@ -340,18 +303,18 @@ $(document).on('click', '.delete-record', function() {
 // });
 
 
-// Show Edit Rate Code Form
+// Show Edit Package Group Form
 
 $(document).on('click', '.editWindow', function() {
 
     $('.dtr-bs-modal').modal('hide');
 
     var sysid = $(this).attr('data_sysid');
-    $('#popModalWindowlabel').html('Edit Rate Code');
-    $("#RT_CD_CODE").prop("readonly", true);
+    $('#popModalWindowlabel').html('Edit Package Group');
+    $("#PKG_GR_CODE").prop("readonly", true);
     $('#popModalWindow').modal('show');
 
-    var url = '<?php echo base_url('/editRateCode')?>';
+    var url = '<?php echo base_url('/editPackageGroup')?>';
     $.ajax({
         url: url,
         type: "post",
@@ -367,8 +330,8 @@ $(document).on('click', '.editWindow', function() {
                 $.each(data, function(fields, datavals) {
                     var field = $.trim(fields); //fields.trim();
                     var dataval = $.trim(datavals); //datavals.trim();
-                    if (field == 'RT_CD_BEGIN_DT' || field == 'RT_CD_END_DT') {
-                        $('#' + field).datepicker("setDate", new Date(dataval));
+                    if ($('#' + field).attr('type') == 'checkbox') {
+                        $('#' + field).prop('checked', dataval == 1 ? true : false);
                     } else {
                         $('#' + field).val(dataval);
                     }
@@ -379,34 +342,13 @@ $(document).on('click', '.editWindow', function() {
     });
 });
 
-// Show Copy Rate Code Form
 
-$(document).on('click', '.copyWindow', function() {
-
-    $('.dtr-bs-modal').modal('hide');
-
-    var sysid = $(this).attr('data_sysid');
-    var rtcode = $(this).attr('data_rtcode');
-
-    $('#main_RT_CD_ID').val(sysid);
-
-    $('#copyModalWindowlabel').html('Create Rate Code Copies of \'' + rtcode + '\'');
-
-    //Reset repeated fields every time modal is loaded
-    $('[data-repeater-item]').slice(1).empty();
-    $('#form-repeater-1-1').val("");
-
-    $('#copyModalWindow').modal('show');
-
-});
-
-
-// Add New or Edit Rate Code submit Function
+// Add New or Edit Package Group submit Function
 
 function submitForm(id) {
     hideModalAlerts();
     var formSerialization = $('#' + id).serializeArray();
-    var url = '<?php echo base_url('/insertRateCode')?>';
+    var url = '<?php echo base_url('/insertPackageGroup')?>';
     $.ajax({
         url: url,
         type: "post",
@@ -427,8 +369,10 @@ function submitForm(id) {
                 });
                 showModalAlert('error', mcontent);
             } else {
-                var alertText = $('#RT_CD_ID').val() == '' ? '<li>The new Rate Code \'' + $('#RT_CD_CODE')
-                    .val() + '\' has been created</li>' : '<li>The Rate Code \'' + $('#RT_CD_CODE').val() +
+                var alertText = $('#PKG_GR_ID').val() == '' ? '<li>The new Package Group \'' + $(
+                        '#PKG_GR_CODE')
+                    .val() + '\' has been created</li>' : '<li>The Package Group \'' + $('#PKG_GR_CODE')
+                    .val() +
                     '\' has been updated</li>';
                 showModalAlert('success', alertText);
 
@@ -439,13 +383,13 @@ function submitForm(id) {
     });
 }
 
-// Copy Rate Code to Multiple submit Function
+// Copy Package Group to Multiple submit Function
 
 function copyForm(id) {
     hideModalAlerts();
 
     var formSerialization = $('#' + id).serializeArray();
-    var url = '<?php echo base_url('/copyRateCode')?>';
+    var url = '<?php echo base_url('/copyPackageGroup')?>';
     $.ajax({
         url: url,
         type: "post",
@@ -456,10 +400,10 @@ function copyForm(id) {
         dataType: 'json',
         success: function(response) {
             if (response == '0') {
-                showModalAlert('error', '<li>No New Rate Codes were added</li>');
+                showModalAlert('error', '<li>No New Package Groups were added</li>');
             } else {
                 showModalAlert('success', '<li>' + response +
-                    ' new Rate Code copies have been created</li>');
+                    ' new Package Group copies have been created</li>');
                 $('#copyModalWindow').modal('hide');
                 $('#dataTable_view').dataTable().fnDraw();
             }

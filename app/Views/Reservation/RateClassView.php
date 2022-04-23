@@ -8,13 +8,12 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Rate Management / Rate
-                Classifications /</span> Rate Classes</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Rate Classes</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
             <!-- <h5 class="card-header">Responsive Datatable</h5> -->
-            <div class="container-fluid table-responsive" style="padding: 6px;">
+            <div class="container-fluid table-responsive" style="padding: 16px 16px 6px 16px">
                 <table id="dataTable_view" class="dt-responsive table table-striped display nowrap" style="width:100%">
                     <thead>
                         <tr>
@@ -25,7 +24,7 @@
                             <th>End Date</th>
                             <th>Associated Rate Categories</th>
                             <th>Seq.</th>
-                            <th>Action</th>
+                            <th class="all">Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -192,7 +191,7 @@ $(document).ready(function() {
                 data: 'RT_CL_END_DT'
             },
             {
-                "defaultContent": ""
+                data: 'ASSOC_CATS'
             },
             {
                 data: 'RT_CL_DIS_SEQ'
@@ -304,18 +303,6 @@ $(document).ready(function() {
     });
 });
 
-function getAssocRateCats(rclId) {
-
-    $.get({
-        url: '<?php echo base_url('/getAssocRateCategories?rclId=')?>' + rclId,
-        dataType: 'json',
-        success: function(respn) {
-            return respn;
-        }
-    });
-
-}
-
 function hideModalAlerts() {
     $('#errorModal').hide();
     $('#successModal').hide();
@@ -332,6 +319,8 @@ function showModalAlert(modalType, modalContent) {
 
 function addForm() {
     $(':input', '#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
+    $('.select2').val(null).trigger('change');
+
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('#popModalWindowlabel').html('Add New Rate Class');
     $("#RT_CL_CODE").prop("readonly", false);
@@ -444,7 +433,7 @@ $(document).on('click', '.copyWindow', function() {
 
     $('#main_RT_CL_ID').val(sysid);
 
-    $('#copyModalWindowlabel').html('Create Rate Class Copies for \'' + rtcode + '\'');
+    $('#copyModalWindowlabel').html('Create Rate Class Copies of \'' + rtcode + '\'');
 
     //Reset repeated fields every time modal is loaded
     $('[data-repeater-item]').slice(1).empty();
