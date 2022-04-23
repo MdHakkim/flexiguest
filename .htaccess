@@ -33,6 +33,11 @@ Options All -Indexes
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteRule ^([\s\S]*)$ index.php/$1 [L,NC,QSA]
 	RewriteRule ^adm/(.*)$ admin.php/$1 [L]
+	RewriteCond %{THE_REQUEST} /index\.php [NC]
+	RewriteRule ^(.*?)index\.php[^/] /$1? [L,R=302,NC,NE]
+
+	RewriteCond %{THE_REQUEST} /index\.php [NC]
+	RewriteRule ^(.*?)index\.php(?:/(.*))?$ /$1$2? [L,R=302,NC,NE]
 	# Ensure Authorization header is passed along
 	RewriteCond %{HTTP:Authorization} .
 	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
