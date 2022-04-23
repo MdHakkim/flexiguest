@@ -682,12 +682,78 @@
                 </li>
 
 
-                <li class="menu-item">
-                <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon fas fa-user-cog"></i>
+                <li
+                    class="menu-item  <?php if(isset($title) && in_array($title, array( 'Rate Class', 
+                                                                                        'Rate Category', 
+                                                                                        'Rate Code', 
+                                                                                        'Add Rate Code', 
+                                                                                        'Edit Rate Code', 
+                                                                                        'Transaction Code Group', 
+                                                                                        'Transaction Code Sub Group', 
+                                                                                        'Transaction Code', 
+                                                                                        'Package Group', 
+                                                                                        'Market Group', 
+                                                                                        'Market Code'))) { echo 'open active'; } ?>">
+                  <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon fas fa-user-cog"></i>
                     <div data-i18n="Masters">Masters</div>
                   </a>
                   <ul class="menu-sub">
+                  <li class="menu-item  <?php if(isset($title) && $title == 'Rate Class') { echo 'active'; } ?>">
+                            <a href="<?php echo base_url('rateClass') ?>" class="menu-link">
+                                <div data-i18n="Rate Classes">Rate Classes</div>
+                            </a>
+                        </li>
+                        <li
+                            class="menu-item  <?php if(isset($title) && $title == 'Rate Category') { echo 'active'; } ?>">
+                            <a href="<?php echo base_url('rateCategory') ?>" class="menu-link">
+                                <div data-i18n="Rate Categories">Rate Categories</div>
+                            </a>
+                        </li>
+                        <li
+                            class="menu-item  <?php if(isset($title) && in_array($title, array( 
+                                                                                        'Rate Code', 
+                                                                                        'Add Rate Code', 
+                                                                                        'Edit Rate Code'))) { echo 'active'; } ?>">
+                            <a href="<?php echo base_url('rateCode') ?>" class="menu-link">
+                                <div data-i18n="Rate Codes">Rate Codes</div>
+                            </a>
+                        </li>
+                        <li
+                            class="menu-item  <?php if(isset($title) && $title == 'Transaction Code Group') { echo 'active'; } ?>">
+                            <a href="<?php echo base_url('transactionCodeGroup') ?>" class="menu-link">
+                                <div data-i18n="Transaction Code Groups">Transaction Code Groups</div>
+                            </a>
+                        </li>
+                        <li
+                            class="menu-item  <?php if(isset($title) && $title == 'Transaction Code Sub Group') { echo 'active'; } ?>">
+                            <a href="<?php echo base_url('transactionCodeSubGroup') ?>" class="menu-link">
+                                <div data-i18n="Transaction Code Groups">Transaction Code Sub Groups</div>
+                            </a>
+                        </li>
+                        <li
+                            class="menu-item  <?php if(isset($title) && $title == 'Transaction Code') { echo 'active'; } ?>">
+                            <a href="<?php echo base_url('transactionCode') ?>" class="menu-link">
+                                <div data-i18n="Transaction Codes">Transaction Codes</div>
+                            </a>
+                        </li>
+                        <li
+                            class="menu-item  <?php if(isset($title) && $title == 'Package Group') { echo 'active'; } ?>">
+                            <a href="<?php echo base_url('packageGroup') ?>" class="menu-link">
+                                <div data-i18n="Package Groups">Package Groups</div>
+                            </a>
+                        </li>
+                        <li
+                            class="menu-item  <?php if(isset($title) && $title == 'Market Group') { echo 'active'; } ?>">
+                            <a href="<?php echo base_url('marketGroup') ?>" class="menu-link">
+                                <div data-i18n="Market Groups">Market Groups</div>
+                            </a>
+                        </li>
+                        <li class="menu-item  <?php if(isset($title) && $title == 'Market Code') { echo 'active'; } ?>">
+                            <a href="<?php echo base_url('marketCode') ?>" class="menu-link">
+                                <div data-i18n="Market Codes">Market Codes</div>
+                            </a>
+                        </li>
                 <li class="menu-item">
                   <a href="javascript:void(0);" class="menu-link">
                     <div data-i18n="Contries">Contries</div>

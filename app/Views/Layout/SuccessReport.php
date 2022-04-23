@@ -1,36 +1,44 @@
+<?php
+  $modalTypes = array('success', 'warning', 'info');
+?>
+
 <style>
-  #successModal, #warningModal{
+<?php echo '#'.implode("Modal, #", $modalTypes).'Modal'?> {
     display: none;
-  }
-  #successModal, #warningModal{
-      position: fixed;
-      top: 10px;
-      right: 22px;
-      z-index: 10000;
-      width: 500px;
-  }
+    position: fixed;
+    top: 10px;
+    right: 22px;
+    z-index: 10000;
+    width: 500px;
+}
 </style>
 
-<div id="successModal">
-    <div class="alert alert-success" role="alert">
-      <button type="button" style="float: right;" class="btn-close btn-close-success" aria-label="Close"></button>
-      <h6 class="alert-heading">Success!</h6>
-      <div id="formSuccessMessage"></div>
-    </div>
-</div>
-<div id="warningModal">
-    <div class="alert alert-warning" role="alert">
-      <button type="button" style="float: right;" class="btn-close btn-close-warning" aria-label="Close"></button>
-      <h6 class="alert-heading"></h6>
-      <div id="formWarningMessage"></div>
-    </div>
-</div>
-<script>
-  $(document).on('click','.btn-close-success',function(){
-    $('#successModal').hide();
-  });
+<?php
+      foreach($modalTypes as $modalType) 
+      {
+        if(null !== $session->getFlashdata($modalType)) { 
+?>
+        <div class="alert alert-solid-<?=$modalType?> alert-dismissible d-flex align-items-center" role="alert">
+            <i class="bx bx-xs bx-store me-2"></i>
+            <?php echo $session->getFlashdata($modalType); ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div><br />
 
-  $(document).on('click','.btn-close-warning',function(){
-    $('#warningModal').hide();
-  });
+<?php   }
+?>
+        <div id="<?=$modalType?>Modal" class="alertModal">
+            <div class="alert alert-<?=$modalType?>" role="alert">
+                <button type="button" style="float: right;" class="btn-close btn-close-<?=$modalType?> btn-modal-close" aria-label="Close"></button>
+                <h6 class="alert-heading"><?=$modalType == 'success' ? ucfirst($modalType).'!' : ''?></h6>
+                <div id="form<?=ucfirst($modalType)?>Message"></div>
+            </div>
+        </div>
+<?php
+      }
+?>
+
+<script>
+$(document).on('click', '.btn-modal-close', function() {
+    $(this).parents('.alertModal').hide();
+});
 </script>

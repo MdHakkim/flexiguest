@@ -1,3 +1,4 @@
+<title><?=isset($title) ? $title : '';?></title>
 <meta name="description" content="" />
 
 <!-- Favicon -->
@@ -35,23 +36,27 @@
 <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css')?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/css/dataTables.bootstrap5.min.css')?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-datepicker.min.css')?>" />
-<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-datetimepicker.min.css')?>" />
-<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-select.css')?>" />
-<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/select2/select2.css')?>" />
 
 <!-- Added by Deleep -->
 <link rel="stylesheet"
-    href="<?php echo base_url('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css')?>" />
-<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/bs-stepper/bs-stepper.css')?>" />
-<link rel="stylesheet"
-    href="<?php echo base_url('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css')?>" />
-<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')?>" />
-<link rel="stylesheet"
-    href="<?php echo base_url('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css')?>" />
-<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/datatables-select-bs5/select.bootstrap5.css')?>" />
-<link rel="stylesheet"
-    href="<?php echo base_url('assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css')?>" />
+        href="<?php echo base_url('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css')?>" />
+    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/bs-stepper/bs-stepper.css')?>" />
+    <link rel="stylesheet"
+        href="<?php echo base_url('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css')?>" />
+    <link rel="stylesheet"
+        href="<?php echo base_url('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')?>" />
+    <link rel="stylesheet"
+        href="<?php echo base_url('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css')?>" />
+    <link rel="stylesheet"
+        href="<?php echo base_url('assets/vendor/libs/datatables-select-bs5/select.bootstrap5.css')?>" />
+    <link rel="stylesheet"
+        href="<?php echo base_url('assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css')?>" />
 
+
+<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-datetimepicker.min.css')?>" />
+<link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-select.css')?>" />
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/select2/select2.css')?>" />
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/tagify/tagify.css')?>" />
 
 <!-- Page CSS -->
 <script src="<?php echo base_url('assets/js/jquery-3.6.0.min.js')?>"></script>

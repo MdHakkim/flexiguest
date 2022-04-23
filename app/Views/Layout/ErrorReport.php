@@ -1,4 +1,12 @@
+<?php if(null !== $session->getFlashdata('error')) { ?>
 
+<div class="alert alert-solid-danger alert-dismissible d-flex align-items-center" role="alert">
+    <i class="bx bx-xs bx-store me-2"></i>
+    <?php echo $session->getFlashdata('error'); ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div><br/>
+
+<?php } ?>
 
 
   <div id="errorModal">

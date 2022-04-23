@@ -14,6 +14,27 @@
 
     <script src="<?php echo base_url('assets/js/moment.min.js')?>"></script>
 
+    <!-- Added by Deleep -->
+    
+      <script src="<?php echo base_url('assets/vendor/libs/datatables-responsive/datatables.responsive.js') ?>"></script>
+      <script src="<?php echo base_url('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js') ?>"></script>
+
+      <script src="<?php echo base_url('assets/vendor/libs/bootstrap-maxlength/bootstrap-maxlength.js') ?>"></script>
+      <script src="<?php echo base_url('assets/vendor/libs/jquery-repeater/jquery-repeater.js') ?>"></script>
+
+      <script src="<?php echo base_url('assets/vendor/libs/bs-stepper/bs-stepper.js') ?>"></script>
+      <script src="<?php echo base_url('assets/vendor/libs/select2/select2.js') ?>"></script>
+      <script src="<?php echo base_url('assets/vendor/libs/tagify/tagify.js') ?>"></script>
+
+      <script src="<?php echo base_url('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') ?>"></script>
+      <script src="<?php echo base_url('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') ?>"></script>
+      <script src="<?php echo base_url('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') ?>"></script>
+      <script src="<?php echo base_url('assets/vendor/libs/datatables-select/datatables-select.js') ?>"></script>
+      <script src="<?php echo base_url('assets/vendor/libs/datatables-select-bs5/select.bootstrap5.js') ?>"></script>
+      <script src="<?php echo base_url('assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.js') ?>"></script>
+
+    <!-- Added by Deleep -->
+    
     <script src="<?php echo base_url('assets/js/bootstrap-datepicker.min.js')?>"></script>
     <script src="<?php echo base_url('assets/js/bootstrap-datetimepicker.min.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/defaults-en_US.js')?>"></script>
@@ -21,38 +42,14 @@
     <script src="<?php echo base_url('assets/js/bootbox.locales.js')?>"></script>
     <script src="<?php //echo base_url('assets/vendor/js/bootstrap.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/block-ui/block-ui.js') ?>"></script>
 
-    <script src="<?php echo base_url('assets/vendor/libs/select2/select2.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/typeahead-js/typeahead.js') ?>"></script>
 
     <script src="<?php echo base_url('assets/vendor/js/menu.js') ?>"></script>
     <!-- endbuild -->
     <!-- Vendors JS -->
     <script src="<?php echo base_url('assets/vendor/libs/apex-charts/apexcharts.js') ?>"></script>
-
-    <!-- Added by Deleep -->
-    <script src="<?php echo base_url('assets/vendor/libs/datatables-responsive/datatables.responsive.js') ?>"></script>
-    <script src="<?php echo base_url('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.js') ?>">
-    </script>
-
-    <script src="<?php echo base_url('assets/vendor/libs/bootstrap-maxlength/bootstrap-maxlength.js') ?>"></script>
-    <script src="<?php echo base_url('assets/vendor/libs/jquery-repeater/jquery-repeater.js') ?>"></script>
-
-    <script src="<?php echo base_url('assets/vendor/libs/bs-stepper/bs-stepper.js') ?>"></script>
-    <script src="<?php echo base_url('assets/vendor/libs/select2/select2.js') ?>"></script>
-    <script src="<?php echo base_url('assets/vendor/libs/tagify/tagify.js') ?>"></script>
-
-    <script src="<?php echo base_url('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') ?>"></script>
-    <script src="<?php echo base_url('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') ?>">
-    </script>
-    <script src="<?php echo base_url('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') ?>"></script>
-    <script src="<?php echo base_url('assets/vendor/libs/datatables-select/datatables-select.js') ?>"></script>
-    <script src="<?php echo base_url('assets/vendor/libs/datatables-select-bs5/select.bootstrap5.js') ?>"></script>
-    <script src="<?php echo base_url('assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.js') ?>">
-    </script>
-
-    <!-- Added by Deleep -->
-
 
     <!-- Main JS -->
     <script src="<?php echo base_url('assets/js/main.js') ?>"></script>
@@ -66,7 +63,8 @@
           {
                 foreach ($js_to_load as $row)
                 {            
-    ?> <script type="text/javascript" src="assets/js/<?php echo $row;?>"></script>
-    <?php       }
+    ?>      <script type="text/javascript" src="<?php echo base_url('assets/js/'.$row);?>"></script>
+    <?php       
+                }
           }
     ?>
