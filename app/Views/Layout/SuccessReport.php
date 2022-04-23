@@ -16,7 +16,7 @@
 <?php
       foreach($modalTypes as $modalType) 
       {
-        if(null !== $session->getFlashdata($modalType)) { 
+        if(isset($session) && null !== $session->getFlashdata($modalType)) { 
 ?>
         <div class="alert alert-solid-<?=$modalType?> alert-dismissible d-flex align-items-center" role="alert">
             <i class="bx bx-xs bx-store me-2"></i>
