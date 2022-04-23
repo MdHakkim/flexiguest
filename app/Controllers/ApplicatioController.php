@@ -2555,5 +2555,4 @@ class ApplicatioController extends BaseController
             return $this->respond($e->errors());
         }
     }
-
 }

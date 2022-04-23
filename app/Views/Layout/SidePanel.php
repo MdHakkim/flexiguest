@@ -402,8 +402,8 @@
                   </a>
                   <ul class="menu-sub">
                   <li class="menu-item">
-                  <a href="javascript:void(0);" class="menu-link">
-                    <div data-i18n="Wizard">Wizard</div>
+                  <a href="<?php echo base_url('maintenance');?>" class="menu-link">
+                    <div data-i18n="Wizard">Create Request</div>
                   </a>
                 </li>
                 <li class="menu-item">

@@ -186,4 +186,15 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/rateCode', 'MastersController::rateCode');
     $routes->get('/addRateCode', 'MastersController::addRateCode');
     $routes->get('/editRateCode', 'MastersController::editRateCode');
+
+
+
+    // Code By ALEESHA 
+    // Maintenance Request 
+    $routes->get('/maintenance', 'FacilityController::maintenanceRequest');
+    $routes->match(['post'],'/getRequestList', 'FacilityController::getRequestList');
+    $routes->match(['post'],'/insertMaintenanceRequest', 'FacilityController::insertMaintenanceRequest');
+    $routes->match(['post'],'/editRequest', 'FacilityController::editMaintenanceRequest');
+    $routes->match(['post'],'/deleteRequest', 'FacilityController::deleteRequest');  
+    $routes->match(['post'],'/getCustomerFromRoomNo', 'FacilityController::getCustomerFromRoomNo');  
 });
