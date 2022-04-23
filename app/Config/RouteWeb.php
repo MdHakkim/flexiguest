@@ -174,18 +174,74 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/editRateClass', 'MastersController::editRateClass');
     $routes->match(['post'],'/deleteRateClass', 'MastersController::deleteRateClass');  
     
-    $routes->get('/getAssocRateCategories', 'MastersController::getAssocRateCategories');    
-
     $routes->get('/rateCategory', 'MastersController::rateCategory');
     $routes->match(['post'],'/rateCategoryView', 'MastersController::RateCategoryView');
     $routes->match(['post'],'/insertRateCategory', 'MastersController::insertRateCategory');
     $routes->match(['post'],'/copyRateCategory', 'MastersController::copyRateCategory');
     $routes->match(['post'],'/editRateCategory', 'MastersController::editRateCategory');
     $routes->match(['post'],'/deleteRateCategory', 'MastersController::deleteRateCategory');  
-    
+   
     $routes->get('/rateCode', 'MastersController::rateCode');
+    $routes->match(['post'],'/rateCodeView', 'MastersController::RateCodeView');
+    $routes->match(['post'],'/rateCodeDetailsView', 'MastersController::RateCodeDetailsView');
     $routes->get('/addRateCode', 'MastersController::addRateCode');
-    $routes->get('/editRateCode', 'MastersController::editRateCode');
+
+    $routes->get('/editRateCode/(:num)', 'MastersController::editRateCode/$1');
+    $routes->get('/rateCodeDetails/(:num)', 'MastersController::rateCodeDetails/$1');
+    $routes->get('/showRateCodeInfo', 'MastersController::showRateCodeInfo');
+    $routes->get('/showRateCodeDetails', 'MastersController::showRateCodeDetails');
+    $routes->get('/showColorBadges', 'MastersController::showColorBadges');
+    $routes->get('/showRoomTypeList', 'MastersController::showRoomTypeList');
+
+    $routes->match(['post'],'/insertRateCode', 'MastersController::insertRateCode');
+    $routes->match(['post'],'/deleteRateCode', 'MastersController::deleteRateCode');
+    $routes->match(['post'],'/deleteRateCodeDetail', 'MastersController::deleteRateCodeDetail');
+    $routes->match(['post'],'/copyRateCode', 'MastersController::copyRateCode');
+    $routes->match(['post'],'/updateRateCodeDetail', 'MastersController::updateRateCodeDetail');
+    $routes->match(['post'],'/copyRateCodeDetail', 'MastersController::copyRateCodeDetail');
+    
+    $routes->get('/transactionCodeGroup', 'MastersController::transactionCodeGroup');
+    $routes->match(['post'],'/transactionCodeGroupView', 'MastersController::TransactionCodeGroupView');
+    $routes->match(['post'],'/insertTransactionCodeGroup', 'MastersController::insertTransactionCodeGroup');
+    $routes->match(['post'],'/editTransactionCodeGroup', 'MastersController::editTransactionCodeGroup');
+    $routes->match(['post'],'/deleteTransactionCodeGroup', 'MastersController::deleteTransactionCodeGroup');
+    
+    $routes->get('/transactionCodeSubGroup', 'MastersController::transactionCodeSubGroup');
+    $routes->match(['post'],'/transactionCodeSubGroupView', 'MastersController::TransactionCodeSubGroupView');
+    $routes->match(['post'],'/insertTransactionCodeSubGroup', 'MastersController::insertTransactionCodeSubGroup');
+    $routes->match(['post'],'/editTransactionCodeSubGroup', 'MastersController::editTransactionCodeSubGroup');
+    $routes->match(['post'],'/deleteTransactionCodeSubGroup', 'MastersController::deleteTransactionCodeSubGroup');  
+    
+    $routes->get('/transactionCode', 'MastersController::transactionCode');
+    $routes->match(['post'],'/transactionCodeView', 'MastersController::TransactionCodeView');
+    $routes->match(['post'],'/insertTransactionCode', 'MastersController::insertTransactionCode');
+    $routes->match(['post'],'/editTransactionCode', 'MastersController::editTransactionCode');
+    $routes->match(['post'],'/deleteTransactionCode', 'MastersController::deleteTransactionCode');  
+    
+    $routes->get('/packageGroup', 'MastersController::packageGroup');
+    $routes->match(['post'],'/packageGroupView', 'MastersController::PackageGroupView');
+    $routes->match(['post'],'/insertPackageGroup', 'MastersController::insertPackageGroup');
+    $routes->match(['post'],'/editPackageGroup', 'MastersController::editPackageGroup');
+    $routes->match(['post'],'/deletePackageGroup', 'MastersController::deletePackageGroup');  
+
+    $routes->get('/packageCode', 'MastersController::packageCode');
+    $routes->match(['post'],'/packageCodeView', 'MastersController::PackageCodeView');
+    $routes->match(['post'],'/insertPackageCode', 'MastersController::insertPackageCode');
+    $routes->match(['post'],'/editPackageCode', 'MastersController::editPackageCode');
+    $routes->match(['post'],'/deletePackageCode', 'MastersController::deletePackageCode');  
+    $routes->get('/showPackageCodeList', 'MastersController::showPackageCodeList');
+
+    $routes->get('/marketGroup', 'MastersController::marketGroup');
+    $routes->match(['post'],'/marketGroupView', 'MastersController::MarketGroupView');
+    $routes->match(['post'],'/insertMarketGroup', 'MastersController::insertMarketGroup');
+    $routes->match(['post'],'/editMarketGroup', 'MastersController::editMarketGroup');
+    $routes->match(['post'],'/deleteMarketGroup', 'MastersController::deleteMarketGroup'); 
+    
+    $routes->get('/marketCode', 'MastersController::marketCode');
+    $routes->match(['post'],'/marketCodeView', 'MastersController::MarketCodeView');
+    $routes->match(['post'],'/insertMarketCode', 'MastersController::insertMarketCode');
+    $routes->match(['post'],'/editMarketCode', 'MastersController::editMarketCode');
+    $routes->match(['post'],'/deleteMarketCode', 'MastersController::deleteMarketCode'); 
 
 
 
