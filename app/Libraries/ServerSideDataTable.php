@@ -6,20 +6,34 @@ class ServerSideDataTable{
     public function __construct(){
         $this->Db = \Config\Database::connect();
     }
-    public function generate_DatatTable($table,$columns){
+    public function generate_DatatTable($table,$columns,$init_cond=array()){
         $draw = $_POST['draw'];
         $row = $_POST['start'];
         // exit;
         $rowperpage = $_POST['length']; // Rows display per page
-        $columnIndex = $_POST['order'][0]['column']; // Column index
-        $columnName = $_POST['columns'][$columnIndex]['data']; // Column name
-        $columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
+
+        $fields = explode(",",$columns);
+
+        $columnIndex = isset($_POST['order']) ? $_POST['order'][0]['column'] : ''; // Column index
+        $columnName  = isset($_POST['order']) ? $_POST['columns'][$columnIndex]['data'] : $fields[0]; // Column name
+        $columnSortOrder = isset($_POST['order']) ? $_POST['order'][0]['dir'] : 'asc'; // asc or desc
+
         $searchValue = $_POST['search']['value']; // Search value
         
         ## Search 
-        $searchQuery = " ";
+        
+        $table .= " WHERE 1=1";
+
+        // Add initial conditions if specified
+        if($init_cond != NULL)
+        {
+            foreach($init_cond as $fieldName => $fieldValue)
+                $table .= " AND " . $fieldName . " = '".$fieldValue."'";
+        }
+
+        $searchQuery = "";
+
         if($searchValue != ''){
-            $fields = explode(",",$columns);
             $joinQr = '';
             foreach($fields as $key=>$name){
                 if ($key === array_key_last($fields)) {
@@ -29,7 +43,7 @@ class ServerSideDataTable{
                 }
                 $joinQr.="$name like '%".$searchValue."%' $or";
             }
-            $searchQuery = " WHERE ($joinQr) ";
+            $searchQuery = " AND ($joinQr) ";
         }
         ## Total number of records without filtering
         $result = $this->Db->query("select count(*) as allcount from $table")->getResultArray();
