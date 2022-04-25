@@ -403,7 +403,7 @@
 
   $(document).on('click','.editWindow',function(){
     runRoomList();
-   
+  
     var sysid = $(this).attr('data_sysid');
     $('#reservationChild').modal('show');
     $.ajax({
@@ -413,8 +413,24 @@
         data:{sysid:sysid},
         dataType:'json',
         success:function(respn){
-          // console.log(respn,"testing");
+          
           $(respn).each(function(inx,data){
+            var data = respn[0];
+            console.log(data.MAINT_ROOM_NO);
+           
+            var option = '<option value="'+data.MAINT_ROOM_NO+'">'+data.RM_DESC+'</option>';
+            $('#MAINT_ROOM_NO').html(option).selectpicker('refresh');
+            var category = '<option value="'+data.MAINT_CATEGORY+'">'+data.MAINT_CATEGORY+'</option>';
+            $('#MAINT_CATEGORY').html(category).selectpicker('refresh');
+            var subcategory = '<option value="'+data.MAINT_SUB_CATEGORY+'">'+data.MAINT_SUB_CATEGORY+'</option>';
+            $('#MAINT_SUB_CATEGORY').html(subcategory).selectpicker('refresh');
+            $("#radio_1").attr('checked', 'checked');
+              // $('#MAINT_ROOM_NO').html(option).selectpicker('refresh');
+              // var valuess = $.trim(data);
+              // f(inx=='MAINT_ROOM_NO' || inx=='CUST_NAME'){
+              //   var option = '<option value="'+data+'">'+data+'</option>';
+              //     $('#'+field).html(option).selectpicker('refresh');
+              // }
             $.each(data,function(fields,datavals){
               var field = $.trim(fields);//fields.trim();
               var dataval = $.trim(datavals);//datavals.trim();
@@ -435,6 +451,7 @@
               }else{
                 $('#'+field).val(dataval);
                 if(field=='CUST_COUNTRY'){
+                  $("#radio_1").attr('checked', 'checked');
                   $('#'+field).selectpicker('refresh');
                 }
               }

@@ -151,9 +151,7 @@ class FacilityController extends BaseController
     }
     function editMaintenanceRequest(){
         $param = ['MAINT_ID'=> $this->request->getPost("sysid")];
-        $sql = "SELECT MAINT_TYPE,MAINT_CATEGORY,MAINT_SUB_CATEGORY,MAINT_PREFERRED_TIME,MAINT_STATUS,MAINT_ROOM_NO ,
-        (SELECT CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME FROM FLXY_CUSTOMER) CUST_DETAILS,
-        (SELECT RESV_NAME FROM FLXY_RESERVATION WHERE RESV_NAME = CUST_ID AND RESV_STATUS=\'CHECKIN\') RESV_DETAILS,  FROM FLXY_MAINTENANCE WHERE MAINT_ID =:MAINT_ID:";
+        $sql = "SELECT *,(SELECT RM_DESC FROM FLXY_ROOM WHERE RM_NO = MAINT_ROOM_NO) RM_DESC FROM FLXY_MAINTENANCE WHERE MAINT_ID =:MAINT_ID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }

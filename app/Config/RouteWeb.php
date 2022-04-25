@@ -252,7 +252,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/maintenance', 'FacilityController::maintenanceRequest');
     $routes->match(['post'],'/getRequestList', 'FacilityController::getRequestList');
     $routes->match(['post'],'/insertMaintenanceRequest', 'FacilityController::insertMaintenanceRequest');
-    $routes->match(['post'],'/editRequest', 'FacilityController::editMaintenanceRequest');
+    $routes->match(['post'],'/editMaintenanceRequest', 'FacilityController::editMaintenanceRequest');
     $routes->match(['post'],'/deleteRequest', 'FacilityController::deleteRequest');  
     $routes->match(['post'],'/getCustomerFromRoomNo', 'FacilityController::getCustomerFromRoomNo');  
 });
