@@ -59,7 +59,7 @@ class ApplicatioController extends BaseController
     public function reservationView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_RESERVATION_VIEW';
-        $columns = 'RESV_ID|RESV_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|FULLNAME|RESV_FEATURE|RESV_PURPOSE_STAY';
+        $columns = 'RESV_ID|RESV_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_STATUS|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|FULLNAME|RESV_FEATURE|RESV_PURPOSE_STAY';
         $mine->generate_DatatTable($tableName,$columns,[],'|');
         exit;
         // return view('Dashboard');
