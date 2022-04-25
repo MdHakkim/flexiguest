@@ -143,7 +143,7 @@ $(document).ready(function() {
                 render: function(data, type, row, meta) {
                     return (
                         '<div class="d-inline-block">' +
-                        '<a href="javascript:;" title="Edit or Delete" class="btn btn-label-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
+                        '<a href="javascript:;" title="Edit or Delete" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                         '<ul class="dropdown-menu dropdown-menu-end">' +
                         '<li><a href="editRateCode/' + data['RT_CD_ID'] +
                         '" data_sysid="' + data['RT_CD_ID'] +
