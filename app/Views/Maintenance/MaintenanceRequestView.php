@@ -417,46 +417,58 @@
           $(respn).each(function(inx,data){
             var data = respn[0];
             console.log(data.MAINT_ROOM_NO);
-           
-            var option = '<option value="'+data.MAINT_ROOM_NO+'">'+data.RM_DESC+'</option>';
-            $('#MAINT_ROOM_NO').html(option).selectpicker('refresh');
-            var category = '<option value="'+data.MAINT_CATEGORY+'">'+data.MAINT_CATEGORY+'</option>';
-            $('#MAINT_CATEGORY').html(category).selectpicker('refresh');
-            var subcategory = '<option value="'+data.MAINT_SUB_CATEGORY+'">'+data.MAINT_SUB_CATEGORY+'</option>';
-            $('#MAINT_SUB_CATEGORY').html(subcategory).selectpicker('refresh');
-            $("#radio_1").attr('checked', 'checked');
+            $('#MAINT_ROOM_NO').val(data['MAINT_ROOM_NO']).trigger('change');
+            $('#MAINT_CATEGORY').val(data['MAINT_CATEGORY']);
+            $('#MAINT_SUB_CATEGORY').val(data['MAINT_SUB_CATEGORY']);
+            $('#MAINT_DETAILS').val(data['MAINT_DETAILS']);
+            $('#MAINT_PREFERRED_DT').val(data['MAINT_PREFERRED_DT']);
+            $('#MAINT_PREFERRED_TIME').val(data['MAINT_PREFERRED_TIME']);
+            if(data['MAINT_TYPE']=='MT'){
+              $('#MAINT_TYPE1').prop('checked',true);
+              $('#MAINT_TYPE2').prop('checked',false);
+            }else{
+              $('#MAINT_TYPE2').prop('checked',true);
+              $('#MAINT_TYPE1').prop('checked',false);
+            }
+            // var option = '<option value="'+data.MAINT_ROOM_NO+'">'+data.RM_DESC+'</option>';
+            // $('#MAINT_ROOM_NO').html(option).selectpicker('refresh');
+            // var category = '<option value="'+data.MAINT_CATEGORY+'">'+data.MAINT_CATEGORY+'</option>';
+            // $('#MAINT_CATEGORY').html(category).selectpicker('refresh');
+            // var subcategory = '<option value="'+data.MAINT_SUB_CATEGORY+'">'+data.MAINT_SUB_CATEGORY+'</option>';
+            // $('#MAINT_SUB_CATEGORY').html(subcategory).selectpicker('refresh');
+            // $("#radio_1").attr('checked', 'checked');
               // $('#MAINT_ROOM_NO').html(option).selectpicker('refresh');
               // var valuess = $.trim(data);
               // f(inx=='MAINT_ROOM_NO' || inx=='CUST_NAME'){
               //   var option = '<option value="'+data+'">'+data+'</option>';
               //     $('#'+field).html(option).selectpicker('refresh');
               // }
-            $.each(data,function(fields,datavals){
-              var field = $.trim(fields);//fields.trim();
-              var dataval = $.trim(datavals);//datavals.trim();
-              if(field=='CUST_COUNTRY_DESC' || field=='CUST_STATE_DESC' || field=='CUST_CITY_DESC'){ return true; };
-              // (field=='CUST_ACTIVE' ? (dataval=='Y' ? $('#CUST_ACTIVE_CHK').prop('checked',true) : $('#CUST_ACTIVE_CHK').prop('checked',false)) : '')
-              if(field=='CUST_STATE' || field=='CUST_CITY'){
-                var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
-                $('#'+field).html(option).selectpicker('refresh');
-              }else if(field=='CUST_ACTIVE'){
-                // var rmSpace = dataval.trim();
-                if(dataval=='Y'){
-                  console.log($('#CUST_ACTIVE_CHK'),dataval,"CUST_ACTIVE_CHK");
-                  $('#CUST_ACTIVE_CHK').prop('checked',true);
-                }else{
-                  console.log($('#CUST_ACTIVE_CHK'),dataval,"CUST_ACTIVE_CHK");
-                  $('#CUST_ACTIVE_CHK').prop('checked',false)
-                }
-              }else{
-                $('#'+field).val(dataval);
-                if(field=='CUST_COUNTRY'){
-                  $("#radio_1").attr('checked', 'checked');
-                  $('#'+field).selectpicker('refresh');
-                }
-              }
+            // $.each(data,function(fields,datavals){
+            //   var field = $.trim(fields);//fields.trim();
+            //   var dataval = $.trim(datavals);//datavals.trim();
+            //   if(field=='CUST_COUNTRY_DESC' || field=='CUST_STATE_DESC' || field=='CUST_CITY_DESC'){ return true; };
+            //   // (field=='CUST_ACTIVE' ? (dataval=='Y' ? $('#CUST_ACTIVE_CHK').prop('checked',true) : $('#CUST_ACTIVE_CHK').prop('checked',false)) : '')
+            //   if(field=='CUST_STATE' || field=='CUST_CITY'){
+            //     var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
+            //     $('#'+field).html(option).selectpicker('refresh');
+            //   }else if(field=='CUST_ACTIVE'){
+            //     // var rmSpace = dataval.trim();
+            //     if(dataval=='Y'){
+            //       console.log($('#CUST_ACTIVE_CHK'),dataval,"CUST_ACTIVE_CHK");
+            //       $('#CUST_ACTIVE_CHK').prop('checked',true);
+            //     }else{
+            //       console.log($('#CUST_ACTIVE_CHK'),dataval,"CUST_ACTIVE_CHK");
+            //       $('#CUST_ACTIVE_CHK').prop('checked',false)
+            //     }
+            //   }else{
+            //     $('#'+field).val(dataval);
+            //     if(field=='CUST_COUNTRY'){
+            //       $("#radio_1").attr('checked', 'checked');
+            //       $('#'+field).selectpicker('refresh');
+            //     }
+            //   }
             
-            });
+            // });
           });
           $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
         }
