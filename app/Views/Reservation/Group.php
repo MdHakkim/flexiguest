@@ -37,7 +37,7 @@
             
             <div class="content-backdrop fade"></div>
           </div>
-          <?=$this->include("GroupModal")?>
+          <?=$this->include("Reservation/GroupModal")?>
           <!-- Content wrapper -->
 <script>
   var compAgntMode='';
