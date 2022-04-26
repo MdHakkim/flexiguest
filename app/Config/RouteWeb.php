@@ -115,12 +115,6 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/editSection', 'ApplicatioController::editSection');
     $routes->match(['post'],'/deleteSection', 'ApplicatioController::deleteSection');
 
-    $routes->get('/rateClass', 'ApplicatioController::rateClass');
-    $routes->match(['post'],'/rateClassView', 'ApplicatioController::RateClassView');
-    $routes->match(['post'],'/insertRateClass', 'ApplicatioController::insertRateClass');
-    $routes->match(['post'],'/editRateClass', 'ApplicatioController::editRateClass');
-    $routes->match(['post'],'/deleteRateClass', 'ApplicatioController::deleteRateClass');
-
     $routes->get('/source', 'ApplicatioController::source');
     $routes->match(['post'],'/sourceView', 'ApplicatioController::SourceView');
     $routes->match(['post'],'/insertSource', 'ApplicatioController::insertSource');
@@ -201,6 +195,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/copyRateCode', 'MastersController::copyRateCode');
     $routes->match(['post'],'/updateRateCodeDetail', 'MastersController::updateRateCodeDetail');
     $routes->match(['post'],'/copyRateCodeDetail', 'MastersController::copyRateCodeDetail');
+    $routes->match(['post'],'/negotiatedRateView', 'MastersController::NegotiatedRateView');
+
     
     $routes->get('/transactionCodeGroup', 'MastersController::transactionCodeGroup');
     $routes->match(['post'],'/transactionCodeGroupView', 'MastersController::TransactionCodeGroupView');
@@ -252,7 +248,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/maintenance', 'FacilityController::maintenanceRequest');
     $routes->match(['post'],'/getRequestList', 'FacilityController::getRequestList');
     $routes->match(['post'],'/insertMaintenanceRequest', 'FacilityController::insertMaintenanceRequest');
-    $routes->match(['post'],'/editMaintenanceRequest', 'FacilityController::editMaintenanceRequest');
+    $routes->match(['post'],'/editRequest', 'FacilityController::editMaintenanceRequest');
     $routes->match(['post'],'/deleteRequest', 'FacilityController::deleteRequest');  
     $routes->match(['post'],'/getCustomerFromRoomNo', 'FacilityController::getCustomerFromRoomNo');  
 });
