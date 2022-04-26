@@ -22,7 +22,7 @@
                         <th>Departure Date</th>
                         <th>Night</th>
                         <th>No of Room</th>
-                        <th>Purpose</th>
+                        <th>Status</th>
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -974,20 +974,7 @@
                             </span>
                           </label>
                         </div>
-                        <div class="col-md-3 flxy_equal2">
-                          <lable class="form-check-lable">First Night</lable>
-                          <label class="switch">
-                            <input type="checkbox" class="switch-input rateRadio" mode="FIS" />
-                            <span class="switch-toggle-slider">
-                              <span class="switch-on">
-                                <i class="bx bx-check"></i>
-                              </span>
-                              <span class="switch-off">
-                                <i class="bx bx-x"></i>
-                              </span>
-                            </span>
-                          </label>
-                        </div>
+                        
                       </div>
                     </div>
                     <div class="flxy_opertion flxy_right">
@@ -1251,7 +1238,11 @@
           { data: 'RESV_NIGHT' },
           { data: 'RESV_NO_F_ROOM'},
           // { data: 'RESV_FEATURE'},
-          { data: 'RESV_PURPOSE_STAY'},
+          { data: 'RESV_STATUS', render : function ( data, type, row, meta ) {
+            return (
+              '<div class="flxy_status_cls">'+data+'</div>'
+            );
+          }},
           { data: null , render : function ( data, type, row, meta ) {
             return (
               '<div class="d-inline-block flxy_option_view">' +

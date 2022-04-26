@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <?php
   $data=$data[0];
+  if($data['RESV_STATUS']=='Due Pre Check-In'){
+    $statusClass='flxy_orng';
+    $icon="fa-circle-xmark";
+    $documentmess="Document not verified";
+  }else{
+    $statusClass='flxy_green';
+    $icon="fa-circle-check";
+    $documentmess="Document verified";
+  }
+  
 ?>
 <html lang="en"
   class="light-style layout-navbar-fixed layout-menu-fixed"
@@ -137,12 +147,12 @@
           <div class="col-11 flxy_web_content"> 
               <div class="flxy_wrapper">
                 <div class="flxy_web-header">
-                  <p class="flxy_web_status">Pre Check-In Completed</p>
+                  <p class="flxy_web_status <?php echo $statusClass;?>"><?php echo $data['RESV_STATUS'];?></p>
                 </div>
                 <div class="flxy_web-blockcont">
                   <div class="sliderclass activeslide">
                     <div class="flxy_block_card">
-                      <div class="card " >
+                      <div class="card">
                         <div class="row g-0">
                           <div class="col-md-3 flxy_icon_mid">
                             <i class="fa-solid fa-r flxy_fa_x2"></i>
@@ -163,7 +173,7 @@
                           <div class="col-md-9">
                             <div class="card-body">
                               <h5 class="card-title">Apartment Number</h5>
-                              <p class="card-text"><?php echo $data['RESV_ROOM'];?></p>
+                              <p class="card-text"><?php echo ($data['RESV_ROOM']=='' ?'&nbsp;':$data['RESV_ROOM']);?></p>
                             </div>
                           </div>
                         </div>
@@ -253,21 +263,22 @@
                   <div class="sliderclass">
                     <div class="flxy_block_card flxy_document">
                       <div class="card">
-                        <div class="card-body">
-                          <h5 class="card-title"><?php echo $data['FULLNAME'];?>e</h5>
-                          <p class="card-text"><i class="fa-regular fa-circle-check"></i>Document not verified</p>
+                        <div class="card-body flxy_web_padd">
+                          <h5 class="card-title"><?php echo $data['FULLNAME'];?></h5>
+                          <p class="card-text">
+                            <i class="fa-solid <?php echo $icon;?> me-1"></i><?php echo $documentmess;?></p>
                         </div>
                         <ul class="list-group list-group-flush flxy_web-ul">
                           <li class="list-group-item text-flxy">
-                            <div>Name</div>
-                            <div>:</div>
+                            <div class="flxy-data">Name</div>
+                            <div class="flxy-data">: <?php echo $data['FULLNAME'];?></div>
                           </li>
                           <li class="list-group-item text-flxy">
-                            <div>Document Status</div>
-                            <div>:</div></li>
+                            <div class="flxy-data">Document Status</div>
+                            <div class="flxy-data">: <span class="flxy_doc_st <?php echo $statusClass;?>">Pending</span></div></li>
                           <li class="list-group-item text-flxy">
-                            <div>Vaccine Certificate</div>
-                            <div>:</div></li>
+                            <div class="flxy-data">Vaccine Certificate</div>
+                            <div class="flxy-data">: <span class="flxy_doc_st <?php echo $statusClass;?>">Pending</span></div></li>
                           <li class="list-group-item d-grid ">
                             <button class="btn btn-dark" type="button">View & Upload Documents</button>
                           </li>
