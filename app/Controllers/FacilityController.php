@@ -22,11 +22,13 @@ class FacilityController extends BaseController
         return view('Maintenance/MaintenanceRequestView');
     }
     public function getRequestList(){
+        
         $mine = new ServerSideDataTable(); // loads and creates instance
-        $tableName = 'FLXY_MAINTENANCE';
-        $columns = 'MAINT_ID,MAINT_ROOM_NO,MAINT_TYPE,MAINT_CATEGORY,MAINT_SUB_CATEGORY,MAINT_PREFERRED_DT,MAINT_PREFERRED_TIME,MAINT_ATTACHMENT,MAINT_STATUS';
-        $mine->generate_DatatTable($tableName,$columns);
+        $tableName = 'FLXY_MAINTENANCE_VIEW';
+        $columns = 'MAINT_ID|MAINT_ROOM_NO|TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS';
+        $mine->generate_DatatTable($tableName,$columns,[],'|');
         exit;
+
     }
     function getCustomerFromRoomNo(){
 
@@ -154,6 +156,26 @@ class FacilityController extends BaseController
         $sql = "SELECT *,(SELECT RM_DESC FROM FLXY_ROOM WHERE RM_NO = MAINT_ROOM_NO) RM_DESC FROM FLXY_MAINTENANCE WHERE MAINT_ID =:MAINT_ID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
+    }
+
+    public function maintenanceCategoryList()
+    {
+        $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY";
+        $response = $this->Db->query($sql)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function maintenanceSubCatByCategoryID()
+    {
+        $param = ['MAINT_CAT_ID'=> $this->request->getPost("category")];
+        $sql = "SELECT a.MAINT_CAT_ID,b.MAINT_SUBCATEGORY ,b.MAINT_SUBCAT_ID FROM FLXY_MAINTENANCE_CATEGORY a
+        LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY b ON b.MAINT_CAT_ID = a.MAINT_CAT_ID WHERE a.MAINT_CAT_ID =:MAINT_CAT_ID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        $option='<option value="">Select SubCategory</option>';
+        foreach($response as $row){
+            $option.= '<option value="'.$row['MAINT_SUBCAT_ID'].'">'.$row['MAINT_SUBCATEGORY'].'</option>';
+        }
+        echo $option;
     }
 
 

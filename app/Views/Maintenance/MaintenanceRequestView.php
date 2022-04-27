@@ -79,11 +79,6 @@
                             <lable class="form-lable">Category</lable>
                             <select id="MAINT_CATEGORY" name="MAINT_CATEGORY" class=" select2 form-select" data-allow-clear="true">
                               <option value="">Select</option>
-                              <option value="Air Conditioner">Air Conditioner</option>
-                              <option value="Civil">Civil</option>
-                              <option value="Common">Common</option>
-                              <option value="Electrical">Electrical</option>
-                              <option value="Plumbing">Plumbing</option>
                             </select>
                           </div>
 
@@ -103,7 +98,7 @@
                             <!-- <input type="hidden" name="RESV_STATUS" id="RESV_STATUS" class="form-control"/> -->
                             <lable class="form-lable">Prefered Date </lable>
                               <div class="input-group mb-3">
-                                <input type="text" name="MAINT_PREFERRED_DT" id="MAINT_PREFERRED_DT" class="form-control MAINT_PREFERRED_DT" placeholder="DD-MM-YYYY">
+                                <input type="text" autocomplete="off" name="MAINT_PREFERRED_DT" id="MAINT_PREFERRED_DT" class="form-control MAINT_PREFERRED_DT" placeholder="DD-MM-YYYY">
                                 <span class="input-group-append">
                                   <span class="input-group-text bg-light d-block">
                                     <i class="fa fa-calendar"></i>
@@ -122,7 +117,7 @@
                             <lable class="form-lable">Image</lable>
                             <input type="file" name="MAINT_ATTACHMENT" id="MAINT_ATTACHMENT" class="form-control" />
                           </div>
-                        
+                          <input type="hidden" name="sysid" id="sysid"  class="form-control" />
                           <div class="modal-footer profileCreate">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="button" onClick="submitForm('maintenanceForm','C',event)" class="btn btn-primary">Save</button>
@@ -152,9 +147,9 @@
         },
         'columns': [
           { data: 'MAINT_ROOM_NO' },
-          { data: 'MAINT_TYPE' },
+          { data: 'TYPE' },
           { data: 'MAINT_CATEGORY' },
-          { data: 'MAINT_SUB_CATEGORY' },
+          { data: 'MAINT_SUBCATEGORY' },
           { data: 'MAINT_PREFERRED_TIME' },
           { data: 'MAINT_STATUS' },
           // { data: 'MAINT_ATTACHMENT' },
@@ -188,7 +183,7 @@
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('#CUST_COUNTRY,#CUST_STATE,#CUST_CITY').html('<option value="">Select</option>').selectpicker('refresh');
     runRoomList();
-    // runSupportingLov();
+    runCatList();
     $('#reservationChild').modal('show');
   }
 
@@ -226,40 +221,27 @@
     
   });
 
-  function runSupportingLov(){
+  
+  function runCatList(){
     $.ajax({
-        url: '<?php echo base_url('/getSupportingLov')?>',
+        url: '<?php echo base_url('/getCategory')?>',
         type: "post",
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         dataType:'json',
         async:false,
         success:function(respn){
-          var vipData = respn[0];
-          var busegmt = respn[1];
-          var option = '<option value="">Select Vip</option>';
-          var option2 = '<option value="">Select Segment</option>';
-          // console.log(vipData,busegmt,"testing");
-          $(vipData).each(function(ind,data){
-            option += '<option value="'+data['VIP_ID']+'">'+data['VIP_DESC']+'</option>';
+          
+          var option = '<option value="">Select Category</option>';
+          $(respn).each(function(ind,data){
+            option += '<option value="'+data['MAINT_CAT_ID']+'">'+data['MAINT_CATEGORY']+'</option>';
           });
-          $(busegmt).each(function(ind,data){
-            option2 += '<option value="'+data['BUS_SEG_CODE']+'">'+data['BUS_SEG_DESC']+'</option>';
-          });
-          $('#CUST_VIP').html(option);
-          $('#CUST_BUS_SEGMENT').html(option2);
+          $('#MAINT_CATEGORY').html(option);
+        
         }
     });
   }
 
-  $(document).on('click','.flxCheckBox',function(){
-    var checked = $(this).is(':checked');
-    var parent = $(this).parent();
-    if(checked){
-      parent.find('input[type=hidden]').val('Y');
-    }else{
-      parent.find('input[type=hidden]').val('N');
-    }
-  });
+  
 
   function submitForm(id,mode){
     var formSerialization = $('#'+id).serializeArray();
@@ -300,129 +282,125 @@
         }
     });
   }
-  $(document).on('change','#MAINT_ROOM_NO',function(){
-    var room = $(this).val();
-    // alert(ccode)
+
+  function getCheckedInGuestFromRoom(room) {
     $.ajax({
         url: '<?php echo base_url('/getCustomerFromRoomNo')?>',
         type: "post",
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         data:{room:room},
-        // dataType:'json',
+        
         success:function(respn){
-          console.log(respn,"testing");
+          
           $('#InHouseBooking').html(respn).selectpicker('refresh');
         }
     });
+  }
+
+  $(document).on('change','#MAINT_ROOM_NO',function(){
+    var room = $(this).val();
+    getCheckedInGuestFromRoom(room);
+    
   });
 
   $(document).on('change','#MAINT_CATEGORY',function(){
 
     var cat = $('#MAINT_CATEGORY').find('option:selected').val();
-    var scode = $(this).val();
-    var option = '<option value="">Select Sub Category</option>';
-    var sub_category_AC = ["A/C is noisy", "A/C is not working","A/C is very cold","A/C not coolimg","A/C needs Servicing","Thermostat not working","Water leakage from A/C unit"];
-    var sub_category_ELECTRICAL = [
-    "Balcony door / window not closing / damaged",
-    "Balcony glass broken",
-    "Cupboards / wardrobes damaged / broken",
-    "Cat Door handle is loose",
-    "Door hinges are broken",
-    "Door is making noise",
-    "Door lock is damaged",
-    "Door not closing properly (other than main door)",
-    "False Ceiling Damage / Broken",
-    "Key to doors not working (other than the main door)",
-    "Kitchen cabinet damaged / broken",
-    "Main door lock- broken", 
-    "Sliding door needsto be fixed",
-    "A/C is very cold",
-    "Toilet Mirror damaged/broken" ,
-    "Window fly net / mesh damaged /broken",
-    "Window glass damaged /broken",
-    "Window lock damaged",
-    ];
-    var sub_category_PLUMBING = [
-    "Bad smell in bathroom",
-    "Bathtub related plumbing problems",
-    "Broken Pipeline - causing flood",
-    "Dirty water from taps",
-    "Drain is blocked",
-    "Flexible hose is not working in toilets",
-    "Flooding in Apartment",
-    "Floor trap / water traps blocked in bathroom",
-    "Flush not working in the toilets",
-    "Foul smell in domestic water from taps",
-    "Heavy Water Leak - flooding from roof / false ceiling",
-    "Heavy water",
-    "Kichen sink is blocked" ,
-    "No Water Supply in Apartment",
-    "Wash basin is blocked",
-    "WC is blocked"
-    ];
-    if(cat == 'Air Conditioner') {
-
-      $(sub_category_AC).each(function(ind,data){
-
-            option += '<option value="'+data+'">'+data+'</option>';
-          });
-
-    }else if(cat == 'Civil'  || cat == 'Common') {
-
-      $('#MAINT_SUB_CATEGORY').disabled = true;
-
-    }else if(cat == 'Electrical') {
-
-      $(sub_category_ELECTRICAL).each(function(ind,data){
-
-            option += '<option value="'+data+'">'+data+'</option>';
-          });
-    } 
-    else if(cat == 'Plumbing') {
-
-      $(sub_category_PLUMBING).each(function(ind,data){
-
-            option += '<option value="'+data+'">'+data+'</option>';
-          });
-
-    }
-    $('#MAINT_SUB_CATEGORY').html(option);
-
-    // $.ajax({
-    //     url: '<?php echo base_url('/cityList')?>',
-    //     type: "post",
-    //     headers: {'X-Requested-With': 'XMLHttpRequest'},
-    //     data:{category:cat,scode:scode},
-    //     // dataType:'json',
-    //     success:function(respn){
-    //       console.log(respn,"testing");
-    //       $('#MAINT_SUB_CATEGORY').html(respn).selectpicker('refresh');
-    //     }
-    // });
+    
+    // var option = '<option value="">Select Sub Category</option>';
+    // var sub_category_AC = ["A/C is noisy", "A/C is not working","A/C is very cold","A/C not coolimg","A/C needs Servicing","Thermostat not working","Water leakage from A/C unit"];
+    // var sub_category_ELECTRICAL = [
+    // "Balcony door / window not closing / damaged",
+    // "Balcony glass broken",
+    // "Cupboards / wardrobes damaged / broken",
+    // "Cat Door handle is loose",
+    // "Door hinges are broken",
+    // "Door is making noise",
+    // "Door lock is damaged",
+    // "Door not closing properly (other than main door)",
+    // "False Ceiling Damage / Broken",
+    // "Key to doors not working (other than the main door)",
+    // "Kitchen cabinet damaged / broken",
+    // "Main door lock- broken", 
+    // "Sliding door needsto be fixed",
+    // "Toilet Mirror damaged/broken" ,
+    // "Window fly net / mesh damaged /broken",
+    // "Window glass damaged /broken",
+    // "Window lock damaged",
+    // ];
+    // var sub_category_PLUMBING = [
+    // "Bad smell in bathroom",
+    // "Bathtub related plumbing problems",
+    // "Broken Pipeline - causing flood",
+    // "Dirty water from taps",
+    // "Drain is blocked",
+    // "Flexible hose is not working in toilets",
+    // "Flooding in Apartment",
+    // "Floor trap / water traps blocked in bathroom",
+    // "Flush not working in the toilets",
+    // "Foul smell in domestic water from taps",
+    // "Heavy Water Leak - flooding from roof / false ceiling",
+    // "Heavy water",
+    // "Kichen sink is blocked" ,
+    // "No Water Supply in Apartment",
+    // "Wash basin is blocked",
+    // "WC is blocked"
+    // ];
+  
+    getSubCategoryList(cat);
+   
   });
+
+  function getSubCategoryList(cat){
+    $.ajax({
+        url: '<?php echo base_url('/getSubCategory')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{category:cat},
+        // dataType:'json',
+        async:false,
+        success:function(respn){
+          $('#MAINT_SUB_CATEGORY').html(respn).selectpicker('refresh');
+        }
+    });
+  }
 
   $(document).on('click','.editWindow',function(){
     runRoomList();
-  
-    var sysid = $(this).attr('data_sysid');
+    runCatList();
+    
+    setTimeout(() => {
+      var sysid = $(this).attr('data_sysid');
+    $('#sysid').val(sysid);
     $('#reservationChild').modal('show');
     $.ajax({
         url: '<?php echo base_url('/editMaintenanceRequest')?>',
         type: "post",
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         data:{sysid:sysid},
+        // async:false,
         dataType:'json',
         success:function(respn){
-          
+          console.log(respn);
           $(respn).each(function(inx,data){
             var data = respn[0];
-            console.log(data.MAINT_ROOM_NO);
+            console.log("CATHOLOF",data.MAINT_SUB_CATEGORY);
+            var dataTrim=$.trim(data.MAINT_SUB_CATEGORY);
+            var roomTrim=$.trim(data['MAINT_ROOM_NO']);
             $('#MAINT_ROOM_NO').val(data['MAINT_ROOM_NO']).trigger('change');
-            $('#MAINT_CATEGORY').val(data['MAINT_CATEGORY']);
-            $('#MAINT_SUB_CATEGORY').val(data['MAINT_SUB_CATEGORY']);
+            $('#MAINT_CATEGORY').val(data.MAINT_CATEGORY).trigger('change');
+            getSubCategoryList(data.MAINT_CATEGORY);
+            getCheckedInGuestFromRoom(roomTrim).trigger('change');
+            $('#InHouseBooking').val(roomTrim);
+            $('#MAINT_SUB_CATEGORY').val(dataTrim).trigger('change');
+            
             $('#MAINT_DETAILS').val(data['MAINT_DETAILS']);
-            $('#MAINT_PREFERRED_DT').val(data['MAINT_PREFERRED_DT']);
-            $('#MAINT_PREFERRED_TIME').val(data['MAINT_PREFERRED_TIME']);
+            $('#MAINT_PREFERRED_DT').val(data['MAINT_PREFERRED_DT']);     
+
+            var javaDate = new Date(data['MAINT_PREFERRED_TIME']);
+            var time = javaDate.getHours() + ":" + javaDate.getMinutes();
+            $('#MAINT_PREFERRED_TIME').val(time);
+
             if(data['MAINT_TYPE']=='MT'){
               $('#MAINT_TYPE1').prop('checked',true);
               $('#MAINT_TYPE2').prop('checked',false);
@@ -430,49 +408,13 @@
               $('#MAINT_TYPE2').prop('checked',true);
               $('#MAINT_TYPE1').prop('checked',false);
             }
-            // var option = '<option value="'+data.MAINT_ROOM_NO+'">'+data.RM_DESC+'</option>';
-            // $('#MAINT_ROOM_NO').html(option).selectpicker('refresh');
-            // var category = '<option value="'+data.MAINT_CATEGORY+'">'+data.MAINT_CATEGORY+'</option>';
-            // $('#MAINT_CATEGORY').html(category).selectpicker('refresh');
-            // var subcategory = '<option value="'+data.MAINT_SUB_CATEGORY+'">'+data.MAINT_SUB_CATEGORY+'</option>';
-            // $('#MAINT_SUB_CATEGORY').html(subcategory).selectpicker('refresh');
-            // $("#radio_1").attr('checked', 'checked');
-              // $('#MAINT_ROOM_NO').html(option).selectpicker('refresh');
-              // var valuess = $.trim(data);
-              // f(inx=='MAINT_ROOM_NO' || inx=='CUST_NAME'){
-              //   var option = '<option value="'+data+'">'+data+'</option>';
-              //     $('#'+field).html(option).selectpicker('refresh');
-              // }
-            // $.each(data,function(fields,datavals){
-            //   var field = $.trim(fields);//fields.trim();
-            //   var dataval = $.trim(datavals);//datavals.trim();
-            //   if(field=='CUST_COUNTRY_DESC' || field=='CUST_STATE_DESC' || field=='CUST_CITY_DESC'){ return true; };
-            //   // (field=='CUST_ACTIVE' ? (dataval=='Y' ? $('#CUST_ACTIVE_CHK').prop('checked',true) : $('#CUST_ACTIVE_CHK').prop('checked',false)) : '')
-            //   if(field=='CUST_STATE' || field=='CUST_CITY'){
-            //     var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
-            //     $('#'+field).html(option).selectpicker('refresh');
-            //   }else if(field=='CUST_ACTIVE'){
-            //     // var rmSpace = dataval.trim();
-            //     if(dataval=='Y'){
-            //       console.log($('#CUST_ACTIVE_CHK'),dataval,"CUST_ACTIVE_CHK");
-            //       $('#CUST_ACTIVE_CHK').prop('checked',true);
-            //     }else{
-            //       console.log($('#CUST_ACTIVE_CHK'),dataval,"CUST_ACTIVE_CHK");
-            //       $('#CUST_ACTIVE_CHK').prop('checked',false)
-            //     }
-            //   }else{
-            //     $('#'+field).val(dataval);
-            //     if(field=='CUST_COUNTRY'){
-            //       $("#radio_1").attr('checked', 'checked');
-            //       $('#'+field).selectpicker('refresh');
-            //     }
-            //   }
             
-            // });
           });
           $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
         }
     });
+    }, 500);
+
   });
 
   
