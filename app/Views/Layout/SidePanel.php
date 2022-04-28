@@ -997,7 +997,7 @@
                 </li>
 
                 <li class="menu-item">
-                  <a href="javascript:void(0);" class="menu-link">
+                  <a href="<?php echo base_url('feedback');?>" class="menu-link">
                     <div data-i18n="General Feedback">General Feedback</div>
                   </a>
                 </li>

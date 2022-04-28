@@ -22,7 +22,7 @@ class FacilityController extends BaseController
         return view('Maintenance/MaintenanceRequestView');
     }
     public function getRequestList(){
-        
+
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_MAINTENANCE_VIEW';
         $columns = 'MAINT_ID|MAINT_ROOM_NO|TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS';
@@ -47,6 +47,7 @@ class FacilityController extends BaseController
     public function insertMaintenanceRequest(){
         try{
             
+            $attached_path = NULL;
             $validate = $this->validate([
                 
                 'MAINT_ROOM_NO' => 'required',
@@ -67,18 +68,18 @@ class FacilityController extends BaseController
                 exit;
             }
             $doc_file = $this->request->getFile('MAINT_ATTACHMENT');
-            if($doc_file){
-                $doc_name = $doc_file->getName();
-                $folderPath = "assets/maintenance";
-                $doc_up = documentUpload($doc_file ,$doc_name, $this->session->name, $folderPath);
-                if($doc_up['SUCCESS'] == 200){
-                    $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
-                }
-            }else{
-                $attached_path = NULL;
-            }
             $sysid = $this->request->getPost("sysid");
             if(empty($sysid)){
+                
+                // INSERT
+                if($doc_file){
+                    $doc_name = $doc_file->getName();
+                    $folderPath = "assets/Uploads/Maintenance";
+                    $doc_up = documentUpload($doc_file ,$doc_name, $this->session->name, $folderPath);
+                    if($doc_up['SUCCESS'] == 200){
+                        $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                    }
+                }
                 $data = 
                 [
                     "MAINT_TYPE" => $this->request->getPost("MAINT_TYPE"),
@@ -91,12 +92,34 @@ class FacilityController extends BaseController
                     "MAINT_STATUS" => "New" ,
                     "MAINT_ROOM_NO" => $this->request->getPost("MAINT_ROOM_NO"),
                     "MAINT_CREATE_DT" => date("d-M-Y"),
-                    "MAINT_CREATE_UID" => $this->session->name,
+                    "MAINT_CREATE_UID" =>$this->session->name,
                     "MAINT_UPDATE_DT" => date("d-M-Y"),
-                    "MAINT_UPDATE_UID" => $this->session->name,
+                    "MAINT_UPDATE_UID" =>$this->session->name,
                 ];
                 $ins = $this->Db->table('FLXY_MAINTENANCE')->insert($data); 
             }else{
+               
+                
+                // UPDATE
+                // unlink the old file from the folder and update the column in db
+                $doc_data = $this->Db->table('FLXY_MAINTENANCE')->select('MAINT_ATTACHMENT')->where('MAINT_ID', $sysid)->get()->getRowArray();
+                $filename = $doc_data['MAINT_ATTACHMENT'];
+                $filename = explode('/',$filename);
+                $file = end($filename);
+                $folderPath = "assets/Uploads/Maintenance/".$file ;
+                if(file_exists( $folderPath )){              
+                    if(unlink($folderPath)){
+                        if($doc_file){
+                            $doc_name = $doc_file->getName();
+                            $folderPath = "assets/Uploads/Maintenance";
+                            // 
+                            $doc_up = documentUpload($doc_file ,$doc_name, $this->session->name, $folderPath);
+                            if($doc_up['SUCCESS'] == 200){
+                                $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                            }
+                        }
+                    }
+                }    
                 $data = 
                 [
                     "MAINT_TYPE" => $this->request->getPost("MAINT_TYPE"),
@@ -109,9 +132,9 @@ class FacilityController extends BaseController
                     "MAINT_STATUS" => "New" ,
                     "MAINT_ROOM_NO" => $this->request->getPost("MAINT_ROOM_NO") ,
                     "MAINT_CREATE_DT" => date("d-M-Y"),
-                    "MAINT_CREATE_UID" => $this->session->name,
+                    "MAINT_CREATE_UID" =>$this->session->name,
                     "MAINT_UPDATE_DT" => date("d-M-Y"),
-                    "MAINT_UPDATE_UID" => $this->session->name,
+                    "MAINT_UPDATE_UID" =>$this->session->name,
                 ];
                 $ins = $this->Db->table('FLXY_MAINTENANCE')->where('MAINT_ID', $sysid)->update($data); 
             }
@@ -136,7 +159,7 @@ class FacilityController extends BaseController
             $return = $this->Db->table('FLXY_MAINTENANCE')->delete(['MAINT_ID' => $sysid]); 
             
             // unlink the document attached
-            $folderPath = "assets/userDocuments/Maintenance/". $doc_data['MAINT_ATTACHMENT'] ;
+            $folderPath = "assets/Uploads/Maintenance/". $doc_data['MAINT_ATTACHMENT'] ;
             if(file_exists( $folderPath )){              
                 unlink($folderPath);
             }
@@ -176,6 +199,22 @@ class FacilityController extends BaseController
             $option.= '<option value="'.$row['MAINT_SUBCAT_ID'].'">'.$row['MAINT_SUBCATEGORY'].'</option>';
         }
         echo $option;
+    }
+
+    // Feedback
+
+    public function feedback()
+    {
+        return view('Feedback/FeedbackView');
+    }
+
+    public function feedbackList()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_FEEDBACK_VIEW';
+        $columns = 'CUST_FULLNAME|FB_RATINGS|FB_DESCRIPTION|FORMAT(FB_CREATE_DT,\'dd-MMM-yyyy\')FB_CREATE_DT';
+        $mine->generate_DatatTable($tableName,$columns,[],'|');
+        exit;
     }
 
 

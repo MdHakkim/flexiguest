@@ -44,7 +44,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <form id="maintenanceForm" novalidate enctype="multipart/form-data">
+                    <form id="maintenanceForm" enctype="multipart/form-data" novalidate >
                       <div class="window-1" id="window1">
                         <div class="row g-3">
 
@@ -181,7 +181,7 @@
   function addForm(){
     $(':input','#customerForm').val('').prop('checked', false).prop('selected', false);
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-    $('#CUST_COUNTRY,#CUST_STATE,#CUST_CITY').html('<option value="">Select</option>').selectpicker('refresh');
+    
     runRoomList();
     runCatList();
     $('#reservationChild').modal('show');
@@ -256,9 +256,10 @@
           
           if(respn.SUCCESS == 200){
             alert("Request Added successfully");
+            console.log(respn)
             $('#reservationChild').modal('hide');
-            $('#dataTable_view').dataTable().fnDraw();
-            window.location.reload();
+            // $('#dataTable_view').dataTable().fnDraw();
+            // window.location.reload();
           }else{
             alert("Please check required parameters are added");
           }

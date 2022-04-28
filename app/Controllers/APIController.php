@@ -232,8 +232,6 @@ class APIController extends ResourceController
                     LEFT JOIN FLXY_DOCUMENTS c ON c.CUST_NAME = a.ACCOMP_CUST_ID WHERE a.ACCOMP_REF_RESV_ID =:ACCOMP_REF_RESV_ID:";
                     $param = ['ACCOMP_REF_RESV_ID' => $resID ];
                     $data = $this->Db->query($sql,$param)->getResultArray();
-                    // print_r($data);
-                    // // echo "<pre>";die;
                     // echo $this->Db->getLastQuery()->getQuery();die;
                     if(!empty($data)){
                         $result = responseJson(200,false,"Accompany list for the reservation", [$data]);
@@ -359,7 +357,7 @@ class APIController extends ResourceController
                 }
                 $doc_file = $this->request->getFile($fileGetName);
                 $doc_name = $doc_file->getName();
-                $folderPath = "assets/userDocuments/".$fileGetName."/";
+                $folderPath = "assets/Uploads/userDocuments/".$fileGetName."/";
                 $userID = $decoded['token_info']->data->USR_CUST_ID;
                 $doc_up = documentUpload($doc_file ,$doc_name, $userID , $folderPath);
                 if($doc_up['SUCCESS'] == 200){
@@ -535,7 +533,7 @@ class APIController extends ResourceController
                 $filename = explode('/',$filename);
                 $file = end($filename);
                 // Unlink the file from the folder
-                $folderPath = "assets/userDocuments/".$doctype."/".$file ;
+                $folderPath = "assets/Uploads/userDocuments/".$doctype."/".$file ;
                 if(file_exists( $folderPath )){              
                     if(unlink($folderPath)){
                         $return = $this->Db->table('FLXY_DOCUMENTS')->where(['CUST_NAME' => $CUST_ID])->update($data); 
@@ -662,7 +660,7 @@ public function acceptAndSignatureUpload()
             // update the signature in the documents table
             $doc_file = $this->request->getFile('signature');
             $doc_name = $doc_file->getName();
-            $folderPath = "assets/userDocuments/signature";
+            $folderPath = "assets/Uploads/userDocuments/signature";
             $cusUserID = $decoded['token_info']->data->USR_CUST_ID;
             $doc_up = documentUpload($doc_file ,$doc_name, $cusUserID , $folderPath);
             if($doc_up['SUCCESS'] == 200){
@@ -735,7 +733,7 @@ public function createRequest()
             $CUST_ID = $decoded['token_info']->data->USR_CUST_ID;
             $doc_file = $this->request->getFile('attachement');
             $doc_name = $doc_file->getName();
-            $folderPath = "assets/maintenance";
+            $folderPath = "assets/Uploads/maintenance";
             $doc_up = documentUpload($doc_file ,$doc_name, $CUST_ID , $folderPath);
             if($doc_up['SUCCESS'] == 200){
                 $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);

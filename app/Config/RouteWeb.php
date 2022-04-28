@@ -253,7 +253,13 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/getCustomerFromRoomNo', 'FacilityController::getCustomerFromRoomNo');  
     $routes->match(['post'],'/getCategory', 'FacilityController::maintenanceCategoryList');  
     $routes->match(['post'],'/getSubCategory', 'FacilityController::maintenanceSubCatByCategoryID');  
+
+    // Feedback
+    $routes->get('/feedback', 'FacilityController::feedback');  
+    $routes->match(['post'],'/getFeedbackList', 'FacilityController::feedbackList');
+    
 });
+
 
 //Web Link Reservation
 $routes->group("webline", ["filter" => "weblinkauth"], function ($routes) {
