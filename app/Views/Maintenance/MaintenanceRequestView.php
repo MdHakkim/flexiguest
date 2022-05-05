@@ -66,11 +66,11 @@
                           <div class="col-md-4 flxi_ds_flx">
                           <lable class="form-lable">Type</lable>
                             <div class="form-radio mt-4 me-1">
-                              <input class="form-radio-input flxCheckBox" type="radio" value="Bulb/Key" name="MAINT_TYPE" id="MAINT_TYPE1">
+                              <input class="form-radio-input flxCheckBox" type="radio" value="BK" name="MAINT_TYPE" id="MAINT_TYPE1">
                               <lable class="form-radio-lable" for="defaultCheck1"> Bulb/Key </lable>
                             </div>
                             <div class="form-radio mt-4 me-1">
-                              <input class="form-radio-input flxCheckBox" type="radio" value="Maintenance Request" name="MAINT_TYPE" id="MAINT_TYPE2">
+                              <input class="form-radio-input flxCheckBox" type="radio" value="MR" name="MAINT_TYPE" id="MAINT_TYPE2">
                               <lable class="form-radio-lable" for="defaultCheck1"> Maintenance Request </lable>
                             </div>
                           </div>
@@ -244,14 +244,18 @@
   
 
   function submitForm(id,mode){
-    var formSerialization = $('#'+id).serializeArray();
+    // var formSerialization = $('#'+id).serializeArray();
+    var form = $('#'+id)[0];
+    var formData = new FormData(form);
     var url = '<?php echo base_url('/insertMaintenanceRequest')?>';
     $.ajax({
         url: url,
         type: "post",
-        data: formSerialization,
+        data: formData,
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         dataType:'json',
+        processData: false,
+        contentType: false,
         success:function(respn){
           
           if(respn.SUCCESS == 200){
@@ -307,46 +311,6 @@
   $(document).on('change','#MAINT_CATEGORY',function(){
 
     var cat = $('#MAINT_CATEGORY').find('option:selected').val();
-    
-    // var option = '<option value="">Select Sub Category</option>';
-    // var sub_category_AC = ["A/C is noisy", "A/C is not working","A/C is very cold","A/C not coolimg","A/C needs Servicing","Thermostat not working","Water leakage from A/C unit"];
-    // var sub_category_ELECTRICAL = [
-    // "Balcony door / window not closing / damaged",
-    // "Balcony glass broken",
-    // "Cupboards / wardrobes damaged / broken",
-    // "Cat Door handle is loose",
-    // "Door hinges are broken",
-    // "Door is making noise",
-    // "Door lock is damaged",
-    // "Door not closing properly (other than main door)",
-    // "False Ceiling Damage / Broken",
-    // "Key to doors not working (other than the main door)",
-    // "Kitchen cabinet damaged / broken",
-    // "Main door lock- broken", 
-    // "Sliding door needsto be fixed",
-    // "Toilet Mirror damaged/broken" ,
-    // "Window fly net / mesh damaged /broken",
-    // "Window glass damaged /broken",
-    // "Window lock damaged",
-    // ];
-    // var sub_category_PLUMBING = [
-    // "Bad smell in bathroom",
-    // "Bathtub related plumbing problems",
-    // "Broken Pipeline - causing flood",
-    // "Dirty water from taps",
-    // "Drain is blocked",
-    // "Flexible hose is not working in toilets",
-    // "Flooding in Apartment",
-    // "Floor trap / water traps blocked in bathroom",
-    // "Flush not working in the toilets",
-    // "Foul smell in domestic water from taps",
-    // "Heavy Water Leak - flooding from roof / false ceiling",
-    // "Heavy water",
-    // "Kichen sink is blocked" ,
-    // "No Water Supply in Apartment",
-    // "Wash basin is blocked",
-    // "WC is blocked"
-    // ];
   
     getSubCategoryList(cat);
    
@@ -375,7 +339,7 @@
     $('#sysid').val(sysid);
     $('#reservationChild').modal('show');
     $.ajax({
-        url: '<?php echo base_url('/editMaintenanceRequest')?>',
+        url: '<?php echo base_url('/editRequest')?>',
         type: "post",
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         data:{sysid:sysid},

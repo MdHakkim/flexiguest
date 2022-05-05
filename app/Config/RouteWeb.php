@@ -252,11 +252,28 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/deleteRequest', 'FacilityController::deleteRequest');  
     $routes->match(['post'],'/getCustomerFromRoomNo', 'FacilityController::getCustomerFromRoomNo');  
     $routes->match(['post'],'/getCategory', 'FacilityController::maintenanceCategoryList');  
-    $routes->match(['post'],'/getSubCategory', 'FacilityController::maintenanceSubCatByCategoryID');  
+    // Maintenance Category
+    $routes->get('/maintenanceCategory', 'FacilityController::maintenanceRequestCategory');  
+    $routes->match(['post'],'/insertCategory', 'FacilityController::insertCategory');  
+    $routes->match(['post'],'/category', 'FacilityController::categorylist');  
+    $routes->match(['post'],'/editCategory', 'FacilityController::editCategory');  
+    $routes->match(['post'],'/deleteCategory', 'FacilityController::deleteCategory');  
+    // Maintenance Sub Category
+    $routes->match(['post'],'/SubCategory', 'FacilityController::subCategoryList');  
+    $routes->get('/maintenanceSubCategory', 'FacilityController::maintenanceRequestSubCategory'); 
+    $routes->match(['post'],'/editSubCategory', 'FacilityController::editSubCategory');  
+    $routes->match(['post'],'/insertSubCategory', 'FacilityController::insertSubCategory');  
+    $routes->match(['post'],'/deleteSubCategory', 'FacilityController::deleteSubCategory');  
+     
 
-    // Feedback
+    // Feedback 
     $routes->get('/feedback', 'FacilityController::feedback');  
     $routes->match(['post'],'/getFeedbackList', 'FacilityController::feedbackList');
+    // HANDBOOK
+    $routes->get('/handbook', 'FacilityController::handbook');  
+    $routes->match(['post'],'/saveHandbook', 'FacilityController::saveHandbook');
+    $routes->match(['post'],'/checkhandbook', 'FacilityController::checkthehandbook');
+    
     
 });
 

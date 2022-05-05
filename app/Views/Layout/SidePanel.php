@@ -210,12 +210,12 @@
                   </a>
                   <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="javascript:void(0);" class="menu-link">
+                  <a href="<?php echo base_url('shuttle');?>" class="menu-link">
                     <div data-i18n="Routes">Routes</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="javascript:void(0);" class="menu-link">
+                  <a href="<?php echo base_url('stages');?>" class="menu-link">
                     <div data-i18n="Stages">Stages</div>
                   </a>
                 </li>
@@ -452,13 +452,13 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="javascript:void(0);" class="menu-link">
-                    <div data-i18n="Manage">Manage</div>
+                  <a href="<?php echo base_url('maintenanceCategory');?>" class="menu-link">
+                    <div data-i18n="Manage">Category</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="javascript:void(0);" class="menu-link">
-                    <div data-i18n="Work Orders">Work Orders</div>
+                  <a href="<?php echo base_url('maintenanceSubCategory');?>" class="menu-link">
+                    <div data-i18n="Work Orders">Sub Category</div>
                   </a>
                 </li>
                   </ul>

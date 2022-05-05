@@ -53,9 +53,13 @@ class FacilityController extends BaseController
                 'MAINT_ROOM_NO' => 'required',
                 'MAINT_TYPE' => 'required',
                 'MAINT_CATEGORY' => 'required',
-                
                 'MAINT_PREFERRED_TIME' => 'required',
                 'MAINT_PREFERRED_DT' => 'required',
+                'MAINT_ATTACHMENT' => [
+                    'uploaded[MAINT_ATTACHMENT]',
+                    'mime_in[MAINT_ATTACHMENT,image/png, image/jpeg]',
+                    'max_size[MAINT_ATTACHMENT,500]',
+                ]
                 
              ]);
             if(!$validate){
@@ -104,22 +108,36 @@ class FacilityController extends BaseController
                 // unlink the old file from the folder and update the column in db
                 $doc_data = $this->Db->table('FLXY_MAINTENANCE')->select('MAINT_ATTACHMENT')->where('MAINT_ID', $sysid)->get()->getRowArray();
                 $filename = $doc_data['MAINT_ATTACHMENT'];
-                $filename = explode('/',$filename);
-                $file = end($filename);
-                $folderPath = "assets/Uploads/Maintenance/".$file ;
-                if(file_exists( $folderPath )){              
-                    if(unlink($folderPath)){
-                        if($doc_file){
-                            $doc_name = $doc_file->getName();
-                            $folderPath = "assets/Uploads/Maintenance";
-                            // 
-                            $doc_up = documentUpload($doc_file ,$doc_name, $this->session->name, $folderPath);
-                            if($doc_up['SUCCESS'] == 200){
-                                $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                if($filename){
+                    $filename = explode('/',$filename);
+                    $file = end($filename);
+                    $folderPath = "assets/Uploads/Maintenance/".$file ;
+                    if(file_exists( $folderPath )){              
+                        if(unlink($folderPath)){
+                            if($doc_file){
+                                $doc_name = $doc_file->getName();
+                                $folderPath = "assets/Uploads/Maintenance";
+                                // 
+                                $doc_up = documentUpload($doc_file ,$doc_name, $this->session->name, $folderPath);
+                                if($doc_up['SUCCESS'] == 200){
+                                    $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                                }
                             }
                         }
+                    }    
+                
+                }
+                else{
+                    if($doc_file){
+                        $doc_name = $doc_file->getName();
+                        $folderPath = "assets/Uploads/Maintenance";
+                        // 
+                        $doc_up = documentUpload($doc_file ,$doc_name, $this->session->name, $folderPath);
+                        if($doc_up['SUCCESS'] == 200){
+                            $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                        }
                     }
-                }    
+                }
                 $data = 
                 [
                     "MAINT_TYPE" => $this->request->getPost("MAINT_TYPE"),
@@ -200,9 +218,179 @@ class FacilityController extends BaseController
         }
         echo $option;
     }
+    // Maintenance request - Category
+    public function maintenanceRequestCategory(){
+        return view('Maintenance/MaintenanceRequestCategoryView');
+    }
+    public function categorylist()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_MAINTENANCE_CATEGORY';
+        $columns = 'MAINT_CAT_ID|MAINT_CATEGORY|MAINT_CAT_CREATE_UID|FORMAT(MAINT_CAT_CREATE_DT,\'dd-MMM-yyyy\')MAINT_CAT_CREATE_DT';
+        $mine->generate_DatatTable($tableName,$columns,[],'|');
+        exit;
+    }
+    function editCategory(){
+        $param = ['MAINT_CAT_ID'=> $this->request->getPost("sysid")];
+        $sql = "SELECT MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY WHERE MAINT_CAT_ID =:MAINT_CAT_ID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+    public function insertCategory(){
+        try{
+            $validate = $this->validate([
+                'MAINT_CATEGORY' => 'required',
+                
+             ]);
+            if(!$validate){
 
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $sysid = $this->request->getPost("sysid");
+            if(empty($sysid)){
+                $data = 
+                [
+                    "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
+                    "MAINT_CAT_CREATE_DT" => date("d-M-Y"),
+                    "MAINT_CAT_CREATE_UID" =>$this->session->name,
+                    "MAINT_CAT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_CAT_UPDATE_UID" =>$this->session->name,
+                ];
+                $ins = $this->Db->table('FLXY_MAINTENANCE_CATEGORY')->insert($data); 
+            }else{
+                // UPDATE
+                $data = 
+                [
+                    "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
+                    "MAINT_CAT_CREATE_DT" => date("d-M-Y"),
+                    "MAINT_CAT_CREATE_UID" =>$this->session->name,
+                    "MAINT_CAT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_CAT_UPDATE_UID" =>$this->session->name,
+                ];
+                $ins = $this->Db->table('FLXY_MAINTENANCE_CATEGORY')->where('MAINT_CAT_ID', $sysid)->update($data); 
+            }
+            if($ins){
+                $result = responseJson(200,true,"Category  Added",[]);
+                echo json_encode($result);die;
+
+            }else {
+                $result = responseJson(500,true,"Category addition Failed",[]);
+                echo json_encode($result);die;
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+    public function deleteCategory()
+    {
+        $sysid = $this->request->getPost("sysid");
+        try{
+             
+           
+            $return = $this->Db->table('FLXY_MAINTENANCE_CATEGORY')->delete(['MAINT_CAT_ID' => $sysid]); 
+            
+            if($return){
+                $result = $this->responseJson(200,false,"Deleted the Category",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson(500,true,"Category not deleted",[]);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+    public function maintenanceRequestSubCategory(){
+        return view('Maintenance/MaintenanceRequestSubCategoryView');
+    }
+    public function subCategoryList()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_MAINT_SUBCATEGORY_VIEW';
+        $columns = 'MAINT_SUBCAT_ID|MAINT_SUBCATEGORY|MAINT_CATEGORY|CUST_FULLNAME|FORMAT(MAINT_SUBCAT_CREATE_DT,\'dd-MMM-yyyy\')MAINT_SUBCAT_CREATE_DT';
+        $mine->generate_DatatTable($tableName,$columns,[],'|');
+        exit;
+    }
+    function editSubCategory(){
+        $param = ['MAINT_SUBCAT_ID'=> $this->request->getPost("sysid")];
+        $sql = "SELECT * FROM FLXY_MAINTENANCE_SUBCATEGORY WHERE MAINT_SUBCAT_ID =:MAINT_SUBCAT_ID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+    public function insertSubCategory(){
+        try{
+            $validate = $this->validate([
+                'MAINT_SUBCATEGORY' => 'required',
+                'MAINT_CATEGORY' => 'required',
+                
+            ]);
+            if(!$validate){
+
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $sysid = $this->request->getPost("sysid");
+            if(empty($sysid)){
+                $data = 
+                [
+                    "MAINT_CAT_ID" => $this->request->getPost("MAINT_CATEGORY"),
+                    "MAINT_SUBCATEGORY" => $this->request->getPost("MAINT_SUBCATEGORY"),
+                    "MAINT_SUBCAT_CREATE_DT" => date("d-M-Y"),
+                    "MAINT_SUBCAT_CREATE_UID" =>$this->session->name,
+                    "MAINT_SUBCAT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_SUBCAT_UPDATE_UID" =>$this->session->name,
+                ];
+                $ins = $this->Db->table('FLXY_MAINTENANCE_SUBCATEGORY')->insert($data); 
+            }else{
+                $data = 
+                [
+                    "MAINT_CAT_ID" => $this->request->getPost("MAINT_CATEGORY"),
+                    "MAINT_SUBCATEGORY" => $this->request->getPost("MAINT_SUBCATEGORY"),
+                    "MAINT_SUBCAT_CREATE_DT" => date("d-M-Y"),
+                    "MAINT_SUBCAT_CREATE_UID" =>$this->session->name,
+                    "MAINT_SUBCAT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_SUBCAT_UPDATE_UID" =>$this->session->name,
+                ];
+                $ins = $this->Db->table('FLXY_MAINTENANCE_SUBCATEGORY')->where('MAINT_SUBCAT_ID', $sysid)->update($data); 
+            }
+            if($ins){
+                $result = responseJson(200,true,"SubCategory Added",[]);
+                echo json_encode($result);die;
+
+            }else {
+                $result = responseJson(500,true,"SubCategory Creation Failed",[]);
+                echo json_encode($result);die;
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+    public function deleteSubCategory()
+    {
+        $sysid = $this->request->getPost("sysid");
+        try{
+            $return = $this->Db->table('FLXY_MAINTENANCE_SUBCATEGORY')->delete(['MAINT_SUBCAT_ID' => $sysid]);
+            if($return){
+                $result = $this->responseJson(200,false,"Deleted the request",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson(500,true,"Record not deleted",[]);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
     // Feedback
-
     public function feedback()
     {
         return view('Feedback/FeedbackView');
@@ -217,5 +405,73 @@ class FacilityController extends BaseController
         exit;
     }
 
+    // HANDBOOK
+    public function handbook()
+    {
+        return view('handbookView');
+    }    
 
+    public function saveHandbook(){
+        try{
+            $validate = $this->validate([       
+                'HANDBOOK' =>  [
+                    'uploaded[HANDBOOK]',
+                    'mime_in[HANDBOOK,application/pdf]',
+                    // 'max_size[HANDBOOK,500]',
+                ], ]);
+                if (!$validate) {
+                        
+                    $validate = $this->validator->getErrors();
+                    $result["SUCCESS"] = "-402";
+                    $result[]["ERROR"] = $validate;
+                    $result = responseJson(402,true,"validation errors. please check required parameters",$validate);
+                    echo json_encode($result);
+                    exit;
+                }
+            $HANDBOOK = $this->request->getFile("HANDBOOK");
+            // $doc_name = $HANDBOOK->getName();
+            $folderPath = "assets/Uploads/handbook/";
+            $doc_up = documentUpload($HANDBOOK ,"hotel", "handbook" , $folderPath);
+            if($doc_up['SUCCESS'] == 200){
+                
+                $result = responseJson(200,false,"HandBook Uploaded successfully",[]);
+                echo json_encode($result);
+            }else{
+                $result = responseJson(500,true,"Something went wrong on uploading.please try again",[]);
+                echo json_encode($result);
+            }
+        }catch(Exception $e){
+            $result = responseJson(500,true,"Something went wrong on uploading.please try again",$e->errors());
+            echo json_encode($result);            
+        }
+        
+    }
+    public function checkthehandbook()
+    {
+        try{
+            $folderPath ="assets/Uploads/handbook/hotel-handbook.pdf";
+            if(file_exists( $folderPath )){        
+                $filesize = filesize($folderPath);
+                $result = responseJson(200,false,"files in the directory",$filesize);
+                echo json_encode($result); 
+            }else{
+                $result = responseJson(201,false,"No files in the directory",[]);
+                echo json_encode($result); 
+            } 
+            
+        }catch(Exception $e){
+            $result = responseJson(500,true,"errors",$e->errors());
+            echo json_encode($result);
+        }
+
+    }
+    // SHUTTLE
+    public function shuttle()
+    {
+        return view('Transfers/shuttle');
+    }
+    public function stages()
+    {
+        return view('Transfers/stages');
+    }
 }
