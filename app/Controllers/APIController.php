@@ -177,6 +177,7 @@ class APIController extends ResourceController
             $decoded =  validateJWTFromRequest($token);
             // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
             if(!empty($decoded)) {
+               
                  $cust_id = $decoded['token_info']->data->USR_CUST_ID;
                 if(!empty($cust_id)){
                     if($resID){
@@ -184,14 +185,14 @@ class APIController extends ResourceController
                         $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
                             LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
                             LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM 
-                            LEFT JOIN FLXY_DOCUMENTS c ON c.CUST_NAME = a.RESV_NAME WHERE RESV_ID=:RESV_ID:";
-                           $data = $this->Db->query($sql,$param)->getRowArray();
+                            LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.RESV_NAME WHERE RESV_ID=:RESV_ID:";
+                            $data = $this->Db->query($sql,$param)->getRowArray();
                     }else{
                         $param = ['RESV_NAME' => $cust_id];
-                        $sql = "SELECT c.DOC_PASS,c.DOC_VACCINE, a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
+                        $sql = "SELECT c.*, a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
                             LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
                             LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM 
-                            LEFT JOIN FLXY_DOCUMENTS c ON c.CUST_NAME = a.RESV_NAME WHERE RESV_NAME=:RESV_NAME:";
+                            LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.RESV_NAME WHERE RESV_NAME=:RESV_NAME:";
                             $data = $this->Db->query($sql,$param)->getResultArray();
                     } 
                     if(!empty($data)){
@@ -305,7 +306,7 @@ class APIController extends ResourceController
         INPUT : Header Authorization- Token
         OUTPUT: PATH OF UPLAODED DOCUMENT */ 
 
-    public function passportUploadAPI() // add validation for pdf,and size.
+    public function passportUploadAPI() 
     {
         helper('upload_helper');
         try{
@@ -538,9 +539,9 @@ class APIController extends ResourceController
                     if(unlink($folderPath)){
                         $return = $this->Db->table('FLXY_DOCUMENTS')->where(['CUST_NAME' => $CUST_ID])->update($data); 
                         if($return){
-                            $data =[ 'VACCINE_DOC_ISNOT'=> 0];
-                            // update the vaccine details table with document removed
-                            $doc_status_update = $this->Db->table('FLXY_VACCINE_DETAILS')->where(['CUST_ID' => $CUST_ID])->update($data); 
+                            $doc_status_update = $this->Db->table('FLXY_VACCINE_DETAILS')->delete(['VACC_FILE_PATH' => $folderPath]); 
+                            // // update the vaccine details table with document removed
+                            // $doc_status_update = $this->Db->table('FLXY_VACCINE_DETAILS')->delete(['CUST_ID' => $CUST_ID]); 
                             if($doc_status_update){
 
                                 $result = responseJson(200,"Documents deleted successfully",$return);
@@ -590,7 +591,7 @@ public function vaccineForm()
                 echo json_encode($result);
                 exit;
             }
-            $vaccineUploadedOrNot = $this->request->getPost("vaccineUploadedOrNot");
+            // $vaccineUploadedOrNot = $this->request->getPost("vaccineUploadedOrNot");
             $data = 
             [
                 "CUST_ID" => $CUST_ID,
@@ -598,7 +599,7 @@ public function vaccineForm()
                 "LAST_VACCINE_DT" => $this->request->getPost("lastVaccineDate"),
                 "VACCINE_NAME" => $this->request->getPost("VaccineName"),
                 "ISSUED_COUNTRY" => $this->request->getPost("cerIssuanceCountry"),
-                "VACCINE_DOC_ISNOT" => $vaccineUploadedOrNot,
+                "VACCINE_IS_VERIFY" => 'N',
                 "VACC_CREATE_UID" =>$CUST_ID,
                 "VACC_CREATE_DT" => date("d-M-Y"), 
                 "VACC_UPDATE_UID" => $CUST_ID,

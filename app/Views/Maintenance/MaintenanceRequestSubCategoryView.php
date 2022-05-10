@@ -118,7 +118,7 @@
 
   
   function addForm(){
-    $(':input','#customerForm').val('').prop('checked', false).prop('selected', false);
+    $(':input','#reservationChild').val('').prop('checked', false).prop('selected', false);
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     runCatList();
     $('#reservationChild').modal('show');

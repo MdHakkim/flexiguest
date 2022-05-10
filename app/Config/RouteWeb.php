@@ -273,7 +273,23 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/handbook', 'FacilityController::handbook');  
     $routes->match(['post'],'/saveHandbook', 'FacilityController::saveHandbook');
     $routes->match(['post'],'/checkhandbook', 'FacilityController::checkthehandbook');
+
+    // SHUTTLE
+    $routes->get('/shuttle', 'FacilityController::shuttle');  
+    $routes->match(['post'],'/shuttlelist', 'FacilityController::shuttlelist');
+    $routes->match(['post'],'/getStages', 'FacilityController::getStages');
+    $routes->match(['post'],'/insertShuttle', 'FacilityController::insertShuttle');
+    $routes->match(['post'],'/deleteShuttle', 'FacilityController::deleteShuttle');
+    $routes->match(['post'],'/editShuttle', 'FacilityController::editShuttle');
     
+    // STAGES - SHUTTLE
+    $routes->get('/stages', 'FacilityController::stages');  
+    $routes->match(['post'],'/getStages', 'FacilityController::getStages');
+    $routes->match(['post'],'/deleteStages', 'FacilityController::deleteStages');
+    $routes->match(['post'],'/insertStages', 'FacilityController::insertStages');
+    $routes->match(['post'],'/editStages', 'FacilityController::editStages');
+    $routes->match(['post'],'/getStagesList', 'FacilityController::getStagesList');
+   
     
 });
 
@@ -282,4 +298,5 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 $routes->group("webline", ["filter" => "weblinkauth"], function ($routes) {
     $routes->match(['get'],'ReservationDetail/(:any)', 'ApplicatioController::webLineReservation/$1');
 });
+
 $routes->get('autherropage', 'ApplicatioController::AuthErroPage');

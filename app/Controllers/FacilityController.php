@@ -468,10 +468,269 @@ class FacilityController extends BaseController
     // SHUTTLE
     public function shuttle()
     {
-        return view('Transfers/shuttle');
+        return view('Transfers/shuttleView');
+    }
+    public function shuttlelist()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_SHUTTLE';
+        $columns = 'SHUTL_ID|SHUTL_NAME|SHUTL_ROUTE|SHUTL_NEXT|SHUTL_DESCRIPTION|cast(SHUTL_START_AT as time)SHUTL_START_AT|cast(SHUTL_END_AT as time)SHUTL_END_AT';
+        $mine->generate_DatatTable($tableName,$columns,[],'|');
+        exit;
+    }
+    function getStages($id = NULL){
+
+        $WHERE ="";
+        if($id){
+            $WHERE = " where SHUTL_STAGE_ID =".$id;
+        }
+        $sql = "SELECT * FROM FLXY_SHUTL_STAGES".$WHERE;
+        $response = $this->Db->query($sql)->getResultArray();
+        return json_encode($response);
+    }
+    public function insertShuttle()
+    {
+        try{
+            
+            $attached_path = NULL;
+            $validate = $this->validate([
+                
+                'SHUTL_NAME' => 'required',
+                'SHUTL_FROM' => 'required',
+                'SHUTL_TO' => 'required',
+                'SHUTL_START_AT' => 'required',
+                'SHUTL_END_AT' => 'required',
+                'SHUTL_NEXT' => 'required',
+                'SHUTL_DESCRIPTION' => 'required',
+                'SHUTL_ROUTE_IMG' => [
+                    'uploaded[SHUTL_ROUTE_IMG]',
+                    'mime_in[SHUTL_ROUTE_IMG,image/png, image/jpeg]',
+                    'max_size[SHUTL_ROUTE_IMG,500]',
+                ]
+                
+             ]);
+            if(!$validate){
+
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+            $doc_file = $this->request->getFile('SHUTL_ROUTE_IMG');
+            $sysid = $this->request->getPost("sysid");
+            // GET SUTTLE NAME FROM IDS
+            $stages_from =json_decode( $this->getStages($this->request->getPost("SHUTL_FROM")));
+            $stages_To = json_decode($this->getStages($this->request->getPost("SHUTL_TO")));
+            $route = $stages_from[0]->SHUTL_STAGE_NAME ." - ".$stages_To[0]->SHUTL_STAGE_NAME;
+            
+            if(empty($sysid)){
+                
+                // INSERT
+                if($doc_file){
+                    $doc_name = $doc_file->getName();
+                    $folderPath = "assets/Uploads/Shuttle";
+                    $doc_up = documentUpload($doc_file ,$doc_name, $this->session->name, $folderPath);
+                    if($doc_up['SUCCESS'] == 200){
+                        $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                    }
+                }
+                $data = 
+                [
+                    "SHUTL_NAME" => $this->request->getPost("SHUTL_NAME"),
+                    "SHUTL_FROM" => $this->request->getPost("SHUTL_FROM"),
+                    "SHUTL_TO" => $this->request->getPost("SHUTL_TO"),
+                    "SHUTL_START_AT" => $this->request->getPost("SHUTL_START_AT"),
+                    "SHUTL_END_AT" => $this->request->getPost("SHUTL_END_AT"),
+                    "SHUTL_NEXT" => $this->request->getPost("SHUTL_NEXT"),
+                    "SHUTL_ROUTE" => $route,
+                    "SHUTL_ROUTE_IMG" => $attached_path ,
+                    "SHUTL_DESCRIPTION" => $this->request->getPost("SHUTL_DESCRIPTION"),
+                    "SHUTL_CREATE_DT" => date("d-M-Y"),
+                    "SHUTL_CREATE_UID" =>$this->session->name,
+                    "SHUTL_UPDATE_DT" => date("d-M-Y"),
+                    "SHUTL_UPDATE_UID" =>$this->session->name,
+                ];
+                $ins = $this->Db->table('FLXY_SHUTTLE')->insert($data); 
+            }else{
+               
+                
+                // UPDATE
+                // unlink the old file from the folder and update the column in db
+                $doc_data = $this->Db->table('FLXY_SHUTTLE')->select('SHUTL_ROUTE_IMG')->where('SHUTL_ID', $sysid)->get()->getRowArray();
+                $filename = $doc_data['SHUTL_ROUTE_IMG'];
+                if($filename){
+                    $filename = explode('/',$filename);
+                    $file = end($filename);
+                    $folderPath = "assets/Uploads/Shuttle/".$file ;
+                    if(file_exists( $folderPath )){              
+                        if(unlink($folderPath)){
+                            if($doc_file){
+                                $doc_name = $doc_file->getName();
+                                $folderPath = "assets/Uploads/Shuttle";
+                                // 
+                                $doc_up = documentUpload($doc_file ,$doc_name, $this->session->name, $folderPath);
+                                if($doc_up['SUCCESS'] == 200){
+                                    $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                                }
+                            }
+                        }
+                    }    
+                
+                }
+                else{
+                    if($doc_file){
+                        $doc_name = $doc_file->getName();
+                        $folderPath = "assets/Uploads/Shuttle";
+                        // 
+                        $doc_up = documentUpload($doc_file ,$doc_name, $this->session->name, $folderPath);
+                        if($doc_up['SUCCESS'] == 200){
+                            $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                        }
+                    }
+                }
+                $data = 
+                [
+                    "SHUTL_NAME" => $this->request->getPost("SHUTL_NAME"),
+                    "SHUTL_FROM" => $this->request->getPost("SHUTL_FROM"),
+                    "SHUTL_TO" => $this->request->getPost("SHUTL_TO"),
+                    "SHUTL_START_AT" => $this->request->getPost("SHUTL_START_AT"),
+                    "SHUTL_END_AT" => $this->request->getPost("SHUTL_END_AT"),
+                    "SHUTL_NEXT" => $this->request->getPost("SHUTL_NEXT"),
+                    "SHUTL_ROUTE" => $route,
+                    "SHUTL_ROUTE_IMG" => $attached_path ,
+                    "SHUTL_DESCRIPTION" => $this->request->getPost("SHUTL_DESCRIPTION"),
+                    "SHUTL_CREATE_DT" => date("d-M-Y"),
+                    "SHUTL_CREATE_UID" =>$this->session->name,
+                    "SHUTL_UPDATE_DT" => date("d-M-Y"),
+                    "SHUTL_UPDATE_UID" =>$this->session->name,
+                ];
+                $ins = $this->Db->table('FLXY_SHUTTLE')->where('SHUTL_ID', $sysid)->update($data); 
+            }
+            if($ins){
+                $result = responseJson(200,true,"Shuttle request Added",[]);
+                echo json_encode($result);die;
+
+            }else {
+                $result = responseJson(500,true,"Creation Failed",[]);
+                echo json_encode($result);die;
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+    public function deleteShuttle()
+    {
+        $sysid = $this->request->getPost("sysid");
+        try{
+            $return = $this->Db->table('FLXY_SHUTTLE')->delete(['SHUTL_ID' => $sysid]);
+            if($return){
+                $result = $this->responseJson(200,false,"Deleted the shuttle",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson(500,true,"shuttle not deleted",[]);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+    function editShuttle(){
+        $param = ['SHUTL_ID'=> $this->request->getPost("sysid")];
+        $sql = "SELECT * FROM FLXY_SHUTTLE WHERE SHUTL_ID =:SHUTL_ID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
     }
     public function stages()
     {
-        return view('Transfers/stages');
+        return view('Transfers/stagesView');
+    }
+    public function insertStages()
+    {
+        try{
+            $validate = $this->validate([
+                
+                'SHUTL_STAGE_NAME' => 'required',
+                
+             ]);
+            if(!$validate){
+
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = responseJson("-402",$validate);
+                echo json_encode($result);
+                exit;
+            }
+           
+            $sysid = $this->request->getPost("sysid");
+           
+            if(empty($sysid)){
+                
+                // INSERT
+                
+                $data = 
+                [
+                    "SHUTL_STAGE_NAME" => $this->request->getPost("SHUTL_STAGE_NAME"),
+                    "SHUTL_CREATE_DT" => date("d-M-Y"),
+                    "SHUTL_CREATE_UID" =>$this->session->name,
+                    "SHUTL_UPDATE_DT" => date("d-M-Y"),
+                    "SHUTL_UPDATE_UID" =>$this->session->name,
+                ];
+                $ins = $this->Db->table('FLXY_SHUTL_STAGES')->insert($data); 
+            }else{
+                $data = 
+                [
+                    "SHUTL_STAGE_NAME" => $this->request->getPost("SHUTL_STAGE_NAME"),
+                    "SHUTL_CREATE_DT" => date("d-M-Y"),
+                    "SHUTL_CREATE_UID" =>$this->session->name,
+                    "SHUTL_UPDATE_DT" => date("d-M-Y"),
+                    "SHUTL_UPDATE_UID" =>$this->session->name,
+                ];
+                $ins = $this->Db->table('FLXY_SHUTL_STAGES')->where('SHUTL_STAGE_ID', $sysid)->update($data); 
+            }
+            if($ins){
+                $result = responseJson(200,true,"Shuttle request Added",[]);
+                echo json_encode($result);die;
+
+            }else {
+                $result = responseJson(500,true,"Creation Failed",[]);
+                echo json_encode($result);die;
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+    public function deleteStages()
+    {
+        $sysid = $this->request->getPost("sysid");
+        try{
+            $return = $this->Db->table('FLXY_SHUTL_STAGES')->delete(['SHUTL_STAGE_ID' => $sysid]);
+            if($return){
+                $result = $this->responseJson(200,false,"Deleted the shuttle Stage",$return);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson(500,true,"shuttle Stage not deleted",[]);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+    function editStages(){
+        $param = ['SHUTL_STAGE_ID'=> $this->request->getPost("sysid")];
+        $sql = "SELECT * FROM FLXY_SHUTL_STAGES WHERE SHUTL_STAGE_ID =:SHUTL_STAGE_ID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();
+        echo json_encode($response);
+    }
+    public function getStagesList()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_SHUTL_STAGES';
+        // CUST_FULLNAME|
+        $columns = 'SHUTL_STAGE_ID|SHUTL_CREATE_UID|SHUTL_STAGE_NAME|FORMAT(SHUTL_CREATE_DT,\'dd-MMM-yyyy\')SHUTL_CREATE_DT';
+        $mine->generate_DatatTable($tableName,$columns,[],'|');
+        exit;
     }
 }
