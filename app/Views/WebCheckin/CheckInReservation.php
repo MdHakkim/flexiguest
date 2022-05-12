@@ -1,6 +1,7 @@
-<!DOCTYPE html>
+
 <?php
   $data=$data[0];
+  // print_r($data);exit;
   if($data['RESV_STATUS']=='Due Pre Check-In'){
     $statusClass='flxy_orng';
     $icon="fa-circle-xmark";
@@ -10,7 +11,7 @@
     $icon="fa-circle-check";
     $documentmess="Document verified";
   }
-  
+  $folderPath = base_url('assets/upload/');
 ?>
 <html lang="en"
   class="light-style layout-navbar-fixed layout-menu-fixed"
@@ -20,12 +21,15 @@
   data-template="vertical-menu-template">
 
   <head>
+    <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar"></nav>
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
+
     <?= $this->include('Layout/HeaderScript') ?>
+    <link rel="stylesheet" href="<?php echo base_url('assets/jquery.Jcrop.min.css');?>" />
   </head>
   <body class="flex_body">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -142,7 +146,7 @@
     </nav>
     <div class="container-fluid text-center flxy_content_flex">    
       <div class="container-sm">
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mb-4">
           <h4 class="breadcrumb-wrapper py-3 mb-1 text-start">Reservation Detail</h4>
           <div class="col-11 flxy_web_content"> 
               <div class="flxy_wrapper">
@@ -275,24 +279,201 @@
                           </li>
                           <li class="list-group-item text-flxy">
                             <div class="flxy-data">Document Status</div>
-                            <div class="flxy-data">: <span class="flxy_doc_st <?php echo $statusClass;?>">Pending</span></div></li>
+                            <div class="flxy-data">: <span class="flxy_doc_prof flxy_doc_st <?php echo $statusClass;?>">Pending</span></div></li>
                           <li class="list-group-item text-flxy">
                             <div class="flxy-data">Vaccine Certificate</div>
-                            <div class="flxy-data">: <span class="flxy_doc_st <?php echo $statusClass;?>">Pending</span></div></li>
+                            <div class="flxy-data">: <span class="flxy_doc_vacc flxy_doc_st <?php echo $statusClass;?>">Pending</span></div></li>
                           <li class="list-group-item d-grid ">
-                            <button class="btn btn-dark" type="button">View & Upload Documents</button>
+                            <button class="btn btn-dark " onClick="docUploadClik('D')" type="button">View & Upload Documents</button>
                           </li>
                           <li class="list-group-item d-grid">
-                            <button class="btn btn-dark" type="button">Vaccination Details</button>
+                            <button class="btn btn-dark " onClick="docUploadClik('V')" type="button">Vaccination Details</button>
                           </li>
                         </ul>
                       </div>
                     </div>
                   </div>
                 </div>
+                
+                <div class="flxy_doc_block flxy_none">
+                  <div class="flxy_doc_content">
+                    <div class="flxy_block_card">
+                      <div class="contentDesc">
+                        <h4>Guest Profile & Document Details</h4>
+                        <ol>
+                          <li>Please upload the following Documents (file types: JPEG or PNG)</li>
+                          <li>Non Residents / UAE Nationals (Valid Passport)</li>
+                          <li>UAE Residents (EID both sides, make sure to scan the back side first)</li>
+                        </ol>
+                      </div>
+                      
+                      <div class="card">
+                        <div class="flxy_card_head">
+                            Document Images <span class="deleteUploadImage"><i class="fa-solid fa-trash-can"></i></span>
+                        </div>
+                        
+                        <img src="#" id="cropped_img">
+                        <div class="card-body">
+                          <div class="flxy_image_show">
+                            <ul id="listImagePresentDb"></ul>
+                            <input class="form-control" type="file" onchange="loadFile(event,this)" style="display:none" id="formFile">
+                            <button type="button" onClick="browseFile()" class="btn btn-secondary flxy_brows btn-sm"><i class="fa-solid fa-upload"></i> Browse</button>
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flxy_block_card flxy_cust_detil">
+                      <div class="row">
+                        <div class="col-12">
+                        <ul class="nav nav-tabs" id="myTab">
+                          <li class="nav-item">
+                              <a href="#profile" class="nav-link active" data-bs-toggle="tab">Profile Detail</a>
+                          </li>
+                          <li class="nav-item">
+                              <a href="#contact" class="nav-link" data-bs-toggle="tab">Contact Detail</a>
+                          </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active p-3" id="profile">
+                            <form id="documentDetailForm">
+                                <input type="hidden" value="<?php echo $data['CUST_ID'];?>" name="DOC_CUST_ID">
+                                <input type="hidden" value="<?php echo $data['RESV_ID'];?>" name="DOC_RESV_ID">
+                                <input type="hidden" value="PROOF" name="DOC_FILE_TYPE">
+                                <div class="row ">
+                                  <label for="inputEmail" class="col-sm-3 col-form-label text-start">Title</label>
+                                  <div class="col-sm-9">
+                                      <input type="text" value="<?php echo $data['CUST_TITLE'];?>" class="form-control form-control-sm" id="CUST_TITLE" name="CUST_TITLE" placeholder="Title">
+                                  </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">First Name</label>
+                                  <div class="col-sm-9">
+                                      <input type="text" value="<?php echo $data['CUST_FIRST_NAME'];?>" class="form-control form-control-sm" id="CUST_FIRST_NAME" name="CUST_FIRST_NAME" placeholder="First Name">
+                                  </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Last Name</label>
+                                  <div class="col-sm-9">
+                                      <input type="text" value="<?php echo $data['CUST_LAST_NAME'];?>" class="form-control form-control-sm" id="CUST_LAST_NAME" name="CUST_LAST_NAME" name="CUST_LAST_NAME" placeholder="Last Name">
+                                  </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Gender</label>
+                                  <div class="col-sm-9">
+                                      <input type="text" value="<?php echo $data['CUST_GENDER'];?>" class="form-control form-control-sm" id="CUST_GENDER" name="CUST_GENDER" name="CUST_GENDER" placeholder="Gender">
+                                  </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Nationality</label>
+                                  <div class="col-sm-9">
+                                      <input type="text" value="<?php echo $data['CUST_NATIONALITY'];?>"  class="form-control form-control-sm" id="CUST_NATIONALITY" name="CUST_NATIONALITY" placeholder="Nationality">
+                                  </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Date of Birth</label>
+                                  <div class="col-sm-9">
+                                      <!-- <input type="text" value="<?php echo $data['CUST_DOB'];?>"  class="form-control form-control-sm" id="CUST_DOB" name="CUST_DOB" placeholder="Date of Birth"> -->
+                                      <div class="input-group mb-2">
+                                        <input type="text" id="CUST_DOB" name="CUST_DOB" value="<?php echo $data['CUST_DOB'];?>" class="form-control CUST_DOB form-control-sm" placeholder="DD-MM-YYYY">
+                                        <span class="input-group-append">
+                                          <span class="input-group-text bg-light d-block">
+                                            <i class="fa fa-calendar"></i>
+                                          </span>
+                                        </span>
+                                      </div>
+                                  </div>
+                                </div>
+                                <div class="row mb-2">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Res Country</label>
+                                  <div class="col-sm-9">
+                                      <!-- <input type="text" value="<?php echo $data['CUST_COUNTRY'];?>"  class="form-control form-control-sm" id="CUST_COUNTRY" name="CUST_COUNTRY" placeholder="Res Country"> -->
+                                      <select name="CUST_COUNTRY"  id="CUST_COUNTRY" data-width="100%" class="selectpicker CUST_COUNTRY" data-live-search="true">
+                                        <option value="">Select</option>
+                                      </select>
+                                  </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Document Type</label>
+                                  <div class="col-sm-9">
+                                      <input type="text" value="<?php echo $data['CUST_DOC_TYPE'];?>"  class="form-control form-control-sm" id="CUST_DOC_TYPE" name="CUST_DOC_TYPE"  placeholder="Document Type">
+                                  </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Doc Number</label>
+                                  <div class="col-sm-9">
+                                      <input type="text" value="<?php echo $data['CUST_DOC_NUMBER'];?>"  class="form-control form-control-sm" id="CUST_DOC_NUMBER"name="CUST_DOC_NUMBER"  placeholder="Doc Number">
+                                  </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Issue Date</label>
+                                    <div class="col-sm-9">
+                                      <div class="input-group mb-2">
+                                        <input type="text" id="CUST_DOC_ISSUE" name="CUST_DOC_ISSUE" value="<?php echo $data['CUST_DOC_ISSUE'];?>" class="form-control CUST_DOC_ISSUE form-control-sm" placeholder="DD-MM-YYYY">
+                                        <span class="input-group-append">
+                                          <span class="input-group-text bg-light d-block">
+                                            <i class="fa fa-calendar"></i>
+                                          </span>
+                                        </span>
+                                      </div>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Phone</label>
+                                  <div class="col-sm-9">
+                                      <input type="number" value="<?php echo $data['CUST_PHONE'];?>"  class="form-control form-control-sm" id="CUST_PHONE" name="CUST_PHONE"  placeholder="Phone">
+                                  </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Email</label>
+                                  <div class="col-sm-9">
+                                      <input type="text" value="<?php echo $data['CUST_EMAIL'];?>" class="form-control form-control-sm" id="CUST_EMAIL" name="CUST_EMAIL"  placeholder="Email">
+                                  </div>
+                                </div>
+                            </form>
+                            </div>
+                            <div class="tab-pane fade  p-3" id="contact">
+                              <form id="documentDetailForm1">
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Address Line 1</label>
+                                  <div class="col-sm-9">
+                                      <input type="text" value="<?php echo $data['CUST_ADDRESS_1'];?>" class="form-control form-control-sm" id="CUST_ADDRESS_1" name="CUST_ADDRESS_1" placeholder="Address Line 1">
+                                  </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">Address Line 2</label>
+                                  <div class="col-sm-9">
+                                      <input type="text" value="<?php echo $data['CUST_ADDRESS_2'];?>" class="form-control form-control-sm" id="CUST_ADDRESS_2" name="CUST_ADDRESS_2" placeholder="Address Line 2">
+                                  </div>
+                                </div>
+                                <div class="row mb-2">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">State </label>
+                                    <div class="col-sm-9">
+                                      <select name="CUST_STATE"  id="CUST_STATE" data-width="100%" class="selectpicker CUST_STATE" data-live-search="true">
+                                        <option value="<?php echo $data['CUST_STATE'];?>"><?php echo $data['CUST_STATE_DESC'];?></option>
+                                      </select>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                  <label for="inputPassword" class="col-sm-3 col-form-label text-start">City</label>
+                                    <div class="col-sm-9">
+                                      <select name="CUST_CITY"  id="CUST_CITY" data-width="100%" class="selectpicker CUST_CITY" data-live-search="true">
+                                        <option value="<?php echo $data['CUST_CITY'];?>"><?php echo $data['CUST_CITY_DESC'];?></option>
+                                      </select>
+                                    </div>
+                                </div>
+                              </form>
+                            </div>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <div class="flxy_web-footer text-end">
                   <button type="button" onClick="sliderWebWid('P')" class="btn btn-blue btn-primary"><i class="fa-solid fa-chevron-left"></i> Back</button>
-                  <button type="button" onClick="sliderWebWid('N')" class="btn btn-blue btn-primary">Continue <i class="fa-solid fa-chevron-right"></i></button>
+                  <button type="button" onClick="sliderWebWid('N')" class="btn continueDefult btn-blue btn-primary">Continue <i class="fa-solid fa-chevron-right"></i></button>
+                  <button type="button" onClick="updateCustomer()" class="btn saveContinue btn-success">Save & Continue <i class="fa-solid fa-chevron-right"></i></button>
                 </div>
               </div>
           </div>
@@ -306,31 +487,500 @@
             document.write(new Date().getFullYear());
           </script>
           , Copyrights. All Rights Reserved by <a href="https://www.hitekservices.com" target="_blank" class="footer-link fw-semibold">HITEK</a>.
-          
         </div>
-        <!-- <div>
-          <a
-            href="#"
-            target="_blank"
-            class="footer-link me-4"
-            >Documentation</a
-          >
-          <a href="#" target="_blank" class="footer-link d-none d-sm-inline-block"
-            >Support</a
-          >
-        </div> -->
       </div>
     </footer>
     <?= $this->include('Layout/FooterScript') ?>
   </body>
 </html>
+    <div class="modal fade" id="imageCropping" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-md" style="min-width:600px!important;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="imageCroppingWindowLable">Cropping Image</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="">
+              <img src="" class="card-img-top cropboxclass" id="croppingbox">
+            </div>
+          </div>
+          <div class="modal-footer flxy_modClass">
+            <span class="btnLeft">
+              <button type="button" id="clickCropping" class="btn btn-primary btn-sm"><i class="fa-solid fa-crop"></i></button>
+              <button type="button" id="croping" class="btn btn-primary btn-sm"><i class="fa-solid fa-check"></i> Crop</button>
+            </span>
+            <span class="btnRight">
+              <button type="button" id="saveCropping" class="btn btn-success btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="modal fade" id="vaccineModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+          <div class="modal-header flxy_padding">
+            <h5 class="modal-title" id="rateQueryWindowLable">Vaccine Report</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
+          </div>
+          <div id="userInfoDate"></div>
+          <div class="modal-body flxy_padding">
+            <form id="vaccineForm">
+              <input type="hidden" value="<?php echo $data['CUST_ID'];?>" name="VACC_CUST_ID">
+              <input type="hidden" value="<?php echo $data['RESV_ID'];?>" name="VACC_RESV_ID">
+              <div class="row ">
+                <label for="inputPassword" class="col-sm-4 col-form-label text-end">Reservation Number</label>
+                <div class="col-sm-8">
+                    <input type="text" readonly value="<?php echo $data['RESV_ID'];?>"  class="form-control form-control-sm" id="CUST_PHONE" name="CUST_PHONE"  placeholder="Phone">
+                </div>
+              </div>
+              <div class="row ">
+                <label for="inputPassword" class="col-sm-4 col-form-label text-end">Booking Profile</label>
+                <div class="col-sm-8">
+                    <input type="text" readonly value="<?php echo $data['FULLNAME'];?>"  class="form-control form-control-sm" id="CUST_PHONE" name="CUST_PHONE"  placeholder="Phone">
+                </div>
+              </div>
+              <div class="row ">
+                <label for="inputPassword" class="col-sm-4 col-form-label text-end">vaccine Detail</label>
+                <div class="col-sm-8">
+                <input class="form-check-input" type="hidden" value="FULLY" name="VACC_DETAILS" id="VACC_DETAILS">
+                  <div class="form-check">
+                    <input class="form-check-input radioCheck" checked type="radio" name="VACC_DETL" method="FULLY">
+                    <label class="form-check-label"  for="flexRadioDefault1">
+                    I have been fully vaccinated (Please attach the Vaccination certificate)
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input radioCheck" type="radio" name="VACC_DETL" method="EXMP">
+                    <label class="form-check-label" for="flexRadioDefault1">
+                    I am medically exempt from taking any Covid19 Vaccine and I have a certified exemption certification (Please attach Official Medical Exemption certificate)
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input radioCheck" type="radio" name="VACC_DETL" method="PROCE">
+                    <label class="form-check-label" for="VACC_DETAILS">
+                    I will be completing my vaccine in Dubai before October 1st and will provide my vaccination certificate prior to October 1st to continue staying
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="row ">
+                <label for="inputPassword" class="col-sm-4 col-form-label text-end">Last Vaccine Date</label>
+                <div class="col-sm-8">
+                    <div class="input-group mb-2">
+                      <input type="text" id="VACC_LAST_DT" name="VACC_LAST_DT" class="form-control VACC_LAST_DT form-control-sm" placeholder="DD-MM-YYYY">
+                      <span class="input-group-append">
+                        <span class="input-group-text bg-light d-block">
+                          <i class="fa fa-calendar"></i>
+                        </span>
+                      </span>
+                    </div>
+                </div>
+              </div>
+              <div class="row ">
+                <label for="inputPassword" class="col-sm-4 col-form-label text-end">Vaccine Name</label>
+                <div class="col-sm-8">
+                    <input type="text"  class="form-control form-control-sm" id="VACC_NAME" name="VACC_NAME"  placeholder="Vaccine Name">
+                </div>
+              </div>
+              <div class="row ">
+                <input type="hidden" class="form-control form-control-sm" id="VACC_DOC_SAVED" name="VACC_DOC_SAVED">
+                <label for="inputPassword" class="col-sm-4 col-form-label text-end">Vaccine Certificate</label>
+                <div class="col-sm-8">
+                    <input class="form-control form-control-sm" name="files[]" multiple onChange="uploadVaccine(this)" type="file">
+                </div>
+                <div class="col-sm-12 text-center previewClass">
+                    
+                </div>
+              </div>
+              <div class="row ">
+                <label for="inputPassword" class="col-sm-4 col-form-label text-end">Certificate Issue Country</label>
+                <div class="col-sm-8">
+                  <select name="VACC_ISSUED_COUNTRY"  id="VACC_ISSUED_COUNTRY" data-width="100%" class="selectpicker VACC_ISSUED_COUNTRY" data-live-search="true">
+                    <option value="">Select</option>
+                  </select>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer flxy_modClass">
+            <button type="button" id="updateVaccine" class="btn btn-primary btn-sm"><i class="fa-solid fa-check"></i> Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
 <script>
+  var size;
   function sliderWebWid(param){
+    if(docuClick=='PROOF'){
+      $('.sliderclass:eq(1)').addClass('activeslide');
+      $('.flxy_web-blockcont').removeClass('flxy_none');
+      $('.flxy_doc_block').addClass('flxy_none');
+      $('.continueDefult').show();
+      $('.saveContinue').hide();
+      return false;
+    }
     if(param=='N'){
-      $('.sliderclass').removeClass('activeslide').next().addClass('activeslide');
+      $('.sliderclass.activeslide').removeClass('activeslide').next().addClass('activeslide');
     }else{
-      $('.sliderclass').removeClass('activeslide').prev().addClass('activeslide');
+      $('.sliderclass.activeslide').removeClass('activeslide').prev().addClass('activeslide');
     }
   }
+
+  var docuClick='';
+  function docUploadClik(param){
+    runCountryList();
+    var DOC_CUST_ID=$('[name="DOC_CUST_ID"]').val();
+    var DOC_RESV_ID=$('[name="DOC_RESV_ID"]').val();
+    if(param=='D'){
+      docuClick='PROOF';
+      $('.continueDefult').hide();
+      $('.saveContinue').show();
+      $('.sliderclass').removeClass('activeslide');
+      $('.flxy_doc_block').removeClass('flxy_none');
+      $('.flxy_web-blockcont').addClass('flxy_none');
+      $.ajax({
+        url: '<?php echo base_url('/getActiveUploadImages')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{DOC_CUST_ID:DOC_CUST_ID,DOC_RESV_ID:DOC_RESV_ID},
+        dataType:'json',
+        success:function(respn){
+          console.log(respn,"SDF");
+          generaListImage(respn);
+        }
+      });
+    }else{
+      $.ajax({
+        url: '<?php echo base_url('/getVaccinUploadImages')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{VACC_CUST_ID:DOC_CUST_ID,VACC_RESV_ID:DOC_RESV_ID},
+        dataType:'json',
+        success:function(respn){
+          console.log(respn,"SDF");
+          if(respn!=''){
+            $('*#vaccinePreview').remove();
+            var jsonFrmt = respn[0];
+            var check = jsonFrmt.VACC_DETAILS;
+            if(check=='FULLY'){
+              $('.radioCheck:eq(0)').prop('checked',true);
+            }else if(check=='EXMP'){
+              $('.radioCheck:eq(1)').prop('checked',true);
+            }else if(check=='PROCE'){
+              $('.radioCheck:eq(2)').prop('checked',true);
+            }
+            $('#VACC_LAST_DT').val(jsonFrmt.VACC_LAST_DT);
+            $('#VACC_NAME').val(jsonFrmt.VACC_NAME);
+            $('#VACC_ISSUED_COUNTRY').val($.trim(jsonFrmt.VACC_ISSUED_COUNTRY)).selectpicker('refresh');
+            var filePath = jsonFrmt.VACC_FILE_PATH;
+            if(filePath!=''){
+              var arrayPath = filePath.split(",");
+              $.each(arrayPath,function(i){
+                  $('.previewClass').append('<span id="vaccinePreview"><span id="'+arrayPath[i]+'" class="vaccdelete"><i class="fa-solid fa-xmark"></i></span><img src="<?php echo $folderPath;?>'+'/'+arrayPath[i]+'" id=""></span>');
+              });
+            }
+            $('#VACC_DOC_SAVED').val(filePath);
+          }
+        }
+      });
+      $('#vaccineModal').modal('show');
+    }
+  }
+
+  $(document).ready(function() {
+    $('.continueDefult').show();
+    checkStatusUploadFiles();
+    $('.saveContinue').hide();
+    $('.CUST_DOB,.VACC_LAST_DT').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true,
+    });
+  });
+
+  function browseFile(){
+    $('#formFile').trigger('click');
+  }
+
+  var jcrop_api='';
+  function action(){
+    jcrop_api = $.Jcrop('#croppingbox', {
+      aspectRatio: 1,
+      boxWidth: 550,
+      boxHeight: 400,
+      onSelect: function(c){
+        size = {x:c.x,y:c.y,w:c.w,h:c.h}; 
+      },
+      }, function () {
+          jcrop_api = this;    
+      });
+  }
+
+  var cropPathImage='';
+  $(document).on('click','#clickCropping',function(){
+    $(this).addClass('active');
+    $('#croping').show();
+    action();
+    jcrop_api.setImage(''+cropPathImage+'');  
+  });
+
+  function loadFile(event){
+    $('#croping').hide();
+    var file = event.target.files[0];
+    $('#imageCropping').modal('show');
+    var formData = new FormData();                     
+    formData.append('file', file); //append file to formData object
+    $.ajax({
+        url: "<?php echo base_url('/imageUpload')?>",
+        type: "POST",
+        data: formData,
+        processData: false, //prevent jQuery from converting your FormData into a string
+        contentType: false, //jQuery does not add a Content-Type header for you
+        success: function (respn) {
+          console.log($('#croppingbox'),"Jcrop");
+          var imagePath="<?php echo $folderPath;?>";
+          console.log(imagePath+respn,"Sdfsdf");
+          if(jcrop_api!=''){
+            jcrop_api.destroy();
+            jcrop_api.setImage(imagePath+'/'+respn);
+          }
+          $('#croppingbox').attr('src',imagePath+'/'+respn);
+          cropPathImage=imagePath+'/'+respn;
+        }
+    });
+  }
+
+  $(document).on('click','#croping,#saveCropping',function(){
+      var img = $("#croppingbox").attr('src');
+      var formSerialization = $('#documentDetailForm').serializeArray();
+      if($('#clickCropping').hasClass('active')){
+        formSerialization.push({name:'x',value:Math.round(size.x)},{name:'y',value:Math.round(size.y)},{name:'w',value:Math.round(size.w)},{name:'h',value:Math.round(size.h)},{name:'img',value:img},{name:'mode',value:'C'});
+      }else{
+        formSerialization.push({name:'img',value:img},{name:'mode',value:'N'});
+      }
+      $('#imageCropping').modal('hide');
+      $.ajax({
+        url: '<?php echo base_url('/croppingImage')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:formSerialization,
+        dataType:'json',
+        success:function(respn){
+          if(respn.SUCCESS==1){
+            var image = respn['RESPONSE']['OUTPUT']['IMAGEPATH'];
+            $("#cropped_img").attr('src','<?php echo $folderPath;?>'+'/'+image);
+            $('#clickCropping').removeClass('active');
+            var listImage = respn['RESPONSE']['OUTPUT'];
+            generaListImage(listImage);
+          }else{
+            $('#errorModal').show();
+            var ERROR = respn['RESPONSE']['ERROR'];
+            var error='<ul>';
+            $.each(ERROR,function(ind,data){
+              console.log(data,"SDF");
+              error+='<li>'+data+'</li>';
+            });
+            error+='<ul>';
+            $('#formErrorMessage').html(error);
+          }
+        }
+      });
+  });
+
+  $(document).on('click','.linkImg',function(){
+    $('.activeLink').removeClass('activeLink');
+    $(this).addClass('activeLink');
+    var linkTag = $(this).find('img').attr('src');
+    $("#cropped_img").attr('src',linkTag);
+  });
+
+  function generaListImage(listImage){
+    var liList='';
+    $.each(listImage,function(inx,data){
+      if($.isNumeric(inx)){
+        inx==0 ? $("#cropped_img").attr('src','<?php echo $folderPath;?>'+'/'+data['DOC_FILE_PATH']) : '';
+        var activeClass = (inx==0 ? 'activeLink linkImg':'linkImg');
+        liList+='<li data_id="'+data['DOC_ID']+'" class="'+activeClass+'"><img id="imagesmall" class="card-img-top" src="<?php echo $folderPath;?>'+'/'+data['DOC_FILE_PATH']+'"></li>';
+      }
+    });
+    $('#listImagePresentDb').html(liList);
+  }
+
+  $(document).on('click','.deleteUploadImage',function(){
+    var sysid = $('.activeLink').attr('data_id');
+    $.ajax({
+        url: '<?php echo base_url('/deleteUploadImages')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{sysid:sysid},
+        dataType:'json',
+        success:function(respn){
+          var element = $('.activeLink');
+          element.next().addClass('activeLink');
+          element.remove();
+        }
+      });
+  });
+
+  var countryCode='<?php echo $data['CUST_COUNTRY'];?>';
+  var statecode='<?php echo $data['CUST_STATE'];?>';
+  function runCountryList(){
+    $.ajax({
+        url: '<?php echo base_url('/countryList')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        // dataType:'json',
+        async:false,
+        success:function(respn){
+          $('#CUST_COUNTRY,#VACC_ISSUED_COUNTRY').html(respn).selectpicker('refresh');
+          $('#CUST_COUNTRY').val(countryCode).selectpicker('refresh');
+        }
+    });
+  }
+  $(document).on('change','#CUST_COUNTRY',function(){
+    var ccode = $(this).val();
+    $.ajax({
+        url: '<?php echo base_url('/stateList')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{ccode:ccode},
+        // dataType:'json',
+        success:function(respn){
+          $('#CUST_STATE').html(respn).selectpicker('refresh');
+        }
+    });
+  });
+  $(document).on('change','#CUST_STATE',function(){
+    var scode = $(this).val();
+    var ccode = $('#CUST_COUNTRY').find('option:selected').val();
+    $.ajax({
+        url: '<?php echo base_url('/cityList')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{ccode:ccode,scode:scode},
+        // dataType:'json',
+        success:function(respn){
+            $('*#CUST_CITY').html(respn).selectpicker('refresh');
+        }
+    });
+  });
+
+  $(document).on('change','#CUST_COUNTRY',function(){
+    $('#CUST_CITY').html('<option value="">Select</option>').selectpicker('refresh');
+  });
+
+  $(document).on('click','#updateVaccine',function(){
+    var formData = new FormData($('#vaccineForm')[0]);   
+    formData.append('DELETEIMAGE', formImageDeletArr);                  
+    $.ajax({
+      url: '<?php echo base_url('/updateVaccineReport')?>',
+      type: "post",
+      headers: {'X-Requested-With': 'XMLHttpRequest'},
+      data: formData,
+      processData: false, //prevent jQuery from converting your FormData into a string
+      contentType: false, //jQuery does not add a Content-Type header for you
+      dataType:'json',
+      success:function(respn){
+        console.log(respn,"SDF");
+        $('#vaccineModal').modal('hide');
+        if(respn.SUCCESS!='1'){
+          $('#errorModal').show();
+          var ERROR = respn['RESPONSE']['ERROR'];
+          var error='<ul>';
+          $.each(ERROR,function(ind,data){
+            console.log(data,"SDF");
+            error+='<li>'+data+'</li>';
+          });
+          error+='<ul>';
+          $('#formErrorMessage').html(error);
+        }else{
+          
+        }
+      }
+    });
+  });
+
+  function updateCustomer(){
+    var formSerialization = $('#documentDetailForm,#documentDetailForm1').serializeArray();
+    $.ajax({
+        url: '<?php echo base_url('/updateCustomerData')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:formSerialization,
+        dataType:'json',
+        success:function(respn){
+          if(respn.SUCCESS!='1'){
+            $('#errorModal').show();
+            var ERROR = respn['RESPONSE']['ERROR'];
+            var error='<ul>';
+            $.each(ERROR,function(ind,data){
+              console.log(data,"SDF");
+              error+='<li>'+data+'</li>';
+            });
+            error+='<ul>';
+            $('#formErrorMessage').html(error);
+          }else{
+            sliderWebWid('');
+            var object = respn['RESPONSE']['OUTPUT'];
+            updateStatuIconButton(object);
+          }
+        }
+    });
+  }
+
+  function checkStatusUploadFiles(){
+    $.ajax({
+      url: '<?php echo base_url('/checkStatusUploadFiles')?>',
+      type: "post",
+      headers: {'X-Requested-With': 'XMLHttpRequest'},
+      // data:formSerialization,
+      dataType:'json',
+      success:function(respn){
+        var jsonForm = respn[0];
+        updateStatuIconButton(jsonForm);
+      }
+    });
+  }
+  
+  function uploadVaccine(input){
+    // var output = document.getElementById('vaccinePreview');
+    if (input.files) {
+        var filesAmount = input.files.length;
+        for (i = 0; i < filesAmount; i++) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+              // console.log(event.target.result,"ssdd");
+                $('.previewClass').append('<span id="vaccinePreview"><img src="'+event.target.result+'" id=""></span>');
+            }
+            reader.readAsDataURL(input.files[i]);
+        }
+    }
+  }
+
+  function updateStatuIconButton(object){
+    if(object.TOTAL_PROOF>0){
+        $('.flxy_doc_prof').removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
+      }else{
+        $('.flxy_doc_prof').removeClass('flxy_green').addClass('flxy_orng').text('Pending');
+      }
+      if(object.TOTAL_VACC>0){
+        $('.flxy_doc_vacc').removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
+      }else{
+        $('.flxy_doc_vacc').removeClass('flxy_green').addClass('flxy_orng').text('Pending');
+      }
+  }
+  
+  var formImageDeletArr=[];
+  $(document).on('click','.vaccdelete',function(){
+    var name = $(this).attr('id');
+    formImageDeletArr.push(name);
+  });
+
+
+  $(document).on('change','.radioCheck',function(){
+    var value = $(this).attr('method');
+    $('#VACC_DETAILS').val(value);
+  });
 </script>

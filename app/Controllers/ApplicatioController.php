@@ -321,10 +321,6 @@ class ApplicatioController extends BaseController
         return true;
     }
 
-    function test(){
-        return view('TestFiles');
-    }
-
     function countryList(){
         $response = $this->Db->table('COUNTRY')->select('iso2,cname')->get()->getResultArray();
         $option='<option value="">Select Country</option>';
@@ -2621,7 +2617,7 @@ class ApplicatioController extends BaseController
         try{
             $param = ['RESV_ID'=> $resvid];
             $sql="SELECT RESV_ID,RESV_NO,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,CUST_FIRST_NAME+' '+CUST_LAST_NAME FULLNAME,
-            (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC,RESV_ROOM,RESV_NO_F_ROOM,RESV_NAME,RESV_RM_TYPE,RESV_STATUS FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:RESV_ID: AND RESV_NAME=CUST_ID";
+            (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC,RESV_ROOM,RESV_NO_F_ROOM,RESV_NAME,RESV_RM_TYPE,RESV_STATUS,CUST_FIRST_NAME,CUST_ID,CUST_LAST_NAME,CUST_TITLE,FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,CUST_COUNTRY,CUST_STATE,(SELECT SNAME FROM STATE WHERE STATE_CODE=CUST_STATE AND COUNTRY_CODE=CUST_COUNTRY)CUST_STATE_DESC,CUST_CITY,(SELECT CTNAME FROM CITY WHERE ID=CUST_CITY)CUST_CITY_DESC,CUST_EMAIL,CUST_MOBILE,CUST_PHONE,CUST_POSTAL_CODE,CUST_NATIONALITY,CUST_DOC_TYPE,CUST_GENDER,CUST_DOC_EXPIRY,CUST_DOC_NUMBER,FORMAT(CUST_DOC_ISSUE,'dd-MMM-yyyy')CUST_DOC_ISSUE FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:RESV_ID: AND RESV_NAME=CUST_ID";
             $response = $this->Db->query($sql,$param)->getResultArray();
             $data['data']=$response;
             return view('WebCheckin/CheckInReservation',$data);
@@ -2630,8 +2626,206 @@ class ApplicatioController extends BaseController
         }
     }
 
-    function AuthErroPage(){
-        return view('errors/html/error_404');
+    function imageUpload(){
+        try{
+            $avatar = $this->request->getFile('file');
+            $avatar->move(ROOTPATH . 'assets/upload/');
+            echo $avatar->getClientName();
+            exit;
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
     }
+
+    function croppingImage(){
+        try{
+            $dateTime = $this->todayDate->format('Y-m-d H:i:s');
+            $mode = $this->request->getPost("mode");
+            $image = $this->request->getPost("img");
+            $imageName = basename($image);
+            $extn=pathinfo($image, PATHINFO_EXTENSION);
+            $newFile = time().'.'.$extn;
+            if($mode=='C'){
+                $img_r = imagecreatefromjpeg($image);
+                $dst_r = ImageCreateTrueColor( $_POST['w'], $_POST['h'] );
+                imagecopyresampled($dst_r, $img_r, 0, 0, $_POST['x'], $_POST['y'], $_POST['w'], $_POST['h'], $_POST['w'],$_POST['h']);
+                // header('Content-type: image/jpeg');
+                imagejpeg($dst_r,'assets/upload/'.$newFile);
+            }else{
+                $sourcePath = dirname(__DIR__,2). '/assets/upload/'.$imageName;
+                $newPath = dirname(__DIR__,2). '/assets/upload/'.$newFile;
+                rename($sourcePath,$newPath);
+            }
+            $file_unlink = dirname(__DIR__,2).'/assets/upload/'.$imageName;
+            if(file_exists($file_unlink)){
+                unlink($file_unlink);
+            }
+            $data = ["DOC_CUST_ID" => $this->request->getPost("DOC_CUST_ID"),
+                "DOC_RESV_ID" => $this->request->getPost("DOC_RESV_ID"),
+                "DOC_FILE_PATH" => $newFile,
+                "DOC_FILE_TYPE" => $this->request->getPost("DOC_FILE_TYPE"),
+                "DOC_FILE_DESC" => $this->request->getPost("DOC_FILE_DESC"),
+                "DOC_IS_VERIFY" => $this->request->getPost("DOC_IS_VERIFY"),
+                "DOC_CREATE_UID" => $this->session->name,
+                "DOC_CREATE_DT" => $dateTime
+            ];
+            $return = $this->Db->table('FLXY_DOCUMENTS')->insert($data);
+            if($return){
+                $array = array('DOC_CUST_ID' => $this->request->getPost("DOC_CUST_ID"), 'DOC_RESV_ID' => $this->request->getPost("DOC_RESV_ID"));
+                $listImage = $this->Db->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_FILE_PATH,DOC_FILE_TYPE')->where($array)->orderBy('DOC_ID', 'DESC')->get()->getResultArray();
+                $imagePath = array('IMAGEPATH'=>$newFile);
+                $outPut = array_merge($imagePath,$listImage);
+                $result = $this->responseJson("1","0",$return,$outPut);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444",$message,$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    function getActiveUploadImages(){
+        $array = array('DOC_CUST_ID' => $this->request->getPost("DOC_CUST_ID"), 'DOC_RESV_ID' => $this->request->getPost("DOC_RESV_ID"));
+        $listImage = $this->Db->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_FILE_PATH,DOC_FILE_TYPE')->where($array)->get()->getResultArray();
+        echo json_encode($listImage);
+    }
+
+    public function deleteUploadImages(){
+        try{
+            $sysid = $this->request->getPost("sysid");
+            $return = $this->Db->table('FLXY_DOCUMENTS')->delete(['DOC_ID' => $sysid]); 
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444",$message,$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function updateCustomerDetail(){
+        try{
+            $custId = $this->request->getPost("DOC_CUST_ID");
+            $data = ["CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
+                "CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
+                "CUST_LAST_NAME" => $this->request->getPost("CUST_LAST_NAME"),
+                "CUST_GENDER" => $this->request->getPost("CUST_GENDER"),
+                "CUST_NATIONALITY" => $this->request->getPost("CUST_NATIONALITY"),
+                "CUST_DOB" => $this->request->getPost("CUST_DOB"),
+                "CUST_COUNTRY" => $this->request->getPost("CUST_COUNTRY"),
+                "CUST_DOC_TYPE" => $this->request->getPost("CUST_DOC_TYPE"),
+                "CUST_DOC_NUMBER" => $this->request->getPost("CUST_DOC_NUMBER"),
+                "CUST_DOC_ISSUE" => $this->request->getPost("CUST_DOC_ISSUE"),
+                "CUST_PHONE" => $this->request->getPost("CUST_PHONE"),
+                "CUST_EMAIL" => $this->request->getPost("CUST_EMAIL"),
+                "CUST_ADDRESS_1" => $this->request->getPost("CUST_ADDRESS_1"),
+                "CUST_ADDRESS_2" => $this->request->getPost("CUST_ADDRESS_2"),
+                "CUST_STATE" => $this->request->getPost("CUST_STATE"),
+                "CUST_CITY" => $this->request->getPost("CUST_CITY"),
+                "CUST_UPDATE_UID" => $this->session->name,
+                "CUST_UPDATE_DT" => date("d-M-Y")
+            ];
+            $return = $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $custId)->update($data); 
+            if($return){
+                $response = $this->checkStatusUploadFiles('RTN');
+                $result = $this->responseJson("1","0",$return,$response);
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444",$message,$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function checkStatusUploadFiles($param=null){
+        $sql="SELECT COUNT(*) TOTAL_PROOF,(SELECT COUNT(*) FROM FLXY_DOCUMENTS WHERE DOC_FILE_TYPE='VACCINE') TOTAL_VACC FROM FLXY_DOCUMENTS WHERE DOC_FILE_TYPE='PROOF'";
+        $response = $this->Db->query($sql)->getResultArray();  
+        if($param){
+            return $response;
+        }
+        echo json_encode($response);
+    }
+
+    public function updateVaccineReport(){
+        try{
+            $this->deleteSpecificVaccine();
+            $fileNames='';
+            $fileNm='';
+            if(!empty($_FILES['files']['name'][0]) || !empty($this->request->getPost("VACC_DOC_SAVED"))){
+                if(!empty($_FILES['files']['name'][0])){
+                    $fileArry=$this->request->getFileMultiple('files');
+                    foreach($fileArry as $key=>$file){ 
+                        $newName = $file->getRandomName();
+                        $file->move(ROOTPATH . 'assets/upload/',$newName);
+                        $comma='';
+                        if (isset($fileArry[$key+1])) {
+                            $comma=',';
+                        }
+                        $fileNames.=$newName.$comma;
+                    }
+                        $savePath = $this->request->getPost("VACC_DOC_SAVED");
+                        $comma = $savePath!='' ?  ',' : '';
+                        $fileNames = $fileNames.$comma.$savePath;
+                }else{
+                    $fileNames = $this->request->getPost("VACC_DOC_SAVED");
+                }
+                $fileNamesArr = explode(",",$fileNames);
+                $deleteImage = $this->request->getPost("DELETEIMAGE");
+                $imageDele = explode(",",$deleteImage);
+                print_r($fileNamesArr);
+                print_r($imageDele);
+                exit;
+                $fileArr = array_diff($fileNamesArr, $imageDele);
+                $fileNm = implode(",",$fileArr);
+            }
+           
+            $VACC_ID = $this->request->getPost("VACC_ID");
+            $data = ["VACC_CUST_ID" => $this->request->getPost("VACC_CUST_ID"),
+                "VACC_RESV_ID" => $this->request->getPost("VACC_RESV_ID"),
+                "VACC_DETAILS" => $this->request->getPost("VACC_DETAILS"),
+                "VACC_LAST_DT" => $this->request->getPost("VACC_LAST_DT"),
+                "VACC_NAME" => $this->request->getPost("VACC_NAME"),
+                "VACC_ISSUED_COUNTRY" => $this->request->getPost("VACC_ISSUED_COUNTRY"),
+                "VACC_IS_VERIFY" => $this->request->getPost("VACC_IS_VERIFY"),
+                "VACC_FILE_PATH" => $fileNm,
+                "VACC_CREATE_UID" => $this->session->name,
+                "VACC_CREATE_DT" => date("d-M-Y")
+            ];
+            $return = $this->Db->table('FLXY_VACCINE_DETAILS')->insert($data); 
+            // $return = $this->Db->table('FLXY_VACCINE_DETAILS')->where('CUST_ID', $custId)->update($data); 
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444",$message,$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function deleteSpecificVaccine(){
+        $param = ['VACC_CUST_ID'=> $this->request->getPost("VACC_CUST_ID"),'VACC_RESV_ID'=> $this->request->getPost("VACC_RESV_ID")];
+        $sql="DELETE FROM FLXY_VACCINE_DETAILS WHERE EXISTS
+        (SELECT VACC_ID FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:VACC_CUST_ID: AND VACC_RESV_ID=:VACC_RESV_ID:)";
+        $response = $this->Db->query($sql,$param); 
+    }
+
+    public function getVaccinUploadImages(){
+        $param = ['VACC_CUST_ID'=> $this->request->getPost("VACC_CUST_ID"),'VACC_RESV_ID'=> $this->request->getPost("VACC_RESV_ID")];
+        $sql="SELECT * FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:VACC_CUST_ID: AND VACC_RESV_ID=:VACC_RESV_ID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();  
+        echo json_encode($response);
+    }
+
+
 
 }

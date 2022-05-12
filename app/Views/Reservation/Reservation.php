@@ -250,7 +250,8 @@
                           </div>
                           <div class="col-md-3 mt-0">
                             <lable class="form-lable">Member No</lable>
-                            <input type="text" name="RESV_MEMBER_NO" id="RESV_MEMBER_NO" class="form-control" placeholder="member no" />
+                            <input type="text" name="RESV_MEMBER_NO" id="RESV_MEMBER_NO" class="form-control" placeholder="member no"/>
+                            <div class="invalidfx-feedback"></div>
                           </div>
                           <div class="col-md-3 mt-0">
                             <lable class="form-lable">Company</lable>
@@ -999,7 +1000,7 @@
                       <div class="flxy_opt_btn text-center">
                         <button type="button" onClick="reservExtraOption('ACP')" class="btn btn-primary">Accompanying</button>
                         <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add On</button>
-                        <button type="button" onClick="reservExtraOption('CHG')" class="btn btn-primary">Changes</button>
+                        <!-- <button type="button" onClick="reservExtraOption('CHG')" class="btn btn-primary">Changes</button> -->
                       </div>
                     </div>
                     <div id="Addon">
@@ -1288,6 +1289,7 @@
     });
     
   });
+
 
   function generateRateQuery(mode='AVG'){
     var formData={};
@@ -1584,14 +1586,39 @@
   });
 
   // validation start //  
+  // var validUsername = false;
+  // var membertype = document.getElementsByName("RESV_MEMBER_NO")[0];
+  // membertype.addEventListener("keyup", () => {
+  //     let regex = /^[a-zA-Z]([0-9a-zA-Z]){1,10}$/;
+  //     let str = membertype.value;
+  //     if (regex.test(str)) {
+  //       membertype.classList.remove("isfx-invalid");
+  //       membertype.nextElementSibling.innerHTML="";
+  //         validUsername = false;
+  //     }else if(str==''){
+  //       membertype.nextElementSibling.innerHTML="Not empty number";
+  //       membertype.classList.add("isfx-invalid");
+  //         validUsername = true;
+  //     } else {
+  //       membertype.nextElementSibling.innerHTML="Allow only number";
+  //       membertype.classList.add("isfx-invalid");
+  //         validUsername = true;
+  //     }
+  // });
 
   function reservationValidate(event,id,mode){
+    // membertype.dispatchEvent(new Event('keyup'));
     event.preventDefault();
-    checkPaymentValid();
     var form = document.getElementById(id);
     var condition = (mode=='R' ? !form.checkValidity() || !checkArrivalDate() || !checkDeparturDate() : !form.checkValidity());
+    if(mode=='R'){
+      var additionValid = checkPaymentValid();
+    }else{
+      var additionValid = false;
+    }
     form.classList.add('was-validated');
-    if (condition) {
+    // console.log(condition,additionValid,"additionValid sdfsf");
+    if (condition || additionValid) {   // -- customize validate user validUsername
       return false;
     }else{
       return true;
@@ -1602,8 +1629,10 @@
     var payment = $('#RESV_PAYMENT_TYPE').val();
     if(payment==''){
       $('#RESV_PAYMENT_TYPE').parent('div').removeClass('is-valid').addClass('is-invalid');
+      return true;
     }else{
       $('#RESV_PAYMENT_TYPE').parent('div').removeClass('is-invalid').addClass('is-valid');
+      return false;
     }
   }
 

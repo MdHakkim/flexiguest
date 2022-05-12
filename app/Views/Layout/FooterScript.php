@@ -13,7 +13,7 @@
     <script src="<?php echo base_url('assets/vendor/js/template-customizer.js')?>"></script>
 
     <script src="<?php echo base_url('assets/js/moment.min.js')?>"></script>
-
+    <script src="<?php echo base_url('assets/jquery.Jcrop.min.js');?>"></script>
     <!-- Added by Deleep -->
     
       <script src="<?php echo base_url('assets/vendor/libs/datatables-responsive/datatables.responsive.js') ?>"></script>

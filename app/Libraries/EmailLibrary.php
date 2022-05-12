@@ -9,20 +9,6 @@ class EmailLibrary{
     }
     public function preCheckInEmail($rawparam){
         $toEmail = $rawparam[0]['CUST_EMAIL'];
-        // $dataFormat = $rawparam[0]['CUST_EMAIL'].','.$rawparam[0]['RESV_ID'];
-        // $key = getenv('JWT_KEY_WEBLINK');
-        // $iat = time(); // current timestamp value
-        // $nbf = $iat;
-        // $exp = $iat + 2592000;
-        // $payload = array(
-        //     "iss" => "Issue by farnek",
-        //     "aud" => "Audience that the farnek",
-        //     "iat" => $iat, // issued at
-        //     "nbf" => $nbf, //not before in seconds
-        //     "exp" => $exp, // expire time in seconds
-        //     "data" => $dataFormat,
-        // );
-        // $paramraw['token'] = JWT::encode($payload, $key,'HS256');
         $paramraw['data'] = $rawparam[0];
         $html = view('EmailTemplates/ReservationTemplate',$paramraw);
         $this->email->setFrom('notifications@farnek.com', 'FlexiGuest | Hitek');
