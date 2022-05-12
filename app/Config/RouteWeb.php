@@ -6,7 +6,6 @@
  */
 $routes->match(['get', 'post'], 'login', 'UserController::login', ["filter" => "noauth"]);
 // Admin routes
-$routes->get("/test", "ApplicatioController::test");
 $routes->get('/', 'DashboardController::index',["filter" => "auth"]);
 $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('logout', 'UserController::logout');
@@ -30,7 +29,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/getExistCustomer', 'ApplicatioController::getExistCustomer');
     $routes->match(['post'],'/rateQueryDetailOption', 'ApplicatioController::rateQueryDetailOption');
 
-    $routes->match(['get'],'/testingApi/(:segment)', 'ApplicatioController::triggerReservationEmail/$1');
+    // $routes->match(['get'],'/testingApi/(:segment)', 'ApplicatioController::triggerReservationEmail/$1');
 
     $routes->get('/customer', 'ApplicatioController::Customer');
     $routes->match(['post'],'/customerView', 'ApplicatioController::customerView');
@@ -295,7 +294,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
 
 //Web Link Reservation
-$routes->group("webline", ["filter" => "weblinkauth"], function ($routes) {
+$routes->group("webline",function ($routes) {
     $routes->match(['get'],'ReservationDetail/(:any)', 'ApplicatioController::webLineReservation/$1');
 });
 

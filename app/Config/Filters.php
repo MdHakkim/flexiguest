@@ -12,7 +12,6 @@ use App\Filters\Cors;
 use App\Filters\Auth;
 use App\Filters\Noauth;
 use App\Filters\AuthAPI;
-use App\Filters\WebLinkAuth;
 
 class Filters extends BaseConfig
 {
@@ -31,8 +30,7 @@ class Filters extends BaseConfig
         'cors'     => Cors::class,   
         "auth" => Auth::class,
         "noauth" => Noauth::class, 
-        "authapi" => AuthAPI::class, 
-        "weblinkauth" => WebLinkAuth::class
+        "authapi" => AuthAPI::class
     ];
 
     /**

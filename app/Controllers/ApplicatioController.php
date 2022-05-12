@@ -2258,11 +2258,10 @@ class ApplicatioController extends BaseController
             $RESV_ADULTS=$this->request->getPost('RESV_ADULTS');
             $RESV_CHILDREN=$this->request->getPost('RESV_CHILDREN');
             $param = ['ARRIVAL_DT'=> $RESV_ARRIVAL_DT,'DEPARTURE_DT'=> $RESV_DEPARTURE,'RESV_ADULTS'=> $this->request->getPost("RESV_ADULTS"),'RESV_CHILDREN'=> $this->request->getPost("RESV_CHILDREN"),'TODAYDATE'=> $TODAYDATE];
-            $sql="SELECT RM_TY_CODE, RM_TY_TOTAL_ROOM,TOTAL_OVER_BOOKING,RM_STCK_RM_TYPE,
-			RM_STCK_NO_OF_ROOM FROM 
-			(SELECT RM_TY_CODE,(RM_TY_TOTAL_ROOM-ISNULL(RM_STCK_NO_OF_ROOM,0)) RM_TY_TOTAL_ROOM,
-			(RM_TY_TOTAL_ROOM-ISNULL(RM_STCK_NO_OF_ROOM,0))TOTAL_OVER_BOOKING,
-			RM_STCK_RM_TYPE,RM_STCK_NO_OF_ROOM,ROW_NUMBER() OVER (PARTITION BY RM_TY_CODE ORDER BY RM_TY_CODE) AS ROW_NUMBER
+            $sql="SELECT RM_TY_CODE, RM_TY_TOTAL_ROOM,TOTAL_OVER_BOOKING,RM_STCK_RM_TYPE FROM 
+			(SELECT RM_TY_CODE,(RM_TY_TOTAL_ROOM) RM_TY_TOTAL_ROOM,
+			(RM_TY_TOTAL_ROOM)TOTAL_OVER_BOOKING,
+			RM_STCK_RM_TYPE,ROW_NUMBER() OVER (PARTITION BY RM_TY_CODE ORDER BY RM_TY_CODE) AS ROW_NUMBER
 			FROM FLXY_ROOM_TYPE ROOMTYTB
 			LEFT JOIN FLXY_OVERBOOKING OVERBTB ON RM_TY_CODE=OB_RM_TYPE 
 			AND (:ARRIVAL_DT: BETWEEN  OB_FROM_DT AND OB_UPTO_DT AND :DEPARTURE_DT: BETWEEN  OB_FROM_DT AND OB_UPTO_DT)
@@ -2321,14 +2320,14 @@ class ApplicatioController extends BaseController
                     $INNERLOOP++;
                     $FieldName=trim($data['RT_DESCRIPTION']);
                 }
-                if($RESV_MODE=='AVG' || $RESV_MODE=='TOT'){ // this for avg,total condition..
+                if($RESV_MODE=='AVG' || $RESV_MODE=='TOT'){
                     foreach($roomtypeStore as $keys=>$room){ 
                         if (strpos($data['ROOM_TYPE'], $room) !== false) { 
                             $roomTypeArr[$FieldName][$keys]=$data;
                         }
                     }
                     $RT_CD_REF_ID=$data['RT_CD_ID'];
-                }else{ // this for first night condition..
+                }else{ 
                     $RT_CD_REF_ID=trim($data['RT_CD_ID']);
                     if($RT_CD_REF_ID==trim($data['RT_CD_ID']) && $ROOM_TYPE!=trim($data['ROOM_TYPE'])){
                         foreach($roomtypeStore as $keys=>$room){ 
@@ -2370,7 +2369,7 @@ class ApplicatioController extends BaseController
     }
 
     public function OverBookingView(){
-        $mine = new ServerSideDataTable(); // loads and creates instance
+        $mine = new ServerSideDataTable();
         $tableName = 'FLXY_OVERBOOKING';
         $columns = 'OB_ID,OB_FROM_DT,OB_UPTO_DT,OB_RM_CLASS,OB_RM_TYPE,OB_OVER_BK_COUNT,OB_FORMULA';
         $mine->generate_DatatTable($tableName,$columns);
@@ -2618,7 +2617,7 @@ class ApplicatioController extends BaseController
             return $this->respond($e->errors());
         }
     }
-    public function webLineReservation($token,$resvid){
+    public function webLineReservation($resvid){
         try{
             $param = ['RESV_ID'=> $resvid];
             $sql="SELECT RESV_ID,RESV_NO,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,CUST_FIRST_NAME+' '+CUST_LAST_NAME FULLNAME,
