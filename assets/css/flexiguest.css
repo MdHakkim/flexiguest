@@ -401,8 +401,15 @@ button.close {
   justify-content: center;
   flex-direction: column;
 }
+.isfx-invalid{
+  border-color: red !important;
+  background-image: none !important;
+}
+.invalidfx-feedback{
+  color: red;
+}
 .flxy_web-blockcont{
-  padding: 2em 8em 0em 8em;
+  /* padding: 2em 8em 0em 8em; */
   color: white;
 }
 .flxy_web-blockcont .flxy_block_card .col-md-3{
@@ -428,6 +435,7 @@ button.close {
 .sliderclass{
   display: none;
   width:100%;
+  padding: 2em 8em 0em 8em;
 }
 .activeslide{
   display: flex;
@@ -439,5 +447,144 @@ button.close {
 }
 .flxy_document .card-body{
   background: #828282;
+}
+.flxy_web_padd{
+  padding: 24px 24px 24px 17px !important;
+}
+.flxy-data{
+  width: 100%;
+  display: block;
+  text-align: left;
+}
+.flxy_doc_st{
+  color: white;
+  background-color: green;
+  font-size: 13px;
+  padding: 4px;
+  text-align: center;
+  border-radius: 13px;
+  width: 7em;
+  display: inline-block;
+}
+.flxy_orng{
+  background-color: orange;
+}
+.flxy_green{
+  background-color: green;
+}
+.contentDesc{
+  display: block;
+  width: 100%;
+  color: black !important;
+  text-align: left;
+  font-size: 11px;
+}
+.flxy_card_head{
+  display: flex;
+  width: 100%;
+  color: black;
+  justify-content: space-between;
+  padding: 6px 10px 6px 10px;
+  border-bottom: 1px solid #d9d9d9;
+}
+.flxy_doc_block{
+  display: flex;
+  width:100%;
+  flex: 1;
+}
+.flxy_doc_content{
+  display: flex;
+  width: 100%;
+}
+.flxy_none{
+  display: none !important;
+}
+.flxy_image_show{
+  justify-content: space-between;
+  display: flex;
+}
+
+.flxy_cust_detil{
+  border-left: 1px solid #e5e3e3;
+  padding: 8px;
+}
+.flxy_modClass{
+  justify-content: space-between !important;
+  padding: 5px 8px 6px 8px !important;
+  border-top: 2px solid #ededed !important;
+}
+#listImagePresentDb{
+  margin:0px;
+  padding:0px !important;
+  min-width: 30em;
+  overflow-x: auto;
+  display: flex;
+}
+.activeLink{
+  border: 3px solid #d2d1d1bf;
+}
+#listImagePresentDb li{
+  display: block;
+  list-style-type: none;
+  white-space: nowrap;
+  padding: 3px;
+  width: 56px;
+  height: 45px;
+  /* display: block; */
+}
+#listImagePresentDb li img{
+  margin-bottom: 4px;
+  width: 44px;
+  height: 34px;
+}
+.flxy_brows{
+  width: 72px;
+  height: 32px;
+  line-height: 1!important;
+  text-align: center!important;
+  font-size: 11px!important;
+}
+.linkImg{
+  cursor: pointer;
+}
+.deleteUploadImage{
+  padding: 3px 6px 3px 6px;
+  cursor: pointer;
+}
+.deleteUploadImage:hover{
+  background-color: #c00a0a;
+  color: white;
+  border-radius: 4px;
+}
+.CUST_COUNTRY .btn-light,.CUST_CITY .btn-light,.CUST_STATE .btn-light,.VACC_ISSUED_COUNTRY .btn-light{
+  background-color: #a5a4a4 !important;
+  color: white !important;
+}
+.saveContinue{
+  display: none;
+}
+#vaccinePreview{
+  width: 122px;
+  height: 80px;
+  padding: 2px;
+  display: flex;
+  position: relative;
+}
+.previewClass{
+  display: flex;
+  justify-content: center;
+}
+.vaccdelete {
+  position: absolute;
+  width: 16px;
+  height: 15px;
+  background: #f94a4a;
+  top: 0px;
+  right: 7px;
+  cursor: pointer;
+  color: white;
+  padding: 0px;
+  font-size: 12px;
+  text-align: center;
 }
 /* web link checkin */
