@@ -40,12 +40,12 @@
             },
             stringLength: {
               min: 2,
-              max: 11,
-              message: 'The Rate Code must be more than 2 and less than 11 characters long'
+              max: 15,
+              message: 'The Rate Code must be more than 2 and less than 15 characters long'
             },
             regexp: {
-              regexp: /^[a-zA-Z0-9\-]+$/,
-              message: 'The Rate Code can only consist of alphabets, numbers and hyphen'
+              regexp: /^[a-zA-Z0-9\- ]+$/,
+              message: 'The Rate Code can only consist of alphabets, numbers, spaces and hyphen'
             }
           }
         },
@@ -57,7 +57,7 @@
             stringLength: {
               min: 5,
               max: 50,
-              message: 'The Rate Code must be more than 5 and less than 50 characters long'
+              message: 'The Description must be more than 5 and less than 50 characters long'
             }
           }
         },
@@ -217,6 +217,7 @@
       // or send the form data to server via an Ajax request
       // To make the demo simple, I just placed an alert
       //alert('Submitted..!!');
+      validationStepper.next();
 
       //submitForm('rateCode-submit-form');
 
@@ -265,6 +266,23 @@
       });
     }
 
+    $(document).on('click', '#RD_Room_Types > tbody > tr', function () {
+
+      $('#RD_Room_Types').find('tr.table-warning').removeClass('table-warning');
+
+      $(this).addClass('table-warning');
+
+      $.when(loadRateCodeDetails($(this).data('ratedetailsid')))
+        .done(function () {
+          FormValidation2.revalidateField('RT_CD_START_DT');
+          FormValidation2.revalidateField('RT_CD_END_DT');
+          FormValidation2.revalidateField('RT_CD_DT_1_ADULT');
+        })
+        .done(function () {
+          blockLoader('rate-detail-validation');
+        });
+    });
+
     // Bootstrap Select (i.e Language select)
     /*
     if (selectPicker.length) {
@@ -298,6 +316,7 @@
     wizardValidationPrev.forEach(item => {
       item.addEventListener('click', event => {
         switch (validationStepper._currentIndex) {
+          case 2:
           case 1:
             validationStepper.previous();
             break;
@@ -310,6 +329,28 @@
       });
     });
   }
+
+  // Negotiated Rate Advanced Search Functions Starts
+  // --------------------------------------------------------------------
+
+  const dt_adv_filter_table = $('#combined_profiles');
+
+  // Filter column wise function
+  function filterColumn(i, val) {
+    dt_adv_filter_table.DataTable().column(i).search(val).draw();
+  }
+
+  // on key up from input field
+  $(document).on('keyup', 'input.dt-input', function () {
+    if ($(this).val().length == 0 || $(this).val().length >= 2)
+      filterColumn($(this).attr('data-column'), $(this).val());
+  });
+
+  $(document).on('change', 'select.dt-select', function () {
+    filterColumn($(this).attr('data-column'), $(this).val());
+  });
+
+  // Advanced Search Functions Ends
 
 
 })();

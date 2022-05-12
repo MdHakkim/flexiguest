@@ -202,7 +202,7 @@ $(document).ready(function() {
                 render: function(data, type, row, meta) {
                     return (
                         '<div class="d-inline-block">' +
-                        '<a href="javascript:;" title="Edit or Delete" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
+                        '<a href="javascript:;" title="Edit or Delete" class="btn btn-label-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                         '<ul class="dropdown-menu dropdown-menu-end">' +
                         '<li><a href="javascript:;" data_sysid="' + data['RT_CL_ID'] +
                         '" class="dropdown-item editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>' +
@@ -338,7 +338,7 @@ $(document).on('click', '.delete-record', function() {
 
     var sysid = $(this).attr('data_sysid');
     bootbox.confirm({
-        message: "Are you confirm to delete this record?",
+        message: "Are you sure you want to delete this record?",
         buttons: {
             confirm: {
                 label: 'Yes',

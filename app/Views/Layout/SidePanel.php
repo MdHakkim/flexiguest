@@ -121,7 +121,7 @@
                 <div data-i18n="Dashboards">Dashboards</div>
               </a>
               <ul class="menu-sub">
-                <li class="menu-item active">
+                <li class="menu-item">
                   <a href="<?php echo base_url('/') ?>" class="menu-link">
                     <div data-i18n="Analytics">Analytics</div>
                   </a>
@@ -737,6 +737,7 @@
                                                                                         'Transaction Code Sub Group', 
                                                                                         'Transaction Code', 
                                                                                         'Package Group', 
+                                                                                        'Package Code', 
                                                                                         'Market Group', 
                                                                                         'Market Code'))) { echo 'open active'; } ?>">
                   <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -786,6 +787,12 @@
                             class="menu-item  <?php if(isset($title) && $title == 'Package Group') { echo 'active'; } ?>">
                             <a href="<?php echo base_url('packageGroup') ?>" class="menu-link">
                                 <div data-i18n="Package Groups">Package Groups</div>
+                            </a>
+                        </li>
+                        <li
+                            class="menu-item  <?php if(isset($title) && $title == 'Package Code') { echo 'active'; } ?>">
+                            <a href="<?php echo base_url('packageCode') ?>" class="menu-link">
+                                <div data-i18n="Package Codes">Package Codes</div>
                             </a>
                         </li>
                         <li
