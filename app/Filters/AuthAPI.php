@@ -4,36 +4,40 @@ namespace App\Filters;
 use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\API\ResponseTrait;
-use \Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+use CodeIgniter\Session\Session;
+
 helper('responsejson');
 
 class AuthAPI implements FilterInterface
-{
-    use ResponseTrait;
-    
-        
+{           
     // checking JWT Token valid or not
     public function before(RequestInterface $request, $arguments = null)
     {
-            $token = null;    
-            $authHeader = session()->get('USR_TOKEN');
-
             try {
 
                 helper('jwt');
                 
-                $token = getJWTFromRequest($authHeader);
+                $token = explode(" ", getJWTFromRequest())[1];
+
                 $decoded  = validateJWTFromRequest($token);
                
                 if(!empty($decoded)){
 
-                    return $request;
-                
+                    if(isset($arguments[0]) && isset($decoded['token_info']->data->USR_ROLE) && $arguments[0] == $decoded['token_info']->data->USR_ROLE){
+                    
+                        $request->user = $decoded['table_info'];
+                        return $request;
+                    }
                 }
-                 
-                 
+
+                $result = [
+                    "status" =>401,
+                    "error" => true,
+                    "message"=>'User Unauthorized',
+                    "data"=> []
+                ];
+
+                echo json_encode($result);die;                 
             }catch (Exception $ex) {
                  
                 
