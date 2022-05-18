@@ -2630,7 +2630,7 @@ class ApplicatioController extends BaseController
     function imageUpload(){
         try{
             $avatar = $this->request->getFile('file');
-            $avatar->move(ROOTPATH . 'assets/upload/');
+            $avatar->move(ROOTPATH . 'assets/Uploads/');
             echo $avatar->getClientName();
             exit;
         }catch (Exception $e){
@@ -2651,13 +2651,13 @@ class ApplicatioController extends BaseController
                 $dst_r = ImageCreateTrueColor( $_POST['w'], $_POST['h'] );
                 imagecopyresampled($dst_r, $img_r, 0, 0, $_POST['x'], $_POST['y'], $_POST['w'], $_POST['h'], $_POST['w'],$_POST['h']);
                 // header('Content-type: image/jpeg');
-                imagejpeg($dst_r,'assets/upload/'.$newFile);
+                imagejpeg($dst_r,'assets/Uploads/userDocuments/'.$newFile);
             }else{
-                $sourcePath = dirname(__DIR__,2). '/assets/upload/'.$imageName;
-                $newPath = dirname(__DIR__,2). '/assets/upload/'.$newFile;
+                $sourcePath = dirname(__DIR__,2). '/assets/Uploads/userDocuments/'.$imageName;
+                $newPath = dirname(__DIR__,2). '/assets/Uploads/userDocuments/'.$newFile;
                 rename($sourcePath,$newPath);
             }
-            $file_unlink = dirname(__DIR__,2).'/assets/upload/'.$imageName;
+            $file_unlink = dirname(__DIR__,2).'/assets/Uploads/userDocuments/'.$imageName;
             if(file_exists($file_unlink)){
                 unlink($file_unlink);
             }
@@ -2769,7 +2769,7 @@ class ApplicatioController extends BaseController
                     $fileArry=$this->request->getFileMultiple('files');
                     foreach($fileArry as $key=>$file){ 
                         $newName = $file->getRandomName();
-                        $file->move(ROOTPATH . 'assets/upload/',$newName);
+                        $file->move(ROOTPATH . 'assets/Uploads/userDocuments/vaccination',$newName);
                         $comma='';
                         if (isset($fileArry[$key+1])) {
                             $comma=',';
@@ -2845,7 +2845,7 @@ class ApplicatioController extends BaseController
                 $fileName = time();
                 $signature=base64_decode($parts[1]);
                 $fileNameExt = $fileName.'.'.$extension;
-                file_put_contents('assets/upload/'.$fileNameExt,$signature);
+                file_put_contents('assets/Uploads/userDocuments/signature/'.$fileNameExt,$signature);
             }else{
                 $fileNameExt = basename($signature);   
             }
