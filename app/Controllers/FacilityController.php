@@ -198,25 +198,28 @@ class FacilityController extends BaseController
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
-
     public function maintenanceCategoryList()
     {
         $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY";
         $response = $this->Db->query($sql)->getResultArray();
         echo json_encode($response);
     }
-
-    public function maintenanceSubCatByCategoryID()
+    public function maintenanceSubCatByCategoryID($api = 0)
     {
         $param = ['MAINT_CAT_ID'=> $this->request->getPost("category")];
         $sql = "SELECT a.MAINT_CAT_ID,b.MAINT_SUBCATEGORY ,b.MAINT_SUBCAT_ID FROM FLXY_MAINTENANCE_CATEGORY a
         LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY b ON b.MAINT_CAT_ID = a.MAINT_CAT_ID WHERE a.MAINT_CAT_ID =:MAINT_CAT_ID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
-        $option='<option value="">Select SubCategory</option>';
-        foreach($response as $row){
-            $option.= '<option value="'.$row['MAINT_SUBCAT_ID'].'">'.$row['MAINT_SUBCATEGORY'].'</option>';
+        if($api){
+            echo json_encode($response);
+        }else{
+            $option='<option value="">Select SubCategory</option>';
+            foreach($response as $row){
+                $option.= '<option value="'.$row['MAINT_SUBCAT_ID'].'">'.$row['MAINT_SUBCATEGORY'].'</option>';
+            }
+            echo $option;
         }
-        echo $option;
+        
     }
     // Maintenance request - Category
     public function maintenanceRequestCategory(){
