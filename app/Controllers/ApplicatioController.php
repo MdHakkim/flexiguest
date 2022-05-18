@@ -285,7 +285,7 @@ class ApplicatioController extends BaseController
                 $this->updateCustomerData($custId);
                 $return = $this->Db->table('FLXY_RESERVATION')->select('RESV_NO')->where('RESV_ID',$sysid)->get()->getResultArray();
                 if($emailProc=='S'){
-                    $this->triggerReservationEmail($sysid);
+                    $this->triggerReservationEmail($sysid,'');
                 }
                 $result = $this->responseJson("1","0",$return);
                 echo json_encode($result);
@@ -298,14 +298,14 @@ class ApplicatioController extends BaseController
         }
     }
 
-    public function triggerReservationEmail($sysid){
+    public function triggerReservationEmail($sysid,$parametr){
         $param = ['SYSID'=> $sysid];
         $sql="SELECT RESV_ID,RESV_NO,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_RM_TYPE,(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC,
         RESV_NO_F_ROOM,RESV_FEATURE,CUST_FIRST_NAME+' '+CUST_LAST_NAME FULLNAME,CUST_EMAIL FROM FLXY_RESERVATION,FLXY_CUSTOMER 
         WHERE RESV_ID=:SYSID: AND RESV_NAME=CUST_ID";
         $reservationInfo = $this->Db->query($sql,$param)->getResultArray();
         $emailCall = new EmailLibrary();
-        $emailResp = $emailCall->preCheckInEmail($reservationInfo);
+        $emailResp = $emailCall->preCheckInEmail($reservationInfo,$parametr);
     }
 
     public function updateCustomerData($custId){
@@ -2874,6 +2874,7 @@ class ApplicatioController extends BaseController
             "RESV_UPDATE_UID" => $this->session->name,
             "RESV_UPDATE_DT" => date("d-M-Y")
         ];
+        $this->triggerReservationEmail($sysid,'QR');
         $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
         $result = $this->responseJson("1","0",$return,$response='');
         echo json_encode($result);

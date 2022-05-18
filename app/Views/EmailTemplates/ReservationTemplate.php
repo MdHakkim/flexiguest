@@ -17,17 +17,23 @@
                           <tr>
                             <td style="padding: 10px 0px;"><h1>Hello <?php echo $data['FULLNAME'];?>,</h1></td>
                           </tr>
+                          <?php if($mode!='QR'){ ?>
                           <tr>
                             <td style="padding: 10px 0px;"><h1>Greetings from Hotel!</h1></td>
                           </tr>
+                          <?php } ?>
                           <tr>
                             <td>
                               <table style="width:100%">
                                 <tbody>
                                   <tr>
                                     <td style="font-size:15px;">
+                                    <?php if($mode=='QR'){?>
+                                      <h3>You have successfully completed your pre- check in process. Please show the below QR-Code to our friendly reception team in order to collect your apartment key. </h3>
+                                    <?php }else{ ?>
                                       <h3>Please find your Reservation details below, download the Flexi Guest App to complete your online check-in and save time on arrival. </h3>
                                       <h3>A valid passport or Emirates ID (for UAE Nationals and Residents) is required upon Check-in. </h3>
+                                    <?php } ?>
                                     </td>
                                   </tr>
                                   <tr>
@@ -58,10 +64,12 @@
                                           <td><p>Apartment Details</p></td>
                                           <td><p>: <?php echo $data['RM_TY_DESC'];?></p></td>
                                         </tr>
+                                        <?php if($mode!='QR'){ ?>
                                         <tr style="padding-bottom:6px;">
                                           <td><p>Click here for Pre-Check-in</p></td>
                                           <td><p>: </p></td>
                                         </tr>
+                                        
                                         <tr style="padding-bottom:6px;">
                                           <td colspan="3">
                                             <table style="width:100%">
@@ -79,6 +87,14 @@
                                             </table>
                                           </td>
                                         </tr>
+                                        <?php }else{ ?>
+                                          <tr style="padding-bottom:6px;">
+                                            <td><div id="output"><img src="https://chart.googleapis.com/chart?cht=qr&chl=<?php echo $data['RESV_NO'];?>&chs=160x160&chld=L|0"/></div></td>
+                                          </tr>
+                                          <tr>
+                                            <td><p>Have a safe journey ahead!</p></td>
+                                          </tr>
+                                        <?php } ?>
                                         </tbody>
                                       </table>
                                     </td>
@@ -136,8 +152,18 @@
       </table>
   </body>
 </html>
-
-
+<!-- <script src="<?php //echo base_url('assets/js/jquery-3.6.0.min.js')?>"></script> -->
+<!-- <script type="text/javascript" src="<?php //echo base_url('assets/js/jquery.qrcode.js');?>"></script>
+<script type="text/javascript" src="<?php //echo base_url('assets/js/qrcode.js');?>"></script> -->
+<!-- <script>
+  jQuery(function(){
+    jQuery('#output').qrcode({
+      width: 128,
+      height: 128,
+      text: "<?php //echo $data['RESV_NO'];?>"
+    });
+  });
+</script> -->
 
 <!-- <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:o="urn:schemas-microsoft-com:office:office">

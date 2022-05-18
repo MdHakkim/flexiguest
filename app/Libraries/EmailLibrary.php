@@ -7,9 +7,10 @@ class EmailLibrary{
     public function __construct(){
         $this->email = \Config\Services::email();
     }
-    public function preCheckInEmail($rawparam){
+    public function preCheckInEmail($rawparam,$param){
         $toEmail = $rawparam[0]['CUST_EMAIL'];
         $paramraw['data'] = $rawparam[0];
+        $paramraw['mode'] = $param;
         $html = view('EmailTemplates/ReservationTemplate',$paramraw);
         $this->email->setFrom('notifications@farnek.com', 'FlexiGuest | Hitek');
         $this->email->setTo($toEmail);
