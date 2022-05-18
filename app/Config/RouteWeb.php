@@ -251,6 +251,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/deleteRequest', 'FacilityController::deleteRequest');  
     $routes->match(['post'],'/getCustomerFromRoomNo', 'FacilityController::getCustomerFromRoomNo');  
     $routes->match(['post'],'/getCategory', 'FacilityController::maintenanceCategoryList');  
+    $routes->match(['post'],'/getSubCategory', 'FacilityController::maintenanceSubCatByCategoryID');  
     // Maintenance Category
     $routes->get('/maintenanceCategory', 'FacilityController::maintenanceRequestCategory');  
     $routes->match(['post'],'/insertCategory', 'FacilityController::insertCategory');  
