@@ -296,9 +296,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 //Web Link Reservation
 $routes->group("webline", function ($routes) {
     $routes->match(['get'],'ReservationDetail/(:any)', 'ApplicatioController::webLineReservation/$1');
-    
-    
 });
+
     $routes->match(['post'],'/imageUpload', 'ApplicatioController::imageUpload'); 
     $routes->match(['post'],'/croppingImage', 'ApplicatioController::croppingImage'); 
     $routes->match(['post'],'/getActiveUploadImages', 'ApplicatioController::getActiveUploadImages');
@@ -307,4 +306,7 @@ $routes->group("webline", function ($routes) {
     $routes->match(['post'],'/checkStatusUploadFiles', 'ApplicatioController::checkStatusUploadFiles');
     $routes->match(['post'],'/updateVaccineReport', 'ApplicatioController::updateVaccineReport');
     $routes->match(['post'],'/getVaccinUploadImages', 'ApplicatioController::getVaccinUploadImages');
-$routes->get('autherropage', 'ApplicatioController::AuthErroPage');
+    $routes->match(['post'],'/updateSignatureReserv', 'ApplicatioController::updateSignatureReserv'); 
+    $routes->match(['post'],'/confirmPrecheckinStatus', 'ApplicatioController::confirmPrecheckinStatus'); 
+    $routes->match(['get'],'/reservationCheckin', 'ApplicatioController::reservationCheckin'); 
+    $routes->get('autherropage', 'ApplicatioController::AuthErroPage');

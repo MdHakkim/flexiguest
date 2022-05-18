@@ -2617,9 +2617,10 @@ class ApplicatioController extends BaseController
         try{
             $param = ['RESV_ID'=> $resvid];
             $sql="SELECT RESV_ID,RESV_NO,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,CUST_FIRST_NAME+' '+CUST_LAST_NAME FULLNAME,
-            (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC,RESV_ROOM,RESV_NO_F_ROOM,RESV_NAME,RESV_RM_TYPE,RESV_STATUS,CUST_FIRST_NAME,CUST_ID,CUST_LAST_NAME,CUST_TITLE,FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,CUST_COUNTRY,CUST_STATE,(SELECT SNAME FROM STATE WHERE STATE_CODE=CUST_STATE AND COUNTRY_CODE=CUST_COUNTRY)CUST_STATE_DESC,CUST_CITY,(SELECT CTNAME FROM CITY WHERE ID=CUST_CITY)CUST_CITY_DESC,CUST_EMAIL,CUST_MOBILE,CUST_PHONE,CUST_POSTAL_CODE,CUST_NATIONALITY,CUST_DOC_TYPE,CUST_GENDER,CUST_DOC_EXPIRY,CUST_DOC_NUMBER,FORMAT(CUST_DOC_ISSUE,'dd-MMM-yyyy')CUST_DOC_ISSUE FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:RESV_ID: AND RESV_NAME=CUST_ID";
+            (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC,RESV_ROOM,RESV_NO_F_ROOM,RESV_NAME,RESV_RM_TYPE,RESV_STATUS,CUST_FIRST_NAME,CUST_ID,CUST_LAST_NAME,CUST_TITLE,FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,CUST_COUNTRY,CUST_STATE,(SELECT SNAME FROM STATE WHERE STATE_CODE=CUST_STATE AND COUNTRY_CODE=CUST_COUNTRY)CUST_STATE_DESC,CUST_CITY,(SELECT CTNAME FROM CITY WHERE ID=CUST_CITY)CUST_CITY_DESC,CUST_EMAIL,CUST_MOBILE,CUST_PHONE,CUST_POSTAL_CODE,CUST_NATIONALITY,CUST_DOC_TYPE,CUST_GENDER,CUST_DOC_EXPIRY,CUST_DOC_NUMBER,FORMAT(CUST_DOC_ISSUE,'dd-MMM-yyyy')CUST_DOC_ISSUE,RESV_ACCP_TRM_CONDI,RESV_SINGATURE_URL,RESV_ETA FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:RESV_ID: AND RESV_NAME=CUST_ID";
             $response = $this->Db->query($sql,$param)->getResultArray();
             $data['data']=$response;
+            $data['condition']='';
             return view('WebCheckin/CheckInReservation',$data);
         }catch (Exception $e){
             return $this->respond($e->errors());
@@ -2732,7 +2733,7 @@ class ApplicatioController extends BaseController
             ];
             $return = $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $custId)->update($data); 
             if($return){
-                $response = $this->checkStatusUploadFiles('RTN');
+                $response = $this->checkStatusUploadFiles('RTN',$custId,$resvid);
                 $result = $this->responseJson("1","0",$return,$response);
                 echo json_encode($result);
             }else{
@@ -2744,10 +2745,15 @@ class ApplicatioController extends BaseController
         }
     }
 
-    public function checkStatusUploadFiles($param=null){
-        $sql="SELECT COUNT(*) TOTAL_PROOF,(SELECT COUNT(*) FROM FLXY_DOCUMENTS WHERE DOC_FILE_TYPE='VACCINE') TOTAL_VACC FROM FLXY_DOCUMENTS WHERE DOC_FILE_TYPE='PROOF'";
-        $response = $this->Db->query($sql)->getResultArray();  
-        if($param){
+    public function checkStatusUploadFiles($condi=null,$custId=null,$resvid=null){
+        if($condi){
+            $param = ['CUST_ID'=> $custId,'RESV_ID'=> $resvid];
+        }else{
+            $param = ['CUST_ID'=> $this->request->getPost("custid"),'RESV_ID'=> $this->request->getPost("resrid")];
+        }
+        $sql="SELECT COUNT(*)TOTAL_PROOF,(SELECT COUNT(*) FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:CUST_ID: AND VACC_RESV_ID=:RESV_ID:) TOTAL_VACC FROM FLXY_DOCUMENTS WHERE DOC_CUST_ID=:CUST_ID: AND DOC_RESV_ID=:RESV_ID:";
+        $response = $this->Db->query($sql,$param)->getResultArray();  
+        if($condi){
             return $response;
         }
         echo json_encode($response);
@@ -2779,9 +2785,9 @@ class ApplicatioController extends BaseController
                 $fileNamesArr = explode(",",$fileNames);
                 $deleteImage = $this->request->getPost("DELETEIMAGE");
                 $imageDele = explode(",",$deleteImage);
-                print_r($fileNamesArr);
-                print_r($imageDele);
-                exit;
+                // print_r($fileNamesArr);
+                // print_r($imageDele);
+                // exit;
                 $fileArr = array_diff($fileNamesArr, $imageDele);
                 $fileNm = implode(",",$fileArr);
             }
@@ -2826,6 +2832,56 @@ class ApplicatioController extends BaseController
         echo json_encode($response);
     }
 
+    function updateSignatureReserv(){
+        $sysid = $this->request->getPost("DOC_RESV_ID");
+        try{
+            $signature = $this->request->getPost("signature");
+            $modesignature = $this->request->getPost("modesignature");
+            if($modesignature==1){
+                $extension = explode('/', mime_content_type($signature))[1];
+                $parts        = explode(";base64,", $signature);
+                $imageparts   = explode("image/", $parts[0]);
+                $imagetype    = $imageparts[1];
+                $fileName = time();
+                $signature=base64_decode($parts[1]);
+                $fileNameExt = $fileName.'.'.$extension;
+                file_put_contents('assets/upload/'.$fileNameExt,$signature);
+            }else{
+                $fileNameExt = basename($signature);   
+            }
+            $data = ["RESV_ETA" => $this->request->getPost("RESV_ETA"),
+                "RESV_ACCP_TRM_CONDI" => $this->request->getPost("RESV_ACCP_TRM_CONDI"),
+                "RESV_SINGATURE_URL" => $fileNameExt,
+                "RESV_UPDATE_UID" => $this->session->name,
+                "RESV_UPDATE_DT" => date("d-M-Y")
+            ];
+            $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
+            if($return){
+                $result = $this->responseJson("1","0",$return,$response='');
+                echo json_encode($result);
+            }else{
+                $result = $this->responseJson("-444",$message,$return);
+                echo json_encode($result);
+            }
+        }catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
 
+    function confirmPrecheckinStatus(){
+        $sysid = $this->request->getPost("DOC_RESV_ID");
+        $data = ["RESV_STATUS" => 'Pre Check-In Completed',
+            "RESV_UPDATE_UID" => $this->session->name,
+            "RESV_UPDATE_DT" => date("d-M-Y")
+        ];
+        $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
+        $result = $this->responseJson("1","0",$return,$response='');
+        echo json_encode($result);
+    }   
 
+    function reservationCheckin(){
+        $data['data']=array('RESV_ID'=>'','CUST_ID'=>'','CUST_COUNTRY'=>'','CUST_STATE'=>'','RESV_ACCP_TRM_CONDI'=>'','RESV_ACCP_TRM_CONDI'=>'');
+        $data['condition']='SUCC';
+        return view('WebCheckin/CheckInReservation',$data);
+    }
 }

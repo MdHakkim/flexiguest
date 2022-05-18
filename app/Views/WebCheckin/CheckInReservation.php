@@ -1,7 +1,8 @@
 
 <?php
+if(empty($condition)){
   $data=$data[0];
-  // print_r($data);exit;
+
   if($data['RESV_STATUS']=='Due Pre Check-In'){
     $statusClass='flxy_orng';
     $icon="fa-circle-xmark";
@@ -11,6 +12,7 @@
     $icon="fa-circle-check";
     $documentmess="Document verified";
   }
+}
   $folderPath = base_url('assets/upload/');
 ?>
 <html lang="en"
@@ -146,6 +148,7 @@
     </nav>
     <div class="container-fluid text-center flxy_content_flex">    
       <div class="container-sm">
+        <?php if(empty($condition)){?>
         <div class="row justify-content-center mb-4">
           <h4 class="breadcrumb-wrapper py-3 mb-1 text-start">Reservation Detail</h4>
           <div class="col-11 flxy_web_content"> 
@@ -269,8 +272,9 @@
                       <div class="card">
                         <div class="card-body flxy_web_padd">
                           <h5 class="card-title"><?php echo $data['FULLNAME'];?></h5>
-                          <p class="card-text">
-                            <i class="fa-solid <?php echo $icon;?> me-1"></i><?php echo $documentmess;?></p>
+                          <p class="card-text document-padding-done">
+                            <i class="fa-solid <?php echo $icon;?> me-1"></i><?php echo $documentmess;?>
+                          </p>
                         </div>
                         <ul class="list-group list-group-flush flxy_web-ul">
                           <li class="list-group-item text-flxy">
@@ -470,14 +474,115 @@
                     </div>
                   </div>
                 </div>
+                <div class="flxy_signature_block">
+                  <div class="singatureContent">
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <th class="text-end">Guest Name</th>
+                          <td><?php echo $data['FULLNAME'];?></td>
+                          <td class="text-end fw-bold">Apartment Number</td>
+                          <td><?php echo $data['RESV_ROOM'];?></td>
+                        </tr>
+                        <tr>
+                          <th class="text-end">Reservation Number</th>
+                          <td><?php echo $data['RESV_NO'];?></td>
+                          <td class="text-end fw-bold">Apartment Details</td>
+                          <td><?php echo $data['RM_TY_DESC'];?></td>
+                        </tr>
+                        <tr>
+                          <th class="text-end">Arrival</th>
+                          <td><?php echo $data['RESV_ARRIVAL_DT'];?></td>
+                          <td class="text-end fw-bold">Phone</td>
+                          <td><?php echo $data['CUST_PHONE'];?></td>
+                        </tr>
+                        <tr>
+                          <th class="text-end">Departure</th>
+                          <td><?php echo $data['RESV_DEPARTURE'];?></td>
+                          <td class="text-end fw-bold">Email</td>
+                          <td><?php echo $data['CUST_EMAIL'];?></td>
+                        </tr>
+                        <tr>
+                          <th class="text-end">Adult/Children</th>
+                          <td><?php echo $data['RESV_ADULTS'].'/'.$data['RESV_CHILDREN'];?></td>
+                          <td class="text-end fw-bold">Nationality</td>
+                          <td><?php echo $data['CUST_NATIONALITY'];?></td>
+                        </tr>
+                        <tr>
+                          <td colspan="4">
+                            <div class="col-md-4">
+                              <lable class="form-lable"> Please update your expected time of arrival </lable>
+                                <input type="time" value="<?php echo $data['RESV_ETA'];?>" name="RESV_ETA" id="RESV_ETA" class="form-control" placeholder="estime Time" />
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                      <h4 class="text-start">Terms and Conditions</h4>
+                      <p class="text-align:right;">         
+                        <ol class="text-start">
+                          <li >Property facilities such as swimming pool and gym are available for guests and may be used at your own risk. Hotel will not be liable for any injury as well as any lost or stolen personal belongings resulting from usage of these facilities. Any damages to the facilities and/or its equipment will result to charges.</li>
+                          <li>
+                          In-room safes are provided for the security of your valuables. Hotel will not be responsible for any lost, stolen or damaged personal items. Hotel is not responsible for any items left in your room or private vehicle.
+                          </li>
+                          <li>
+                          My signature on this registration card is an authorization to use my credit card for any unpaid bills. I accept full liability for any bills associated during my stay and I agree to be held personally liable in the event that the indicated person/company or third party fails to pay for any part of the charges or full amount.
+                          <li>
+                          Early Departures: All Reservations are confirmed and charged in full for the entire duration of stay. No refunds will apply in the event of Early Departures.
+                          </li>
+                          <li>
+                          I agree that I will be liable to pay for any damages or loss in the apartment assigned to me for the entire stay including apartment keys, furnishings, fixtures and equipment. All related repairs and replacements required will be subject to evaluation and/or assessment of the damage or loss.
+                          </li>
+                          <li>
+                          All rooms and units are strictly Non-smoking, I fully understand that any violation of the non-smoking policy will result to a penalty subject to management discretion.
+                          </li>
+                          <li>
+                          I hereby accept that any items thrown off the balcony of my occupied room or apartment will result in immediate eviction. I agree to supervise all children (below 16 years and under) on the balcony at all times and to ensure that balcony and windows are locked before exiting the room or apartment.
+                          </li>
+                          <li>
+                          Acknowledge that I have access to the Hotel Handbook in the Hotel App which contains a guide to Hotel and the Community Rules.
+                          </li>
+                          <li>
+                          I hereby agree that staff from Hotel housekeeping, maintenance and associated teams can enter my apartment for cleaning services or to attend to any maintenance issues. Although we endeavor to notify residents in advance, direct access may be required in an emergency situation.
+                          </li>
+                          <li>
+                          Housekeeping cleaning services and linen change will be offered once per week at a preset date & time frame.
+                          </li>
+                        </ol>       
+                      </p>
+                      <div class="form-check" style="display: flex;">
+                        <input class="form-check-input" type="checkbox" <?php echo (trim($data['RESV_ACCP_TRM_CONDI'])=='Y' ? 'checked':'');?> id="agreeTerms">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          I accept the terms and conditions
+                        </label>
+                      </div>
+                      <div class="row" style="justify-content: right;padding: 48px;"> 
+                        <div class="col-md-3">
+                          <button type="button" <?php echo $data['RESV_SINGATURE_URL']!='' ? 'style="display:none;"' : '';?> id="clickSignature" class="btn btn-secondary">Click to sign here</button>
+                          <img id="captureSignature" style="width:100%;" src="<?php echo base_url('assets/upload/'.$data['RESV_SINGATURE_URL']);?>"/>
+                        </div>
+                      </div>
+                  </div>
+                </div>
                 <div class="flxy_web-footer text-end">
                   <button type="button" onClick="sliderWebWid('P')" class="btn btn-blue btn-primary"><i class="fa-solid fa-chevron-left"></i> Back</button>
                   <button type="button" onClick="sliderWebWid('N')" class="btn continueDefult btn-blue btn-primary">Continue <i class="fa-solid fa-chevron-right"></i></button>
+                  <button type="button" onClick="updateSignature()" class="btn btn-success updateSignature signHideClass">Continue <i class="fa-solid fa-chevron-right"></i></button>
                   <button type="button" onClick="updateCustomer()" class="btn saveContinue btn-success">Save & Continue <i class="fa-solid fa-chevron-right"></i></button>
                 </div>
               </div>
           </div>
         </div>
+        <?php }else{?>
+          <div class="row mt-4">
+            <div class="col-11">
+            <p style="font-size: 40px;color: green;"><i class="fa-solid fa-circle-check"></i></p>  
+            <h2>You have successfully completed your Pre-Arrival Check-in Process</h2>
+            <h5 style="font-weight: inherit;">We look forward to welcoming you soon. A confirmation email with a unique QR code has been sent to your registered email address. Please check your inbox or Spam folder.</h5>
+          </div>
+          </div>
+        <?php }?>
       </div>
     </div>
     <footer class="container-fluid text-center mt-auto">
@@ -493,6 +598,7 @@
     <?= $this->include('Layout/FooterScript') ?>
   </body>
 </html>
+<?php if(empty($condition)){?>
     <div class="modal fade" id="imageCropping" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog modal-md" style="min-width:600px!important;">
         <div class="modal-content">
@@ -589,7 +695,7 @@
                 <input type="hidden" class="form-control form-control-sm" id="VACC_DOC_SAVED" name="VACC_DOC_SAVED">
                 <label for="inputPassword" class="col-sm-4 col-form-label text-end">Vaccine Certificate</label>
                 <div class="col-sm-8">
-                    <input class="form-control form-control-sm" name="files[]" multiple onChange="uploadVaccine(this)" type="file">
+                    <input class="form-control form-control-sm" id="fileUpload" name="files[]" multiple onChange="uploadVaccine(this)" type="file">
                 </div>
                 <div class="col-sm-12 text-center previewClass">
                     
@@ -611,25 +717,126 @@
         </div>
       </div>
     </div>
+
+      <div class="modal fade" id="signaturWindow" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="rateQueryWindowLable">Signature Here</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div id="signature" style=''>
+                  <canvas id="signature-pad" class="signature-pad" width="460px" height="200px"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="clearButton" class="btn btn-secondary">Clear</button>
+              <button type="button" id="submitSignatureImage" class="btn btn-secondary">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="checkInConfirmWindow" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="rateQueryWindowLable">Confirmation</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary" onClick="confirmPrecheckin()" type="button">Pre-Check-in Now</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<?php } ?>
+      <link href="<?php //echo base_url('assets/signature/jquery.signature.css'); ?>" rel="stylesheet">
+      <script src="<?php echo base_url('assets/signature/signature_pad.js'); ?>"></script>
+      <script src="<?php //echo base_url('assets/signature/jquery.signature.js'); ?>"></script>
+      <script src="<?php //echo base_url('assets/signature/jquery.ui.touch-punch.js'); ?>"></script>
+  <style>
+    #signature{
+      width: 100%;
+      height: auto;
+    }
+  </style>
 <script>
+  var condi='<?php echo $condition;?>';
+  if(condi==''){
+    var resrid='<?php echo $data['RESV_ID'];?>';
+    var custid='<?php echo $data['CUST_ID'];?>';
+    var countryCode='<?php echo $data['CUST_COUNTRY'];?>';
+    var statecode='<?php echo $data['CUST_STATE'];?>';
+  }
+ 
+  $(document).ready(function() {
+    $('.flxy_signature_block').hide();
+    $('.continueDefult').show();
+    $('.saveContinue').addClass('hideSaveCont');
+    checkStatusUploadFiles();
+    $('.CUST_DOB,.VACC_LAST_DT').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true,
+    });
+  });
+
   var size;
+  var docuClick='';
+  var farwrdClick=0;
   function sliderWebWid(param){
+    $('.updateSignature').addClass('signHideClass');
     if(docuClick=='PROOF'){
       $('.sliderclass:eq(1)').addClass('activeslide');
       $('.flxy_web-blockcont').removeClass('flxy_none');
       $('.flxy_doc_block').addClass('flxy_none');
       $('.continueDefult').show();
-      $('.saveContinue').hide();
+      $('.saveContinue').addClass('hideSaveCont');
       return false;
     }
     if(param=='N'){
+      var length = $('.sliderclass.activeslide').next('.sliderclass').length;
+      if(length==0){
+        $('.updateSignature').removeClass('signHideClass');
+        $('.continueDefult').hide();
+        continueToTaskSlide();
+        farwrdClick=1;
+      }
       $('.sliderclass.activeslide').removeClass('activeslide').next().addClass('activeslide');
     }else{
-      $('.sliderclass.activeslide').removeClass('activeslide').prev().addClass('activeslide');
+      $('.flxy_web-header,.flxy_web-blockcont').show();
+      $('.flxy_signature_block').hide();
+      if($('.sliderclass.activeslide').prev().length>0){
+        $('.sliderclass.activeslide').removeClass('activeslide').prev().addClass('activeslide');  
+      }
+      if(farwrdClick==1){
+        $('.continueDefult').show();
+        $('.updateSignature').addClass('signHideClass');
+        previewSlideClick(farwrdClick);
+        farwrdClick=0;
+      }
     }
+    // console.log(farwrdClick,"AVTION");
   }
 
-  var docuClick='';
+  function continueToTaskSlide(){
+    $('.flxy_web-header,.flxy_web-blockcont').hide();
+    $('.flxy_signature_block').show();
+  }
+
+  function previewSlideClick(){
+    $('.sliderclass:eq(1)').addClass('activeslide');
+    $('.flxy_web-header,.flxy_web-blockcont').show();
+    $('.flxy_signature_block').hide();
+  }
+
   function docUploadClik(param){
     runCountryList();
     var DOC_CUST_ID=$('[name="DOC_CUST_ID"]').val();
@@ -637,7 +844,7 @@
     if(param=='D'){
       docuClick='PROOF';
       $('.continueDefult').hide();
-      $('.saveContinue').show();
+      $('.saveContinue').removeClass('hideSaveCont');
       $('.sliderclass').removeClass('activeslide');
       $('.flxy_doc_block').removeClass('flxy_none');
       $('.flxy_web-blockcont').addClass('flxy_none');
@@ -653,6 +860,7 @@
         }
       });
     }else{
+      $('#fileUpload').val('');
       $.ajax({
         url: '<?php echo base_url('/getVaccinUploadImages')?>',
         type: "post",
@@ -689,16 +897,6 @@
       $('#vaccineModal').modal('show');
     }
   }
-
-  $(document).ready(function() {
-    $('.continueDefult').show();
-    checkStatusUploadFiles();
-    $('.saveContinue').hide();
-    $('.CUST_DOB,.VACC_LAST_DT').datepicker({
-        format: 'd-M-yyyy',
-        autoclose: true,
-    });
-  });
 
   function browseFile(){
     $('#formFile').trigger('click');
@@ -824,8 +1022,6 @@
       });
   });
 
-  var countryCode='<?php echo $data['CUST_COUNTRY'];?>';
-  var statecode='<?php echo $data['CUST_STATE'];?>';
   function runCountryList(){
     $.ajax({
         url: '<?php echo base_url('/countryList')?>',
@@ -873,7 +1069,8 @@
 
   $(document).on('click','#updateVaccine',function(){
     var formData = new FormData($('#vaccineForm')[0]);   
-    formData.append('DELETEIMAGE', formImageDeletArr);                  
+    formData.append('DELETEIMAGE', formImageDeletArr);   
+    console.log(formData,"ACTION");               
     $.ajax({
       url: '<?php echo base_url('/updateVaccineReport')?>',
       type: "post",
@@ -935,23 +1132,25 @@
       url: '<?php echo base_url('/checkStatusUploadFiles')?>',
       type: "post",
       headers: {'X-Requested-With': 'XMLHttpRequest'},
-      // data:formSerialization,
+      data:{custid:custid,resrid:resrid},
       dataType:'json',
       success:function(respn){
         var jsonForm = respn[0];
+        // console.log(jsonForm.TOTAL_PROOF,"ACTION");
+        if(jsonForm.TOTAL_PROOF>0 && jsonForm.TOTAL_VACC>0){
+          $('.document-padding-done').html('<i class="fa-solid fa-circle-check me-1"></i> Document verified');
+        }
         updateStatuIconButton(jsonForm);
       }
     });
   }
   
   function uploadVaccine(input){
-    // var output = document.getElementById('vaccinePreview');
     if (input.files) {
         var filesAmount = input.files.length;
         for (i = 0; i < filesAmount; i++) {
             var reader = new FileReader();
             reader.onload = function(event) {
-              // console.log(event.target.result,"ssdd");
                 $('.previewClass').append('<span id="vaccinePreview"><img src="'+event.target.result+'" id=""></span>');
             }
             reader.readAsDataURL(input.files[i]);
@@ -971,16 +1170,79 @@
         $('.flxy_doc_vacc').removeClass('flxy_green').addClass('flxy_orng').text('Pending');
       }
   }
+
+  function updateSignature(){
+    var arrivTime = $('#RESV_ETA').val();
+    var signature = $('#captureSignature').attr('src');
+    var DOC_RESV_ID = $('[name="DOC_RESV_ID"]').val();
+    $.ajax({
+      url: '<?php echo base_url('/updateSignatureReserv')?>',
+      type: "POST",
+      headers: {'X-RequearrivTimested-With': 'XMLHttpRequest'},
+      data:{RESV_ETA:arrivTime,RESV_ACCP_TRM_CONDI:AGREE_TERMS,signature:signature,DOC_RESV_ID:DOC_RESV_ID,modesignature:newImageSignature},
+      dataType:'json',
+      success:function(respn){
+       console.log(respn,"ACTIONSES");
+       $('#checkInConfirmWindow').modal('show');
+      }
+    });
+  }
   
   var formImageDeletArr=[];
   $(document).on('click','.vaccdelete',function(){
+    $(this).parent().remove();
     var name = $(this).attr('id');
     formImageDeletArr.push(name);
   });
-
 
   $(document).on('change','.radioCheck',function(){
     var value = $(this).attr('method');
     $('#VACC_DETAILS').val(value);
   });
+  var signaturePad = '';
+  $(document).on('click','#clickSignature',function(){
+    $('#signaturWindow').modal('show');
+    signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+  });
+  $(document).on('click','#clearButton',function(){
+    signaturePad.clear();
+  });
+  var newImageSignature=0;
+  $(document).on('click','#submitSignatureImage',function(){
+    var data = signaturePad.toDataURL('image/png');
+    $('#captureSignature').attr("src",data);
+    $('#clickSignature').hide();
+    $('#signaturWindow').modal('hide');
+    newImageSignature=1;
+  });
+  $(document).on('click','#captureSignature',function(){
+    $('#clickSignature').click();
+    var image = $('#captureSignature').attr("src");
+    signaturePad.fromDataURL(image);
+  });
+  
+  var AGREE_TERMS='<?php echo ($data['RESV_ACCP_TRM_CONDI']=='N' || $data['RESV_ACCP_TRM_CONDI']=='' ? 'N':'Y')?>';
+  $(document).on('click','#agreeTerms',function(){
+    var checked = $(this).is(':checked');
+    if(checked){
+      AGREE_TERMS='Y';
+    }else{
+      AGREE_TERMS='N';
+    }
+  });
+
+  function confirmPrecheckin(){
+    var DOC_RESV_ID = $('[name="DOC_RESV_ID"]').val();
+    $.ajax({
+      url: '<?php echo base_url('/confirmPrecheckinStatus')?>',
+      type: "POST",
+      headers: {'X-RequearrivTimested-With': 'XMLHttpRequest'},
+      data:{DOC_RESV_ID:DOC_RESV_ID},
+      dataType:'json',
+      success:function(respn){
+       console.log(respn,"ACTIONSES");
+       window.location = '/reservationCheckin';
+      }
+    });
+  }
 </script>
