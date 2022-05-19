@@ -6,10 +6,314 @@
 
 (function () {
 
-  const select2 = $('.select2'),
-    dateField = $('.dateField'),
-    tagifyElems = $('.TagifyRoomTypeList,.TagifyRateCatList');
+  const select2Pkg = $('.select2Pkg'),
+    textField = $('.textField'),    
+    datePkgField = $('.datePkgField');
   //const selectPicker = $('.selectpicker');
+
+
+// Rate Package Wizard Validation
+  // --------------------------------------------------------------------
+  const ratePkgWizardValidation = document.querySelector('#rtpkg-wizard-validation');
+  if (typeof ratePkgWizardValidation !== undefined && ratePkgWizardValidation !== null) {
+    // Wizard form
+    const ratePkgWizardValidationForm = ratePkgWizardValidation.querySelector('#packageCode-submit-form');
+    // Wizard steps
+    const ratePkgWizardValidationFormStep1 = ratePkgWizardValidationForm.querySelector('#package-header-validation');
+    const ratePkgWizardValidationFormStep2 = ratePkgWizardValidationForm.querySelector('#package-detail-validation');
+
+    // Wizard next prev button
+    const ratePkgWizardValidationNext = [].slice.call(ratePkgWizardValidationForm.querySelectorAll('.btn-next'));
+    const ratePkgWizardValidationPrev = [].slice.call(ratePkgWizardValidationForm.querySelectorAll('.btn-prev'));
+
+    const ratePkgValidationStepper = new Stepper(ratePkgWizardValidation, {
+      linear: true
+    });
+
+    // Account details
+
+    const ratePkgFormValidation1 = FormValidation.formValidation(ratePkgWizardValidationFormStep1, {
+      fields: {
+        PKG_CD_CODE: {
+          validators: {
+            notEmpty: {
+              message: 'The Package Code is required'
+            },
+            stringLength: {
+              min: 2,
+              max: 15,
+              message: 'The Package Code must be more than 2 and less than 15 characters long'
+            },
+            regexp: {
+              regexp: /^[a-zA-Z0-9\- ]+$/,
+              message: 'The Rate Code can only consist of alphabets, numbers, spaces and hyphen'
+            }
+          }
+        },
+        PKG_CD_DESC: {
+          validators: {
+            notEmpty: {
+              message: 'Description is required'
+            },
+            stringLength: {
+              min: 5,
+              max: 50,
+              message: 'The Description must be more than 5 and less than 50 characters long'
+            }
+          }
+        },
+        PKG_RT_TR_CD_ID: {
+          validators: {
+            notEmpty: {
+              message: 'Transaction Code cannot be empty'
+            }
+          }
+        },
+        PO_RH_ID: {
+          validators: {
+            notEmpty: {
+              message: 'Posting Rhythm cannot be empty'
+            }
+          }
+        },  
+        CLC_RL_ID: {
+          validators: {
+            notEmpty: {
+              message: 'Calculation Rule cannot be empty'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          // Use this for enabling/changing valid/invalid class
+          // eleInvalidClass: '',
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            // field is the field name & ele is the field element
+            switch (field) {
+              case 'PKG_CD_DESC':
+                return '.col-md-7';
+              case 'PKG_CD_CODE':
+                return '.col-md-3';
+              case 'PKG_RT_TR_CD_ID':
+                return '.col-md-4';
+              case 'PO_RH_ID':
+              case 'CLC_RL_ID':
+                return '.col-md-8';
+              default:
+                return '.row';
+            }
+          }
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      },
+      init: instance => {
+        instance.on('plugins.message.placed', function (e) {
+          //* Move the error message out of the `input-group` element
+          if (e.element.parentElement.classList.contains('input-group')) {
+            e.element.parentElement.insertAdjacentElement('afterend', e.messageElement);
+          }
+        });
+      }
+    }).on('core.form.valid', function () {
+
+      var pkgCodeID = $('#PKG_CD_ID').val();
+      if (pkgCodeID)
+        showPackageCodeDetails(pkgCodeID);
+
+      // Jump to the next step when all fields in the current step are valid
+      //ratePkgValidationStepper.next();
+
+    });
+
+    // Personal info
+    const ratePkgFormValidation2 = FormValidation.formValidation(ratePkgWizardValidationFormStep2, {
+      fields: {
+        PKG_CD_START_DT: {
+          validators: {
+            notEmpty: {
+              message: 'The Start Date cannot be empty'
+            }
+          }
+        },
+        PKG_CD_END_DT: {
+          validators: {
+            notEmpty: {
+              message: 'The End Date cannot be empty'
+            }
+          }
+        },
+        PKG_CD_DT_PRICE: {
+          validators: {
+            notEmpty: {
+              message: 'The Price cannot be empty'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          // Use this for enabling/changing valid/invalid class
+          // eleInvalidClass: '',
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            // field is the field name & ele is the field element
+            switch (field) {
+              case 'PKG_CD_START_DT':
+              case 'PKG_CD_END_DT':
+              case 'PKG_CD_DT_PRICE':
+                return '.col-md-8';
+              default:
+                return '.row';
+            }
+          }
+        }),
+        autoFocus: new FormValidation.plugins.AutoFocus(),
+        submitButton: new FormValidation.plugins.SubmitButton()
+      }
+    }).on('core.form.valid', function () {
+      // Jump to the next step when all fields in the current step are valid
+      // You can submit the form
+      // ratePkgWizardValidationForm.submit()
+      // or send the form data to server via an Ajax request
+      // To make the demo simple, I just placed an alert
+      //alert('Submitted..!!');
+      //ratePkgValidationStepper.next();
+
+    });
+
+
+    if (textField.length) {
+      textField.each(function () {
+        var $this = $(this);
+        $this
+          .on('blur,change', function () {
+            ratePkgFormValidation1.revalidateField($this.attr('id'));
+          });
+      });
+    }
+
+    if (datePkgField.length) {
+      datePkgField.each(function () {
+        var $this = $(this);
+        $this
+          .on('blur,change', function () {
+            ratePkgFormValidation2.revalidateField($this.attr('id'));
+          });
+      });
+    }
+
+    // select2
+    if (select2Pkg.length) {
+      select2Pkg.each(function () {
+        var $this = $(this);
+        $this
+          .on('change.select2', function () {
+            // Revalidate the color field when an option is chosen
+            if (jQuery.inArray($this.attr('id'), ['PO_RH_ID', 'CLC_RL_ID']) !== -1)
+              ratePkgFormValidation1.revalidateField($this.attr('id'));
+          });
+      });
+    }
+
+    
+    // Reset form validation when add or edit form is loaded
+    $(document).on('click', '.tagify__tag', function () {
+      ratePkgFormValidation1.resetForm();
+    });
+
+    $(document).on('click', '.saveBtn', function () {
+      ratePkgFormValidation1.validate();
+    });
+
+    $(document).on('click', '.add-package-code-detail', function () {
+      ratePkgFormValidation2.resetForm();
+    });
+
+    $(document).on('click', '.save-package-code-detail', function () {
+      ratePkgFormValidation2.validate();
+    });
+
+    $(document).on('click', '.btn-next', function () {
+
+      ratePkgFormValidation1.validate().then(function (status) {
+        // status can be one of the following value
+        // 'NotValidated': The form is not yet validated
+        // 'Valid': The form is valid
+        // 'Invalid': The form is invalid
+        if (status == 'Valid')
+          ratePkgValidationStepper.next();
+      });
+
+    });
+
+    $(document).on('click', '#PKG_CD_Details > tbody > tr', function () {
+
+      $('#PKG_CD_Details').find('tr.table-warning').removeClass('table-warning');
+
+      $(this).addClass('table-warning');
+
+      $.when(loadPackageCodeDetails($(this).data('packagecodeid'), $(this).data('packagedetailsid')))
+        .done(function () {
+          ratePkgFormValidation2.revalidateField('PKG_CD_START_DT');
+          ratePkgFormValidation2.revalidateField('PKG_CD_END_DT');
+          ratePkgFormValidation2.revalidateField('PKG_CD_DT_PRICE');
+        })
+        .done(function () {
+          blockLoader('package-detail-validation');
+        });
+    });
+
+    // Bootstrap Select (i.e Language select)
+    /*
+    if (selectPicker.length) {
+      selectPicker.each(function () {
+        var $this = $(this);
+        $this.selectpicker().on('change', function () {
+          ratePkgFormValidation2.revalidateField('formValidationLanguage');
+        });
+      });
+    }
+    */
+
+    ratePkgWizardValidationNext.forEach(item => {
+      item.addEventListener('click', event => {
+        // When click the Next button, we will validate the current step
+        switch (ratePkgValidationStepper._currentIndex) {
+          case 0:
+            ratePkgFormValidation1.validate();
+            break;
+
+          case 1:
+            ratePkgFormValidation2.validate();
+            break;
+
+          default:
+            break;
+        }
+      });
+    });
+
+    ratePkgWizardValidationPrev.forEach(item => {
+      item.addEventListener('click', event => {
+        switch (ratePkgValidationStepper._currentIndex) {
+          case 2:
+          case 1:
+            ratePkgValidationStepper.previous();
+            break;
+
+          case 0:
+
+          default:
+            break;
+        }
+      });
+    });
+  }
 
   // Users List suggestion
   //------------------------------------------------------
@@ -68,11 +372,13 @@
       whitelist: packageCodeList,
       callbacks: {
         //"remove": (e) => $('#RT_CL_CODE').val(""),
-        "blur": (e) => dropdown.hide()
+        //"blur": (e) => dropdown.hide()
+        "click": (e) => (rateCodeID) ? showRatePackageForm(rateCodeID, e.detail.data.value, e.detail.data.id) : '',
       }
     });
 
     TagifyPackageCodeList.on('dropdown:show dropdown:updated', onDropdownPackageCodeShow);
+    //TagifyPackageCodeList.on('dropdown:select', getSelectedData);
     TagifyPackageCodeList.on('dropdown:select', onSelectPackageCodeSuggestion);
 
     let addAllPackageCodeSuggestionsEl;
@@ -90,6 +396,22 @@
 
     function onSelectPackageCodeSuggestion(e) {
       if (e.detail.elm == addAllPackageCodeSuggestionsEl) TagifyPackageCodeList.dropdown.selectAll.call(TagifyPackageCodeList);
+    }
+
+    function getSelectedData(e) {
+
+      //console.log("onDropdownSelect: ", e.detail);
+
+      var selectedData = e.detail.tagify.value;
+
+      if (selectedData.length == 1)
+        console.log("selectedSingleData: ", selectedData);
+      else {
+        $.each(selectedData, function (ind, val) {
+          console.log("selectedMultiData: ", val);
+        });
+      }
+
     }
 
     // create an "add all" custom suggestion element every time the dropdown changes

@@ -7,6 +7,7 @@
 (function () {
 
   const select2 = $('.select2'),
+    textField = $('.textField'),
     dateField = $('.dateField'),
     tagifyElems = $('.TagifyRoomTypeList,.TagifyRateCatList');
   //const selectPicker = $('.selectpicker');
@@ -124,7 +125,7 @@
         showPackageCodeDetails(pkgCodeID);
 
       // Jump to the next step when all fields in the current step are valid
-      validationStepper.next();
+      //validationStepper.next();
 
     });
 
@@ -186,6 +187,16 @@
     });
 
 
+    if (textField.length) {
+      textField.each(function () {
+        var $this = $(this);
+        $this
+          .on('blur,change', function () {
+            FormValidation1.revalidateField($this.attr('id'));
+          });
+      });
+    }
+
     if (dateField.length) {
       dateField.each(function () {
         var $this = $(this);
@@ -225,6 +236,36 @@
           });
       });
     }
+
+    // Reset form validation when add or edit form is loaded
+    $(document).on('click', '.addWindow,.editWindow', function () {
+      FormValidation1.resetForm();
+    });
+
+    $(document).on('click', '.saveBtn', function () {
+      FormValidation1.validate();
+    });
+
+    $(document).on('click', '.add-package-code-detail', function () {
+      FormValidation2.resetForm();
+    });
+
+    $(document).on('click', '.save-package-code-detail', function () {
+      FormValidation2.validate();
+    });
+
+    $(document).on('click', '.btn-next', function () {
+
+      FormValidation1.validate().then(function (status) {
+        // status can be one of the following value
+        // 'NotValidated': The form is not yet validated
+        // 'Valid': The form is valid
+        // 'Invalid': The form is invalid
+        if (status == 'Valid')
+          validationStepper.next();
+      });
+
+    });
 
     $(document).on('click', '#PKG_CD_Details > tbody > tr', function () {
 
