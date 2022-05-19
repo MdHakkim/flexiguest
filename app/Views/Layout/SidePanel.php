@@ -894,6 +894,13 @@
                     <div data-i18n="Email Templates">Email Templates</div>
                   </a>
                 </li>
+
+                <li class="menu-item">
+                  <a href="<?= base_url('/news') ?>" class="menu-link">
+                    <div data-i18n="News">News</div>
+                  </a>
+                </li>
+                
                   </ul>
                 </li>
 

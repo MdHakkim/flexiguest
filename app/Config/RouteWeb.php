@@ -290,7 +290,17 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/editStages', 'FacilityController::editStages');
     $routes->match(['post'],'/getStagesList', 'FacilityController::getStagesList');
    
-    
+    // ABUBAKAR CODE (START)
+    $routes->group('/news', function ($routes) {
+        $routes->get('', 'NewsController::news');
+        $routes->post('all-news', 'NewsController::allNews');
+        $routes->post('store', 'NewsController::store');
+        $routes->post('edit', 'NewsController::edit');
+        $routes->delete('delete', 'NewsController::delete');
+    });
+
+
+    // ABUBAKAR CODE (END)
 });
 
 

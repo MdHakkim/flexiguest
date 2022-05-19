@@ -15,7 +15,7 @@ $routes->group("api", function ($routes) {
     $routes->post("login", "APIController::loginAPI");
 
 });
-$routes->group("api", ["filter" => "authapi"], function ($routes) {
+$routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 
     $routes->get("profile", "APIController::profileAPI"); // user profile 
 //----------------------------------------------------------------------------- CHECK-IN --------------------------------------------------------------------//
@@ -79,3 +79,19 @@ $routes->get("maintenance/listRequests/(:segment)", "APIController::listRequests
 $routes->get("maintenance/listRequests", "APIController::listRequests"); 
 
 //  ------------------------------------ALEESHA CODES ENDS--------------------------------------- //
+
+
+//  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
+
+$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
+
+    $routes->get("reservation/get-reservations-list", "ReservationController::getReservationsList");
+    $routes->get("news", "NewsController::news");
+
+    $routes->group("", ['namespace' => 'App\Controllers'], function($routes){  
+        $routes->post("customer/update-customer-details", "APIController::saveDocDetails"); 
+        $routes->get("profile", "APIController::profileAPI");
+    });
+});
+
+//  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
