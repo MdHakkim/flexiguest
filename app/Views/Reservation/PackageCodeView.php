@@ -94,7 +94,7 @@
                                                             *</b></label>
                                                     <div class="col-md-3">
                                                         <input type="text" name="PKG_CD_CODE" id="PKG_CD_CODE"
-                                                            class="form-control bootstrap-maxlength" maxlength="10"
+                                                            class="form-control bootstrap-maxlength textField" maxlength="10"
                                                             placeholder="eg: 1001" required />
                                                     </div>
                                                 </div>
@@ -116,7 +116,7 @@
                                                             *</b></label>
                                                     <div class="col-md-7">
                                                         <input type="text" name="PKG_CD_DESC" id="PKG_CD_DESC"
-                                                            class="form-control bootstrap-maxlength" maxlength="50"
+                                                            class="form-control bootstrap-maxlength textField" maxlength="50"
                                                             placeholder="eg: Online Travel Agent" />
                                                     </div>
                                                 </div>
@@ -248,7 +248,7 @@
                                                 data-bs-dismiss="modal">Close</button>
 
                                             <button type="button" onclick="submitForm('packageCode-submit-form')"
-                                                class="btn btn-success btn-next">
+                                                class="btn btn-success saveBtn">
                                                 <i class="fa-solid fa-floppy-disk"></i>&nbsp; Save
                                             </button>
 
@@ -478,7 +478,7 @@ $(document).ready(function() {
 
     });
     $("#dataTable_view_wrapper .row:first").before(
-        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>'
+        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary addWindow" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>'
     );
 
 });
