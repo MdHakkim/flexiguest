@@ -950,7 +950,7 @@ class MastersController extends BaseController
             $sysid = $this->request->getPost('PKG_CD_ID');
 
             $validate = $this->validate([
-                'PKG_CD_CODE' => ['label' => 'Package Code Code', 'rules' => 'required|is_unique[FLXY_PACKAGE_CODE.PKG_CD_CODE,PKG_CD_ID,' . $sysid . ']'],
+                'PKG_CD_CODE' => ['label' => 'Package Code', 'rules' => 'required|is_unique[FLXY_PACKAGE_CODE.PKG_CD_CODE,PKG_CD_ID,' . $sysid . ']'],
                 'PKG_CD_DESC' => ['label' => 'Package Code Description', 'rules' => 'required'],
                 'TR_CD_ID' => ['label' => 'Transaction Code', 'rules' => 'required'],
             ]);
@@ -1206,15 +1206,11 @@ class MastersController extends BaseController
         $sysid = $this->request->getPost('sysid');
 
         try {
-            /*
+            
             $return = $this->Db->table('FLXY_PACKAGE_CODE')->delete(['PKG_CD_ID' => $sysid]);
             $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
-            */
-
+            
             //Dummy function to prevent deletion if package is attached to any Rate Detail
-
-            $result["SUCCESS"] = "-402";
-            $result["ERROR"] = "Package is attached to Rate Detail(s) and cannot be deleted";
             echo json_encode($result);
 
         } catch (Exception $e) {
@@ -1234,7 +1230,7 @@ class MastersController extends BaseController
         $response = $this->Db->query($sql)->getNumRows();
 
         if($response <= 1) // Check if Package Code Detail can be deleted
-           echo $this->responseJson("0", "The Package Detail cannot be deleted");
+            echo json_encode($this->responseJson("0", "The Package Detail cannot be deleted"));
         else
         {
             try {
@@ -1871,7 +1867,22 @@ class MastersController extends BaseController
         $selectedRoomTypes = !empty($rateCodeDetails['RT_CD_ROOM_TYPES']) ? $this->roomTypeList($rateCodeDetails['RT_CD_ROOM_TYPES']) : array();
 
         $packageCodes = $this->packageCodeList();
-        $selectedPackageCodes = !empty($rateCodeDetails['RT_CD_PACKAGES']) ? $this->packageCodeList($rateCodeDetails['RT_CD_PACKAGES']) : array();
+
+        //$selectedPackageCodes = !empty($rateCodeDetails['RT_CD_PACKAGES']) ? $this->packageCodeList($rateCodeDetails['RT_CD_PACKAGES']) : array();
+        $getRateCodePackages = $this->getRateCodePackages($id);
+
+        $selectedPackageCodes = array();
+
+        foreach ($getRateCodePackages as $row) {
+            $selectedPackageCodes[] = array( "id" => $row['RT_CD_PKG_ID'], "value" => $row['PKG_CD_ID'], 
+                                             "name" => $row['PKG_CD_CODE'], "desc" => $row['PKG_CD_DESC']);
+        }
+
+        //echo "<pre>"; print_r($selectedPackageCodes); echo "</pre>"; exit;
+
+        $rateInclusionRules = $this->rateInclusionRuleList();
+        $postingRhythm = $this->postingRhythmList();
+        $calcInclusionRules = $this->calculationInclusionRuleList();
 
         $marketCodes = $this->marketCodeList();
         $sourceCodes = $this->sourceCodeList();
@@ -1898,6 +1909,9 @@ class MastersController extends BaseController
             'selectedRoomTypes' => $selectedRoomTypes,
             'packageCodeOptions' => $packageCodes,
             'selectedPackageCodes' => $selectedPackageCodes,
+            'rateInclusionRules' => $rateInclusionRules,
+            'postingRhythmOptions' => $postingRhythm,
+            'calcInclusionRules' => $calcInclusionRules,
             'marketCodeOptions' => $marketCodes,
             'sourceCodeOptions' => $sourceCodes,
             'transactionCodeOptions' => $transactionCodes,
@@ -1925,12 +1939,111 @@ class MastersController extends BaseController
         try {
             $return = $this->Db->table('FLXY_RATE_CODE')->delete(['RT_CD_ID' => $sysid]);
             $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+
+            if($result)
+                $this->Db->table('FLXY_RATE_CODE')->delete(['RT_CD_ID' => $sysid]);
+
             echo json_encode($result);
         } catch (Exception $e) {
             return $this->respond($e->errors());
         }
     }
 
+    public function getRateCodePackages($rcID = 0, $pkgId = 0, $rcPkgId = 0)
+    {
+        $param = ['SYSID' => $rcID];
+
+        $sql = "SELECT FPC.PKG_CD_ID, RTRIM(LTRIM(REPLACE(REPLACE(REPLACE(FPC.PKG_CD_CODE, CHAR(9), ' '), CHAR(10), ' '), CHAR(13), ' '))) AS PKG_CD_CODE,
+                FPC.PKG_CD_SHORT_DESC, 
+                FPC.TR_CD_ID, FPC.PKG_CD_TAX_INCLUDED, FPC.PKG_CD_SELL_SEP,
+                FRPC.RT_CD_PKG_ID,
+                (CASE WHEN FRPC.RT_CD_PKG_DESC IS NOT NULL THEN FRPC.RT_CD_PKG_DESC ELSE FPC.PKG_CD_DESC END) AS PKG_CD_DESC, 
+                (CASE WHEN FRPC.RT_INCL_ID IS NOT NULL THEN FRPC.RT_INCL_ID ELSE FPC.RT_INCL_ID END) AS RT_INCL_ID, 
+                (CASE WHEN FRPC.PO_RH_ID IS NOT NULL THEN FRPC.PO_RH_ID ELSE FPC.PO_RH_ID END) AS PO_RH_ID, 
+                (CASE WHEN FRPC.CLC_RL_ID IS NOT NULL THEN FRPC.CLC_RL_ID ELSE FPC.CLC_RL_ID END) AS CLC_RL_ID 
+        
+                FROM FLXY_PACKAGE_CODE FPC 
+                LEFT JOIN FLXY_RATE_CODE_PACKAGE FRPC ON (FRPC.PKG_CD_ID = FPC.PKG_CD_ID AND FRPC.RT_CD_ID=:SYSID: AND FRPC.RT_CD_PKG_STATUS = 1)
+                WHERE FPC.PKG_CD_STATUS = 1";
+
+        if ($pkgId != 0) {
+            $sql .= " AND FPC.PKG_CD_ID = $pkgId";
+        }
+
+        if ($rcPkgId != 0) {
+            $sql .= " AND FRPC.RT_CD_PKG_ID = $rcPkgId";
+        }
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        return $response;
+    }
+
+    public function showRateCodePackageDetails()
+    {
+        $rcPackageDetailsList = $this->getRateCodePackages( $this->request->getPost('rcId'), 
+                                                            null !== $this->request->getPost('pkgId') ? $this->request->getPost('pkgId') : 0, 
+                                                            null !== $this->request->getPost('rcPkgId') ? $this->request->getPost('rcPkgId') : 0);
+        
+        $rcPackages = array();
+        
+        foreach($rcPackageDetailsList as $rcPackageDetailsItem)
+        {
+            $rcPackages[] = array(  'PKG_CD_ID' => $rcPackageDetailsItem['PKG_CD_ID'], 'PKG_CD_CODE' => $rcPackageDetailsItem['PKG_CD_CODE'], 
+                                    'PKG_CD_DESC' => $rcPackageDetailsItem['PKG_CD_DESC'], 
+                                    'PKG_CD_SHORT_DESC' => $rcPackageDetailsItem['PKG_CD_SHORT_DESC'], 
+                                    'PKG_RT_TR_CD_ID' => $rcPackageDetailsItem['TR_CD_ID'], 'PKG_CD_TAX_INCLUDED' => $rcPackageDetailsItem['TR_CD_ID'], 
+                                    'RT_CD_PKG_ID' => $rcPackageDetailsItem['RT_CD_PKG_ID'],
+                                    'RT_INCL_ID' => $rcPackageDetailsItem['RT_INCL_ID'], 'PO_RH_ID' => $rcPackageDetailsItem['PO_RH_ID'], 
+                                    'CLC_RL_ID' => $rcPackageDetailsItem['CLC_RL_ID'] );
+        }
+                                                            
+        echo json_encode($rcPackages);
+    }
+
+    public function insertRateCodePackage()
+    {
+        try {
+            $sysid = $this->request->getPost('RT_CD_PKG_ID');
+
+            $validate = $this->validate([
+                'PKG_CD_ID' => ['label' => 'Package', 'rules' => 'required'],
+                'PKG_CD_CODE' => ['label' => 'Package Code', 'rules' => 'required'],
+                'PKG_CD_DESC' => ['label' => 'Package Code Description', 'rules' => 'required']
+            ]);
+
+            //echo json_encode(print_r($_POST));
+            //exit;
+
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $data = [
+                "RT_CD_ID" => trim($this->request->getPost('RT_CD_ID')),
+                "PKG_CD_ID" => trim($this->request->getPost('PKG_CD_ID')),
+                "RT_CD_PKG_DESC" => trim($this->request->getPost('PKG_CD_DESC')),
+                "RT_INCL_ID" => trim($this->request->getPost('RT_INCL_ID')),
+                "PO_RH_ID" => trim($this->request->getPost('PO_RH_ID')),
+                "CLC_RL_ID" => trim($this->request->getPost('CLC_RL_ID')),
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_RATE_CODE_PACKAGE')->where('RT_CD_PKG_ID', $sysid)->update($data) : $this->Db->table('FLXY_RATE_CODE_PACKAGE')->insert($data);
+            $newPkgCodeID = empty($sysid) ? $this->Db->insertID() : '';                        
+                
+            $result = $return ? $this->responseJson("1", "0", $return, !empty($sysid) ? $sysid : $newPkgCodeID) : $this->responseJson("-444", "db insert not successful", $return);
+
+            echo json_encode($result);
+            
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+    
     public function updateRateCodeDetail()
     {
         try {
