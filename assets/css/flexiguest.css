@@ -353,8 +353,14 @@ button.close {
   color: white;
   text-transform: uppercase;
 }
+.flxy_signature_block{
+  display: none;
+}
 
 /* web link checkin */
+.signHideClass{
+  display: none !important;
+}
 .flxy_web-header{
   min-height: 6vh;
   display: flex;
@@ -407,6 +413,9 @@ button.close {
 }
 .invalidfx-feedback{
   color: red;
+}
+.hideSaveCont{
+  display: none !important;
 }
 .flxy_web-blockcont{
   /* padding: 2em 8em 0em 8em; */

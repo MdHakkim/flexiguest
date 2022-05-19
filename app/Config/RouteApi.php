@@ -4,7 +4,7 @@
  * Api Router Setup begin
  * --------------------------------------------------------------------
  */
-//-------------------------------------  ALEESHA CODES ------------------------------------ //
+//-------------------------------------  ALEESHA CODES STARTS------------------------------------ //
 
 
 //-----------  FLEXI GUEST API ROUTES -----------------//
@@ -15,8 +15,7 @@ $routes->group("api", function ($routes) {
     $routes->post("login", "APIController::loginAPI");
 
 });
-
-$routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
+$routes->group("api", ["filter" => "authapi"], function ($routes) {
 
     $routes->get("profile", "APIController::profileAPI"); // user profile 
 //----------------------------------------------------------------------------- CHECK-IN --------------------------------------------------------------------//
@@ -24,12 +23,18 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     $routes->get("checkin/listReservations", "APIController::listReservationsAPI"); 
     // API to get the reservation details from reservation number
     $routes->get("checkin/listReservations/(:segment)", "APIController::listReservationsAPI/$1"); 
-    // API to upload the  documnets for checkin 
-    $routes->post("checkin/docUplaod", "APIController::passportUploadAPI"); 
+    // API to upload the  documnets proof for checkin 
+    $routes->get("checkin/checkPrevDocs", "APIController::checkDocDetails"); 
+    // API to upload the  documnets proof for checkin 
+    $routes->post("checkin/docUplaod", "APIController::docUploadAPI"); 
+    // API to upload the  Vaccine for checkin 
+    $routes->post("checkin/vaccineUplaod", "APIController::Vaccineupload"); 
     // API to fetch guest profile including the guest accomonaying persons
     $routes->get("checkin/guestProfile", "APIController::getGuestAccompanyProfiles"); 
     // API to update the guest details from the doc uploaded.
     $routes->post("checkin/saveDoc", "APIController::saveDocDetails"); 
+    // API to update the guest details from the doc uploaded.
+    $routes->get("checkin/getUserDetails", "APIController::FetchSavedDocDetails"); 
     // API to Delete doc uploaded.
     $routes->post("checkin/deleteDoc", "APIController::deleteUploadedDOC"); 
     // API to Add the details of the vaccine details 
@@ -46,6 +51,10 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     $routes->get("maintenance/listRequests/(:segment)", "APIController::listRequests/$1");
     // API to fetch all requests
     $routes->get("maintenance/listRequests", "APIController::listRequests"); 
+    // API to get category list of maintenance
+    $routes->get('maintenance/getCategory', 'FacilityController::maintenanceCategoryList');  
+     // API to get Subcategory list of maintenance by categoryID
+    $routes->post('maintenance/getSubCategory/(:segment)', 'FacilityController::maintenanceSubCatByCategoryID/$1'); 
 // ---------------------------------------------------------------------------- Feedback --------------------------------------------------------------------------------//
     // API to fetch all requests
     $routes->post("addFeedback", "APIController::addFeedBack"); 
@@ -69,25 +78,4 @@ $routes->get("maintenance/listRequests/(:segment)", "APIController::listRequests
 // API to fetch all requests
 $routes->get("maintenance/listRequests", "APIController::listRequests"); 
 
-
-
-
-
-
-//  ------------------------------------ALEESHA CODES --------------------------------------- //
-
-
-//  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
-
-$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
-
-    $routes->get("reservation/get-reservations-list", "ReservationController::getReservationsList");
-    $routes->get("news", "NewsController::news");
-
-    $routes->group("", ['namespace' => 'App\Controllers'], function($routes){  
-        $routes->post("customer/update-customer-details", "APIController::saveDocDetails"); 
-        $routes->get("profile", "APIController::profileAPI");
-    });
-});
-
-//  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
+//  ------------------------------------ALEESHA CODES ENDS--------------------------------------- //

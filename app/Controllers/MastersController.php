@@ -57,7 +57,7 @@ class MastersController extends BaseController
                 'RT_CL_DESC' => ['label' => 'Rate Class Description', 'rules' => 'required'],
                 'RT_CL_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
                 'RT_CL_BEGIN_DT' => ['label' => 'Begin Date', 'rules' => 'required'],
-                'RT_CL_END_DT' => ['label' => 'End Date', 'rules' => 'compareDate', 'errors' => ['compareDate' => 'The End Date should be after Begin Date']],
+                'RT_CL_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Date should be after Begin Date']],
             ]);
             if (!$validate) {
                 $validate = $this->validator->getErrors();
@@ -227,7 +227,7 @@ class MastersController extends BaseController
                 'RT_CL_ID' => ['label' => 'Rate Class Code', 'rules' => 'required'],
                 'RT_CT_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
                 'RT_CT_BEGIN_DT' => ['label' => 'Begin Date', 'rules' => 'required'],
-                'RT_CT_END_DT' => ['label' => 'End Date', 'rules' => 'compareDate', 'errors' => ['compareDate' => 'The End Date should be after Begin Date']],
+                'RT_CT_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Date should be after Begin Date']],
             ]);
             if (!$validate) {
                 $validate = $this->validator->getErrors();
@@ -913,6 +913,20 @@ class MastersController extends BaseController
 
     public function packageCode()
     {
+        $transactionCodes = $this->transactionCodeList();
+        $rateInclusionRules = $this->rateInclusionRuleList();
+        $postingRhythm = $this->postingRhythmList();
+        $calcInclusionRules = $this->calculationInclusionRuleList();
+
+        $data = [
+            'transactionCodeOptions' => $transactionCodes,
+            'rateInclusionRules' => $rateInclusionRules,
+            'postingRhythmOptions' => $postingRhythm,
+            'calcInclusionRules' => $calcInclusionRules,
+            'toggleButton_javascript' => toggleButton_javascript(),
+            'clearFormFields_javascript' => clearFormFields_javascript(),
+            'blockLoader_javascript' => blockLoader_javascript(),
+        ];
 
         $data['title'] = $this->getMethodName();
         $data['session'] = $this->session;
@@ -938,7 +952,7 @@ class MastersController extends BaseController
             $validate = $this->validate([
                 'PKG_CD_CODE' => ['label' => 'Package Code Code', 'rules' => 'required|is_unique[FLXY_PACKAGE_CODE.PKG_CD_CODE,PKG_CD_ID,' . $sysid . ']'],
                 'PKG_CD_DESC' => ['label' => 'Package Code Description', 'rules' => 'required'],
-                'PKG_CODES' => ['label' => 'Package List', 'rules' => 'required'],
+                'TR_CD_ID' => ['label' => 'Transaction Code', 'rules' => 'required'],
             ]);
 
             //echo json_encode(print_r($_POST));
@@ -957,12 +971,31 @@ class MastersController extends BaseController
                 "PKG_CD_CODE" => trim($this->request->getPost('PKG_CD_CODE')),
                 "PKG_CD_SHORT_DESC" => trim($this->request->getPost('PKG_CD_SHORT_DESC')),
                 "PKG_CD_DESC" => trim($this->request->getPost('PKG_CD_DESC')),
+                "TR_CD_ID" => trim($this->request->getPost('TR_CD_ID')),
+                "PKG_CD_TAX_INCLUDED" => trim($this->request->getPost('PKG_CD_TAX_INCLUDED')),
+                "RT_INCL_ID" => trim($this->request->getPost('RT_INCL_ID')),
+                "PO_RH_ID" => trim($this->request->getPost('PO_RH_ID')),
+                "CLC_RL_ID" => trim($this->request->getPost('CLC_RL_ID')),
                 "PKG_CD_SELL_SEP" => null !== $this->request->getPost('PKG_CD_SELL_SEP') ? '1' : '0',
             ];
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_PACKAGE_CODE')->where('PKG_CD_ID', $sysid)->update($data) : $this->Db->table('FLXY_PACKAGE_CODE')->insert($data);
-            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            $newPkgCodeID = empty($sysid) ? $this->Db->insertID() : '';                        
+                
+            $result = $return ? $this->responseJson("1", "0", $return, !empty($sysid) ? $sysid : $newPkgCodeID) : $this->responseJson("-444", "db insert not successful", $return);
+
+            if(empty($sysid))
+            {
+                $blank_package_detail = ["PKG_CD_ID" => $newPkgCodeID, 
+                                         "PKG_CD_START_DT" => date('Y-m-d'), 
+                                         "PKG_CD_END_DT" => date('Y-m-d', strtotime('+10 years')),
+                                         "PKG_CD_DT_PRICE" => '0'];
+                
+                $this->Db->table('FLXY_PACKAGE_CODE_DETAIL')->insert($blank_package_detail);
+            }
+
             echo json_encode($result);
+            
         } catch (Exception $e) {
             return $this->respond($e->errors());
         }
@@ -992,7 +1025,7 @@ class MastersController extends BaseController
         }
         if ($codes != null) {
             $sql .= " AND PKG_CD_CODE IN ('" . str_replace(",", "','", $codes) . "')";
-        }
+        }                                                               
 
         $response = $this->Db->query($sql)->getResultArray();
 
@@ -1002,6 +1035,101 @@ class MastersController extends BaseController
         }
 
         return $options;
+    }
+
+    public function rateInclusionRuleList()
+    {
+        $sql = "SELECT  RT_INCL_ID, 
+                        RTRIM(LTRIM(REPLACE(REPLACE(REPLACE(RT_INCL_DESC, CHAR(9), ' '), CHAR(10), ' '), CHAR(13), ' '))) AS RT_INCL_DESC
+
+                FROM FLXY_RATE_INCLUSION_RULE
+                WHERE 1=1 ";
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $options = array();
+
+        foreach ($response as $row) {
+            $options[] = array("value" => $row['RT_INCL_ID'], "name" => $row['RT_INCL_DESC']);
+        }
+
+        return $options;
+    }
+
+    public function postingRhythmList()
+    {
+        $sql = "SELECT  PO_RH_ID, 
+                        RTRIM(LTRIM(REPLACE(REPLACE(REPLACE(PO_RH_DESC, CHAR(9), ' '), CHAR(10), ' '), CHAR(13), ' '))) AS PO_RH_DESC
+
+                FROM FLXY_POSTING_RHYTHM
+                WHERE 1=1 ";
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $options = array();
+
+        foreach ($response as $row) {
+            $options[] = array("value" => $row['PO_RH_ID'], "name" => $row['PO_RH_DESC']);
+        }
+
+        return $options;
+    }
+
+    public function calculationInclusionRuleList()
+    {
+        $sql = "SELECT  CLC_RL_ID, 
+                        RTRIM(LTRIM(REPLACE(REPLACE(REPLACE(CLC_RL_DESC, CHAR(9), ' '), CHAR(10), ' '), CHAR(13), ' '))) AS CLC_RL_DESC
+
+                FROM FLXY_CALCULATION_RULE
+                WHERE 1=1 ";
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $options = array();
+
+        foreach ($response as $row) {
+            $options[] = array("value" => $row['CLC_RL_ID'], "name" => $row['CLC_RL_DESC']);
+        }
+
+        return $options;
+    }    
+
+    public function PackageCodeDetailsView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array("PKG_CD_ID = " => "'$sysid'"); // Add condition for main Rate Code
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_PACKAGE_CODE_DETAIL';
+        $columns = 'PKG_CD_DT_ID,PKG_CD_ID,PKG_CD_START_DT,PKG_CD_END_DT,PKG_CD_DT_PRICE,PKG_CD_DT_STATUS';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
+    public function getPackageCodeDetails($pkgID = 0, $id = 0)
+    {
+        $param = ['SYSID' => $pkgID];
+
+        $sql = "SELECT FPKGCDT.*,
+                FORMAT(FPKGCDT.PKG_CD_START_DT, 'dd-MMM-yyyy') as PKG_CD_START_DT, 
+                FORMAT(FPKGCDT.PKG_CD_END_DT, 'dd-MMM-yyyy') as PKG_CD_END_DT
+               
+                FROM dbo.FLXY_PACKAGE_CODE_DETAIL FPKGCDT
+                WHERE FPKGCDT.PKG_CD_ID=:SYSID:";
+
+        if ($id != 0) {
+            $sql .= " AND FPKGCDT.PKG_CD_DT_ID = $id";
+        }
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        return $response;
+    }
+
+    public function showPackageCodeDetails()
+    {
+        $rateCodeDetailsList = $this->getPackageCodeDetails($this->request->getGet('sysid'), null !== $this->request->getGet('dtID') ? $this->request->getGet('dtID') : 0);
+        echo json_encode($rateCodeDetailsList);
     }
 
     public function showPackageCodeList()
@@ -1014,16 +1142,64 @@ class MastersController extends BaseController
     {
         $param = ['SYSID' => $this->request->getPost('sysid')];
 
-        $sql = "SELECT FPC.*, FTC.TR_CD_CODE, FTCG.TC_GR_DESC, FTCSG.TC_SGR_CODE, FTCSG.TC_SGR_DESC, FTCT.TR_TY_DESC
+        $sql = "SELECT FPC.*
                 FROM dbo.FLXY_PACKAGE_CODE AS FPC
-                LEFT OUTER JOIN dbo.FLXY_TRANSACTION_CODE AS FTC ON FTC.TR_CD_ID = FPC.TR_CD_ID
-                LEFT OUTER JOIN dbo.FLXY_TRANSACTION_CODE_SUBGROUP AS FTCSG ON FTCSG.TC_SGR_ID = FPC.TC_SGR_ID
-                LEFT OUTER JOIN dbo.FLXY_TRANSACTION_TYPE AS FTCT ON FTCT.TR_TY_ID = FPC.TR_TY_ID
                 WHERE PKG_CD_ID=:SYSID:";
 
         $response = $this->Db->query($sql, $param)->getResultArray();
         echo json_encode($response);
     }
+
+    public function updatePackageCodeDetail()
+    {
+        try {
+            $sysid = $this->request->getPost('PKG_CD_DT_ID');
+
+            $data = [
+                "PKG_CD_ID" => trim($this->request->getPost('PKG_CD_ID')),
+                "PKG_CD_START_DT" => trim($this->request->getPost('PKG_CD_START_DT')),
+                "PKG_CD_END_DT" => trim($this->request->getPost('PKG_CD_END_DT')),
+                "PKG_CD_DT_PRICE" => trim($this->request->getPost('PKG_CD_DT_PRICE'))
+            ];
+
+            $rules = [  'PKG_CD_ID' => ['label' => 'Package Code ID', 'rules' => 'required'],
+                        'PKG_CD_START_DT' => ['label' => 'Start Date', 'rules' => 'required'],
+                        'PKG_CD_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Sell Date should be after Begin Date']],
+                        'PKG_CD_DT_PRICE' => ['label' => 'Package Price', 'rules' => 'required'],
+                     ];
+
+            $validate = $this->validate($rules);
+            
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            //echo json_encode(print_r($_POST)); exit;
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_PACKAGE_CODE_DETAIL')->where('PKG_CD_DT_ID', $sysid)->update($data) : $this->Db->table('FLXY_PACKAGE_CODE_DETAIL')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, !empty($sysid) ? $sysid : $this->Db->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
+
+            if(!$return)
+                $this->session->setFlashdata('error', 'There has been an error. Please try again.');
+            else
+            {
+                if(empty($sysid))
+                    //$this->session->setFlashdata('success', 'The Package Code has been updated.');
+                    //else
+                    $this->session->setFlashdata('success', 'The new Package Code Detail has been created.');
+            }
+            echo json_encode($result);
+
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
 
     public function deletePackageCode()
     {
@@ -1045,6 +1221,33 @@ class MastersController extends BaseController
             return $this->respond($e->errors());
         }
     }
+
+    public function deletePackageCodeDetail()
+    {
+        $sysid = $this->request->getPost('sysid');
+        $packageCodeID = $this->request->getPost('packageCodeID');
+
+        $sql = "SELECT PKG_CD_DT_ID
+                FROM FLXY_PACKAGE_CODE_DETAIL
+                WHERE PKG_CD_ID = '" . $packageCodeID . "'";
+
+        $response = $this->Db->query($sql)->getNumRows();
+
+        if($response <= 1) // Check if Package Code Detail can be deleted
+           echo $this->responseJson("0", "The Package Detail cannot be deleted");
+        else
+        {
+            try {
+                $return = $this->Db->table('FLXY_PACKAGE_CODE_DETAIL')->delete(['PKG_CD_DT_ID' => $sysid]); 
+                //$return = NULL;
+                $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+                echo json_encode($result);
+            } catch (Exception $e) {
+                return $this->respond($e->errors());
+            }
+        }
+    }
+
 
     /**************      Market Group Functions      ***************/
 
@@ -1418,7 +1621,7 @@ class MastersController extends BaseController
     {
         $sysid = $this->request->getPost('sysid');
 
-        $init_cond = array('RT_CD_ID' => $sysid); // Add condition for main Rate Code
+        $init_cond = array("RT_CD_ID = " => "'$sysid'"); // Add condition for main Rate Code
 
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_RATE_CODE_DETAIL';
@@ -1479,12 +1682,15 @@ class MastersController extends BaseController
             'marketCodeOptions' => $marketCodes,
             'sourceCodeOptions' => $sourceCodes,
             'transactionCodeOptions' => $transactionCodes,
-            'pkgTransactionCodeOptions' => $pkgTransactionCodes
+            'pkgTransactionCodeOptions' => $pkgTransactionCodes,
+            'toggleButton_javascript' => toggleButton_javascript(),
+            'clearFormFields_javascript' => clearFormFields_javascript(),
+            'blockLoader_javascript' => blockLoader_javascript()
         ];
 
         $data['session'] = $this->session;
         $data['title'] = $this->getMethodName();
-        $data['js_to_load'] = array("rateCodeForm.js", "rateCategory.js", "roomType.js", "packageCode.js");
+        $data['js_to_load'] = array("rateCodeForm.js", "rateCategory.js", "roomType.js", "packageList.js");
 
         return view('Reservation/RateCodeForm', $data);
     }
@@ -1501,7 +1707,7 @@ class MastersController extends BaseController
                 'TR_CD_ID' => ['label' => 'Transaction Code', 'rules' => 'required'],
                 'RT_CD_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
                 'RT_CD_BEGIN_SELL_DT' => ['label' => 'Begin Sell Date', 'rules' => 'required'],
-                'RT_CD_END_SELL_DT' => ['label' => 'End Sell Date', 'rules' => 'compareDate', 'errors' => ['compareDate' => 'The End Sell Date should be after Begin Date']],
+                'RT_CD_END_SELL_DT' => ['label' => 'End Sell Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Sell Date should be after Begin Date']],
                 'RT_CD_ROOM_TYPES' => ['label' => 'Room Types', 'rules' => 'required'],
                 
             ]);
@@ -1699,12 +1905,15 @@ class MastersController extends BaseController
             'rateCodeDetailsList' => $rateCodeDetailsList, 
             'color_array' => jumble_color_array(),
             'jumble_array_javascript' => jumble_array_javascript(),
-            'color_badges_javascript' => show_color_badges_javascript()
+            'color_badges_javascript' => show_color_badges_javascript(),
+            'toggleButton_javascript' => toggleButton_javascript(),
+            'clearFormFields_javascript' => clearFormFields_javascript(),
+            'blockLoader_javascript' => blockLoader_javascript()
         ];
 
         $data['session'] = $this->session;
         $data['title'] = $this->getMethodName();
-        $data['js_to_load'] = array("rateCodeForm.js", "rateCategory.js", "roomType.js", "packageCode.js");
+        $data['js_to_load'] = array("rateCodeForm.js", "rateCategory.js", "roomType.js", "packageList.js");
 
         return view('Reservation/RateCodeForm', $data);
     }
@@ -1726,26 +1935,6 @@ class MastersController extends BaseController
     {
         try {
             $sysid = $this->request->getPost('RT_CD_DT_ID');
-
-            $validate = $this->validate([
-                'RT_CD_ID' => ['label' => 'Rate Code ID', 'rules' => 'required'],
-                'RT_CD_START_DT' => ['label' => 'Start Date', 'rules' => 'required'],
-                'RT_CD_END_DT' => ['label' => 'End Date', 'rules' => 'compareDate', 'errors' => ['compareDate' => 'The End Sell Date should be after Begin Date']],
-                'RT_CD_DT_DAYS' => ['label' => 'Days', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one day']],
-                'RT_CD_DT_1_ADULT' => ['label' => 'Rate for 1 Adult', 'rules' => 'required'],
-                'RT_CD_DT_ROOM_TYPES' => ['label' => 'Room Types', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one room type']],
-                
-            ]);
-            if (!$validate) {
-                $validate = $this->validator->getErrors();
-                $result["SUCCESS"] = "-402";
-                $result[]["ERROR"] = $validate;
-                $result = $this->responseJson("-402", $validate);
-                echo json_encode($result);
-                exit;
-            }
-
-            //echo json_encode(print_r($_POST)); exit;
 
             $data = [
                 "RT_CD_ID" => trim($this->request->getPost('RT_CD_ID')),
@@ -1782,6 +1971,27 @@ class MastersController extends BaseController
                 }
                 $data["RT_CD_DT_ROOM_TYPES"] = rtrim($data["RT_CD_DT_ROOM_TYPES"], ',');
             }
+
+            $rules = [  'RT_CD_ID' => ['label' => 'Rate Code ID', 'rules' => 'required'],
+                        'RT_CD_START_DT' => ['label' => 'Start Date', 'rules' => 'required|dateOverlapCheck[RT_CD_START_DT,'.$data["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['dateOverlapCheck' => 'The Start Sell Date overlaps with an existing Rate Detail. Change the date or selected room type']],
+                        'RT_CD_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate|dateOverlapCheck[RT_CD_END_DT,'.$data["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['compareDate' => 'The End Sell Date should be after Begin Date', 'dateOverlapCheck' => 'The End Sell Date overlaps with an existing Rate Detail. Change the date or selected room type']],
+                        'RT_CD_DT_DAYS' => ['label' => 'Days', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one day']],
+                        'RT_CD_DT_1_ADULT' => ['label' => 'Rate for 1 Adult', 'rules' => 'required'],
+                        'RT_CD_DT_ROOM_TYPES' => ['label' => 'Room Types', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one room type']],
+                     ];
+
+            $validate = $this->validate($rules);
+            
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            //echo json_encode(print_r($_POST)); exit;
 
             // Get Package Codes comma separated
             $allPackageCodes = $this->packageCodeList();
@@ -1844,24 +2054,6 @@ class MastersController extends BaseController
             $param = [  'RT_CD_DT_ID' => $this->request->getPost('rep_RT_CD_DT_ID'),
                         'RT_CD_ID' => $this->request->getPost('rep_RT_CD_ID') ];
 
-            $validate = $this->validate([
-                'rep_RT_CD_DT_ID' => ['label' => 'Rate Code Detail', 'rules' => 'required'],
-                'rep_RT_CD_ID' => ['label' => 'Rate Code', 'rules' => 'required'],
-                'rep_RT_CD_START_DT' => ['label' => 'Start Date', 'rules' => 'required'],
-                'rep_RT_CD_END_DT' => ['label' => 'End Date', 'rules' => 'compareDate', 'errors' => ['compareDate' => 'The End Date should be after Start Date']],
-                'rep_RT_CD_DT_DAYS' => ['label' => 'Days', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one day']],
-                'rep_RT_CD_DT_ROOM_TYPES' => ['label' => 'Room Types', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one room type']],
-            ]);
-
-            if (!$validate) {
-                $validate = $this->validator->getErrors();
-                $result["SUCCESS"] = "-402";
-                $result[]["ERROR"] = $validate;
-                $result = $this->responseJson("-402", $validate);
-                echo json_encode($result);
-                exit;
-            }
-
             $origRateCodeDetail = $this->getRateCodeDetails($param['RT_CD_ID'], $param['RT_CD_DT_ID']);
 
             //echo json_encode($response);
@@ -1898,6 +2090,25 @@ class MastersController extends BaseController
                     }
                     $newRateCodeDetail["RT_CD_DT_ROOM_TYPES"] = rtrim($newRateCodeDetail["RT_CD_DT_ROOM_TYPES"], ',');
                 }
+
+                $validate = $this->validate([
+                    'rep_RT_CD_DT_ID' => ['label' => 'Rate Code Detail', 'rules' => 'required'],
+                    'rep_RT_CD_ID' => ['label' => 'Rate Code', 'rules' => 'required'],
+                    'rep_RT_CD_START_DT' => ['label' => 'Start Date', 'rules' => 'required|dateOverlapCheck[rep_RT_CD_START_DT,'.$newRateCodeDetail["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['dateOverlapCheck' => 'The Start Sell Date overlaps with an existing Rate Detail. Change the date or selected room type']],
+                    'rep_RT_CD_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate|dateOverlapCheck[rep_RT_CD_END_DT,'.$newRateCodeDetail["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['compareDate' => 'The End Sell Date should be after Begin Date', 'dateOverlapCheck' => 'The End Sell Date overlaps with an existing Rate Detail. Change the date or selected room type']],
+                    'rep_RT_CD_DT_DAYS' => ['label' => 'Days', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one day']],
+                    'rep_RT_CD_DT_ROOM_TYPES' => ['label' => 'Room Types', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one room type']],
+                ]);
+    
+                if (!$validate) {
+                    $validate = $this->validator->getErrors();
+                    $result["SUCCESS"] = "-402";
+                    $result[]["ERROR"] = $validate;
+                    $result = $this->responseJson("-402", $validate);
+                    echo json_encode($result);
+                    exit;
+                }
+
                 
                 // Get Package Codes comma separated
                 $allPackageCodes = $this->packageCodeList();
@@ -1955,7 +2166,7 @@ class MastersController extends BaseController
         $response = $this->Db->query($sql)->getNumRows();
 
         if($response <= 1) // Check if Rate Code Detail can be deleted
-           echo $this->responseJson("-402", "The Rate Detail cannot be deleted");
+           echo json_encode($this->responseJson("0", "The Rate Detail cannot be deleted"));
         else
         {
             try {
@@ -1966,6 +2177,131 @@ class MastersController extends BaseController
             } catch (Exception $e) {
                 return $this->respond($e->errors());
             }
+        }
+    }
+
+    public function NegotiatedRateView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array("RT_CD_ID = " => "'$sysid'"); // Add condition for main Rate Code
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_RATE_CODE_NEGOTIATED_RATE_VIEW LEFT JOIN FLXY_CUSTOMER FCU ON (FCU.CUST_ID = FLXY_RATE_CODE_NEGOTIATED_RATE_VIEW.PROFILE_ID AND FLXY_RATE_CODE_NEGOTIATED_RATE_VIEW.PROFILE_TYPE = 1)';
+        $columns = 'NG_RT_ID,RT_CD_ID,PROFILE_ID,PROFILE_TYPE,PROFILE_NAME,PROFILE_TYPE_NAME,CUST_CLIENT_ID,PROFILE_NUMBER,NG_RT_START_DT,NG_RT_END_DT,NG_RT_DIS_SEQ';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
+    public function CombinedProfilesView()
+    {
+        $_POST = filter_var($_POST, \FILTER_CALLBACK, ['options' => 'trim']);
+
+        $sysid = $this->request->getPost('sysid');
+        $postValues = $this->request->getPost('columns');
+
+        //echo json_encode(print_r($postValues));
+        //exit;
+
+        // Hide profiles with negortiated rates already created 
+        /*
+        $init_cond = array("CONCAT_WS('_',PROFILE_ID,PROFILE_TYPE) NOT IN" => "(SELECT CONCAT_WS('_',PROFILE_ID,PROFILE_TYPE)
+        FROM FLXY_RATE_CODE_NEGOTIATED_RATE_VIEW WHERE RT_CD_ID = '".$sysid."')");
+        */
+
+        $init_cond = array();
+
+        if($postValues != NULL){
+            foreach($postValues as $postData)
+            {
+                //echo json_encode(print_r($postData));
+                
+                //if(!is_numeric($key)) continue;
+
+                $field = $postData['data'];
+                $value = $postData['search']['value'];
+
+                if(!empty(trim($value)))
+                {
+                    $init_cond["".$field." LIKE "] = "'%$value%'";
+                }
+            }
+        }
+        
+        //echo json_encode(print_r($init_cond));
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_COMBINED_PROFILES_VIEW';
+        $columns = 'PROFILE_ID,PROFILE_NAME,PROFILE_FIRST_NAME,PROFILE_TYPE,PROFILE_ADDRESS,PROFILE_CITY,PROFILE_POSTAL_CODE,PROFILE_COMP_CODE,PROFILE_VIP,PROFILE_TITLE,PROFILE_COUNTRY,PROFILE_NUMBER,PROFILE_EMAIL,PROFILE_MOBILE,PROFILE_PASSPORT,COUNTRY_NAME,PROFILE_TYPE_NAME';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
+    public function insertNegotiatedRate()
+    {
+        try {
+            $sysid = $this->request->getPost('NG_RT_ID');
+
+            $validate = $this->validate([
+                'neg_RT_CD_ID' => ['label' => 'Rate Code', 'rules' => 'required|is_unique[FLXY_RATE_CLASS.RT_CL_CODE,RT_CL_ID,' . $sysid . ']'],
+                'neg_PROFILE_IDS' => ['label' => 'Profiles', 'rules' => 'required', 'errors' => ['required' => 'No Profiles have been selected. Please try again.']],
+                'NG_RT_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
+                'NG_RT_START_DT' => ['label' => 'Start Date', 'rules' => 'required|dateOverlapCheckNR[NG_RT_START_DT,'.$this->request->getPost('neg_PROFILE_IDS').']', 'errors' => ['dateOverlapCheckNR' => 'The Start Date overlaps with an existing Negotiated Rate. Change the date or selected user(s)']],
+                'NG_RT_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate|dateOverlapCheckNR[NG_RT_END_DT,'.$this->request->getPost('neg_PROFILE_IDS').']', 'errors' => ['compareDate' => 'The End Date should be after Start Date', 'dateOverlapCheckNR' => 'The End Date overlaps with an existing Negotiated Rate. Change the date or selected user(s)']],
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            //echo json_encode(print_r($_POST));
+            //exit;
+
+            $profiles = explode(',', $this->request->getPost('neg_PROFILE_IDS'));
+            $no_of_added = 0;
+            if($profiles != NULL)
+            {
+                foreach($profiles as $profile_string)
+                {
+                    $profile_data = explode('_', $profile_string);
+                    $data = [
+                        "RT_CD_ID" => trim($this->request->getPost('neg_RT_CD_ID')),
+                        "PROFILE_ID" => $profile_data[3],
+                        "PROFILE_TYPE" => $profile_data[2],
+                        "NG_RT_DIS_SEQ" => trim($this->request->getPost('NG_RT_DIS_SEQ')) != '' ? trim($this->request->getPost('NG_RT_DIS_SEQ')) : '',
+                        "NG_RT_START_DT" => trim($this->request->getPost('NG_RT_START_DT')),
+                        "NG_RT_END_DT" => trim($this->request->getPost('NG_RT_END_DT')) != '' ? trim($this->request->getPost('NG_RT_END_DT')) : '2030-12-31',
+                    ];
+        
+                    //$return = $this->Db->table('FLXY_RATE_CODE_NEGOTIATED_RATE')->insert($data);
+                    $return = !empty($sysid) ? $this->Db->table('FLXY_RATE_CODE_NEGOTIATED_RATE')->where('NG_RT_ID', $sysid)->update($data) : $this->Db->table('FLXY_RATE_CODE_NEGOTIATED_RATE')->insert($data);
+
+                    $no_of_added += $this->Db->affectedRows();                    
+                }
+            }
+            
+            $result = $no_of_added > 0 ? $this->responseJson("1", "0", $return, $no_of_added) : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+            
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function deleteNegotiatedRate()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_RATE_CODE_NEGOTIATED_RATE')->delete(['NG_RT_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
         }
     }
 }

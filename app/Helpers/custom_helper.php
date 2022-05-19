@@ -41,7 +41,7 @@ if (!function_exists("get_color_badges")) {
     }
 }
 
-// Function: get color badges
+// Function: show color badges
 if (!function_exists("show_color_badges_javascript")) {
     function show_color_badges_javascript()
     {
@@ -66,4 +66,83 @@ if (!function_exists("show_color_badges_javascript")) {
                     return $str_final_str;
                 }';
     }
+}
+
+// Function: toggle buttons
+if (!function_exists("toggleButton_javascript")) {
+    function toggleButton_javascript()
+    {
+        return 'function toggleButton(elem, currentClass, replaceClass, disabled = false) {
+                    if ($(elem).hasClass(currentClass))
+                        $(elem).removeClass(currentClass).addClass(replaceClass);
+                
+                    $(elem).prop(\'disabled\', disabled);
+                }';
+    }
+}
+
+// Function: clear form fields
+if (!function_exists("clearFormFields_javascript")) {
+    function clearFormFields_javascript()
+    {
+        return "function clearFormFields(elem) {
+
+                    var formSerialization = $(elem).find(\"input,select,textarea\").serialize();
+                    // alert(formSerialization);
+                
+                    $(elem).find('input,select').each(function() {
+                
+                        if ($(this).hasClass('dateField')) {
+                            $(this).datepicker(\"setDate\", new Date('".date('d-M-Y')."'));
+                        }
+                
+                        switch ($(this).attr('type')) {
+                            case 'password':
+                            case 'text':
+                            case 'textarea':
+                            case 'file':
+                            case 'date':
+                            case 'number':
+                            case 'tel':
+                            case 'date':
+                            case 'email':
+                                $(this).val('');
+                                break;
+                            case 'checkbox':
+                                $(this).prop('checked', true);
+                                break;
+                            case 'radio':
+                                //this.checked = false;
+                                break;
+                            default:
+                                if (!$(this).closest(\".table-responsive\").length)
+                                    $(this).val(null).trigger('change');
+                                break;
+                        }
+                    });
+                }";
+            }
+}
+
+// Function: clear form fields
+if (!function_exists("blockLoader_javascript")) {
+    function blockLoader_javascript()
+    {
+        return "function blockLoader(elem, duration = 500, alert = '') {
+                    $('#' + elem).block({
+                        message: '<div class=\"spinner-border text-white\" role=\"status\"></div>',
+                        timeout: duration,
+                        css: {
+                            backgroundColor: 'transparent',
+                            border: '0'
+                        },
+                        overlayCSS: {
+                            opacity: 0.5
+                        },
+                        onUnblock: function() {
+                
+                        }
+                    });
+                }";
+            }
 }

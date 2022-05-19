@@ -9,6 +9,10 @@
 .table-hover>tbody>tr:hover {
     cursor: pointer;
 }
+
+.table-warning {
+    color: #000 !important;
+}
 </style>
 
 <!-- Content wrapper -->
@@ -215,8 +219,7 @@
                                                         Code *</b></label>
                                                 <div class="col-md-8">
                                                     <select id="TR_CD_ID" name="TR_CD_ID"
-                                                        class="select2 form-select form-select-lg"
-                                                        data-allow-clear="true">
+                                                        class="select2 form-select form-select-lg">
                                                         <?=$transactionCodeOptions?>
                                                     </select>
                                                 </div>
@@ -803,14 +806,29 @@
                             <div id="negotiated-rate-validation" class="content">
                                 <div class="row g-3">
                                     <div class="col-md-12">
-                                        <table id="dataTable_view" class="table table-bordered table-hover"
+
+                                        <div class="dt-action-buttons text-end pt-3 pt-md-0 mb-6"
+                                            style="margin-bottom: 15px;">
+                                            <div class="dt-buttons">
+                                                <button class="dt-button new-negotiated-rate btn btn-primary"
+                                                    tabindex="0" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#newNegotiatedRate"><span><i
+                                                            class="bx bx-plus me-sm-2"></i>
+                                                        <span class="d-none d-sm-inline-block">Add New
+                                                            Negotiated Rate</span></span></button>
+                                            </div>
+                                        </div>
+
+                                        <table id="negotiated_rates" class="table table-bordered table-hover"
                                             style="width: 100%;">
                                             <thead>
                                                 <tr>
                                                     <th>Name</th>
+                                                    <th>Profile Type</th>
                                                     <th>Client ID</th>
                                                     <th>Start Date</th>
                                                     <th>End Date</th>
+                                                    <th class="all">Action</th>
                                                 </tr>
                                             </thead>
 
@@ -823,7 +841,6 @@
                                             <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
                                             <span class="d-none d-sm-inline-block">Previous</span>
                                         </button>
-                                        <button class="btn btn-success btn-next btn-submit">Submit</button>
                                     </div>
                                 </div>
                             </div>
@@ -1041,6 +1058,260 @@
         </div>
     </div>
 
+    <!-- Combined Profiles Modal -->
+    <div class="modal fade" id="newNegotiatedRate" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel4">Select Profiles</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="dt_adv_search" method="POST">
+                        <div class="border rounded p-3">
+                            <div class="row g-3">
+                                <div class="col-4 col-sm-6 col-lg-4">
+
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-md-4"
+                                            style="text-align: right;"><b>Name:</b></label>
+                                        <div class="col-md-8">
+                                            <input type="text" id="PROFILE_NAME" name="PROFILE_NAME"
+                                                class="form-control dt-input dt-full-name" data-column="0"
+                                                placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>First
+                                                Name:</b></label>
+                                        <div class="col-md-8">
+                                            <input type="text" name="PROFILE_FIRST_NAME"
+                                                class="form-control dt-input dt-first-name" data-column="0"
+                                                placeholder="" />
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>View
+                                                By:</b></label>
+                                        <div class="col-md-8">
+                                            <select id="searchProfileType" name="PROFILE_TYPE"
+                                                class="form-select dt-select dt-view-by" data-column="1">
+                                                <option value="">View All</option>
+                                                <option value="1">Individual</option>
+                                                <option value="2">Company</option>
+                                                <option value="3">Travel Agent</option>
+                                                <option value="4">Group</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-4 col-sm-6 col-lg-4">
+
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>City /
+                                                Postal Code:</b></label>
+                                        <div class="col-md-5" style="padding-right:  0;">
+                                            <input type="text" name="PROFILE_CITY" class="form-control dt-input dt-city"
+                                                data-column="4" placeholder="" />
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="text" name="PROFILE_POSTAL_CODE"
+                                                class="form-control dt-input dt-postal-code" data-column="5"
+                                                placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>Mem. Type /
+                                                No:</b></label>
+                                        <div class="col-md-4" style="padding-right:  0;">
+                                            <select id="defaultSelect" class="form-select dt-input dt-mem-type">
+                                                <option></option>
+                                                <option value="AA">AA | American Airlines</option>
+                                                <option value="AC">AC | Air Canada</option>
+                                                <option value="US">US | US Air</option>
+                                                <option value="VX">Virgin American Airlines</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control dt-input dt-mem-no" placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-md-4"
+                                            style="text-align: right;"><b>Communication:</b></label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control dt-input dt-communication"
+                                                placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>Passport
+                                                No:</b></label>
+                                        <div class="col-md-8">
+                                            <input type="text" name="PROFILE_PASSPORT"
+                                                class="form-control dt-input dt-passport-no" data-column="19"
+                                                placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-4 col-sm-6 col-lg-4">
+
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>Client
+                                                ID:</b></label>
+                                        <div class="col-md-8">
+                                            <input type="text" name="PROFILE_NUMBER"
+                                                class="form-control dt-input dt-client-id" data-column="16"
+                                                placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>IATA
+                                                No:</b></label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control dt-input dt-iata-no"
+                                                placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>Corp
+                                                No:</b></label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control dt-input dt-corp-no"
+                                                placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>A/R
+                                                No:</b></label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control dt-input dt-ar-no" placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
+                    <div class="table-responsive text-nowrap">
+                        <table id="combined_profiles" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type ID</th>
+                                    <th>Type</th>
+                                    <th>Address</th>
+                                    <th>City</th>
+                                    <th>Postal Code</th>
+                                    <th>Company</th>
+                                    <th>A/R No.</th>
+                                    <th>VIP</th>
+                                    <th>Rate Code</th>
+                                    <th>Next Stay</th>
+                                    <th>Last Stay</th>
+                                    <th>Last Room</th>
+                                    <th>Last Group</th>
+                                    <th>Title</th>
+                                    <th>Country</th>
+                                    <th>Client ID/IATA/Corp No</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Passport</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary close_selected_profiles"
+                        data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-dark use_selected_profiles" disabled>Use Selected
+                        Profiles</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Add Negotiated Rate Modal -->
+    <div class="modal fade" id="addNegotiatedRate" data-backdrop="static" data-keyboard="false"
+        aria-lableledby="addNegotiatedRatelable">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="addNegotiatedRatelabel">Negotiated Rate</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="negRateForm" class="needs-validation" novalidate>
+                        <div class="row g-3">
+                            <input type="hidden" name="neg_PROFILE_IDS" id="neg_PROFILE_IDS" />
+                            <input type="hidden" name="neg_RT_CD_ID" id="neg_RT_CD_ID" class="form-control"
+                                value="<?php echo isset($rateCodeID) ? $rateCodeID : 0; ?>" />
+                            <input type="hidden" name="NG_RT_ID" id="NG_RT_ID" />
+
+                            <div class="col-md-7">
+                                <lable class="form-lable"><b>Rate Code </b></lable>
+                                <input type="text" name="neg_RT_CD_CODE" id="neg_RT_CD_CODE"
+                                    value="<?php echo isset($rateCodeDetails['RT_CD_CODE']) ? $rateCodeDetails['RT_CD_CODE'] : ''; ?>"
+                                    class="form-control bootstrap-maxlength" readonly />
+                            </div>
+                            <div class="col-md-4">
+                                <lable class="form-lable">Display Sequence</lable>
+                                <input type="number" name="NG_RT_DIS_SEQ" id="NG_RT_DIS_SEQ" class="form-control"
+                                    min="0" placeholder="eg: 3" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Begin Date *</b></label>
+                                <div class="input-group mb-6">
+                                    <input type="text" id="NG_RT_START_DT" name="NG_RT_START_DT"
+                                        class="form-control dateField" placeholder="d-Mon-yyyy" required />
+                                    <span class="input-group-append">
+                                        <span class="input-group-text bg-light d-block">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">End Date</label>
+                                <div class="input-group mb-6">
+                                    <input type="text" id="NG_RT_END_DT" name="NG_RT_END_DT"
+                                        class="form-control dateField" placeholder="d-Mon-yyyy" />
+                                    <span class="input-group-append">
+                                        <span class="input-group-text bg-light d-block">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="submitBtn" onClick="submitNegotiatedForm('negRateForm')"
+                        class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -1058,40 +1329,12 @@ var rateCodeDetailID =
 
 $(document).ready(function() {
 
-    $('#dataTable_view').DataTable({
-        'processing': true,
-        'serverSide': true,
-        'serverMethod': 'post',
-        'ajax': {
-            'url': '<?php echo base_url('/customerView')?>'
-        },
-        'columns': [{
-                data: 'CUST_FIRST_NAME'
-            },
-            {
-                data: 'CUST_CLIENT_ID'
-            },
-            {
-                data: null,
-                render: function() {
-                    return '12/09/2021';
-                }
-            },
-            {
-                data: null,
-                render: function() {
-                    return '25/08/2022';
-                }
-            },
-        ],
-        autowidth: true,
-        responsive: true,
-        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-    });
-
     $('.dateField').datepicker({
         format: 'dd-M-yyyy',
         autoclose: true,
+        <?php if($rateCodeDetails == NULL) { ?>
+        startDate: '-0m',
+        <?php } ?>
         onSelect: function() {
             $(this).change();
         }
@@ -1135,6 +1378,8 @@ $(document).ready(function() {
             });
         }
     });
+
+    // Rate Code Details List
 
     $('#RD_Room_Types').DataTable({
         'processing': true,
@@ -1182,64 +1427,359 @@ $(document).ready(function() {
         responsive: true
     });
 
-    $('#RD_Room_Types tbody').on('click', 'tr', function() {
+    $(document).on('click', '#RD_Room_Types > tbody > tr', function() {
 
-        $('#RD_Room_Types').find('tr.table-warning').removeClass('table-warning');
-        $(this).addClass('table-warning');
 
-        loadRateCodeDetails($(this).data('ratedetailsid'));
+    });
 
-        blockLoader('rate-detail-validation');
+
+    // Negotiated Rates List
+
+    $('#negotiated_rates').DataTable({
+        'processing': true,
+        'serverSide': true,
+        'serverMethod': 'post',
+        'ajax': {
+            'url': '<?php echo base_url('/negotiatedRateView')?>',
+            'data': {
+                "sysid": rateCodeID
+            }
+        },
+        'columns': [{
+                data: 'PROFILE_NAME'
+            },
+            {
+                data: 'PROFILE_TYPE_NAME'
+            },
+            {
+                data: 'CUST_CLIENT_ID'
+            },
+            {
+                data: 'NG_RT_START_DT'
+            },
+            {
+                data: 'NG_RT_END_DT'
+            },
+            {
+                data: null,
+                "orderable": false,
+                render: function(data, type, row, meta) {
+                    return (
+                        '<div class="d-inline-block">' +
+                        '<a href="javascript:;" title="Edit or Delete" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
+                        '<ul class="dropdown-menu dropdown-menu-end">' +
+                        '<li><a href="javascript:;" data_sysid="' + data['NG_RT_ID'] +
+                        '" data-profile-type="' + data['PROFILE_TYPE'] +
+                        '" data-profile-id="' + data['PROFILE_ID'] +
+                        '" data-start-date="' + data['NG_RT_START_DT'] +
+                        '" data-edit-date="' + data['NG_RT_END_DT'] +
+                        '" data-display-seq="' + data['NG_RT_DIS_SEQ'] +
+                        '" class="dropdown-item edit-negotiated-rate text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>' +
+                        '<div class="dropdown-divider"></div>' +
+                        '<li><a href="javascript:;" data_sysid="' + data['NG_RT_ID'] +
+                        '" class="dropdown-item text-danger delete-negotiated-rate"><i class="fa-solid fa-ban"></i> Delete</a></li>' +
+                        '</ul>' +
+                        '</div>'
+                    );
+                }
+            },
+        ],
+        columnDefs: [{
+            width: "25%"
+        }, {
+            width: "20%"
+        }, {
+            width: "15%"
+        }, {
+            width: "10%"
+        }, {
+            width: "10%"
+        }, {
+            width: "10%"
+        }],
+        "order": [
+            [3, "asc"]
+        ],
+        responsive: true,
+        dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6 dataTables_pager'p>>",
+        language: {
+            emptyTable: 'There are no negotiated rates added'
+        }
+    });
+
+    var clicked_profile_ids = [];
+
+    $(document).on('click', '#combined_profiles > tbody > tr', function() {
+
+        var profile_chk_str = 'profile_chk_' + $(this).attr('data-profile-type') + '_' + $(this).attr(
+            'data-profile-id');
+
+        //If value in array
+        if (jQuery.inArray(profile_chk_str, clicked_profile_ids) !==
+            -1) {
+            if ($(this).hasClass("table-warning")) {
+                // Remove value from array
+                clicked_profile_ids = $.grep(clicked_profile_ids, function(value) {
+                    return value != profile_chk_str;
+                });
+            }
+        } else {
+            if (!$(this).hasClass("table-warning")) {
+                clicked_profile_ids.push(profile_chk_str);
+            }
+        }
+
+        if (clicked_profile_ids.length == 0) {
+            toggleButton('.use_selected_profiles', 'btn-primary', 'btn-dark', true);
+        } else {
+            toggleButton('.use_selected_profiles', 'btn-dark', 'btn-primary', false);
+        }
+
+        //alert(clicked_profile_ids);
+        $(this).toggleClass('table-warning');
+    });
+
+    function getProfileName() {
+        return $('#PROFILE_NAME').val();
+    }
+
+    // Combined Profiles (Customer, Company, Agent, Group) List for Negotiated Rates
+
+    $('#combined_profiles').DataTable({
+        'processing': true,
+        'serverSide': true,
+        'serverMethod': 'post',
+        'ajax': {
+            'url': '<?php echo base_url('/combinedProfilesView')?>',
+            'data': {
+                "sysid": rateCodeID
+            }
+        },
+        'columns': [{
+                data: 'PROFILE_NAME'
+            },
+            {
+                data: 'PROFILE_TYPE',
+                "visible": false,
+            },
+            {
+                data: 'PROFILE_TYPE_NAME'
+            },
+            {
+                data: 'PROFILE_ADDRESS'
+            },
+            {
+                data: 'PROFILE_CITY'
+            },
+            {
+                data: 'PROFILE_POSTAL_CODE'
+            },
+            {
+                data: 'PROFILE_COMP_CODE'
+            },
+            {
+                "defaultContent": ""
+            },
+            {
+                data: 'PROFILE_VIP'
+            },
+            {
+                "defaultContent": ""
+            },
+            {
+                "defaultContent": ""
+            },
+            {
+                "defaultContent": ""
+            },
+            {
+                "defaultContent": ""
+            },
+            {
+                "defaultContent": ""
+            },
+            {
+                data: 'PROFILE_TITLE'
+            },
+            {
+                data: 'PROFILE_COUNTRY'
+            },
+            {
+                data: 'PROFILE_NUMBER'
+            },
+            {
+                data: 'PROFILE_EMAIL'
+            },
+            {
+                data: 'PROFILE_MOBILE'
+            },
+            {
+                data: 'PROFILE_PASSPORT'
+            },
+        ],
+        'createdRow': function(row, data, dataIndex) {
+            var check_str = 'profile_chk_' + data['PROFILE_TYPE'] + '_' + data['PROFILE_ID'];
+
+            $(row).attr('data-profile-type', data['PROFILE_TYPE']);
+            $(row).attr('data-profile-id', data['PROFILE_ID']);
+
+            if (jQuery.inArray(check_str, clicked_profile_ids) !== -1 && !$(row).hasClass(
+                    'table-warning')) {
+                $(row).addClass('table-warning');
+            } else if (jQuery.inArray(check_str, clicked_profile_ids) == -1 && $(row).hasClass(
+                    'table-warning')) {
+                $(row).removeClass('table-warning');
+            }
+        },
+        columnDefs: [{
+            width: "25%"
+        }, {
+            width: "20%"
+        }, {
+            width: "15%"
+        }, {
+            width: "10%"
+        }, {
+            width: "10%"
+        }, {
+            width: "10%"
+        }, {
+            width: "25%"
+        }, {
+            width: "20%"
+        }, {
+            width: "15%"
+        }, {
+            width: "10%"
+        }, {
+            width: "10%"
+        }, {
+            width: "10%"
+        }, {
+            width: "25%"
+        }, {
+            width: "20%"
+        }, {
+            width: "15%"
+        }, {
+            width: "10%"
+        }, {
+            width: "10%"
+        }, {
+            width: "10%"
+        }, {
+            width: "10%"
+        }],
+        "order": [
+            [1, "asc"]
+        ],
+        destroy: true,
+        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end">>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+        language: {
+            emptyTable: 'There are no profiles in the system'
+        },
+        select: {
+            // Select style
+            style: 'multi',
+            info: false
+        }
+    });
+
+    $(document).on('click', '.new-negotiated-rate', function() {
+
+        hideModalAlerts();
+        clearFormFields('.dt_adv_search');
+        $('#combined_profiles').dataTable().fnDraw();
+
+    });
+
+    $(document).on('click', '.edit-negotiated-rate', function() {
+
+        hideModalAlerts();
+
+        var profile_chk_str = 'profile_chk_' + $(this).attr('data-profile-type') + '_' + $(this).attr(
+            'data-profile-id');
+
+        $('#NG_RT_ID').val($(this).attr('data_sysid'));
+        $('#neg_PROFILE_IDS').val(profile_chk_str);
+        $("#NG_RT_START_DT").datepicker("setDate", new Date($(this).attr('data-start-date')));
+        $("#NG_RT_END_DT").datepicker("setDate", new Date($(this).attr('data-edit-date')));
+        $("#NG_RT_DIS_SEQ").val($(this).attr('data-display-seq'));
+
+        $('#addNegotiatedRate').modal('show');
+    });
+
+    $(document).on('click', '.use_selected_profiles', function() {
+
+        $('#neg_PROFILE_IDS').val(clicked_profile_ids);
+        $("#NG_RT_ID").val("");
+        $("#NG_RT_START_DT").datepicker("setDate", new Date(<?php date('d-M-Y'); ?>));
+        $("#NG_RT_END_DT").datepicker("setDate", new Date(
+            <?php date('d-M-Y', strtotime('+1 day')); ?>));
+        $("#NG_RT_DIS_SEQ").val("");
+
+        clicked_profile_ids = [];
+        $('#combined_profiles').dataTable().fnDraw();
+
+        $('#addNegotiatedRatelabel').html('Add New Negotiated Rate');
+
+        $('#newNegotiatedRate').modal('hide');
+        $('#addNegotiatedRate').modal('show');
+    });
+
+
+    $(document).on('click', '.delete-negotiated-rate', function() {
+        hideModalAlerts();
+        $('.dtr-bs-modal').modal('hide');
+
+        var sysid = $(this).attr('data_sysid');
+        bootbox.confirm({
+            message: "Are you sure you want to delete this negotiated rate?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function(result) {
+                if (result) {
+                    $.ajax({
+                        url: '<?php echo base_url('/deleteNegotiatedRate')?>',
+                        type: "post",
+                        data: {
+                            sysid: sysid
+                        },
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        dataType: 'json',
+                        success: function(respn) {
+                            showModalAlert('warning',
+                                '<li>The Negotiated Rate has been deleted</li>'
+                            );
+                            $('#negotiated_rates').dataTable().fnDraw();
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    $(document).on('hide.bs.modal', '#newNegotiatedRate', function() {
+
+        clicked_profile_ids = [];
+        clearFormFields('.dt_adv_search');
+        $('#combined_profiles').DataTable().columns('').search('').draw();
+
     });
 
 
     <?php } ?>
 
-});
-
-// Delete Rate Code Detail
-
-$(document).on('click', '.delete-rate-code-detail', function() {
-    hideModalAlerts();
-    $('.dtr-bs-modal').modal('hide');
-
-    var sysid = $('#RD_Room_Types').find("tr.table-warning").data("ratedetailsid");
-
-    bootbox.confirm({
-        message: "Rate Code Detail is active. Do you want to Delete?",
-        buttons: {
-            confirm: {
-                label: 'Yes',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: 'No',
-                className: 'btn-danger'
-            }
-        },
-        callback: function(result) {
-            if (result) {
-                $.ajax({
-                    url: '<?php echo base_url('/deleteRateCodeDetail')?>',
-                    type: "post",
-                    data: {
-                        sysid: sysid,
-                        rateCodeID: rateCodeID
-                    },
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    dataType: 'json',
-                    success: function(respn) {
-                        showModalAlert('warning',
-                            '<li>The Rate Code Detail has been deleted</li>');
-
-                        $('#RD_Room_Types').dataTable().fnDraw();
-                    }
-                });
-            }
-        }
-    });
 });
 
 function hideModalAlerts() {
@@ -1255,54 +1795,7 @@ function showModalAlert(modalType, modalContent) {
         '</ul>');
 }
 
-function clearFormFields(elem) {
-
-    var formSerialization = $(elem).find("input,select,textarea").serialize();
-    // alert(formSerialization);
-
-    $(elem).find('input,select').each(function() {
-        switch ($(this).attr('type')) {
-            case 'password':
-            case 'text':
-            case 'textarea':
-            case 'file':
-            case 'date':
-            case 'number':
-            case 'tel':
-            case 'date':
-            case 'email':
-                $(this).val('');
-                break;
-            case 'checkbox':
-                $(this).prop('checked', true);
-                break;
-            case 'radio':
-                //this.checked = false;
-                break;
-            default:
-                if (!$(this).closest(".table-responsive").length)
-                    $(this).val(null).trigger('change');
-                break;
-        }
-    });
-}
-
-function blockLoader(elem, duration = 500, alert = '') {
-    $('#' + elem).block({
-        message: '<div class="spinner-border text-white" role="status"></div>',
-        timeout: duration,
-        css: {
-            backgroundColor: 'transparent',
-            border: '0'
-        },
-        overlayCSS: {
-            opacity: 0.5
-        },
-        onUnblock: function() {
-
-        }
-    });
-}
+// Add / Edit Rate Code
 
 function submitForm(id) {
     hideModalAlerts();
@@ -1403,12 +1896,62 @@ function getPackageCodes(codes, field) {
     });
 }
 
+
+// Add / Edit Negotiated Rate
+
+function submitNegotiatedForm(id) {
+    hideModalAlerts();
+    var formSerialization = $('#' + id).serializeArray();
+    var url = '<?php echo base_url('/insertNegotiatedRate')?>';
+    $.ajax({
+        url: url,
+        type: "post",
+        data: formSerialization,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        dataType: 'json',
+        success: function(respn) {
+
+            var response = respn['SUCCESS'];
+            if (response != '1') {
+                var ERROR = respn['RESPONSE']['ERROR'];
+                var mcontent = '';
+                $.each(ERROR, function(ind, data) {
+                    console.log(data, "SDF");
+                    mcontent += '<li>' + data + '</li>';
+                });
+                showModalAlert('error', mcontent);
+            } else {
+
+                if (respn['RESPONSE']['OUTPUT'] != '0') {
+
+                    var alertText = $('#NG_RT_ID').val() == '' ? '<li>' + respn['RESPONSE']['OUTPUT'] +
+                        ' new Negotiated Rates have been created</li>' :
+                        '<li>The Negotiated Rate has been updated</li>';
+
+                    showModalAlert('success', alertText);
+                } else
+                    showModalAlert('error',
+                        '<li>No new Negotiated Rates could be created. Please try again</li>');
+
+                $('#addNegotiatedRate').modal('hide');
+                $('#negotiated_rates').dataTable().fnDraw();
+            }
+        }
+    });
+}
+
+
+// Show Rate Code Detail
+
 function loadRateCodeDetails(id) {
 
     var url = '<?php echo base_url('/showRateCodeDetails')?>';
     $.ajax({
         url: url,
         type: "get",
+        async: false,
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         },
@@ -1420,6 +1963,10 @@ function loadRateCodeDetails(id) {
         success: function(respn) {
 
             $('#rep_RT_CD_DT_ID').val(id);
+
+            //Enable Repeat and Delete buttons
+            toggleButton('.repeat-rate-code-detail', 'btn-dark', 'btn-secondary', false);
+            toggleButton('.delete-rate-code-detail', 'btn-dark', 'btn-danger', false);
 
             $(respn).each(function(inx, data) {
                 $.each(data, function(fields, datavals) {
@@ -1460,6 +2007,54 @@ function loadRateCodeDetails(id) {
         }
     });
 }
+
+
+// Add new Rate Code Detail
+
+$(document).on('click', '.add-rate-code-detail', function() {
+    hideModalAlerts();
+    $('.dtr-bs-modal').modal('hide');
+
+    bootbox.dialog({
+        message: "Do you want to add a new Rate Code Detail?",
+        buttons: {
+            ok: {
+                label: 'Yes',
+                className: 'btn-success',
+                callback: function(result) {
+                    if (result) {
+                        clearFormFields('#rate-detail-validation');
+                        $('#RD_Room_Types').find('tr.table-warning').removeClass('table-warning');
+
+                        //Disable Repeat and Delete buttons
+                        toggleButton('.repeat-rate-code-detail', 'btn-secondary', 'btn-dark', true);
+                        toggleButton('.delete-rate-code-detail', 'btn-danger', 'btn-dark', true);
+
+                        showModalAlert('info',
+                            'Fill in the form and click the \'Save\' button to add the new Rate Detail'
+                        );
+                    }
+                }
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        }
+    });
+});
+
+
+// Update existing Rate Code Detail
+
+$(document).on('click', '.save-rate-code-detail', function() {
+
+    //var formSerialization = $('#rate-detail-validation').find("input,select,textarea").serializeArray();
+    submitDetailsForm('rateCode-submit-form');
+});
+
+
+// Add / Edit Rate Code Detail
 
 function submitDetailsForm(id) {
     hideModalAlerts();
@@ -1505,6 +2100,14 @@ function submitDetailsForm(id) {
         }
     });
 }
+
+
+// Repeat Rate Code Detail
+
+$(document).on('click', '.repeat-rate-code-detail', function() {
+
+    $('#repeatModalWindow').modal('show');
+});
 
 function repeatForm() {
 
@@ -1555,49 +2158,55 @@ function repeatForm() {
     //$('#repeatForm').submit();
 }
 
-// Update existing Rate Code Detail
-$(document).on('click', '.save-rate-code-detail', function() {
 
-    //var formSerialization = $('#rate-detail-validation').find("input,select,textarea").serializeArray();
-    submitDetailsForm('rateCode-submit-form');
-});
+// Delete Rate Code Detail
 
-// Add new Rate Code Detail
-
-$(document).on('click', '.add-rate-code-detail', function() {
+$(document).on('click', '.delete-rate-code-detail', function() {
     hideModalAlerts();
     $('.dtr-bs-modal').modal('hide');
 
-    bootbox.dialog({
-        message: "Do you want to add a new Rate Code Detail?",
-        buttons: {
-            ok: {
-                label: 'Yes',
-                className: 'btn-success',
-                callback: function(result) {
-                    if (result) {
-                        clearFormFields('#rate-detail-validation');
-                        $('#RD_Room_Types').find('tr.table-warning').removeClass('table-warning');
+    var sysid = $('#RD_Room_Types').find("tr.table-warning").data("ratedetailsid");
 
-                        showModalAlert('info',
-                            'Fill in the form and click the \'Save\' button to add the new Rate Detail'
-                        );
-                    }
-                }
+    bootbox.confirm({
+        message: "Rate Code Detail is active. Do you want to Delete?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
             },
             cancel: {
                 label: 'No',
                 className: 'btn-danger'
             }
+        },
+        callback: function(result) {
+            if (result) {
+                $.ajax({
+                    url: '<?php echo base_url('/deleteRateCodeDetail')?>',
+                    type: "post",
+                    data: {
+                        sysid: sysid,
+                        rateCodeID: rateCodeID
+                    },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    dataType: 'json',
+                    success: function(respn) {
+                        var response = respn['SUCCESS'];
+                        if (response == '0') {showModalAlert('error',
+                                '<li>The Rate Detail cannot be deleted</li>');} 
+                        else {
+                            showModalAlert('warning',
+                                '<li>The Rate Code Detail has been deleted</li>');
+
+                            $('#RD_Room_Types').dataTable().fnDraw();
+                        }
+                    }
+                });
+            }
         }
     });
-});
-
-$(document).on('click', '.repeat-rate-code-detail', function() {
-
-    $('#repeatModalWindow').modal('show');
-
-
 });
 
 
@@ -1606,6 +2215,15 @@ $(document).on('click', '.repeat-rate-code-detail', function() {
 
 // Display function show_color_badges(str) 
 <?php echo isset($color_badges_javascript) ? $color_badges_javascript : ''; ?>
+
+// Display function toggleButton
+<?php echo isset($toggleButton_javascript) ? $toggleButton_javascript : ''; ?>
+
+// Display function clearFormFields
+<?php echo isset($clearFormFields_javascript) ? $clearFormFields_javascript : ''; ?>
+
+// Display function blockLoader
+<?php echo isset($blockLoader_javascript) ? $blockLoader_javascript : ''; ?>
 </script>
 
 

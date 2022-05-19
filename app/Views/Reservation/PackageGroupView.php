@@ -249,7 +249,7 @@ $(document).on('click', '.delete-record', function() {
 
     var sysid = $(this).attr('data_sysid');
     bootbox.confirm({
-        message: "Are you confirm to delete this record?",
+        message: "Are you sure you want to delete this record?",
         buttons: {
             confirm: {
                 label: 'Yes',

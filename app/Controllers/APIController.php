@@ -149,7 +149,6 @@ class APIController extends ResourceController
             echo json_encode($result);die;
         }
     }
-    
     // for Logout Just delete the token from session or anystorage
     public function logoutApi()
     {
@@ -212,6 +211,42 @@ class APIController extends ResourceController
             echo json_encode($ex->errors());
         }
     }
+        /*  FUNCTION : To check the Docs like Proof and vaccination is uploaded or not and verified or not
+        METHOD : POST , 
+        INPUT  : Header Authorization- Token
+        OUTPUT : list and details of the accompanying the persons   */
+        public function checkDocDetails()
+        {
+            try{
+                // get Token
+                $token = getJWTFromRequest();  
+                // decoded token information and userdata information from the table.
+                $decoded =  validateJWTFromRequest($token);
+                // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
+                if(!empty($decoded)) {
+                    $userID = $decoded['token_info']->data->USR_CUST_ID;
+                    // an indicator to inform Docs are uploaded and verified.
+                    $sql = "SELECT concat(a.CUST_FIRST_NAME,' ',a.CUST_MIDDLE_NAME,' ',a.CUST_LAST_NAME)NAME,c.*,b.VACCINE_IS_VERIFY,c.DOC_IS_VERIFY FROM FLXY_CUSTOMER a
+                    LEFT JOIN FLXY_VACCINE_DETAILS b ON b.CUST_ID = a.CUST_ID 
+                    LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.CUST_ID WHERE DOC_FILE_TYPE='PROOF' AND a.CUST_ID = :CUST_ID:";
+                    $param = ['CUST_ID' => $userID ];
+                    $data = $this->Db->query($sql,$param)->getResultArray();
+                    if(!empty($data)){
+                        $result = responseJson(200,false,"Doc Details fetched Successfully", [$data]);
+                        echo json_encode($result);die; 
+                    }else{
+                        $result = responseJson(200,false,"Fetching Failed", $data);
+                        echo json_encode($result);die; 
+                    }
+                }else{
+                    $result = responseJson(200,false,"No user found", []);
+                    echo json_encode($result);die; 
+                }
+            }catch(Execption $ex){
+                echo json_encode($ex->errors());
+            }
+        } 
+
     /*  FUNCTION : list of accompanying persons.
         METHOD : POST , 
         INPUT  : Header Authorization- Token
@@ -223,19 +258,22 @@ class APIController extends ResourceController
                 $token = getJWTFromRequest();  
                 // decoded token information and userdata information from the table.
                 $decoded =  validateJWTFromRequest($token);
+               
                 // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
                 if(!empty($decoded)) {
-                    $resID = $decoded['table_info']['RESV_ID'];
                     
+                    $resID = $decoded['table_info']['RESV_ID'];
                     // an indicator to inform this is accompanying person
-                    $sql = "SELECT concat(b.CUST_FIRST_NAME,' ',b.CUST_MIDDLE_NAME,' ',b.CUST_LAST_NAME)NAME,c.DOC_PASS,a.ACCOMP_STATUS FROM FLXY_ACCOMPANY_PROFILE a
+                    $sql = "SELECT concat(b.CUST_FIRST_NAME,' ',b.CUST_MIDDLE_NAME,' ',b.CUST_LAST_NAME)NAME,c.*,a.ACCOMP_STATUS FROM FLXY_ACCOMPANY_PROFILE a
                     LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.ACCOMP_CUST_ID
-                    LEFT JOIN FLXY_DOCUMENTS c ON c.CUST_NAME = a.ACCOMP_CUST_ID WHERE a.ACCOMP_REF_RESV_ID =:ACCOMP_REF_RESV_ID:";
+                    LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.ACCOMP_CUST_ID WHERE a.ACCOMP_REF_RESV_ID =:ACCOMP_REF_RESV_ID: AND DOC_FILE_TYPE='PROOF'";
                     $param = ['ACCOMP_REF_RESV_ID' => $resID ];
                     $data = $this->Db->query($sql,$param)->getResultArray();
-                    // echo $this->Db->getLastQuery()->getQuery();die;
                     if(!empty($data)){
                         $result = responseJson(200,false,"Accompany list for the reservation", [$data]);
+                        echo json_encode($result);die; 
+                    }else{
+                        $result = responseJson(200,false,"There is no accompany person", $data);
                         echo json_encode($result);die; 
                     }
                 }else{
@@ -306,7 +344,7 @@ class APIController extends ResourceController
         INPUT : Header Authorization- Token
         OUTPUT: PATH OF UPLAODED DOCUMENT */ 
 
-    public function passportUploadAPI() 
+    public function docUploadAPI() 
     {
         helper('upload_helper');
         try{
@@ -316,82 +354,61 @@ class APIController extends ResourceController
             $decoded =  validateJWTFromRequest($token);
             // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
             if(!empty($decoded)) {
-                // DOC_PASS - passport DOC_VACCINE- vaccination
-                if(!empty($this->request->getFile("passport"))){
-                    $fileGetName = 'passport';
-                    $file = $this->validate([
-                        'passport' => [
-                            'uploaded[passport]',
-                            'mime_in[passport,image/png, image/jpeg]',
-                            'max_size[passport,500]',
-                        ]
-                    ]);
-                }else if(!empty($this->request->getFile("vaccination"))){
-                    $fileGetName = 'vaccination';
-                    $file = $this->validate([
-                        
-                        'vaccination' => [
-                            'uploaded[vaccination]',
-                            'mime_in[vaccination,image/png, image/jpeg,application/pdf]',
-                            'max_size[vaccination,500]',
-                        ],
-                    ]);
-                }else{
-                    $fileGetName = 'DOC3';
-                    $file = $this->validate([
-                        'DOC3' => [
-                            'uploaded[vaccination]',
-                            'mime_in[vaccination,image/png, image/jpeg]',
-                            'max_size[vaccination,500]',
-                        ],
-                    ]);
-                }
+                $userID = $decoded['token_info']->data->USR_CUST_ID;
+                $resID = $decoded['table_info']['RESV_ID'];
+                $file = $this->validate([
+                    'images' => [
+                        'uploaded[images]',
+                        'mime_in[images,image/png, image/jpeg]',
+                        'max_size[images,500]',
+                    ],
+                ]);
                 // adding validatoion to the files
                 if (!$file) {
-                    
                     $validate = $this->validator->getErrors();
                     $result["SUCCESS"] = "-402";
                     $result[]["ERROR"] = $validate;
                     $result = responseJson("-402",$validate);
-                    echo json_encode($result);
-                    exit;
+                    echo json_encode($result);exit;
                 }
-                $doc_file = $this->request->getFile($fileGetName);
-                $doc_name = $doc_file->getName();
-                $folderPath = "assets/Uploads/userDocuments/".$fileGetName."/";
-                $userID = $decoded['token_info']->data->USR_CUST_ID;
-                $doc_up = documentUpload($doc_file ,$doc_name, $userID , $folderPath);
-                if($doc_up['SUCCESS'] == 200){
-                     // check wheather there is any entry with this user. 
-                    $doc_data = $this->Db->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_PASS,DOC_VACCINE,DOC3')->where('CUST_NAME',$userID)->get()->getRowArray();
+                $fileNames='';
+                $fileArry=$this->request->getFileMultiple('images');
+                $desc = $this->request->getPost("desc");
+                if(!empty($fileArry)){
+                    foreach($fileArry as $key=>$file){
+                        if($file->isValid() && !$file->hasMoved()) {
+                            $newName = $file->getRandomName();
+                            $file->move(ROOTPATH . 'assets/Uploads/userDocuments/proof',$newName);
+                            $comma='';
+                            if (isset($fileArry[$key+1])) {
+                                $comma=',';
+                            }
+                            $fileNames.=$newName.$comma;
+                        }
+                    }
+                }
+                if(!empty($fileNames)){
+                    // check wheather there is any entry with this user. 
+                    $doc_data = $this->Db->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_CUST_ID,DOC_FILE_PATH,DOC_RESV_ID')->where(['DOC_CUST_ID'=>$userID,'DOC_RESV_ID'=>$resID,'DOC_FILE_TYPE'=> 'PROOF'])->get()->getRowArray();  
                     $data = [
-                    "CUST_NAME" => $userID,
-                    "IS_VERIFY" => 0, 
+                    "DOC_CUST_ID" => $userID,
+                    "DOC_IS_VERIFY" => 0, 
+                    "DOC_FILE_PATH" => $fileNames, 
+                    "DOC_FILE_TYPE" => 'PROOF', 
+                    "DOC_RESV_ID" => $resID, 
+                    "DOC_FILE_DESC" => $desc , 
                     "DOC_CREATE_UID" =>$userID,
                     "DOC_CREATE_DT" => date("d-M-Y"), 
                     "DOC_UPDATE_UID" => $userID,
                     "DOC_UPDATE_DT" => date("d-M-Y") ];
-                    $filepath = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
-                    if($fileGetName == 'passport'){
-
-                        $data["DOC_PASS"] = $filepath;
-
-                    }else if($fileGetName == 'vaccination'){
-
-                        $data["DOC_VACCINE"] = $filepath;
-                    }else {
-
-                        $data["DOC3"] = $filepath;
-                    }
                     $ins = 0;$update_data = 0;
                     if(empty($doc_data)  ){
                         $ins = $this->Db->table('FLXY_DOCUMENTS')->insert($data);
                     }else {
-                        $update_data = $this->Db->table('FLXY_DOCUMENTS')->where('DOC_ID',$doc_data['DOC_ID'])->update($data);
-                        
+                        $update_data = $this->Db->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID'=> $userID, 'DOC_RESV_ID'=> $resID])->update($data);
                     }
                     if ( $ins || $update_data ){
-                        $result = responseJson(200,false,"File uploaded successfully", ["path"=> $filepath]);
+                        $result = responseJson(200,false,"File uploaded successfully", ["path"=> $fileNames]);
                         echo json_encode($result);die; 
                     } else {
                         $result = responseJson(500,true,"Failed to upload image",[]);
@@ -400,16 +417,13 @@ class APIController extends ResourceController
                 } 
             }
         }catch(Execption $ex){
-
             echo json_encode($ex->errors());
         }
     }
-
     /*  FUNCTION : SAVE GUEST DETAILS FROM THE IMAGE UPLOADED.
         METHOD: POST , 
         INPUT : Header Authorization- Token
         OUTPUT : UPDATED STATUS.     */ 
-
     public function saveDocDetails()
     {
         try {
@@ -423,7 +437,7 @@ class APIController extends ResourceController
                         'title' => 'required',
                         'firstName' => 'required',
                         'email' => 'required|valid_email',
-                        'countryOfResidence' => 'required',
+                        'cor' => 'required',
                         'DOB' => 'required',
                         'phn' => 'required',
                         'gender' => 'required',
@@ -436,50 +450,30 @@ class APIController extends ResourceController
                         'city' => 'required',
                     ]);
                     if(!$validate){
-
                         $validate = $this->validator->getErrors();
                         $result["SUCCESS"] = "-402";
                         $result[]["ERROR"] = $validate;
                         $result = responseJson("-402",$validate);
-                        echo json_encode($result);
-                        exit;
+                        echo json_encode($result);exit;
                     }
-                    
-                    $custId = $this->request->getPost("CUST_ID");
                     $CUST_ID = $decoded['token_info']->data->USR_CUST_ID;
-
-                    // checking the id from token and id from post values are same
-                    // reason for first condition => Bcz admin can update customer data too
-                    // if it is a admin then ignore second condition
-                    if($decoded['token_info']->data->USR_ROLE !== "admin" && $custId != $CUST_ID){
-
-                        $validate = "Token details and updating details mismactch";
-                        $result["SUCCESS"] = "-400";
-                        $result[]["ERROR"] = $validate;
-                        $result = responseJson("-400",$validate);
-                        echo json_encode($result);
-                        exit;
-                       
-                    }
-                    
                     if($this->request->getPost("expiryDate") < $this->request->getPost("issueDate") && $this->request->getPost("expiryDate") <  date("d-M-Y")){
                         $validate = "Your Document is expired";
                         $result["SUCCESS"] = "-402";
                         $result[]["ERROR"] = $validate;
                         $result = responseJson("-402",$validate);
-                        echo json_encode($result);
-                        exit;
+                        echo json_encode($result);exit;
                     }
                     $data = 
-                    ["CUST_FIRST_NAME" => $this->request->getPost("firstName"),
+                    [   "CUST_FIRST_NAME" => $this->request->getPost("firstName"),
                         "CUST_MIDDLE_NAME" => $this->request->getPost("middleName"),
                         "CUST_LAST_NAME" => $this->request->getPost("lastName"),
                         "CUST_TITLE" => $this->request->getPost("title"),
-                        "CUST_COUNTRY" => $this->request->getPost("countryOfResidence"),
                         "CUST_DOC_TYPE" => $this->request->getPost("docType"),
                         "CUST_DOC_NUMBER" => $this->request->getPost("docNumber"),
                         "CUST_GENDER" => $this->request->getPost("gender"),
                         "CUST_NATIONALITY" => $this->request->getPost("nationality"),
+                        "CUST_COR" => $this->request->getPost("cor"),
                         "CUST_DOB" => date("d-M-Y", strtotime($this->request->getPost("DOB"))),
                         "CUST_DOC_EXPIRY" => date("d-M-Y", strtotime($this->request->getPost("expiryDate"))),
                         "CUST_DOC_ISSUE" => date("d-M-Y", strtotime($this->request->getPost("issueDate"))),
@@ -488,10 +482,10 @@ class APIController extends ResourceController
                         "CUST_ADDRESS_1" => $this->request->getPost("address1"),
                         "CUST_ADDRESS_2" => $this->request->getPost("address2"),
                         "CUST_CITY" => $this->request->getPost("city"),
-                        "CUST_UPDATE_UID" => $custId,
+                        "CUST_UPDATE_UID" => $CUST_ID,
                         "CUST_UPDATE_DT" => date("d-M-Y")
                     ];
-                    $update = $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $custId)->update($data); 
+                    $update = $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $CUST_ID)->update($data); 
                     if($update){
                         $result = responseJson(200,true,"updated the guest details",[]);
                         echo json_encode($result);die;
@@ -500,20 +494,17 @@ class APIController extends ResourceController
                         echo json_encode($result);die;
                     }
             }
-        } catch (Exception $e){
+        }catch (Exception $e){
             return $this->respond($e->errors());
         }
     }
-
-    /*  FUNCTION : DELETE THE UPLOADED DOC
-        METHOD: DELETE 
+    /*  FUNCTION : FETCH ALL DETAILS OF GUEST
+        METHOD: GET 
         INPUT : Header Authorization- Token
-        OUTPUT : DELETED STATUS.  */ 
-    public function deleteUploadedDOC()
+        OUTPUT : CUSTOMER_DATA  */ 
+    public function FetchSavedDocDetails()
     {
-        try{
-            $doctype = $this->request->getPost("doctype");
-            $filename = $this->request->getPost("filename"); // or path
+        try {
             // get Token
             $token = getJWTFromRequest();  
             // decoded token information and userdata information from the table.
@@ -521,46 +512,92 @@ class APIController extends ResourceController
             // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
             if(!empty($decoded)) {
                 $CUST_ID = $decoded['token_info']->data->USR_CUST_ID;
-                // fetch details from db
-                $doc_data = $this->Db->table('FLXY_DOCUMENTS')->select('*')->where(['CUST_NAME' => $CUST_ID])->get()->getRowArray(); 
-                if($doctype == 'passport'){
-                    $doc_column = 'DOC_PASS';
-                    $data['DOC_PASS'] = null;
-
-                }else if($doctype == 'vaccination'){
-                    $doc_column = 'DOC_VACCINEPASS';
-                    $data['DOC_VACCINE'] = null;    
-                }else {         
-                    $doc_column = 'DOC3';
-                    $data['DOC3'] = null;
-                }
-                $filename = $doc_data[$doc_column];
-                $filename = explode('/',$filename);
-                $file = end($filename);
-                // Unlink the file from the folder
-                $folderPath = "assets/Uploads/userDocuments/".$doctype."/".$file ;
-                if(file_exists( $folderPath )){              
-                    if(unlink($folderPath)){
-                        $return = $this->Db->table('FLXY_DOCUMENTS')->where(['CUST_NAME' => $CUST_ID])->update($data); 
-                        if($return){
-                            $doc_status_update = $this->Db->table('FLXY_VACCINE_DETAILS')->delete(['VACC_FILE_PATH' => $folderPath]); 
-                            // // update the vaccine details table with document removed
-                            // $doc_status_update = $this->Db->table('FLXY_VACCINE_DETAILS')->delete(['CUST_ID' => $CUST_ID]); 
-                            if($doc_status_update){
-
-                                $result = responseJson(200,"Documents deleted successfully",$return);
-                                echo json_encode($result);  
-                            }
-                        }else{
-                            $result = responseJson("-402","Record not deleted");
-                            echo json_encode($result);
+                $filePath = base_url('assets/Uploads/userDocuments/proof');
+                $param = ['CUST_ID' => $CUST_ID];
+                $sql = "SELECT  b.* ,a.DOC_FILE_PATH FROM FLXY_CUSTOMER b 
+                    LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID: AND a.DOC_FILE_TYPE ='PROOF'";
+                $data = $this->Db->query($sql,$param)->getRowArray();
+                if(!empty($data)){
+                    $data['DOCS'] =NULL;
+                    if($data['DOC_FILE_PATH']){
+                        $files_array = explode(',',$data['DOC_FILE_PATH']);
+                        foreach ($files_array as $key => $value) {
+                           $files[] = $filePath.'/'.$value;
                         }
+                        $data['DOCS'] = $files;
                     }
-                }            
+                    $result = responseJson(200,true,"Fetch the user details",$data);
+                    echo json_encode($result);die;
+                }else {
+                    $result = responseJson(500,true,"user details fetching failed",[]);
+                    echo json_encode($result);die;
+                }
+            }
+        } catch (Exception $e){
+            return $this->respond($e->errors());
+        }
+    }
+    
+    /*  FUNCTION : DELETE THE UPLOADED DOC( proof)
+        METHOD: DELETE 
+        INPUT : Header Authorization- Token
+        OUTPUT : DELETED STATUS.  */ 
+    public function deleteUploadedDOC()
+    {
+        try{
+            
+            $doctype = $this->request->getPost("doctype"); //  proof / 
+            $filename = $this->request->getPost("filename"); // or path
+            // get Token
+            $token = getJWTFromRequest();  
+            // decoded token information and userdata information from the table.
+            $decoded =  validateJWTFromRequest($token);
+            // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
+            if(!empty($decoded)) {
+                $resID = $decoded['table_info']['RESV_ID'];
+                $CUST_ID = $decoded['token_info']->data->USR_CUST_ID;
+                // fetch details from db
+                $doc_data = $this->Db->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID'=>$CUST_ID,'DOC_RESV_ID'=>$resID,'DOC_FILE_TYPE'=> 'PROOF'])->get()->getRowArray(); 
+                $filenames = $doc_data['DOC_FILE_PATH'];
+                $filename_array = explode(',',$filenames);
+                // inarray then delete else msg 
+                if($pos = array_search($filename, $filename_array)){
+                    unset($filename_array[$pos]);
+                    $folderPath = "assets/Uploads/userDocuments/".$doctype."/".$filename ;
+                    if(file_exists( $folderPath )){              
+                        unlink($folderPath);
+                    }
+                    $data = [
+                        "DOC_CUST_ID" => $CUST_ID,
+                        "DOC_IS_VERIFY" => 0, 
+                        "DOC_FILE_PATH" => implode(',',$filename_array), 
+                        "DOC_FILE_TYPE" => 'PROOF', 
+                        "DOC_RESV_ID" => $resID, 
+                        "DOC_FILE_DESC" => "" , 
+                        "DOC_UPDATE_UID" => $CUST_ID,
+                        "DOC_UPDATE_DT" => date("d-M-Y") ];
+                    $return = $this->Db->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID'=>$CUST_ID,'DOC_RESV_ID'=>$resID,'DOC_FILE_TYPE'=>'PROOF'])->update($data); 
+                    if($return){
+                            $result = responseJson(200,"Documents deleted successfully",$return);
+                            echo json_encode($result);          
+                    }else{
+                        $result = responseJson("-402","Record not deleted");
+                        echo json_encode($result);
+                    }
+                }
+                // Unlink the file from the folder
             }
         }catch (Exception $e){
             return $this->respond($e->errors());
         }
+    }
+    public function deleteSpecificVaccine()
+    {
+        $param = ['CUST_ID'=> $this->request->getPost("CUST_ID")];
+        $sql="DELETE FROM FLXY_VACCINE_DETAILS WHERE EXISTS
+        (SELECT VACCINE_ID FROM FLXY_VACCINE_DETAILS WHERE CUST_ID=:CUST_ID:)";
+        $response = $this->Db->query($sql,$param); 
+        return $response;
     }
 
 /* FUNCTION : Vaccination Form
@@ -578,32 +615,51 @@ public function vaccineForm()
         // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
         if(!empty($decoded)) {
             $CUST_ID = $decoded['token_info']->data->USR_CUST_ID;
+            $del =  $this->deleteSpecificVaccine();
             $validate = $this->validate([
-
                 'vaccineDetail' => 'required',
                 'lastVaccineDate' => 'required',
                 'VaccineName' => 'required',
                 'cerIssuanceCountry' => 'required',
-                
+                'vaccine' => [
+                    'uploaded[vaccine]',
+                    'mime_in[vaccine,image/png, image/jpeg]',
+                    'max_size[vaccine,500]',
+                ], 
             ]);
             if(!$validate){
-    
                 $validate = $this->validator->getErrors();
                 $result["SUCCESS"] = "-402";
                 $result[]["ERROR"] = $validate;
                 $result = responseJson("-402",$validate);
-                echo json_encode($result);
-                exit;
+                echo json_encode($result);exit;
             }
-            // $vaccineUploadedOrNot = $this->request->getPost("vaccineUploadedOrNot");
+            // Code for file upload [vaccine is uploading to FLXY_VACCINE_DETAILS table]
+            $fileNames='';
+            $fileArry = $this->request->getFileMultiple('vaccine');
+            $desc = $this->request->getPost("desc");
+            if(!empty($fileArry)){
+                foreach($fileArry as $key=>$file){
+                    if($file->isValid() && !$file->hasMoved()) {
+                        $newName = $file->getRandomName();
+                        $file->move(ROOTPATH . 'assets/Uploads/userDocuments/vaccination',$newName);
+                        $comma='';
+                        if (isset($fileArry[$key+1])) {
+                            $comma=',';
+                        }
+                        $fileNames.=$newName.$comma;
+                    }
+                }
+            }
             $data = 
             [
                 "CUST_ID" => $CUST_ID,
-                "VACCINED_DETAILS" => $this->request->getPost("vaccineDetail"), //vaccinated, medicallyExempt, vaccinationLater 
+                "VACCINED_DETAILS" => $this->request->getPost("vaccineDetail"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
                 "LAST_VACCINE_DT" => $this->request->getPost("lastVaccineDate"),
                 "VACCINE_NAME" => $this->request->getPost("VaccineName"),
                 "ISSUED_COUNTRY" => $this->request->getPost("cerIssuanceCountry"),
-                "VACCINE_IS_VERIFY" => 'N',
+                "VACCINE_IS_VERIFY" => 0,
+                "VACC_FILE_PATH" => $fileNames,
                 "VACC_CREATE_UID" =>$CUST_ID,
                 "VACC_CREATE_DT" => date("d-M-Y"), 
                 "VACC_UPDATE_UID" => $CUST_ID,
@@ -611,7 +667,6 @@ public function vaccineForm()
             ];
             $insert = $this->Db->table('FLXY_VACCINE_DETAILS')->insert($data); 
             if($insert){
-
                 $result = responseJson(200,true,"Added the guest vaccine details",[]);
                 echo json_encode($result);die;
             }else {
@@ -641,6 +696,7 @@ public function acceptAndSignatureUpload()
         // ["token_info"=> $decodedToken,"table_info"=> $userdata]; output from decoded.
         if(!empty($decoded)) {
             $USR_ID = $decoded['token_info']->data->USR_ID;
+            $resID = $decoded['table_info']['RESV_ID'];
             $validate = $this->validate([ 
                 'estimatedTimeOfArrival' => 'required', 
                 'signature' =>  [
@@ -653,36 +709,44 @@ public function acceptAndSignatureUpload()
                 $result["SUCCESS"] = "-402";
                 $result[]["ERROR"] = $validate;
                 $result = responseJson("-402",$validate);
-                echo json_encode($result);
-                exit;
+                echo json_encode($result);exit;
             }
-            $data = [
-
-                "RESV_ETA" => $this->request->getPost("estimatedTimeOfArrival"), 
+            $dataRes = [
+                "RESV_ETA" => $this->request->getPost("estimatedTimeOfArrival"),
                 "RESV_UPDATE_UID" => $USR_ID,
                 "RESV_UPDATE_DT" => date("d-M-Y")
             ];
             // update the signature in the documents table
             $doc_file = $this->request->getFile('signature');
             $doc_name = $doc_file->getName();
-            $folderPath = "assets/Uploads/userDocuments/signature";
+            $folderPath = "assets/Uploads/userDocuments/signature/";
             $cusUserID = $decoded['token_info']->data->USR_CUST_ID;
             $doc_up = documentUpload($doc_file ,$doc_name, $cusUserID , $folderPath);
             if($doc_up['SUCCESS'] == 200){
                 // check wheather there is any entry with this user. 
-                $doc_data = $this->Db->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_PASS,DOC_VACCINE,DOC3')->where('CUST_NAME',$cusUserID)->get()->getRowArray();
+                $doc_data = $this->Db->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_FILE_PATH,DOC_CUST_ID,DOC_FILE_TYPE')->where(['DOC_CUST_ID'=>$cusUserID,'DOC_FILE_TYPE'=>'SIGN','DOC_RESV_ID'=>$resID])->get()->getRowArray();
+
                 if(!empty($doc_data)){
                     $filepath = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
                     $data = [
-                        "SIGNATURE_IMG" => $filepath ,
-                        "DOC_UPDATE_UID" => $cusUserID,
+                        "DOC_CUST_ID" => $cusUserID,
+                        "DOC_IS_VERIFY" => 0, 
+                        "DOC_FILE_PATH" => $filepath, 
+                        "DOC_FILE_TYPE" => 'SIGN', 
+                        "DOC_RESV_ID" => $resID, 
+                        "DOC_FILE_DESC" => "", 
+                        "DOC_UPDATE_UID" => $USR_ID,
                         "DOC_UPDATE_DT" => date("d-M-Y") ];
+                    
                     $update_data = $this->Db->table('FLXY_DOCUMENTS')->where('DOC_ID',$doc_data['DOC_ID'])->update($data);
-                    if ( $update_data ){
+                    $res_data = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID',$resID)->update($dataRes);
+                echo $this->Db->getLastQuery()->getQuery();die;
+
+                    if ( $update_data &&  $res_data){
                         $result = responseJson(200,false,"File uploaded successfully", ["path"=> $filepath]);
                         echo json_encode($result);die;
                     } else {
-                        $result = responseJson(500,true,"Failed to upload image",[]);
+                        $result = responseJson(500,true,"Failed to upload image or updation in reservation",[]);
                         echo json_encode($result);die;
                     }
                 }else{
@@ -695,7 +759,6 @@ public function acceptAndSignatureUpload()
         return $this->respond($e->errors());
     }    
 }
-
 // ----------------------------------------------------------------------- MAINTENANCE REQUEST API -------------------------------------------//
 
 /*  FUNCTION : CREATE MAINTENANCE REQUEST
@@ -912,7 +975,23 @@ public function listShuttles($shutleID = null)
             echo json_encode($ex->errors());
         }
 }
-
+//------------------------------------------------------------------------------------- HANDBOOK ----------------------------------------------------------------------------------------------//
+/*  FUNCTION : TO GET HANDBOOK URL 
+    METHOD: GET 
+    INPUT : Header Authorization- Token
+    OUTPUT : HANDBOOK URL         */ 
+public function getHandBookURL()
+{
+    $path = 'http://localhost/FlexiGuest/assets/Uploads/handbook/hotel-handbook.pdf';
+    if(file_exists( $path)){
+        $handbook = ['url'=> $path];
+        $result = responseJson(200,false,"Handbook URL fetched",$handbook);
+        echo json_encode($result);die;
+    }else{
+        $result = responseJson(500,false,"No Handbook file uploaded",[]);
+        echo json_encode($result);die;
+    }
+}
 
 // ------------------------------------------------------------------------------------ ADMIN APP APIS ---------------------------------------------------------------------------------------//
 
