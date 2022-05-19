@@ -35,7 +35,7 @@ class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = ['responsejson'];
+    protected $helpers = ['responsejson', 'common', 'upload'];
 
     /**
      * Constructor.

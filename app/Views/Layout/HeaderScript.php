@@ -57,6 +57,15 @@
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/select2/select2.css')?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/tagify/tagify.css')?>" />
 
+<?php
+    if(isset($title) && $title == 'News'){
+?>
+    <!-- text editor -->
+    <link rel="stylesheet" href="<?= base_url('assets/vendor/libs/quill/editor.css') ?>" />
+<?php
+    }
+?>
+
 <!-- Page CSS -->
 <script src="<?php echo base_url('assets/js/jquery-3.6.0.min.js')?>"></script>
 <!-- Helpers -->

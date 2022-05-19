@@ -6,6 +6,11 @@ use App\Controllers\BaseController;
 use App\Models\UserModel;
 use CodeIgniter\API\ResponseTrait;
 
+/*
+ 
+********************** NOT USING THIS CONTROLLER FOR NOW **********************
+
+*/
 class ProfileController extends BaseController
 {
     use ResponseTrait;

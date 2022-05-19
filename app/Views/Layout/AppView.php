@@ -55,5 +55,7 @@
             <div class="drag-target"></div>
           </div>
           <?= $this->include('Layout/FooterScript') ?>
+
+          <?= $this->renderSection("script") ?>
       </body>
     </html>

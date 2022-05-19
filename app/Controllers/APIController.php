@@ -444,10 +444,14 @@ class APIController extends ResourceController
                         echo json_encode($result);
                         exit;
                     }
+                    
                     $custId = $this->request->getPost("CUST_ID");
                     $CUST_ID = $decoded['token_info']->data->USR_CUST_ID;
+
                     // checking the id from token and id from post values are same
-                    if($custId != $CUST_ID){
+                    // reason for first condition => Bcz admin can update customer data too
+                    // if it is a admin then ignore second condition
+                    if($decoded['token_info']->data->USR_ROLE !== "admin" && $custId != $CUST_ID){
 
                         $validate = "Token details and updating details mismactch";
                         $result["SUCCESS"] = "-400";
@@ -457,7 +461,7 @@ class APIController extends ResourceController
                         exit;
                        
                     }
-                    $custId = $CUST_ID;
+                    
                     if($this->request->getPost("expiryDate") < $this->request->getPost("issueDate") && $this->request->getPost("expiryDate") <  date("d-M-Y")){
                         $validate = "Your Document is expired";
                         $result["SUCCESS"] = "-402";

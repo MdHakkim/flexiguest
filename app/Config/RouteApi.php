@@ -81,11 +81,13 @@ $routes->get("maintenance/listRequests", "APIController::listRequests");
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
 
-    $routes->get("get-profile-data", "ProfileController::getProfileData");
-    
     $routes->get("reservation/get-reservations-list", "ReservationController::getReservationsList");
+    $routes->get("news", "NewsController::news");
 
-    $routes->post("customer/update-customer-details", "APIController::saveDocDetails", ['namespace' => 'App\Controllers']); 
+    $routes->group("", ['namespace' => 'App\Controllers'], function($routes){  
+        $routes->post("customer/update-customer-details", "APIController::saveDocDetails"); 
+        $routes->get("profile", "APIController::profileAPI");
+    });
 });
 
 //  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
