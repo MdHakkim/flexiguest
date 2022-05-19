@@ -711,21 +711,20 @@ public function acceptAndSignatureUpload()
                 $result = responseJson("-402",$validate);
                 echo json_encode($result);exit;
             }
-            $data = [
-                "RESV_ETA" => $this->request->getPost("estimatedTimeOfArrival"), 
+            $dataRes = [
+                "RESV_ETA" => $this->request->getPost("estimatedTimeOfArrival"),
                 "RESV_UPDATE_UID" => $USR_ID,
                 "RESV_UPDATE_DT" => date("d-M-Y")
             ];
             // update the signature in the documents table
             $doc_file = $this->request->getFile('signature');
             $doc_name = $doc_file->getName();
-            $folderPath = "assets/Uploads/userDocuments/signature";
+            $folderPath = "assets/Uploads/userDocuments/signature/";
             $cusUserID = $decoded['token_info']->data->USR_CUST_ID;
             $doc_up = documentUpload($doc_file ,$doc_name, $cusUserID , $folderPath);
             if($doc_up['SUCCESS'] == 200){
                 // check wheather there is any entry with this user. 
                 $doc_data = $this->Db->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_FILE_PATH,DOC_CUST_ID,DOC_FILE_TYPE')->where(['DOC_CUST_ID'=>$cusUserID,'DOC_FILE_TYPE'=>'SIGN','DOC_RESV_ID'=>$resID])->get()->getRowArray();
-                // echo $this->Db->getLastQuery()->getQuery();die;
 
                 if(!empty($doc_data)){
                     $filepath = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
@@ -740,11 +739,14 @@ public function acceptAndSignatureUpload()
                         "DOC_UPDATE_DT" => date("d-M-Y") ];
                     
                     $update_data = $this->Db->table('FLXY_DOCUMENTS')->where('DOC_ID',$doc_data['DOC_ID'])->update($data);
-                    if ( $update_data ){
+                    $res_data = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID',$resID)->update($dataRes);
+                echo $this->Db->getLastQuery()->getQuery();die;
+
+                    if ( $update_data &&  $res_data){
                         $result = responseJson(200,false,"File uploaded successfully", ["path"=> $filepath]);
                         echo json_encode($result);die;
                     } else {
-                        $result = responseJson(500,true,"Failed to upload image",[]);
+                        $result = responseJson(500,true,"Failed to upload image or updation in reservation",[]);
                         echo json_encode($result);die;
                     }
                 }else{
@@ -973,7 +975,23 @@ public function listShuttles($shutleID = null)
             echo json_encode($ex->errors());
         }
 }
-
+//------------------------------------------------------------------------------------- HANDBOOK ----------------------------------------------------------------------------------------------//
+/*  FUNCTION : TO GET HANDBOOK URL 
+    METHOD: GET 
+    INPUT : Header Authorization- Token
+    OUTPUT : HANDBOOK URL         */ 
+public function getHandBookURL()
+{
+    $path = 'http://localhost/FlexiGuest/assets/Uploads/handbook/hotel-handbook.pdf';
+    if(file_exists( $path)){
+        $handbook = ['url'=> $path];
+        $result = responseJson(200,false,"Handbook URL fetched",$handbook);
+        echo json_encode($result);die;
+    }else{
+        $result = responseJson(500,false,"No Handbook file uploaded",[]);
+        echo json_encode($result);die;
+    }
+}
 
 // ------------------------------------------------------------------------------------ ADMIN APP APIS ---------------------------------------------------------------------------------------//
 
