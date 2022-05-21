@@ -62,18 +62,26 @@
 
     <!-- Added by Deleep -->
     <?php if (isset($js_to_load)) {
-            foreach ($js_to_load as $row) {
-      ?> <script type="text/javascript" src="<?php echo base_url('assets/js/' . $row); ?>"></script>
+      foreach ($js_to_load as $row) {
+    ?> <script type="text/javascript" src="<?php echo base_url('assets/js/' . $row); ?>"></script>
     <?php
-            }
       }
-      ?>
+    }
+    ?>
 
     <!-- text editor -->
     <?php
-      if (isset($title) && $title == 'News') {
-      ?>
-          <script src="<?= base_url('assets/vendor/libs/quill/quill.js') ?>"></script>
+    if (isset($title) && $title == 'News') {
+    ?>
+      <script src="<?= base_url('assets/vendor/libs/quill/quill.js') ?>"></script>
     <?php
-      }
-      ?>
+    }
+    ?>
+
+    <?php
+    if (isset($title) && $title == 'Shuttle') {
+    ?>
+      <script src="<?= base_url('assets/vendor/libs/sortablejs/sortable.js') ?>"></script>
+    <?php
+    }
+    ?>

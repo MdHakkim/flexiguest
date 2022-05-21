@@ -289,9 +289,16 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertStages', 'FacilityController::insertStages');
     $routes->match(['post'],'/editStages', 'FacilityController::editStages');
     $routes->match(['post'],'/getStagesList', 'FacilityController::getStagesList');
+
+    // Shuttle & Stages Mapping
+    $routes->get('all-routes-stages', 'FacilityController::allRoutesStages');
+    $routes->post('store-route-stop', 'FacilityController::storeRouteStop');
+    $routes->post('get-shuttle-stops', 'FacilityController::getShuttleStops');
+    $routes->post('update-shuttle-stops-order', 'FacilityController::updateShuttleStopsOrder');
+    $routes->post('remove-shuttle-stop', 'FacilityController::removeShuttleStop');
    
     // ABUBAKAR CODE (START)
-    $routes->group('/news', function ($routes) {
+    $routes->group('news', function ($routes) {
         $routes->get('', 'NewsController::news');
         $routes->post('all-news', 'NewsController::allNews');
         $routes->post('store', 'NewsController::store');
