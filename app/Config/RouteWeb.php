@@ -315,7 +315,13 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('delete-optional-file', 'GuidelineController::deleteOptionalFile');
     });
 
-
+    $routes->group('app-update', function ($routes) {
+        $routes->get('', 'AppUpdateController::appUpdate');
+        $routes->post('all-app-updates', 'AppUpdateController::allAppUpdates');
+        $routes->post('store', 'AppUpdateController::store');
+        $routes->post('edit', 'AppUpdateController::edit');
+        $routes->delete('delete', 'AppUpdateController::delete');
+    });
     // ABUBAKAR CODE (END)
 });
 

@@ -3,10 +3,10 @@ namespace App\Libraries;
 
 class GuidelineDataTable{
 
-    private $Db;
+    private $DB;
 
     public function __construct(){
-        $this->Db = \Config\Database::connect();
+        $this->DB = \Config\Database::connect();
     }
 
     public function generate_DatatTable(){
@@ -31,20 +31,20 @@ class GuidelineDataTable{
         }
 
         ## Total number of records without filtering
-        $result = $this->Db->query("select count(*) as allcount from $table")->getResultArray();       
+        $result = $this->DB->query("select count(*) as allcount from $table")->getResultArray();       
         $totalRecords = $result[0]['allcount'];
 
         ## Total number of record with filtering
-        $result1 = $this->Db->query("select count(*) as allcount from $table $searchQuery")->getResultArray();
+        $result1 = $this->DB->query("select count(*) as allcount from $table $searchQuery")->getResultArray();
         $totalRecordwithFilter = $result1[0]['allcount'];
         
         ## Fetch records
         $query = "select * from $table $searchQuery order by ".$columnName." ".$columnSortOrder." OFFSET ".$row." ROWS FETCH NEXT ".$rowperpage." ROWS ONLY";
-        $records = $this->Db->query($query)->getResultArray();
+        $records = $this->DB->query($query)->getResultArray();
 
         $return = [];
         foreach($records as $row){
-            $guideline_files = $this->Db->query("select * from guideline_files where guideline_id = {$row['id']}")->getResultArray();
+            $guideline_files = $this->DB->query("select * from guideline_files where guideline_id = {$row['id']}")->getResultArray();
 
             $return[] = [
                 'id' => $row['id'],

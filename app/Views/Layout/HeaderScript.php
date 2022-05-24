@@ -58,7 +58,7 @@
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/tagify/tagify.css')?>" />
 
 <?php
-    if(isset($title) && in_array($title, ['News', 'Guideline'])){
+    if(isset($title) && in_array($title, ['News', 'Guideline', 'App Update'])){
 ?>
     <!-- text editor -->
     <link rel="stylesheet" href="<?= base_url('assets/vendor/libs/quill/editor.css') ?>" />

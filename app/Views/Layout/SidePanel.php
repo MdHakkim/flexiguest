@@ -790,7 +790,8 @@
                                             'Market Group',
                                             'Market Code',
                                             'News',
-                                            'Guideline'
+                                            'Guideline',
+                                            'App Update'
                                         ))) {
                                             echo 'open active';
                                         } ?>">
@@ -971,6 +972,12 @@
                         <li class="menu-item <?= (isset($title) && $title == 'Guideline') ? 'active' : '' ?>">
                             <a href="<?= base_url('/guideline') ?>" class="menu-link">
                                 <div data-i18n="Guideline">Guidelines</div>
+                            </a>
+                        </li>
+
+                        <li class="menu-item <?= (isset($title) && $title == 'App Update') ? 'active' : '' ?>">
+                            <a href="<?= base_url('/app-update') ?>" class="menu-link">
+                                <div data-i18n="Guideline">App Update</div>
                             </a>
                         </li>
 
