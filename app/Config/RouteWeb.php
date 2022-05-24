@@ -306,6 +306,15 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->delete('delete', 'NewsController::delete');
     });
 
+    $routes->group('guideline', function ($routes) {
+        $routes->get('', 'GuidelineController::guideline');
+        $routes->post('all-guidelines', 'GuidelineController::allGuidelines');
+        $routes->post('store', 'GuidelineController::store');
+        $routes->post('edit', 'GuidelineController::edit');
+        $routes->delete('delete', 'GuidelineController::delete');
+        $routes->post('delete-optional-file', 'GuidelineController::deleteOptionalFile');
+    });
+
 
     // ABUBAKAR CODE (END)
 });

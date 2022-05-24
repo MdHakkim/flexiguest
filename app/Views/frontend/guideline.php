@@ -3,12 +3,45 @@
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
 
+<style>
+    .optional-files .image, .optional-files .file{
+        position: relative;
+        height: 100px;
+        margin-bottom: 10px;
+        width: 100px;
+    }
+    .optional-files .image img {
+        width: 100%;
+        height: 100%;
+    }
+    .optional-files .delete-icon {
+        position: absolute;
+        color: red;
+        right: 5px;
+        top: -8px;
+        cursor: pointer;
+    }
+    .optional-files .file{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .optional-files .file a{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        height: 100%;
+        overflow: hidden;
+    }
+
+</style>
+
 <!-- Content wrapper -->
 <div class="content-wrapper">
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> News</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Guidelines</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -23,6 +56,7 @@
                             <th>Description</th>
                             <th>Body</th>
                             <th>Created At</th>
+                            <th>Optional Files</th>
                             <th class="all">Action</th>
                         </tr>
                     </thead>
@@ -41,14 +75,14 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h4 class="modal-title" id="popModalWindowlabel">Rate Class</h4>
+                    <h4 class="modal-title" id="popModalWindowlabel">Add Guideline</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
 
                 <div class="modal-body">
                     <form id="submit-form" class="needs-validation" novalidate>
                         <div class="row g-3">
-                            <input type="hidden" name="id" id="news-id" class="form-control" />
+                            <input type="hidden" name="id" id="guideline-id" class="form-control" />
 
                             <div class="col-md-6">
 
@@ -69,6 +103,30 @@
                                 <lable class="form-lable"><b>Description *</b></lable>
 
                                 <textarea type="number" name="description" class="form-control" placeholder="Description..."></textarea>
+                            </div>
+
+                            <div class="col-md-12">
+                                <lable class="form-lable"><b>Optional Files</b></lable>
+
+                                <input type="file" name="files[]" class="form-control bootstrap-maxlength" multiple />
+                            </div>
+
+                            <div class="col-md-12 optional-files">
+                                <div class="row">
+                                    <!-- <div class="col-sm-4 col-md-3 col-lg-2 image">
+                                        <img src="http://localhost/FlexiGuest/assets/Uploads/guidelines/files/1653303736-2.jpg"/>
+                                        <i class="fa-solid fa-circle-minus delete-icon"></i>
+                                    </div>
+                                    
+                                    <div class="col-sm-3 col-md-2 col-lg-1 file">
+                                        <a href="http://localhost/FlexiGuest/assets/Uploads/guidelines/files/1653303736-2.jpg" target="_blank">
+                                            <i class="fa-solid fa-file fa-4x"></i>
+                                            Open File
+                                        </a>
+
+                                        <i class="fa-solid fa-circle-minus delete-icon"></i>
+                                    </div> -->
+                                </div>
                             </div>
 
                             <div class="col-md-12">
@@ -126,7 +184,7 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('/news/all-news') ?>'
+                'url': '<?php echo base_url('/guideline/all-guidelines') ?>'
             },
             'columns': [{
                     data: ''
@@ -152,6 +210,32 @@
                 },
                 {
                     data: 'created_at'
+                },
+                {
+                    data: null,
+                    render: function (data, type, row, meta) {
+                        let html = `<div class="optional-files"> <div class="row">`;
+
+                        $.each(data['guideline_files'], function(key, file) {
+                            if(file['file_type'].includes('image'))
+                                html += `
+                                    <div class="col-sm-4 col-md-3 col-lg-2 image">
+                                        <img src="${file['file_url']}"/>
+                                    </div>
+                                `;
+                            else
+                                html += `
+                                    <div class="col-sm-4 col-md-3 col-lg-2 file">
+                                        <a href="<?=base_url()?>/${file['file_url']}" target="_blank">
+                                            <i class="fa-solid fa-file fa-4x"></i>
+                                            
+                                            <span>${file['file_name']}</span>
+                                        </a>
+                                    </div>`;
+                        });
+
+                        return html + `</div></div>`;
+                    }
                 },
                 {
                     data: null,
@@ -195,15 +279,18 @@
                     return '';
                 }
             }, {
-                width: "15%"
+                width: "13%"
             }, {
                 width: "10%"
             }, {
-                width: "20%"
+                width: "10%"
             }, {
-                width: "20%"
+                width: "5%"
             }, {
-                width: "15%"
+                width: "45%"
+            }
+            , {
+                width: "5%"
             }],
             "order": [
                 [5, "desc"]
@@ -270,13 +357,13 @@
     function addForm() {
         $(`#submit-form input[name='id']`).val('');
         $(`#submit-form input[name='title']`).val('');
-        $(`#submit-form input[name='cover_image']`).val('');
+        $(`#submit-form input[type='file']`).val('');
         $(`#submit-form textarea[name='description']`).val('');
         $(`#submit-form textarea[name='body']`).val('');
         $(`#submit-form #snow-editor .ql-editor`).html('');
 
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add News');
+        $('#popModalWindowlabel').html('Add Guideline');
 
         $('#popModalWindow').modal('show');
     }
@@ -303,7 +390,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('/news/delete') ?>',
+                        url: '<?php echo base_url('/guideline/delete') ?>',
                         type: "post",
                         data: {
                             id: id,
@@ -315,7 +402,7 @@
                         dataType: 'json',
                         success: function(respn) {
                             showModalAlert('warning',
-                                '<li>The News has been deleted</li>');
+                                '<li>The Guideline has been deleted</li>');
                             $('#dataTable_view').dataTable().fnDraw();
                         }
                     });
@@ -339,14 +426,14 @@
 
     $(document).on('click', '.editWindow', function() {
         $(`#submit-form input[type='file']`).val('');
-        
+
         $('.dtr-bs-modal').modal('hide');
 
         var id = $(this).attr('data_id');
-        $('#popModalWindowlabel').html('Edit News');
+        $('#popModalWindowlabel').html('Edit Guideline');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('/news/edit') ?>';
+        var url = '<?php echo base_url('/guideline/edit') ?>';
         $.ajax({
             url: url,
             type: "post",
@@ -368,6 +455,34 @@
 
                         if(field == 'body')
                             $("#snow-editor .ql-editor").html(val);
+                        
+                        if(field == 'guideline_files' && val.length){
+                            let optional_files_html = "";
+
+                            $.each(val, function(field, file){
+                                if(file.file_type.includes('image')){
+                                    optional_files_html += `
+                                        <div class="col-sm-4 col-md-3 col-lg-2 image">
+                                            <img src="<?=base_url()?>/${file.file_url}"/>
+
+                                            <i onClick="deleteOptionalFile(this, ${file.id})" class="fa-solid fa-circle-minus delete-icon"></i>
+                                        </div>`;
+                                }
+                                else{
+                                    optional_files_html += `
+                                        <div class="col-sm-3 col-md-2 col-lg-1 file">
+                                            <a href="<?=base_url()?>/${file.file_url}" target="_blank">
+                                                <i class="fa-solid fa-file fa-4x"></i>
+                                                ${file.file_name}
+                                            </a>
+
+                                            <i onClick="deleteOptionalFile(this, ${file.id})" class="fa-solid fa-circle-minus delete-icon"></i>
+                                        </div>`;
+                                }
+                            });
+
+                            $("#submit-form .optional-files .row").html(optional_files_html);
+                        }
 
                     });
                 });
@@ -376,6 +491,38 @@
             }
         });
     });
+
+    function deleteOptionalFile(e, file_id){
+        $.ajax({
+            url: '<?= base_url('/guideline/delete-optional-file') ?>',
+            type: "post",
+            data: { file_id },
+            dataType: 'json',
+            success: function(respn) {
+                console.log(respn, "testing");
+                var response = respn['SUCCESS'];
+
+                if (response != '200') {
+
+                    var ERROR = respn['RESPONSE']['ERROR'];
+                    var mcontent = '';
+                    $.each(ERROR, function(ind, data) {
+                        console.log(data, "SDF");
+                        mcontent += '<li>' + data + '</li>';
+                    });
+                    showModalAlert('error', mcontent);
+                } else {
+
+                    var alertText = respn['RESPONSE']['REPORT_RES'];
+
+                    showModalAlert('success', alertText);
+
+                    $(e.parentNode).remove();
+                }
+            }
+        });
+    }
+
 
     // Show Copy Rate Class Form
 
@@ -404,20 +551,23 @@
     function submitForm(id) {
         hideModalAlerts();
 
-        $(`#${id} textarea[name='body']`).val($("#snow-editor .ql-editor").html());
+        if($("#snow-editor .ql-editor").html() != "<p><br></p>")
+            $(`#${id} textarea[name='body']`).val($("#snow-editor .ql-editor").html());
 
-        var fd = new FormData();
-        fd.append('id', $(`#${id} input[name='id']`).val());
-        fd.append('title', $(`#${id} input[name='title']`).val());
-        fd.append('description', $(`#${id} textarea[name='description']`).val());
-        fd.append('body', $(`#${id} textarea[name='body']`).val());
+        var fd = new FormData($(`#${id}`)[0]);
+        fd.delete('cover_image');
+        fd.delete('files[]');
 
-        let files = $(`#${id} input[name='cover_image']`)[0].files;
+        files = $(`#${id} input[name='cover_image']`)[0].files;
         if (files.length)
             fd.append('cover_image', files[0]);
 
+        files = $(`#${id} input[name='files[]']`)[0].files;
+        for(let i = 0; i < files.length; i++)
+            fd.append('files[]', files[i]);
+
         $.ajax({
-            url: '<?= base_url('/news/store') ?>',
+            url: '<?= base_url('/guideline/store') ?>',
             type: "post",
             data: fd,
             processData: false,
@@ -426,7 +576,7 @@
             success: function(respn) {
                 console.log(respn, "testing");
                 var response = respn['SUCCESS'];
-                if (response != '1') {
+                if (response != '200') {
 
                     var ERROR = respn['RESPONSE']['ERROR'];
                     var mcontent = '';
@@ -436,9 +586,8 @@
                     });
                     showModalAlert('error', mcontent);
                 } else {
-                    var alertText = $(`#submit-form input[name='id']`).val() == '' ?
-                        '<li>News has been created</li>' :
-                        '<li>News has been updated</li>';
+
+                    var alertText = respn['RESPONSE']['REPORT_RES'];
 
                     showModalAlert('success', alertText);
 

@@ -789,7 +789,8 @@
                                             'Package Code',
                                             'Market Group',
                                             'Market Code',
-                                            'News'
+                                            'News',
+                                            'Guideline'
                                         ))) {
                                             echo 'open active';
                                         } ?>">
@@ -964,6 +965,12 @@
                         <li class="menu-item <?= (isset($title) && $title == 'News') ? 'active' : '' ?>">
                             <a href="<?= base_url('/news') ?>" class="menu-link">
                                 <div data-i18n="News">News</div>
+                            </a>
+                        </li>
+                        
+                        <li class="menu-item <?= (isset($title) && $title == 'Guideline') ? 'active' : '' ?>">
+                            <a href="<?= base_url('/guideline') ?>" class="menu-link">
+                                <div data-i18n="Guideline">Guidelines</div>
                             </a>
                         </li>
 

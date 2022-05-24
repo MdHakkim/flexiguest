@@ -71,7 +71,7 @@
 
     <!-- text editor -->
     <?php
-    if (isset($title) && $title == 'News') {
+    if (isset($title) && in_array($title, ['News', 'Guideline'])) {
     ?>
       <script src="<?= base_url('assets/vendor/libs/quill/quill.js') ?>"></script>
     <?php

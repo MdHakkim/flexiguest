@@ -11,6 +11,8 @@ class NewsController extends BaseController
 
     use ResponseTrait;
 
+    private $News;
+
     public function __construct()
     {
         $this->News = new News();
@@ -46,7 +48,7 @@ class NewsController extends BaseController
         ];
 
         if (empty($id) || $this->request->getFile('cover_image'))
-            array_merge($rules, [
+            $rules = array_merge($rules, [
                 'cover_image' => [
                     'label' => 'Cover Image',
                     'rules' => ['uploaded[cover_image]', 'mime_in[cover_image,image/png,image/jpg,image/jpeg]', 'max_size[cover_image,2048]']

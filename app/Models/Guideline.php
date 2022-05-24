@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class News extends Model
+class Guideline extends Model
 {
-    protected $table      = 'news';
+    protected $table      = 'guidelines';
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'title',

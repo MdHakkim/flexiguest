@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class News extends Model
+class GuidelineFile extends Model
 {
-    protected $table      = 'news';
+    protected $table      = 'guideline_files';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'title',
-        'cover_image',
-        'description',
-        'body',
+        'guideline_id',
+        'file_url',
+        'file_type',
+        'file_name',
         'created_by',
         'updated_by',
     ];
