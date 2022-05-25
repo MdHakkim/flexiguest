@@ -83,17 +83,20 @@ $routes->get("maintenance/listRequests", "APIController::listRequests");
 
 //  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
 
+// ADMIN ROUTES (START)
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
 
     $routes->get("reservation/get-reservations-list", "ReservationController::getReservationsList");
     $routes->get("news", "NewsController::news");
     $routes->get("guideline", "GuidelineController::guideline");
     $routes->get("app-update", "AppUpdateController::appUpdate");
-
-    $routes->group("", ['namespace' => 'App\Controllers'], function($routes){  
-        $routes->post("customer/update-customer-details", "APIController::saveDocDetails"); 
-        $routes->get("profile", "APIController::profileAPI");
-    });
 });
+
+$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  
+    $routes->post("customer/update-customer-details", "APIController::saveDocDetails"); 
+    $routes->get("profile", "APIController::profileAPI");
+});
+// ADMIN ROUTES (END)
+
 
 //  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
