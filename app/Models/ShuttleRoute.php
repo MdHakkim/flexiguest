@@ -4,17 +4,17 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class News extends Model
+class ShuttleRoute extends Model
 {
-    protected $table      = 'news';
+    protected $table      = 'FLXY_SHUTTLE_ROUTE';
     protected $primaryKey = 'id';
     protected $allowedFields = [
-        'title',
-        'cover_image',
-        'description',
-        'body',
-        'created_by',
-        'updated_by',
+        'shuttle_id',
+        'stage_id',
+        'duration_mins',
+        'order_no',
+        'create_uid',
+        'update_uid',
     ];
 
     protected $useAutoIncrement = true;

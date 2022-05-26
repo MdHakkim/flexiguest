@@ -8,7 +8,7 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> News</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> App Updates</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -41,7 +41,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h4 class="modal-title" id="popModalWindowlabel">Rate Class</h4>
+                    <h4 class="modal-title" id="popModalWindowlabel">App Updates</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
 
@@ -126,7 +126,7 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('/news/all-news') ?>'
+                'url': '<?php echo base_url('/app-update/all-app-updates') ?>'
             },
             'columns': [{
                     data: ''
@@ -303,7 +303,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('/news/delete') ?>',
+                        url: '<?php echo base_url('/app-update/delete') ?>',
                         type: "post",
                         data: {
                             id: id,
@@ -314,8 +314,7 @@
                         },
                         dataType: 'json',
                         success: function(respn) {
-                            showModalAlert('warning',
-                                '<li>The News has been deleted</li>');
+                            showModalAlert('warning', respn['RESPONSE']['REPORT_RES']);
                             $('#dataTable_view').dataTable().fnDraw();
                         }
                     });
@@ -346,7 +345,7 @@
         $('#popModalWindowlabel').html('Edit News');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('/news/edit') ?>';
+        var url = '<?php echo base_url('/app-update/edit') ?>';
         $.ajax({
             url: url,
             type: "post",
@@ -417,7 +416,7 @@
             fd.append('cover_image', files[0]);
 
         $.ajax({
-            url: '<?= base_url('/news/store') ?>',
+            url: '<?= base_url('/app-update/store') ?>',
             type: "post",
             data: fd,
             processData: false,
@@ -426,7 +425,7 @@
             success: function(respn) {
                 console.log(respn, "testing");
                 var response = respn['SUCCESS'];
-                if (response != '1') {
+                if (response != '200') {
 
                     var ERROR = respn['RESPONSE']['ERROR'];
                     var mcontent = '';
@@ -436,41 +435,11 @@
                     });
                     showModalAlert('error', mcontent);
                 } else {
-                    var alertText = $(`#submit-form input[name='id']`).val() == '' ?
-                        '<li>News has been created</li>' :
-                        '<li>News has been updated</li>';
+                    var alertText = respn['RESPONSE']['REPORT_RES'];
 
                     showModalAlert('success', alertText);
 
                     $('#popModalWindow').modal('hide');
-                    $('#dataTable_view').dataTable().fnDraw();
-                }
-            }
-        });
-    }
-
-    // Copy Rate Class to Multiple submit Function
-
-    function copyForm(id) {
-        hideModalAlerts();
-
-        var formSerialization = $('#' + id).serializeArray();
-        var url = '<?php echo base_url('/copyRateClass') ?>';
-        $.ajax({
-            url: url,
-            type: "post",
-            data: formSerialization,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response == '0') {
-                    showModalAlert('error', '<li>No New Rate Classes were added</li>');
-                } else {
-                    showModalAlert('success', '<li>' + response +
-                        ' new Rate Class copies have been created</li>');
-                    $('#copyModalWindow').modal('hide');
                     $('#dataTable_view').dataTable().fnDraw();
                 }
             }

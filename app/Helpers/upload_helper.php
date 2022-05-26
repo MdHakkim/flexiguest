@@ -8,7 +8,9 @@ function documentUpload($file,$docname ,$userID,$folderPath)
 
         // Renaming file before upload and just uplaod the file
 		$temp = explode(".",$docname);
-		$newfilename = round(microtime(true)).'-'.$userID . '.' . end($temp);
+        $name_without_ext = implode(' ', array_slice($temp, 0, -1));
+
+		$newfilename = round(microtime(true)) . '-' . $userID . '-' . $name_without_ext . '.' . end($temp);
 
         if ($file->move($folderPath, $newfilename)) {
 

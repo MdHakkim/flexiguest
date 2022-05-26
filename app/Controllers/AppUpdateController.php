@@ -3,33 +3,33 @@
 namespace App\Controllers;
 
 use App\Libraries\ServerSideDataTable;
+use App\Models\AppUpdate;
 use CodeIgniter\API\ResponseTrait;
-use App\Models\News;
 
-class NewsController extends BaseController
+class AppUpdateController extends BaseController
 {
 
     use ResponseTrait;
 
-    private $News;
+    private $AppUpdate;
 
     public function __construct()
     {
-        $this->News = new News();
+        $this->AppUpdate = new AppUpdate();
     }
 
-    public function news()
+    public function appUpdate()
     {
         $data['title'] = getMethodName();
         $data['session'] = session();
 
-        return view('frontend/news', $data);
+        return view('frontend/app_update', $data);
     }
 
-    public function allNews()
+    public function allAppUpdates()
     {
         $mine = new ServerSideDataTable();
-        $tableName = 'news';
+        $tableName = 'app_updates';
         $columns = 'id,title,cover_image,description,body,created_at';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
@@ -81,35 +81,41 @@ class NewsController extends BaseController
         $data['body'] = trim($this->request->getPost('body'));
 
         $response = !empty($id)
-            ? $this->News->update($id, $data)
-            : $this->News->insert($data);
+            ? $this->AppUpdate->update($id, $data)
+            : $this->AppUpdate->insert($data);
 
-        $result = $response
-            ? responseJson("1", "0", $response, $response = '')
-            : responseJson("-444", "db insert not successful", $response);
 
-        return $this->respond($result);
+        if (!$response)
+            return $this->respond(responseJson("-444", false, "db insert/update not successful", $response));
+
+        if(empty($id))
+            $msg = 'App Update has been created successflly.';
+        else
+            $msg = 'App Update has been updated successflly.';
+
+        return $this->respond(responseJson("200", false, $msg));
     }
 
     public function edit()
     {
         $id = $this->request->getPost('id');
 
-        $news = $this->News->where('id', $id)->first();
+        $app_update = $this->AppUpdate->where('id', $id)->first();
 
-        if ($news)
-            return $this->respond($news);
+        if ($app_update)
+            return $this->respond($app_update);
 
-        return $this->respond(responseJson(204, true, "news not found"));
+        return $this->respond(responseJson(204, true, "App Update not found"));
     }
 
     public function delete()
     {
         $id = $this->request->getPost('id');
 
-        $return = $this->News->delete($id);
+        $return = $this->AppUpdate->delete($id);
+        
         $result = $return 
-                    ? responseJson("200", false, "record deleted", $return)
+                    ? responseJson("200", false, "App update deleted successfully.", $return)
                     : responseJson("-402", "record not deleted");
         
         return $this->respond($result);
