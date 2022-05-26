@@ -296,6 +296,55 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->post('get-shuttle-stops', 'FacilityController::getShuttleStops');
     $routes->post('update-shuttle-stops-order', 'FacilityController::updateShuttleStopsOrder');
     $routes->post('remove-shuttle-stop', 'FacilityController::removeShuttleStop');
+
+    //Subina Code (START)  
+    
+    //Currency - 19/05 
+    $routes->get('/currency', 'AdditionalController::currency');
+    $routes->match(['post'],'/CurrencyView', 'AdditionalController::CurrencyView');
+    $routes->match(['post'],'/insertCurrency', 'AdditionalController::insertCurrency');
+    $routes->match(['post'],'/editCurrency', 'AdditionalController::editCurrency');
+    $routes->match(['post'],'/deleteCurrency', 'AdditionalController::deleteCurrency'); 
+
+    //Exchange Codes - 21/05 
+    $routes->get('/exchangeCodes', 'AdditionalController::exchangeCodes');
+    $routes->match(['post'],'/ExchangeCodesView', 'AdditionalController::ExchangeCodesView');
+    $routes->match(['post'],'/insertExchangeCodes', 'AdditionalController::insertExchangeCodes');
+    $routes->match(['post'],'/editExchangeCodes', 'AdditionalController::editExchangeCodes');
+    $routes->match(['post'],'/deleteExchangeCodes', 'AdditionalController::deleteExchangeCodes'); 
+
+    //Exchange Rates - 23/05 
+    $routes->get('/exchangeRates', 'AdditionalController::exchangeRates');
+    $routes->match(['post'],'/ExchangeRatesView', 'AdditionalController::ExchangeRatesView');
+    $routes->match(['post'],'/insertExchangeRates', 'AdditionalController::insertExchangeRates');
+    $routes->match(['post'],'/editExchangeRates', 'AdditionalController::editExchangeRates');
+    $routes->match(['post'],'/deleteExchangeRates', 'AdditionalController::deleteExchangeRates'); 
+
+    //Department - 24/05 
+    $routes->get('/departments', 'AdditionalController::departments');
+    $routes->match(['post'],'/DepartmentView', 'AdditionalController::DepartmentView');
+    $routes->match(['post'],'/insertDepartment', 'AdditionalController::insertDepartment');
+    $routes->match(['post'],'/editDepartment', 'AdditionalController::editDepartment');
+    $routes->match(['post'],'/deleteDepartment', 'AdditionalController::deleteDepartment'); 
+
+     //Item Class - 24/05 
+     $routes->get('/itemClass', 'AdditionalController::itemClass');
+     $routes->match(['post'],'/ItemClassView', 'AdditionalController::ItemClassView');
+     $routes->match(['post'],'/insertItemClass', 'AdditionalController::insertItemClass');
+     $routes->match(['post'],'/editItemClass', 'AdditionalController::editItemClass');
+     $routes->match(['post'],'/deleteItemClass', 'AdditionalController::deleteItemClass'); 
+
+      //Item Class - 25/05 
+      $routes->get('/items', 'AdditionalController::items');
+      $routes->match(['post'],'/ItemsView', 'AdditionalController::ItemsView');
+      $routes->match(['post'],'/insertItem', 'AdditionalController::insertItem');
+      $routes->match(['post'],'/editItem', 'AdditionalController::editItem');
+      $routes->match(['post'],'/deleteItem', 'AdditionalController::deleteItem'); 
+
+      $routes->match(['post'],'/itemClassList', 'AdditionalController::itemClassList');
+      $routes->match(['post'],'/itemDepartmentList', 'AdditionalController::itemDepartmentList');
+      
+   //Subina Code (END)  
    
     // ABUBAKAR CODE (START)
     $routes->group('news', function ($routes) {
