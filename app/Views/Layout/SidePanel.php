@@ -281,7 +281,7 @@
                 </li>
 
 
-                <li class="menu-item">
+                <li class="menu-item <?= (isset($title) && in_array($title, ['Concierge Offer'])) ? 'open' : '' ?>">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon fas fa-bahai"></i>
 
@@ -289,11 +289,12 @@
                     </a>
 
                     <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link">
+                        <li class="menu-item <?= (isset($title) && $title == 'Concierge Offer') ? 'active' : '' ?>">
+                            <a href="<?= base_url('concierge/concierge-offer') ?>" class="menu-link">
                                 <div data-i18n="Concierge Offers">Concierge Offers</div>
                             </a>
                         </li>
+                        
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link">
                                 <div data-i18n="Concierge Request">Concierge Request</div>

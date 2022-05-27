@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Libraries\GuidelineDataTable;
+use App\Libraries\DataTables\GuidelineDataTable;
 use App\Models\Guideline;
 use App\Models\GuidelineFile;
 use CodeIgniter\API\ResponseTrait;

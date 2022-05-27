@@ -10,7 +10,7 @@
     <script src="<?php echo base_url('assets/js/popper.min.js') ?>"></script>
 
     <script src="<?php //echo base_url('assets/vendor/js/helpers.js')
-                  ?>"></script>
+                    ?>"></script>
     <script src="<?php echo base_url('assets/vendor/js/template-customizer.js') ?>"></script>
 
     <script src="<?php echo base_url('assets/js/moment.min.js') ?>"></script>
@@ -42,7 +42,7 @@
     <script src="<?php echo base_url('assets/js/bootbox.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/bootbox.locales.js') ?>"></script>
     <script src="<?php //echo base_url('assets/vendor/js/bootstrap.js') 
-                  ?>"></script>
+                    ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/block-ui/block-ui.js') ?>"></script>
 
@@ -62,26 +62,15 @@
 
     <!-- Added by Deleep -->
     <?php if (isset($js_to_load)) {
-      foreach ($js_to_load as $row) {
+        foreach ($js_to_load as $row) {
     ?> <script type="text/javascript" src="<?php echo base_url('assets/js/' . $row); ?>"></script>
     <?php
-      }
+        }
     }
     ?>
 
     <!-- text editor -->
-    <?php
-    if (isset($title) && in_array($title, ['News', 'Guideline', 'App Update'])) {
-    ?>
-      <script src="<?= base_url('assets/vendor/libs/quill/quill.js') ?>"></script>
-    <?php
-    }
-    ?>
+    <script src="<?= base_url('assets/vendor/libs/quill/quill.js') ?>"></script>
 
-    <?php
-    if (isset($title) && $title == 'Shuttle') {
-    ?>
-      <script src="<?= base_url('assets/vendor/libs/sortablejs/sortable.js') ?>"></script>
-    <?php
-    }
-    ?>
+    <!--  -->
+    <script src="<?= base_url('assets/vendor/libs/sortablejs/sortable.js') ?>"></script>

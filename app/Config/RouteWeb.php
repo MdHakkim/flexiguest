@@ -371,6 +371,16 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('edit', 'AppUpdateController::edit');
         $routes->delete('delete', 'AppUpdateController::delete');
     });
+
+    $routes->group('concierge', function ($routes) {
+        $routes->get('concierge-offer', 'ConciergeController::conciergeOffer');
+        $routes->post('all-concierge-offers', 'ConciergeController::allConciergeOffers');
+
+        $routes->post('store-concierge-offer', 'ConciergeController::storeConciergeOffer');
+        $routes->post('edit-concierge-offer', 'ConciergeController::editConciergeOffer');
+        $routes->delete('delete-concierge-offer', 'ConciergeController::deleteConciergeOffer');
+
+    });
     // ABUBAKAR CODE (END)
 });
 
