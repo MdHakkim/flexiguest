@@ -114,7 +114,7 @@ class APIController extends BaseController
                 if (password_verify($this->request->getVar("password"), $userdata['USR_PASSWORD'])) {
                     // Token created  
                     $token =   getSignedJWTForUser($userdata);
-                    $result = responseJson(200, false, 'User logged In successfully', ['token' => $token]);
+                    $result = responseJson(200, false, 'User logged In successfully', ['token' => $token, 'user' => $userdata]);
                 } else
                     $result = responseJson("500", true, "Incorrect details");
 
