@@ -115,13 +115,13 @@ class APIController extends BaseController
                     // Token created  
                     $token =   getSignedJWTForUser($userdata);
                     $result = responseJson(200, false, 'User logged In successfully', ['token' => $token, 'user' => $userdata]);
-                } else
-                    $result = responseJson("500", true, "Incorrect details");
-
+                } else{
+                    $result = responseJson(500, true, 'Incorrect details');
+                 }
                 return $this->respond($result);
             } else {
-                $result = responseJson("404", false, "User not found");
-                echo json_encode($result);
+                $result = responseJson(404, false, 'User not found');
+                return $this->respond($result);
             }
         }
     }
