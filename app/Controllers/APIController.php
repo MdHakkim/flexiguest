@@ -51,7 +51,7 @@ class APIController extends BaseController
         ];
 
         if (!$this->validate($rules, $messages)) {
-            $result = responseJson(500, true, $this->validator->getErrors(), []);
+            $result = responseJson(409, true, $this->validator->getErrors());
             return $this->respond($result);
         } else {
             $email = $this->request->getPost("email");
@@ -59,7 +59,7 @@ class APIController extends BaseController
             // check wheather the email is present in customer table
             $isCustomer_data = $this->DB->table('FLXY_CUSTOMER')->where('CUST_EMAIL', $email)->get()->getRowArray();
             if (empty($isCustomer_data)) {
-                $result = responseJson(404, false, "Sorry , You are not Reserved any room.", []);
+                $result = responseJson(404, false, "Sorry , You are not Reserved any room.");
                 return $this->respond($result);
             }
 
@@ -75,9 +75,9 @@ class APIController extends BaseController
             ];
 
             if ($this->DB->table('FLXY_USERS')->insert($data))
-                $result = responseJson(200, false, "Successfully, user has been registered", []);
+                $result = responseJson(200, false, "Successfully, user has been registered");
             else
-                $result = responseJson(500, true, "Failed to create user", []);
+                $result = responseJson(500, true, "Failed to create user");
 
             return $this->respond($result);
         }
