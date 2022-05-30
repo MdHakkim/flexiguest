@@ -15,14 +15,15 @@ function getJWTFromRequest(): string
     $request = \Config\Services::request();
 
     $authHeader = $request->getHeader("Authorization");
-    $authHeader = $authHeader->getValue();
 
     if (is_null($authHeader)) { //JWT is absent
 
         $result = responseJson(500,true,'Missing or invalid JWT in request',[]);
         echo json_encode($result);die;
     }
-    return  $authHeader;
+    
+    $authHeader = $authHeader->getValue();
+    return $authHeader;
         
 }
 

@@ -377,6 +377,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('all-concierge-offers', 'ConciergeController::allConciergeOffers');
 
         $routes->post('store-concierge-offer', 'ConciergeController::storeConciergeOffer');
+        $routes->post('change-concierge-offer-status', 'ConciergeController::changeConciergeOfferStatus');
         $routes->post('edit-concierge-offer', 'ConciergeController::editConciergeOffer');
         $routes->delete('delete-concierge-offer', 'ConciergeController::deleteConciergeOffer');
 

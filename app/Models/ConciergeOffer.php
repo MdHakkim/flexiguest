@@ -34,6 +34,7 @@ class ConciergeOffer extends Model
         'max_quantity',
         'min_age',
         'max_age',
+        'status',
         'created_by',
         'updated_by',
     ];

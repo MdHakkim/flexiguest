@@ -142,7 +142,18 @@ class ConciergeController extends BaseController
             return $this->respond(responseJson("200", false, "Concierge offer deleted successfully", $response));
 
         return $this->respond(responseJson("-402", "Concierge offer not deleted"));
+    }
+
+    public function changeConciergeOfferStatus()
+    {
+        $id = $this->request->getPost('id');
+        $data['status'] = $this->request->getPost('status');
         
+        $response = $this->ConciergeOffer->update($id, $data);
+        if($response)
+            return $this->respond(responseJson("200", false, "Concierge status updated successfully", $response));
+
+        return $this->respond(responseJson("-402", "Not able to update status"));
     }
 
 }

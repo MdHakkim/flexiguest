@@ -45,6 +45,7 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>Status</th>
                             <th>Title</th>
                             <th>Description</th>
                             <th>Cover Image</th>
@@ -432,6 +433,21 @@
                     data: ''
                 },
                 {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        let class_name = 'badge rounded-pill';
+
+                        if (data['status'] == 'disabled')
+                            class_name += ' bg-label-danger';
+                        else
+                            class_name += ' bg-label-success';
+
+                        return (`
+                            <span class="${class_name}">${data['status']}</span>
+                        `);
+                    }
+                },
+                {
                     data: 'title'
                 },
                 {
@@ -476,6 +492,19 @@
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a 
+                                        href="javascript:;" 
+                                        data_id="${data['id']}" 
+                                        data_status="${data['status'] == 'disabled' ? 'enabled' : 'disabled'}" 
+                                        class="dropdown-item change-status ${data['status'] == 'disabled' ? 'text-success' : 'text-info'}">
+
+                                        <i class="fa-solid ${data['status'] == 'disabled' ? 'fa-unlock' : 'fa-lock'}"></i>
+
+                                        ${data['status'] == 'disabled' ? 'Enable' : 'Disable'}
+                                    </a>
+                                </li>
+
                                 <li>
                                     <a href="javascript:;" data_id="${data['id']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
@@ -640,7 +669,7 @@
                         success: function(respn) {
                             if (respn['SUCCESS'] != 200) {
                                 var ERROR = respn['RESPONSE']['ERROR'];
-                                
+
                                 var mcontent = '';
                                 $.each(ERROR, function(ind, data) {
                                     mcontent += '<li>' + data + '</li>';
@@ -668,9 +697,40 @@
     //   }
     // });
 
+    $(document).on('click', '.change-status', function() {
+        let concierge_offer_id = $(this).attr('data_id');
+        let status = $(this).attr('data_status');
+
+        var url = '<?php echo base_url('/concierge/change-concierge-offer-status') ?>';
+        $.ajax({
+            url: url,
+            type: "post",
+            data: {
+                id: concierge_offer_id,
+                status: status,
+            },
+            dataType: 'json',
+            success: function(respn) {
+                if (respn['SUCCESS'] != 200) {
+                    var ERROR = respn['RESPONSE']['ERROR'];
+
+                    var mcontent = '';
+                    $.each(ERROR, function(ind, data) {
+                        mcontent += '<li>' + data + '</li>';
+                    });
+
+                    showModalAlert('error', mcontent);
+                } else {
+                    showModalAlert('warning', respn['RESPONSE']['REPORT_RES']);
+                    $('#dataTable_view').dataTable().fnDraw();
+                }
+
+            }
+        });
+    });
+
 
     // Show Edit Rate Class Form
-
     $(document).on('click', '.editWindow', function() {
         resetConciergeOfferForm();
         $('.dtr-bs-modal').modal('hide');

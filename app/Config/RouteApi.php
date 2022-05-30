@@ -60,13 +60,21 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     $routes->post("addFeedback", "APIController::addFeedBack"); 
 // ---------------------------------------------------------------------------- Shuttle --------------------------------------------------------------------------------//
     // API to fetch all shuttles
-    $routes->get("shuttles/list", "APIController::listShuttles"); 
+    $routes->get("shuttles/list", "APIController::listShuttles");
     // API to fetch  shuttles details by id
-    $routes->get("shuttles/list/(:segment)", "APIController::listShuttles/$1"); 
+    $routes->get("shuttles/list/(:segment)", "APIController::listShuttles/$1");
     
 });
 
+//  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
 
+$routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
+
+    $routes->get("concierge/concierge-offers", "ConciergeController::conciergeOffers");
+
+});
+
+//  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
 
 
 

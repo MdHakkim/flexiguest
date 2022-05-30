@@ -23,6 +23,7 @@ class ConciergeOffersDataTable
 
         $columns = [
             'id', 
+            'status', 
             'title', 
             'description',
             'cover_image', 
@@ -60,6 +61,7 @@ class ConciergeOffersDataTable
         foreach ($records as $row) {
             $return[] = [
                 'id' => $row['id'],
+                'status' => $row['status'],
                 'title' => $row['title'],
                 'description' => $row['description'],
                 'cover_image' => $row['cover_image'],
