@@ -56,7 +56,7 @@ class APIController extends BaseController
             // check wheather the email is present in customer table
             $isCustomer_data = $this->DB->table('FLXY_CUSTOMER')->where('CUST_EMAIL', $email)->get()->getRowArray();
             if (empty($isCustomer_data)) {
-                $result = responseJson(404, false, "Sorry , You are not Reserved any room.");
+                $result = responseJson(404, false, ["msg"=>"Sorry , You are not Reserved any room."]);
                 return $this->respond($result);
             }
 
@@ -72,9 +72,9 @@ class APIController extends BaseController
             ];
 
             if ($this->DB->table('FLXY_USERS')->insert($data))
-                $result = responseJson(200, false, "Successfully, user has been registered");
+                $result = responseJson(200, false, ["msg"=>"Successfully, user has been registered"]);
             else
-                $result = responseJson(500, true, "Failed to create user");
+                $result = responseJson(500, true, ["msg"=>"Failed to create user"]);
 
             return $this->respond($result);
         }
@@ -100,7 +100,7 @@ class APIController extends BaseController
         ];
 
         if (!$this->validate($rules, $messages)) {
-            $result = responseJson(500, true, $this->validator->getErrors(), []);
+            $result = responseJson(403, true, $this->validator->getErrors());
             return $this->respond($result);
         } else {
             $sql = "SELECT * FROM FLXY_USERS WHERE USR_EMAIL=:email:";
@@ -111,13 +111,13 @@ class APIController extends BaseController
                 if (password_verify($this->request->getVar("password"), $userdata['USR_PASSWORD'])) {
                     // Token created  
                     $token =   getSignedJWTForUser($userdata);
-                    $result = responseJson(200, false, 'User logged In successfully', ['token' => $token, 'user' => $userdata]);
+                    $result = responseJson(200, false, ["msg"=>'User logged In successfully'], ['token' => $token, 'user' => $userdata]);
                 } else{
-                    $result = responseJson(500, true, 'Incorrect details');
+                    $result = responseJson(500, true, ["msg"=>'Incorrect details']);
                  }
                 return $this->respond($result);
             } else {
-                $result = responseJson(404, false, 'User not found');
+                $result = responseJson(404, false, ["msg"=>'User not found']);
                 return $this->respond($result);
             }
         }
@@ -127,7 +127,7 @@ class APIController extends BaseController
     {
         $user = $this->request->user;
 
-        $result = responseJson(200, false, "User details", $user);
+        $result = responseJson(200, false, ["msg"=>"User details"], $user);
         return $this->respond($result);
     }
 
@@ -172,9 +172,9 @@ class APIController extends BaseController
         }
 
         if (!empty($data))
-            $result = responseJson(200, false, "Reservation fetched Successfully", [$data]);
+            $result = responseJson(200, false, ["msg"=>"Reservation fetched Successfully"], $data);
         else
-            $result = responseJson(500, true, "No reservation found for this user", [$data]);
+            $result = responseJson(500, true,["msg"=> "No reservation found for this user"], $data);
 
         return $this->respond($result);
     }
@@ -195,9 +195,9 @@ class APIController extends BaseController
         $data = $this->DB->query($sql, $param)->getResultArray();
 
         if (!empty($data))
-            $result = responseJson(200, false, "Doc Details fetched Successfully", [$data]);
+            $result = responseJson(200, false, ["msg"=>"Doc Details fetched Successfully"], $data);
         else
-            $result = responseJson(200, false, "Fetching Failed", $data);
+            $result = responseJson(200, false, ["msg"=>"Fetching Failed"], $data);
 
         return $this->respond($result);
     }
@@ -218,9 +218,9 @@ class APIController extends BaseController
         $data = $this->DB->query($sql, $param)->getResultArray();
 
         if (!empty($data))
-            $result = responseJson(200, false, "Accompany list for the reservation", [$data]);
+            $result = responseJson(200, false, ["msg"=>"Accompany list for the reservation"], $data);
         else
-            $result = responseJson(200, false, "There is no accompany person", $data);
+            $result = responseJson(201, false, ["msg"=>"There is no accompany person"], $data);
 
         return $this->respond($result);
     }
@@ -241,7 +241,7 @@ class APIController extends BaseController
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
-            $result = responseJson("-402", $validate);
+            $result = responseJson("403", $validate);
 
             return $this->respond($result);
         }
@@ -258,9 +258,9 @@ class APIController extends BaseController
         $emailResp = $emailCall->requestDocUploadEmail($reservationInfo, $email, $firstName . " " . $lastName);
 
         if ($emailResp)
-            $result = responseJson(200, false, "Email send Successfully", []);
+            $result = responseJson(200, false, ["msg"=>"Email send Successfully"]);
         else
-            $result = responseJson(500, false, "Email sending failed", []);
+            $result = responseJson(500, false, ["msg"=>"Email sending failed"]);
 
         return $this->respond($result);
     }
@@ -287,7 +287,7 @@ class APIController extends BaseController
         // adding validatoion to the files
         if (!$file) {
             $validate = $this->validator->getErrors();
-            $result = responseJson("-402", $validate);
+            $result = responseJson("403", $validate);
 
             return $this->respond($result);
         }
@@ -334,9 +334,9 @@ class APIController extends BaseController
                 $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID])->update($data);
 
             if ($ins || $update_data)
-                $result = responseJson(200, false, "File uploaded successfully", ["path" => $fileNames]);
+                $result = responseJson(200, false, ["msg"=>"File uploaded successfully"], ["path" => $fileNames]);
             else
-                $result = responseJson(500, true, "Failed to upload image", []);
+                $result = responseJson(500, true, ["msg"=>"Failed to upload image"], []);
 
             return $this->respond($result);
         }
@@ -369,7 +369,7 @@ class APIController extends BaseController
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
-            $result = responseJson("-402", $validate);
+            $result = responseJson("403", $validate);
 
             return $this->respond($result);
         }
@@ -377,7 +377,7 @@ class APIController extends BaseController
         $CUST_ID = $this->request->user['USR_CUST_ID'];
         if ($this->request->getPost("expiryDate") < $this->request->getPost("issueDate") && $this->request->getPost("expiryDate") <  date("d-M-Y")) {
             $validate = "Your Document is expired";
-            $result = responseJson("-402", $validate);
+            $result = responseJson("403",true, $validate);
 
             return $this->respond($result);
         }
@@ -406,9 +406,9 @@ class APIController extends BaseController
 
         $update = $this->DB->table('FLXY_CUSTOMER')->where('CUST_ID', $CUST_ID)->update($data);
         if ($update)
-            $result = responseJson(200, true, "updated the guest details", []);
+            $result = responseJson(200, true, ["msg"=>"updated the guest details"]);
         else
-            $result = responseJson(500, true, "updation Failed", []);
+            $result = responseJson(500, true, ["msg"=>"updation Failed"]);
 
         return $this->respond($result);
     }
@@ -438,9 +438,9 @@ class APIController extends BaseController
                 $data['DOCS'] = $files;
             }
 
-            $result = responseJson(200, true, "Fetch the user details", $data);
+            $result = responseJson(200, true, ["msg"=>"Fetch the user details"], $data);
         } else {
-            $result = responseJson(500, true, "user details fetching failed", []);
+            $result = responseJson(500, true,["msg"=> "user details fetching failed"]);
         }
 
         return $this->respond($result);
@@ -486,14 +486,14 @@ class APIController extends BaseController
             $return = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_RESV_ID' => $resID, 'DOC_FILE_TYPE' => 'PROOF'])->update($data);
 
             if ($return)
-                $result = responseJson(200, "Documents deleted successfully", $return);
+                $result = responseJson(200, ["msg"=>"Documents deleted successfully"], $return);
             else
-                $result = responseJson("-402", "Record not deleted");
+                $result = responseJson("500", ["msg"=>"Record not deleted"]);
 
             return $this->respond($result);
         }
 
-        return $this->respond(responseJson("-402", "Record not deleted"));
+        return $this->respond(responseJson("500", ["msg"=>"Record not deleted"]));
     }
 
     public function deleteSpecificVaccine()
@@ -529,7 +529,7 @@ class APIController extends BaseController
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
-            $result = responseJson("-402", $validate);
+            $result = responseJson(403,true, $validate);
 
             return $this->respond($result);
         }
@@ -569,9 +569,9 @@ class APIController extends BaseController
         $insert = $this->DB->table('FLXY_VACCINE_DETAILS')->insert($data);
 
         if ($insert)
-            $result = responseJson(200, true, "Added the guest vaccine details", []);
+            $result = responseJson(200, true, ["msg"=>"Added the guest vaccine details"]);
         else
-            $result = responseJson(500, true, "Insertion  Failed", []);
+            $result = responseJson(500, true, ["msg"=>"Insertion  Failed"]);
 
         return $this->respond($result);
     }
@@ -598,7 +598,7 @@ class APIController extends BaseController
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
-            $result = responseJson("-402", $validate);
+            $result = responseJson(403,true, $validate);
 
             return $this->respond($result);
         }
@@ -638,18 +638,18 @@ class APIController extends BaseController
                 // die;
 
                 if ($update_data &&  $res_data)
-                    $result = responseJson(200, false, "File uploaded successfully", ["path" => $filepath]);
+                    $result = responseJson(200, false, ["msg"=>"File uploaded successfully"], ["path" => $filepath]);
                 else
-                    $result = responseJson(500, true, "Failed to upload image or updation in reservation", []);
+                    $result = responseJson(500, true, ["msg"=>"Failed to upload image or updation in reservation"]);
 
                 return $this->respond($result);
             }
 
-            $result = responseJson(404, true, "User details not found", []);
+            $result = responseJson(404, true, ["msg"=>"User details not found"]);
             return $this->respond($result);
         }
 
-        return $this->respond(responseJson(500, true, "Something went wrong", []));
+        return $this->respond(responseJson(500, true, ["msg"=>"Something went wrong"]));
     }
 
     // ----------------------------------------------------------------------- MAINTENANCE REQUEST API -------------------------------------------//
@@ -680,7 +680,7 @@ class APIController extends BaseController
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
-            $result = responseJson("-402", $validate);
+            $result = responseJson(403,true, $validate);
 
             return $this->respond($result);
         }
@@ -711,14 +711,14 @@ class APIController extends BaseController
 
             $ins = $this->DB->table('FLXY_MAINTENANCE')->insert($data);
             if ($ins)
-                $result = responseJson(200, true, "Maintenance request created", []);
+                $result = responseJson(200, true, ["msg"=>"Maintenance request created"]);
             else
-                $result = responseJson(500, true, "Creation Failed", []);
+                $result = responseJson(500, true, ["msg"=>"Creation Failed"]);
 
             return $this->respond($result);
         }
 
-        $result = responseJson(500, true, "USER information not available", []);
+        $result = responseJson(500, true, ["msg"=>"User information not available"]);
         return $this->respond($result);
     }
 
@@ -753,9 +753,9 @@ class APIController extends BaseController
         }
 
         if (!empty($data))
-            $result = responseJson(200, false, "Maintenance list fetched Successfully", [$data]);
+            $result = responseJson(200, false, ["msg"=>"Maintenance list fetched Successfully"], [$data]);
         else
-            $result = responseJson(200, false, "No Request List for this user", [$data]);
+            $result = responseJson(200, false, ["msg"=>"No Request List for this user"]);
 
         return $this->respond($result);
     }
@@ -774,7 +774,7 @@ class APIController extends BaseController
         if (!$validate) {
 
             $validate = $this->validator->getErrors();
-            $result = responseJson("-402", $validate);
+            $result = responseJson(403,true, $validate);
 
             return $this->respond($result);
         }
@@ -791,9 +791,9 @@ class APIController extends BaseController
 
         $ins = $this->DB->table('FLXY_FEEDBACK')->insert($data);
         if ($ins)
-            $result = responseJson(200, false, "Feedback Added", []);
+            $result = responseJson(200, false, ["msg"=>"Feedback Added"]);
         else
-            $result = responseJson(500, true, "Feedback addition Failed", []);
+            $result = responseJson(500, true, ["msg"=>"Feedback addition Failed"]);
 
         return $this->respond($result);
     }
@@ -812,10 +812,16 @@ class APIController extends BaseController
             $sql = "SELECT * FROM FLXY_SHUTTLE";
             $data = $this->DB->query($sql)->getResultArray();
         }
+	
+	if($data){
 
-
-        $result = responseJson(200, false, "Shuttles deatils fetched Successfully", [$data]);
-        return $this->respond($result);
+        	$result = responseJson(200, false, ["msg"=>"Shuttles deatils fetched Successfully"], [$data]);
+        	
+	}else{
+		$result = responseJson(500, true, ["msg"=>"Shuttles deatils fetched Failed"]);
+        	
+	}
+	return $this->respond($result);
     }
 
     //------------------------------------------------------------------------------------- HANDBOOK ----------------------------------------------------------------------------------------------//
@@ -828,9 +834,9 @@ class APIController extends BaseController
         $path = base_url('assets/Uploads/handbook/hotel-handbook.pdf');
 
         if (file_exists($path))
-            $result = responseJson(200, false, "Handbook URL fetched", ['url' => $path]);
+            $result = responseJson(200, false, ["msg"=>"Handbook URL fetched"], ['url' => $path]);
         else
-            $result = responseJson(500, false, "No Handbook file uploaded", []);
+            $result = responseJson(500, false, ["msg"=>"No Handbook file uploaded"]);
 
         return $this->respond($result);
     }
