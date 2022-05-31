@@ -334,15 +334,26 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
      $routes->match(['post'],'/editItemClass', 'AdditionalController::editItemClass');
      $routes->match(['post'],'/deleteItemClass', 'AdditionalController::deleteItemClass'); 
 
-      //Item Class - 25/05 
+      //Item  - 26/05 
       $routes->get('/items', 'AdditionalController::items');
       $routes->match(['post'],'/ItemsView', 'AdditionalController::ItemsView');
       $routes->match(['post'],'/insertItem', 'AdditionalController::insertItem');
       $routes->match(['post'],'/editItem', 'AdditionalController::editItem');
-      $routes->match(['post'],'/deleteItem', 'AdditionalController::deleteItem'); 
+      $routes->match(['post'],'/deleteItem', 'AdditionalController::deleteItem');
+
+      //Item  - 27/05 
+      $routes->get('/dailyInventory', 'AdditionalController::dailyInventory');
+      $routes->match(['post'],'/DailyInventoryView', 'AdditionalController::DailyInventoryView');
+      $routes->match(['post'],'/insertDailyInventory', 'AdditionalController::insertDailyInventory');
+      $routes->match(['post'],'/editDailyInventory', 'AdditionalController::editDailyInventory');
+      $routes->match(['post'],'/deleteDailyInventory', 'AdditionalController::deleteDailyInventory');
 
       $routes->match(['post'],'/itemClassList', 'AdditionalController::itemClassList');
       $routes->match(['post'],'/itemDepartmentList', 'AdditionalController::itemDepartmentList');
+      $routes->match(['post'],'/itemList', 'AdditionalController::itemList');
+
+      	
+      $routes->get('/fullCalendar', 'FullCalendar::index');
       
    //Subina Code (END)  
    

@@ -31,7 +31,6 @@ class AdditionalController extends BaseController
 
     public function currency()
     {
-
         $data['title'] = $this->getMethodName();
         $data['session'] = $this->session;
         
@@ -588,8 +587,8 @@ class AdditionalController extends BaseController
                 $sysid = $this->request->getPost('ITM_ID');
 
                 $validate = $this->validate([
-                    'ITM_NAME' => ['label' => 'Name', 'rules' => 'required'],
-                    'ITM_CODE' => ['label' => 'Code', 'rules' => 'required'],
+                    'ITM_NAME' => ['label' => 'Name', 'rules' => 'required|is_unique[FLXY_ITEM.ITM_NAME,ITM_ID,' . $sysid . ']'],
+                    'ITM_CODE' => ['label' => 'Code', 'rules' => 'required|is_unique[FLXY_ITEM.ITM_CODE,ITM_ID,' . $sysid . ']'],
                     'ITM_DESC' => ['label' => 'Description', 'rules' => 'required'],
                     'IT_CL_DEPARTMENTS' => ['label' => 'Department', 'rules' => 'required'],
                     'IT_CL_ID' => ['label' => 'Item Class', 'rules' => 'required'],
@@ -646,12 +645,12 @@ class AdditionalController extends BaseController
             echo json_encode($response);
         }
 
-        public function deleteItems()
+        public function deleteItem()
         {
             $sysid = $this->request->getPost('sysid');
 
             try {
-                $return = $this->Db->table('FLXY_EXCHANGE_RATES')->delete(['EXCH_RATE_ID' => $sysid]);
+                $return = $this->Db->table('FLXY_ITEM')->delete(['ITM_ID' => $sysid]);
                 $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
                 echo json_encode($result);
             } catch (Exception $e) {
@@ -663,11 +662,21 @@ class AdditionalController extends BaseController
         public function itemClassList()
         {
             $deptcode = $this->request->getPost("deptcode");
-            $sql = "SELECT IT_CL_ID,IT_CL_CODE,IT_CL_DESC FROM FLXY_ITEM_CLASS WHERE IT_CL_DEPARTMENTS='$deptcode'";
+            $class_id = $this->request->getPost("class_id");
+            if($deptcode != '')
+                $sql = "SELECT IT_CL_ID,IT_CL_CODE,IT_CL_DESC FROM FLXY_ITEM_CLASS WHERE IT_CL_DEPARTMENTS='$deptcode' ";
+            else
+                $sql = "SELECT IT_CL_ID,IT_CL_CODE,IT_CL_DESC FROM FLXY_ITEM_CLASS";
+
             $response = $this->Db->query($sql)->getResultArray();
             $option='<option value="">Select Item Class</option>';
+            $selected = "";
             foreach($response as $row){
-                $option.= '<option value="'.$row['IT_CL_ID'].'">'.$row['IT_CL_CODE'].' | '.$row['IT_CL_DESC'].'</option>';
+                if($row['IT_CL_ID'] == $class_id){
+                    $selected = "selected";
+                }
+
+                $option.= '<option value="'.$row['IT_CL_ID'].'"'.$selected.'>'.$row['IT_CL_CODE'].' | '.$row['IT_CL_DESC'].'</option>';
             }
             echo $option;
         }
@@ -694,7 +703,127 @@ class AdditionalController extends BaseController
             return $option;
         }
 
+        /**************     Daily Inventory Functions      ***************/
+
+        public function dailyInventory()
+        {
     
+            $itemDepartmentLists = $this->itemDepartmentList();
+    
+            $data = [
+                'itemDepartmentLists' => $itemDepartmentLists
+            ];
+    
+            $data['title'] = $this->getMethodName();
+            $data['session'] = $this->session;
+            
+            return view('Master/DailyInventoryView', $data);
+        }
+    
+        public function DailyInventoryView()
+        {
+            $mine = new ServerSideDataTable(); // loads and creates instance
+            $tableName = 'FLXY_DAILY_INVENTORY INNER JOIN FLXY_ITEM ON FLXY_DAILY_INVENTORY.ITM_ID = FLXY_ITEM.ITM_ID INNER JOIN FLXY_ITEM_CLASS ON FLXY_DAILY_INVENTORY.IT_CL_ID = FLXY_ITEM_CLASS.IT_CL_ID';
+            $columns = 'ITM_DLY_ID,ITM_NAME,IT_CL_CODE,IT_CL_DESC,ITM_DLY_BEGIN_DATE,ITM_DLY_END_DATE,ITM_DLY_QTY,ITM_DLY_SUN,ITM_DLY_MON,ITM_DLY_TUE,ITM_DLY_WED,ITM_DLY_THU,ITM_DLY_THU,ITM_DLY_FRI,ITM_DLY_SAT,ITM_DLY_STATUS';
+            $mine->generate_DatatTable($tableName, $columns);
+            exit;
+        }    
+
+        public function insertDailyInventory()
+        {
+            try {
+                $sysid = $this->request->getPost('ITM_DLY_ID');
+
+                $validate = $this->validate([
+                    'IT_CL_ID' => ['label' => 'Item Class', 'rules' => 'required'],
+                    'ITM_ID' => ['label' => 'Item', 'rules' => 'required'],
+                    'ITM_DLY_BEGIN_DATE' => ['label' => 'Begin Date', 'rules' => 'required'],
+                    'ITM_DLY_END_DATE' => ['label' => 'End Date', 'rules' => 'required'],
+                    'ITM_DLY_QTY' => ['label' => 'Quantity', 'rules' => 'required']
+                ]);
+
+                if (!$validate) {
+                    $validate = $this->validator->getErrors();
+                    $result["SUCCESS"] = "-402";
+                    $result[]["ERROR"] = $validate;
+                    $result = $this->responseJson("-402", $validate);
+                    echo json_encode($result);
+                    exit;
+                }
+
+                //echo json_encode(print_r($_POST)); exit;
+
+                $data = [
+                    "IT_CL_ID" => trim($this->request->getPost('IT_CL_ID')),
+                    "ITM_ID" => trim($this->request->getPost('ITM_ID')),
+                    "ITM_DLY_BEGIN_DATE" => trim($this->request->getPost('ITM_DLY_BEGIN_DATE')),
+                    "ITM_DLY_END_DATE" => trim($this->request->getPost('ITM_DLY_END_DATE')),
+                    "ITM_DLY_QTY" => trim($this->request->getPost('ITM_DLY_QTY')),
+                    "ITM_DLY_SUN" => trim($this->request->getPost('ITM_DLY_SUN')),
+                    "ITM_DLY_MON" => trim($this->request->getPost('ITM_DLY_MON')),
+                    "ITM_DLY_TUE" => trim($this->request->getPost('ITM_DLY_TUE')),
+                    "ITM_DLY_WED" => trim($this->request->getPost('ITM_DLY_WED')),
+                    "ITM_DLY_THU" => trim($this->request->getPost('ITM_DLY_THU')),
+                    "ITM_DLY_FRI" => trim($this->request->getPost('ITM_DLY_FRI')),
+                    "ITM_DLY_SAT" => trim($this->request->getPost('ITM_DLY_SAT')),
+                    "ITM_DLY_STATUS" => trim($this->request->getPost('ITM_DLY_STATUS'))
+                ];
+
+                $return = !empty($sysid) ? $this->Db->table('FLXY_DAILY_INVENTORY')->where('ITM_DLY_ID', $sysid)->update($data) : $this->Db->table('FLXY_DAILY_INVENTORY')->insert($data);
+                $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+                echo json_encode($result);
+            } catch (Exception $e) {
+                return $this->respond($e->errors());
+            }
+        }    
+
+        public function editDailyInventory()
+        {
+            $param = ['SYSID' => $this->request->getPost('sysid')];
+
+            $sql = "SELECT ITM_DLY_ID,FLXY_DAILY_INVENTORY.ITM_ID,FLXY_DAILY_INVENTORY.IT_CL_ID,FLXY_ITEM.ITM_NAME,FLXY_ITEM_CLASS.IT_CL_CODE,FLXY_ITEM_CLASS.IT_CL_DESC,ITM_DLY_BEGIN_DATE,ITM_DLY_END_DATE,ITM_DLY_QTY, ITM_DLY_SUN,ITM_DLY_MON, ITM_DLY_TUE,ITM_DLY_WED,ITM_DLY_THU,ITM_DLY_THU,ITM_DLY_FRI, ITM_DLY_SAT,ITM_DLY_STATUS
+            FROM FLXY_DAILY_INVENTORY INNER JOIN FLXY_ITEM ON FLXY_DAILY_INVENTORY.ITM_ID = FLXY_ITEM.ITM_ID INNER JOIN FLXY_ITEM_CLASS ON FLXY_DAILY_INVENTORY.IT_CL_ID = FLXY_ITEM_CLASS.IT_CL_ID
+            WHERE ITM_DLY_ID=:SYSID:";
+
+            $response = $this->Db->query($sql, $param)->getResultArray();
+            echo json_encode($response);
+        }
+
+        public function deleteDailyInventory()
+        {
+            $sysid = $this->request->getPost('sysid');
+
+            try {
+                $return = $this->Db->table('FLXY_DAILY_INVENTORY')->delete(['ITM_DLY_ID' => $sysid]);
+                $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+                echo json_encode($result);
+            } catch (Exception $e) {
+                return $this->respond($e->errors());
+            }
+        }
+
+        
+
+        public function itemList()
+        {
+            $item_class_id = $this->request->getPost("item_class_id");
+            $item_id = $this->request->getPost("item_id");
+
+            if($item_class_id != '')
+                $sql = "SELECT * FROM FLXY_ITEM WHERE IT_CL_ID='$item_class_id' ";           
+
+            $response = $this->Db->query($sql)->getResultArray();
+            $option='<option value="">Select Item Class</option>';
+            $selected = "";
+            foreach($response as $row){
+                if($row['ITM_ID'] == $item_id){
+                    $selected = "selected";
+                }
+
+                $option.= '<option value="'.$row['ITM_ID'].'"'.$selected.'>'.$row['ITM_CODE'].' | '.$row['ITM_NAME'].'</option>';
+            }
+            echo $option;
+        }
 
 
     
