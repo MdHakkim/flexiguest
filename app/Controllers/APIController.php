@@ -26,8 +26,7 @@ class APIController extends BaseController
             "name" => "required",
             "email" => "required|valid_email|is_unique[FLXY_USERS.USR_EMAIL]|min_length[6]|max_length[50]",
             "phone_no" => "required",
-            "password" => 'required|min_length[8]|max_length[255]',
-            "confirm_password" => 'required|matches[password]',
+            "password" => 'required|min_length[8]|max_length[255]'
 
         ];
         $messages = [
@@ -45,9 +44,7 @@ class APIController extends BaseController
             "password" => [
                 "required" => "password is required"
             ],
-            "confirm_password" => [
-                "matches" => "confirm password must be same as password"
-            ],
+            
         ];
 
         if (!$this->validate($rules, $messages)) {
