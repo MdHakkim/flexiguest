@@ -164,24 +164,12 @@
 
             <ul class="menu-inner py-1">
                 <!-- Dashboards -->
-                <li class="menu-item">
-                    <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <li class="menu-item active">
+                    <a href="<?php echo base_url('/') ?>" class="menu-link">
 
                         <i class="menu-icon fas fa-tachometer-alt"></i>
-                        <div data-i18n="Dashboards">Dashboards</div>
+                        <div data-i18n="Dashboards">Dashboard</div>
                     </a>
-                    <ul class="menu-sub">
-                        <li class="menu-item">
-                            <a href="<?php echo base_url('/') ?>" class="menu-link">
-                                <div data-i18n="Analytics">Analytics</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="<?php echo base_url('/') ?>" class="menu-link">
-                                <div data-i18n="eCommerce">eCommerce</div>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
 
                 <!-- Layouts -->

@@ -2157,8 +2157,11 @@ function showRatePackageForm(rcId, pkgId, rcPkgId) {
 function submitRatePackageForm(id) {
     hideModalAlerts();
     var formSerialization = $('#' + id).serializeArray();
-    formSerialization.push({name: "RT_CD_ID", value: rateCodeID});
-    
+    formSerialization.push({
+        name: "RT_CD_ID",
+        value: rateCodeID
+    });
+
     var url = '<?php echo base_url('/insertRateCodePackage') ?>';
     $.ajax({
         url: url,
@@ -2188,6 +2191,29 @@ function submitRatePackageForm(id) {
                 var rcPkgCodeID = respn['RESPONSE']['OUTPUT'];
                 $('#RT_CD_PKG_ID').val(rcPkgCodeID);
             }
+        }
+    });
+}
+
+function deleteRatePackageCode(rcId, pkgId, rcPkgId) {
+    $.ajax({
+        url: '<?php echo base_url('/deleteRatePackageCode')?>',
+        type: "post",
+        async: false,
+        data: {
+            rcId: rcId,
+            pkgId: pkgId,
+            rcPkgId: rcPkgId
+        },
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        dataType: 'json',
+        success: function(respn) {
+            return true;
+        },
+        error: function() {
+            return false;
         }
     });
 }

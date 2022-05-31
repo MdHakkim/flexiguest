@@ -9,8 +9,7 @@
     <script src="<?php echo base_url('assets/js/bootstrap-select.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/popper.min.js') ?>"></script>
 
-    <script src="<?php //echo base_url('assets/vendor/js/helpers.js')
-                    ?>"></script>
+    <script src="<?php //echo base_url('assets/vendor/js/helpers.js')?>"></script>
     <script src="<?php echo base_url('assets/vendor/js/template-customizer.js') ?>"></script>
 
     <script src="<?php echo base_url('assets/js/moment.min.js') ?>"></script>
@@ -41,8 +40,7 @@
     <script src="<?php echo base_url('assets/js/defaults-en_US.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/bootbox.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/bootbox.locales.js') ?>"></script>
-    <script src="<?php //echo base_url('assets/vendor/js/bootstrap.js') 
-                    ?>"></script>
+    <script src="<?php //echo base_url('assets/vendor/js/bootstrap.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/block-ui/block-ui.js') ?>"></script>
 
@@ -60,6 +58,12 @@
     <!-- Footer Script End -->
     <script src="<?php echo base_url('assets/js/form-layouts.js') ?>"></script>
 
+    <!-- text editor -->
+    <script src="<?= base_url('assets/vendor/libs/quill/quill.js') ?>"></script>
+    <!--  -->
+    <script src="<?= base_url('assets/vendor/libs/sortablejs/sortable.js') ?>"></script>
+    
+
     <!-- Added by Deleep -->
     <?php if (isset($js_to_load)) {
         foreach ($js_to_load as $row) {
@@ -68,9 +72,3 @@
         }
     }
     ?>
-
-    <!-- text editor -->
-    <script src="<?= base_url('assets/vendor/libs/quill/quill.js') ?>"></script>
-
-    <!--  -->
-    <script src="<?= base_url('assets/vendor/libs/sortablejs/sortable.js') ?>"></script>

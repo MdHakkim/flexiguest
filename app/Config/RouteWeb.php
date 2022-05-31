@@ -195,7 +195,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/updateRateCodeDetail', 'MastersController::updateRateCodeDetail');
     $routes->match(['post'],'/copyRateCodeDetail', 'MastersController::copyRateCodeDetail');
     $routes->match(['post'],'/negotiatedRateView', 'MastersController::NegotiatedRateView');
-
+    $routes->match(['post'],'/combinedProfilesView', 'MastersController::CombinedProfilesView');
+    $routes->match(['post'],'/insertNegotiatedRate', 'MastersController::insertNegotiatedRate');
+    $routes->match(['post'],'/deleteNegotiatedRate', 'MastersController::deleteNegotiatedRate');    
     
     $routes->get('/transactionCodeGroup', 'MastersController::transactionCodeGroup');
     $routes->match(['post'],'/transactionCodeGroupView', 'MastersController::TransactionCodeGroupView');
@@ -223,10 +225,17 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
     $routes->get('/packageCode', 'MastersController::packageCode');
     $routes->match(['post'],'/packageCodeView', 'MastersController::PackageCodeView');
+    $routes->match(['post'],'/packageCodeDetailsView', 'MastersController::PackageCodeDetailsView');
+    $routes->get('/showPackageCodeDetails', 'MastersController::showPackageCodeDetails');
     $routes->match(['post'],'/insertPackageCode', 'MastersController::insertPackageCode');
     $routes->match(['post'],'/editPackageCode', 'MastersController::editPackageCode');
     $routes->match(['post'],'/deletePackageCode', 'MastersController::deletePackageCode');  
+    $routes->match(['post'],'/updatePackageCodeDetail', 'MastersController::updatePackageCodeDetail');
+    $routes->match(['post'],'/deletePackageCodeDetail', 'MastersController::deletePackageCodeDetail');
     $routes->get('/showPackageCodeList', 'MastersController::showPackageCodeList');
+    $routes->match(['post'],'/showRateCodePackageDetails', 'MastersController::showRateCodePackageDetails');
+    $routes->match(['post'],'/insertRateCodePackage', 'MastersController::insertRateCodePackage');
+    $routes->match(['post'],'/deleteRatePackageCode', 'MastersController::deleteRatePackageCode');
 
     $routes->get('/marketGroup', 'MastersController::marketGroup');
     $routes->match(['post'],'/marketGroupView', 'MastersController::MarketGroupView');
