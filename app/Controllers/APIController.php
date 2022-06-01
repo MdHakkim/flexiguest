@@ -777,14 +777,15 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        $CUST_ID = $this->request->user['USR_CUST_ID'];
+        $cust_id = $this->request->user['USR_CUST_ID'];
         $data = [
             "FB_RATINGS" => $this->request->getVar("rating"),
+            "FB_CUST_ID"  =>$cust_id,
             "FB_DESCRIPTION" => $this->request->getVar("comments"),
-            "FB_CREATE_DT" => date("d-M-Y"),
-            "FB_CREATE_UID" => $CUST_ID,
+            "FB_CREATE_DT" => date("d-M-Y H:i"),
+            "FB_CREATE_UID" => $cust_id,
             "FB_UPDATE_DT" => date("d-M-Y"),
-            "FB_UPDATE_UID" => $CUST_ID
+            "FB_UPDATE_UID" => $cust_id
         ];
 
         $ins = $this->DB->table('FLXY_FEEDBACK')->insert($data);
