@@ -47,16 +47,16 @@
                       <div class="row g-3">
                         <input type="hidden" name="SOR_GR_ID" id="SOR_GR_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <lable class="form-lable">Group Code</lable>
+                          <label class="form-label">Group Code</label>
                           <input type="text" name="SOR_GR_CODE" id="SOR_GR_CODE" class="form-control" placeholder="group code" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Source Group Description</lable>
+                          <label class="form-label">Source Group Description</label>
                           <input type="text" name="SOR_GR_DESC" id="SOR_GR_DESC" class="form-control" placeholder="group description" />
                         </div>
                       
                         <div class="col-md-12 ">
-                          <lable class="form-lable">Display Sequence</lable>
+                          <label class="form-label">Display Sequence</label>
                           <input type="number" name="SOR_GR_DIS_SEQ" id="SOR_GR_DIS_SEQ" class="form-control" placeholder="group sequence" />
                         </div>
                       </div>

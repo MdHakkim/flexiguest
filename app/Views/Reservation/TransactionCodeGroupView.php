@@ -71,19 +71,19 @@
                             <?php } ?>
 
                             <div class="col-md-7">
-                                <lable class="form-lable"><b>Group Code *</b></lable>
+                                <label class="form-label"><b>Group Code *</b></label>
                                 <input type="text" name="TC_GR_CODE" id="TC_GR_CODE"
                                     class="form-control bootstrap-maxlength" maxlength="10" placeholder="eg: OTA"
                                     required />
                             </div>
                             <div class="col-md-8">
-                                <lable class="form-lable"><b>Group Description *</b></lable>
+                                <label class="form-label"><b>Group Description *</b></label>
                                 <input type="text" name="TC_GR_DESC" id="TC_GR_DESC"
                                     class="form-control bootstrap-maxlength" maxlength="50"
                                     placeholder="eg: Online Travel Agent" required />
                             </div>
                             <div class="col-md-4">
-                                <lable class="form-lable">Display Sequence</lable>
+                                <label class="form-label">Display Sequence</label>
                                 <input type="number" name="TC_GR_DIS_SEQ" id="TC_GR_DIS_SEQ" class="form-control"
                                     min="0" placeholder="eg: 3" />
                             </div>

@@ -51,17 +51,17 @@
                             <input type="hidden" name="CUR_ID" id="CUR_ID" class="form-control" />
 
                             <div class="col-md-7">
-                                <lable class="form-lable"><b>Currency Code *</b></lable>
+                                <label class="form-label"><b>Currency Code *</b></label>
                                 <input type="text" name="CUR_CODE" id="CUR_CODE" class="form-control bootstrap-maxlength"
                                     maxlength="10" placeholder="eg: USD" required />
                             </div>
                             <div class="col-md-8">
-                                <lable class="form-lable"><b>Currency Description *</b></lable>
+                                <label class="form-label"><b>Currency Description *</b></label>
                                 <input type="text" name="CUR_DESC" id="CUR_DESC" class="form-control bootstrap-maxlength"
                                     maxlength="50" placeholder="eg: US Dollar" required />
                             </div>
                             <div class="col-md-4">
-                                <lable class="form-lable"><b>Decimal</b></lable>
+                                <label class="form-label"><b>Decimal</b></label>
                                 <input type="number" name="CUR_DECIMAL" id="CUR_DECIMAL" class="form-control" min="1"
                                     placeholder="eg: 2" />
                             </div>

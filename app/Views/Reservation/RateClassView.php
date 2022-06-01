@@ -50,19 +50,19 @@
                         <div class="row g-3">
                             <input type="hidden" name="RT_CL_ID" id="RT_CL_ID" class="form-control" />
                             <div class="col-md-7">
-                                <lable class="form-lable"><b>Rate Class Code *</b></lable>
+                                <label class="form-label"><b>Rate Class Code *</b></label>
                                 <input type="text" name="RT_CL_CODE" id="RT_CL_CODE"
                                     class="form-control bootstrap-maxlength" maxlength="10" placeholder="eg: OTA"
                                     required />
                             </div>
                             <div class="col-md-8">
-                                <lable class="form-lable"><b>Rate Class Description *</b></lable>
+                                <label class="form-label"><b>Rate Class Description *</b></label>
                                 <input type="text" name="RT_CL_DESC" id="RT_CL_DESC"
                                     class="form-control bootstrap-maxlength" maxlength="50"
                                     placeholder="eg: Online Travel Agent" required />
                             </div>
                             <div class="col-md-4">
-                                <lable class="form-lable">Display Sequence</lable>
+                                <label class="form-label">Display Sequence</label>
                                 <input type="number" name="RT_CL_DIS_SEQ" id="RT_CL_DIS_SEQ" class="form-control"
                                     min="0" placeholder="eg: 3" />
                             </div>

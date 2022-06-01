@@ -51,34 +51,34 @@
                       <div class="row g-3">
                       <input type="hidden" name="BLK_ID" id="BLK_ID" class="form-control"/>
                         <div class="col-md-3">
-                          <lable class="form-lable">Company</lable>
+                          <label class="form-label">Company</label>
                           <select name="BLK_COMP"  id="BLK_COMP" data-width="100%" class="selectpicker BLK_COMP" data-live-search="true">
                             <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Agent</lable>
+                          <label class="form-label">Agent</label>
                           <select name="BLK_AGENT"  id="BLK_AGENT" data-width="100%" class="selectpicker BLK_AGENT" data-live-search="true">
                             <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Group</lable>
+                          <label class="form-label">Group</label>
                           <select name="BLK_GROUP"  id="BLK_GROUP" data-width="100%" class="selectpicker BLK_GROUP" data-live-search="true">
                             <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-3"></div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Block Name</lable>
+                          <label class="form-label">Block Name</label>
                           <input type="text" name="BLK_NAME" id="BLK_NAME" class="form-control" placeholder="block name" />
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Block Code</lable>
+                          <label class="form-label">Block Code</label>
                           <input type="text" name="BLK_CODE" id="BLK_CODE" class="form-control" placeholder="block code" />
                         </div>
                         <div class="col-md-4">
-                          <lable class="form-lable">Start/End Date</lable>
+                          <label class="form-label">Start/End Date</label>
                             <div class="input-group mb-3">
                               <input type="text" id="BLK_START_DT" name="BLK_START_DT" class="form-control" placeholder="DD/MM/YYYY">
                               <span class="input-group-append">
@@ -98,11 +98,11 @@
                             <div class="form-check mt-3">
                               <input class="form-check-input flxCheckBox" type="checkbox"  id="BLK_ELASTIC_CHK">
                               <input type="hidden" name="BLK_ELASTIC" id="BLK_ELASTIC" value="N" class="form-control" />
-                              <lable class="form-check-lable" for="defaultCheck1"> Elastic </lable>
+                              <label class="form-check-lable" for="defaultCheck1"> Elastic </label>
                             </div>
                         </div> 
                         <div class="col-md-3">
-                          <lable class="form-lable">Night/Status</lable>
+                          <label class="form-label">Night/Status</label>
                           <div class="input-group mb-3">
                             <input type="number" name="BLK_NIGHT" id="BLK_NIGHT" class="form-control" placeholder="night" />
                             <select name="BLK_STATUS" id="BLK_STATUS" class=" select2 form-select" data-allow-clear="true">
@@ -114,7 +114,7 @@
                         </div>
                         
                         <div class="col-md-3">
-                          <lable class="form-lable">Reservation Type</lable>
+                          <label class="form-label">Reservation Type</label>
                           <select name="BLK_RESER_TYPE" id="BLK_RESER_TYPE" class=" select2 form-select" data-allow-clear="true">
                             <option value="">Select</option>
                             <option value="GRINQ">Group Inquiry</option>
@@ -123,20 +123,20 @@
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Market</lable>
+                          <label class="form-label">Market</label>
                           <select name="BLK_MARKET" id="BLK_MARKET" class=" select2 form-select" data-allow-clear="true">
                             <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Source</lable>
+                          <label class="form-label">Source</label>
                           <select name="BLK_SOURCE" id="BLK_SOURCE" class=" select2 form-select" data-allow-clear="true">
                             <option value="">Select</option>
                           </select>
                         </div>
                         
                         <div class="col-md-3">
-                          <lable class="form-lable">Reservation Method</lable>
+                          <label class="form-label">Reservation Method</label>
                           <select name="BLK_RESER_METHOD" id="BLK_RESER_METHOD" class=" select2 form-select" data-allow-clear="true">
                             <option value="">Select</option>
                             <option value="RM">Rooming List</option>
@@ -145,7 +145,7 @@
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Cutoff Date</lable>
+                          <label class="form-label">Cutoff Date</label>
                           <div class="input-group mb-3">
                             <input type="text" id="BLK_CUTOFF_DT" name="BLK_CUTOFF_DT" class="form-control flatpickr-input active" placeholder="YYYY-MM-DD" readonly="readonly">
                              <span class="input-group-append">
@@ -156,17 +156,17 @@
                              </div>
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Cutoff Days</lable>
+                          <label class="form-label">Cutoff Days</label>
                           <input type="number" name="BLK_CUTOFF_DAYS" id="BLK_CUTOFF_DAYS" class="form-control" placeholder="member no" />
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Rate Code</lable>
+                          <label class="form-label">Rate Code</label>
                           <select name="BLK_RATE_CODE" id="BLK_RATE_CODE" class=" select2 form-select" data-allow-clear="true">
                             <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Packages</lable>
+                          <label class="form-label">Packages</label>
                           <select name="BLK_PACKAGE" id="BLK_PACKAGE" class=" select2 form-select" data-allow-clear="true">
                             <option value="">Select</option>
                           </select>

@@ -52,13 +52,13 @@
                             <input type="hidden" name="TC_SGR_ID" id="TC_SGR_ID" class="form-control" />
 
                             <div class="col-md-7">
-                                <lable class="form-lable"><b>Sub Group Code *</b></lable>
+                                <label class="form-label"><b>Sub Group Code *</b></label>
                                 <input type="text" name="TC_SGR_CODE" id="TC_SGR_CODE"
                                     class="form-control bootstrap-maxlength" maxlength="10" placeholder="eg: OTA"
                                     required />
                             </div>
                             <div class="col-md-8">
-                                <lable class="form-lable"><b>Select Main Group *</b></lable>
+                                <label class="form-label"><b>Select Main Group *</b></label>
                                 <select id="TC_GR_ID" name="TC_GR_ID" class="select2 form-select form-select-lg"
                                     data-allow-clear="true" required>
                                     <?=$transactionCodeGroupOptions?>
@@ -66,13 +66,13 @@
                             </div>
 
                             <div class="col-md-8">
-                                <lable class="form-lable"><b>Sub Group Description *</b></lable>
+                                <label class="form-label"><b>Sub Group Description *</b></label>
                                 <input type="text" name="TC_SGR_DESC" id="TC_SGR_DESC"
                                     class="form-control bootstrap-maxlength" maxlength="50"
                                     placeholder="eg: Online Travel Agent" required />
                             </div>
                             <div class="col-md-4">
-                                <lable class="form-lable">Display Sequence</lable>
+                                <label class="form-label">Display Sequence</label>
                                 <input type="number" name="TC_SGR_DIS_SEQ" id="TC_SGR_DIS_SEQ" class="form-control"
                                     min="0" placeholder="eg: 3" />
                             </div>

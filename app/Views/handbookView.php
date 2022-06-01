@@ -79,7 +79,7 @@
                         <div class="row g-3">
 
                           <div class="col-md-12 mt-0">
-                            <lable class="form-lable mt-20">Please Upload handbook</lable>
+                            <label class="form-label mt-20">Please Upload handbook</label>
                             <input type="file" name="HANDBOOK" id="HANDBOOK" class="form-control" />
                           </div>
                           

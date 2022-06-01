@@ -47,16 +47,16 @@
                       <div class="row g-3">
                         <input type="hidden" name="SPC_ID" id="SPC_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <lable class="form-lable">Special Code</lable>
+                          <label class="form-label">Special Code</label>
                           <input type="text" name="SPC_CODE" id="SPC_CODE" class="form-control" placeholder="Special code" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Special Description</lable>
+                          <label class="form-label">Special Description</label>
                           <input type="text" name="SPC_DESC" id="SPC_DESC" class="form-control" placeholder="Special description" />
                         </div>
                       
                         <div class="col-md-12 ">
-                          <lable class="form-lable">Display Sequence</lable>
+                          <label class="form-label">Display Sequence</label>
                           <input type="number" name="SPC_SEQ" id="SPC_SEQ" class="form-control" placeholder="Special sequence" />
                         </div>
                       </div>

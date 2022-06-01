@@ -1019,7 +1019,7 @@
                             <div class="col-md-12"></div>
 
                             <div class="col-md-12">
-                                <lable class="form-label"><b>Room Types *</b></lable>
+                                <label class="form-label"><b>Room Types *</b></label>
                                 <select id="rep_RT_CD_DT_ROOM_TYPES" name="rep_RT_CD_DT_ROOM_TYPES[]"
                                     class="select2 form-select form-select-lg" multiple>
                                     <?php
@@ -1270,13 +1270,13 @@
                             <input type="hidden" name="NG_RT_ID" id="NG_RT_ID" />
 
                             <div class="col-md-7">
-                                <lable class="form-lable"><b>Rate Code </b></lable>
+                                <label class="form-label"><b>Rate Code </b></label>
                                 <input type="text" name="neg_RT_CD_CODE" id="neg_RT_CD_CODE"
                                     value="<?php echo isset($rateCodeDetails['RT_CD_CODE']) ? $rateCodeDetails['RT_CD_CODE'] : ''; ?>"
                                     class="form-control bootstrap-maxlength" readonly />
                             </div>
                             <div class="col-md-4">
-                                <lable class="form-lable">Display Sequence</lable>
+                                <label class="form-label">Display Sequence</label>
                                 <input type="number" name="NG_RT_DIS_SEQ" id="NG_RT_DIS_SEQ" class="form-control"
                                     min="0" placeholder="eg: 3" />
                             </div>

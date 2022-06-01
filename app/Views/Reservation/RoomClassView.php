@@ -47,15 +47,15 @@
                       <div class="row g-3">
                         <input type="hidden" name="RM_CL_ID" id="RM_CL_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <lable class="form-lable">Room Code</lable>
+                          <label class="form-label">Room Code</label>
                           <input type="text" name="RM_CL_CODE" id="RM_CL_CODE" class="form-control" placeholder="room code" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Room Description</lable>
+                          <label class="form-label">Room Description</label>
                           <input type="text" name="RM_CL_DESC" id="RM_CL_DESC" class="form-control" placeholder="room description" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Display Seq./Total Rooms</lable>
+                          <label class="form-label">Display Seq./Total Rooms</label>
                             <div class="input-group mb-3">
                               <input type="number" name="RM_CL_DISPLY_SEQ" id="RM_CL_DISPLY_SEQ" class="form-control" placeholder="display seq." />
                               <input type="number" name="RM_CL_TOTAL_ROOM" id="RM_CL_TOTAL_ROOM" class="form-control" placeholder="total rooms" />
@@ -65,15 +65,15 @@
                             <div class="input-group mb-3 radioBtnClass">
                               <div class="form-check pe-2">
                                 <input class="form-check-input" type="radio" checked Value="SL" name="RM_CL_FEATURE" id="RM_CL_FEATURE">
-                                <lable class="form-check-lable"> Selected </lable>
+                                <label class="form-check-lable"> Selected </label>
                               </div>
                               <div class="form-check pe-2">
                                 <input class="form-check-input" type="radio" Value="NS" name="RM_CL_FEATURE" id="RM_CL_FEATURE">
-                                <lable class="form-check-lable"> Non-selected </lable>
+                                <label class="form-check-lable"> Non-selected </label>
                               </div>
                               <div class="form-check pe-2">
                                 <input class="form-check-input" Value="BT" type="radio" name="RM_CL_FEATURE" id="RM_CL_FEATURE">
-                                <lable class="form-check-lable"> Both </lable>
+                                <label class="form-check-lable"> Both </label>
                               </div>
                             </div>
                         </div> -->

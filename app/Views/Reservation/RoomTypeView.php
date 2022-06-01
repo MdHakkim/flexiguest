@@ -47,75 +47,75 @@
                       <div class="row g-3">
                         <input type="hidden" name="RM_TY_ID" id="RM_TY_ID" class="form-control"/>
                         <div class="col-md-6">
-                          <lable class="form-lable">Room Class</lable>
+                          <label class="form-label">Room Class</label>
                           <select name="RM_TY_ROOM_CLASS"  id="RM_TY_ROOM_CLASS" data-width="100%" class="selectpicker RM_TY_ROOM_CLASS" data-live-search="true">
                               <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Room Type</lable>
+                          <label class="form-label">Room Type</label>
                           <input type="text" name="RM_TY_CODE" id="RM_TY_CODE" class="form-control" placeholder="room code" />
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Room Type Description</lable>
+                          <label class="form-label">Room Type Description</label>
                           <input type="text" name="RM_TY_DESC" id="RM_TY_DESC" class="form-control" placeholder="room description" />
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Display Seq./Total Rooms</lable>
+                          <label class="form-label">Display Seq./Total Rooms</label>
                             <div class="input-group mb-3">
                               <input type="number" name="RM_TY_DISP_SEQ" id="RM_TY_DISP_SEQ" class="form-control" placeholder="display seq." />
                               <input type="number" name="RM_TY_TOTAL_ROOM" id="RM_TY_TOTAL_ROOM" class="form-control" placeholder="total rooms" />
                             </div>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Pub. Rate Amount</lable>
+                          <label class="form-label">Pub. Rate Amount</label>
                           <input type="text" name="RM_TY_PUBLIC_RATE_AMT" id="RM_TY_PUBLIC_RATE_AMT" class="form-control" placeholder="room description" />
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Pub. Rate Code</lable>
+                          <label class="form-label">Pub. Rate Code</label>
                           <select name="RM_TY_PUBLIC_RATE_CODE" id="RM_TY_PUBLIC_RATE_CODE" class="select2 form-select" data-allow-clear="true">
                             <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Feature</lable>
+                          <label class="form-label">Feature</label>
                           <select name="RM_TY_FEATURE[]"id="RM_TY_FEATURE" class="select2 form-select" multiple>
                             <!-- <option value="">Select</option> -->
                           </select>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Default/Maximum Occupancy</lable>
+                          <label class="form-label">Default/Maximum Occupancy</label>
                             <div class="input-group mb-3">
                               <input type="number" name="RM_TY_DEFUL_OCCUPANCY" id="RM_TY_DEFUL_OCCUPANCY" class="form-control" placeholder="display seq." />
                               <input type="number" name="RM_TY_MAX_OCCUPANCY" id="RM_TY_MAX_OCCUPANCY" class="form-control" placeholder="maximum occupany" />
                             </div>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Maximum Adults/Children</lable>
+                          <label class="form-label">Maximum Adults/Children</label>
                             <div class="input-group mb-3">
                               <input type="number" name="RM_TY_MAX_ADULTS" id="RM_TY_MAX_ADULTS" class="form-control" placeholder="max adults" />
                               <input type="number" name="RM_TY_MAX_CHILDREN" id="RM_TY_MAX_CHILDREN" class="form-control" placeholder="max children" />
                             </div>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Minimum Occupancy</lable>
+                          <label class="form-label">Minimum Occupancy</label>
                           <input type="text" name="RM_TY_MIN_OCCUPANCY" id="RM_TY_MIN_OCCUPANCY" class="form-control" placeholder="minimum occpancy" />
                         </div>
                         <div class="col-md-12 flxi_ds_flx">
                           <div class="form-check mt-3 me-1">
                             <input class="form-check-input flxCheckBox" type="checkbox"  id="RM_TY_PSEUDO_RM_CHK">
                             <input type="hidden" name="RM_TY_PSEUDO_RM" id="RM_TY_PSEUDO_RM" value="N" class="form-control" />
-                            <lable class="form-check-lable" for="defaultCheck1"> Pseudo Room </lable>
+                            <label class="form-check-lable" for="defaultCheck1"> Pseudo Room </label>
                           </div>
                           <div class="form-check mt-3 me-1">
                             <input class="form-check-input flxCheckBox" type="checkbox" value="N" id="RM_TY_HOUSEKEEPING_CHK">
                             <input type="hidden" name="RM_TY_HOUSEKEEPING" id="RM_TY_HOUSEKEEPING" value="N" class="form-control" />
-                            <lable class="form-check-lable" for="defaultCheck1"> Housekeeping </lable>
+                            <label class="form-check-lable" for="defaultCheck1"> Housekeeping </label>
                           </div>
                           <div class="form-check mt-3">
                             <input class="form-check-input flxCheckBox" type="checkbox" value="N" id="RM_TY_SEND_T_INTERF_CHK">
                             <input type="hidden" name="RM_TY_SEND_T_INTERF" id="RM_TY_SEND_T_INTERF" value="N" class="form-control" />
-                            <lable class="form-check-lable" for="defaultCheck1"> Send to Interface </lable>
+                            <label class="form-check-lable" for="defaultCheck1"> Send to Interface </label>
                           </div>
                         </div>
                       

@@ -47,21 +47,21 @@
                       <div class="row g-3">
                         <input type="hidden" name="SOR_ID" id="SOR_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <lable class="form-lable">Source Code</lable>
+                          <label class="form-label">Source Code</label>
                           <input type="text" name="SOR_CODE" id="SOR_CODE" class="form-control" placeholder="source code" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Source Description</lable>
+                          <label class="form-label">Source Description</label>
                           <input type="text" name="SOR_DESC" id="SOR_DESC" class="form-control" placeholder="source description" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Source Group</lable>
+                          <label class="form-label">Source Group</label>
                           <select name="SOR_GROUP"  id="SOR_GROUP" class="select2 form-select" data-allow-clear="true">
                             <option value="">Select Group</option>
                           </select>
                         </div>
                         <div class="col-md-12 ">
-                          <lable class="form-lable">Display Sequence</lable>
+                          <label class="form-label">Display Sequence</label>
                           <input type="number" name="SOR_DIS_SEQ" id="SOR_DIS_SEQ" class="form-control" placeholder="display sequence" />
                         </div>
                       </div>

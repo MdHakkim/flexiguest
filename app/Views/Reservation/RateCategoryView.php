@@ -51,26 +51,26 @@
                         <div class="row g-3">
                             <input type="hidden" name="RT_CT_ID" id="RT_CT_ID" class="form-control" />
                             <div class="col-md-7">
-                                <lable class="form-lable"><b>Rate Category Code *</b></lable>
+                                <label class="form-label"><b>Rate Category Code *</b></label>
                                 <input type="text" name="RT_CT_CODE" id="RT_CT_CODE"
                                     class="form-control bootstrap-maxlength" maxlength="10" placeholder="eg: OTA"
                                     required />
                             </div>
                             <div class="col-md-5">
-                                <lable class="form-lable"><b>Select Rate Class *</b></lable>
+                                <label class="form-label"><b>Select Rate Class *</b></label>
                                 <select id="RT_CL_ID" name="RT_CL_ID" class="select2 form-select form-select-lg"
                                     data-allow-clear="true" required>
                                     <?=$rateClassOptions?>
                                 </select>
                             </div>
                             <div class="col-md-8">
-                                <lable class="form-lable"><b>Rate Category Description *</b></lable>
+                                <label class="form-label"><b>Rate Category Description *</b></label>
                                 <input type="text" name="RT_CT_DESC" id="RT_CT_DESC"
                                     class="form-control bootstrap-maxlength" maxlength="50"
                                     placeholder="eg: Online Travel Agent" required />
                             </div>
                             <div class="col-md-4">
-                                <lable class="form-lable">Display Sequence</lable>
+                                <label class="form-label">Display Sequence</label>
                                 <input type="number" name="RT_CT_DIS_SEQ" id="RT_CT_DIS_SEQ" class="form-control"
                                     min="0" placeholder="eg: 3" />
                             </div>

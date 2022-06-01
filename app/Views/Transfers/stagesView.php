@@ -46,7 +46,7 @@
                         <div class="row g-3">
 
                           <div class="col-md-4 mt-0">
-                            <lable class="form-lable">Stages</lable>
+                            <label class="form-label">Stages</label>
                             <input type="text" autocomplete="off" name="SHUTL_STAGE_NAME" id="SHUTL_STAGE_NAME" class="form-control">
                           </div>
 

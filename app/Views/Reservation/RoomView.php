@@ -48,7 +48,7 @@
                       <div class="row g-3">
                         <input type="hidden" name="RM_ID" id="RM_ID" class="form-control"/>
                         <div class="col-md-6">
-                          <lable class="form-lable">Room No/Room Class</lable>
+                          <label class="form-label">Room No/Room Class</label>
                             <div class="input-group mb-3">
                                 <div class="col-md-6">
                                   <input type="number" name="RM_NO" id="RM_NO" class="form-control" placeholder="room no" />
@@ -59,50 +59,50 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Room Type</lable>
+                          <label class="form-label">Room Type</label>
                           <input type="hidden" name="RM_DESC" id="RM_DESC" class="form-control"/>
                           <select name="RM_TYPE"  id="RM_TYPE" data-width="100%" class="selectpicker RM_TYPE" data-live-search="true">
                               <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Pub. Rate Code</lable>
+                          <label class="form-label">Pub. Rate Code</label>
                           <select name="RM_PUBLIC_RATE_CODE" id="RM_PUBLIC_RATE_CODE" class="select2 form-select" data-allow-clear="true">
                             <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Floor Preference</lable>
+                          <label class="form-label">Floor Preference</label>
                           <select name="RM_FLOOR_PREFERN" id="RM_FLOOR_PREFERN" class="select2 form-select" data-allow-clear="true">
                             <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Pub. Rate Amount</lable>
+                          <label class="form-label">Pub. Rate Amount</label>
                           <input type="text" name="RM_PUBLIC_RATE_AMOUNT" id="RM_PUBLIC_RATE_AMOUNT" class="form-control" placeholder="rate amount" />
                         </div>  
                         <div class="col-md-6">
-                          <lable class="form-lable">Smoking Preference</lable>
+                          <label class="form-label">Smoking Preference</label>
                           <select name="RM_SMOKING_PREFERN" id="RM_SMOKING_PREFERN" class="select2 form-select" data-allow-clear="true">
                             <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Display Seq./Max Occupancy</lable>
+                          <label class="form-label">Display Seq./Max Occupancy</label>
                             <div class="input-group mb-3">
                               <input type="number" name="RM_DISP_SEQ" id="RM_DISP_SEQ" class="form-control" placeholder="display seq." />
                               <input type="number" name="RM_MAX_OCCUPANCY" id="RM_MAX_OCCUPANCY" class="form-control" placeholder="max occupancy" />
                             </div>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Measurement/Square Units</lable>
+                          <label class="form-label">Measurement/Square Units</label>
                             <div class="input-group mb-3">
                               <input type="number" name="RM_MEASUREMENT" id="RM_MEASUREMENT" class="form-control" placeholder="measurement" />
                               <input type="number" name="RM_SQUARE_UNITS" id="RM_SQUARE_UNITS" class="form-control" placeholder="square units" />
                             </div>
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Features</lable>
+                          <label class="form-label">Features</label>
                           <!-- <select name="RM_FEATURE"  id="RM_FEATURE" data-width="100%" class="selectpicker RM_FEATURE" data-live-search="true">
                               <option value="">Select</option>
                           </select> -->
@@ -111,23 +111,23 @@
                           </select>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Day section</lable>
+                          <label class="form-label">Day section</label>
                           <select name="RM_HOUSKP_DY_SECTION"  id="RM_HOUSKP_DY_SECTION" data-width="100%" class="selectpicker RM_HOUSKP_DY_SECTION" data-live-search="true">
                               <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Evening section</lable>
+                          <label class="form-label">Evening section</label>
                           <select name="RM_HOUSKP_EV_SECTION"  id="RM_HOUSKP_EV_SECTION" data-width="100%" class="selectpicker RM_HOUSKP_EV_SECTION" data-live-search="true">
                               <option value="">Select</option>
                           </select>
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Phone No</lable>
+                          <label class="form-label">Phone No</label>
                           <input type="text" name="RM_PHONE_NO" id="RM_PHONE_NO" class="form-control" placeholder="phone" />
                         </div>
                         <div class="col-md-6">
-                          <lable class="form-lable">Stayover/Departure Credits</lable>
+                          <label class="form-label">Stayover/Departure Credits</label>
                             <div class="input-group mb-3">
                               <input type="number" name="RM_STAYOVER_CR" id="RM_STAYOVER_CR" class="form-control" placeholder="stayover" />
                               <input type="number" name="RM_DEPARTURE_CR" id="RM_DEPARTURE_CR" class="form-control" placeholder="departure" />

@@ -45,7 +45,7 @@
                         <div class="row g-3">
 
                         <div class="col-md-6 mt-0">
-                            <lable class="form-lable">Category</lable>
+                            <label class="form-label">Category</label>
                             <input type="text" name="MAINT_CATEGORY" id="MAINT_CATEGORY" class="form-control" >
                               
                           </div> 

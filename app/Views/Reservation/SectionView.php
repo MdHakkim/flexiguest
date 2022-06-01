@@ -47,19 +47,19 @@
                       <div class="row g-3">
                         <input type="hidden" name="SC_FL_ID" id="SC_FL_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <lable class="form-lable">Section Code</lable>
+                          <label class="form-label">Section Code</label>
                           <input type="text" name="SC_FL_CODE" id="SC_FL_CODE" class="form-control" placeholder="section code" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Section Description</lable>
+                          <label class="form-label">Section Description</label>
                           <input type="text" name="SC_FL_DESC" id="SC_FL_DESC" class="form-control" placeholder="section description" />
                         </div>
                         <div class="col-md-12 ">
-                          <lable class="form-lable">Target Credit</lable>
+                          <label class="form-label">Target Credit</label>
                           <input type="number" name="SC_FL_TARGET_CREDIT" id="SC_FL_TARGET_CREDIT" class="form-control" placeholder="section target credit" />
                         </div>
                         <div class="col-md-12 ">
-                          <lable class="form-lable">Display Sequence</lable>
+                          <label class="form-label">Display Sequence</label>
                           <input type="number" name="SC_FL_DISPLAY_SEQ" id="SC_FL_DISPLAY_SEQ" class="form-control" placeholder="display sequence" />
                         </div>
                       </div>

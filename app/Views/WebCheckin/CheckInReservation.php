@@ -511,7 +511,7 @@ if(empty($condition)){
                         <tr>
                           <td colspan="4">
                             <div class="col-md-4">
-                              <lable class="form-lable"> Please update your expected time of arrival </lable>
+                              <label class="form-label"> Please update your expected time of arrival </label>
                                 <input type="time" value="<?php echo $data['RESV_ETA'];?>" name="RESV_ETA" id="RESV_ETA" class="form-control" placeholder="estime Time" />
                               </div>
                             </div>

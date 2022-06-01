@@ -50,44 +50,44 @@
                             <div class="row g-3">
 
                                 <div class="col-md-4 mt-0">
-                                    <lable class="form-lable">Shuttle Name</lable>
+                                    <label class="form-label">Shuttle Name</label>
                                     <input type="text" name="SHUTL_NAME" id="SHUTL_NAME" class="form-control" autocomplete="off">
                                 </div>
                                 <div class="col-md-4 mt-0">
-                                    <lable class="form-lable">Shuttle From</lable>
+                                    <label class="form-label">Shuttle From</label>
                                     <select id="SHUTL_FROM" name="SHUTL_FROM" class=" select2 form-select stages" data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4 mt-0">
-                                    <lable class="form-lable">Shuttle To</lable>
+                                    <label class="form-label">Shuttle To</label>
                                     <select id="SHUTL_TO" name="SHUTL_TO" class=" select2 form-select stages" data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-4">
-                                    <lable class="form-lable">Start Time</lable>
+                                    <label class="form-label">Start Time</label>
                                     <input type="time" autocomplete="off" name="SHUTL_START_AT" id="SHUTL_START_AT" class="form-control" placeholder="08:10">
                                 </div>
 
                                 <div class="col-md-4">
-                                    <lable class="form-lable">End Time</lable>
+                                    <label class="form-label">End Time</label>
                                     <input type="time" autocomplete="off" name="SHUTL_END_AT" id="SHUTL_END_AT" class="form-control" placeholder="08:10" />
                                 </div>
 
                                 <div class="col-md-4">
-                                    <lable class="form-lable">Next Shuttle at</lable>
+                                    <label class="form-label">Next Shuttle at</label>
                                     <input type="text" name="SHUTL_NEXT" id="SHUTL_NEXT" class="form-control" autocomplete="off">
                                 </div>
 
                                 <div class="col-md-4">
-                                    <lable class="form-lable">Description</lable>
+                                    <label class="form-label">Description</label>
                                     <textarea rows="4" class="form-control" name="SHUTL_DESCRIPTION" id="SHUTL_DESCRIPTION"></textarea>
                                 </div>
 
                                 <div class="col-md-4">
-                                    <lable class="form-lable">Image</lable>
+                                    <label class="form-label">Image</label>
                                     <input type="file" name="SHUTL_ROUTE_IMG" id="SHUTL_ROUTE_IMG" class="form-control" />
                                 </div>
 
@@ -125,14 +125,14 @@
                             <div class="row g-3">
 
                                 <div class="col-md-4">
-                                    <lable class="form-lable">Stops</lable>
+                                    <label class="form-label">Stops</label>
                                     <select name="stage_id" class="select2 form-select stages" data-allow-clear="true">
                                         <option value="">Select Stop</option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-4">
-                                    <lable class="form-lable">Stop Duration <b>(mins)</b></lable>
+                                    <label class="form-label">Stop Duration <b>(mins)</b></label>
                                     <input type="number" name="duration_mins" class="form-control" autocomplete="off">
                                 </div>
 

@@ -2,13 +2,40 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<?= $this->include('Layout/image_modal') ?>
+
+<style>
+    /* .light-style .bs-stepper .step.crossed .bs-stepper-label {
+        color: #677788 !important;
+    }
+
+    .bs-stepper .step.crossed .step-trigger::after {
+        background-color: #d4d8dd;
+    }
+
+    .ql-snow .ql-editor {
+        min-height: 5rem;
+    }
+
+    .light-style .bs-stepper:not(.wizard-modern) {
+        box-shadow: unset;
+    }
+
+    .light-style .bs-stepper {
+        background-color: unset;
+    }
+
+    #popModalWindow .modal-body {
+        padding: 0.6rem;
+    } */
+</style>
 
 <!-- Content wrapper -->
 <div class="content-wrapper">
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> News</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Concierge /</span> Concierge Requests</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -18,10 +45,17 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Title</th>
-                            <th>Cover Image</th>
-                            <th>Description</th>
-                            <th>Body</th>
+                            <th>Status</th>
+                            <th>Offer</th>
+                            <th>Guest Name</th>
+                            <th>Guest Phone</th>
+                            <th>Guest Email</th>
+                            <th>Guest Room</th>
+                            <th>Quantity</th>
+                            <th>Total Amount</th>
+                            <th>Tax Amount</th>
+                            <th>Net Amount</th>
+                            <th>Remarks</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
@@ -41,47 +75,96 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h4 class="modal-title" id="popModalWindowlabel">Rate Class</h4>
+                    <h4 class="modal-title" id="popModalWindowlabel">Add Concierge Request</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
 
                 <div class="modal-body">
-                    <form id="submit-form" class="needs-validation" novalidate>
+
+                    <form id="concierge-request-form" class="needs-validation" novalidate>
                         <div class="row g-3">
-                            <input type="hidden" name="id" id="news-id" class="form-control" />
+                            <input type="hidden" name="id" class="form-control" />
 
                             <div class="col-md-6">
-
-                                <label class="form-label"><b>Title *</b></label>
-
-                                <input type="text" name="title" class="form-control" placeholder="Title" required />
+                                <label class="form-label"><b>Offer *</b></label>
+                                <select class="select2" name="CR_OFFER_ID" id="CR_OFFER_ID" onchange="getAmount()">
+                                    <?php foreach ($concierge_offers as $concierge_offer) : ?>
+                                        <option value="<?= $concierge_offer['CO_ID'] ?>">
+                                            <?= $concierge_offer['CO_TITLE'] ?>
+                                        </option>
+                                    <?php endforeach ?>
+                                </select>
                             </div>
 
                             <div class="col-md-6">
+                                <label class="form-label"><b>Quantity *</b></label>
+                                <input type="number" name="CR_QUANTITY" id="CR_QUANTITY" class="form-control" oninput="getAmount()" placeholder="Quantity" />
+                            </div>
 
-                                <label class="form-label"><b>Cover Image *</b></label>
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Guest Name *</b></label>
+                                <input type="text" name="CR_GUEST_NAME" class="form-control" placeholder="Guest name" />
+                            </div>
 
-                                <input type="file" name="cover_image" class="form-control" required />
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Guest Email *</b></label>
+                                <input type="email" name="CR_GUEST_EMAIL" class="form-control" placeholder="Guest email" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Guest Phone *</b></label>
+                                <input type="text" name="CR_GUEST_PHONE" class="form-control" placeholder="Guest phone" />
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Guest Room No *</b></label>
+                                <select class="select2" name="CR_GUEST_ROOM_ID">
+                                    <?php foreach ($rooms as $room) : ?>
+                                        <option value="<?= $room['RM_ID'] ?>">
+                                            <?= $room['RM_NO'] ?>
+                                        </option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Net Amount</b></label>
+                                <input type="number" name="CR_NET_AMOUNT" id="CR_NET_AMOUNT" class="form-control" placeholder="Net amount" readonly />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Tax Amount</b></label>
+                                <input type="number" name="CR_TAX_AMOUNT" id="CR_TAX_AMOUNT" class="form-control" placeholder="Tax amount" readonly />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Total Amount</b></label>
+                                <input type="number" name="CR_TOTAL_AMOUNT" id="CR_TOTAL_AMOUNT" class="form-control" placeholder="Total amount" readonly />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Status *</b></label>
+                                <select class="select2" name="CR_STATUS">
+                                    <option value="pending">Pending</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
+                                    <option value="closed">Closed</option>
+
+                                </select>
                             </div>
 
                             <div class="col-md-12">
 
-                                <label class="form-label"><b>Description *</b></label>
+                                <label class="form-label"><b>Remarks</b></label>
 
-                                <textarea type="number" name="description" class="form-control" placeholder="Description..."></textarea>
-                            </div>
-
-                            <div class="col-md-12">
-
-                                <label class="form-label"><b>Body *</b></label>
-
-                                <textarea name="body" class="d-none"></textarea>
-
-                                <div id="snow-editor"></div>
+                                <textarea name="CR_REMARKS" class="form-control" placeholder="Remarks..."></textarea>
                             </div>
 
                         </div>
                     </form>
+
                 </div>
 
                 <div class="modal-footer">
@@ -89,7 +172,7 @@
                         Close
                     </button>
 
-                    <button type="button" id="submitBtn" onClick="submitForm('submit-form')" class="btn btn-primary">
+                    <button type="button" id="submitBtn" onClick="submitForm()" class="btn btn-primary">
                         Save
                     </button>
                 </div>
@@ -107,14 +190,6 @@
 
 <?= $this->section("script") ?>
 <script>
-    $(document).ready(function() {
-        const snowEditor = new Quill('#snow-editor', {
-            bounds: '#snow-editor',
-            theme: 'snow',
-            placeholder: 'Content...',
-        });
-    });
-
     var compAgntMode = '';
     var linkMode = '';
 
@@ -126,32 +201,65 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('/news/all-news') ?>'
+                'url': '<?php echo base_url('/concierge/all-concierge-requests') ?>'
             },
             'columns': [{
                     data: ''
                 },
                 {
-                    data: 'title'
-                },
-                {
                     data: null,
                     render: function(data, type, row, meta) {
-                        return (
-                            `
-                                <img src='${data['cover_image']}' width='80' height='80'/>
-                            `
-                        );
+                        let class_name = 'badge rounded-pill';
+
+                        if (data['CR_STATUS'] == 'accepted')
+                            class_name += ' bg-label-success';
+
+                        else if (data['CR_STATUS'] == 'rejected')
+                            class_name += ' bg-label-danger';
+
+                        else if (data['CR_STATUS'] == 'pending')
+                            class_name += ' bg-label-warning';
+
+                        else
+                            class_name += ' bg-label-info';
+
+                        return (`
+                            <span class="${class_name}">${data['CR_STATUS']}</span>
+                        `);
                     }
                 },
                 {
-                    data: 'description'
+                    data: 'CO_TITLE'
                 },
                 {
-                    data: 'body'
+                    data: 'CR_GUEST_NAME'
                 },
                 {
-                    data: 'created_at'
+                    data: 'CR_GUEST_PHONE'
+                },
+                {
+                    data: 'CR_GUEST_EMAIL'
+                },
+                {
+                    data: 'RM_NO'
+                },
+                {
+                    data: 'CR_QUANTITY'
+                },
+                {
+                    data: 'CR_TOTAL_AMOUNT'
+                },
+                {
+                    data: 'CR_TAX_AMOUNT'
+                },
+                {
+                    data: 'CR_NET_AMOUNT'
+                },
+                {
+                    data: 'CR_REMARKS'
+                },
+                {
+                    data: 'CR_CREATED_AT'
                 },
                 {
                     data: null,
@@ -166,7 +274,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['id']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['CR_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -174,7 +282,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['id']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['CR_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -185,26 +293,34 @@
                 },
             ],
             columnDefs: [{
-                width: "7%",
-                className: 'control',
-                responsivePriority: 1,
-                orderable: false,
-                targets: 0,
-                searchable: false,
-                render: function(data, type, full, meta) {
-                    return '';
-                }
-            }, {
-                width: "15%"
-            }, {
-                width: "10%"
-            }, {
-                width: "20%"
-            }, {
-                width: "20%"
-            }, {
-                width: "15%"
-            }],
+                    width: "7%",
+                    className: 'control',
+                    responsivePriority: 1,
+                    orderable: false,
+                    targets: 0,
+                    searchable: false,
+                    render: function(data, type, full, meta) {
+                        return '';
+                    }
+                },
+                // {
+                //     width: "13%"
+                // }, {
+                //     width: "10%"
+                // }, {
+                //     width: "10%"
+                // }, {
+                //     width: "5%"
+                // }, {
+                //     width: "35%"
+                // }, {
+                //     width: "5%"
+                // }, {
+                //     width: "5%"
+                // }, {
+                //     width: "5%"
+                // }
+            ],
             "order": [
                 [5, "desc"]
             ],
@@ -249,9 +365,30 @@
         });
 
         $("#dataTable_view_wrapper .row:first").before(
-            '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>'
+            `<div class="row flxi_pad_view">
+                <div class="col-md-3 ps-0">
+                    <button type="button" class="btn btn-primary" onClick="addForm()">
+                        <i class="fa-solid fa-plus fa-lg"></i> 
+                        Add
+                    </button>
+                </div>
+            </div>`
         );
     });
+
+    function getAmount() {
+        let concierge_offers = <?= json_encode($concierge_offers) ?>;
+        let offer_id = $("#CR_OFFER_ID").val();
+        let quantity = parseInt($("#CR_QUANTITY").val() || 0);
+
+        concierge_offers.forEach((offer) => {
+            if (offer.CO_ID == offer_id) {
+                $("#CR_TOTAL_AMOUNT").val(quantity * offer.CO_TAX_AMOUNT);
+                $("#CR_TAX_AMOUNT").val(quantity * offer.CO_TAX_RATE);
+                $("#CR_NET_AMOUNT").val(quantity * offer.CO_NET_PRICE);
+            }
+        });
+    }
 
     function hideModalAlerts() {
         $('#errorModal').hide();
@@ -268,15 +405,10 @@
     // Show Add Rate Class Form
 
     function addForm() {
-        $(`#submit-form input[name='id']`).val('');
-        $(`#submit-form input[name='title']`).val('');
-        $(`#submit-form input[name='cover_image']`).val('');
-        $(`#submit-form textarea[name='description']`).val('');
-        $(`#submit-form textarea[name='body']`).val('');
-        $(`#submit-form #snow-editor .ql-editor`).html('');
+        resetConciergeRequestForm();
 
-        $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add News');
+        $('#submitBtn').text('Save');
+        $('#popModalWindowlabel').html('Add Concierge Request');
 
         $('#popModalWindow').modal('show');
     }
@@ -303,7 +435,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('/news/delete') ?>',
+                        url: '<?php echo base_url('/concierge/delete-concierge-request') ?>',
                         type: "post",
                         data: {
                             id: id,
@@ -314,9 +446,19 @@
                         },
                         dataType: 'json',
                         success: function(respn) {
-                            showModalAlert('warning',
-                                '<li>The News has been deleted</li>');
-                            $('#dataTable_view').dataTable().fnDraw();
+                            if (respn['SUCCESS'] != 200) {
+                                var ERROR = respn['RESPONSE']['ERROR'];
+
+                                var mcontent = '';
+                                $.each(ERROR, function(ind, data) {
+                                    mcontent += '<li>' + data + '</li>';
+                                });
+
+                                showModalAlert('error', mcontent);
+                            } else {
+                                showModalAlert('warning', respn['RESPONSE']['REPORT_RES']);
+                                $('#dataTable_view').dataTable().fnDraw();
+                            }
                         }
                     });
                 }
@@ -334,24 +476,26 @@
     //   }
     // });
 
-
     // Show Edit Rate Class Form
-
     $(document).on('click', '.editWindow', function() {
-        $(`#submit-form input[type='file']`).val('');
-        
+        resetConciergeRequestForm();
+
         $('.dtr-bs-modal').modal('hide');
 
-        var id = $(this).attr('data_id');
-        $('#popModalWindowlabel').html('Edit News');
+        let id = "concierge-request-form";
+        let concierge_request_id = $(this).attr('data_id');
+
+        $('#popModalWindowlabel').html('Edit Concierge Request');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('/news/edit') ?>';
+        $(`#${id} input[name='id']`).val(concierge_request_id);
+
+        var url = '<?php echo base_url('/concierge/edit-concierge-request') ?>';
         $.ajax({
             url: url,
             type: "post",
             data: {
-                id: id
+                id: concierge_request_id
             },
             dataType: 'json',
             success: function(respn) {
@@ -360,64 +504,43 @@
 
                     $.each(data, function(field, val) {
 
-                        if ($(`#submit-form input[name='${field}'][type!='file']`).length)
-                            $(`#submit-form input[name='${field}']`).val(val);
+                        if ($(`#${id} input[name='${field}'][type!='file']`).length)
+                            $(`#${id} input[name='${field}']`).val(val);
 
-                        else if ($(`#submit-form textarea[name='${field}']`).length)
-                            $(`#submit-form textarea[name='${field}']`).val(val);
+                        else if ($(`#${id} textarea[name='${field}']`).length)
+                            $(`#${id} textarea[name='${field}']`).val(val);
 
-                        if(field == 'body')
-                            $("#snow-editor .ql-editor").html(val);
-
+                        else if ($(`#${id} select[name='${field}']`).length)
+                            $(`#${id} select[name='${field}']`).val(val).trigger('change');
                     });
                 });
 
                 $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
+                $('#dataTable_view').dataTable().fnDraw();
             }
         });
     });
 
-    // Show Copy Rate Class Form
+    function resetConciergeRequestForm() {
+        let id = "concierge-request-form";
 
-    $(document).on('click', '.copyWindow', function() {
-
-        $('.dtr-bs-modal').modal('hide');
-
-        var sysid = $(this).attr('data_sysid');
-        var rtcode = $(this).attr('data_rtcode');
-
-        $('#main_RT_CL_ID').val(sysid);
-
-        $('#copyModalWindowlabel').html('Create Rate Class Copies of \'' + rtcode + '\'');
-
-        //Reset repeated fields every time modal is loaded
-        $('[data-repeater-item]').slice(1).empty();
-        $('#form-repeater-1-1').val("");
-
-        $('#copyModalWindow').modal('show');
-
-    });
-
+        $(`#${id} input[type='hidden']`).val('');
+        $(`#${id} input[type='text']`).val('');
+        $(`#${id} input[type='email']`).val('');
+        $(`#${id} input[type='number']`).val('');
+        $(`#${id} select`).val('').trigger('change');
+        $(`#${id} #CR_QUANTITY`).val('1');
+    }
 
     // Add New or Edit Rate Class submit Function
-
-    function submitForm(id) {
+    function submitForm() {
+        let id = "concierge-request-form";
         hideModalAlerts();
 
-        $(`#${id} textarea[name='body']`).val($("#snow-editor .ql-editor").html());
-
-        var fd = new FormData();
-        fd.append('id', $(`#${id} input[name='id']`).val());
-        fd.append('title', $(`#${id} input[name='title']`).val());
-        fd.append('description', $(`#${id} textarea[name='description']`).val());
-        fd.append('body', $(`#${id} textarea[name='body']`).val());
-
-        let files = $(`#${id} input[name='cover_image']`)[0].files;
-        if (files.length)
-            fd.append('cover_image', files[0]);
+        var fd = new FormData($(`#${id}`)[0]);
 
         $.ajax({
-            url: '<?= base_url('/news/store') ?>',
+            url: '<?= base_url('/concierge/store-concierge-request') ?>',
             type: "post",
             data: fd,
             processData: false,
@@ -426,57 +549,27 @@
             success: function(respn) {
                 console.log(respn, "testing");
                 var response = respn['SUCCESS'];
-                if (response != '1') {
+                if (response != '200') {
 
                     var ERROR = respn['RESPONSE']['ERROR'];
                     var mcontent = '';
                     $.each(ERROR, function(ind, data) {
-                        console.log(data, "SDF");
                         mcontent += '<li>' + data + '</li>';
                     });
                     showModalAlert('error', mcontent);
                 } else {
-                    var alertText = $(`#submit-form input[name='id']`).val() == '' ?
-                        '<li>News has been created</li>' :
-                        '<li>News has been updated</li>';
+
+                    var alertText = respn['RESPONSE']['REPORT_RES'];
 
                     showModalAlert('success', alertText);
 
                     $('#popModalWindow').modal('hide');
+                    resetConciergeRequestForm();
                     $('#dataTable_view').dataTable().fnDraw();
                 }
             }
         });
     }
-
-    // Copy Rate Class to Multiple submit Function
-
-    function copyForm(id) {
-        hideModalAlerts();
-
-        var formSerialization = $('#' + id).serializeArray();
-        var url = '<?php echo base_url('/copyRateClass') ?>';
-        $.ajax({
-            url: url,
-            type: "post",
-            data: formSerialization,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response == '0') {
-                    showModalAlert('error', '<li>No New Rate Classes were added</li>');
-                } else {
-                    showModalAlert('success', '<li>' + response +
-                        ' new Rate Class copies have been created</li>');
-                    $('#copyModalWindow').modal('hide');
-                    $('#dataTable_view').dataTable().fnDraw();
-                }
-            }
-        });
-    }
-
 
     // bootstrap-maxlength & repeater (jquery)
     $(function() {

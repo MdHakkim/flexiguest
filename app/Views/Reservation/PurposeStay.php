@@ -47,15 +47,15 @@
                       <div class="row g-3">
                         <input type="hidden" name="PUR_ST_ID" id="PUR_ST_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <lable class="form-lable">Purpose Stay</lable>
+                          <label class="form-label">Purpose Stay</label>
                           <input type="text" name="PUR_ST_CODE" id="PUR_ST_CODE" class="form-control" placeholder="reservation type" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Purpose Stay Description</lable>
+                          <label class="form-label">Purpose Stay Description</label>
                           <input type="text" name="PUR_ST_DESC" id="PUR_ST_DESC" class="form-control" placeholder="reservation desc." />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Display Seq</lable>
+                          <label class="form-label">Display Seq</label>
                             <div class="input-group mb-3">
                               <input type="number" name="PUR_ST_SEQ" id="PUR_ST_SEQ" class="form-control" placeholder="display seq." />
                             </div>
