@@ -51,10 +51,11 @@ class APIController extends BaseController
             $result = responseJson(409, true, $this->validator->getErrors());
             return $this->respond($result);
         } else {
-            $email = $this->request->getPost("email");
+            $email = $this->request->getVar("email");
 
             // check wheather the email is present in customer table
             $isCustomer_data = $this->DB->table('FLXY_CUSTOMER')->where('CUST_EMAIL', $email)->get()->getRowArray();
+
             if (empty($isCustomer_data)) {
                 $result = responseJson(404, false, ["msg"=>"Sorry , You are not Reserved any room."]);
                 return $this->respond($result);
@@ -246,9 +247,9 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        $firstName = $this->request->getPost("firstName");
-        $lastName = $this->request->getPost("lastName");
-        $email = $this->request->getPost("email");
+        $firstName = $this->request->getVar("firstName");
+        $lastName = $this->request->getVar("lastName");
+        $email = $this->request->getVar("email");
 
         // email sending to the accompany person
         $param = ['RESV_ID' => $resID];
@@ -288,13 +289,12 @@ class APIController extends BaseController
         if (!$file) {
             $validate = $this->validator->getErrors();
             $result = responseJson("403", $validate);
-
             return $this->respond($result);
         }
 
         $fileNames = '';
         $fileArry = $this->request->getFileMultiple('images');
-        $desc = $this->request->getPost("desc");
+        $desc = $this->request->getVar("desc");
         if (!empty($fileArry)) {
             foreach ($fileArry as $key => $file) {
                 if ($file->isValid() && !$file->hasMoved()) {
@@ -370,36 +370,34 @@ class APIController extends BaseController
         if (!$validate) {
             $validate = $this->validator->getErrors();
             $result = responseJson("403", $validate);
-
             return $this->respond($result);
         }
 
         $CUST_ID = $this->request->user['USR_CUST_ID'];
-        if ($this->request->getPost("expiryDate") < $this->request->getPost("issueDate") && $this->request->getPost("expiryDate") <  date("d-M-Y")) {
+        if ($this->request->getVar("expiryDate") < $this->request->getVar("issueDate") && $this->request->getVar("expiryDate") <  date("d-M-Y")) {
             $validate = "Your Document is expired";
             $result = responseJson("403",true, $validate);
-
             return $this->respond($result);
         }
 
         $data = [
-            "CUST_FIRST_NAME" => $this->request->getPost("firstName"),
-            "CUST_MIDDLE_NAME" => $this->request->getPost("middleName"),
-            "CUST_LAST_NAME" => $this->request->getPost("lastName"),
-            "CUST_TITLE" => $this->request->getPost("title"),
-            "CUST_DOC_TYPE" => $this->request->getPost("docType"),
-            "CUST_DOC_NUMBER" => $this->request->getPost("docNumber"),
-            "CUST_GENDER" => $this->request->getPost("gender"),
-            "CUST_NATIONALITY" => $this->request->getPost("nationality"),
-            "CUST_COR" => $this->request->getPost("cor"),
-            "CUST_DOB" => date("d-M-Y", strtotime($this->request->getPost("DOB"))),
-            "CUST_DOC_EXPIRY" => date("d-M-Y", strtotime($this->request->getPost("expiryDate"))),
-            "CUST_DOC_ISSUE" => date("d-M-Y", strtotime($this->request->getPost("issueDate"))),
-            "CUST_PHONE" => $this->request->getPost("phn"),
-            "CUST_EMAIL" => $this->request->getPost("email"),
-            "CUST_ADDRESS_1" => $this->request->getPost("address1"),
-            "CUST_ADDRESS_2" => $this->request->getPost("address2"),
-            "CUST_CITY" => $this->request->getPost("city"),
+            "CUST_FIRST_NAME" => $this->request->getVar("firstName"),
+            "CUST_MIDDLE_NAME" => $this->request->getVar("middleName"),
+            "CUST_LAST_NAME" => $this->request->getVar("lastName"),
+            "CUST_TITLE" => $this->request->getVar("title"),
+            "CUST_DOC_TYPE" => $this->request->getVar("docType"),
+            "CUST_DOC_NUMBER" => $this->request->getVar("docNumber"),
+            "CUST_GENDER" => $this->request->getVar("gender"),
+            "CUST_NATIONALITY" => $this->request->getVar("nationality"),
+            "CUST_COR" => $this->request->getVar("cor"),
+            "CUST_DOB" => date("d-M-Y", strtotime($this->request->getVar("DOB"))),
+            "CUST_DOC_EXPIRY" => date("d-M-Y", strtotime($this->request->getVar("expiryDate"))),
+            "CUST_DOC_ISSUE" => date("d-M-Y", strtotime($this->request->getVar("issueDate"))),
+            "CUST_PHONE" => $this->request->getVar("phn"),
+            "CUST_EMAIL" => $this->request->getVar("email"),
+            "CUST_ADDRESS_1" => $this->request->getVar("address1"),
+            "CUST_ADDRESS_2" => $this->request->getVar("address2"),
+            "CUST_CITY" => $this->request->getVar("city"),
             "CUST_UPDATE_UID" => $CUST_ID,
             "CUST_UPDATE_DT" => date("d-M-Y")
         ];
@@ -456,8 +454,8 @@ class APIController extends BaseController
         $resID = $user['RESV_ID'];
         $CUST_ID = $user['USR_CUST_ID'];
 
-        $doctype = $this->request->getPost("doctype"); //  proof
-        $filename = $this->request->getPost("filename"); // or path
+        $doctype = $this->request->getVar("doctype"); //  proof
+        $filename = $this->request->getVar("filename"); // or path
 
         // fetch details from db
         $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_RESV_ID' => $resID, 'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
@@ -498,7 +496,7 @@ class APIController extends BaseController
 
     public function deleteSpecificVaccine()
     {
-        $param = ['CUST_ID' => $this->request->getPost("CUST_ID")];
+        $param = ['CUST_ID' => $this->request->getVar("CUST_ID")];
         $sql = "DELETE FROM FLXY_VACCINE_DETAILS WHERE EXISTS
         (SELECT VACCINE_ID FROM FLXY_VACCINE_DETAILS WHERE CUST_ID=:CUST_ID:)";
         $response = $this->DB->query($sql, $param);
@@ -537,7 +535,7 @@ class APIController extends BaseController
         // Code for file upload [vaccine is uploading to FLXY_VACCINE_DETAILS table]
         $fileNames = '';
         $fileArry = $this->request->getFileMultiple('vaccine');
-        $desc = $this->request->getPost("desc");
+        $desc = $this->request->getVar("desc");
         if (!empty($fileArry)) {
             foreach ($fileArry as $key => $file) {
                 if ($file->isValid() && !$file->hasMoved()) {
@@ -554,10 +552,10 @@ class APIController extends BaseController
 
         $data = [
             "CUST_ID" => $CUST_ID,
-            "VACCINED_DETAILS" => $this->request->getPost("vaccineDetail"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
-            "LAST_VACCINE_DT" => $this->request->getPost("lastVaccineDate"),
-            "VACCINE_NAME" => $this->request->getPost("VaccineName"),
-            "ISSUED_COUNTRY" => $this->request->getPost("cerIssuanceCountry"),
+            "VACCINED_DETAILS" => $this->request->getVar("vaccineDetail"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
+            "LAST_VACCINE_DT" => $this->request->getVar("lastVaccineDate"),
+            "VACCINE_NAME" => $this->request->getVar("VaccineName"),
+            "ISSUED_COUNTRY" => $this->request->getVar("cerIssuanceCountry"),
             "VACCINE_IS_VERIFY" => 0,
             "VACC_FILE_PATH" => $fileNames,
             "VACC_CREATE_UID" => $CUST_ID,
@@ -604,7 +602,7 @@ class APIController extends BaseController
         }
 
         $dataRes = [
-            "RESV_ETA" => $this->request->getPost("estimatedTimeOfArrival"),
+            "RESV_ETA" => $this->request->getVar("estimatedTimeOfArrival"),
             "RESV_UPDATE_UID" => $USR_ID,
             "RESV_UPDATE_DT" => date("d-M-Y")
         ];
@@ -694,12 +692,12 @@ class APIController extends BaseController
         if ($doc_up['SUCCESS'] == 200) {
             $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
             $data = [
-                "MAINT_TYPE" => $this->request->getPost("type"),
-                "MAINT_CATEGORY" => $this->request->getPost("category"),
-                "MAINT_SUB_CATEGORY" => $this->request->getPost("subCategory"),
-                "MAINT_DETAILS" => $this->request->getPost("details"),
-                "MAINT_PREFERRED_DT" => date("d-M-Y", strtotime($this->request->getPost("preferredDate"))),
-                "MAINT_PREFERRED_TIME" => date("d-M-Y H:i:s", strtotime($this->request->getPost("preferredTime"))),
+                "MAINT_TYPE" => $this->request->getVar("type"),
+                "MAINT_CATEGORY" => $this->request->getVar("category"),
+                "MAINT_SUB_CATEGORY" => $this->request->getVar("subCategory"),
+                "MAINT_DETAILS" => $this->request->getVar("details"),
+                "MAINT_PREFERRED_DT" => date("d-M-Y", strtotime($this->request->getVar("preferredDate"))),
+                "MAINT_PREFERRED_TIME" => date("d-M-Y H:i:s", strtotime($this->request->getVar("preferredTime"))),
                 "MAINT_ATTACHMENT" => $attached_path,
                 "MAINT_STATUS" => "New",
                 "MAINT_ROOM_NO" => $appartment,
@@ -781,8 +779,8 @@ class APIController extends BaseController
 
         $CUST_ID = $this->request->user['USR_CUST_ID'];
         $data = [
-            "FB_RATINGS" => $this->request->getPost("rating"),
-            "FB_DESCRIPTION" => $this->request->getPost("comments"),
+            "FB_RATINGS" => $this->request->getVar("rating"),
+            "FB_DESCRIPTION" => $this->request->getVar("comments"),
             "FB_CREATE_DT" => date("d-M-Y"),
             "FB_CREATE_UID" => $CUST_ID,
             "FB_UPDATE_DT" => date("d-M-Y"),
