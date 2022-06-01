@@ -195,7 +195,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/updateRateCodeDetail', 'MastersController::updateRateCodeDetail');
     $routes->match(['post'],'/copyRateCodeDetail', 'MastersController::copyRateCodeDetail');
     $routes->match(['post'],'/negotiatedRateView', 'MastersController::NegotiatedRateView');
-
+    $routes->match(['post'],'/combinedProfilesView', 'MastersController::CombinedProfilesView');
+    $routes->match(['post'],'/insertNegotiatedRate', 'MastersController::insertNegotiatedRate');
+    $routes->match(['post'],'/deleteNegotiatedRate', 'MastersController::deleteNegotiatedRate');    
     
     $routes->get('/transactionCodeGroup', 'MastersController::transactionCodeGroup');
     $routes->match(['post'],'/transactionCodeGroupView', 'MastersController::TransactionCodeGroupView');
@@ -223,10 +225,17 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
     $routes->get('/packageCode', 'MastersController::packageCode');
     $routes->match(['post'],'/packageCodeView', 'MastersController::PackageCodeView');
+    $routes->match(['post'],'/packageCodeDetailsView', 'MastersController::PackageCodeDetailsView');
+    $routes->get('/showPackageCodeDetails', 'MastersController::showPackageCodeDetails');
     $routes->match(['post'],'/insertPackageCode', 'MastersController::insertPackageCode');
     $routes->match(['post'],'/editPackageCode', 'MastersController::editPackageCode');
     $routes->match(['post'],'/deletePackageCode', 'MastersController::deletePackageCode');  
+    $routes->match(['post'],'/updatePackageCodeDetail', 'MastersController::updatePackageCodeDetail');
+    $routes->match(['post'],'/deletePackageCodeDetail', 'MastersController::deletePackageCodeDetail');
     $routes->get('/showPackageCodeList', 'MastersController::showPackageCodeList');
+    $routes->match(['post'],'/showRateCodePackageDetails', 'MastersController::showRateCodePackageDetails');
+    $routes->match(['post'],'/insertRateCodePackage', 'MastersController::insertRateCodePackage');
+    $routes->match(['post'],'/deleteRatePackageCode', 'MastersController::deleteRatePackageCode');
 
     $routes->get('/marketGroup', 'MastersController::marketGroup');
     $routes->match(['post'],'/marketGroupView', 'MastersController::MarketGroupView');
@@ -334,15 +343,26 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
      $routes->match(['post'],'/editItemClass', 'AdditionalController::editItemClass');
      $routes->match(['post'],'/deleteItemClass', 'AdditionalController::deleteItemClass'); 
 
-      //Item Class - 25/05 
+      //Item  - 26/05 
       $routes->get('/items', 'AdditionalController::items');
       $routes->match(['post'],'/ItemsView', 'AdditionalController::ItemsView');
       $routes->match(['post'],'/insertItem', 'AdditionalController::insertItem');
       $routes->match(['post'],'/editItem', 'AdditionalController::editItem');
-      $routes->match(['post'],'/deleteItem', 'AdditionalController::deleteItem'); 
+      $routes->match(['post'],'/deleteItem', 'AdditionalController::deleteItem');
+
+      //Item  - 27/05 
+      $routes->get('/dailyInventory', 'AdditionalController::dailyInventory');
+      $routes->match(['post'],'/DailyInventoryView', 'AdditionalController::DailyInventoryView');
+      $routes->match(['post'],'/insertDailyInventory', 'AdditionalController::insertDailyInventory');
+      $routes->match(['post'],'/editDailyInventory', 'AdditionalController::editDailyInventory');
+      $routes->match(['post'],'/deleteDailyInventory', 'AdditionalController::deleteDailyInventory');
 
       $routes->match(['post'],'/itemClassList', 'AdditionalController::itemClassList');
       $routes->match(['post'],'/itemDepartmentList', 'AdditionalController::itemDepartmentList');
+      $routes->match(['post'],'/itemList', 'AdditionalController::itemList');
+
+      	
+      $routes->get('/fullCalendar', 'FullCalendar::index');
       
    //Subina Code (END)  
    
