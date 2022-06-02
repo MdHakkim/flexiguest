@@ -28,6 +28,9 @@
     #popModalWindow .modal-body {
         padding: 0.6rem;
     }
+    .text-right {
+        text-align: right !important;
+    }
 </style>
 
 <!-- Content wrapper -->
@@ -51,9 +54,11 @@
                             <th>Cover Image</th>
                             <th>From Date</th>
                             <th>To Date</th>
+                            <th>Offer Price</th>
                             <th>Actual Price</th>
                             <th>Provider Title</th>
                             <th>Provider Logo</th>
+                            <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
                     </thead>
@@ -269,7 +274,19 @@
 
                                     <!-- Social Links -->
                                     <div id="price-instructions" class="content">
+
                                         <div class="row g-3">
+
+                                            <div class="col-md-12 text-right">
+                                                <div class="form-check form-switch">
+                                                    <!-- fa-spin -->
+                                                    <i class="fa-solid fa-rotate fa-xl me-2 calculate-price" onclick="calculatePrice(this)"></i>
+
+                                                    <span>Exclusive</span>
+                                                    <input class="form-check-input" type="checkbox" name="CO_EXCLUSIVE_OR_INCLUSIVE" id="CO_EXCLUSIVE_OR_INCLUSIVE" checked style="margin: 0 10px; float: unset" />
+                                                    <label>Inclusive</label>
+                                                </div>
+                                            </div>
 
                                             <div class="col-md-4">
                                                 <label class="form-label">Currency *</label>
@@ -291,22 +308,22 @@
 
                                             <div class="col-md-4">
                                                 <label class="form-label"><b>Offer Price *</b></label>
-                                                <input type="number" name="CO_OFFER_PRICE" class="form-control" placeholder="Offer price" />
+                                                <input type="number" name="CO_OFFER_PRICE" id="CO_OFFER_PRICE" class="form-control" placeholder="Offer price" />
                                             </div>
 
                                             <div class="col-md-4">
-                                                <label class="form-label"><b>Tax Rate</b></label>
-                                                <input type="number" name="CO_TAX_RATE" class="form-control" placeholder="Tax rate" />
+                                                <label class="form-label"><b>Tax Rate *</b></label>
+                                                <input type="number" name="CO_TAX_RATE" id="CO_TAX_RATE" class="form-control" placeholder="Tax rate" value="5" readonly />
                                             </div>
 
                                             <div class="col-md-4">
-                                                <label class="form-label"><b>Tax Amount</b></label>
-                                                <input type="number" name="CO_TAX_AMOUNT" class="form-control" placeholder="Tax amount" />
+                                                <label class="form-label"><b>Tax Amount *</b></label>
+                                                <input type="number" name="CO_TAX_AMOUNT" id="CO_TAX_AMOUNT" class="form-control" placeholder="Tax amount" />
                                             </div>
 
                                             <div class="col-md-4">
-                                                <label class="form-label"><b>Net Price</b></label>
-                                                <input type="number" name="CO_NET_PRICE" class="form-control" placeholder="Net price" />
+                                                <label class="form-label"><b>Net Price *</b></label>
+                                                <input type="number" name="CO_NET_PRICE" id="CO_NET_PRICE" class="form-control" placeholder="Net price" />
                                             </div>
 
                                             <div class="col-md-3">
@@ -468,7 +485,13 @@
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        return (`${data['CURRENCY_CODE']} ${data['CO_ACTUAL_PRICE']}`);
+                        return (`${data['CUR_CODE']} ${data['CO_OFFER_PRICE']}`);
+                    }
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return (`${data['CUR_CODE']} ${data['CO_ACTUAL_PRICE']}`);
                     }
                 },
                 {
@@ -479,6 +502,9 @@
                     render: function(data, type, row, meta) {
                         return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['CO_PROVIDER_LOGO']}")' src='<?= base_url() ?>/${data['CO_PROVIDER_LOGO']}' width='80' height='80'/>`);
                     }
+                },
+                {
+                    data: 'CO_CREATED_AT'
                 },
                 {
                     data: null,
@@ -552,7 +578,7 @@
                 width: "5%"
             }],
             "order": [
-                [5, "desc"]
+                [11, "desc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -618,11 +644,37 @@
             '</ul>');
     }
 
+    function calculatePrice(e) {
+        $('.calculate-price').addClass('fa-spin');
+
+        let tax_rate = parseFloat($('#CO_TAX_RATE').val()) || 0;
+        let exclusive_or_inclusive = $('#CO_EXCLUSIVE_OR_INCLUSIVE').val();
+        let offer_price = parseFloat($('#CO_OFFER_PRICE').val()) || 0;
+
+        if($('#CO_EXCLUSIVE_OR_INCLUSIVE').is(':checked')) { // inclusive
+            let tax_amount = (tax_rate / 100) * offer_price;
+
+            $('#CO_TAX_AMOUNT').val(tax_amount);
+            $('#CO_NET_PRICE').val(offer_price - tax_amount);
+        }
+        else { // exclusive
+            let tax_amount = (tax_rate / 100) * offer_price;
+
+            $('#CO_OFFER_PRICE').val(tax_amount + offer_price);
+            $('#CO_TAX_AMOUNT').val(tax_amount);
+            $('#CO_NET_PRICE').val(offer_price);
+        }
+
+        window.setTimeout(() => {
+            $('.calculate-price').removeClass('fa-spin');
+        }, 300);
+    }
+
     // Show Add Rate Class Form
 
     function addForm() {
         resetConciergeOfferForm();
-        
+
         $('#submitBtn').text('Save');
         $('#popModalWindowlabel').html('Add Concierge Offer');
 
@@ -780,6 +832,8 @@
         $(`#${id} input[type='number']`).val('');
         $(`#${id} input[type='file']`).val('');
         $(`#${id} select[name='CO_CURRENCY_ID']`).select2('val', `0`);
+
+        $(`#${id} #CO_TAX_RATE`).val('5');
     }
 
     // Add New or Edit Rate Class submit Function
@@ -793,6 +847,14 @@
         var fd = new FormData($(`#${id}`)[0]);
         fd.delete('CO_COVER_IMAGE');
         fd.delete('CO_PROVIDER_LOGO');
+        fd.delete('CO_EXCLUSIVE_OR_INCLUSIVE');
+
+        if($('#CO_EXCLUSIVE_OR_INCLUSIVE').is(':checked')) { // inclusive
+            fd.append('CO_EXCLUSIVE_OR_INCLUSIVE', 'inclusive');
+        }
+        else { // exclusive
+            fd.append('CO_EXCLUSIVE_OR_INCLUSIVE', 'exclusive');
+        }
 
         files = $(`#${id} input[name='CO_COVER_IMAGE']`)[0].files;
         if (files.length)

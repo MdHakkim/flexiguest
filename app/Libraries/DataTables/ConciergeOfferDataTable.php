@@ -29,9 +29,11 @@ class ConciergeOfferDataTable
             'CO_COVER_IMAGE', 
             'CO_VALID_FROM_DATE',
             'CO_VALID_TO_DATE',
+            'CO_OFFER_PRICE',
             'CO_ACTUAL_PRICE',
             'CO_PROVIDER_TITLE',
             'CO_PROVIDER_LOGO',
+            'CO_CREATED_AT'
         ];
 
         $columnIndex = isset($_POST['order']) ? $_POST['order'][0]['column'] : ''; // Column index
@@ -48,7 +50,8 @@ class ConciergeOfferDataTable
                                     or cast(CO_VALID_TO_DATE as date) like '%$searchValue%'
                                     or CO_ACTUAL_PRICE like '%$searchValue%' 
                                     or CO_PROVIDER_TITLE like '%$searchValue%'
-                                    or CO_STATUS like '%$searchValue%')";
+                                    or CO_STATUS like '%$searchValue%')
+                                    or cast(CO_CREATED_AT as datetime) like '%$searchValue%'";
         }
 
         ## Total number of records without filtering
@@ -60,25 +63,11 @@ class ConciergeOfferDataTable
         $totalRecordwithFilter = $result1[0]['allcount'];
 
         ## Fetch records
-        $query = "select $table.*, c.CUR_ID, c.CUR_DESC as CURRENCY, c.CUR_CODE as CURRENCY_CODE from $table inner join FLXY_CURRENCY as c on $table.CO_CURRENCY_ID = c.CUR_ID $searchQuery order by " . $columnName . " " . $columnSortOrder . " OFFSET " . $row . " ROWS FETCH NEXT " . $rowperpage . " ROWS ONLY";
+        $query = "select $table.*, c.CUR_ID, c.CUR_DESC as CURRENCY, c.CUR_CODE from $table inner join FLXY_CURRENCY as c on $table.CO_CURRENCY_ID = c.CUR_ID $searchQuery order by " . $columnName . " " . $columnSortOrder . " OFFSET " . $row . " ROWS FETCH NEXT " . $rowperpage . " ROWS ONLY";
         $records = $this->DB->query($query)->getResultArray();
+        
+        $return = $records;
 
-        $return = [];
-        foreach ($records as $row) {
-            $return[] = [
-                'CO_ID' => $row['CO_ID'],
-                'CO_STATUS' => $row['CO_STATUS'],
-                'CO_TITLE' => $row['CO_TITLE'],
-                'CO_DESCRIPTION' => $row['CO_DESCRIPTION'],
-                'CO_COVER_IMAGE' => $row['CO_COVER_IMAGE'],
-                'CO_VALID_FROM_DATE' => $row['CO_VALID_FROM_DATE'],
-                'CO_VALID_TO_DATE' => $row['CO_VALID_TO_DATE'],
-                'CO_ACTUAL_PRICE' => $row['CO_ACTUAL_PRICE'],
-                'CURRENCY_CODE' => $row['CURRENCY_CODE'],
-                'CO_PROVIDER_TITLE' => $row['CO_PROVIDER_TITLE'],
-                'CO_PROVIDER_LOGO' => $row['CO_PROVIDER_LOGO'],
-            ];
-        }
         ## Response
         $response = array(
             "draw" => intval($draw),

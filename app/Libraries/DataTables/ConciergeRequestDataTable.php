@@ -56,7 +56,7 @@ class ConciergeRequestDataTable
                                     or CR_TAX_AMOUNT like '%$searchValue%' 
                                     or CR_NET_AMOUNT like '%$searchValue%' 
                                     or CR_REMARKS like '%$searchValue%' 
-                                    or cast(CR_CREATED_AT as date) like '%$searchValue%'
+                                    or cast(CR_CREATED_AT as datetime) like '%$searchValue%'
                                     )";
         }
 

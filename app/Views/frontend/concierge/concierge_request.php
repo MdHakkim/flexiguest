@@ -322,7 +322,7 @@
                 // }
             ],
             "order": [
-                [5, "desc"]
+                [12, "desc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -383,8 +383,8 @@
 
         concierge_offers.forEach((offer) => {
             if (offer.CO_ID == offer_id) {
-                $("#CR_TOTAL_AMOUNT").val(quantity * offer.CO_TAX_AMOUNT);
-                $("#CR_TAX_AMOUNT").val(quantity * offer.CO_TAX_RATE);
+                $("#CR_TOTAL_AMOUNT").val(quantity * offer.CO_OFFER_PRICE);
+                $("#CR_TAX_AMOUNT").val(quantity * offer.CO_TAX_AMOUNT);
                 $("#CR_NET_AMOUNT").val(quantity * offer.CO_NET_PRICE);
             }
         });

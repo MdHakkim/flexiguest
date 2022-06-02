@@ -24,6 +24,7 @@ class ConciergeOffer extends Model
         'CO_CONTACT_EMAIL',
         'CO_CONTACT_PHONE',
         'CO_LOCATION',
+        'CO_EXCLUSIVE_OR_INCLUSIVE',
         'CO_ACTUAL_PRICE',
         'CO_OFFER_PRICE',
         'CO_CURRENCY_ID',

@@ -55,9 +55,7 @@ class ConciergeController extends BaseController
             'CO_DESCRIPTION' => ['label' => 'Description', 'rules' => 'required'],
             'CO_VALID_FROM_DATE' => ['label' => 'From date', 'rules' => 'required'],
             'CO_VALID_TO_DATE' => ['label' => 'To date', 'rules' => 'required'],
-            'CO_PROVIDER_EMAIL' => ['label' => 'Provider email', 'rules' => 'required'],
-            'CO_ACTUAL_PRICE' => ['label' => 'Actual price', 'rules' => 'required'],
-            'CO_OFFER_PRICE' => ['label' => 'Offer price', 'rules' => 'required'],
+            'CO_PROVIDER_EMAIL' => ['label' => 'Provider email', 'rules' => 'required|valid_email'],
             'CO_CURRENCY_ID' => [
                 'label' => 'Currency',
                 'rules' => 'required',
@@ -65,6 +63,11 @@ class ConciergeController extends BaseController
                     'required' => 'Please select a currency.'
                 ]
             ],
+            'CO_ACTUAL_PRICE' => ['label' => 'Actual price', 'rules' => 'required'],
+            'CO_OFFER_PRICE' => ['label' => 'Offer price', 'rules' => 'required'],
+            'CO_TAX_RATE' => ['label' => 'Tax rate', 'rules' => 'required'],
+            'CO_TAX_AMOUNT' => ['label' => 'Tax amount', 'rules' => 'required'],
+            'CO_NET_PRICE' => ['label' => 'Net price', 'rules' => 'required'],
         ];
 
         if (empty($id) || $this->request->getFile('CO_COVER_IMAGE'))
@@ -187,6 +190,14 @@ class ConciergeController extends BaseController
 
         $id = $this->request->getPost('id');
 
+        $min_quantity = $max_quantity = 1;
+        $offer_id = $this->request->getVar('CR_OFFER_ID');
+        if(!empty($offer_id)){
+            $concierge_offer = $this->ConciergeOffer->where('CO_ID', $offer_id)->first();
+            $min_quantity = $concierge_offer['CO_MIN_QUANTITY'] ?? 1;
+            $max_quantity = $concierge_offer['CO_MAX_QUANTITY'] ?? 1;
+        }
+
         $rules = [
             'CR_OFFER_ID' => [
                 'rules' => 'required',
@@ -194,9 +205,9 @@ class ConciergeController extends BaseController
                     'required' => 'Please select an offer.'
                 ]
             ],
-            'CR_QUANTITY' => ['label' => 'Quantity', 'rules' => 'required|greater_than_equal_to[1]'],
+            'CR_QUANTITY' => ['label' => 'Quantity', 'rules' => "required|greater_than_equal_to[$min_quantity]|less_than_equal_to[$max_quantity]"],
             'CR_GUEST_NAME' => ['label' => 'Guest name', 'rules' => 'required'],
-            'CR_GUEST_EMAIL' => ['label' => 'Guest email', 'rules' => 'required'],
+            'CR_GUEST_EMAIL' => ['label' => 'Guest email', 'rules' => 'required|valid_email'],
             'CR_GUEST_PHONE' => ['label' => 'Guest phone', 'rules' => 'required'],
             'CR_GUEST_ROOM_ID' => [
                 'rules' => 'required',

@@ -242,7 +242,7 @@ class APIController extends BaseController
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
-            $result = responseJson("403", $validate);
+            $result = responseJson("403", true, $validate);
 
             return $this->respond($result);
         }
@@ -288,7 +288,7 @@ class APIController extends BaseController
         // adding validatoion to the files
         if (!$file) {
             $validate = $this->validator->getErrors();
-            $result = responseJson("403", $validate);
+            $result = responseJson("403", true, $validate);
             return $this->respond($result);
         }
 
@@ -336,7 +336,7 @@ class APIController extends BaseController
             if ($ins || $update_data)
                 $result = responseJson(200, false, ["msg"=>"File uploaded successfully"], ["path" => $fileNames]);
             else
-                $result = responseJson(500, true, ["msg"=>"Failed to upload image"], []);
+                $result = responseJson(500, true, ["msg"=>"Failed to upload image"]);
 
             return $this->respond($result);
         }
@@ -369,14 +369,14 @@ class APIController extends BaseController
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
-            $result = responseJson("403", $validate);
+            $result = responseJson("403", true, $validate);
             return $this->respond($result);
         }
 
         $CUST_ID = $this->request->user['USR_CUST_ID'];
         if ($this->request->getVar("expiryDate") < $this->request->getVar("issueDate") && $this->request->getVar("expiryDate") <  date("d-M-Y")) {
             $validate = "Your Document is expired";
-            $result = responseJson("403",true, $validate);
+            $result = responseJson("403", true, $validate);
             return $this->respond($result);
         }
 
@@ -438,7 +438,7 @@ class APIController extends BaseController
 
             $result = responseJson(200, true, ["msg"=>"Fetch the user details"], $data);
         } else {
-            $result = responseJson(500, true,["msg"=> "user details fetching failed"]);
+            $result = responseJson(500, true, ["msg"=> "user details fetching failed"]);
         }
 
         return $this->respond($result);
@@ -484,14 +484,14 @@ class APIController extends BaseController
             $return = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_RESV_ID' => $resID, 'DOC_FILE_TYPE' => 'PROOF'])->update($data);
 
             if ($return)
-                $result = responseJson(200, ["msg"=>"Documents deleted successfully"], $return);
+                $result = responseJson(200, false, ["msg"=>"Documents deleted successfully"], $return);
             else
-                $result = responseJson("500", ["msg"=>"Record not deleted"]);
+                $result = responseJson("500", true, ["msg"=>"Record not deleted"]);
 
             return $this->respond($result);
         }
 
-        return $this->respond(responseJson("500", ["msg"=>"Record not deleted"]));
+        return $this->respond(responseJson("500", true, ["msg"=>"Record not deleted"]));
     }
 
     public function deleteSpecificVaccine()
@@ -527,7 +527,7 @@ class APIController extends BaseController
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
-            $result = responseJson(403,true, $validate);
+            $result = responseJson(403, true, $validate);
 
             return $this->respond($result);
         }
@@ -596,7 +596,7 @@ class APIController extends BaseController
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
-            $result = responseJson(403,true, $validate);
+            $result = responseJson(403, true, $validate);
 
             return $this->respond($result);
         }
@@ -678,7 +678,7 @@ class APIController extends BaseController
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
-            $result = responseJson(403,true, $validate);
+            $result = responseJson(403, true, $validate);
 
             return $this->respond($result);
         }
@@ -772,7 +772,7 @@ class APIController extends BaseController
         if (!$validate) {
 
             $validate = $this->validator->getErrors();
-            $result = responseJson(403,true, $validate);
+            $result = responseJson(403, true, $validate);
 
             return $this->respond($result);
         }

@@ -72,6 +72,7 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
 
     $routes->get("concierge/concierge-offers", "ConciergeController::conciergeOffers");
 
+    $routes->post("concierge/make-concierge-request", "ConciergeController::makeConciergeRequest");
 });
 
 //  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
