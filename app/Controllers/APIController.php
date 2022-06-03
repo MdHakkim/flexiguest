@@ -181,7 +181,7 @@ class APIController extends BaseController
     }
 
     /*  FUNCTION : To check the Docs like Proof and vaccination is uploaded or not and verified or not
-        METHOD : POST , 
+        METHOD : GET , 
         INPUT  : Header Authorization- Token
         OUTPUT : list and details of the accompanying the persons   */
     public function checkDocDetails()
@@ -214,7 +214,7 @@ class APIController extends BaseController
         // an indicator to inform this is accompanying person
         $sql = "SELECT concat(b.CUST_FIRST_NAME,' ',b.CUST_MIDDLE_NAME,' ',b.CUST_LAST_NAME)NAME,c.*,a.ACCOMP_STATUS FROM FLXY_ACCOMPANY_PROFILE a
                     LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.ACCOMP_CUST_ID
-                    LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.ACCOMP_CUST_ID WHERE a.ACCOMP_REF_RESV_ID =:ACCOMP_REF_RESV_ID: AND DOC_FILE_TYPE='PROOF'";
+                    LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.ACCOMP_CUST_ID WHERE a.ACCOMP_REF_RESV_ID =:ACCOMP_REF_RESV_ID: OR DOC_FILE_TYPE='PROOF'";
         $param = ['ACCOMP_REF_RESV_ID' => $resID];
         $data = $this->DB->query($sql, $param)->getResultArray();
 
