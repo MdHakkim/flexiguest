@@ -27,7 +27,7 @@ class ConciergeController extends BaseController
             $concierge_offers[$index]['CO_COVER_IMAGE'] = base_url($concierge_offer['CO_COVER_IMAGE']);
         }
 
-        $result = responseJson(200, false, "Cocierge offers list", $concierge_offers);
+        $result = responseJson(200, false, ['msg' => "Cocierge offers list"], $concierge_offers);
         return $this->respond($result);
     }
 
@@ -76,7 +76,7 @@ class ConciergeController extends BaseController
             : $this->ConciergeRequest->insert($data);
 
         if (!$concierge_request_id)
-            return $this->respond(responseJson(500, true, "db insert/update not successful"));
+            return $this->respond(responseJson(500, true, ['msg' => "db insert/update not successful"]));
 
         if (empty($id))
             $msg = 'Concierge request has been created.';
