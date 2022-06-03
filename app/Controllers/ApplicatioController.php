@@ -15,7 +15,7 @@ class ApplicatioController extends BaseController
     public function __construct(){
         $this->Db = \Config\Database::connect();
         $this->session = \Config\Services::session();
-        helper(['form']);
+        helper(['form', 'common']);
         $this->request = \Config\Services::request();
         $this->todayDate = new DateTime("now", new DateTimeZone('Asia/Dubai'));
     }
@@ -68,6 +68,26 @@ class ApplicatioController extends BaseController
         $mine->generate_DatatTable($tableName,$columns,[],'|');
         exit;
         // return view('Dashboard');
+    }
+
+    public function getReservationDetails($id = 0)
+    {
+        $param = ['SYSID' => $id];
+
+        $addColumnCopty='RESV_ID,RESV_PAYMENT_TYPE,RESV_SPECIALS,RESV_COMMENTS,RESV_PACKAGES,RESV_ITEM_INVT,RESV_NAME,(CUST_FIRST_NAME+\' \'+CUST_LAST_NAME)RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
+                        (SELECT CNAME FROM COUNTRY WHERE ISO2=CUST_COUNTRY)CUST_COUNTRY_DESC,CUST_VIP,CUST_PHONE';
+
+        $sql = "SELECT $addColumnCopty,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_MEMBER_TY,
+        RESV_COMPANY,(SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY)RESV_COMPANY_DESC,
+        RESV_AGENT,(SELECT AGN_ACCOUNT FROM FLXY_AGENT_PROFILE WHERE AGN_ID=RESV_AGENT)RESV_AGENT_DESC,
+        RESV_BLOCK,(SELECT BLK_NAME+' - '+BLK_CODE+' - '+BLK_START_DT+' - '+BLK_END_DT AS BLOCKDESC FROM FLXY_BLOCK WHERE BLK_ID=RESV_BLOCK)RESV_BLOCK_DESC,RESV_MEMBER_NO,RESV_CORP_NO,RESV_IATA_NO,RESV_CLOSED,RESV_DAY_USE,
+        RESV_PSEUDO,RESV_RATE_CLASS,RESV_RATE_CATEGORY,RESV_RATE_CODE,RESV_ROOM_CLASS,RESV_FEATURE,RESV_PURPOSE_STAY,RESV_STATUS,RESV_RM_TYPE,RESV_C_O_TIME,RESV_TAX_TYPE,RESV_EXEMPT_NO,RESV_PICKUP_YN,RESV_TRANSPORT_TYP,RESV_STATION_CD,RESV_CARRIER_CD,RESV_TRANSPORT_NO,FORMAT(RESV_ARRIVAL_DT_PK,'dd-MMM-yyyy')RESV_ARRIVAL_DT_PK,RESV_PICKUP_TIME,RESV_DROPOFF_YN,RESV_TRANSPORT_TYP_DO,RESV_STATION_CD_DO,RESV_CARRIER_CD_DO,RESV_TRANSPORT_NO_DO,FORMAT(RESV_ARRIVAL_DT_DO,'dd-MMM-yyyy')RESV_ARRIVAL_DT_DO,RESV_DROPOFF_TIME,RESV_GUST_TY,RESV_EXT_PURP_STAY,RESV_ENTRY_PONT,RESV_PROFILE,RESV_NAME_ON_CARD,RESV_EXT_PRINT_RT,
+        (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RESV_RM_TYPE_DESC,
+        (SELECT RM_DESC FROM FLXY_ROOM WHERE RM_NO=RESV_ROOM)RESV_ROOM_DESC,(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RTC) RESV_RTC_DESC,
+        RESV_ROOM,RESV_RATE,RESV_ETA,RESV_CO_TIME,RESV_RTC,RESV_FIXED_RATE,RESV_RESRV_TYPE,RESV_MARKET,RESV_SOURCE,RESV_ORIGIN,RESV_BOKR_LAST,RESV_BOKR_FIRST,RESV_BOKR_EMAIL,RESV_BOKR_PHONE,RESV_CONFIRM_YN FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:SYSID: AND CUST_ID=RESV_NAME";
+       
+        $response = $this->Db->query($sql,$param)->getRowArray();
+        return $response;
     }
 
     function editReservation(){
@@ -135,8 +155,12 @@ class ApplicatioController extends BaseController
                 exit;
             }
             $sysid = $this->request->getPost("RESV_ID");
-            $emailProc = '';
+            $emailProc = $log_action_desc = '';
+
             if(!empty($sysid)){
+
+            $currentReservation = $this->getReservationDetails($sysid);
+
             $data = ["RESV_ARRIVAL_DT" => $this->request->getPost("RESV_ARRIVAL_DT"),
                 "RESV_NIGHT" => $this->request->getPost("RESV_NIGHT"),
                 "RESV_ADULTS" => $this->request->getPost("RESV_ADULTS"),
@@ -209,6 +233,16 @@ class ApplicatioController extends BaseController
                 "RESV_UPDATE_DT" => date("d-M-Y")
                 ];
                 $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data); 
+
+                foreach($currentReservation as $rkey => $rvalue)
+                {
+                    // Save changes in log description if data is updated/changed
+                    if(isset($data[$rkey]) && !empty(trim($data[$rkey])) && !empty(trim($rvalue)) && trim($data[$rkey]) != trim($rvalue))
+                    {
+                        $log_action_desc .= str_replace('RESV_', '', $rkey) . " '" . $rvalue . "' -> '". $data[$rkey]."'\n";
+                    }
+                }
+
             }else{
                 $data = ["RESV_ARRIVAL_DT" => $this->request->getPost("RESV_ARRIVAL_DT"),
                     "RESV_NIGHT" => $this->request->getPost("RESV_NIGHT"),
@@ -284,14 +318,32 @@ class ApplicatioController extends BaseController
                 $return = $this->Db->table('FLXY_RESERVATION')->insert($data); 
                 $sysid = $this->Db->insertID();
                 $emailProc='S';
+
+                foreach($data as $dkey => $dvalue)
+                {
+                    // Save changes in log description if data is not empty
+                    if(!empty(trim($dvalue)))
+                    {
+                        $log_action_desc .= str_replace('RESV_', '', $dkey) . " = '" . $dvalue ."'\n";
+                    }
+                }
             }
             if($return){
                 $custId = $this->request->getPost("RESV_NAME");
                 $this->updateCustomerData($custId);
-                $return = $this->Db->table('FLXY_RESERVATION')->select('RESV_NO')->where('RESV_ID',$sysid)->get()->getResultArray();
-                if($emailProc=='S'){
+                
+                if($emailProc=='S'){ // New Reservation
                     $this->triggerReservationEmail($sysid,'');
+
+                    $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update(array('RESV_NO' => 'RES'.$sysid));
+                    addActivityLog(1, 10, $sysid, $log_action_desc);
                 }
+                else    // Update exisitng Reservation
+                {
+                    addActivityLog(1, 26, $sysid, $log_action_desc);
+                }
+
+                $return = $this->Db->table('FLXY_RESERVATION')->select('RESV_NO')->where('RESV_ID',$sysid)->get()->getResultArray();
                 $result = $this->responseJson("1","0",$return);
                 echo json_encode($result);
             }else{
@@ -480,7 +532,8 @@ class ApplicatioController extends BaseController
     }
 
     public function Customer(){
-        return view('Reservation/Customer');
+        $data['title'] = getMethodName();
+        return view('Reservation/Customer', $data);
     }
 
     public function customerView(){
@@ -725,7 +778,8 @@ class ApplicatioController extends BaseController
     }
     // company modal 
     public function company(){
-        return view('Reservation/Company');
+        $data['title'] = getMethodName();
+        return view('Reservation/Company', $data);
     }
 
     public function companyView(){
@@ -775,7 +829,8 @@ class ApplicatioController extends BaseController
     // agent modal
 
     public function agent(){
-        return view('Reservation/Agent');
+        $data['title'] = getMethodName();
+        return view('Reservation/Agent', $data);
     }
 
     public function AgentView(){
@@ -804,7 +859,8 @@ class ApplicatioController extends BaseController
     // agent modal
     // Group modal
     public function group(){
-        return view('Reservation/Group');
+        $data['title'] = getMethodName();
+        return view('Reservation/Group', $data);
     }
     public function GroupView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
@@ -929,7 +985,8 @@ class ApplicatioController extends BaseController
     // Group modal
     // Block modal
     public function block(){
-        return view('Reservation/BlockView');
+        $data['title'] = getMethodName();
+        return view('Reservation/BlockView', $data);
     }
     public function BlockView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
@@ -1093,7 +1150,8 @@ class ApplicatioController extends BaseController
     }
 
     public function room(){
-        return view('Reservation/RoomView');
+        $data['title'] = getMethodName();
+        return view('Reservation/RoomView', $data);
     }
 
     public function RoomView(){
@@ -1217,7 +1275,8 @@ class ApplicatioController extends BaseController
     }
 
     public function roomClass(){
-        return view('Reservation/RoomClassView');
+        $data['title'] = getMethodName();
+        return view('Reservation/RoomClassView', $data);
     }
 
     public function RoomClassView(){
@@ -1295,7 +1354,8 @@ class ApplicatioController extends BaseController
     }
 
     public function roomType(){
-        return view('Reservation/RoomTypeView');
+        $data['title'] = getMethodName();
+        return view('Reservation/RoomTypeView', $data);
     }
 
     public function RoomTypeView(){
@@ -1492,7 +1552,8 @@ class ApplicatioController extends BaseController
     }
 
     public function roomFloor(){
-        return view('Reservation/RoomFloorView');
+        $data['title'] = getMethodName();
+        return view('Reservation/RoomFloorView', $data);
     }
 
     public function RoomFloorView(){
@@ -1566,7 +1627,8 @@ class ApplicatioController extends BaseController
     }
 
     public function roomFeature(){
-        return view('Reservation/RoomFeatureView');
+        $data['title'] = getMethodName();
+        return view('Reservation/RoomFeatureView', $data);
     }
 
     public function RoomFeatureView(){
@@ -1640,7 +1702,8 @@ class ApplicatioController extends BaseController
     }
 
     public function section(){
-        return view('Reservation/SectionView');
+        $data['title'] = getMethodName();
+        return view('Reservation/SectionView', $data);
     }
 
     public function SectionView(){
@@ -1717,86 +1780,10 @@ class ApplicatioController extends BaseController
         }
     }
 
-    public function rateClass(){
-        return view('Reservation/RateClassView');
-    }
-
-    public function RateClassView(){
-        $mine = new ServerSideDataTable(); // loads and creates instance
-        $tableName = 'FLXY_RATE_CLASS';
-        $columns = 'RT_CL_ID,RT_CL_CODE,RT_CL_DESC,RT_CL_DIS_SEQ,RT_CL_BEGIN_DT,RT_CL_END_DT';
-        $mine->generate_DatatTable($tableName,$columns);
-        exit;
-    }
-
-    public function insertRateClass(){
-        try{
-            $validate = $this->validate([
-                'RT_CL_CODE' => 'required'
-            ]);
-            if(!$validate){
-                $validate = $this->validator->getErrors();
-                $result["SUCCESS"] = "-402";
-                $result[]["ERROR"] = $validate;
-                $result = $this->responseJson("-402",$validate);
-                echo json_encode($result);
-                exit;
-            }
-            $sysid = $this->request->getPost("RT_CL_ID");
-            if(!empty($sysid)){
-                $data = ["RT_CL_CODE" => $this->request->getPost("RT_CL_CODE"),
-                    "RT_CL_DESC" => $this->request->getPost("RT_CL_DESC"),
-                    "RT_CL_DIS_SEQ" => $this->request->getPost("RT_CL_DIS_SEQ"),
-                    "RT_CL_BEGIN_DT" => $this->request->getPost("RT_CL_BEGIN_DT"),
-                    "RT_CL_END_DT" => $this->request->getPost("RT_CL_END_DT")
-                 ];
-            $return = $this->Db->table('FLXY_RATE_CLASS')->where('RT_CL_ID', $sysid)->update($data); 
-            }else{
-                $data = ["RT_CL_CODE" => $this->request->getPost("RT_CL_CODE"),
-                    "RT_CL_DESC" => $this->request->getPost("RT_CL_DESC"),
-                    "RT_CL_DIS_SEQ" => $this->request->getPost("RT_CL_DIS_SEQ"),
-                    "RT_CL_BEGIN_DT" => $this->request->getPost("RT_CL_BEGIN_DT"),
-                    "RT_CL_END_DT" => $this->request->getPost("RT_CL_END_DT")
-                 ];
-                $return = $this->Db->table('FLXY_RATE_CLASS')->insert($data); 
-            }
-            if($return){
-                $result = $this->responseJson("1","0",$return,$response='');
-                echo json_encode($result);
-            }else{
-                $result = $this->responseJson("-444","db insert not success",$return);
-                echo json_encode($result);
-            }
-        }catch (Exception $e){
-            return $this->respond($e->errors());
-        }
-    }
-
-    public function editRateClass(){
-        $param = ['SYSID'=> $this->request->getPost("sysid")];
-        $sql = "SELECT RT_CL_ID,RT_CL_CODE,RT_CL_DESC,RT_CL_DIS_SEQ,RT_CL_BEGIN_DT,RT_CL_END_DT FROM FLXY_RATE_CLASS WHERE RT_CL_ID=:SYSID:";
-        $response = $this->Db->query($sql,$param)->getResultArray();
-        echo json_encode($response);
-    }
-
-    public function deleteRateClass(){
-        $sysid = $this->request->getPost("sysid");
-        try{
-            $return = $this->Db->table('FLXY_RATE_CLASS')->delete(['RT_CL_ID' => $sysid]); 
-            if($return){
-                $result = $this->responseJson("1","0",$return);
-                echo json_encode($result);
-            }else{
-                $result = $this->responseJson("-402","Record not deleted");
-                echo json_encode($result);
-            }
-        }catch (Exception $e){
-            return $this->respond($e->errors());
-        }
-    }
-
+    
     public function source(){
-        return view('Reservation/SourceView');
+        $data['title'] = getMethodName();
+        return view('Reservation/SourceView', $data);
     }
 
     public function SourceView(){
@@ -1874,7 +1861,8 @@ class ApplicatioController extends BaseController
     }
 
     public function sourceGroup(){
-        return view('Reservation/SourceGroupView');
+        $data['title'] = getMethodName();
+        return view('Reservation/SourceGroupView', $data);
     }
 
     public function SourceGroupView(){
@@ -1950,7 +1938,8 @@ class ApplicatioController extends BaseController
     }
 
     public function special(){
-        return view('Reservation/SpecialView');
+        $data['title'] = getMethodName();
+        return view('Reservation/SpecialView', $data);
     }
 
     public function SpecialView(){
@@ -2024,7 +2013,8 @@ class ApplicatioController extends BaseController
     }
 
     public function reservationType(){
-        return view('Reservation/ReservationType');
+        $data['title'] = getMethodName();
+        return view('Reservation/ReservationType', $data);
     }
 
     public function ReservationTypeView(){
@@ -2098,7 +2088,8 @@ class ApplicatioController extends BaseController
     }
 
     public function purposeStay(){
-        return view('Reservation/PurposeStay');
+        $data['title'] = getMethodName();
+        return view('Reservation/PurposeStay', $data);
     }
 
     public function PurposeStayView(){
@@ -2172,7 +2163,8 @@ class ApplicatioController extends BaseController
     }
 
     public function payment(){
-        return view('Reservation/PaymentView');
+        $data['title'] = getMethodName();
+        return view('Reservation/PaymentView', $data);
     }
 
     public function PaymentView(){
@@ -2364,7 +2356,8 @@ class ApplicatioController extends BaseController
     }
 
     public function overBooking(){
-        return view('Reservation/OverBookingView');
+        $data['title'] = getMethodName();
+        return view('Reservation/OverBookingView', $data);
     }
 
     public function OverBookingView(){
@@ -2888,7 +2881,6 @@ class ApplicatioController extends BaseController
         $data['condition']='SUCC';
         return view('WebCheckin/CheckInReservation',$data);
     }
-
 
     public function itemList()
         {

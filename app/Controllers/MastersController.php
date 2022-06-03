@@ -15,24 +15,14 @@ class MastersController extends BaseController
         $this->Db = \Config\Database::connect();
         $this->request = \Config\Services::request();
         $this->session = \Config\Services::session();
-        helper(['form', 'url', 'custom']);
-    }
-
-    public function getMethodName()
-    {
-        /** Get Method Name as Page Title */
-
-        $router = service('router');
-        $method = $router->methodName();
-        return ucwords(implode(' ', preg_split('/(?=[A-Z])/', $method)));
+        helper(['form', 'url', 'custom', 'common']);
     }
 
     /**************      Rate Class Functions      ***************/
 
     public function rateClass()
     {
-
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         
         return view('Reservation/RateClassView', $data);
@@ -198,7 +188,7 @@ class MastersController extends BaseController
         $rateClassOptions = $this->rateClassList();
 
         $data = ['rateClassOptions' => $rateClassOptions];
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         
         return view('Reservation/RateCategoryView', $data);
@@ -378,7 +368,7 @@ class MastersController extends BaseController
         $transactionCodeGroupTypes = $this->transactionCodeGroupTypeList();
 
         $data = ['transactionCodeGroupTypes' => $transactionCodeGroupTypes];
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         
         return view('Reservation/TransactionCodeGroupView', $data);
@@ -511,7 +501,7 @@ class MastersController extends BaseController
         $transactionCodeGroups = $this->transactionCodeGroupList();
 
         $data = ['transactionCodeGroupOptions' => $transactionCodeGroups];
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         
         return view('Reservation/TransactionCodeSubGroupView', $data);
@@ -637,7 +627,7 @@ class MastersController extends BaseController
             'adjTransactionCodeOptions' => $adjTransactionCodes,
         ];
 
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         
         return view('Reservation/TransactionCodeView', $data);
@@ -789,7 +779,7 @@ class MastersController extends BaseController
     public function packageGroup()
     {
 
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         $data['js_to_load'] = array("PackageGroup.js");
 
@@ -928,7 +918,7 @@ class MastersController extends BaseController
             'blockLoader_javascript' => blockLoader_javascript(),
         ];
 
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         $data['js_to_load'] = array("PackageCode.js");
 
@@ -1249,7 +1239,7 @@ class MastersController extends BaseController
 
     public function marketGroup()
     {
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         
         return view('Reservation/MarketGroupView', $data);
@@ -1369,7 +1359,7 @@ class MastersController extends BaseController
             'marketGroupOptions' => $marketGroups,
         ];
 
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         
         return view('Reservation/MarketCodeView', $data);
@@ -1533,7 +1523,7 @@ class MastersController extends BaseController
     public function rateCode()
     {
 
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
 
         return view('Reservation/RateCodeView', $data);
@@ -1685,7 +1675,7 @@ class MastersController extends BaseController
         ];
 
         $data['session'] = $this->session;
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['js_to_load'] = array("rateCodeForm.js", "rateCategory.js", "roomType.js", "packageList.js");
 
         return view('Reservation/RateCodeForm', $data);
@@ -1874,6 +1864,8 @@ class MastersController extends BaseController
         $selectedPackageCodes = array();
 
         foreach ($getRateCodePackages as $row) {
+            if($row['RT_CD_PKG_ID'] == NULL) continue;
+            
             $selectedPackageCodes[] = array( "id" => $row['RT_CD_PKG_ID'], "value" => $row['PKG_CD_ID'], 
                                              "name" => $row['PKG_CD_CODE'], "desc" => $row['PKG_CD_DESC']);
         }
@@ -1926,7 +1918,7 @@ class MastersController extends BaseController
         ];
 
         $data['session'] = $this->session;
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['js_to_load'] = array("rateCodeForm.js", "rateCategory.js", "roomType.js", "packageList.js");
 
         return view('Reservation/RateCodeForm', $data);
@@ -2039,6 +2031,20 @@ class MastersController extends BaseController
 
             echo json_encode($result);
             
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function deleteRatePackageCode()
+    {
+        $rcId = $this->request->getPost('rcId');
+        $pkgId = $this->request->getPost('pkgId');
+
+        try {
+            $return = $this->Db->table('FLXY_RATE_CODE_PACKAGE')->delete(['RT_CD_ID' => $rcId, 'PKG_CD_ID' => $pkgId]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
         } catch (Exception $e) {
             return $this->respond($e->errors());
         }
