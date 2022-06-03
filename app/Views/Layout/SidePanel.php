@@ -164,7 +164,7 @@
 
             <ul class="menu-inner py-1">
                 <!-- Dashboards -->
-                <li class="menu-item active">
+                <li class="menu-item <?= (isset($title) && in_array($title, ['Dashboard'])) ? 'active' : '' ?>">
                     <a href="<?php echo base_url('/') ?>" class="menu-link">
 
                         <i class="menu-icon fas fa-tachometer-alt"></i>
@@ -269,7 +269,7 @@
                 </li>
 
 
-                <li class="menu-item <?= (isset($title) && in_array($title, ['Concierge Offer', 'Concierge Request'])) ? 'open' : '' ?>">
+                <li class="menu-item <?= (isset($title) && in_array($title, ['Concierge Offer'])) ? 'open' : '' ?>">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon fas fa-bahai"></i>
 
@@ -283,8 +283,8 @@
                             </a>
                         </li>
                         
-                        <li class="menu-item <?= (isset($title) && $title == 'Concierge Request') ? 'active' : '' ?>">
-                            <a href="<?= base_url('concierge/concierge-request') ?>" class="menu-link">
+                        <li class="menu-item">
+                            <a href="javascript:void(0);" class="menu-link">
                                 <div data-i18n="Concierge Request">Concierge Request</div>
                             </a>
                         </li>
@@ -294,7 +294,29 @@
 
 
 
-                <li class="menu-item">
+                <li class="menu-item   <?php if (isset($title) && in_array($title, array(
+                                            'Reservation',
+                                            'Customer',
+                                            'Company',
+                                            'Agent',
+                                            'Group',
+                                            'Block',
+                                            'Room',
+                                            'Room Class',
+                                            'Room Type',
+                                            'Room Floor',
+                                            'Room Feature',
+                                            'Section',
+                                            'Source',
+                                            'Source Group',
+                                            'Special',
+                                            'Reservation Type',
+                                            'Purpose Stay',
+                                            'Payment',
+                                            'Over Booking'
+                                        ))) {
+                                            echo 'open active';
+                                        } ?>">
                     <a href="javascript:void(0);" class="menu-link menu-toggle">
                         <i class="menu-icon fas fa-luggage-cart"></i>
 
@@ -302,37 +324,51 @@
                     </a>
 
                     <ul class="menu-sub">
-                        <li class="menu-item">
+                        <li class="menu-item  <?php if (isset($title) && $title == 'Reservation') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('reservation'); ?>" class="menu-link">
-                                <div data-i18n="Create Reservation">New Reservation</div>
+                                <div data-i18n="Create Reservation">Add / List Reservations</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item  <?php if (isset($title) && $title == 'Room Class') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('roomClass'); ?>" class="menu-link">
                                 <div data-i18n="Create Reservation">Room Class</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item  <?php if (isset($title) && $title == 'Room Type') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('roomType'); ?>" class="menu-link">
                                 <div data-i18n="Create Reservation">Room Type</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item  <?php if (isset($title) && $title == 'Room') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('room'); ?>" class="menu-link">
-                                <div data-i18n="Search Reservations">Room</div>
+                                <div data-i18n="Search Reservations">Rooms</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item  <?php if (isset($title) && $title == 'Room Floor') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('roomFloor'); ?>" class="menu-link">
-                                <div data-i18n="Search Reservations">Floor</div>
+                                <div data-i18n="Search Reservations">Room Floors</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item  <?php if (isset($title) && $title == 'Room Feature') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('roomFeature'); ?>" class="menu-link">
-                                <div data-i18n="Search Reservations">Feature</div>
+                                <div data-i18n="Search Reservations">Room Features</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item <?php if (isset($title) && $title == 'Customer') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('customer'); ?>" class="menu-link">
                                 <div data-i18n="Search Reservations">Customer</div>
                             </a>
@@ -342,59 +378,81 @@
                                 <div data-i18n="Search Reservations">Class Rate</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item <?php if (isset($title) && $title == 'Section') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('section'); ?>" class="menu-link">
-                                <div data-i18n="Search Reservations">Section</div>
+                                <div data-i18n="Search Reservations">Sections</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item <?php if (isset($title) && $title == 'Source Group') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('sourceGroup'); ?>" class="menu-link">
                                 <div data-i18n="Search Reservations">Source Group</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item <?php if (isset($title) && $title == 'Source') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('source'); ?>" class="menu-link">
-                                <div data-i18n="Search Reservations">Source</div>
+                                <div data-i18n="Search Reservations">Sources</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item <?php if (isset($title) && $title == 'Over Booking') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('overBooking'); ?>" class="menu-link">
                                 <div data-i18n="Search Reservations">OverBooking</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item <?php if (isset($title) && $title == 'Company') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('company'); ?>" class="menu-link">
                                 <div data-i18n="Search Reservations">Company</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item <?php if (isset($title) && $title == 'Agent') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('agent'); ?>" class="menu-link">
                                 <div data-i18n="Search Reservations">Agent</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item <?php if (isset($title) && $title == 'Group') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('group'); ?>" class="menu-link">
                                 <div data-i18n="Search Reservations">Group</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item <?php if (isset($title) && $title == 'Special') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('special'); ?>" class="menu-link">
-                                <div data-i18n="Search Reservations">Special</div>
+                                <div data-i18n="Search Reservations">Specials</div>
                             </a>
                         </li>
-                        <li class="menu-item">
+                        <li class="menu-item <?php if (isset($title) && $title == 'Reservation Type') {
+                                                    echo 'active';
+                                                } ?>">
                             <a href="<?php echo base_url('reservationType'); ?>" class="menu-link">
                                 <div data-i18n="Search Reservations">Reservation Type</div>
                             </a>
                         </li>
-                        <li class="menu-item">
-                            <a href="<?php echo base_url('purposeStay'); ?>" class="menu-link">
-                                <div data-i18n="Search Reservations">Purpose Of Stay</div>
+                        <li class="menu-item <?php if (isset($title) && $title == 'Purpose Stay') {
+                                                    echo 'active';
+                                                } ?>">
+                                <a href="<?php echo base_url('purposeStay'); ?>" class="menu-link">
+                                    <div data-i18n="Search Reservations">Purpose Of Stay</div>
                             </a>
                         </li>
-                        <li class="menu-item">
-                            <a href="<?php echo base_url('payment'); ?>" class="menu-link">
-                                <div data-i18n="Search Reservations">Payment</div>
+                        <li class="menu-item <?php if (isset($title) && $title == 'Payment') {
+                                                    echo 'active';
+                                                } ?>">
+                                <a href="<?php echo base_url('payment'); ?>" class="menu-link">
+                                    <div data-i18n="Payment Types">Payment Types</div>
                             </a>
                         </li>
                         <li class="menu-item">
