@@ -361,8 +361,17 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/itemDepartmentList', 'AdditionalController::itemDepartmentList');
       $routes->match(['post'],'/itemList', 'AdditionalController::itemList');
 
+      $routes->match(['post'],'/insertItemInventory', 'ApplicatioController::insertItemInventory');
+
       	
       $routes->get('/fullCalendar', 'FullCalendar::index');
+
+      //Item  - 26/05 
+      $routes->get('/inventory', 'InventoryController::inventory');
+      $routes->match(['post'],'/InventoryView', 'InventoryController::InventoryView');
+    //   $routes->match(['post'],'/insertItem', 'AdditionalController::insertItem');
+    //   $routes->match(['post'],'/editItem', 'AdditionalController::editItem');
+    //   $routes->match(['post'],'/deleteItem', 'AdditionalController::deleteItem');
       
    //Subina Code (END)  
    
