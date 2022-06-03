@@ -780,7 +780,14 @@
                                             'Market Code',
                                             'News',
                                             'Guideline',
-                                            'App Update'
+                                            'App Update',
+                                            'Currency',
+                                            'Exchange Codes',
+                                            'Exchange Rates',
+                                            'Item Class',
+                                            'Items',
+                                            'Daily Inventory',
+                                    
                                         ))) {
                                             echo 'open active';
                                         } ?>">
@@ -967,6 +974,36 @@
                         <li class="menu-item <?= (isset($title) && $title == 'App Update') ? 'active' : '' ?>">
                             <a href="<?= base_url('/app-update') ?>" class="menu-link">
                                 <div data-i18n="Guideline">App Update</div>
+                            </a>
+                        </li>
+                        <li class="menu-item <?= (isset($title) && $title == 'Currency') ? 'active' : '' ?>">
+                            <a href="<?= base_url('/currency') ?>" class="menu-link">
+                                <div data-i18n="Currency">Currency</div>
+                            </a>
+                        </li>
+                        <li class="menu-item <?= (isset($title) && $title == 'Exchange Codes') ? 'active' : '' ?>">
+                            <a href="<?= base_url('/exchangeCodes') ?>" class="menu-link">
+                                <div data-i18n="Exchange Codes">Exchange Codes</div>
+                            </a>
+                        </li>
+                        <li class="menu-item <?= (isset($title) && $title == 'Exchange Rates') ? 'active' : '' ?>">
+                            <a href="<?= base_url('/exchangeRates') ?>" class="menu-link">
+                                <div data-i18n="Exchange Rates">Exchange Rates</div>
+                            </a>
+                        </li>
+                        <li class="menu-item <?= (isset($title) && $title == 'Item Class') ? 'active' : '' ?>">
+                            <a href="<?= base_url('/itemClass') ?>" class="menu-link">
+                                <div data-i18n="Item Class">Item Class</div>
+                            </a>
+                        </li>
+                        <li class="menu-item <?= (isset($title) && $title == 'Items') ? 'active' : '' ?>">
+                            <a href="<?= base_url('/items') ?>" class="menu-link">
+                                <div data-i18n="Items">Items</div>
+                            </a>
+                        </li>
+                        <li class="menu-item <?= (isset($title) && $title == 'Daily Inventory') ? 'active' : '' ?>">
+                            <a href="<?= base_url('/dailyInventory') ?>" class="menu-link">
+                                <div data-i18n="Daily Inventory">Daily Inventory</div>
                             </a>
                         </li>
 
