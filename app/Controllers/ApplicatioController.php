@@ -21,7 +21,12 @@ class ApplicatioController extends BaseController
     }
 
     public function Reservation(){
-        return view('Reservation/Reservation');
+        $itemLists = $this->itemList();    
+        $data['itemLists'] = $itemLists;    
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+        $data['js_to_load'] = array("inventoryFormWizardNumbered.js");
+        return view('Reservation/Reservation', $data);
     }
 
     public function blockList(){
@@ -2883,4 +2888,77 @@ class ApplicatioController extends BaseController
         $data['condition']='SUCC';
         return view('WebCheckin/CheckInReservation',$data);
     }
+
+
+    public function itemList()
+        {
+           
+            $item_id = $this->request->getPost("item_id");
+            
+            if( $item_id > 0 )
+                $sql = "SELECT * FROM FLXY_ITEM WHERE ITM_ID='$item_id' ";
+            else 
+                $sql = "SELECT * FROM FLXY_ITEM";          
+
+            $response = $this->Db->query($sql)->getResultArray();
+            $option='<option value="">Select Item </option>';
+            $selected = "";
+            foreach($response as $row){
+                if($row['ITM_ID'] == $item_id){
+                    $selected = "selected";
+                }
+
+                $option.= '<option value="'.$row['ITM_ID'].'"'.$selected.'>'.$row['ITM_CODE'].' | '.$row['ITM_NAME'].'</option>';
+            }
+            return $option;
+        }
+
+        public function insertItemInventory()
+        {
+           
+            try {
+                // if (!$validate) {
+                //     $validate = $this->validator->getErrors();
+                //     $result["SUCCESS"] = "-402";
+                //     $result[]["ERROR"] = $validate;
+                //     $result = $this->responseJson("-402", $validate);
+                //     echo json_encode($result);
+                //     exit;
+                // }
+                $sysid = $this->request->getPost('RSV_PRI_ID');
+                $data = [
+                    
+                    "RSV_ITM_ID" => trim($this->request->getPost('RSV_ITM_ID')),
+                    "RSV_ID" => '100',
+                    "RSV_ITM_BEGIN_DATE" => $this->request->getPost('ITEM_AVAIL_START_DT'),
+                    "RSV_ITM_END_DATE" => $this->request->getPost('ITEM_AVAIL_END_DT'),
+                    "RSV_ITM_QTY" => trim($this->request->getPost('RSV_ITM_QTY'))                   
+                ];
+    
+                $return = !empty($sysid) ? $this->Db->table('FLXY_RESERVATION_ITEM')->where('RSV_PRI_ID', $sysid)->update($data) : $this->Db->table('FLXY_RESERVATION_ITEM')->insert($data);
+                $newItemCodeID = empty($sysid) ? $this->Db->insertID() : '';                        
+                    
+                $result = $return ? $this->responseJson("1", "0", $return, !empty($sysid) ? $sysid : $newItemCodeID) : $this->responseJson("-444", "db insert not successful", $return);
+    
+                // if(empty($sysid))
+                // {
+                //     $blank_item_detail = [
+                //                              "RSV_ITM_ID" => '0', 
+                //                              "RSV_ITM_BEGIN_DATE" => date('Y-m-d'),
+                //                              "RSV_ID" => '100',
+                //                              "RSV_ITM_END_DATE" => date('Y-m-d', strtotime('+10 years')),
+                //                              "RSV_ITM_QTY" => '0'
+                //                             ];
+                    
+                //     $this->Db->table('FLXY_RESERVATION_ITEM')->insert($blank_item_detail);
+                // }
+    
+                echo json_encode($result);
+                
+            } catch (Exception $e) {
+                return $this->respond($e->errors());
+            }
+        }
+
+       
 }
