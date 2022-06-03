@@ -9,7 +9,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Basic</h4>
+              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Reservation Types</h4>
 
               <!-- DataTable with Buttons -->
               <div class="card">
@@ -47,15 +47,15 @@
                       <div class="row g-3">
                         <input type="hidden" name="RESV_TY_ID" id="RESV_TY_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <label class="form-label">Reservation Type</label>
+                          <lable class="form-lable">Reservation Type</lable>
                           <input type="text" name="RESV_TY_CODE" id="RESV_TY_CODE" class="form-control" placeholder="reservation type" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Reservation Type Description</label>
+                          <lable class="form-lable">Reservation Type Description</lable>
                           <input type="text" name="RESV_TY_DESC" id="RESV_TY_DESC" class="form-control" placeholder="reservation desc." />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Display Seq</label>
+                          <lable class="form-lable">Display Seq</lable>
                             <div class="input-group mb-3">
                               <input type="number" name="RESV_TY_SEQ" id="RESV_TY_SEQ" class="form-control" placeholder="display seq." />
                             </div>

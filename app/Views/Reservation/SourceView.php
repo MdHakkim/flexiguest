@@ -9,7 +9,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Basic</h4>
+              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Sources</h4>
 
               <!-- DataTable with Buttons -->
               <div class="card">
@@ -47,21 +47,21 @@
                       <div class="row g-3">
                         <input type="hidden" name="SOR_ID" id="SOR_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <label class="form-label">Source Code</label>
+                          <lable class="form-lable">Source Code</lable>
                           <input type="text" name="SOR_CODE" id="SOR_CODE" class="form-control" placeholder="source code" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Source Description</label>
+                          <lable class="form-lable">Source Description</lable>
                           <input type="text" name="SOR_DESC" id="SOR_DESC" class="form-control" placeholder="source description" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Source Group</label>
+                          <lable class="form-lable">Source Group</lable>
                           <select name="SOR_GROUP"  id="SOR_GROUP" class="select2 form-select" data-allow-clear="true">
                             <option value="">Select Group</option>
                           </select>
                         </div>
                         <div class="col-md-12 ">
-                          <label class="form-label">Display Sequence</label>
+                          <lable class="form-lable">Display Sequence</lable>
                           <input type="number" name="SOR_DIS_SEQ" id="SOR_DIS_SEQ" class="form-control" placeholder="display sequence" />
                         </div>
                       </div>

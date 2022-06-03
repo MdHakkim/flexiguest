@@ -9,7 +9,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Basic</h4>
+              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Payment Types</h4>
 
               <!-- DataTable with Buttons -->
               <div class="card">
@@ -47,15 +47,15 @@
                       <div class="row g-3">
                         <input type="hidden" name="PYM_ID" id="PYM_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <label class="form-label">Payment Type</label>
+                          <lable class="form-lable">Payment Type</lable>
                           <input type="text" name="PYM_CODE" id="PYM_CODE" class="form-control" placeholder="reservation type" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Payment Description</label>
+                          <lable class="form-lable">Payment Description</lable>
                           <input type="text" name="PYM_DESC" id="PYM_DESC" class="form-control" placeholder="reservation desc." />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Txn Code</label>
+                          <lable class="form-lable">Txn Code</lable>
                             <div class="input-group mb-3">
                               <select  id="PYM_TXN_CODE" name="PYM_TXN_CODE"  data-width="100%" class="selectpicker PYM_TXN_CODE" data-live-search="true">
                                 <option value="">Select</option>
@@ -63,11 +63,11 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Credit Limit</label>
+                          <lable class="form-lable">Credit Limit</lable>
                           <input type="text" class="form-control" placeholder="reservation type" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">IFC CC Type</label>
+                          <lable class="form-lable">IFC CC Type</lable>
                             <div class="input-group mb-3">
                               <select  data-width="100%" class="selectpicker PYM_TXN_CODE" data-live-search="true">
                                 <option value="">Select</option>
@@ -78,7 +78,7 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Merchant Number</label>
+                          <lable class="form-lable">Merchant Number</lable>
                           <input type="text" class="form-control" placeholder="reservation type" />
                         </div>
                       </div>

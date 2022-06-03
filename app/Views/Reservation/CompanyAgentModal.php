@@ -7,7 +7,7 @@
               <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="compnayAgentWindowLable">New message</h5>
+                    <h5 class="modal-title" id="compnayAgentWindowLable"></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                   </div>
                   <div class="modal-body">
@@ -17,29 +17,29 @@
                         <input type="hidden" name="COM_ID" id="COM_ID" class="form-control"/>
                         <input type="hidden" name="AGN_ID" id="AGN_ID" class="form-control"/>
                         <div class="col-md-3">
-                          <label class="form-label">Account</label>
+                          <lable class="form-lable">Account</lable>
                           <input type="text" name="COM_ACCOUNT" id="COM_ACCOUNT" class="form-control" placeholder="account" required/>
                           <div class="invalid-feedback">
                             Account required can't empty.
                           </div>
                         </div>
                         <div class="col-md-3">
-                          <label class="form-label">Address</label>
+                          <lable class="form-lable">Address</lable>
                           <input type="text" name="COM_ADDRESS1"  id="COM_ADDRESS1" class="form-control" placeholder="addresss 1" required/>
                           <div class="invalid-feedback">
                             Address required can't empty.
                           </div>
                         </div> 
                         <div class="col-md-3 flx_top_lb">
-                          <label class="form-label"></label>
+                          <lable class="form-lable"></lable>
                           <input type="text" name="COM_ADDRESS2"  id="COM_ADDRESS2" class="form-control" placeholder="address 2" />
                         </div> 
                         <div class="col-md-3 flx_top_lb">
-                          <label class="form-label"></label>
+                          <lable class="form-lable"></lable>
                           <input type="text" name="COM_ADDRESS3"  id="COM_ADDRESS3" class="form-control" placeholder="address 3" />
                         </div> 
                         <div class="col-md-3">
-                          <label class="form-label col-md-12">Country</label>
+                          <lable class="form-lable col-md-12">Country</lable>
                           <select name="COM_COUNTRY"  id="COM_COUNTRY" data-width="100%" class="selectpicker COM_COUNTRY" data-live-search="true" required>
                             <option value="">Select</option>
                           </select>
@@ -48,48 +48,48 @@
                           </div>
                         </div> 
                         <div class="col-md-3">
-                          <label class="form-label col-md-12">State</label>
+                          <lable class="form-lable col-md-12">State</lable>
                           <select name="COM_STATE"  id="COM_STATE" data-width="100%" class="selectpicker COM_STATE" data-live-search="true">
                             <option value="">Select</option>
                           </select>
                         </div> 
                         <div class="col-md-3">
-                          <label class="form-label col-md-12">City</label>
+                          <lable class="form-lable col-md-12">City</lable>
                           <select name="COM_CITY"  id="COM_CITY" data-width="100%" class="selectpicker COM_CITY" data-live-search="true">
                             <option value="">Select</option>
                           </select>
                         </div> 
                         <div class="col-md-3">
-                          <label class="form-label">Postal</label>
+                          <lable class="form-lable">Postal</lable>
                           <input type="text" name="COM_POSTAL"  id="COM_POSTAL" class="form-control" placeholder="postal" />
                         </div>
                         
                           <div class="col-md-3 companyData">
-                            <label class="form-label">Contact First</label>
+                            <lable class="form-lable">Contact First</lable>
                             <input type="text" name="COM_CONTACT_FR"  id="COM_CONTACT_FR" class="form-control" placeholder="client id" />
                           </div>
                           <div class="col-md-3 companyData">
-                            <label class="form-label">Contact Last</label>
+                            <lable class="form-lable">Contact Last</lable>
                             <input type="text" name="COM_CONTACT_LT"  id="COM_CONTACT_LT" class="form-control" placeholder="postal" />
                           </div> 
                           <div class="col-md-3">
-                            <label class="form-label">Contact No</label>
+                            <lable class="form-lable">Contact No</lable>
                             <input type="text" name="COM_CONTACT_NO"  id="COM_CONTACT_NO" class="form-control" placeholder="client id" />
                           </div> 
                           <div class="col-md-3">
-                            <label class="form-label">Contact Email</label>
+                            <lable class="form-lable">Contact Email</lable>
                             <input type="text" name="COM_CONTACT_EMAIL"  id="COM_CONTACT_EMAIL" class="form-control" placeholder="client email id" required/>
                             <div class="invalid-feedback">
                               Email required can't empty.
                             </div>
                           </div> 
                           <div class="col-md-3 companyData">
-                            <label class="form-label">Corporate ID</label>
+                            <lable class="form-lable">Corporate ID</lable>
                             <input type="text" name="COM_CORP_ID"  id="COM_CORP_ID" class="form-control" placeholder="communication desc" />
                           </div> 
                         
                           <div class="col-md-3 agentData">
-                            <label class="form-label">Territory</label>
+                            <lable class="form-lable">Territory</lable>
                             <select name="COM_TERRITORY"  id="COM_TERRITORY" class="select2 form-select" data-allow-clear="true">
                               <option value="">Select Territory</option>
                               <option value="UAE">United Arabian Emirates</option>
@@ -97,12 +97,12 @@
                             </select>
                           </div> 
                           <div class="col-md-3 agentData">
-                            <label class="form-label">IATA</label>
+                            <lable class="form-lable">IATA</lable>
                             <input type="text" name="COM_IATA"  id="COM_IATA" class="form-control" placeholder="iata" />
                           </div> 
                         
                         <div class="col-md-3">
-                          <label class="form-label">Communication</label>
+                          <lable class="form-lable">Communication</lable>
                           <select name="COM_COMMUNI_CODE"  id="COM_COMMUNI_CODE" class="select2 form-select" data-allow-clear="true">
                             <option value="">Select Communication</option>
                             <option value="WEB">Web</option>
@@ -112,14 +112,14 @@
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <label class="form-label">Communcation Desc.</label>
+                          <lable class="form-lable">Communcation Desc.</lable>
                           <input type="text" name="COM_COMMUNI_DESC"  id="COM_COMMUNI_DESC" class="form-control" placeholder="communication desc" />
                         </div> 
                         <div class="col-md-3">
                             <div class="form-check mt-3">
                               <input class="form-check-input flxCheckBox" type="checkbox"  id="COM_ACTIVE_CHK">
                               <input type="hidden" name="COM_ACTIVE" id="COM_ACTIVE" value="N" class="form-control" />
-                              <label class="form-check-lable" for="defaultCheck1"> Active </label>
+                              <lable class="form-check-lable" for="defaultCheck1"> Active </lable>
                             </div>
                         </div> 
                         

@@ -9,7 +9,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Basic</h4>
+              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Specials</h4>
 
               <!-- DataTable with Buttons -->
               <div class="card">
@@ -47,16 +47,16 @@
                       <div class="row g-3">
                         <input type="hidden" name="SPC_ID" id="SPC_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <label class="form-label">Special Code</label>
+                          <lable class="form-lable">Special Code</lable>
                           <input type="text" name="SPC_CODE" id="SPC_CODE" class="form-control" placeholder="Special code" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Special Description</label>
+                          <lable class="form-lable">Special Description</lable>
                           <input type="text" name="SPC_DESC" id="SPC_DESC" class="form-control" placeholder="Special description" />
                         </div>
                       
                         <div class="col-md-12 ">
-                          <label class="form-label">Display Sequence</label>
+                          <lable class="form-lable">Display Sequence</lable>
                           <input type="number" name="SPC_SEQ" id="SPC_SEQ" class="form-control" placeholder="Special sequence" />
                         </div>
                       </div>

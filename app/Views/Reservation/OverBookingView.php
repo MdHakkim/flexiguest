@@ -9,7 +9,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservation /</span> Overbooking</h4>
+              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Overbooking</h4>
 
               <!-- DataTable with Buttons -->
               <div class="card">
@@ -49,7 +49,7 @@
                       <div class="row g-3">
                         <input type="hidden" name="OB_ID" id="OB_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <label class="form-label">From Date</label>
+                          <lable class="form-lable">From Date</lable>
                           <div class="input-group">
                             <input type="text" name="OB_FROM_DT" id="OB_FROM_DT" class="form-control" placeholder="from date" />
                             <span class="input-group-append">
@@ -60,7 +60,7 @@
                           </div>
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Upto Date</label>
+                          <lable class="form-lable">Upto Date</lable>
                           <div class="input-group">
                           <input type="text" name="OB_UPTO_DT" id="OB_UPTO_DT" class="form-control" placeholder="upto date" />
                           <span class="input-group-append">
@@ -76,7 +76,7 @@
                             <?php $days=['SUN','MON','TUE','WED','THU','FRI','SAT']; foreach($days as $day){ ?>
                               <div class="flxy_join">
                                 <span class="flxy_fixed">
-                                  <label class="flxy_labstick"><?php echo $day;?></label>
+                                  <lable class="flxy_labstick"><?php echo $day;?></lable>
                                 </span>
                                 <label class="switch">
                                   <input type="checkbox" data-value="<?php echo $day;?>" class="switch-input" checked="checked" />
@@ -94,13 +94,13 @@
                           </div>
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Room Class</label>
+                          <lable class="form-lable">Room Class</lable>
                           <select name="OB_RM_CLASS" id="OB_RM_CLASS" class="select2 form-select" data-allow-clear="true">
                               <option value="">Select</option>
                             </select>
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Room Type</label>
+                          <lable class="form-lable">Room Type</lable>
                             <div class="input-group mb-3">
                               <select  id="OB_RM_TYPE" name="OB_RM_TYPE"  data-width="100%" class="selectpicker OB_RM_TYPE" data-live-search="true">
                                 <option value="">Select</option>
@@ -108,7 +108,7 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Overbook Count</label>
+                          <lable class="form-lable">Overbook Count</lable>
                           <input type="number" name="OB_OVER_BK_COUNT" id="OB_OVER_BK_COUNT" class="form-control" placeholder="overbook count" />
                           
                         </div>

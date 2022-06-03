@@ -9,7 +9,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Basic</h4>
+              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Sections</h4>
 
               <!-- DataTable with Buttons -->
               <div class="card">
@@ -47,19 +47,19 @@
                       <div class="row g-3">
                         <input type="hidden" name="SC_FL_ID" id="SC_FL_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <label class="form-label">Section Code</label>
+                          <lable class="form-lable">Section Code</lable>
                           <input type="text" name="SC_FL_CODE" id="SC_FL_CODE" class="form-control" placeholder="section code" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Section Description</label>
+                          <lable class="form-lable">Section Description</lable>
                           <input type="text" name="SC_FL_DESC" id="SC_FL_DESC" class="form-control" placeholder="section description" />
                         </div>
                         <div class="col-md-12 ">
-                          <label class="form-label">Target Credit</label>
+                          <lable class="form-lable">Target Credit</lable>
                           <input type="number" name="SC_FL_TARGET_CREDIT" id="SC_FL_TARGET_CREDIT" class="form-control" placeholder="section target credit" />
                         </div>
                         <div class="col-md-12 ">
-                          <label class="form-label">Display Sequence</label>
+                          <lable class="form-lable">Display Sequence</lable>
                           <input type="number" name="SC_FL_DISPLAY_SEQ" id="SC_FL_DISPLAY_SEQ" class="form-control" placeholder="display sequence" />
                         </div>
                       </div>

@@ -9,7 +9,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Basic</h4>
+              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Room Floors</h4>
 
               <!-- DataTable with Buttons -->
               <div class="card">
@@ -47,26 +47,26 @@
                       <div class="row g-3">
                         <input type="hidden" name="RM_FL_ID" id="RM_FL_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <label class="form-label">Floor Code</label>
+                          <lable class="form-lable">Floor Code</lable>
                           <input type="text" name="RM_FL_CODE" id="RM_FL_CODE" class="form-control" placeholder="floor code" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Floor Description</label>
+                          <lable class="form-lable">Floor Description</lable>
                           <input type="text" name="RM_FL_DESC" id="RM_FL_DESC" class="form-control" placeholder="floor description" />
                         </div>
                         <!-- <div class="col-md-12">
                             <div class="input-group mb-3 radioBtnClass">
                               <div class="form-check pe-2">
                                 <input class="form-check-input" type="radio" checked Value="SL" name="RM_FL_FEATURE" id="RM_FL_FEATURE">
-                                <label class="form-check-lable"> Selected </label>
+                                <lable class="form-check-lable"> Selected </lable>
                               </div>
                               <div class="form-check pe-2">
                                 <input class="form-check-input" type="radio" Value="NS" name="RM_FL_FEATURE" id="RM_FL_FEATURE">
-                                <label class="form-check-lable"> Non-selected </label>
+                                <lable class="form-check-lable"> Non-selected </lable>
                               </div>
                               <div class="form-check pe-2">
                                 <input class="form-check-input" Value="BT" type="radio" name="RM_FL_FEATURE" id="RM_FL_FEATURE">
-                                <label class="form-check-lable"> Both </label>
+                                <lable class="form-check-lable"> Both </lable>
                               </div>
                             </div>
                         </div> -->

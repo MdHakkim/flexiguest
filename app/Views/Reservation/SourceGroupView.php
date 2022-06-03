@@ -9,7 +9,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Basic</h4>
+              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Source Groups</h4>
 
               <!-- DataTable with Buttons -->
               <div class="card">
@@ -47,16 +47,16 @@
                       <div class="row g-3">
                         <input type="hidden" name="SOR_GR_ID" id="SOR_GR_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <label class="form-label">Group Code</label>
+                          <lable class="form-lable">Group Code</lable>
                           <input type="text" name="SOR_GR_CODE" id="SOR_GR_CODE" class="form-control" placeholder="group code" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Source Group Description</label>
+                          <lable class="form-lable">Source Group Description</lable>
                           <input type="text" name="SOR_GR_DESC" id="SOR_GR_DESC" class="form-control" placeholder="group description" />
                         </div>
                       
                         <div class="col-md-12 ">
-                          <label class="form-label">Display Sequence</label>
+                          <lable class="form-lable">Display Sequence</lable>
                           <input type="number" name="SOR_GR_DIS_SEQ" id="SOR_GR_DIS_SEQ" class="form-control" placeholder="group sequence" />
                         </div>
                       </div>

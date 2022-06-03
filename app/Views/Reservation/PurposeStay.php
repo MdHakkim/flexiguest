@@ -9,7 +9,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Basic</h4>
+              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Purpose of Stay</h4>
 
               <!-- DataTable with Buttons -->
               <div class="card">
@@ -47,15 +47,15 @@
                       <div class="row g-3">
                         <input type="hidden" name="PUR_ST_ID" id="PUR_ST_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <label class="form-label">Purpose Stay</label>
+                          <lable class="form-lable">Purpose Stay</lable>
                           <input type="text" name="PUR_ST_CODE" id="PUR_ST_CODE" class="form-control" placeholder="reservation type" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Purpose Stay Description</label>
+                          <lable class="form-lable">Purpose Stay Description</lable>
                           <input type="text" name="PUR_ST_DESC" id="PUR_ST_DESC" class="form-control" placeholder="reservation desc." />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Display Seq</label>
+                          <lable class="form-lable">Display Seq</lable>
                             <div class="input-group mb-3">
                               <input type="number" name="PUR_ST_SEQ" id="PUR_ST_SEQ" class="form-control" placeholder="display seq." />
                             </div>

@@ -9,7 +9,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">DataTables /</span> Basic</h4>
+              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Room Classes</h4>
 
               <!-- DataTable with Buttons -->
               <div class="card">
@@ -47,15 +47,15 @@
                       <div class="row g-3">
                         <input type="hidden" name="RM_CL_ID" id="RM_CL_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <label class="form-label">Room Code</label>
+                          <lable class="form-lable">Room Code</lable>
                           <input type="text" name="RM_CL_CODE" id="RM_CL_CODE" class="form-control" placeholder="room code" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Room Description</label>
+                          <lable class="form-lable">Room Description</lable>
                           <input type="text" name="RM_CL_DESC" id="RM_CL_DESC" class="form-control" placeholder="room description" />
                         </div>
                         <div class="col-md-12">
-                          <label class="form-label">Display Seq./Total Rooms</label>
+                          <lable class="form-lable">Display Seq./Total Rooms</lable>
                             <div class="input-group mb-3">
                               <input type="number" name="RM_CL_DISPLY_SEQ" id="RM_CL_DISPLY_SEQ" class="form-control" placeholder="display seq." />
                               <input type="number" name="RM_CL_TOTAL_ROOM" id="RM_CL_TOTAL_ROOM" class="form-control" placeholder="total rooms" />
@@ -65,15 +65,15 @@
                             <div class="input-group mb-3 radioBtnClass">
                               <div class="form-check pe-2">
                                 <input class="form-check-input" type="radio" checked Value="SL" name="RM_CL_FEATURE" id="RM_CL_FEATURE">
-                                <label class="form-check-lable"> Selected </label>
+                                <lable class="form-check-lable"> Selected </lable>
                               </div>
                               <div class="form-check pe-2">
                                 <input class="form-check-input" type="radio" Value="NS" name="RM_CL_FEATURE" id="RM_CL_FEATURE">
-                                <label class="form-check-lable"> Non-selected </label>
+                                <lable class="form-check-lable"> Non-selected </lable>
                               </div>
                               <div class="form-check pe-2">
                                 <input class="form-check-input" Value="BT" type="radio" name="RM_CL_FEATURE" id="RM_CL_FEATURE">
-                                <label class="form-check-lable"> Both </label>
+                                <lable class="form-check-lable"> Both </lable>
                               </div>
                             </div>
                         </div> -->
