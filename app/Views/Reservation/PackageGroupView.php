@@ -47,25 +47,25 @@
                         <div class="row g-3">
                             <input type="hidden" name="PKG_GR_ID" id="PKG_GR_ID" class="form-control" />
                             <div class="col-md-6">
-                                <lable class="form-lable"><b>Package Group Code *</b></lable>
+                                <label class="form-label"><b>Package Group Code *</b></label>
                                 <input type="text" name="PKG_GR_CODE" id="PKG_GR_CODE"
                                     class="form-control bootstrap-maxlength" maxlength="10" placeholder="eg: FULL"
                                     required />
                             </div>
                             <div class="col-md-8">
-                                <lable class="form-lable">Short Description</lable>
+                                <label class="form-label">Short Description</label>
                                 <input type="text" name="PKG_GR_SHORT_DESC" id="PKG_GR_SHORT_DESC"
                                     class="form-control bootstrap-maxlength" maxlength="50" placeholder="eg: Full Meal"
                                     required />
                             </div>
                             <div class="col-md-10">
-                                <lable class="form-lable"><b>Description *</b></lable>
+                                <label class="form-label"><b>Description *</b></label>
                                 <input type="text" name="PKG_GR_DESC" id="PKG_GR_DESC"
                                     class="form-control bootstrap-maxlength" maxlength="255"
                                     placeholder="eg: Provides Full Meals for a whole day" required />
                             </div>
                             <div class="col-md-12">
-                                <label for="form-lable"><b>Package List *</b></label>
+                                <label for="form-label"><b>Package List *</b></label>
                                 <input id="PKG_CODES" name="TagifyPkgGroupList" class="form-control TagifyPkgGroupList"
                                     value="FOOD" />
                             </div>

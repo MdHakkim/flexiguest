@@ -47,26 +47,26 @@
                       <div class="row g-3">
                         <input type="hidden" name="RM_FT_ID" id="RM_FT_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <lable class="form-lable">Feature Code</lable>
+                          <label class="form-label">Feature Code</label>
                           <input type="text" name="RM_FT_CODE" id="RM_FT_CODE" class="form-control" placeholder="feature code" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Feature Description</lable>
+                          <label class="form-label">Feature Description</label>
                           <input type="text" name="RM_FT_DESC" id="RM_FT_DESC" class="form-control" placeholder="feature description" />
                         </div>
                         <div class="col-md-12 " style="display:none;">
                             <div class="input-group mb-3 radioBtnClass">
                               <div class="form-check pe-2">
                                 <input class="form-check-input" type="radio" checked Value="SL" name="RM_FT_FEATURE" id="RM_FT_FEATURE">
-                                <lable class="form-check-lable"> Selected </lable>
+                                <label class="form-check-lable"> Selected </label>
                               </div>
                               <div class="form-check pe-2">
                                 <input class="form-check-input" type="radio" Value="NS" name="RM_FT_FEATURE" id="RM_FT_FEATURE">
-                                <lable class="form-check-lable"> Non-selected </lable>
+                                <label class="form-check-lable"> Non-selected </label>
                               </div>
                               <div class="form-check pe-2">
                                 <input class="form-check-input" Value="BT" type="radio" name="RM_FT_FEATURE" id="RM_FT_FEATURE">
-                                <lable class="form-check-lable"> Both </lable>
+                                <label class="form-check-lable"> Both </label>
                               </div>
                             </div>
                         </div>

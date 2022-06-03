@@ -86,29 +86,29 @@
 
                             <div class="col-md-6">
 
-                                <lable class="form-lable"><b>Title *</b></lable>
+                                <label class="form-label"><b>Title *</b></label>
 
-                                <input type="text" name="title" class="form-control bootstrap-maxlength" maxlength="10" placeholder="Title" required />
+                                <input type="text" name="title" class="form-control" placeholder="Title" required />
                             </div>
 
                             <div class="col-md-6">
 
-                                <lable class="form-lable"><b>Cover Image *</b></lable>
+                                <label class="form-label"><b>Cover Image *</b></label>
 
-                                <input type="file" name="cover_image" class="form-control bootstrap-maxlength" required />
+                                <input type="file" name="cover_image" class="form-control" required />
                             </div>
 
                             <div class="col-md-12">
 
-                                <lable class="form-lable"><b>Description *</b></lable>
+                                <label class="form-label"><b>Description *</b></label>
 
                                 <textarea type="number" name="description" class="form-control" placeholder="Description..."></textarea>
                             </div>
 
                             <div class="col-md-12">
-                                <lable class="form-lable"><b>Optional Files</b></lable>
+                                <label class="form-label"><b>Optional Files</b></label>
 
-                                <input type="file" name="files[]" class="form-control bootstrap-maxlength" multiple />
+                                <input type="file" name="files[]" class="form-control" multiple />
                             </div>
 
                             <div class="col-md-12 optional-files">
@@ -131,7 +131,7 @@
 
                             <div class="col-md-12">
 
-                                <lable class="form-lable"><b>Body *</b></lable>
+                                <label class="form-label"><b>Body *</b></label>
 
                                 <textarea name="body" class="d-none"></textarea>
 

@@ -46,7 +46,7 @@
                         <div class="row g-3">
 
                         <div class="col-md-4 mt-0">
-                            <lable class="form-lable">Apartments</lable>
+                            <label class="form-label">Apartments</label>
                             <select id="MAINT_ROOM_NO" class=" select2 form-select" name="MAINT_ROOM_NO" data-allow-clear="true">
                               <option value="">Select</option>
                             </select>
@@ -54,46 +54,46 @@
                           
                         
                         <div class="col-md-4 mt-0">
-                            <lable class="form-lable">InHouseBooking</lable>
+                            <label class="form-label">InHouseBooking</label>
                             <select name="InHouseBooking" id="InHouseBooking" class=" select2 form-select" data-allow-clear="true">
                               <option value="">Select</option>
                             </select>
                           </div> 
 
                           <div class="col-md-4 flxi_ds_flx">
-                          <lable class="form-lable">Type</lable>
+                          <label class="form-label">Type</label>
                             <div class="form-radio mt-4 me-1">
                               <input class="form-radio-input flxCheckBox" type="radio" value="Bulb/Key" name="MAINT_TYPE" id="MAINT_TYPE1">
-                              <lable class="form-radio-lable" for="defaultCheck1"> Bulb/Key </lable>
+                              <label class="form-radio-lable" for="defaultCheck1"> Bulb/Key </label>
                             </div>
                             <div class="form-radio mt-4 me-1">
                               <input class="form-radio-input flxCheckBox" type="radio" value="Maintenance Request" name="MAINT_TYPE" id="MAINT_TYPE2">
-                              <lable class="form-radio-lable" for="defaultCheck1"> Maintenance Request </lable>
+                              <label class="form-radio-lable" for="defaultCheck1"> Maintenance Request </label>
                             </div>
                           </div>
 
                           <div class="col-md-4 mt-0">
-                            <lable class="form-lable">Category</lable>
+                            <label class="form-label">Category</label>
                             <select id="MAINT_CATEGORY" name="MAINT_CATEGORY" class=" select2 form-select" data-allow-clear="true">
                               <option value="">Select</option>
                             </select>
                           </div>
 
                           <div class="col-md-4 mt-0">
-                            <lable class="form-lable">Sub Category</lable>
+                            <label class="form-label">Sub Category</label>
                             <select id="MAINT_SUB_CATEGORY" name="MAINT_SUB_CATEGORY" class=" select2 form-select" data-allow-clear="true">
                               <option value="">Select</option>
                             </select>
                           </div>
 
                           <div class="col-md-4 mt-0">
-                            <lable class="form-lable">Description</lable>
+                            <label class="form-label">Description</label>
                             <textarea rows="4" class="form-control" name="MAINT_DETAILS" id="MAINT_DETAILS" ></textarea>
                           </div>
                         
                           <div class="col-md-4">
                             <!-- <input type="hidden" name="RESV_STATUS" id="RESV_STATUS" class="form-control"/> -->
-                            <lable class="form-lable">Prefered Date </lable>
+                            <label class="form-label">Prefered Date </label>
                               <div class="input-group mb-3">
                                 <input type="text" autocomplete="off" name="MAINT_PREFERRED_DT" id="MAINT_PREFERRED_DT" class="form-control MAINT_PREFERRED_DT" placeholder="DD-MM-YYYY">
                                 <span class="input-group-append">
@@ -106,12 +106,12 @@
                           </div>
 
                           <div class="col-md-4">
-                            <lable class="form-lable">Prefered Time</lable>
+                            <label class="form-label">Prefered Time</label>
                             <input type="time" name="MAINT_PREFERRED_TIME" id="MAINT_PREFERRED_TIME" class="form-control" placeholder="Preferred Time" />
                           </div>
 
                           <div class="col-md-4 mt-0">
-                            <lable class="form-lable">Image</lable>
+                            <label class="form-label">Image</label>
                             <input type="file" name="MAINT_ATTACHMENT" id="MAINT_ATTACHMENT" class="form-control" />
                           </div>
                           <input type="hidden" name="sysid" id="sysid"  class="form-control" />

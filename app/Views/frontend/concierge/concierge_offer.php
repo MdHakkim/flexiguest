@@ -28,6 +28,9 @@
     #popModalWindow .modal-body {
         padding: 0.6rem;
     }
+    .text-right {
+        text-align: right !important;
+    }
 </style>
 
 <!-- Content wrapper -->
@@ -51,9 +54,11 @@
                             <th>Cover Image</th>
                             <th>From Date</th>
                             <th>To Date</th>
+                            <th>Offer Price</th>
                             <th>Actual Price</th>
                             <th>Provider Title</th>
                             <th>Provider Logo</th>
+                            <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
                     </thead>
@@ -123,29 +128,29 @@
                                         <div class="row g-3">
 
                                             <div class="col-md-6">
-                                                <lable class="form-lable" for="title"><b>Title *</b></lable>
-                                                <input type="text" name="title" id="title" class="form-control" placeholder="Title" />
+                                                <label class="form-label" for="title"><b>Title *</b></label>
+                                                <input type="text" name="CO_TITLE" id="title" class="form-control" placeholder="Title" />
                                             </div>
 
                                             <div class="col-md-6">
-                                                <lable class="form-lable" for='cover_image'><b>Cover Image *</b></lable>
-                                                <input type="file" name="cover_image" id="cover_image" class="form-control" />
+                                                <label class="form-label" for='cover_image'><b>Cover Image *</b></label>
+                                                <input type="file" name="CO_COVER_IMAGE" id="cover_image" class="form-control" />
                                             </div>
 
                                             <div class="col-md-12">
 
-                                                <lable class="form-lable"><b>Description *</b></lable>
+                                                <label class="form-label"><b>Description *</b></label>
 
-                                                <textarea name="description" class="d-none"></textarea>
+                                                <textarea name="CO_DESCRIPTION" class="d-none"></textarea>
 
                                                 <div id="snow-editor"></div>
                                             </div>
 
                                             <div class="col-md-6">
-                                                <lable class="form-lable"><b>Valid From Date *</b></lable>
+                                                <label class="form-label"><b>Valid From Date *</b></label>
 
                                                 <div class="input-group">
-                                                    <input type="text" name="valid_from_date" id="valid_from_date" placeholder="DD-MM-YYYY" class="form-control">
+                                                    <input type="text" name="CO_VALID_FROM_DATE" id="valid_from_date" placeholder="DD-MM-YYYY" class="form-control">
                                                     <span class="input-group-append">
                                                         <span class="input-group-text bg-light d-block">
                                                             <i class="fa fa-calendar"></i>
@@ -155,10 +160,10 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <lable class="form-lable"><b>Valid To Date *</b></lable>
+                                                <label class="form-label"><b>Valid To Date *</b></label>
 
                                                 <div class="input-group">
-                                                    <input type="text" name="valid_to_date" id="valid_to_date" placeholder="DD-MM-YYYY" class="form-control">
+                                                    <input type="text" name="CO_VALID_TO_DATE" id="valid_to_date" placeholder="DD-MM-YYYY" class="form-control">
                                                     <span class="input-group-append">
                                                         <span class="input-group-text bg-light d-block">
                                                             <i class="fa fa-calendar"></i>
@@ -168,15 +173,15 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <lable class="form-lable"><b>PMS Code</b></lable>
+                                                <label class="form-label"><b>PMS Code</b></label>
 
-                                                <input type="text" name="pms_code" class="form-control" placeholder="PMS code" />
+                                                <input type="text" name="CO_PMS_CODE" class="form-control" placeholder="PMS code" />
                                             </div>
 
                                             <div class="col-md-6">
-                                                <lable class="form-lable"><b>Ext Ref</b></lable>
+                                                <label class="form-label"><b>Ext Ref</b></label>
 
-                                                <input type="text" name="ext_ref" class="form-control" placeholder="Ext Ref" />
+                                                <input type="text" name="CO_EXT_REF" class="form-control" placeholder="Ext Ref" />
                                             </div>
 
                                             <div class="col-12 d-flex justify-content-between">
@@ -199,58 +204,58 @@
 
                                             <div class="col-md-6">
 
-                                                <lable class="form-lable"><b>Contact Email</b></lable>
+                                                <label class="form-label"><b>Contact Email</b></label>
 
-                                                <input type="email" name="contact_email" class="form-control" placeholder="Contact Email" />
+                                                <input type="email" name="CO_CONTACT_EMAIL" class="form-control" placeholder="Contact Email" />
                                             </div>
 
                                             <div class="col-md-6">
 
-                                                <lable class="form-lable"><b>Contact Phone</b></lable>
+                                                <label class="form-label"><b>Contact Phone</b></label>
 
-                                                <input type="text" name="contact_phone" class="form-control" placeholder="Contact Phone" />
+                                                <input type="text" name="CO_CONTACT_PHONE" class="form-control" placeholder="Contact Phone" />
                                             </div>
 
                                             <div class="col-md-12">
 
-                                                <lable class="form-lable"><b>location</b></lable>
+                                                <label class="form-label"><b>location</b></label>
 
-                                                <input type="text" name="location" class="form-control" placeholder="Location" />
+                                                <input type="text" name="CO_LOCATION" class="form-control" placeholder="Location" />
                                             </div>
 
                                             <div class="col-md-6">
 
-                                                <lable class="form-lable"><b>Provider Title</b></lable>
+                                                <label class="form-label"><b>Provider Title</b></label>
 
-                                                <input type="text" name="provider_title" class="form-control" placeholder="Provider Title" />
+                                                <input type="text" name="CO_PROVIDER_TITLE" class="form-control" placeholder="Provider Title" />
                                             </div>
 
                                             <div class="col-md-6">
 
-                                                <lable class="form-lable"><b>Provider Logo</b></lable>
+                                                <label class="form-label"><b>Provider Logo</b></label>
 
-                                                <input type="file" name="provider_logo" class="form-control" />
+                                                <input type="file" name="CO_PROVIDER_LOGO" class="form-control" />
                                             </div>
 
                                             <div class="col-md-12">
 
-                                                <lable class="form-lable"><b>Provider Sub Title</b></lable>
+                                                <label class="form-label"><b>Provider Sub Title</b></label>
 
-                                                <input type="text" name="provider_sub_title" class="form-control" placeholder="Provider Sub Title" />
+                                                <input type="text" name="CO_PROVIDER_SUB_TITLE" class="form-control" placeholder="Provider Sub Title" />
                                             </div>
 
                                             <div class="col-md-6">
 
-                                                <lable class="form-lable"><b>Provider Email</b></lable>
+                                                <label class="form-label"><b>Provider Email *</b></label>
 
-                                                <input type="email" name="provider_email" class="form-control" placeholder="Provider Email" />
+                                                <input type="email" name="CO_PROVIDER_EMAIL" class="form-control" placeholder="Provider Email" />
                                             </div>
 
                                             <div class="col-md-6">
 
-                                                <lable class="form-lable"><b>Provider Phone</b></lable>
+                                                <label class="form-label"><b>Provider Phone</b></label>
 
-                                                <input type="text" name="provider_phone" class="form-control" placeholder="Provider Phone" />
+                                                <input type="text" name="CO_PROVIDER_PHONE" class="form-control" placeholder="Provider Phone" />
                                             </div>
 
                                             <div class="col-12 d-flex justify-content-between">
@@ -269,11 +274,23 @@
 
                                     <!-- Social Links -->
                                     <div id="price-instructions" class="content">
+
                                         <div class="row g-3">
+
+                                            <div class="col-md-12 text-right">
+                                                <div class="form-check form-switch">
+                                                    <!-- fa-spin -->
+                                                    <i class="fa-solid fa-rotate fa-xl me-2 calculate-price" onclick="calculatePrice(this)"></i>
+
+                                                    <span>Exclusive</span>
+                                                    <input class="form-check-input" type="checkbox" name="CO_EXCLUSIVE_OR_INCLUSIVE" id="CO_EXCLUSIVE_OR_INCLUSIVE" checked style="margin: 0 10px; float: unset" />
+                                                    <label>Inclusive</label>
+                                                </div>
+                                            </div>
 
                                             <div class="col-md-4">
                                                 <label class="form-label">Currency *</label>
-                                                <select class="select2" name="currency_id">
+                                                <select class="select2" name="CO_CURRENCY_ID">
                                                     <option value="">Select Currency</option>
 
                                                     <?php foreach ($currencies as $currency) : ?>
@@ -285,48 +302,48 @@
                                             </div>
 
                                             <div class="col-md-4">
-                                                <lable class="form-lable"><b>Actual Price *</b></lable>
-                                                <input type="number" name="actual_price" class="form-control" placeholder="Actual price" />
+                                                <label class="form-label"><b>Actual Price *</b></label>
+                                                <input type="number" name="CO_ACTUAL_PRICE" class="form-control" placeholder="Actual price" />
                                             </div>
 
                                             <div class="col-md-4">
-                                                <lable class="form-lable"><b>Offer Price *</b></lable>
-                                                <input type="number" name="offer_price" class="form-control" placeholder="Offer price" />
+                                                <label class="form-label"><b>Offer Price *</b></label>
+                                                <input type="number" name="CO_OFFER_PRICE" id="CO_OFFER_PRICE" class="form-control" placeholder="Offer price" />
                                             </div>
 
                                             <div class="col-md-4">
-                                                <lable class="form-lable"><b>Tax Rate</b></lable>
-                                                <input type="number" name="tax_rate" class="form-control" placeholder="Tax rate" />
+                                                <label class="form-label"><b>Tax Rate *</b></label>
+                                                <input type="number" name="CO_TAX_RATE" id="CO_TAX_RATE" class="form-control" placeholder="Tax rate" value="5" readonly />
                                             </div>
 
                                             <div class="col-md-4">
-                                                <lable class="form-lable"><b>Tax Amount</b></lable>
-                                                <input type="number" name="tax_amount" class="form-control" placeholder="Tax amount" />
+                                                <label class="form-label"><b>Tax Amount *</b></label>
+                                                <input type="number" name="CO_TAX_AMOUNT" id="CO_TAX_AMOUNT" class="form-control" placeholder="Tax amount" />
                                             </div>
 
                                             <div class="col-md-4">
-                                                <lable class="form-lable"><b>Net Price</b></lable>
-                                                <input type="number" name="net_price" class="form-control" placeholder="Net price" />
+                                                <label class="form-label"><b>Net Price *</b></label>
+                                                <input type="number" name="CO_NET_PRICE" id="CO_NET_PRICE" class="form-control" placeholder="Net price" />
                                             </div>
 
                                             <div class="col-md-3">
-                                                <lable class="form-lable"><b>Min Quantity</b></lable>
-                                                <input type="number" name="min_quantity" class="form-control" placeholder="Min quantity" />
+                                                <label class="form-label"><b>Min Quantity</b></label>
+                                                <input type="number" name="CO_MIN_QUANTITY" class="form-control" placeholder="Min quantity" />
                                             </div>
 
                                             <div class="col-md-3">
-                                                <lable class="form-lable"><b>Max Quantity</b></lable>
-                                                <input type="number" name="max_quantity" class="form-control" placeholder="Max quantity" />
+                                                <label class="form-label"><b>Max Quantity</b></label>
+                                                <input type="number" name="CO_MAX_QUANTITY" class="form-control" placeholder="Max quantity" />
                                             </div>
 
                                             <div class="col-md-3">
-                                                <lable class="form-lable"><b>Min Age</b></lable>
-                                                <input type="number" name="min_age" class="form-control" placeholder="Min age" />
+                                                <label class="form-label"><b>Min Age</b></label>
+                                                <input type="number" name="CO_MIN_AGE" class="form-control" placeholder="Min age" />
                                             </div>
 
                                             <div class="col-md-3">
-                                                <lable class="form-lable"><b>Max Age</b></lable>
-                                                <input type="number" name="max_age" class="form-control" placeholder="Max age" />
+                                                <label class="form-label"><b>Max Age</b></label>
+                                                <input type="number" name="CO_MAX_AGE" class="form-control" placeholder="Max age" />
                                             </div>
 
                                             <div class="col-12 d-flex justify-content-between">
@@ -437,48 +454,57 @@
                     render: function(data, type, row, meta) {
                         let class_name = 'badge rounded-pill';
 
-                        if (data['status'] == 'disabled')
+                        if (data['CO_STATUS'] == 'disabled')
                             class_name += ' bg-label-danger';
                         else
                             class_name += ' bg-label-success';
 
                         return (`
-                            <span class="${class_name}">${data['status']}</span>
+                            <span class="${class_name}">${data['CO_STATUS']}</span>
                         `);
                     }
                 },
                 {
-                    data: 'title'
+                    data: 'CO_TITLE'
                 },
                 {
-                    data: 'description'
-                },
-                {
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['cover_image']}")' src='<?= base_url() ?>/${data['cover_image']}' width='80' height='80'/>`);
-                    }
-                },
-                {
-                    data: 'valid_from_date'
-                },
-                {
-                    data: 'valid_to_date'
+                    data: 'CO_DESCRIPTION'
                 },
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        return (`${data['currency_code']} ${data['actual_price']}`);
+                        return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['CO_COVER_IMAGE']}")' src='<?= base_url() ?>/${data['CO_COVER_IMAGE']}' width='80' height='80'/>`);
                     }
                 },
                 {
-                    data: 'provider_title'
+                    data: 'CO_VALID_FROM_DATE'
+                },
+                {
+                    data: 'CO_VALID_TO_DATE'
                 },
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['provider_logo']}")' src='<?= base_url() ?>/${data['provider_logo']}' width='80' height='80'/>`);
+                        return (`${data['CUR_CODE']} ${data['CO_OFFER_PRICE']}`);
                     }
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return (`${data['CUR_CODE']} ${data['CO_ACTUAL_PRICE']}`);
+                    }
+                },
+                {
+                    data: 'CO_PROVIDER_TITLE'
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['CO_PROVIDER_LOGO']}")' src='<?= base_url() ?>/${data['CO_PROVIDER_LOGO']}' width='80' height='80'/>`);
+                    }
+                },
+                {
+                    data: 'CO_CREATED_AT'
                 },
                 {
                     data: null,
@@ -495,18 +521,18 @@
                                 <li>
                                     <a 
                                         href="javascript:;" 
-                                        data_id="${data['id']}" 
-                                        data_status="${data['status'] == 'disabled' ? 'enabled' : 'disabled'}" 
-                                        class="dropdown-item change-status ${data['status'] == 'disabled' ? 'text-success' : 'text-info'}">
+                                        data_id="${data['CO_ID']}" 
+                                        data_status="${data['CO_STATUS'] == 'disabled' ? 'enabled' : 'disabled'}" 
+                                        class="dropdown-item change-status ${data['CO_STATUS'] == 'disabled' ? 'text-success' : 'text-info'}">
 
-                                        <i class="fa-solid ${data['status'] == 'disabled' ? 'fa-unlock' : 'fa-lock'}"></i>
+                                        <i class="fa-solid ${data['CO_STATUS'] == 'disabled' ? 'fa-unlock' : 'fa-lock'}"></i>
 
-                                        ${data['status'] == 'disabled' ? 'Enable' : 'Disable'}
+                                        ${data['CO_STATUS'] == 'disabled' ? 'Enable' : 'Disable'}
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['id']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['CO_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -514,7 +540,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['id']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['CO_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -552,7 +578,7 @@
                 width: "5%"
             }],
             "order": [
-                [5, "desc"]
+                [11, "desc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -561,7 +587,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['title'];
+                            return 'Details of ' + data['CO_TITLE'];
                         }
                     }),
                     type: 'column',
@@ -618,15 +644,36 @@
             '</ul>');
     }
 
+    function calculatePrice(e) {
+        $('.calculate-price').addClass('fa-spin');
+
+        let tax_rate = parseFloat($('#CO_TAX_RATE').val()) || 0;
+        let exclusive_or_inclusive = $('#CO_EXCLUSIVE_OR_INCLUSIVE').val();
+        let offer_price = parseFloat($('#CO_OFFER_PRICE').val()) || 0;
+
+        if($('#CO_EXCLUSIVE_OR_INCLUSIVE').is(':checked')) { // inclusive
+            let tax_amount = (tax_rate / 100) * offer_price;
+
+            $('#CO_TAX_AMOUNT').val(tax_amount);
+            $('#CO_NET_PRICE').val(offer_price - tax_amount);
+        }
+        else { // exclusive
+            let tax_amount = (tax_rate / 100) * offer_price;
+
+            $('#CO_OFFER_PRICE').val(tax_amount + offer_price);
+            $('#CO_TAX_AMOUNT').val(tax_amount);
+            $('#CO_NET_PRICE').val(offer_price);
+        }
+
+        window.setTimeout(() => {
+            $('.calculate-price').removeClass('fa-spin');
+        }, 300);
+    }
+
     // Show Add Rate Class Form
 
     function addForm() {
-        // $(`#submit-form input[name='id']`).val('');
-        // $(`#submit-form input[name='title']`).val('');
-        // $(`#submit-form input[type='file']`).val('');
-        // $(`#submit-form textarea[name='description']`).val('');
-        // $(`#submit-form textarea[name='body']`).val('');
-        // $(`#submit-form #snow-editor .ql-editor`).html('');
+        resetConciergeOfferForm();
 
         $('#submitBtn').text('Save');
         $('#popModalWindowlabel').html('Add Concierge Offer');
@@ -766,7 +813,7 @@
                         else if ($(`#${id} select[name='${field}']`).length)
                             $(`#${id} select[name='${field}']`).select2('val', `${val}`);
 
-                        if (field == 'description')
+                        if (field == 'CO_DESCRIPTION')
                             $("#snow-editor .ql-editor").html(val);
                     });
                 });
@@ -779,11 +826,14 @@
     function resetConciergeOfferForm() {
         let id = "concierge-offer-form";
 
+        $(`#${id} input[type='hidden']`).val('');
         $(`#${id} input[type='text']`).val('');
         $(`#${id} input[type='email']`).val('');
         $(`#${id} input[type='number']`).val('');
         $(`#${id} input[type='file']`).val('');
-        $(`#${id} select[name='currency_id']`).select2('val', `0`);
+        $(`#${id} select[name='CO_CURRENCY_ID']`).select2('val', `0`);
+
+        $(`#${id} #CO_TAX_RATE`).val('5');
     }
 
     // Add New or Edit Rate Class submit Function
@@ -792,19 +842,27 @@
         hideModalAlerts();
 
         if ($("#snow-editor .ql-editor").html() != "<p><br></p>")
-            $(`#${id} textarea[name='description']`).val($("#snow-editor .ql-editor").html());
+            $(`#${id} textarea[name='CO_DESCRIPTION']`).val($("#snow-editor .ql-editor").html());
 
         var fd = new FormData($(`#${id}`)[0]);
-        fd.delete('cover_image');
-        fd.delete('provider_logo');
+        fd.delete('CO_COVER_IMAGE');
+        fd.delete('CO_PROVIDER_LOGO');
+        fd.delete('CO_EXCLUSIVE_OR_INCLUSIVE');
 
-        files = $(`#${id} input[name='cover_image']`)[0].files;
-        if (files.length)
-            fd.append('cover_image', files[0]);
+        if($('#CO_EXCLUSIVE_OR_INCLUSIVE').is(':checked')) { // inclusive
+            fd.append('CO_EXCLUSIVE_OR_INCLUSIVE', 'inclusive');
+        }
+        else { // exclusive
+            fd.append('CO_EXCLUSIVE_OR_INCLUSIVE', 'exclusive');
+        }
 
-        files = $(`#${id} input[name='provider_logo']`)[0].files;
+        files = $(`#${id} input[name='CO_COVER_IMAGE']`)[0].files;
         if (files.length)
-            fd.append('provider_logo', files[0]);
+            fd.append('CO_COVER_IMAGE', files[0]);
+
+        files = $(`#${id} input[name='CO_PROVIDER_LOGO']`)[0].files;
+        if (files.length)
+            fd.append('CO_PROVIDER_LOGO', files[0]);
 
         $.ajax({
             url: '<?= base_url('/concierge/store-concierge-offer') ?>',

@@ -2,7 +2,7 @@
 
 namespace App\Libraries\DataTables;
 
-class ConciergeOffersDataTable
+class ConciergeOfferDataTable
 {
 
     private $DB;
@@ -14,7 +14,7 @@ class ConciergeOffersDataTable
 
     public function generate_DatatTable()
     {
-        $table = 'concierge_offers';
+        $table = 'FLXY_CONCIERGE_OFFERS';
 
         $draw = $_POST['draw'];
         $row = $_POST['start'];
@@ -22,16 +22,18 @@ class ConciergeOffersDataTable
         $rowperpage = $_POST['length']; // Rows display per page
 
         $columns = [
-            'id', 
-            'status', 
-            'title', 
-            'description',
-            'cover_image', 
-            'valid_from_date',
-            'valid_to_date',
-            'actual_price',
-            'provider_title',
-            'provider_logo',
+            'CO_ID', 
+            'CO_STATUS', 
+            'CO_TITLE', 
+            'CO_DESCRIPTION',
+            'CO_COVER_IMAGE', 
+            'CO_VALID_FROM_DATE',
+            'CO_VALID_TO_DATE',
+            'CO_OFFER_PRICE',
+            'CO_ACTUAL_PRICE',
+            'CO_PROVIDER_TITLE',
+            'CO_PROVIDER_LOGO',
+            'CO_CREATED_AT'
         ];
 
         $columnIndex = isset($_POST['order']) ? $_POST['order'][0]['column'] : ''; // Column index
@@ -42,7 +44,14 @@ class ConciergeOffersDataTable
         $searchQuery = 'WHERE 1 = 1';
         $searchValue = isset($_POST['search']['value']) ? $_POST['search']['value'] : '';
         if ($searchValue != '') {
-            $searchQuery .= " AND (title like '%$searchValue%' or description like '%$searchValue%' or body like '%$searchValue%' or cast(created_at as date) like '%$searchValue%')";
+            $searchQuery .= " AND (CO_TITLE like '%$searchValue%' 
+                                    or CO_DESCRIPTION like '%$searchValue%' 
+                                    or cast(CO_VALID_FROM_DATE as date) like '%$searchValue%')
+                                    or cast(CO_VALID_TO_DATE as date) like '%$searchValue%'
+                                    or CO_ACTUAL_PRICE like '%$searchValue%' 
+                                    or CO_PROVIDER_TITLE like '%$searchValue%'
+                                    or CO_STATUS like '%$searchValue%')
+                                    or cast(CO_CREATED_AT as datetime) like '%$searchValue%'";
         }
 
         ## Total number of records without filtering
@@ -54,25 +63,11 @@ class ConciergeOffersDataTable
         $totalRecordwithFilter = $result1[0]['allcount'];
 
         ## Fetch records
-        $query = "select $table.*, c.CUR_ID, c.CUR_DESC as currency, c.CUR_CODE as currency_code from $table inner join FLXY_CURRENCY as c on $table.currency_id = c.CUR_ID $searchQuery order by " . $columnName . " " . $columnSortOrder . " OFFSET " . $row . " ROWS FETCH NEXT " . $rowperpage . " ROWS ONLY";
+        $query = "select $table.*, c.CUR_ID, c.CUR_DESC as CURRENCY, c.CUR_CODE from $table inner join FLXY_CURRENCY as c on $table.CO_CURRENCY_ID = c.CUR_ID $searchQuery order by " . $columnName . " " . $columnSortOrder . " OFFSET " . $row . " ROWS FETCH NEXT " . $rowperpage . " ROWS ONLY";
         $records = $this->DB->query($query)->getResultArray();
+        
+        $return = $records;
 
-        $return = [];
-        foreach ($records as $row) {
-            $return[] = [
-                'id' => $row['id'],
-                'status' => $row['status'],
-                'title' => $row['title'],
-                'description' => $row['description'],
-                'cover_image' => $row['cover_image'],
-                'valid_from_date' => $row['valid_from_date'],
-                'valid_to_date' => $row['valid_to_date'],
-                'actual_price' => $row['actual_price'],
-                'currency_code' => $row['currency_code'],
-                'provider_title' => $row['provider_title'],
-                'provider_logo' => $row['provider_logo'],
-            ];
-        }
         ## Response
         $response = array(
             "draw" => intval($draw),

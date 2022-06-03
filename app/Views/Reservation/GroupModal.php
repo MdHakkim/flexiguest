@@ -15,11 +15,11 @@
                       <div class="row g-3">
                         <input type="hidden" name="GRP_ID" id="GRP_ID" class="form-control"/>
                         <div class="col-md-3">
-                          <lable class="form-lable">Group Name</lable>
+                          <label class="form-label">Group Name</label>
                           <input type="text" name="GRP_NAME" id="GRP_NAME" class="form-control" placeholder="account" />
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Language</lable>
+                          <label class="form-label">Language</label>
                           <select name="GRP_LANG"  id="GRP_LANG" class="select2 form-select" data-allow-clear="true">
                               <option value="">Select Language</option>
                               <option value="AR">Arabic</option>
@@ -28,56 +28,56 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Address</lable>
+                          <label class="form-label">Address</label>
                           <input type="text" name="GRP_ADDRESS1"  id="GRP_ADDRESS1" class="form-control" placeholder="addresss 1" />
                         </div> 
                         <div class="col-md-3 flx_top_lb">
-                          <lable class="form-lable"></lable>
+                          <label class="form-label"></label>
                           <input type="text" name="GRP_ADDRESS2"  id="GRP_ADDRESS2" class="form-control" placeholder="address 2" />
                         </div> 
                         <div class="col-md-3 flx_top_lb">
-                          <lable class="form-lable"></lable>
+                          <label class="form-label"></label>
                           <input type="text" name="GRP_ADDRESS3"  id="GRP_ADDRESS3" class="form-control" placeholder="address 3" />
                         </div> 
                         <div class="col-md-3">
-                          <lable class="form-lable col-md-12">Country</lable>
+                          <label class="form-label col-md-12">Country</label>
                           <select name="GRP_COUNTRY"  id="GRP_COUNTRY" data-width="100%" class="selectpicker GRP_COUNTRY" data-live-search="true">
                             <option value="">Select</option>
                           </select>
                         </div> 
                         <div class="col-md-3">
-                          <lable class="form-lable col-md-12">State</lable>
+                          <label class="form-label col-md-12">State</label>
                           <select name="GRP_STATE"  id="GRP_STATE" data-width="100%" class="selectpicker GRP_STATE" data-live-search="true">
                             <option value="">Select</option>
                           </select>
                         </div> 
                         <div class="col-md-3">
-                          <lable class="form-lable col-md-12">City</lable>
+                          <label class="form-label col-md-12">City</label>
                           <select name="GRP_CITY"  id="GRP_CITY" data-width="100%" class="selectpicker GRP_CITY" data-live-search="true">
                             <option value="">Select</option>
                           </select>
                         </div> 
                         <div class="col-md-3">
-                          <lable class="form-lable">Postal</lable>
+                          <label class="form-label">Postal</label>
                           <input type="text" name="GRP_POSTAL"  id="GRP_POSTAL" class="form-control" placeholder="postal" />
                         </div>
 
                           <div class="col-md-3">
-                            <lable class="form-lable">Contact No</lable>
+                            <label class="form-label">Contact No</label>
                             <input type="text" name="GRP_CONTACT_NO"  id="GRP_CONTACT_NO" class="form-control" placeholder="client id" />
                           </div> 
                           <div class="col-md-3">
-                            <lable class="form-lable">Contact Email</lable>
+                            <label class="form-label">Contact Email</label>
                             <input type="text" name="GRP_EMAIL"  id="GRP_EMAIL" class="form-control" placeholder="client id" />
                           </div> 
                           
                           <div class="col-md-3">
-                            <lable class="form-lable">VIP</lable>
+                            <label class="form-label">VIP</label>
                             <select name="GRP_VIP"  id="GRP_VIP" class="select2 form-select" data-allow-clear="true">
                             </select>
                           </div> 
                           <div class="col-md-3">
-                            <lable class="form-lable">VIP</lable>
+                            <label class="form-label">VIP</label>
                             <select name="GRP_CURR"  id="GRP_CURR" class="select2 form-select" data-allow-clear="true">
                               <option value="">Select Territory</option>
                               <option value="UAE">United Arabian Emirates</option>
@@ -86,7 +86,7 @@
                           </div> 
 
                         <div class="col-md-3">
-                          <lable class="form-lable">Communication</lable>
+                          <label class="form-label">Communication</label>
                           <select name="GRP_COMMUNI_CODE"  id="GRP_COMMUNI_CODE" class="select2 form-select" data-allow-clear="true">
                             <option value="">Select Communication</option>
                             <option value="WEB">Web</option>
@@ -96,18 +96,18 @@
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <lable class="form-lable">Communcation Desc.</lable>
+                          <label class="form-label">Communcation Desc.</label>
                           <input type="text" name="GRP_COMMUNI_DESC"  id="GRP_COMMUNI_DESC" class="form-control" placeholder="communication desc" />
                         </div> 
                         <div class="col-md-3">
-                          <lable class="form-lable">Notes</lable>
+                          <label class="form-label">Notes</label>
                           <input type="text" name="GRP_NOTES"  id="GRP_NOTES" class="form-control" placeholder="communication desc" />
                         </div> 
                         <div class="col-md-3">
                             <div class="form-check mt-3">
                               <input class="form-check-input flxCheckBox" type="checkbox"  id="GRP_ACTIVE_CHK">
                               <input type="hidden" name="GRP_ACTIVE" id="GRP_ACTIVE" value="N" class="form-control" />
-                              <lable class="form-check-lable" for="defaultCheck1"> Active </lable>
+                              <label class="form-check-lable" for="defaultCheck1"> Active </label>
                             </div>
                         </div> 
                         

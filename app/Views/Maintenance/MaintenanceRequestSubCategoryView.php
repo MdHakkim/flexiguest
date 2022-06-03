@@ -46,7 +46,7 @@
                         <div class="row g-3">
 
                         <div class="col-md-4 mt-0">
-                            <lable class="form-lable">Category</lable>
+                            <label class="form-label">Category</label>
                             <select id="MAINT_CATEGORY" name="MAINT_CATEGORY" class=" select2 form-select" data-allow-clear="true">
                               <option value="">Select</option>
                             </select>
@@ -55,7 +55,7 @@
                         
                           <div class="col-md-4 mt-0">
                       
-                            <lable class="form-lable">Sub Category</lable>
+                            <label class="form-label">Sub Category</label>
                             <input type="text" name="MAINT_SUBCATEGORY" id="MAINT_SUBCATEGORY" class="form-control" >
                               
                           </div>  

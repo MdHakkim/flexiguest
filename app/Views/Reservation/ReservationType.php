@@ -47,15 +47,15 @@
                       <div class="row g-3">
                         <input type="hidden" name="RESV_TY_ID" id="RESV_TY_ID" class="form-control"/>
                         <div class="col-md-12">
-                          <lable class="form-lable">Reservation Type</lable>
+                          <label class="form-label">Reservation Type</label>
                           <input type="text" name="RESV_TY_CODE" id="RESV_TY_CODE" class="form-control" placeholder="reservation type" />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Reservation Type Description</lable>
+                          <label class="form-label">Reservation Type Description</label>
                           <input type="text" name="RESV_TY_DESC" id="RESV_TY_DESC" class="form-control" placeholder="reservation desc." />
                         </div>
                         <div class="col-md-12">
-                          <lable class="form-lable">Display Seq</lable>
+                          <label class="form-label">Display Seq</label>
                             <div class="input-group mb-3">
                               <input type="number" name="RESV_TY_SEQ" id="RESV_TY_SEQ" class="form-control" placeholder="display seq." />
                             </div>

@@ -32,7 +32,7 @@ class Database extends Config
      */
     // public $default = [
     //     'DSN'      => '',
-    //     'hostname' => 'FARNEK-LT-868\SQLEXPRESS',
+    //     'hostname' => 'FLEXIGUEST-DEV\MSSQLSERVER2019',
     //     'username' => 'FARNEK-HO/Mohamed.Hakkim',
     //     'password' => 'Working@fr08',
     //     'database' => 'flexiguest',
