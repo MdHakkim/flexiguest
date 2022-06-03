@@ -455,10 +455,14 @@
                                   <textarea class="form-control" name="RESV_COMMENTS" id="RESV_COMMENTS" rows="1"></textarea>
                                 </div>
                                 <div class="col-md-3 mt-2">
-                                  <label class="form-label">Item Inventory</label>
-                                  <select name="RESV_ITEM_INVT" id="RESV_ITEM_INVT" class="select2 form-select" data-allow-clear="true">
-                                    <option value="">Select</option>
-                                  </select>
+                                  <lable class="form-lable">Item Inventory</lable>
+                                 
+                                
+                                  <div class="input-group mb-3">
+                                    <input type="text" readonly name="RESV_ITEM_INVT" id="RESV_ITEM_INVT" class="form-control" placeholder="Item" required />
+                                    <button type="button" onClick="getInventoryItems()" class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                  </div>
+                                  <div class="invalid-feedback"> Item required can't empty.</div>
                                 </div>
                                 <div class="col-md-3">
                                   <label class="form-label">Booker Last / First</label>
@@ -1213,6 +1217,300 @@
               </div>
             </div>
             <!--  RateQuery Detail window end -->
+
+                <!-- Modal Window Item Inventory -->
+
+    <div class="modal fade" id="ItemInventory" data-backdrop="static" data-keyboard="false"
+        aria-labelledby="popModalWindowlabel">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="popModalWindowlabel">Item Inventory</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div id="wizard-validation" class="bs-stepper mt-2">
+                        <div class="bs-stepper-header">
+                            <div class="step" data-target="#select_items">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">1</span>
+                                    <span class="bs-stepper-label">Items</span>
+                                </button>
+                            </div>
+                            <div class="line"></div>
+                            <div class="step" data-target="#item_availability">
+                                <button type="button" class="step-trigger">
+                                    <span class="bs-stepper-circle">2</span>
+                                    <span class="bs-stepper-label">Inventory Availability</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bs-stepper-content">
+                         
+
+                            <form id="item-submit-form" onSubmit="return false">                                
+                           
+                                <div id="select_items" class="content" >
+                                <input type="hidden" name="RSV_PRI_ID" id="RSV_PRI_ID" class="form-control" />
+                                    <div class="row g-3">
+
+                                        <div class="col-md-5">
+                                            <div class="border rounded p-4 mb-3">
+                                                <div class="row mb-3">
+                                                    <label for="RSV_ITM_ID"
+                                                        class="col-form-label col-md-4"><b>Items *</b></label>
+                                                    <div class="col-md-8">
+                                                    <select id="RSV_ITM_ID" name="RSV_ITM_ID"
+                                                        class="select2 form-select form-select-lg">
+                                                       <?php echo $itemLists;?>
+                                                    </select> 
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label for="ITEM_AVAIL_START_DT"
+                                                        class="col-form-label col-md-4"><b>Start
+                                                            Date *</b></label>
+                                                    <div class="col-md-8">
+                                                        <input class="form-control dateField" type="text"
+                                                            placeholder="d-Mon-yyyy" id="ITEM_AVAIL_START_DT"
+                                                            name="ITEM_AVAIL_START_DT" />
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label for="ITEM_AVAIL_END_DT" class="col-form-label col-md-4"><b>End
+                                                            Date *</b></label>
+                                                    <div class="col-md-8">
+                                                        <input class="form-control dateField" type="text"
+                                                            placeholder="d-Mon-yyyy" id="ITEM_AVAIL_END_DT"
+                                                            name="ITEM_AVAIL_END_DT" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-3">
+                                                    <label for="RSV_ITM_QTY"
+                                                        class="col-form-label col-md-4"><b>Quantity *</b></label>
+                                                    <div class="col-md-8">
+                                                        <input type="number" name="RSV_ITM_QTY" id="RSV_ITM_QTY"
+                                                            class="form-control" min="1" step="1"
+                                                            placeholder="eg: 12" />
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                <div class="col-md-8 float-right">
+                                                <button type="button" class="btn btn-success save-package-code-detail"  onclick="submitItemForm('item-submit-form')">
+                                                    <i class="fa-solid fa-floppy-disk"></i>&nbsp; Save
+                                                </button>&nbsp;
+                                                </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-7">
+
+                                            <div class="border rounded p-4 mb-3">
+                                                <div class="col-md-6 mb-3">
+                                                  <button type="button" class="btn btn-primary add-package-code-detail">
+                                                      <i class="fa-solid fa-circle-plus"></i>&nbsp; Add New
+                                                  </button>&nbsp;
+                                                  
+                                                  <button type="button" class="btn btn-danger delete-package-code-detail">
+                                                      <i class="fa-solid fa-ban"></i>&nbsp; Delete
+                                                  </button>&nbsp;
+                                                </div>
+
+                                                <div class="table-responsive text-nowrap">
+                                                    <table id="PKG_CD_Details" class="table table-bordered table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="all">Start</th>
+                                                                <th class="all">End</th>
+                                                                <th class="all">Price</th>
+                                                                <th class="all">Active</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+
+                                                <br />
+
+                                                <input type="hidden" name="PKG_CD_DT_ID" id="PKG_CD_DT_ID" readonly />
+
+                                                
+                                            </div>
+                                        </div>
+                                        <div class="d-flex col-12 justify-content-between">
+                                            <button type="button" class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>                                         
+
+                                            <button type="button" class="btn btn-primary btn-next">
+                                                <span class="d-none d-sm-inline-block me-sm-1">Next</span>
+                                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div id="item_availability" class="content">
+
+                                    <div class="row g-3">
+                                        <input type="hidden" name="PKG_CD_ID" id="PKG_CD_ID" />
+
+                                        <div class="border rounded p-3">
+
+                                            <div class="col-md-12">
+                                                <div class="row mb-3">
+                                                    <label for="html5-text-input"
+                                                        class="col-form-label col-md-3"><b>Code
+                                                            *</b></label>
+                                                    <div class="col-md-3">
+                                                        <input type="text" name="PKG_CD_CODE" id="PKG_CD_CODE"
+                                                            class="form-control bootstrap-maxlength textField" maxlength="10"
+                                                            placeholder="eg: 1001" required />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-3">
+                                                    <label for="html5-text-input" class="col-form-label col-md-3">Short
+                                                        Description</label>
+                                                    <div class="col-md-5">
+                                                        <input type="text" name="PKG_CD_SHORT_DESC"
+                                                            id="PKG_CD_SHORT_DESC"
+                                                            class="form-control bootstrap-maxlength" maxlength="50"
+                                                            placeholder="eg: Online Travel Agent" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-3">
+                                                    <label for="html5-text-input"
+                                                        class="col-form-label col-md-3"><b>Description
+                                                            *</b></label>
+                                                    <div class="col-md-7">
+                                                        <input type="text" name="PKG_CD_DESC" id="PKG_CD_DESC"
+                                                            class="form-control bootstrap-maxlength textField" maxlength="50"
+                                                            placeholder="eg: Online Travel Agent" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="border rounded p-3">
+                                            <h6>Transaction Details</h6>
+                                            <div class="row g-3 mb-3">
+                                                <label for="TR_CD_ID" class="col-form-label col-md-3"><b>Transaction
+                                                        Code *</b></label>
+                                                <div class="col-md-4">
+                                                    <select id="TR_CD_ID" name="TR_CD_ID"
+                                                        class="select2 form-select form-select-lg">
+                                                        
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <label class="switch">
+                                                        <input type="checkbox" class="switch-input"
+                                                            id="PKG_CD_TAX_INCLUDED" name="PKG_CD_TAX_INCLUDED"
+                                                            value="1" />
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bx-check"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                                <i class="bx bx-x"></i>
+                                                            </span>
+                                                        </span>
+                                                        <span class="switch-label">Tax Included</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="border rounded p-3">
+                                            <h6>Attributes</h6>
+                                            <div class="row mb-3">
+
+                                                <div class="col-md-4">
+
+                                                    
+                                                </div>
+
+                                                <div class="col-md-8">
+                                                    <div class="row mb-3">
+
+                                                        <label for="PO_RH_ID" class="col-form-label col-md-4"
+                                                            style="text-align: right;"><b>Posting Rhythm *</b></label>
+                                                        <div class="col-md-8">
+                                                            <select id="PO_RH_ID" name="PO_RH_ID"
+                                                                class="select2 form-select form-select-lg">
+                                                              
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row mb-3">
+
+                                                        <label for="CLC_RL_ID" class="col-form-label col-md-4"
+                                                            style="text-align: right;"><b>Calculation Rule *</b></label>
+                                                        <div class="col-md-8">
+                                                            <select id="CLC_RL_ID" name="CLC_RL_ID"
+                                                                class="select2 form-select form-select-lg">
+                                                               
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4 mb-3">
+                                            <label class="switch">
+                                                <input id="PKG_CD_SELL_SEP" name="PKG_CD_SELL_SEP" type="checkbox"
+                                                    value="1" class="switch-input" />
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on">
+                                                        <i class="bx bx-check"></i>
+                                                    </span>
+                                                    <span class="switch-off">
+                                                        <i class="bx bx-x"></i>
+                                                    </span>
+                                                </span>
+                                                <span class="switch-label">Sell Separately</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="d-flex col-12 justify-content-between">
+
+                                        <button class="btn btn-primary btn-prev">
+                                            <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
+                                            <span class="d-none d-sm-inline-block">Previous</span>
+                                        </button>
+
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        </div>
+
+                                      
+
+                                    </div>
+                                
+                                  </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /Modal window -->
             <div class="content-backdrop fade"></div>
           </div>
           <!-- Content wrapper -->
@@ -1222,6 +1520,14 @@
   var linkMode='';
   var windowmode='';
   $(document).ready(function() {
+
+    $('.dateField').datepicker({
+        format: 'dd-M-yyyy',
+        autoclose: true,
+        onSelect: function() {
+            $(this).change();
+        }
+    });
     linkMode='EX';
     $('#loader_flex_bg').show();
     $('#dataTable_view').DataTable({
@@ -1374,8 +1680,8 @@
         dataType:'json',
         success:function(respn){
           var dataSet = respn[0];
-          var option= '<option data-feture="'+$.trim(dataSet['RM_TY_FEATURE'])+'" data-desc="'+$.trim(dataSet['RM_TY_DESC'])+'" data-rmclass="'+$.trim(dataSet['RM_TY_ROOM_CLASS'])+'" value="'+dataSet['RM_TY_CODE']+'">'+dataSet['RM_TY_DESC']+'</option>';
-          $('#RESV_RM_TYPE,#RESV_RTC').html(option).selectpicker('refresh');
+          // var option= '<option data-feture="'+$.trim(dataSet['RM_TY_FEATURE'])+'" data-desc="'+$.trim(dataSet['RM_TY_DESC'])+'" data-rmclass="'+$.trim(dataSet['RM_TY_ROOM_CLASS'])+'" value="'+dataSet['RM_TY_CODE']+'">'+dataSet['RM_TY_DESC']+'</option>';
+         // $('#RESV_RM_TYPE,#RESV_RTC').html(option).selectpicker('refresh');
         }
       });
   }
@@ -2160,6 +2466,58 @@
       }
     });
   }
+
+  function getInventoryItems(){
+    // var fetchInfo = avaiableDatePeriod();
+    // $('#userInfoDate').html(fetchInfo);
+    // generateRateQuery();
+    // $('.rateRadio').prop('checked',false);
+    // $('.rateRadio:first').prop('checked',true);
+    $('#ItemInventory').modal('show');
+  }
+
+  
+// Add New or Edit Package Code submit Function
+
+function submitItemForm(id) {
+    //hideModalAlerts();
+    alert('q');
+    var formSerialization = $('#' + id).serializeArray();
+    var url = '<?php echo base_url('/insertItemInventory') ?>';
+    $.ajax({
+        url: url,
+        type: "post",
+        data: formSerialization,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        dataType: 'json',
+        success: function(respn) {
+            console.log(respn, "testing");
+            var response = respn['SUCCESS'];
+            if (response != '1') {
+                var ERROR = respn['RESPONSE']['ERROR'];
+                var mcontent = '';
+                $.each(ERROR, function(ind, data) {
+                    console.log(data, "SDF");
+                    mcontent += '<li>' + data + '</li>';
+                });
+                showModalAlert('error', mcontent);
+            } else {
+                var alertText = $('#RSV_ITM_ID').val() == '' ? '<li>The item has been added</li>' : '<li>';
+                showModalAlert('success', alertText);
+                
+
+                //$('#popModalWindow').modal('hide');
+
+                var pkgCodeID = respn['RESPONSE']['OUTPUT'];
+                showPackageCodeDetails(pkgCodeID);
+            }
+        }
+    });
+}
+
+ 
 </script>
 
 <?=$this->endSection()?>

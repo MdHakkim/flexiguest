@@ -15,23 +15,23 @@ class AdditionalController extends BaseController
         $this->Db = \Config\Database::connect();
         $this->request = \Config\Services::request();
         $this->session = \Config\Services::session();
-        helper(['form', 'url', 'custom']);
+        helper(['form', 'url', 'custom', 'common']);
     }
 
-    public function getMethodName()
-    {
-        /** Get Method Name as Page Title */
+    // public function getMethodName()
+    // {
+    //     /** Get Method Name as Page Title */
 
-        $router = service('router');
-        $method = $router->methodName();
-        return ucwords(implode(' ', preg_split('/(?=[A-Z])/', $method)));
-    }
+    //     $router = service('router');
+    //     $method = $router->methodName();
+    //     return ucwords(implode(' ', preg_split('/(?=[A-Z])/', $method)));
+    // }
 
     /**************      Currency Functions      ***************/
 
     public function currency()
     {
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         
         return view('Master/CurrencyView', $data);
@@ -122,7 +122,7 @@ class AdditionalController extends BaseController
     public function exchangeCodes()
     {
 
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         
         return view('Master/ExchangeCodesView', $data);
@@ -218,7 +218,7 @@ class AdditionalController extends BaseController
                 'exchangeCodesLists' => $exchangeCodesLists
             ];
     
-            $data['title'] = $this->getMethodName();
+            $data['title'] = getMethodName();
             $data['session'] = $this->session;
             
             return view('Master/ExchangeRatesView', $data);
@@ -354,7 +354,7 @@ class AdditionalController extends BaseController
     public function departments()
     {
 
-        $data['title'] = $this->getMethodName();
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         
         return view('Master/DepartmentView', $data);
@@ -443,13 +443,11 @@ class AdditionalController extends BaseController
         public function itemClass()
         {
     
-            $data['title'] = $this->getMethodName();
+            $data['title'] = getMethodName();
             $data['session'] = $this->session;
             $departmentLists = $this->departmentLists();
     
-            $data = [
-                'departmentLists' => $departmentLists
-            ];
+            $data['departmentLists'] = $departmentLists;
             
             return view('Master/ItemClassView', $data);
         }
@@ -555,7 +553,7 @@ class AdditionalController extends BaseController
             return $option;
         }
 
-        /**************      Exchange Rate Functions      ***************/
+        /**************      Items Functions      ***************/
 
         public function items()
         {
@@ -566,7 +564,7 @@ class AdditionalController extends BaseController
                 'itemDepartmentLists' => $itemDepartmentLists
             ];
     
-            $data['title'] = $this->getMethodName();
+            $data['title'] = getMethodName();
             $data['session'] = $this->session;
             
             return view('Master/ItemsView', $data);
@@ -714,7 +712,7 @@ class AdditionalController extends BaseController
                 'itemDepartmentLists' => $itemDepartmentLists
             ];
     
-            $data['title'] = $this->getMethodName();
+            $data['title'] = getMethodName();
             $data['session'] = $this->session;
             
             return view('Master/DailyInventoryView', $data);
