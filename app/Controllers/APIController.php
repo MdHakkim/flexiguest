@@ -209,40 +209,41 @@ class APIController extends BaseController
         OUTPUT : list and details of the accompanying the persons   */
     public function getGuestAccompanyProfiles()
     {
-        $user_id = $this->request->user['USR_ID'];
         $customer_id = $this->request->user['USR_CUST_ID'];
-
         $reservation_id = $this->request->getVar('reservation_id');
 
         // an indicator to inform this is accompanying person
-        $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name FROM FLXY_CUSTOMER as fc where CUST_ID = :customer_id:";
+        $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name, 
+                        fc.CUST_ID, 
+                        count(fd.DOC_ID) as is_document_uploaded 
+                        FROM FLXY_CUSTOMER as fc
+                        left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID 
+                        where CUST_ID = :customer_id:
+                        group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID";
+
         $param = ['customer_id' => $customer_id];
-
         $data = $this->DB->query($sql, $param)->getResultArray();
+        if(!count($data))
+            return $this->respond(responseJson(404, true, "Customer not found"));
 
-        if (count($data)) {
-            $data = $data[0];
+        $guest = $data[0];
 
-            $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name, fc.CUST_ID FROM FLXY_CUSTOMER as fc
-                    inner join FLXY_ACCOMPANY_PROFILE as fap on fc.CUST_ID = fap.ACCOMP_CUST_ID where fap.ACCOMP_REF_RESV_ID = :reservation_id:";
-            $param = ['reservation_id' => $reservation_id];
-            $data['accompany_profiles'] = $this->DB->query($sql, $param)->getResultArray();
-            
-            foreach($data['accompany_profiles'] as $index => $profile){
-                $sql = "SELECT * from FLXY_DOCUMENTS where DOC_CUST_ID = :customer_id:";
-                $param = ['customer_id' => $profile['CUST_ID']];
-                
-                $data['accompany_profiles'][$index]['document_uploaded_check'] = false;
-                if(count($this->DB->query($sql, $param)->getResultArray())){
-                    $data['accompany_profiles'][$index]['document_uploaded_check'] = true;
-                }
-            }
-        }
+        $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name, 
+                        fc.CUST_ID, 
+                        count(fd.DOC_ID) as is_document_uploaded 
+                        FROM FLXY_CUSTOMER as fc
+                        inner join FLXY_ACCOMPANY_PROFILE as fap on fc.CUST_ID = fap.ACCOMP_CUST_ID 
+                        left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID 
+                        where fap.ACCOMP_REF_RESV_ID = :reservation_id:
+                        group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID";
 
-        if (!empty($data))
+        $param = ['reservation_id' => $reservation_id];
+        $guest['accompany_profiles'] = $this->DB->query($sql, $param)->getResultArray();
+
+        if (!empty($guest['accompany_profiles']))
             $result = responseJson(200, false, ["msg" => "Accompany list for the reservation"], $data);
         else
-            $result = responseJson(201, false, ["msg" => "There is no accompany person"]);
+            $result = responseJson(404, false, ["msg" => "There is no accompany person"]);
 
         return $this->respond($result);
     }
@@ -253,31 +254,22 @@ class APIController extends BaseController
         OUTPUT : list and details of the accompanying the persons   */
     public function requestSelfUpload()
     {
-        $resID = $this->request->user['RESV_ID'];
-
-        $validate = $this->validate([
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'email' => 'required|valid_email',
-        ]);
-
-        if (!$validate) {
-            $validate = $this->validator->getErrors();
-            $result = responseJson("403", true, $validate);
-
-            return $this->respond($result);
-        }
-
-        $firstName = $this->request->getVar("firstName");
-        $lastName = $this->request->getVar("lastName");
-        $email = $this->request->getVar("email");
+        $reservation_id = $this->request->getVar('reservation_id');
+        $customer_id = $this->request->getVar('customer_id');
 
         // email sending to the accompany person
-        $param = ['RESV_ID' => $resID];
-        $sql = "SELECT RESV_ID,RESV_NO,RESV_ARRIVAL_DT,RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_FEATURE,CUST_FIRST_NAME,CUST_EMAIL FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:RESV_ID: AND RESV_NAME=CUST_ID";
+        $sql = "SELECT RESV_ID, RESV_NO, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO_F_ROOM, RESV_FEATURE, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_EMAIL 
+                FROM FLXY_RESERVATION, FLXY_CUSTOMER
+                WHERE RESV_ID = :reservation_id: 
+                    AND CUST_ID = :customer_id:";
+        $param = ['reservation_id' => $reservation_id, 'customer_id' => $customer_id];
+
         $reservationInfo = $this->DB->query($sql, $param)->getResultArray();
+        if(!count($reservationInfo))
+            return $this->respond(responseJson(404, true, ['msg' => 'Reservation not found.']));
+
         $emailCall = new EmailLibrary();
-        $emailResp = $emailCall->requestDocUploadEmail($reservationInfo, $email, $firstName . " " . $lastName);
+        $emailResp = $emailCall->requestDocUploadEmail($reservationInfo, $reservationInfo[0]['CUST_EMAIL'], $reservationInfo[0]['CUST_FIRST_NAME'] . " " . $reservationInfo[0]['CUST_LAST_NAME']);
 
         if ($emailResp)
             $result = responseJson(200, false, ["msg" => "Email send Successfully"]);
