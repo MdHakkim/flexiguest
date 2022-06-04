@@ -241,7 +241,7 @@ class APIController extends BaseController
         $guest['accompany_profiles'] = $this->DB->query($sql, $param)->getResultArray();
 
         if (!empty($guest['accompany_profiles']))
-            $result = responseJson(200, false, ["msg" => "Accompany list for the reservation"], $data);
+            $result = responseJson(200, false, ["msg" => "Accompany list for the reservation"], $guest);
         else
             $result = responseJson(404, false, ["msg" => "There is no accompany person"]);
 
