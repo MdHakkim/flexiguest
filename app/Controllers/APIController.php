@@ -175,7 +175,7 @@ class APIController extends BaseController
         if (!empty($data))
             $result = responseJson(200, false, ["msg" => "Reservation fetched Successfully"], $data);
         else
-            $result = responseJson(500, true, ["msg" => "No reservation found for this user"], $data);
+            $result = responseJson(500, true, ["msg" => "No reservation found for this user"]);
 
         return $this->respond($result);
     }
@@ -213,6 +213,11 @@ class APIController extends BaseController
         $reservation_id = $this->request->getVar('reservation_id');
 
         // an indicator to inform this is accompanying person
+<<<<<<< .mine
+        $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name FROM FLXY_CUSTOMER as fc  where CUST_ID = :customer_id:";
+||||||| .r224
+        $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name FROM FLXY_CUSTOMER as fc where CUST_ID = :customer_id:";
+=======
         $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name, 
                         fc.CUST_ID, 
                         count(fd.DOC_ID) as is_document_uploaded 
@@ -221,6 +226,7 @@ class APIController extends BaseController
                         where CUST_ID = :customer_id:
                         group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID";
 
+>>>>>>> .r229
         $param = ['customer_id' => $customer_id];
         $data = $this->DB->query($sql, $param)->getResultArray();
         if(!count($data))
@@ -293,7 +299,7 @@ class APIController extends BaseController
         $file = $this->validate([
             'images' => [
                 'uploaded[images]',
-                'mime_in[images,image/png, image/jpeg]',
+                'mime_in[images,image/png,image/jpeg,image/jpg]',
                 'max_size[images,500]',
             ],
         ]);
@@ -354,7 +360,7 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        return $this->respond(responseJson(500, true, "something went wrong"));
+        return $this->respond(responseJson(500, true, ["something went wrong"]));
     }
 
     /*  FUNCTION : SAVE GUEST DETAILS FROM THE IMAGE UPLOADED.
