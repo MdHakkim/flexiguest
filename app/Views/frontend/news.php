@@ -406,8 +406,7 @@
                         },
                         dataType: 'json',
                         success: function(respn) {
-                            showModalAlert('warning',
-                                '<li>The News has been deleted</li>');
+                            showModalAlert('success', '<li>The News has been deleted</li>');
                             $('#dataTable_view').dataTable().fnDraw();
                         }
                     });
