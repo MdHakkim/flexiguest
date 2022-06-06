@@ -243,7 +243,7 @@ class APIController extends BaseController
         if (!empty($guest['accompany_profiles']))
             $result = responseJson(200, false, ["msg" => "Accompany list for the reservation"], $guest);
         else
-            $result = responseJson(404, false, ["msg" => "There is no accompany person"]);
+            $result = responseJson(400, false, ["msg" => "There is no accompany person"],$guest);
 
         return $this->respond($result);
     }
