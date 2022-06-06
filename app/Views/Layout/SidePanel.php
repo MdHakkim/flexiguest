@@ -839,6 +839,7 @@
                                             'News',
                                             'Guideline',
                                             'App Update',
+                                            'Transport',
                                             'Currency',
                                             'Exchange Codes',
                                             'Exchange Rates',
@@ -1034,6 +1035,13 @@
                                 <div data-i18n="Guideline">App Update</div>
                             </a>
                         </li>
+                        
+                        <li class="menu-item <?= (isset($title) && $title == 'Transport') ? 'active' : '' ?>">
+                            <a href="<?= base_url('/transport') ?>" class="menu-link">
+                                <div data-i18n="Transport">Transport</div>
+                            </a>
+                        </li>
+
                         <li class="menu-item <?= (isset($title) && $title == 'Currency') ? 'active' : '' ?>">
                             <a href="<?= base_url('/currency') ?>" class="menu-link">
                                 <div data-i18n="Currency">Currency</div>
