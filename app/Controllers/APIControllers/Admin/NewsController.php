@@ -19,10 +19,10 @@ class NewsController extends BaseController
 
     public function news()
     {
-        $news = $this->News->orderBy('id', 'desc')->findAll(20);
+        $news = $this->News->orderBy('NS_ID', 'desc')->findAll(20);
         
         foreach($news as $index => $item){
-            $news[$index]['cover_image'] = base_url($item['cover_image']);
+            $news[$index]['NS_COVER_IMAGE'] = base_url($item['NS_COVER_IMAGE']);
         }
 
         $result = responseJson(200, false, 'news list', $news);

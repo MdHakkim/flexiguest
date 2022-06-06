@@ -6,20 +6,20 @@ use CodeIgniter\Model;
 
 class News extends Model
 {
-    protected $table      = 'news';
-    protected $primaryKey = 'id';
+    protected $table      = 'FLXY_NEWS';
+    protected $primaryKey = 'NS_ID';
     protected $allowedFields = [
-        'title',
-        'cover_image',
-        'description',
-        'body',
-        'created_by',
-        'updated_by',
+        'NS_TITLE',
+        'NS_COVER_IMAGE',
+        'NS_DESCRIPTION',
+        'NS_BODY',
+        'NS_CREATED_BY',
+        'NS_UPDATED_BY',
     ];
 
     protected $useAutoIncrement = true;
 
     protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    protected $createdField  = 'NS_CREATED_AT';
+    protected $updatedField  = 'NS_UPDATED_AT';
 }

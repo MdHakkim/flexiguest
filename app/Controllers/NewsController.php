@@ -29,8 +29,8 @@ class NewsController extends BaseController
     public function allNews()
     {
         $mine = new ServerSideDataTable();
-        $tableName = 'news';
-        $columns = 'id,title,cover_image,description,body,created_at';
+        $tableName = 'FLXY_NEWS';
+        $columns = 'NS_ID,NS_TITLE,NS_COVER_IMAGE,NS_DESCRIPTION,NS_BODY,NS_CREATED_AT';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -42,29 +42,29 @@ class NewsController extends BaseController
         $id = $this->request->getPost('id');
         
         $rules = [
-            'title' => ['required'],
-            'description' => ['required'],
-            'body' => ['required'],
+            'NS_TITLE' => ['required'],
+            'NS_DESCRIPTION' => ['required'],
+            'NS_BODY' => ['required'],
         ];
 
-        if (empty($id) || $this->request->getFile('cover_image'))
+        if (empty($id) || $this->request->getFile('NS_COVER_IMAGE'))
             $rules = array_merge($rules, [
-                'cover_image' => [
+                'NS_COVER_IMAGE' => [
                     'label' => 'Cover Image',
-                    'rules' => ['uploaded[cover_image]', 'mime_in[cover_image,image/png,image/jpg,image/jpeg]', 'max_size[cover_image,2048]']
+                    'rules' => ['uploaded[NS_COVER_IMAGE]', 'mime_in[NS_COVER_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[NS_COVER_IMAGE,2048]']
                 ],
             ]);
 
         if (!$this->validate($rules)) {
             $errors = $this->validator->getErrors();
-            $result = responseJson("-402", $errors);
+            $result = responseJson(403, true, $errors);
             
             return $this->respond($result);
         }
 
         $data = [];
-        if ($this->request->getFile('cover_image')) {
-            $image = $this->request->getFile('cover_image');
+        if ($this->request->getFile('NS_COVER_IMAGE')) {
+            $image = $this->request->getFile('NS_COVER_IMAGE');
             $image_name = $image->getName();
             $directory = "assets/Uploads/news/cover_image/";
 
@@ -73,20 +73,25 @@ class NewsController extends BaseController
             if ($response['SUCCESS'] != 200)
                 return $this->respond(responseJson("500", true, "image not uploaded"));
 
-            $data['cover_image'] = $directory . $response['RESPONSE']['OUTPUT'];
+            $data['NS_COVER_IMAGE'] = $directory . $response['RESPONSE']['OUTPUT'];
         }
 
-        $data['title'] = trim($this->request->getPost('title'));
-        $data['description'] = trim($this->request->getPost('description'));
-        $data['body'] = trim($this->request->getPost('body'));
+        $data['NS_TITLE'] = trim($this->request->getPost('NS_TITLE'));
+        $data['NS_DESCRIPTION'] = trim($this->request->getPost('NS_DESCRIPTION'));
+        $data['NS_BODY'] = trim($this->request->getPost('NS_BODY'));
 
-        $response = !empty($id)
-            ? $this->News->update($id, $data)
-            : $this->News->insert($data);
+        if(empty($id)){
+            $data['NS_CREATED_BY'] = $data['NS_UPDATED_BY'] = $user_id;
+            $response = $this->News->insert($data);
+        }
+        else{
+            $data['NS_UPDATED_BY'] = $user_id;
+            $response = $this->News->update($id, $data);
+        }
 
         $result = $response
-            ? responseJson("1", "0", $response, $response = '')
-            : responseJson("-444", "db insert not successful", $response);
+            ? responseJson(200, "0", $response, $response = '')
+            : responseJson(500, "db insert not successful", $response);
 
         return $this->respond($result);
     }
@@ -95,7 +100,7 @@ class NewsController extends BaseController
     {
         $id = $this->request->getPost('id');
 
-        $news = $this->News->where('id', $id)->first();
+        $news = $this->News->where('NS_ID', $id)->first();
 
         if ($news)
             return $this->respond($news);
@@ -109,8 +114,8 @@ class NewsController extends BaseController
 
         $return = $this->News->delete($id);
         $result = $return 
-                    ? responseJson("200", false, "record deleted", $return)
-                    : responseJson("-402", "record not deleted");
+                    ? responseJson(200, false, "record deleted", $return)
+                    : responseJson(500, true, "record not deleted");
         
         return $this->respond($result);
     }
