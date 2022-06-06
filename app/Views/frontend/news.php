@@ -54,28 +54,28 @@
 
                                 <label class="form-label"><b>Title *</b></label>
 
-                                <input type="text" name="title" class="form-control" placeholder="Title" required />
+                                <input type="text" name="NS_TITLE" class="form-control" placeholder="Title" required />
                             </div>
 
                             <div class="col-md-6">
 
                                 <label class="form-label"><b>Cover Image *</b></label>
 
-                                <input type="file" name="cover_image" class="form-control" required />
+                                <input type="file" name="NS_COVER_IMAGE" class="form-control" required />
                             </div>
 
                             <div class="col-md-12">
 
                                 <label class="form-label"><b>Description *</b></label>
 
-                                <textarea type="number" name="description" class="form-control" placeholder="Description..."></textarea>
+                                <textarea type="number" name="NS_DESCRIPTION" class="form-control" placeholder="Description..."></textarea>
                             </div>
 
                             <div class="col-md-12">
 
                                 <label class="form-label"><b>Body *</b></label>
 
-                                <textarea name="body" class="d-none"></textarea>
+                                <textarea name="NS_BODY" class="d-none"></textarea>
 
                                 <div id="snow-editor"></div>
                             </div>
@@ -89,7 +89,7 @@
                         Close
                     </button>
 
-                    <button type="button" id="submitBtn" onClick="submitForm('submit-form')" class="btn btn-primary">
+                    <button type="button" id="submitBtn" onClick="submitForm()" class="btn btn-primary">
                         Save
                     </button>
                 </div>
@@ -132,26 +132,26 @@
                     data: ''
                 },
                 {
-                    data: 'title'
+                    data: 'NS_TITLE'
                 },
                 {
                     data: null,
                     render: function(data, type, row, meta) {
                         return (
                             `
-                                <img src='${data['cover_image']}' width='80' height='80'/>
+                                <img src='${data['NS_COVER_IMAGE']}' width='80' height='80'/>
                             `
                         );
                     }
                 },
                 {
-                    data: 'description'
+                    data: 'NS_DESCRIPTION'
                 },
                 {
-                    data: 'body'
+                    data: 'NS_BODY'
                 },
                 {
-                    data: 'created_at'
+                    data: 'NS_CREATED_AT'
                 },
                 {
                     data: null,
@@ -166,7 +166,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['id']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['NS_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -174,7 +174,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['id']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['NS_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -265,15 +265,17 @@
             '</ul>');
     }
 
-    // Show Add Rate Class Form
+    function resetForm(){
+        let id = "submit-form";
 
+        $(`#${id} input`).val('');
+        $(`#${id} textarea`).val('');
+        $(`#${id} #snow-editor .ql-editor`).html('');
+    }
+
+    // Show Add Rate Class Form
     function addForm() {
-        $(`#submit-form input[name='id']`).val('');
-        $(`#submit-form input[name='title']`).val('');
-        $(`#submit-form input[name='cover_image']`).val('');
-        $(`#submit-form textarea[name='description']`).val('');
-        $(`#submit-form textarea[name='body']`).val('');
-        $(`#submit-form #snow-editor .ql-editor`).html('');
+        resetForm();
 
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
         $('#popModalWindowlabel').html('Add News');
@@ -281,8 +283,98 @@
         $('#popModalWindow').modal('show');
     }
 
-    // Delete Rate Class
+    // Add New or Edit Rate Class submit Function
+    function submitForm() {
+        hideModalAlerts();
 
+        let id = 'submit-form';
+        $(`#${id} textarea[name='NS_BODY']`).val($("#snow-editor .ql-editor").html());
+
+        var fd = new FormData($(`#${id}`)[0]);
+        fd.delete('NS_COVER_IMAGE');
+
+        let files = $(`#${id} input[name='NS_COVER_IMAGE']`)[0].files;
+        if (files.length)
+            fd.append('NS_COVER_IMAGE', files[0]);
+
+        $.ajax({
+            url: '<?= base_url('/news/store') ?>',
+            type: "post",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(respn) {
+                console.log(respn, "testing");
+                var response = respn['SUCCESS'];
+                if (response != 200) {
+
+                    var ERROR = respn['RESPONSE']['ERROR'];
+                    var mcontent = '';
+                    $.each(ERROR, function(ind, data) {
+                        console.log(data, "SDF");
+                        mcontent += '<li>' + data + '</li>';
+                    });
+                    showModalAlert('error', mcontent);
+                } else {
+                    var alertText = $(`#submit-form input[name='id']`).val() == '' ?
+                        '<li>News has been created</li>' :
+                        '<li>News has been updated</li>';
+
+                    showModalAlert('success', alertText);
+
+                    $('#popModalWindow').modal('hide');
+                    $('#dataTable_view').dataTable().fnDraw();
+                }
+            }
+        });
+    }
+
+    // Show Edit Rate Class Form
+    $(document).on('click', '.editWindow', function() {
+        resetForm();
+        
+        $('.dtr-bs-modal').modal('hide');
+        var news_id = $(this).attr('data_id');
+
+        let id = "submit-form";
+        $(`#${id} input[name='id']`).val(news_id);
+
+        $('#popModalWindowlabel').html('Edit News');
+        $('#popModalWindow').modal('show');
+
+        var url = '<?php echo base_url('/news/edit') ?>';
+        $.ajax({
+            url: url,
+            type: "post",
+            data: {
+                id: news_id
+            },
+            dataType: 'json',
+            success: function(respn) {
+                $(respn).each(function(inx, data) {
+                    console.log(data);
+
+                    $.each(data, function(field, val) {
+
+                        if ($(`#${id} input[name='${field}'][type!='file']`).length)
+                            $(`#${id} input[name='${field}']`).val(val);
+
+                        else if ($(`#${id} textarea[name='${field}']`).length)
+                            $(`#${id} textarea[name='${field}']`).val(val);
+
+                        if(field == 'body')
+                            $("#snow-editor .ql-editor").html(val);
+
+                    });
+                });
+
+                $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
+            }
+        });
+    });
+
+    // Delete Rate Class
     $(document).on('click', '.delete-record', function() {
         hideModalAlerts();
         $('.dtr-bs-modal').modal('hide');
@@ -314,8 +406,7 @@
                         },
                         dataType: 'json',
                         success: function(respn) {
-                            showModalAlert('warning',
-                                '<li>The News has been deleted</li>');
+                            showModalAlert('success', '<li>The News has been deleted</li>');
                             $('#dataTable_view').dataTable().fnDraw();
                         }
                     });
@@ -323,160 +414,6 @@
             }
         });
     });
-
-    // $(document).on('click','.flxCheckBox',function(){
-    //   var checked = $(this).is(':checked');
-    //   var parent = $(this).parent();
-    //   if(checked){
-    //     parent.find('input[type=hidden]').val('Y');
-    //   }else{
-    //     parent.find('input[type=hidden]').val('N');
-    //   }
-    // });
-
-
-    // Show Edit Rate Class Form
-
-    $(document).on('click', '.editWindow', function() {
-        $(`#submit-form input[type='file']`).val('');
-        
-        $('.dtr-bs-modal').modal('hide');
-
-        var id = $(this).attr('data_id');
-        $('#popModalWindowlabel').html('Edit News');
-        $('#popModalWindow').modal('show');
-
-        var url = '<?php echo base_url('/news/edit') ?>';
-        $.ajax({
-            url: url,
-            type: "post",
-            data: {
-                id: id
-            },
-            dataType: 'json',
-            success: function(respn) {
-                $(respn).each(function(inx, data) {
-                    console.log(data);
-
-                    $.each(data, function(field, val) {
-
-                        if ($(`#submit-form input[name='${field}'][type!='file']`).length)
-                            $(`#submit-form input[name='${field}']`).val(val);
-
-                        else if ($(`#submit-form textarea[name='${field}']`).length)
-                            $(`#submit-form textarea[name='${field}']`).val(val);
-
-                        if(field == 'body')
-                            $("#snow-editor .ql-editor").html(val);
-
-                    });
-                });
-
-                $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
-            }
-        });
-    });
-
-    // Show Copy Rate Class Form
-
-    $(document).on('click', '.copyWindow', function() {
-
-        $('.dtr-bs-modal').modal('hide');
-
-        var sysid = $(this).attr('data_sysid');
-        var rtcode = $(this).attr('data_rtcode');
-
-        $('#main_RT_CL_ID').val(sysid);
-
-        $('#copyModalWindowlabel').html('Create Rate Class Copies of \'' + rtcode + '\'');
-
-        //Reset repeated fields every time modal is loaded
-        $('[data-repeater-item]').slice(1).empty();
-        $('#form-repeater-1-1').val("");
-
-        $('#copyModalWindow').modal('show');
-
-    });
-
-
-    // Add New or Edit Rate Class submit Function
-
-    function submitForm(id) {
-        hideModalAlerts();
-
-        $(`#${id} textarea[name='body']`).val($("#snow-editor .ql-editor").html());
-
-        var fd = new FormData();
-        fd.append('id', $(`#${id} input[name='id']`).val());
-        fd.append('title', $(`#${id} input[name='title']`).val());
-        fd.append('description', $(`#${id} textarea[name='description']`).val());
-        fd.append('body', $(`#${id} textarea[name='body']`).val());
-
-        let files = $(`#${id} input[name='cover_image']`)[0].files;
-        if (files.length)
-            fd.append('cover_image', files[0]);
-
-        $.ajax({
-            url: '<?= base_url('/news/store') ?>',
-            type: "post",
-            data: fd,
-            processData: false,
-            contentType: false,
-            dataType: 'json',
-            success: function(respn) {
-                console.log(respn, "testing");
-                var response = respn['SUCCESS'];
-                if (response != '1') {
-
-                    var ERROR = respn['RESPONSE']['ERROR'];
-                    var mcontent = '';
-                    $.each(ERROR, function(ind, data) {
-                        console.log(data, "SDF");
-                        mcontent += '<li>' + data + '</li>';
-                    });
-                    showModalAlert('error', mcontent);
-                } else {
-                    var alertText = $(`#submit-form input[name='id']`).val() == '' ?
-                        '<li>News has been created</li>' :
-                        '<li>News has been updated</li>';
-
-                    showModalAlert('success', alertText);
-
-                    $('#popModalWindow').modal('hide');
-                    $('#dataTable_view').dataTable().fnDraw();
-                }
-            }
-        });
-    }
-
-    // Copy Rate Class to Multiple submit Function
-
-    function copyForm(id) {
-        hideModalAlerts();
-
-        var formSerialization = $('#' + id).serializeArray();
-        var url = '<?php echo base_url('/copyRateClass') ?>';
-        $.ajax({
-            url: url,
-            type: "post",
-            data: formSerialization,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response == '0') {
-                    showModalAlert('error', '<li>No New Rate Classes were added</li>');
-                } else {
-                    showModalAlert('success', '<li>' + response +
-                        ' new Rate Class copies have been created</li>');
-                    $('#copyModalWindow').modal('hide');
-                    $('#dataTable_view').dataTable().fnDraw();
-                }
-            }
-        });
-    }
-
 
     // bootstrap-maxlength & repeater (jquery)
     $(function() {

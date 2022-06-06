@@ -7,19 +7,19 @@ use CodeIgniter\Model;
 class ShuttleRoute extends Model
 {
     protected $table      = 'FLXY_SHUTTLE_ROUTE';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'FSR_ID';
     protected $allowedFields = [
-        'shuttle_id',
-        'stage_id',
-        'duration_mins',
-        'order_no',
-        'create_uid',
-        'update_uid',
+        'FSR_SHUTTLE_ID',
+        'FSR_STAGE_ID',
+        'FSR_DURATION_MINS',
+        'FSR_ORDER_NO',
+        'FSR_CREATE_UID',
+        'FSR_UPDATE_UID',
     ];
 
     protected $useAutoIncrement = true;
 
     protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    protected $createdField  = 'FSR_CREATED_AT';
+    protected $updatedField  = 'FSR_UPDATED_AT';
 }

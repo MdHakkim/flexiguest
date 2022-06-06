@@ -120,20 +120,20 @@
                     <div class="window-1" id="window1">
 
                         <form id="add-stop-form" enctype="multipart/form-data" novalidate>
-                            <input type="hidden" name="shuttle_id" class="form-control" />
+                            <input type="hidden" name="FSR_SHUTTLE_ID" class="form-control" />
 
                             <div class="row g-3">
 
                                 <div class="col-md-4">
                                     <label class="form-label">Stops</label>
-                                    <select name="stage_id" class="select2 form-select stages" data-allow-clear="true">
+                                    <select name="FSR_STAGE_ID" class="select2 form-select stages" data-allow-clear="true">
                                         <option value="">Select Stop</option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-4">
                                     <label class="form-label">Stop Duration <b>(mins)</b></label>
-                                    <input type="number" name="duration_mins" class="form-control" autocomplete="off">
+                                    <input type="number" name="FSR_DURATION_MINS" class="form-control" autocomplete="off">
                                 </div>
 
                                 <div class="col-md-4">
@@ -366,14 +366,14 @@
                     $.each(stops_list, function(index, stop) {
                         stop_list_html += `
                                     <li class="list-group-item lh-1 d-flex justify-content-between align-items-center">
-                                        <input type='hidden' name='shuttle_route_ids[]' value='${stop.id}'/>
+                                        <input type='hidden' name='shuttle_route_ids[]' value='${stop.FSR_ID}'/>
                                         
                                         <span class="d-flex justify-content-between align-items-center">
                                             <i class="drag-handle cursor-move bx bx-menu align-text-bottom me-2"></i>
                                             <span>${stop.SHUTL_STAGE_NAME}</span>
                                         </span>
 
-                                        <i onClick="removeShuttleStop(${stop.id})" class="text-danger cursor-pointer fa-solid fa-xmark"></i>
+                                        <i onClick="removeShuttleStop(${stop.FSR_ID})" class="text-danger cursor-pointer fa-solid fa-xmark"></i>
                                     </li>
                         `;
                     });
@@ -398,14 +398,14 @@
         let shuttle_id = $(this).attr('data_id');
         getShuttleStops(shuttle_id);
 
-        $('#add-stop-modal input[name="shuttle_id"]').val(shuttle_id);
+        $('#add-stop-modal input[name="FSR_SHUTTLE_ID"]').val(shuttle_id);
 
         $('#add-stop-modal').modal('show');
     });
 
     function resetAddStopForm() {
         $("#add-stop-form .select2").val(null).trigger('change');
-        $("#add-stop-form input[name='duration_mins']").val('');
+        $("#add-stop-form input[name='FSR_DURATION_MINS']").val('');
     }
 
     function submitAddStopForm() {
@@ -434,7 +434,7 @@
                 }
 
                 showModalAlert('success', response.RESPONSE.REPORT_RES);
-                getShuttleStops($("#add-stop-form input[name='shuttle_id']").val());
+                getShuttleStops($("#add-stop-form input[name='FSR_SHUTTLE_ID']").val());
                 resetAddStopForm();
             }
         });
@@ -457,7 +457,7 @@
                 }
 
                 showModalAlert('success', response.RESPONSE.REPORT_RES);
-                getShuttleStops($("#add-stop-form input[name='shuttle_id']").val());
+                getShuttleStops($("#add-stop-form input[name='FSR_SHUTTLE_ID']").val());
             }
         });
     }

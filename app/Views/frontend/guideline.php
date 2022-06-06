@@ -4,16 +4,19 @@
 <?= $this->include('Layout/SuccessReport') ?>
 
 <style>
-    .optional-files .image, .optional-files .file{
+    .optional-files .image,
+    .optional-files .file {
         position: relative;
         height: 100px;
         margin-bottom: 10px;
         width: 100px;
     }
+
     .optional-files .image img {
         width: 100%;
         height: 100%;
     }
+
     .optional-files .delete-icon {
         position: absolute;
         color: red;
@@ -21,19 +24,20 @@
         top: -8px;
         cursor: pointer;
     }
-    .optional-files .file{
+
+    .optional-files .file {
         display: flex;
         justify-content: center;
         align-items: center;
     }
-    .optional-files .file a{
+
+    .optional-files .file a {
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
         height: 100%;
         overflow: hidden;
     }
-
 </style>
 
 <!-- Content wrapper -->
@@ -82,33 +86,33 @@
                 <div class="modal-body">
                     <form id="submit-form" class="needs-validation" novalidate>
                         <div class="row g-3">
-                            <input type="hidden" name="id" id="guideline-id" class="form-control" />
+                            <input type="hidden" name="id" class="form-control" />
 
                             <div class="col-md-6">
 
                                 <label class="form-label"><b>Title *</b></label>
 
-                                <input type="text" name="title" class="form-control" placeholder="Title" required />
+                                <input type="text" name="GL_TITLE" class="form-control" placeholder="Title" required />
                             </div>
 
                             <div class="col-md-6">
 
                                 <label class="form-label"><b>Cover Image *</b></label>
 
-                                <input type="file" name="cover_image" class="form-control" required />
+                                <input type="file" name="GL_COVER_IMAGE" class="form-control" required />
                             </div>
 
                             <div class="col-md-12">
 
                                 <label class="form-label"><b>Description *</b></label>
 
-                                <textarea type="number" name="description" class="form-control" placeholder="Description..."></textarea>
+                                <textarea type="number" name="GL_DESCRIPTION" class="form-control" placeholder="Description..."></textarea>
                             </div>
 
                             <div class="col-md-12">
                                 <label class="form-label"><b>Optional Files</b></label>
 
-                                <input type="file" name="files[]" class="form-control" multiple />
+                                <input type="file" name="GL_FILES[]" class="form-control" multiple />
                             </div>
 
                             <div class="col-md-12 optional-files">
@@ -133,7 +137,7 @@
 
                                 <label class="form-label"><b>Body *</b></label>
 
-                                <textarea name="body" class="d-none"></textarea>
+                                <textarea name="GL_BODY" class="d-none"></textarea>
 
                                 <div id="snow-editor"></div>
                             </div>
@@ -147,7 +151,7 @@
                         Close
                     </button>
 
-                    <button type="button" id="submitBtn" onClick="submitForm('submit-form')" class="btn btn-primary">
+                    <button type="button" id="submitBtn" onClick="submitForm()" class="btn btn-primary">
                         Save
                     </button>
                 </div>
@@ -190,46 +194,46 @@
                     data: ''
                 },
                 {
-                    data: 'title'
+                    data: 'GL_TITLE'
                 },
                 {
                     data: null,
                     render: function(data, type, row, meta) {
                         return (
                             `
-                                <img src='${data['cover_image']}' width='80' height='80'/>
+                                <img src='${data['GL_COVER_IMAGE']}' width='80' height='80'/>
                             `
                         );
                     }
                 },
                 {
-                    data: 'description'
+                    data: 'GL_DESCRIPTION'
                 },
                 {
-                    data: 'body'
+                    data: 'GL_BODY'
                 },
                 {
-                    data: 'created_at'
+                    data: 'GL_CREATED_AT'
                 },
                 {
                     data: null,
-                    render: function (data, type, row, meta) {
+                    render: function(data, type, row, meta) {
                         let html = `<div class="optional-files"> <div class="row">`;
 
-                        $.each(data['guideline_files'], function(key, file) {
-                            if(file['file_type'].includes('image'))
+                        $.each(data['GUIDELINE_FILES'], function(key, file) {
+                            if (file['GLF_FILE_TYPE'].includes('image'))
                                 html += `
                                     <div class="col-sm-4 col-md-3 col-lg-2 image">
-                                        <img src="${file['file_url']}"/>
+                                        <img src="${file['GLF_FILE_URL']}"/>
                                     </div>
                                 `;
                             else
                                 html += `
                                     <div class="col-sm-4 col-md-3 col-lg-2 file">
-                                        <a href="<?=base_url()?>/${file['file_url']}" target="_blank">
+                                        <a href="<?= base_url() ?>/${file['GLF_FILE_URL']}" target="_blank">
                                             <i class="fa-solid fa-file fa-4x"></i>
                                             
-                                            <span>${file['file_name']}</span>
+                                            <span>${file['GLF_FILE_NAME']}</span>
                                         </a>
                                     </div>`;
                         });
@@ -250,7 +254,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['id']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['GL_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -258,7 +262,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['id']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['GL_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -288,8 +292,7 @@
                 width: "5%"
             }, {
                 width: "45%"
-            }
-            , {
+            }, {
                 width: "5%"
             }],
             "order": [
@@ -352,15 +355,18 @@
             '</ul>');
     }
 
-    // Show Add Rate Class Form
+    function resetForm() {
+        let id = "submit-form";
 
+        $(`#${id} input`).val('');
+        $(`#${id} textarea`).val('');
+        $(`#${id} #snow-editor .ql-editor`).html('');
+        $(`#${id} .optional-files .row`).html('');
+    }
+
+    // Show Add Rate Class Form
     function addForm() {
-        $(`#submit-form input[name='id']`).val('');
-        $(`#submit-form input[name='title']`).val('');
-        $(`#submit-form input[type='file']`).val('');
-        $(`#submit-form textarea[name='description']`).val('');
-        $(`#submit-form textarea[name='body']`).val('');
-        $(`#submit-form #snow-editor .ql-editor`).html('');
+        resetForm();
 
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
         $('#popModalWindowlabel').html('Add Guideline');
@@ -368,8 +374,128 @@
         $('#popModalWindow').modal('show');
     }
 
-    // Delete Rate Class
+    // Add New or Edit Rate Class submit Function
+    function submitForm() {
+        hideModalAlerts();
+        let id = "submit-form";
 
+        if ($("#snow-editor .ql-editor").html() != "<p><br></p>")
+            $(`#${id} textarea[name='GL_BODY']`).val($("#snow-editor .ql-editor").html());
+
+        var fd = new FormData($(`#${id}`)[0]);
+        fd.delete('GL_COVER_IMAGE');
+        fd.delete('GL_FILES[]');
+
+        files = $(`#${id} input[name='GL_COVER_IMAGE']`)[0].files;
+        if (files.length)
+            fd.append('GL_COVER_IMAGE', files[0]);
+
+        files = $(`#${id} input[name='GL_FILES[]']`)[0].files;
+        for (let i = 0; i < files.length; i++)
+            fd.append('GL_FILES[]', files[i]);
+
+        $.ajax({
+            url: '<?= base_url('/guideline/store') ?>',
+            type: "post",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(response) {
+
+                if (response['SUCCESS'] != '200') {
+
+                    var ERROR = response['RESPONSE']['REPORT_RES'];
+                    var mcontent = '';
+                    $.each(ERROR, function(ind, data) {
+                        console.log(data, "SDF");
+                        mcontent += '<li>' + data + '</li>';
+                    });
+                    showModalAlert('error', mcontent);
+                } else {
+
+                    var alertText = response['RESPONSE']['REPORT_RES']['msg'];
+                    showModalAlert('success', alertText);
+
+                    $('#popModalWindow').modal('hide');
+                    $('#dataTable_view').dataTable().fnDraw();
+                }
+            }
+        });
+    }
+
+    // Show Edit Rate Class Form
+    $(document).on('click', '.editWindow', function() {
+        resetForm();
+
+        $('.dtr-bs-modal').modal('hide');
+        var guideline_id = $(this).attr('data_id');
+
+        let id = "submit-form";
+        $(`#${id} input[name='id']`).val(guideline_id);
+
+        $('#popModalWindowlabel').html('Edit Guideline');
+        $('#popModalWindow').modal('show');
+
+        var url = '<?php echo base_url('/guideline/edit') ?>';
+        $.ajax({
+            url: url,
+            type: "post",
+            data: {
+                id: guideline_id
+            },
+            dataType: 'json',
+            success: function(respn) {
+                $(respn).each(function(inx, data) {
+                    console.log(data);
+
+                    $.each(data, function(field, val) {
+
+                        if ($(`#${id} input[name='${field}'][type!='file']`).length)
+                            $(`#${id} input[name='${field}']`).val(val);
+
+                        else if ($(`#${id} textarea[name='${field}']`).length)
+                            $(`#${id} textarea[name='${field}']`).val(val);
+
+                        if (field == 'GL_BODY')
+                            $("#snow-editor .ql-editor").html(val);
+
+                        if (field == 'GUIDELINE_FILES' && val.length) {
+                            let optional_files_html = "";
+
+                            $.each(val, function(field, file) {
+                                if (file.GLF_FILE_TYPE.includes('image')) {
+                                    optional_files_html += `
+                                        <div class="col-sm-4 col-md-3 col-lg-2 image">
+                                            <img src="<?= base_url() ?>/${file.GLF_FILE_URL}"/>
+
+                                            <i onClick="deleteOptionalFile(this, ${file.GLF_ID})" class="fa-solid fa-circle-minus delete-icon"></i>
+                                        </div>`;
+                                } else {
+                                    optional_files_html += `
+                                        <div class="col-sm-3 col-md-2 col-lg-1 file">
+                                            <a href="<?= base_url() ?>/${file.GLF_FILE_URL}" target="_blank">
+                                                <i class="fa-solid fa-file fa-4x"></i>
+                                                ${file.GLF_FILE_NAME}
+                                            </a>
+
+                                            <i onClick="deleteOptionalFile(this, ${file.GLF_ID})" class="fa-solid fa-circle-minus delete-icon"></i>
+                                        </div>`;
+                                }
+                            });
+
+                            $(`#${id} .optional-files .row`).html(optional_files_html);
+                        }
+
+                    });
+                });
+
+                $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
+            }
+        });
+    });
+
+    // Delete Rate Class
     $(document).on('click', '.delete-record', function() {
         hideModalAlerts();
         $('.dtr-bs-modal').modal('hide');
@@ -400,10 +526,14 @@
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         dataType: 'json',
-                        success: function(respn) {
-                            showModalAlert('warning',
-                                '<li>The Guideline has been deleted</li>');
-                            $('#dataTable_view').dataTable().fnDraw();
+                        success: function(response) {
+                            if (response['SUCCESS'] != 200) {
+                                showModalAlert('error', response['RESPONSE']['REPORT_RES']['msg']);
+                            } else {
+                                showModalAlert('success', response['RESPONSE']['REPORT_RES']['msg']);
+
+                                $('#dataTable_view').dataTable().fnDraw();
+                            }
                         }
                     });
                 }
@@ -411,92 +541,13 @@
         });
     });
 
-    // $(document).on('click','.flxCheckBox',function(){
-    //   var checked = $(this).is(':checked');
-    //   var parent = $(this).parent();
-    //   if(checked){
-    //     parent.find('input[type=hidden]').val('Y');
-    //   }else{
-    //     parent.find('input[type=hidden]').val('N');
-    //   }
-    // });
-
-
-    // Show Edit Rate Class Form
-
-    $(document).on('click', '.editWindow', function() {
-        $(`#submit-form input[type='file']`).val('');
-
-        $('.dtr-bs-modal').modal('hide');
-
-        var id = $(this).attr('data_id');
-        $('#popModalWindowlabel').html('Edit Guideline');
-        $('#popModalWindow').modal('show');
-
-        var url = '<?php echo base_url('/guideline/edit') ?>';
-        $.ajax({
-            url: url,
-            type: "post",
-            data: {
-                id: id
-            },
-            dataType: 'json',
-            success: function(respn) {
-                $(respn).each(function(inx, data) {
-                    console.log(data);
-
-                    $.each(data, function(field, val) {
-
-                        if ($(`#submit-form input[name='${field}'][type!='file']`).length)
-                            $(`#submit-form input[name='${field}']`).val(val);
-
-                        else if ($(`#submit-form textarea[name='${field}']`).length)
-                            $(`#submit-form textarea[name='${field}']`).val(val);
-
-                        if(field == 'body')
-                            $("#snow-editor .ql-editor").html(val);
-                        
-                        if(field == 'guideline_files' && val.length){
-                            let optional_files_html = "";
-
-                            $.each(val, function(field, file){
-                                if(file.file_type.includes('image')){
-                                    optional_files_html += `
-                                        <div class="col-sm-4 col-md-3 col-lg-2 image">
-                                            <img src="<?=base_url()?>/${file.file_url}"/>
-
-                                            <i onClick="deleteOptionalFile(this, ${file.id})" class="fa-solid fa-circle-minus delete-icon"></i>
-                                        </div>`;
-                                }
-                                else{
-                                    optional_files_html += `
-                                        <div class="col-sm-3 col-md-2 col-lg-1 file">
-                                            <a href="<?=base_url()?>/${file.file_url}" target="_blank">
-                                                <i class="fa-solid fa-file fa-4x"></i>
-                                                ${file.file_name}
-                                            </a>
-
-                                            <i onClick="deleteOptionalFile(this, ${file.id})" class="fa-solid fa-circle-minus delete-icon"></i>
-                                        </div>`;
-                                }
-                            });
-
-                            $("#submit-form .optional-files .row").html(optional_files_html);
-                        }
-
-                    });
-                });
-
-                $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
-            }
-        });
-    });
-
-    function deleteOptionalFile(e, file_id){
+    function deleteOptionalFile(e, file_id) {
         $.ajax({
             url: '<?= base_url('/guideline/delete-optional-file') ?>',
             type: "post",
-            data: { file_id },
+            data: {
+                file_id
+            },
             dataType: 'json',
             success: function(respn) {
                 console.log(respn, "testing");
@@ -522,110 +573,6 @@
             }
         });
     }
-
-
-    // Show Copy Rate Class Form
-
-    $(document).on('click', '.copyWindow', function() {
-
-        $('.dtr-bs-modal').modal('hide');
-
-        var sysid = $(this).attr('data_sysid');
-        var rtcode = $(this).attr('data_rtcode');
-
-        $('#main_RT_CL_ID').val(sysid);
-
-        $('#copyModalWindowlabel').html('Create Rate Class Copies of \'' + rtcode + '\'');
-
-        //Reset repeated fields every time modal is loaded
-        $('[data-repeater-item]').slice(1).empty();
-        $('#form-repeater-1-1').val("");
-
-        $('#copyModalWindow').modal('show');
-
-    });
-
-
-    // Add New or Edit Rate Class submit Function
-
-    function submitForm(id) {
-        hideModalAlerts();
-
-        if($("#snow-editor .ql-editor").html() != "<p><br></p>")
-            $(`#${id} textarea[name='body']`).val($("#snow-editor .ql-editor").html());
-
-        var fd = new FormData($(`#${id}`)[0]);
-        fd.delete('cover_image');
-        fd.delete('files[]');
-
-        files = $(`#${id} input[name='cover_image']`)[0].files;
-        if (files.length)
-            fd.append('cover_image', files[0]);
-
-        files = $(`#${id} input[name='files[]']`)[0].files;
-        for(let i = 0; i < files.length; i++)
-            fd.append('files[]', files[i]);
-
-        $.ajax({
-            url: '<?= base_url('/guideline/store') ?>',
-            type: "post",
-            data: fd,
-            processData: false,
-            contentType: false,
-            dataType: 'json',
-            success: function(respn) {
-                console.log(respn, "testing");
-                var response = respn['SUCCESS'];
-                if (response != '200') {
-
-                    var ERROR = respn['RESPONSE']['ERROR'];
-                    var mcontent = '';
-                    $.each(ERROR, function(ind, data) {
-                        console.log(data, "SDF");
-                        mcontent += '<li>' + data + '</li>';
-                    });
-                    showModalAlert('error', mcontent);
-                } else {
-
-                    var alertText = respn['RESPONSE']['REPORT_RES'];
-
-                    showModalAlert('success', alertText);
-
-                    $('#popModalWindow').modal('hide');
-                    $('#dataTable_view').dataTable().fnDraw();
-                }
-            }
-        });
-    }
-
-    // Copy Rate Class to Multiple submit Function
-
-    function copyForm(id) {
-        hideModalAlerts();
-
-        var formSerialization = $('#' + id).serializeArray();
-        var url = '<?php echo base_url('/copyRateClass') ?>';
-        $.ajax({
-            url: url,
-            type: "post",
-            data: formSerialization,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response == '0') {
-                    showModalAlert('error', '<li>No New Rate Classes were added</li>');
-                } else {
-                    showModalAlert('success', '<li>' + response +
-                        ' new Rate Class copies have been created</li>');
-                    $('#copyModalWindow').modal('hide');
-                    $('#dataTable_view').dataTable().fnDraw();
-                }
-            }
-        });
-    }
-
 
     // bootstrap-maxlength & repeater (jquery)
     $(function() {
