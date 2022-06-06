@@ -131,6 +131,20 @@ class ApplicatioController extends BaseController
         echo json_encode($response);
     }
 
+    public function ReservationChangesView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array("ELEMENT_ID = " => "'$sysid'"); // Add condition for main Rate Code
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_ACTIVITY_LOG_VIEW';
+        $columns = 'LOG_ID,USR_NAME,LOG_DATE,LOG_TIME,AC_TY_DESC,LOG_ACTION_DESCRIPTION';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
+
     public function removeNullJson($value){
         array_walk_recursive($value, function (&$item, $key) {
             $item = null === $item ? '' : $item;
