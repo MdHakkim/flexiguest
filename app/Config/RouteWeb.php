@@ -29,6 +29,10 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/getExistCustomer', 'ApplicatioController::getExistCustomer');
     $routes->match(['post'],'/rateQueryDetailOption', 'ApplicatioController::rateQueryDetailOption');
 
+    $routes->match(['post'],'/reservationChangesView', 'ApplicatioController::ReservationChangesView');
+
+    
+
     // $routes->match(['get'],'/testingApi/(:segment)', 'ApplicatioController::triggerReservationEmail/$1');
 
     $routes->get('/customer', 'ApplicatioController::Customer');
