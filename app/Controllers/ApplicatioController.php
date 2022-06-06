@@ -253,7 +253,7 @@ class ApplicatioController extends BaseController
                     // Save changes in log description if data is updated/changed
                     if(isset($data[$rkey]) && !empty(trim($data[$rkey])) && !empty(trim($rvalue)) && trim($data[$rkey]) != trim($rvalue))
                     {
-                        $log_action_desc .= str_replace('RESV_', '', $rkey) . " '" . $rvalue . "' -> '". $data[$rkey]."'\n";
+                        $log_action_desc .= str_replace('RESV_', '', $rkey) . " '" . $rvalue . "' -> '". $data[$rkey]."'<br/>";
                     }
                 }
 
@@ -338,7 +338,7 @@ class ApplicatioController extends BaseController
                     // Save changes in log description if data is not empty
                     if(!empty(trim($dvalue)))
                     {
-                        $log_action_desc .= str_replace('RESV_', '', $dkey) . " = '" . $dvalue ."'\n";
+                        $log_action_desc .= str_replace('RESV_', '', $dkey) . " = '" . $dvalue ."'<br/>";
                     }
                 }
             }
