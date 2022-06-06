@@ -2968,7 +2968,7 @@ function showReservationChanges(rsrvId = 0) {
                 display: $.fn.dataTable.Responsive.display.modal({
                     header: function(row) {
                         var data = row.data();
-                        return 'Details of RES' + rsrvId;
+                        return 'Log Details of RES' + rsrvId;
                     }
                 }),
                 type: 'column',
