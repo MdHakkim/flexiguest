@@ -2956,7 +2956,7 @@ function showReservationChanges(rsrvId = 0) {
             width: "23%"
         }],
         "order": [
-            [2, "asc"]
+            [2, "desc"]
         ],
         destroy: true,
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end">>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
