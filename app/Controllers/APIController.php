@@ -294,7 +294,7 @@ class APIController extends BaseController
             'images' => [
                 'uploaded[images]',
                 'mime_in[images,image/png,image/jpeg,image/jpg]',
-                'max_size[images,500]',
+                'max_size[images,1024]',
             ],
         ]);
 
@@ -534,7 +534,7 @@ class APIController extends BaseController
             'vaccine' => [
                 'uploaded[vaccine]',
                 'mime_in[vaccine,image/png, image/jpeg]',
-                'max_size[vaccine,500]',
+                'max_size[vaccine,1024]',
             ],
         ]);
 
@@ -603,7 +603,7 @@ class APIController extends BaseController
             'signature' =>  [
                 'uploaded[signature]',
                 'mime_in[signature,image/png, image/jpeg]',
-                'max_size[signature,500]',
+                'max_size[signature,1024]',
             ],
         ]);
 
@@ -685,7 +685,7 @@ class APIController extends BaseController
             'attachement' =>  [
                 'uploaded[attachement]',
                 'mime_in[attachement,image/png, image/jpeg]',
-                'max_size[attachement,500]',
+                'max_size[attachement,1024]',
             ],
         ]);
 
