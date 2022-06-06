@@ -1344,7 +1344,7 @@
     <!-- Changes Log window -->
     <div class="modal fade" id="changesWindow" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="changesWindowLabel">Activity Log</h5>
@@ -1357,8 +1357,9 @@
                                 <thead>
                                     <tr>
                                         <th class="all">User</th>
+                                        <th>Log ID</th>
+                                        <th class="all">Date</th>
                                         <th>Time</th>
-                                        <th>Date</th>
                                         <th class="all">Action Type</th>
                                         <th>Description</th>
                                     </tr>
@@ -1368,8 +1369,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" onClick="accompanySet('A',event)" class="btn btn-primary">Attach</button>
-                    <button type="button" onClick="accompanySet('D',event)" class="btn btn-warning">Detach</button>
+                    <button type="button" data-bs-dismiss="modal" class="btn btn-secondary">Close</button>
                 </div>
             </div>
         </div>
@@ -2898,6 +2898,7 @@ function submitItemForm(id) {
 //Show Activity Log table in modal
 
 function showReservationChanges(rsrvId = 0) {
+
     $('#reservation_changes').DataTable({
         'processing': true,
         async: false,
@@ -2906,89 +2907,31 @@ function showReservationChanges(rsrvId = 0) {
         'ajax': {
             'url': '<?php echo base_url('/reservationChangesView')?>',
             'data': {
-                "sysid": rateCodeID
+                "sysid": rsrvId
             }
         },
         'columns': [{
-                data: 'PROFILE_NAME'
+                data: 'USR_NAME'
             },
             {
-                data: 'PROFILE_TYPE',
+                data: 'LOG_ID',
                 "visible": false,
             },
             {
-                data: 'PROFILE_TYPE_NAME'
+                data: 'LOG_DATE'
             },
             {
-                data: 'PROFILE_ADDRESS'
+                data: 'LOG_TIME'
             },
             {
-                data: 'PROFILE_CITY'
+                data: 'AC_TY_DESC'
             },
             {
-                data: 'PROFILE_POSTAL_CODE'
-            },
-            {
-                data: 'PROFILE_COMP_CODE'
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                data: 'PROFILE_VIP'
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                data: 'PROFILE_TITLE'
-            },
-            {
-                data: 'PROFILE_COUNTRY'
-            },
-            {
-                data: 'PROFILE_NUMBER'
-            },
-            {
-                data: 'PROFILE_EMAIL'
-            },
-            {
-                data: 'PROFILE_MOBILE'
-            },
-            {
-                data: 'PROFILE_PASSPORT'
+                data: 'LOG_ACTION_DESCRIPTION'
             },
         ],
-        'createdRow': function(row, data, dataIndex) {
-            var check_str = 'profile_chk_' + data['PROFILE_TYPE'] + '_' + data['PROFILE_ID'];
-
-            $(row).attr('data-profile-type', data['PROFILE_TYPE']);
-            $(row).attr('data-profile-id', data['PROFILE_ID']);
-
-            if (jQuery.inArray(check_str, clicked_profile_ids) !== -1 && !$(row).hasClass(
-                    'table-warning')) {
-                $(row).addClass('table-warning');
-            } else if (jQuery.inArray(check_str, clicked_profile_ids) == -1 && $(row).hasClass(
-                    'table-warning')) {
-                $(row).removeClass('table-warning');
-            }
-        },
         columnDefs: [{
-            width: "25%"
-        }, {
-            width: "20%"
+            width: "35%"
         }, {
             width: "15%"
         }, {
@@ -2996,33 +2939,7 @@ function showReservationChanges(rsrvId = 0) {
         }, {
             width: "10%"
         }, {
-            width: "10%"
-        }, {
-            width: "25%"
-        }, {
-            width: "20%"
-        }, {
-            width: "15%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
-        }, {
-            width: "25%"
-        }, {
-            width: "20%"
-        }, {
-            width: "15%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
+            width: "30%"
         }],
         "order": [
             [1, "asc"]
@@ -3030,19 +2947,14 @@ function showReservationChanges(rsrvId = 0) {
         destroy: true,
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end">>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
         language: {
-            emptyTable: 'There are no profiles in the system'
-        },
-        select: {
-            // Select style
-            style: 'multi',
-            info: false
+            emptyTable: 'There are no logs for this reservation'
         }
     });
 }
 
 $(document).on('click', '.show-activity-log', function() {
 
-    $('#reservation_changes').dataTable().fnDraw();
+    showReservationChanges(ressysId);
 
 });
 </script>
