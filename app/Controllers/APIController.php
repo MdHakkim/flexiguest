@@ -860,4 +860,13 @@ class APIController extends BaseController
 
     // ----------- END API FOR FLEXIGUEST ----------------//
 
+    public function lookupApi()
+    {
+        $data['salutations'] = $this->DB->query("select SA_ID as id, SA_NAME as label from FLXY_SALUTATIONS")->getResultArray();
+        $data['genders'] = $this->DB->query("select GE_ID as id, GE_NAME as label from FLXY_GENDERS")->getResultArray();
+        $data['doc_types'] = $this->DB->query("select DT_ID as id, DT_NAME as label from FLXY_DOC_TYPES")->getResultArray();
+
+        $result = responseJson(200, false, ['msg' => 'LookUp Api'], $data);
+        return $this->respond($result);
+    }
 }
