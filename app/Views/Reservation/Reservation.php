@@ -1,5 +1,6 @@
 <?=$this->extend("Layout/AppView")?>
 <?=$this->section("contentRender")?>
+<?= $this->include('Layout/SuccessReport') ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <!-- Content wrapper -->
 <div class="content-wrapper">
@@ -1055,6 +1056,7 @@
                             <table class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
+                                        <th scope="col" style="width:50px">Edit</th>
                                         <th scope="col" style="width:50px">Sr.No</th>
                                         <th scope="col" style="width:250px">First Name</th>
                                         <th scope="col" style="width:250px">Last Name</th>
@@ -1744,11 +1746,20 @@
         </div>
     </div>
 
+    <?= $this->include('Reservation/includes/EditCustomerModal') ?>
+
+
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
 <?=$this->include("Reservation/CompanyAgentModal")?>
 <script>
+    function showModalAlert(modalType, modalContent) {
+        $('#' + modalType + 'Modal').show();
+        $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
+            '</ul>');
+    }
+    
 var compAgntMode = '';
 var linkMode = '';
 var windowmode = '';
@@ -2726,10 +2737,13 @@ $(document).on('click', '.activeRow,#customeTrigger', function() {
     });
 });
 
-$(document).on('click', '.getExistCust', function() {
+$(document).on('click', '.getExistCust .select', function() {
     $('.getExistCust').removeClass('activeTr');
-    $(this).addClass('activeTr');
-    custId = $(this).attr('data_sysid');
+
+    // $(this).addClass('activeTr');
+    $(this).parent().addClass('activeTr');
+
+    custId = $(this).parent().attr('data_sysid');
     $.ajax({
         url: '<?php echo base_url('/getExistCustomer')?>',
         type: "post",

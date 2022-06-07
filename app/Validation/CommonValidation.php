@@ -10,7 +10,9 @@ class CommonValidation{
 
     public function emailVerification(string $str, string $fields, array $data){
         $email = $data['CUST_EMAIL'];
-        $sql="SELECT CUST_EMAIL FROM FLXY_CUSTOMER WHERE CUST_EMAIL='$email'";
+        $cust_id = !empty($data['CUST_ID']) ? $data['CUST_ID'] : 0;
+
+        $sql="SELECT CUST_EMAIL FROM FLXY_CUSTOMER WHERE CUST_EMAIL='$email' and CUST_ID != $cust_id";
         $response = $this->Db->query($sql)->getNumRows();
         return ($response==0 ? true : false);
     }
