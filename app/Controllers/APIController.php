@@ -343,8 +343,10 @@ class APIController extends BaseController
 
             if (empty($doc_data))
                 $ins = $this->DB->table('FLXY_DOCUMENTS')->insert($data);
-            else
+            else{
+                $data['DOC_FILE_PATH'] = $doc_data[0]['DOC_FILE_PATH'] . ',' . $fileNames;
                 $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID])->update($data);
+            }
 
             if ($ins || $update_data)
                 $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => $fileNames]);
