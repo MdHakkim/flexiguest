@@ -224,7 +224,7 @@ class APIController extends BaseController
         $param = ['customer_id' => $customer_id];
         $data = $this->DB->query($sql, $param)->getResultArray();
         if(!count($data))
-            return $this->respond(responseJson(404, true, "Customer not found"));
+            return $this->respond(responseJson(404, true, ["msg" =>"Customer not found"]));
 
         $guest = $data[0];
 
@@ -290,20 +290,6 @@ class APIController extends BaseController
         $userID = $user['USR_CUST_ID'];
         $resID = $user['RESV_ID'];
 
-        $file = $this->validate([
-            'images' => [
-                'uploaded[images]',
-                'mime_in[images,image/png,image/jpeg,image/jpg]',
-                'max_size[images,1024]',
-            ],
-        ]);
-
-        // adding validatoion to the files
-        if (!$file) {
-            $validate = $this->validator->getErrors();
-            $result = responseJson(403, true, $validate);
-            return $this->respond($result);
-        }
 
         $fileNames = '';
         $fileArry = $this->request->getFileMultiple('images');
@@ -356,7 +342,7 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        return $this->respond(responseJson(500, true, ["something went wrong"]));
+        return $this->respond(responseJson(500, true, ["msg" => "something went wrong"]));
     }
 
     /*  FUNCTION : SAVE GUEST DETAILS FROM THE IMAGE UPLOADED.
