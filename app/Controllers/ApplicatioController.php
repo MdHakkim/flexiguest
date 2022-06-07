@@ -429,7 +429,7 @@ class ApplicatioController extends BaseController
             $validate = $this->validate([
                 'CUST_FIRST_NAME' => 'required',
                 'CUST_EMAIL' =>[
-                    'rules'  => 'required|valid_email|emailVerification[CUST_EMAIL]',
+                    'rules'  => "required|valid_email|emailVerification[CUST_EMAIL,CUST_ID]",
                     'errors' => [
                         'required' => 'Email is required does not empty',
                         'emailVerification' => 'Email already exist'
@@ -447,6 +447,7 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
+
             $sysid = $this->request->getPost("CUST_ID");
             if(!empty($sysid)){
                 $data = ["CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
@@ -2501,18 +2502,19 @@ class ApplicatioController extends BaseController
         $className = $modeWindow=='C' ? 'getExistCust' : 'activeRow';
         foreach($response as $key=>$row){
             $table.='<tr class="'.$className.'" data_sysid="'.$row['CUST_ID'].'">'
+            .'<td class="editcustomer" data_sysid="'.$row['CUST_ID'].'"><i class="fa-solid fa-user-pen"></i></td>'
             .'<td>'
             .($key+1).'</td>'
-            .'<td>'.$row['CUST_FIRST_NAME'].'</td>'
-            .'<td>'.$row['CUST_LAST_NAME'].'</td>'
-            .'<td>'.$row['CUST_DOB'].'</td>'
-            .'<td>'.$row['CUST_PASSPORT'].'</td>'
-            .'<td>'.$row['CUST_ADDRESS_1'].'</td>'
-            .'<td>'.$row['CUST_CITY'].'</td>'
-            .'<td>'.$row['CUST_EMAIL'].'</td>'
-            .'<td>'.$row['CUST_MOBILE'].'</td>'
-            .'<td>'.$row['CUST_NATIONALITY'].'</td>'
-            .'<td>'.$row['CUST_VIP'].'</td>'
+            .'<td class="select">'.$row['CUST_FIRST_NAME'].'</td>'
+            .'<td class="select">'.$row['CUST_LAST_NAME'].'</td>'
+            .'<td class="select">'.$row['CUST_DOB'].'</td>'
+            .'<td class="select">'.$row['CUST_PASSPORT'].'</td>'
+            .'<td class="select">'.$row['CUST_ADDRESS_1'].'</td>'
+            .'<td class="select">'.$row['CUST_CITY'].'</td>'
+            .'<td class="select">'.$row['CUST_EMAIL'].'</td>'
+            .'<td class="select">'.$row['CUST_MOBILE'].'</td>'
+            .'<td class="select">'.$row['CUST_NATIONALITY'].'</td>'
+            .'<td class="select">'.$row['CUST_VIP'].'</td>'
             .'</tr>';
         }
         $return['table']=$table;
