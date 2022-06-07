@@ -301,7 +301,7 @@ class APIController extends BaseController
         // adding validatoion to the files
         if (!$file) {
             $validate = $this->validator->getErrors();
-            $result = responseJson("403", true, $validate);
+            $result = responseJson(403, true, $validate);
             return $this->respond($result);
         }
 
@@ -344,7 +344,7 @@ class APIController extends BaseController
             if (empty($doc_data))
                 $ins = $this->DB->table('FLXY_DOCUMENTS')->insert($data);
             else{
-                $data['DOC_FILE_PATH'] = $doc_data[0]['DOC_FILE_PATH'] . ',' . $fileNames;
+                $data['DOC_FILE_PATH'] = $doc_data['DOC_FILE_PATH'] . ',' . $fileNames;
                 $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID])->update($data);
             }
 
@@ -536,7 +536,7 @@ class APIController extends BaseController
             'vaccine' => [
                 'uploaded[vaccine]',
                 'mime_in[vaccine,image/png, image/jpeg]',
-                'max_size[vaccine,1024]',
+                'max_size[vaccine,50000]',
             ],
         ]);
 
@@ -605,7 +605,7 @@ class APIController extends BaseController
             'signature' =>  [
                 'uploaded[signature]',
                 'mime_in[signature,image/png, image/jpeg]',
-                'max_size[signature,1024]',
+                'max_size[signature,50000]',
             ],
         ]);
 
@@ -687,7 +687,7 @@ class APIController extends BaseController
             'attachement' =>  [
                 'uploaded[attachement]',
                 'mime_in[attachement,image/png, image/jpeg]',
-                'max_size[attachement,1024]',
+                'max_size[attachement,50000]',
             ],
         ]);
 
