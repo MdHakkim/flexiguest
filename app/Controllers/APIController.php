@@ -159,16 +159,15 @@ class APIController extends BaseController
 
             $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
                             LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
-                            LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM 
-                            LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.RESV_NAME WHERE RESV_ID=:RESV_ID:";
+                            LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM  WHERE RESV_ID=:RESV_ID:";
 
             $data = $this->DB->query($sql, $param)->getRowArray();
         } else {
             $param = ['RESV_NAME' => $cust_id];
-            $sql = "SELECT c.*, a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
+            $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
                             LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
                             LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM 
-                            LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.RESV_NAME WHERE RESV_NAME=:RESV_NAME:";
+                            WHERE RESV_NAME=:RESV_NAME:";
             $data = $this->DB->query($sql, $param)->getResultArray();
         }
 
@@ -501,7 +500,7 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        return $this->respond(responseJson("500", true, ["msg" => "Something wne"]));
+        return $this->respond(responseJson("500", true, ["msg" => "Something went worng"]));
     }
 
     public function deleteSpecificVaccine()
