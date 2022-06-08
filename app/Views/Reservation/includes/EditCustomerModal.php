@@ -9,28 +9,28 @@
                 <form id="edit-customer-form">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <input type="hidden" name="CUST_ID" id="CUST_ID" class="form-control" />
+                            <input type="hidden" name="CUST_ID" class="form-control" />
                             <label class="form-label">First Name</label>
-                            <input type="text" name="CUST_FIRST_NAME" id="CUST_FIRST_NAME" class="form-control" placeholder="first name" />
+                            <input type="text" name="CUST_FIRST_NAME" class="form-control" placeholder="first name" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Middle Name</label>
-                            <input type="text" name="CUST_MIDDLE_NAME" id="CUST_MIDDLE_NAME" class="form-control" placeholder="middle name" />
+                            <input type="text" name="CUST_MIDDLE_NAME" class="form-control" placeholder="middle name" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Last Name</label>
-                            <input type="text" name="CUST_LAST_NAME" id="CUST_LAST_NAME" class="form-control" placeholder="last name" />
+                            <input type="text" name="CUST_LAST_NAME" class="form-control" placeholder="last name" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Language/Title</label>
                             <div class="form-group flxi_join">
-                                <select name="CUST_LANG" id="CUST_LANG" class="form-select" data-allow-clear="true">
+                                <select name="CUST_LANG" class="form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                     <option value="EN">English</option>
                                     <option value="AR">Arabic</option>
                                     <option value="FR">French</option>
                                 </select>
-                                <select name="CUST_TITLE" id="CUST_TITLE" class="form-select" data-allow-clear="true">
+                                <select name="CUST_TITLE" class="form-select" data-allow-clear="true">
                                     <option value="">Select</option>
                                     <option value="Mr">Mr.</option>
                                     <option value="Ms">Ms.</option>
@@ -45,7 +45,7 @@
                         <div class="col-md-3">
                             <label class="form-label">DOB</label>
                             <div class="input-group mb-3">
-                                <input type="text" id="CUST_DOB" name="CUST_DOB" class="form-control flatpickr-input" placeholder="YYYY-MM-DD">
+                                <input type="text" name="CUST_DOB" class="form-control flatpickr-input" placeholder="YYYY-MM-DD">
                                 <span class="input-group-append">
                                     <span class="input-group-text bg-light d-block">
                                         <i class="fa fa-calendar"></i>
@@ -55,79 +55,79 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Passport</label>
-                            <input type="text" name="CUST_PASSPORT" id="CUST_PASSPORT" class="form-control" placeholder="passport" />
+                            <input type="text" name="CUST_PASSPORT" class="form-control" placeholder="passport" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Address</label>
-                            <input type="text" name="CUST_ADDRESS_1" id="CUST_ADDRESS_1" class="form-control" placeholder="addresss 1" />
+                            <input type="text" name="CUST_ADDRESS_1" class="form-control" placeholder="addresss 1" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label"></label>
-                            <input type="text" name="CUST_ADDRESS_2" id="CUST_ADDRESS_2" class="form-control" placeholder="address 2" />
+                            <input type="text" name="CUST_ADDRESS_2" class="form-control" placeholder="address 2" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label"></label>
-                            <input type="text" name="CUST_ADDRESS_3" id="CUST_ADDRESS_3" class="form-control" placeholder="address 3" />
+                            <input type="text" name="CUST_ADDRESS_3" class="form-control" placeholder="address 3" />
                         </div>
                         <div class="col-md-3 ">
                             <label class="form-label col-md-12">Country</label>
-                            <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%" class="selectpicker CUST_COUNTRY" data-live-search="true">
+                            <select name="CUST_COUNTRY" data-width="100%" class="selectpicker CUST_COUNTRY" data-live-search="true">
                                 <option value="">Select</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label col-md-12">State</label>
-                            <select name="CUST_STATE" id="CUST_STATE" data-width="100%" class="selectpicker CUST_STATE" data-live-search="true">
+                            <select name="CUST_STATE" data-width="100%" class="selectpicker CUST_STATE" data-live-search="true">
                                 <option value="">Select</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label col-md-12">City</label>
-                            <select name="CUST_CITY" id="CUST_CITY" data-width="100%" class="selectpicker CUST_CITY" data-live-search="true">
+                            <select name="CUST_CITY" data-width="100%" class="selectpicker CUST_CITY" data-live-search="true">
                                 <option value="">Select</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Email</label>
-                            <input type="text" name="CUST_EMAIL" id="CUST_EMAIL" class="form-control" placeholder="email" />
+                            <input type="text" name="CUST_EMAIL" class="form-control" placeholder="email" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Mobile</label>
-                            <input type="text" name="CUST_MOBILE" id="CUST_MOBILE" class="form-control" placeholder="mobile" />
+                            <input type="text" name="CUST_MOBILE" class="form-control" placeholder="mobile" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Phone</label>
-                            <input type="text" name="CUST_PHONE" id="CUST_PHONE" class="form-control" placeholder="phone" />
+                            <input type="text" name="CUST_PHONE" class="form-control" placeholder="phone" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Client ID</label>
-                            <input type="text" name="CUST_CLIENT_ID" id="CUST_CLIENT_ID" class="form-control" placeholder="client id" />
+                            <input type="text" name="CUST_CLIENT_ID" class="form-control" placeholder="client id" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Postal Code</label>
-                            <input type="text" name="CUST_POSTAL_CODE" id="CUST_POSTAL_CODE" class="form-control" placeholder="postal" />
+                            <input type="text" name="CUST_POSTAL_CODE" class="form-control" placeholder="postal" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">VIP</label>
-                            <select name="CUST_VIP" id="CUST_VIP" class="select2 form-select" data-allow-clear="true">
+                            <select name="CUST_VIP" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select VIP</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Nationality</label>
-                            <select name="CUST_NATIONALITY" id="CUST_NATIONALITY" class="select2 form-select" data-allow-clear="true">
+                            <select name="CUST_NATIONALITY" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Business Segment</label>
-                            <select name="CUST_BUS_SEGMENT" id="CUST_BUS_SEGMENT" class="select2 form-select" data-allow-clear="true">
+                            <select name="CUST_BUS_SEGMENT" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Communication</label>
-                            <select name="CUST_COMMUNICATION" id="CUST_COMMUNICATION" class="select2 form-select" data-allow-clear="true">
+                            <select name="CUST_COMMUNICATION" class="select2 form-select" data-allow-clear="true">
                                 <option value="">Select Communication</option>
                                 <option value="WEB">Web</option>
                                 <option value="WHATSAPP">Whatsapp</option>
@@ -137,12 +137,12 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Communcation Desc.</label>
-                            <input type="text" name="CUST_COMMUNICATION_DESC" id="CUST_COMMUNICATION_DESC" class="form-control" placeholder="communication desc" />
+                            <input type="text" name="CUST_COMMUNICATION_DESC" class="form-control" placeholder="communication desc" />
                         </div>
                         <div class="col-md-3">
                             <div class="form-check mt-3">
-                                <input class="form-check-input flxCheckBox" type="checkbox" name="CUST_ACTIVE_CHK" id="CUST_ACTIVE_CHK">
-                                <input type="hidden" name="CUST_ACTIVE" id="CUST_ACTIVE" value="N" class="form-control" />
+                                <input class="form-check-input flxCheckBox" type="checkbox" name="CUST_ACTIVE_CHK">
+                                <input type="hidden" name="CUST_ACTIVE" value="N" class="form-control" />
                                 <label class="form-check-label" for="defaultCheck1"> Active </label>
                             </div>
 
@@ -161,7 +161,17 @@
 <!-- /Modal window -->
 
 <script>
+    const month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ];
     var form_id = '#edit-customer-form';
+
+    $(document).ready(function() {
+        $(`${form_id} input[name='CUST_DOB']`).datepicker({
+            format: 'd-M-yyyy',
+            autoclose: true
+        });
+    });
 
     function submitEditCustomerForm(id, mode) {
         var formSerialization = $('#' + id).serializeArray();
@@ -305,7 +315,12 @@
                             return true;
                         };
 
-                        if ($(`${form_id} input[name='${field}'][type='checkbox']`).length) {
+                        if (field == 'CUST_DOB') {
+                            let dob_date = new Date(dataval);
+                            dataval = dob_date.getDate() + '-' + month_names[dob_date.getMonth()] + '-' + dob_date.getFullYear();
+                        }
+
+                        if (field == 'CUST_ACTIVE') {
                             if (dataval == 'Y')
                                 $(`${form_id} input[name='CUST_ACTIVE_CHK']`).prop('checked', true);
                             else
