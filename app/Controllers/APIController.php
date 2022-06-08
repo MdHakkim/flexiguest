@@ -432,7 +432,7 @@ class APIController extends BaseController
             if ($data['DOC_FILE_PATH']) {
                 $files_array = explode(',', $data['DOC_FILE_PATH']);
                 foreach ($files_array as $key => $value) {
-                    $files[] = $filePath . '/' . $value;
+                    $files[$value] = $filePath . '/' . $value;
                 }
                 $data['DOCS'] = $files;
             }
@@ -461,9 +461,18 @@ class APIController extends BaseController
         // fetch details from db
         $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_RESV_ID' => $resID, 'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
         $filenames = $doc_data['DOC_FILE_PATH'];
+
         $filename_array = explode(',', $filenames);
+  
         // inarray then delete else msg 
-        if ($pos = array_search($filename, $filename_array)) {
+	$pos = array_search($filename, $filename_array);
+        if($pos >= 0){
+          $flag= true;
+	}else{
+		$flag = false;
+	}
+
+          if($flag) {
             unset($filename_array[$pos]);
 
             $folderPath = "assets/Uploads/userDocuments/" . $doctype . "/" . $filename;
@@ -482,7 +491,7 @@ class APIController extends BaseController
                 "DOC_UPDATE_DT" => date("d-M-Y")
             ];
 
-            $return = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_RESV_ID' => $resID, 'DOC_FILE_TYPE' => 'PROOF'])->update($data);
+            $return = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_FILE_TYPE' => 'PROOF'])->update($data);
 
             if ($return)
                 $result = responseJson(200, false, ["msg" => "Documents deleted successfully"], $return);
@@ -492,7 +501,7 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        return $this->respond(responseJson("500", true, ["msg" => "Record not deleted"]));
+        return $this->respond(responseJson("500", true, ["msg" => "Something wne"]));
     }
 
     public function deleteSpecificVaccine()
