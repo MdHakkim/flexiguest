@@ -311,7 +311,9 @@ class APIController extends BaseController
                 }
 
                 if ($newName)
-                    $fileNames .= $newName . $comma;
+                    
+                    if($newName)
+                        $fileNames .= $newName . $comma;
             }
         }
 
@@ -338,7 +340,7 @@ class APIController extends BaseController
                 $ins = $this->DB->table('FLXY_DOCUMENTS')->insert($data);
             else {
                 $data['DOC_FILE_PATH'] = $doc_data['DOC_FILE_PATH'] . ',' . $fileNames;
-                $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $userID ])->update($data);
+                $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID])->update($data);
             }
 
             if ($ins || $update_data)
@@ -471,6 +473,11 @@ class APIController extends BaseController
 
         $filename_array = explode(',', $filenames);
 
+	if(count($filename_array) == 1){
+	    $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_FILE_TYPE' => 'PROOF'])->delete();
+            return $this->respond(responseJson(200, false, ['msg' => "Documents deletes successfully."]));
+        }
+  
         // inarray then delete else msg 
         $pos = array_search($filename, $filename_array);
         if ($pos >= 0) {
