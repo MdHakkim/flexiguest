@@ -222,8 +222,8 @@ class APIController extends BaseController
 
         $param = ['customer_id' => $customer_id];
         $data = $this->DB->query($sql, $param)->getResultArray();
-        if(!count($data))
-            return $this->respond(responseJson(404, true, ["msg" =>"Customer not found"]));
+        if (!count($data))
+            return $this->respond(responseJson(404, true, ["msg" => "Customer not found"]));
 
         $guest = $data[0];
 
@@ -242,7 +242,7 @@ class APIController extends BaseController
         if (!empty($guest['accompany_profiles']))
             $result = responseJson(200, false, ["msg" => "Accompany list for the reservation"], $guest);
         else
-            $result = responseJson(200, false, ["msg" => "There is no accompany person"],$guest);
+            $result = responseJson(200, false, ["msg" => "There is no accompany person"], $guest);
 
         return $this->respond($result);
     }
@@ -264,7 +264,7 @@ class APIController extends BaseController
         $param = ['reservation_id' => $reservation_id, 'customer_id' => $customer_id];
 
         $reservationInfo = $this->DB->query($sql, $param)->getResultArray();
-        if(!count($reservationInfo))
+        if (!count($reservationInfo))
             return $this->respond(responseJson(404, true, ['msg' => 'Reservation not found.']));
 
         $emailCall = new EmailLibrary();
@@ -287,29 +287,37 @@ class APIController extends BaseController
         $user = $this->request->user;
 
         $userID = $user['USR_CUST_ID'];
-        $resID = $user['RESV_ID'];
+        $resID = $this->request->getVar('RESV_ID') ?? 0;
 
 
         $fileNames = '';
         $fileArry = $this->request->getFileMultiple('images');
+
+        foreach ($fileArry as $key => $file) {
+            if(!$file->isValid()){
+                return $this->respond(responseJson(500, true, ['msg' => "Please upload valid file. This file '{$file->getClientName()}' is not valid"]));
+            }
+        }
+
         $desc = $this->request->getVar("desc");
-        if (!empty($fileArry)) {
-            foreach ($fileArry as $key => $file) {
-                if ($file->isValid() && !$file->hasMoved()) {
-                    $newName = $file->getRandomName();
-                    $file->move(ROOTPATH . 'assets/Uploads/userDocuments/proof', $newName);
-                    $comma = '';
-                    if (isset($fileArry[$key + 1])) {
-                        $comma = ',';
-                    }
-                    $fileNames .= $newName . $comma;
+        foreach ($fileArry as $key => $file) {
+            if ($file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move(ROOTPATH . 'assets/Uploads/userDocuments/proof', $newName);
+                $comma = '';
+
+                if (isset($fileArry[$key + 1]) && $fileArry[$key + 1]->isValid()) {
+                    $comma = ',';
                 }
+
+                if ($newName)
+                    $fileNames .= $newName . $comma;
             }
         }
 
         if (!empty($fileNames)) {
             // check wheather there is any entry with this user. 
-            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_CUST_ID,DOC_FILE_PATH,DOC_RESV_ID')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID, 'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
+            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_CUST_ID,DOC_FILE_PATH,DOC_RESV_ID')->where(['DOC_CUST_ID' => $userID, 'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
             $data = [
                 "DOC_CUST_ID" => $userID,
                 "DOC_IS_VERIFY" => 0,
@@ -328,7 +336,7 @@ class APIController extends BaseController
 
             if (empty($doc_data))
                 $ins = $this->DB->table('FLXY_DOCUMENTS')->insert($data);
-            else{
+            else {
                 $data['DOC_FILE_PATH'] = $doc_data['DOC_FILE_PATH'] . ',' . $fileNames;
                 $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID])->update($data);
             }
@@ -462,16 +470,16 @@ class APIController extends BaseController
         $filenames = $doc_data['DOC_FILE_PATH'];
 
         $filename_array = explode(',', $filenames);
-  
-        // inarray then delete else msg 
-	$pos = array_search($filename, $filename_array);
-        if($pos >= 0){
-          $flag= true;
-	}else{
-		$flag = false;
-	}
 
-          if($flag) {
+        // inarray then delete else msg 
+        $pos = array_search($filename, $filename_array);
+        if ($pos >= 0) {
+            $flag = true;
+        } else {
+            $flag = false;
+        }
+
+        if ($flag) {
             unset($filename_array[$pos]);
 
             $folderPath = "assets/Uploads/userDocuments/" . $doctype . "/" . $filename;
