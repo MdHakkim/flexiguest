@@ -417,7 +417,7 @@ class APIController extends BaseController
         OUTPUT : CUSTOMER_DATA  */
     public function FetchSavedDocDetails()
     {
-        $CUST_ID = $this->request->user['USR_CUST_ID'];
+        $CUST_ID = $this->request->getVar('customer_id');
 
         $filePath = base_url('assets/Uploads/userDocuments/proof');
 
