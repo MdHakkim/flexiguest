@@ -309,7 +309,7 @@ class APIController extends BaseController
 
         if (!empty($fileNames)) {
             // check wheather there is any entry with this user. 
-            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_CUST_ID,DOC_FILE_PATH,DOC_RESV_ID')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID, 'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
+            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_CUST_ID,DOC_FILE_PATH,DOC_RESV_ID')->where(['DOC_CUST_ID' => $userID, 'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
             $data = [
                 "DOC_CUST_ID" => $userID,
                 "DOC_IS_VERIFY" => 0,
@@ -330,7 +330,7 @@ class APIController extends BaseController
                 $ins = $this->DB->table('FLXY_DOCUMENTS')->insert($data);
             else{
                 $data['DOC_FILE_PATH'] = $doc_data['DOC_FILE_PATH'] . ',' . $fileNames;
-                $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID])->update($data);
+                $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $userID ])->update($data);
             }
 
             if ($ins || $update_data)
@@ -423,7 +423,7 @@ class APIController extends BaseController
 
         $param = ['CUST_ID' => $CUST_ID];
         $sql = "SELECT  b.* ,a.DOC_FILE_PATH FROM FLXY_CUSTOMER b 
-                    LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID: AND a.DOC_FILE_TYPE ='PROOF'";
+                    LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID:";
         $data = $this->DB->query($sql, $param)->getRowArray();
 
         if (!empty($data)) {
@@ -451,53 +451,55 @@ class APIController extends BaseController
     public function deleteUploadedDOC()
     {
         $user = $this->request->user;
-        $resID = $user['RESV_ID'];
+        
         $CUST_ID = $user['USR_CUST_ID'];
 
         $doctype = $this->request->getVar("doctype"); //  proof
         $filename = $this->request->getVar("filename"); // or path
 
         // fetch details from db
-        $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_RESV_ID' => $resID, 'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
+        $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID,  'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
         $filenames = $doc_data['DOC_FILE_PATH'];
 
         $filename_array = explode(',', $filenames);
   
         // inarray then delete else msg 
-	$pos = array_search($filename, $filename_array);
+        $pos = array_search($filename, $filename_array);
         if($pos >= 0){
-          $flag= true;
-	}else{
-		$flag = false;
-	}
+            $flag= true;
+        }else{
+            $flag = false;
+        }
 
-          if($flag) {
+        if($flag) {
             unset($filename_array[$pos]);
 
-            $folderPath = "assets/Uploads/userDocuments/" . $doctype . "/" . $filename;
+            $folderPath =$_SERVER['DOCUMENT_ROOT']."/assets/Uploads/userDocuments/proof/" .  $filename;
+            //echo $folderPath;die;
+            //var_dump(file_exists($folderPath));die;
             if (file_exists($folderPath)) {
-                unlink($folderPath);
-            }
+                 unlink($folderPath);
+	       $data = [
+            		"DOC_CUST_ID" => $CUST_ID,
+            		"DOC_IS_VERIFY" => 0,
+           		"DOC_FILE_PATH" => implode(',', $filename_array),
+            		"DOC_FILE_TYPE" => 'PROOF',
+            		"DOC_RESV_ID" => $doc_data['DOC_RESV_ID'],
+            		"DOC_FILE_DESC" => "",
+            		"DOC_UPDATE_UID" => $CUST_ID,
+            		"DOC_UPDATE_DT" => date("d-M-Y")
+        		];
+		$return = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_FILE_TYPE' => 'PROOF'])->update($data);
+        
+       }
 
-            $data = [
-                "DOC_CUST_ID" => $CUST_ID,
-                "DOC_IS_VERIFY" => 0,
-                "DOC_FILE_PATH" => implode(',', $filename_array),
-                "DOC_FILE_TYPE" => 'PROOF',
-                "DOC_RESV_ID" => $resID,
-                "DOC_FILE_DESC" => "",
-                "DOC_UPDATE_UID" => $CUST_ID,
-                "DOC_UPDATE_DT" => date("d-M-Y")
-            ];
 
-            $return = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_FILE_TYPE' => 'PROOF'])->update($data);
+        if ($return)
+            $result = responseJson(200, false, ["msg" => "Documents deleted successfully"], $return);
+        else
+            $result = responseJson(500, true, ["msg" => "File not found on server"]);
 
-            if ($return)
-                $result = responseJson(200, false, ["msg" => "Documents deleted successfully"], $return);
-            else
-                $result = responseJson("500", true, ["msg" => "Record not deleted"]);
-
-            return $this->respond($result);
+        return $this->respond($result);
         }
 
         return $this->respond(responseJson("500", true, ["msg" => "Something went worng"]));
