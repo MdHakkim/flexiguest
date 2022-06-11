@@ -370,7 +370,7 @@ class APIController extends BaseController
         $validate = $this->validate([
             'title' => 'required',
             'firstName' => 'required',
-            'email' => 'required|valid_email',
+            //'email' => 'required|valid_email',
             'cor' => 'required',
             'DOB' => 'required',
             'phn' => 'required',
