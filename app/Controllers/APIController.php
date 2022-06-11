@@ -523,14 +523,14 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        return $this->respond(responseJson("500", true, ["msg" => "Something went worng"]));
+        return $this->respond(responseJson(500, true, ["msg" => "Something went worng"]));
     }
 
     public function deleteSpecificVaccine()
     {
         $param = ['CUST_ID' => $this->request->getVar("CUST_ID")];
         $sql = "DELETE FROM FLXY_VACCINE_DETAILS WHERE EXISTS
-        (SELECT VACCINE_ID FROM FLXY_VACCINE_DETAILS WHERE CUST_ID=:CUST_ID:)";
+        (SELECT VACC_ID FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:CUST_ID:)";
         $response = $this->DB->query($sql, $param);
         return $response;
     }
@@ -552,7 +552,7 @@ class APIController extends BaseController
             'cerIssuanceCountry' => 'required',
             'vaccine' => [
                 'uploaded[vaccine]',
-                'mime_in[vaccine,image/png, image/jpeg]',
+                'mime_in[vaccine,image/png, image/jpeg,image/jpg,application/pdf]',
                 'max_size[vaccine,50000]',
             ],
         ]);
@@ -583,12 +583,12 @@ class APIController extends BaseController
         }
 
         $data = [
-            "CUST_ID" => $CUST_ID,
-            "VACCINED_DETAILS" => $this->request->getVar("vaccineDetail"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
-            "LAST_VACCINE_DT" => $this->request->getVar("lastVaccineDate"),
-            "VACCINE_NAME" => $this->request->getVar("VaccineName"),
-            "ISSUED_COUNTRY" => $this->request->getVar("cerIssuanceCountry"),
-            "VACCINE_IS_VERIFY" => 0,
+            "VACC_CUST_ID" => $CUST_ID,
+            "VACC_DETAILS" => $this->request->getVar("vaccineDetail"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
+            "VACC_LAST_DT" => $this->request->getVar("lastVaccineDate"),
+            "VACC_NAME" => $this->request->getVar("VaccineName"),
+            "VACC_ISSUED_COUNTRY" => $this->request->getVar("cerIssuanceCountry"),
+            "VACC_IS_VERIFY" => 0,
             "VACC_FILE_PATH" => $fileNames,
             "VACC_CREATE_UID" => $CUST_ID,
             "VACC_CREATE_DT" => date("d-M-Y"),
