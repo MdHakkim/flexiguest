@@ -615,13 +615,13 @@ class APIController extends BaseController
     {
         $user = $this->request->user;
         $USR_ID = $user['USR_ID'];
-        $resID = $user['RESV_ID'];
+        $resID = $this->request->getVar('reservation_id');
 
         $validate = $this->validate([
             'estimatedTimeOfArrival' => 'required',
             'signature' =>  [
                 'uploaded[signature]',
-                'mime_in[signature,image/png, image/jpeg]',
+                
                 'max_size[signature,50000]',
             ],
         ]);
@@ -645,16 +645,11 @@ class APIController extends BaseController
         $folderPath = "assets/Uploads/userDocuments/signature/";
         $cusUserID = $user['USR_CUST_ID'];
         $doc_up = documentUpload($doc_file, $doc_name, $cusUserID, $folderPath);
-        if ($doc_up['SUCCESS'] == 200) {
-            // check wheather there is any entry with this user. 
-            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_FILE_PATH,DOC_CUST_ID,DOC_FILE_TYPE')->where(['DOC_CUST_ID' => $cusUserID, 'DOC_FILE_TYPE' => 'SIGN', 'DOC_RESV_ID' => $resID])->get()->getRowArray();
 
-            if (!empty($doc_data)) {
-                $filepath = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
-                $data = [
+	$data = [
                     "DOC_CUST_ID" => $cusUserID,
                     "DOC_IS_VERIFY" => 0,
-                    "DOC_FILE_PATH" => $filepath,
+                    "DOC_FILE_PATH" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']),
                     "DOC_FILE_TYPE" => 'SIGN',
                     "DOC_RESV_ID" => $resID,
                     "DOC_FILE_DESC" => "",
@@ -662,21 +657,28 @@ class APIController extends BaseController
                     "DOC_UPDATE_DT" => date("d-M-Y")
                 ];
 
+        if ($doc_up['SUCCESS'] == 200) {
+            // check wheather there is any entry with this user. 
+            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_FILE_PATH,DOC_CUST_ID,DOC_FILE_TYPE')->where(['DOC_CUST_ID' => $cusUserID, 'DOC_FILE_TYPE' => 'SIGN','DOC_RESV_ID' => $resID])->get()->getRowArray();
+
+            if (!empty($doc_data)) {
+
                 $update_data = $this->DB->table('FLXY_DOCUMENTS')->where('DOC_ID', $doc_data['DOC_ID'])->update($data);
-                $res_data = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resID)->update($dataRes);
-                // echo $this->DB->getLastQuery()->getQuery();
-                // die;
 
-                if ($update_data &&  $res_data)
-                    $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => $filepath]);
-                else
-                    $result = responseJson(500, true, ["msg" => "Failed to upload image or updation in reservation"]);
+            }else{
 
-                return $this->respond($result);
-            }
+		$update_data = $this->DB->table('FLXY_DOCUMENTS')->insert($data);
+		}
+            $res_data = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resID)->update($dataRes);
+	    if ($update_data &&  $res_data)
+                  $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT'])]);
+            else
+                  $result = responseJson(500, true, ["msg" => "Failed to upload image or updation in reservation"]);
 
-            $result = responseJson(404, true, ["msg" => "User details not found"]);
+            
             return $this->respond($result);
+        }else{
+	     return $this->respond(responseJson(500, true, ["msg" => "Upload Failed Please try again"]));
         }
 
         return $this->respond(responseJson(500, true, ["msg" => "Something went wrong"]));
