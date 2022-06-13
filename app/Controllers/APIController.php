@@ -447,15 +447,17 @@ class APIController extends BaseController
         OUTPUT : CUSTOMER_DATA  */
     public function FetchSavedDocDetails()
     {
-        $CUST_ID = $this->request->getVar('customer_id');
+        $CUST_ID = $this->request->getVar('customerId');
+        $RESV_ID = $this->request->getVar('reservationId');
 
         $filePath = base_url('assets/Uploads/userDocuments/proof');
 
-        $param = ['CUST_ID' => $CUST_ID];
-        $sql = "SELECT  b.* ,a.DOC_FILE_PATH FROM FLXY_CUSTOMER b 
-                    LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID: OR a.DOC_FILE_TYPE ='PROOF'";
+        $param = ['CUST_ID' => $CUST_ID,'RESV_ID'=>$RESV_ID];
+        //$sql = "SELECT  b.* ,a.DOC_FILE_PATH FROM FLXY_CUSTOMER b LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID: OR a.DOC_FILE_TYPE ='PROOF'";
+        $sql ="SELECT b.*, (SELECT a.DOC_FILE_PATH FROM FLXY_DOCUMENTS a WHERE a.DOC_FILE_TYPE ='PROOF' AND a.DOC_CUST_ID = :CUST_ID: AND DOC_RESV_ID = :RESV_ID: ) as DOC_FILE_PATH FROM FLXY_CUSTOMER b WHERE CUST_ID=:CUST_ID:";
         $data = $this->DB->query($sql, $param)->getRowArray();
 
+	//print_r($data);die;
         if (!empty($data)) {
             $data['DOCS'] = NULL;
             if ($data['DOC_FILE_PATH']) {
@@ -482,13 +484,16 @@ class APIController extends BaseController
     {
         $user = $this->request->user;
 
-        $CUST_ID = $user['USR_CUST_ID'];
-
-        $doctype = $this->request->getVar("doctype"); //  proof
+        $CUST_ID = $this->request->getVar("customerId"); //  proof
         $filename = $this->request->getVar("filename"); // or path
+	$RESID = $this->request->getVar("reservationId");
 
         // fetch details from db
-        $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID,  'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
+        $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID,  'DOC_FILE_TYPE' => 'PROOF', 'DOC_RESV_ID'=>$RESID])->get()->getRowArray();
+        //echo $this->DB->getLastQuery()->getQuery();die;
+	if(empty($doc_data)){
+	   return $this->respond(responseJson(500, true, ["msg" => "No Documents found for the customer =".$CUST_ID." with reservation =".$RESID]));die;
+	}
         $filenames = $doc_data['DOC_FILE_PATH'];
 
         $filename_array = explode(',', $filenames);
