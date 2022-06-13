@@ -581,7 +581,7 @@ class APIController extends BaseController
         $customer_id = $this->request->getVar('customer_id');
 
         $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
-        
+    
         $vaccine_detail['vaccines'] = [
             "Ipsar",
             "BBIBP-CorV",
@@ -595,18 +595,20 @@ class APIController extends BaseController
             "Sputnik Light",
             "Sputnik V"
         ];
+        
+        if(isset($vaccine_detail['VACC_FILE_PATH'])){
+            $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
+            foreach($docs as $index => $doc){
+                $doc_name = $doc;
+                $doc_url = base_url($doc);
 
-        $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
-        foreach($docs as $index => $doc){
-            $doc_name = $doc;
-            $doc_url = base_url($doc);
+                $doc_array = explode(".", $doc);
+                $doc_type = end($doc_array);
 
-            $doc_array = explode(".", $doc);
-            $doc_type = end($doc_array);
-
-            $docs[$index] = ['name' => $doc_name, 'url' => $doc_url, 'type' => $doc_type];
+                $docs[$index] = ['name' => $doc_name, 'url' => $doc_url, 'type' => $doc_type];
+            }
+            $vaccine_detail['docs'] = $docs;
         }
-        $vaccine_detail['docs'] = $docs;
 
         return $this->respond(responseJson(200, false, ['msg' => 'Vaccine Details'], $vaccine_detail));
     }
