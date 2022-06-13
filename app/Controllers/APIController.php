@@ -622,7 +622,7 @@ class APIController extends BaseController
         $validate = $this->validate([
             'vaccine' => [
                 'uploaded[vaccine]',
-                'mime_in[vaccine,image/png, image/jpeg,image/jpg,application/pdf]',
+                'mime_in[vaccine,image/png,image/jpeg,image/jpg,application/pdf]',
                 'max_size[vaccine,50000]',
             ],
         ]);
@@ -760,7 +760,7 @@ class APIController extends BaseController
     {
         $user = $this->request->user;
         $USR_ID = $user['USR_ID'];
-        $resID = $this->request->getVar('reservation_id');
+        $resID = $this->request->getVar('reservationId');
 
         $validate = $this->validate([
             'estimatedTimeOfArrival' => 'required',
@@ -805,7 +805,7 @@ class APIController extends BaseController
         if ($doc_up['SUCCESS'] == 200) {
             // check wheather there is any entry with this user. 
             $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_FILE_PATH,DOC_CUST_ID,DOC_FILE_TYPE')->where(['DOC_CUST_ID' => $cusUserID, 'DOC_FILE_TYPE' => 'SIGN','DOC_RESV_ID' => $resID])->get()->getRowArray();
-
+	 
             if (!empty($doc_data)) {
 
                 $update_data = $this->DB->table('FLXY_DOCUMENTS')->where('DOC_ID', $doc_data['DOC_ID'])->update($data);
@@ -814,7 +814,7 @@ class APIController extends BaseController
 
 		$update_data = $this->DB->table('FLXY_DOCUMENTS')->insert($data);
 		}
-            $res_data = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resID)->update($dataRes);
+          $res_data = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resID)->update($dataRes);
 	    if ($update_data &&  $res_data)
                   $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT'])]);
             else
