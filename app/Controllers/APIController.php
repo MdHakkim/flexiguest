@@ -703,14 +703,14 @@ class APIController extends BaseController
     public function vaccineForm()
     {
         $user_id = $this->request->user['USR_ID'];
-        $customer_id = $this->request->getVar('customer_id');
-        $reservation_id = $this->request->getVar('reservation_id');
+        $customer_id = $this->request->getVar('VACC_CUST_ID');
+        $reservation_id = $this->request->getVar('VACC_RESV_ID');
 
         $validate = $this->validate([
-            'vaccineDetail' => 'required',
-            'lastVaccineDate' => 'required',
-            'VaccineName' => 'required',
-            'cerIssuanceCountry' => 'required',
+            'VACC_DETAILS' => 'required',
+            'VACC_LAST_DT' => 'required',
+            'VACC_NAME' => 'required',
+            'VACC_ISSUED_COUNTRY' => 'required',
         ]);
 
         if (!$validate) {
@@ -722,12 +722,13 @@ class APIController extends BaseController
 
         $data = [
             "VACC_CUST_ID" => $customer_id,
-            "VACC_DETAILS" => $this->request->getVar("vaccineDetail"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
-            "VACC_LAST_DT" => $this->request->getVar("lastVaccineDate"),
-            "VACC_NAME" => $this->request->getVar("VaccineName"),
-            "VACC_ISSUED_COUNTRY" => $this->request->getVar("cerIssuanceCountry"),
+            "VACC_DETAILS" => $this->request->getVar("VACC_DETAILS"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
+            "VACC_LAST_DT" => $this->request->getVar("VACC_LAST_DT"),
+            "VACC_NAME" => $this->request->getVar("VACC_NAME"),
+            "VACC_ISSUED_COUNTRY" => $this->request->getVar("VACC_ISSUED_COUNTRY"),
             "VACC_IS_VERIFY" => 0,
             "VACC_FILE_PATH" => '',
+            "VACC_RESV_ID" =>$reservation_id,
             "VACC_CREATE_UID" => $user_id,
             "VACC_UPDATE_UID" => $user_id,
         ];
