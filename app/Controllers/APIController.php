@@ -293,9 +293,19 @@ class APIController extends BaseController
     {
         $user = $this->request->user;
 
-        $userID = $user['USR_CUST_ID'];
-        $resID = $this->request->getVar('RESV_ID') ?? 0;
+        $userID = $this->request->getVar('customerId'); // get from the frondend
+        $resID = $this->request->getVar('reservationId');
 
+        $validate = $this->validate([
+            'customerId' => 'required',
+            'reservationId' => 'required'
+        ]);
+
+        if (!$validate) {
+            $validate = $this->validator->getErrors();
+            $result = responseJson(403, true, $validate);
+            return $this->respond($result);
+        }
 
         $fileNames = '';
         $fileArry = $this->request->getFileMultiple('images');
@@ -649,7 +659,7 @@ class APIController extends BaseController
 	$data = [
                     "DOC_CUST_ID" => $cusUserID,
                     "DOC_IS_VERIFY" => 0,
-                    "DOC_FILE_PATH" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']),
+                    "DOC_FILE_PATH" => $doc_up['RESPONSE']['OUTPUT'],
                     "DOC_FILE_TYPE" => 'SIGN',
                     "DOC_RESV_ID" => $resID,
                     "DOC_FILE_DESC" => "",
