@@ -1754,7 +1754,7 @@
         </div>
     </div>
 
-    <?= $this->include('Reservation/includes/EditCustomerModal') ?>
+    <?= $this->include('includes/EditCustomerPopup') ?>
 
 
     <div class="content-backdrop fade"></div>
