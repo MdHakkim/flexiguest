@@ -336,7 +336,7 @@ class APIController extends BaseController
 
         if (!empty($fileNames)) {
             // check wheather there is any entry with this user. 
-            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_CUST_ID,DOC_FILE_PATH,DOC_RESV_ID')->where(['DOC_CUST_ID' => $userID, 'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
+            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_CUST_ID,DOC_FILE_PATH,DOC_RESV_ID')->where(['DOC_CUST_ID' => $userID, 'DOC_FILE_TYPE' => 'PROOF','DOC_RESV_ID' => $resID])->get()->getRowArray();
             $data = [
                 "DOC_CUST_ID" => $userID,
                 "DOC_IS_VERIFY" => 0,
@@ -450,7 +450,7 @@ class APIController extends BaseController
 
         $param = ['CUST_ID' => $CUST_ID];
         $sql = "SELECT  b.* ,a.DOC_FILE_PATH FROM FLXY_CUSTOMER b 
-                    LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID:";
+                    LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID: OR a.DOC_FILE_TYPE ='PROOF'";
         $data = $this->DB->query($sql, $param)->getRowArray();
 
         if (!empty($data)) {
