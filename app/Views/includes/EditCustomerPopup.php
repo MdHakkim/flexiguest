@@ -32,13 +32,21 @@
                                 </select>
                                 <select name="CUST_TITLE" class="form-select" data-allow-clear="true">
                                     <option value="">Select</option>
-                                    <option value="Mr">Mr.</option>
-                                    <option value="Ms">Ms.</option>
+                                    <option value="Mr.">Mr.</option>
+                                    <option value="Ms.">Ms.</option>
                                     <option value="Shiekh.">Shiekh.</option>
                                     <option value="Shiekha.">Shiekha.</option>
                                     <option value="Dr.">Dr.</option>
                                     <option value="Ambassador.">Ambassador.</option>
+                                    <option value="Madam Ambassadress">Madam Ambassadress</option>
+                                    <option value="Prince.">Prince.</option>
+                                    <option value="Princess.">Princess.</option>
+                                    <option value="President">President</option>
                                     <option value="Prof.">Prof.</option>
+                                    <option value="Minister.">Minister.</option>
+                                    <option value="Admiral">Admiral</option>
+                                    <option value="Lieutenant.">Lieutenant.</option>
+                                    <option value="Consul.">Consul.</option>
                                 </select>
                             </div>
                         </div>
