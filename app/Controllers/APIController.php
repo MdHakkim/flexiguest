@@ -565,11 +565,12 @@ class APIController extends BaseController
             'lastVaccineDate' => 'required',
             'VaccineName' => 'required',
             'cerIssuanceCountry' => 'required',
-            'vaccine' => [
-                'uploaded[vaccine]',
-                'mime_in[vaccine,image/png, image/jpeg,image/jpg,application/pdf]',
-                'max_size[vaccine,50000]',
-            ],
+            
+//'vaccine' => [
+                //'uploaded[vaccine]',
+                //'mime_in[vaccine,image/png, image/jpeg,image/jpg,application/pdf]',
+               // 'max_size[vaccine,50000]',
+            //],
         ]);
 
         if (!$validate) {
