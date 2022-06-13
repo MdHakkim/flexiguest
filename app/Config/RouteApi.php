@@ -30,7 +30,7 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     // API to upload the  documnets proof for checkin 
     $routes->post("checkin/docUplaod", "APIController::docUploadAPI"); 
     // API to upload the  Vaccine for checkin 
-    $routes->post("checkin/vaccine-uplaod", "APIController::vaccineUpload"); 
+    $routes->post("checkin/vaccine-upload", "APIController::vaccineUpload"); 
     
     $routes->get('checkin/fetch-vaccine-details', 'APIController::fetchVaccineDetails');
     $routes->get('checkin/delete-vaccine', 'APIController::deleteVaccine');
