@@ -5,19 +5,16 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\API\ResponseTrait;
 use  App\Libraries\EmailLibrary;
-use App\Models\VaccineDetail;
 
 class APIController extends BaseController
 {
     use ResponseTrait;
 
     private $DB;
-    private $VaccineDetail;
 
     public function __construct()
     {
         $this->DB = \Config\Database::connect();
-        $this->VaccineDetail = new VaccineDetail();
     }
 
     // ----------- START API FOR FLEXI GUEST --------------//
@@ -544,90 +541,30 @@ class APIController extends BaseController
         return $this->respond(responseJson(500, true, ["msg" => "Something went worng"]));
     }
 
-    // public function deleteSpecificVaccine()
-    // {
-    //     $param = ['CUST_ID' => $this->request->getVar("CUST_ID")];
-    //     $sql = "DELETE FROM FLXY_VACCINE_DETAILS WHERE EXISTS
-    //     (SELECT VACC_ID FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:CUST_ID:)";
-    //     $response = $this->DB->query($sql, $param);
-    //     return $response;
-    // }
-
-    public function deleteVaccine()
-    {   
-        $reservation_id = $this->request->getVar('reservation_id');
-        $customer_id = $this->request->getVar('customer_id');
-
-        $file_name = $this->request->getVar('file_name');
-
-        $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
-        $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
-        foreach($docs as $index => $doc){
-            if($doc == $file_name){
-                unset($docs[$index]);
-
-                $folder_path = $_SERVER['DOCUMENT_ROOT'] . "/FlexiGuest/assets/Uploads/userDocuments/proof/" .  $file_name;
-                if (file_exists($folder_path))
-                    unlink($folder_path);
-            }
-        }
-
-        $file_names = implode(",", $docs);
-        $response = $this->VaccineDetail
-                        ->where('VACC_CUST_ID', $customer_id)
-                        ->where('VACC_RESV_ID', $reservation_id)
-                        ->set(['VACC_FILE_PATH' => $file_names])
-                        ->update();
-
-        if(!$response)
-            return $this->respond(responseJson(500, true, ['msg' => 'delete failed']));
-
-        return $this->respond(responseJson(200, false, ['msg' => 'Doc deleted']));
+    public function deleteSpecificVaccine()
+    {
+        $param = ['CUST_ID' => $this->request->getVar("CUST_ID")];
+        $sql = "DELETE FROM FLXY_VACCINE_DETAILS WHERE EXISTS
+        (SELECT VACC_ID FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:CUST_ID:)";
+        $response = $this->DB->query($sql, $param);
+        return $response;
     }
 
-    public function fetchVaccineDetails()
+    /* FUNCTION : Vaccination Form
+    METHOD: POST 
+    INPUT : Header Authorization- Token
+    OUTPUT : Update the Vaccination details in table.  */
+
+    public function vaccineForm()
     {
-        $reservation_id = $this->request->getVar('reservation_id');
-        $customer_id = $this->request->getVar('customer_id');
-
-        $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
-        
-        $vaccine_detail['vaccines'] = [
-            "Ipsar",
-            "BBIBP-CorV",
-            "Convidecia",
-            "CoronaVac",
-            "Covaxin",
-            "Johnson & John",
-            "Moderna",
-            "Oxford-AstraZeneca",
-            "Pfizer-BioNTech",
-            "Sputnik Light",
-            "Sputnik V"
-        ];
-
-        $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
-        foreach($docs as $index => $doc){
-            $doc_name = $doc;
-            $doc_url = base_url($doc);
-
-            $doc_array = explode(".", $doc);
-            $doc_type = end($doc_array);
-
-            $docs[$index] = ['name' => $doc_name, 'url' => $doc_url, 'type' => $doc_type];
-        }
-        $vaccine_detail['docs'] = $docs;
-
-        return $this->respond(responseJson(200, false, ['msg' => 'Vaccine Details'], $vaccine_detail));
-    }
-
-    public function vaccineUpload()
-    {
-        $user_id = $this->request->user['USR_ID'];
-        $reservation_id = $this->request->getVar('reservation_id');
-        $customer_id = $this->request->getVar('customer_id');
+        $CUST_ID = $this->request->user['USR_CUST_ID'];
+        $del =  $this->deleteSpecificVaccine();
 
         $validate = $this->validate([
+            'vaccineDetail' => 'required',
+            'lastVaccineDate' => 'required',
+            'VaccineName' => 'required',
+            'cerIssuanceCountry' => 'required',
             'vaccine' => [
                 'uploaded[vaccine]',
                 'mime_in[vaccine,image/png, image/jpeg,image/jpg,application/pdf]',
@@ -642,119 +579,44 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        $fileArry = $this->request->getFileMultiple('vaccine');
-
-        foreach ($fileArry as $key => $file) {
-            if (!$file->isValid()) {
-                return $this->respond(responseJson(500, true, ['msg' => "Please upload valid file. This file '{$file->getClientName()}' is not valid"]));
-            }
-        }
-
         // Code for file upload [vaccine is uploading to FLXY_VACCINE_DETAILS table]
-        $file_names = '';
+        $fileNames = '';
+        $fileArry = $this->request->getFileMultiple('vaccine');
+        $desc = $this->request->getVar("desc");
         if (!empty($fileArry)) {
             foreach ($fileArry as $key => $file) {
                 if ($file->isValid() && !$file->hasMoved()) {
                     $newName = $file->getRandomName();
                     $file->move(ROOTPATH . 'assets/Uploads/userDocuments/vaccination', $newName);
-                    
                     $comma = '';
                     if (isset($fileArry[$key + 1])) {
                         $comma = ',';
                     }
-
-                    $file_names .= $newName . $comma;
+                    $fileNames .= $newName . $comma;
                 }
             }
         }
 
-        $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
-        if(empty($vaccine_detail)){
-            $data = [
-                "VACC_CUST_ID" => $customer_id,
-                "VACC_DETAILS" => '', // values will be -- vaccinated, medicallyExempt, vaccinationLater 
-                "VACC_LAST_DT" => '',
-                "VACC_NAME" => '',
-                "VACC_ISSUED_COUNTRY" => '',
-                "VACC_IS_VERIFY" => 0,
-                "VACC_FILE_PATH" => $file_names,
-                "VACC_CREATE_UID" => $user_id,
-                "VACC_UPDATE_UID" => $user_id,
-                "VACC_RESV_ID" => $reservation_id
-            ];
-            $response = $this->VaccineDetail->insert($data);
-        }
-        else{
-            if(!empty($vaccine_detail['VACC_FILE_PATH'])){
-                $file_names = $vaccine_detail['VACC_FILE_PATH'] . "," . $file_names;
-            }
-
-            $data = [
-                "VACC_FILE_PATH" => $file_names,
-                "VACC_UPDATE_UID" => $user_id,
-            ];
-
-            $response = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->set($data)->update();
-        }
-
-        if(!$response)
-            return $this->respond(responseJson(500, true, ['msg' => 'Insert/Update failed']));
-
-        return $this->respond(responseJson(200, false, ['msg' => 'Doc uploaded']));
-    }
-
-    /* FUNCTION : Vaccination Form
-    METHOD: POST 
-    INPUT : Header Authorization- Token
-    OUTPUT : Update the Vaccination details in table.  */
-
-    public function vaccineForm()
-    {
-        $user_id = $this->request->user['USR_ID'];
-        $customer_id = $this->request->getVar('customer_id');
-        $reservation_id = $this->request->getVar('reservation_id');
-
-        $validate = $this->validate([
-            'vaccineDetail' => 'required',
-            'lastVaccineDate' => 'required',
-            'VaccineName' => 'required',
-            'cerIssuanceCountry' => 'required',
-        ]);
-
-        if (!$validate) {
-            $validate = $this->validator->getErrors();
-            $result = responseJson(403, true, $validate);
-
-            return $this->respond($result);
-        }
-
         $data = [
-            "VACC_CUST_ID" => $customer_id,
+            "VACC_CUST_ID" => $CUST_ID,
             "VACC_DETAILS" => $this->request->getVar("vaccineDetail"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
             "VACC_LAST_DT" => $this->request->getVar("lastVaccineDate"),
             "VACC_NAME" => $this->request->getVar("VaccineName"),
             "VACC_ISSUED_COUNTRY" => $this->request->getVar("cerIssuanceCountry"),
             "VACC_IS_VERIFY" => 0,
-            "VACC_FILE_PATH" => '',
-            "VACC_CREATE_UID" => $user_id,
-            "VACC_UPDATE_UID" => $user_id,
+            "VACC_FILE_PATH" => $fileNames,
+            "VACC_CREATE_UID" => $CUST_ID,
+            "VACC_CREATE_DT" => date("d-M-Y"),
+            "VACC_UPDATE_UID" => $CUST_ID,
+            "VACC_UPDATE_DT" => date("d-M-Y")
         ];
 
-        $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
-        if(empty($vaccine_detail)){
-            $response = $this->VaccineDetail->insert($data);
-        }
-        else{
-            unset($data['VACC_FILE_PATH']);
-            unset($data['VACC_CREATE_UID']);
+        $insert = $this->DB->table('FLXY_VACCINE_DETAILS')->insert($data);
 
-            $response = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->set($data)->update();
-        }
-
-        if ($response)
-            $result = responseJson(200, false, ["msg" => "Added the guest vaccine details"]);
+        if ($insert)
+            $result = responseJson(200, true, ["msg" => "Added the guest vaccine details"]);
         else
-            $result = responseJson(500, true, ["msg" => "Insert/Update  Failed"]);
+            $result = responseJson(500, true, ["msg" => "Insertion  Failed"]);
 
         return $this->respond($result);
     }
