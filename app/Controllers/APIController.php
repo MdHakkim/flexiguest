@@ -301,7 +301,12 @@ class APIController extends BaseController
 
         $validate = $this->validate([
             'customerId' => 'required',
-            'reservationId' => 'required'
+            'reservationId' => 'required',
+            'files' => [
+                'uploaded[files]',
+                'mime_in[files,image/png,image/jpeg,image/jpg,application/pdf]',
+                'max_size[files,50000]',
+            ],
         ]);
 
         if (!$validate) {
@@ -311,7 +316,7 @@ class APIController extends BaseController
         }
 
         $fileNames = '';
-        $fileArry = $this->request->getFileMultiple('images');
+        $fileArry = $this->request->getFileMultiple('files');
 
         foreach ($fileArry as $key => $file) {
             if (!$file->isValid()) {
@@ -482,14 +487,15 @@ class APIController extends BaseController
     public function deleteUploadedDOC()
     {
         $user = $this->request->user;
+        $return = false;
 
         $CUST_ID = $this->request->getVar("customerId"); //  proof
         $filename = $this->request->getVar("filename"); // or path
-	$RESID = $this->request->getVar("reservationId");
+	    $RESID = $this->request->getVar("reservationId");
 
         // fetch details from db
         $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID,  'DOC_FILE_TYPE' => 'PROOF', 'DOC_RESV_ID'=>$RESID])->get()->getRowArray();
-        //echo $this->DB->getLastQuery()->getQuery();die;
+        // echo $this->DB->getLastQuery()->getQuery();die;
 	if(empty($doc_data)){
 	   return $this->respond(responseJson(500, true, ["msg" => "No Documents found for the customer =".$CUST_ID." with reservation =".$RESID]));die;
 	}
@@ -514,7 +520,7 @@ class APIController extends BaseController
             unset($filename_array[$pos]);
 
             $folderPath = $_SERVER['DOCUMENT_ROOT'] . "/assets/Uploads/userDocuments/proof/" .  $filename;
-            //echo $folderPath;die;
+            // echo $folderPath;die;
             //var_dump(file_exists($folderPath));die;
             if (file_exists($folderPath)) {
                 unlink($folderPath);
@@ -545,10 +551,10 @@ class APIController extends BaseController
 
     public function deleteVaccine()
     {   
-        $reservation_id = $this->request->getVar('reservation_id');
-        $customer_id = $this->request->getVar('customer_id');
+        $reservation_id = $this->request->getVar('reservationId');
+        $customer_id = $this->request->getVar('customerId');
 
-        $file_name = $this->request->getVar('file_name');
+        $file_name = $this->request->getVar('filename');
 
         $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
         $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
@@ -577,8 +583,8 @@ class APIController extends BaseController
 
     public function fetchVaccineDetails()
     {
-        $reservation_id = $this->request->getVar('reservation_id');
-        $customer_id = $this->request->getVar('customer_id');
+        $reservation_id = $this->request->getVar('reservationId');
+        $customer_id = $this->request->getVar('customerId');
 
         $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
     
@@ -596,19 +602,21 @@ class APIController extends BaseController
             "Sputnik V"
         ];
         
-        if(isset($vaccine_detail['VACC_FILE_PATH'])){
+        $docs = [];
+        if(isset($vaccine_detail['VACC_FILE_PATH']) && !empty($vaccine_detail['VACC_FILE_PATH'])){
             $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
             foreach($docs as $index => $doc){
                 $doc_name = $doc;
-                $doc_url = base_url($doc);
+                $doc_url = base_url("assets/Uploads/userDocuments/vaccination/$doc");
 
                 $doc_array = explode(".", $doc);
                 $doc_type = end($doc_array);
 
                 $docs[$index] = ['name' => $doc_name, 'url' => $doc_url, 'type' => $doc_type];
             }
-            $vaccine_detail['docs'] = $docs;
         }
+
+        $vaccine_detail['docs'] = $docs;
 
         return $this->respond(responseJson(200, false, ['msg' => 'Vaccine Details'], $vaccine_detail));
     }
@@ -616,14 +624,14 @@ class APIController extends BaseController
     public function vaccineUpload()
     {
         $user_id = $this->request->user['USR_ID'];
-        $reservation_id = $this->request->getVar('reservation_id');
-        $customer_id = $this->request->getVar('customer_id');
+        $reservation_id = $this->request->getVar('reservationId');
+        $customer_id = $this->request->getVar('customerId');
 
         $validate = $this->validate([
-            'vaccine' => [
-                'uploaded[vaccine]',
-                'mime_in[vaccine,image/png,image/jpeg,image/jpg,application/pdf]',
-                'max_size[vaccine,50000]',
+            'files' => [
+                'uploaded[files]',
+                'mime_in[files,image/png,image/jpeg,image/jpg,application/pdf]',
+                'max_size[files,50000]',
             ],
         ]);
 
@@ -634,7 +642,7 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        $fileArry = $this->request->getFileMultiple('vaccine');
+        $fileArry = $this->request->getFileMultiple('files');
 
         foreach ($fileArry as $key => $file) {
             if (!$file->isValid()) {
@@ -935,6 +943,41 @@ class APIController extends BaseController
         else
             $result = responseJson(200, false, ["msg" => "No Request List for this user"]);
 
+        return $this->respond($result);
+    }
+    /*  FUNCTION : GET  MAINTENANCE REQUEST GET CATEGORY LIST
+    METHOD: GET
+    INPUT : Header Authorization- Token
+    OUTPUT : LIST OF CATEGORIES   */
+    public function maintenanceCategoryList()
+    {
+        $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY";
+        $response = $this->DB->query($sql)->getResultArray();
+        if($response){
+           $result = responseJson(200, false, ["msg" => "Maintenance list categories fetched Successfully"], $response);
+           
+        }else{
+            $result = responseJson(500, True, ["msg" => "Server Error"]);
+        }
+        return $this->respond($result);
+    }
+    /*  FUNCTION : GET  MAINTENANCE REQUEST  SUBCATEGORY LIST
+    METHOD: GET
+    INPUT : Header Authorization- Token , CategoryID
+    OUTPUT : LIST OF SUBCATEGORIES   */
+
+    public function maintenanceSubCatByCategoryID()
+    {
+        $param = ['MAINT_CAT_ID' => $this->request->getVar("category")];
+        $sql = "SELECT a.MAINT_CAT_ID,b.MAINT_SUBCATEGORY ,b.MAINT_SUBCAT_ID FROM FLXY_MAINTENANCE_CATEGORY a
+        LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY b ON b.MAINT_CAT_ID = a.MAINT_CAT_ID WHERE a.MAINT_CAT_ID =:MAINT_CAT_ID:";
+        $response = $this->DB->query($sql, $param)->getResultArray();
+        if ($response) {
+            $result = responseJson(200, false, ["msg" => "Maintenance list sub categories fetched Successfully"], $response);
+           
+        }else{
+            $result = responseJson(500, True, ["msg" => "Server Error in subcategor fetching"]);
+        }
         return $this->respond($result);
     }
 

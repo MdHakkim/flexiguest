@@ -56,7 +56,7 @@
                                             From:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_ARRIVAL_FROM" name="S_ARRIVAL_FROM"
-                                            class="form-control dt-input" placeholder="" />
+                                            class="form-control dt-input dateField" placeholder="" />
                                     </div>
                                 </div>
 
@@ -85,7 +85,7 @@
                                             To:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_ARRIVAL_TO" name="S_ARRIVAL_TO"
-                                            class="form-control dt-input" data-column="16" placeholder="" />
+                                            class="form-control dt-input dateField" data-column="16" placeholder="" />
                                     </div>
                                 </div>
 
