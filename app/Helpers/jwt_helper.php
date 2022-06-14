@@ -50,8 +50,7 @@ function getSignedJWTForUser($userdata)
 
     $key = getKey();
     $issuedAtTime = time();
-    $tokenTimeToLive = 259200;
-    
+    $tokenTimeToLive = 259200;// in seconds - one month
     $nbf = $issuedAtTime;
     
     $tokenExpiration = $issuedAtTime + $tokenTimeToLive;
