@@ -301,7 +301,12 @@ class APIController extends BaseController
 
         $validate = $this->validate([
             'customerId' => 'required',
-            'reservationId' => 'required'
+            'reservationId' => 'required',
+            'files' => [
+                'uploaded[files]',
+                'mime_in[files,image/png,image/jpeg,image/jpg,application/pdf]',
+                'max_size[files,50000]',
+            ],
         ]);
 
         if (!$validate) {
@@ -311,7 +316,7 @@ class APIController extends BaseController
         }
 
         $fileNames = '';
-        $fileArry = $this->request->getFileMultiple('images');
+        $fileArry = $this->request->getFileMultiple('files');
 
         foreach ($fileArry as $key => $file) {
             if (!$file->isValid()) {
@@ -545,10 +550,10 @@ class APIController extends BaseController
 
     public function deleteVaccine()
     {   
-        $reservation_id = $this->request->getVar('reservation_id');
-        $customer_id = $this->request->getVar('customer_id');
+        $reservation_id = $this->request->getVar('reservationId');
+        $customer_id = $this->request->getVar('customerId');
 
-        $file_name = $this->request->getVar('file_name');
+        $file_name = $this->request->getVar('filename');
 
         $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
         $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
@@ -577,8 +582,8 @@ class APIController extends BaseController
 
     public function fetchVaccineDetails()
     {
-        $reservation_id = $this->request->getVar('reservation_id');
-        $customer_id = $this->request->getVar('customer_id');
+        $reservation_id = $this->request->getVar('reservationId');
+        $customer_id = $this->request->getVar('customerId');
 
         $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
     
@@ -620,10 +625,10 @@ class APIController extends BaseController
         $customer_id = $this->request->getVar('customer_id');
 
         $validate = $this->validate([
-            'vaccine' => [
-                'uploaded[vaccine]',
-                'mime_in[vaccine,image/png,image/jpeg,image/jpg,application/pdf]',
-                'max_size[vaccine,50000]',
+            'files' => [
+                'uploaded[files]',
+                'mime_in[files,image/png,image/jpeg,image/jpg,application/pdf]',
+                'max_size[files,50000]',
             ],
         ]);
 
@@ -634,7 +639,7 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        $fileArry = $this->request->getFileMultiple('vaccine');
+        $fileArry = $this->request->getFileMultiple('files');
 
         foreach ($fileArry as $key => $file) {
             if (!$file->isValid()) {

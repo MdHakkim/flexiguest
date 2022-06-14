@@ -33,7 +33,7 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     $routes->post("checkin/vaccine-upload", "APIController::vaccineUpload"); 
     
     $routes->get('checkin/fetch-vaccine-details', 'APIController::fetchVaccineDetails');
-    $routes->get('checkin/delete-vaccine', 'APIController::deleteVaccine');
+    $routes->delete('checkin/delete-vaccine', 'APIController::deleteVaccine');
     
     // API to fetch guest profile including the guest accomonaying persons
     $routes->post("checkin/guestProfile", "APIController::getGuestAccompanyProfiles"); 
@@ -42,7 +42,7 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     // API to update the guest details from the doc uploaded.
     $routes->get("checkin/getUserDetails", "APIController::FetchSavedDocDetails"); 
     // API to Delete doc uploaded.
-    $routes->post("checkin/deleteDoc", "APIController::deleteUploadedDOC"); 
+    $routes->delete("checkin/deleteDoc", "APIController::deleteUploadedDOC"); 
     // API to Add the details of the vaccine details 
     $routes->post("checkin/vaccineForm", "APIController::vaccineForm"); 
     // API to upload the signature and accept terms and conditions.
