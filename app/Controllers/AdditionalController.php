@@ -1000,13 +1000,14 @@ class AdditionalController extends BaseController
 
 
     public function registerCardPrint(){
+        $data['title'] = getMethodName();
         $data['js_to_load'] = "app-invoice-print.js";
-        $data['css_to_load'] = "app-invoice-preview.js";
-        return view('Reservation/RegisterCard');
+        return view('Reservation/RegisterCard',$data);
 
     }
     public function registerCardPreview(){
-        return view('Reservation/RegisterCardPreview');
+        $data['title'] = getMethodName();
+        return view('Reservation/RegisterCardPreview',$data);
 
     }
     public function roomClassLists()
