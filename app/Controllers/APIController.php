@@ -487,14 +487,15 @@ class APIController extends BaseController
     public function deleteUploadedDOC()
     {
         $user = $this->request->user;
+        $return = false;
 
         $CUST_ID = $this->request->getVar("customerId"); //  proof
         $filename = $this->request->getVar("filename"); // or path
-	$RESID = $this->request->getVar("reservationId");
+	    $RESID = $this->request->getVar("reservationId");
 
         // fetch details from db
         $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID,  'DOC_FILE_TYPE' => 'PROOF', 'DOC_RESV_ID'=>$RESID])->get()->getRowArray();
-        //echo $this->DB->getLastQuery()->getQuery();die;
+        // echo $this->DB->getLastQuery()->getQuery();die;
 	if(empty($doc_data)){
 	   return $this->respond(responseJson(500, true, ["msg" => "No Documents found for the customer =".$CUST_ID." with reservation =".$RESID]));die;
 	}
@@ -519,7 +520,7 @@ class APIController extends BaseController
             unset($filename_array[$pos]);
 
             $folderPath = $_SERVER['DOCUMENT_ROOT'] . "/assets/Uploads/userDocuments/proof/" .  $filename;
-            //echo $folderPath;die;
+            // echo $folderPath;die;
             //var_dump(file_exists($folderPath));die;
             if (file_exists($folderPath)) {
                 unlink($folderPath);
@@ -605,7 +606,7 @@ class APIController extends BaseController
             $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
             foreach($docs as $index => $doc){
                 $doc_name = $doc;
-                $doc_url = base_url($doc);
+                $doc_url = base_url("assets/Uploads/userDocuments/vaccination/$doc");
 
                 $doc_array = explode(".", $doc);
                 $doc_type = end($doc_array);
