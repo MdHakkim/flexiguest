@@ -621,8 +621,8 @@ class APIController extends BaseController
     public function vaccineUpload()
     {
         $user_id = $this->request->user['USR_ID'];
-        $reservation_id = $this->request->getVar('reservation_id');
-        $customer_id = $this->request->getVar('customer_id');
+        $reservation_id = $this->request->getVar('reservationId');
+        $customer_id = $this->request->getVar('customerId');
 
         $validate = $this->validate([
             'files' => [
