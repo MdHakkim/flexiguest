@@ -58,9 +58,9 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     // API to fetch all requests
     $routes->get("maintenance/listRequests", "APIController::listRequests"); 
     // API to get category list of maintenance
-    $routes->get('maintenance/getCategory', 'FacilityController::maintenanceCategoryList');  
+    $routes->get('maintenance/getCategory', 'APIController::maintenanceCategoryList');  
      // API to get Subcategory list of maintenance by categoryID
-    $routes->post('maintenance/getSubCategory/(:segment)', 'FacilityController::maintenanceSubCatByCategoryID/$1'); 
+    $routes->post('maintenance/getSubCategory', 'APIController::maintenanceSubCatByCategoryID'); 
 // ---------------------------------------------------------------------------- Feedback --------------------------------------------------------------------------------//
     // API to fetch all requests
     $routes->post("addFeedback", "APIController::addFeedBack"); 
