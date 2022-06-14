@@ -29,6 +29,10 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/getExistCustomer', 'ApplicatioController::getExistCustomer');
     $routes->match(['post'],'/rateQueryDetailOption', 'ApplicatioController::rateQueryDetailOption');
 
+    $routes->match(['post'],'/reservationChangesView', 'ApplicatioController::ReservationChangesView');
+
+    
+
     // $routes->match(['get'],'/testingApi/(:segment)', 'ApplicatioController::triggerReservationEmail/$1');
 
     $routes->get('/customer', 'ApplicatioController::Customer');
@@ -432,6 +436,15 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('edit-concierge-request', 'ConciergeController::editConciergeRequest');
         $routes->delete('delete-concierge-request', 'ConciergeController::deleteConciergeRequest');
     });
+
+    $routes->group('transport', function ($routes) { 
+        $routes->get('', 'TransportController::transport');
+        $routes->post('all-transports', 'TransportController::allTransports');
+        $routes->post('store', 'TransportController::store');
+        $routes->post('edit', 'TransportController::edit');
+        $routes->delete('delete', 'TransportController::delete');
+    });
+
     // ABUBAKAR CODE (END)
 });
 

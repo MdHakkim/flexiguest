@@ -43,124 +43,128 @@ class GuidelineController extends BaseController
         $id = $this->request->getPost('id');
 
         $rules = [
-            'title' => ['required'],
-            'description' => ['required'],
-            'body' => ['required'],
+            'GL_TITLE' => ['required'],
+            'GL_DESCRIPTION' => ['required'],
+            'GL_BODY' => ['required'],
         ];
 
-        if (empty($id) || $this->request->getFile('cover_image'))
+        if (empty($id) || $this->request->getFile('GL_COVER_IMAGE'))
             $rules = array_merge($rules, [
-                'cover_image' => [
+                'GL_COVER_IMAGE' => [
                     'label' => 'Cover Image',
-                    'rules' => ['uploaded[cover_image]', 'mime_in[cover_image,image/png,image/jpg,image/jpeg]', 'max_size[cover_image,2048]']
+                    'rules' => ['uploaded[GL_COVER_IMAGE]', 'mime_in[GL_COVER_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[GL_COVER_IMAGE,2048]']
                 ],
             ]);
 
-        if ($this->request->getFileMultiple('files'))
+        if ($this->request->getFileMultiple('GL_FILES'))
             $rules = array_merge($rules, [
-                'files.*' => [
+                'GL_FILES.*' => [
                     'label' => 'Files',
-                    'rules' => ['mime_in[files,image/png,image/jpg,image/jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document]', 'max_size[files, 2048]']
+                    'rules' => ['mime_in[GL_FILES,image/png,image/jpg,image/jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document]', 'max_size[GL_FILES, 2048]']
                 ],
             ]);
 
         if (!$this->validate($rules)) {
             $errors = $this->validator->getErrors();
-            $result = responseJson("-402", $errors);
+            $result = responseJson(403, true, $errors);
 
             return $this->respond($result);
         }
 
         $data = [];
-        if ($this->request->getFile('cover_image')) {
-            $image = $this->request->getFile('cover_image');
+        if ($this->request->getFile('GL_COVER_IMAGE')) {
+            $image = $this->request->getFile('GL_COVER_IMAGE');
             $image_name = $image->getName();
             $directory = "assets/Uploads/guidelines/cover_image/";
 
             $response = documentUpload($image, $image_name, $user_id, $directory);
 
             if ($response['SUCCESS'] != 200)
-                return $this->respond(responseJson("500", true, "image not uploaded"));
+                return $this->respond(responseJson('500', true, ['msg' => 'image not uploaded']));
 
-            $data['cover_image'] = $directory . $response['RESPONSE']['OUTPUT'];
+            $data['GL_COVER_IMAGE'] = $directory . $response['RESPONSE']['OUTPUT'];
         }
 
-        $data['title'] = trim($this->request->getPost('title'));
-        $data['description'] = trim($this->request->getPost('description'));
-        $data['body'] = trim($this->request->getPost('body'));
+        $data['GL_TITLE'] = trim($this->request->getPost('GL_TITLE'));
+        $data['GL_DESCRIPTION'] = trim($this->request->getPost('GL_DESCRIPTION'));
+        $data['GL_BODY'] = trim($this->request->getPost('GL_BODY'));
 
-        $guideline_id = !empty($id)
-            ? $this->Guideline->update($id, $data)
-            : $this->Guideline->insert($data);
-        
+        if (empty($id)) {
+            $data['GL_CREATED_BY'] = $data['GL_UPDATED_BY'] = $user_id;
+            $guideline_id = $this->Guideline->insert($data);
+        } else {
+            $data['GL_UPDATED_BY'] = $user_id;
+            $guideline_id = $this->Guideline->update($id, $data);
+        }
+
         if (!$guideline_id)
-            return $this->respond(responseJson("-444", false, "db insert/update not successful", $guideline_id));
+            return $this->respond(responseJson(500, true, ['msg' => "db insert/update not successfull"]));
 
-        if(!empty($id)) // when updating
+        if (!empty($id)) // when updating
             $guideline_id = $id;
 
-        if ($this->request->getFileMultiple('files')) {
+        if ($this->request->getFileMultiple('GL_FILES')) {
 
-            foreach ($this->request->getFileMultiple('files') as $file) {
+            foreach ($this->request->getFileMultiple('GL_FILES') as $file) {
                 $file_name = $file->getName();
                 $directory = "assets/Uploads/guidelines/files/";
 
                 $response = documentUpload($file, $file_name, $user_id, $directory);
 
                 if ($response['SUCCESS'] != 200)
-                    return $this->respond(responseJson("500", true, "file not uploaded"));
+                    return $this->respond(responseJson("500", true, ['msg' => "file not uploaded"]));
 
-                $guideline_file['guideline_id'] = $guideline_id;
-                $guideline_file['file_url'] = $directory . $response['RESPONSE']['OUTPUT'];
-                $guideline_file['file_type'] = $file->getClientMimeType();
-                $guideline_file['file_name'] = $file_name;
+                $guideline_file['GLF_GUIDELINE_ID'] = $guideline_id;
+                $guideline_file['GLF_FILE_URL'] = $directory . $response['RESPONSE']['OUTPUT'];
+                $guideline_file['GLF_FILE_TYPE'] = $file->getClientMimeType();
+                $guideline_file['GLF_FILE_NAME'] = $file_name;
 
                 $this->GuidelineFile->insert($guideline_file);
             }
         }
-        
-        if(empty($id))
+
+        if (empty($id))
             $msg = 'Guideline has been created.';
         else
             $msg = 'Guideline has been updated.';
 
-        return $this->respond(responseJson("200", false, $msg));
+        return $this->respond(responseJson("200", false, ['msg' => $msg]));
     }
 
     public function edit()
     {
         $id = $this->request->getPost('id');
 
-        $guideline = $this->Guideline->where('id', $id)->first();
+        $guideline = $this->Guideline->where('GL_ID', $id)->first();
 
         if ($guideline) {
-            $guideline['guideline_files'] = $this->GuidelineFile->where('guideline_id', $guideline['id'])->orderBy('file_type')->findAll();
+            $guideline['GUIDELINE_FILES'] = $this->GuidelineFile->where('GLF_GUIDELINE_ID', $guideline['GL_ID'])->orderBy('GLF_FILE_TYPE')->findAll();
 
             return $this->respond($guideline);
         }
 
-        return $this->respond(responseJson(204, true, "guideline not found"));
+        return $this->respond(responseJson(404, true, ['msg' => "guideline not found"]));
     }
 
     public function delete()
     {
         $id = $this->request->getPost('id');
 
-        $this->GuidelineFile->where('guideline_id', $id)->delete();
+        $this->GuidelineFile->where('GLF_GUIDELINE_ID', $id)->delete();
 
         $response = $this->Guideline->delete($id);
-        if(!$response)
-            return $this->respond(responseJson("-402", "record not deleted"));
-        
-        return $this->respond(responseJson("200", false, "record deleted", $response));
+        if (!$response)
+            return $this->respond(responseJson(500, true, ['msg' => "The Guideline has not been deleted"]));
+
+        return $this->respond(responseJson(200, false, ['msg' => "The Guideline has been deleted successfully"]));
     }
 
     public function deleteOptionalFile()
     {
         $file_id = $this->request->getPost('file_id');
 
-        $this->GuidelineFile->where('id', $file_id)->delete();
+        $this->GuidelineFile->where('GLF_ID', $file_id)->delete();
 
-        return $this->respond(responseJson(200, false, "File deleted successfully.", []));
+        return $this->respond(responseJson(200, false, ['msg' => "File deleted successfully."]));
     }
 }

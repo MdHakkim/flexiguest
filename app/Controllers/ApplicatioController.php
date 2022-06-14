@@ -15,7 +15,7 @@ class ApplicatioController extends BaseController
     public function __construct(){
         $this->Db = \Config\Database::connect();
         $this->session = \Config\Services::session();
-        helper(['form', 'common']);
+        helper(['form', 'common', 'custom']);
         $this->request = \Config\Services::request();
         $this->todayDate = new DateTime("now", new DateTimeZone('Asia/Dubai'));
     }
@@ -25,6 +25,7 @@ class ApplicatioController extends BaseController
         $data['itemLists'] = $itemLists;    
         $data['title'] = getMethodName();
         $data['session'] = $this->session;
+        $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['js_to_load'] = array("inventoryFormWizardNumbered.js");
         return view('Reservation/Reservation', $data);
     }
@@ -62,10 +63,50 @@ class ApplicatioController extends BaseController
     }
 
     public function reservationView(){
+
+        $_POST = filter_var($_POST, \FILTER_CALLBACK, ['options' => 'trim']);
+
+        $postValues = $this->request->getPost('columns');
+
+        $search_keys = ['S_GUEST_NAME', 'S_GUEST_FIRST_NAME', 'S_COMPANY', 'S_ARRIVAL_FROM', 'S_ARRIVAL_TO', 'S_ROOM_NO', 'S_RESV_STATUS'];
+
+        $init_cond = array();
+
+        if($search_keys != NULL){
+            foreach($search_keys as $search_key)
+            {
+                //echo json_encode(print_r($postData));
+                
+                //if(!is_numeric($key)) continue;
+
+                if(null !== $this->request->getPost($search_key) && !empty(trim($this->request->getPost($search_key))))
+                {
+                    $value = trim($this->request->getPost($search_key));
+
+                    switch($search_key)
+                    {
+                        case 'S_GUEST_NAME': $init_cond["FULLNAME LIKE "] = "'%$value%'"; break;
+                        case 'S_GUEST_FIRST_NAME': $init_cond["SUBSTRING(FULLNAME,1,(CHARINDEX(' ',FULLNAME + ' ')-1)) LIKE "] = "'%$value%'"; break;
+
+                        case 'S_SEARCH_TYPE': { switch($value)
+                                                {
+                                                    case '1': $init_cond["RESV_ARRIVAL_DT = "] = date('Y-m-d'); break;
+                                                    case '2': $init_cond["RESV_DEPARTURE = "] = date('Y-m-d'); break;
+                                                    case '3': $init_cond["RESV_ARRIVAL_DT = "] = "RESV_DEPARTURE"; break;
+                                                }
+                                              } 
+                        default: $init_cond["".ltrim($search_key, 'S_')." LIKE "] = "'%$value%'"; break;
+                        
+                    }
+                    
+                }
+            }
+        }
+        
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_RESERVATION_VIEW';
         $columns = 'RESV_ID|RESV_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_STATUS|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|FULLNAME|RESV_FEATURE|RESV_PURPOSE_STAY';
-        $mine->generate_DatatTable($tableName,$columns,[],'|');
+        $mine->generate_DatatTable($tableName,$columns,$init_cond,'|');
         exit;
         // return view('Dashboard');
     }
@@ -131,6 +172,20 @@ class ApplicatioController extends BaseController
         echo json_encode($response);
     }
 
+    public function ReservationChangesView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array("ELEMENT_ID = " => "'$sysid'"); // Add condition for main Rate Code
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_ACTIVITY_LOG_VIEW';
+        $columns = 'LOG_ID,USR_NAME,LOG_DATE,LOG_TIME,AC_TY_DESC,LOG_ACTION_DESCRIPTION';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
+
     public function removeNullJson($value){
         array_walk_recursive($value, function (&$item, $key) {
             $item = null === $item ? '' : $item;
@@ -157,7 +212,7 @@ class ApplicatioController extends BaseController
             $sysid = $this->request->getPost("RESV_ID");
             $emailProc = $log_action_desc = '';
 
-            if(!empty($sysid)){
+            if(!empty($sysid)){ // Edit Reservation
 
             $currentReservation = $this->getReservationDetails($sysid);
 
@@ -176,7 +231,7 @@ class ApplicatioController extends BaseController
                 "RESV_CORP_NO" => $this->request->getPost("RESV_CORP_NO"),
                 "RESV_IATA_NO" => $this->request->getPost("RESV_IATA_NO"),
                 // "RESV_CLOSED" => $this->request->getPost("RESV_CLOSED"),
-                // "RESV_DAY_USE" => $this->request->getPost("RESV_DAY_USE"),
+                "RESV_DAY_USE" => $this->request->getPost("RESV_ARRIVAL_DT") == $this->request->getPost("RESV_DEPARTURE") ? 'Y' : 'N',
                 // "RESV_PSEUDO" => $this->request->getPost("RESV_PSEUDO"),
                 "RESV_RATE_CLASS" => $this->request->getPost("RESV_RATE_CLASS"),
                 "RESV_RATE_CATEGORY" => $this->request->getPost("RESV_RATE_CATEGORY"),
@@ -239,11 +294,11 @@ class ApplicatioController extends BaseController
                     // Save changes in log description if data is updated/changed
                     if(isset($data[$rkey]) && !empty(trim($data[$rkey])) && !empty(trim($rvalue)) && trim($data[$rkey]) != trim($rvalue))
                     {
-                        $log_action_desc .= str_replace('RESV_', '', $rkey) . " '" . $rvalue . "' -> '". $data[$rkey]."'\n";
+                        $log_action_desc .= "<b>".str_replace('RESV_', '', $rkey) . ": </b> '" . $rvalue . "' -> '". $data[$rkey]."'<br/>";
                     }
                 }
 
-            }else{
+            }else{ // Add New Reservation
                 $data = ["RESV_ARRIVAL_DT" => $this->request->getPost("RESV_ARRIVAL_DT"),
                     "RESV_NIGHT" => $this->request->getPost("RESV_NIGHT"),
                     "RESV_ADULTS" => $this->request->getPost("RESV_ADULTS"),
@@ -259,7 +314,7 @@ class ApplicatioController extends BaseController
                     "RESV_CORP_NO" => $this->request->getPost("RESV_CORP_NO"),
                     "RESV_IATA_NO" => $this->request->getPost("RESV_IATA_NO"),
                     // "RESV_CLOSED" => $this->request->getPost("RESV_CLOSED"),
-                    // "RESV_DAY_USE" => $this->request->getPost("RESV_DAY_USE"),
+                    "RESV_DAY_USE" => $this->request->getPost("RESV_ARRIVAL_DT") == $this->request->getPost("RESV_DEPARTURE") ? 'Y' : 'N',
                     // "RESV_PSEUDO" => $this->request->getPost("RESV_PSEUDO"),
                     "RESV_RATE_CLASS" => $this->request->getPost("RESV_RATE_CLASS"),
                     "RESV_RATE_CATEGORY" => $this->request->getPost("RESV_RATE_CATEGORY"),
@@ -328,7 +383,7 @@ class ApplicatioController extends BaseController
                     // Save changes in log description if data is not empty
                     if(!empty(trim($dvalue)))
                     {
-                        $log_action_desc .= str_replace('RESV_', '', $dkey) . " = '" . $dvalue ."'\n";
+                        $log_action_desc .= "<b>".str_replace('RESV_', '', $dkey) . ": </b> '" . $dvalue ."'<br/>";
                     }
                 }
             }
@@ -419,7 +474,7 @@ class ApplicatioController extends BaseController
             $validate = $this->validate([
                 'CUST_FIRST_NAME' => 'required',
                 'CUST_EMAIL' =>[
-                    'rules'  => 'required|valid_email|emailVerification[CUST_EMAIL]',
+                    'rules'  => "required|valid_email|emailVerification[CUST_EMAIL,CUST_ID]",
                     'errors' => [
                         'required' => 'Email is required does not empty',
                         'emailVerification' => 'Email already exist'
@@ -2254,39 +2309,67 @@ class ApplicatioController extends BaseController
             $RESV_NIGHT=$this->request->getPost('RESV_NIGHT');
             $RESV_ADULTS=$this->request->getPost('RESV_ADULTS');
             $RESV_CHILDREN=$this->request->getPost('RESV_CHILDREN');
-            $param = ['ARRIVAL_DT'=> $RESV_ARRIVAL_DT,'DEPARTURE_DT'=> $RESV_DEPARTURE,'RESV_ADULTS'=> $this->request->getPost("RESV_ADULTS"),'RESV_CHILDREN'=> $this->request->getPost("RESV_CHILDREN"),'TODAYDATE'=> $TODAYDATE];
-            $sql="SELECT RM_TY_CODE, RM_TY_TOTAL_ROOM,TOTAL_OVER_BOOKING FROM 
-			(SELECT RM_TY_CODE,(RM_TY_TOTAL_ROOM) RM_TY_TOTAL_ROOM,
+
+            $RESV_ROOM_TYPE = $this->request->getPost('resv_room_type');
+            $RESV_RATE = $this->request->getPost('resv_rate');
+            
+            $RATE_CLOSED  = $this->request->getPost('closed');
+            $RATE_DAY_USE = $this->request->getPost('day_use');
+
+            $param = [  'ARRIVAL_DT'=> $RESV_ARRIVAL_DT,
+                        'DEPARTURE_DT'=> $RESV_DEPARTURE,
+                        'RESV_ADULTS'=> $this->request->getPost("RESV_ADULTS"),
+                        'RESV_CHILDREN'=> $this->request->getPost("RESV_CHILDREN"),
+                        'TODAYDATE'=> $TODAYDATE
+                     ];
+
+            $sql="SELECT RM_TY_CODE, RM_TY_DESC, RM_TY_TOTAL_ROOM,TOTAL_OVER_BOOKING FROM 
+			(SELECT RM_TY_CODE,(RM_TY_TOTAL_ROOM) RM_TY_TOTAL_ROOM, RM_TY_DESC,
 			(RM_TY_TOTAL_ROOM)TOTAL_OVER_BOOKING,
 			ROW_NUMBER() OVER (PARTITION BY RM_TY_CODE ORDER BY RM_TY_CODE) AS ROW_NUMBER
 			FROM FLXY_ROOM_TYPE ROOMTYTB
 			LEFT JOIN FLXY_OVERBOOKING OVERBTB ON RM_TY_CODE=OB_RM_TYPE 
 			AND (:ARRIVAL_DT: BETWEEN  OB_FROM_DT AND OB_UPTO_DT AND :DEPARTURE_DT: BETWEEN  OB_FROM_DT AND OB_UPTO_DT))MAIN_DATA WHERE ROW_NUMBER=1 ORDER BY RM_TY_CODE ASC";
+            
             $response = $this->Db->query($sql,$param)->getResultArray();
             // print_r($response);exit;
             if($RESV_MODE=='AVG'){
                 $operation = ' CAST(AVG(ACTUAL_ADULT_PRICE)AS DECIMAL(10, 2))ACTUAL_ADULT_PRICE,COUNT(value) TOTAL';
-                $groupby=' GROUP BY value,RT_CD_ID,RT_DESCRIPTION ORDER BY RT_CD_ID,ROOM_TYPE ASC';
+                $groupby=' GROUP BY value,RT_CD_ID,RT_DESCRIPTION,RT_INFO ORDER BY RT_CD_ID,ROOM_TYPE ASC';
             }elseif($RESV_MODE=='TOT'){
                 $operation = ' CAST(SUM(ACTUAL_ADULT_PRICE)*'.$RESV_NIGHT.'AS DECIMAL(10, 2))ACTUAL_ADULT_PRICE,COUNT(value) TOTAL';
-                $groupby=' GROUP BY value,RT_CD_ID,RT_DESCRIPTION ORDER BY RT_CD_ID,ROOM_TYPE ASC';
+                $groupby=' GROUP BY value,RT_CD_ID,RT_DESCRIPTION,RT_INFO ORDER BY RT_CD_ID,ROOM_TYPE ASC';
             }
-            $sqlRate="SELECT RT_DESCRIPTION,RT_CD_ID,value as ROOM_TYPE,$operation
-            FROM (SELECT(SELECT RT_CD_CODE FROM FLXY_RATE_CODE WHERE RATEQUERY.RT_CD_ID=RT_CD_ID)RT_DESCRIPTION ,RATEQUERY.*,
+
+            $closed  = $RATE_CLOSED == 1 ? "" : "WHERE ( :ARRIVAL_DT: BETWEEN RT_CD_START_DT AND RT_CD_END_DT 
+                                                         AND :DEPARTURE_DT: BETWEEN RT_CD_START_DT AND RT_CD_END_DT
+                                                       )";
+            $day_use = $RATE_DAY_USE == 1 ? "" : "AND RT_CD_DAY_USE != 1";
+
+            $sqlRate = "SELECT RT_DESCRIPTION, RT_INFO, RT_CD_ID, value as ROOM_TYPE, $operation
+            FROM (SELECT (SELECT RT_CD_CODE FROM FLXY_RATE_CODE WHERE RATEQUERY.RT_CD_ID=RT_CD_ID)RT_DESCRIPTION, 
+                         (SELECT RT_CD_DESC FROM FLXY_RATE_CODE WHERE RATEQUERY.RT_CD_ID=RT_CD_ID)RT_INFO, RATEQUERY.*,
             CASE 
             WHEN 1 = '$RESV_ADULTS' THEN CAST(RT_CD_DT_1_ADULT AS DECIMAL(10, 2))
-            WHEN 2 = '$RESV_ADULTS' THEN CAST(RT_CD_DT_2_ADULT AS DECIMAL(10, 2))
-            WHEN 3 = '$RESV_ADULTS' THEN CAST(RT_CD_DT_3_ADULT AS DECIMAL(10, 2))
-            WHEN 4 = '$RESV_ADULTS' THEN CAST(RT_CD_DT_4_ADULT AS DECIMAL(10, 2))
-            WHEN 5 = '$RESV_ADULTS' THEN CAST(RT_CD_DT_5_ADULT AS DECIMAL(10, 2))
-            ELSE (CAST(RT_CD_DT_5_ADULT AS DECIMAL(10, 2))+CAST(RT_CD_DT_EXTRA_ADULT AS DECIMAL(10, 2)))
+            WHEN 2 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_2_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
+            WHEN 3 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_3_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
+            WHEN 4 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_4_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
+            WHEN 5 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_5_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
+            ELSE (CAST(ISNULL(RT_CD_DT_5_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))+CAST(ISNULL(RT_CD_DT_EXTRA_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2)))
             END AS ACTUAL_ADULT_PRICE
             FROM (
-            SELECT * FROM FLXY_RATE_CODE_DETAIL RT_DETAIL WHERE EXISTS( SELECT RT_CD_ID FROM FLXY_RATE_CODE WHERE
-            :TODAYDATE: BETWEEN RT_CD_BEGIN_SELL_DT AND RT_CD_END_SELL_DT AND RT_CD_ID=RT_DETAIL.RT_CD_ID)) RATEQUERY 
-            WHERE (:ARRIVAL_DT: BETWEEN  RT_CD_START_DT AND RT_CD_END_DT AND
-            :DEPARTURE_DT: BETWEEN  RT_CD_START_DT AND RT_CD_END_DT))TEMP_QUERY CROSS APPLY STRING_SPLIT(RT_CD_DT_ROOM_TYPES,',')
+                    SELECT * FROM FLXY_RATE_CODE_DETAIL RT_DETAIL 
+                    WHERE EXISTS(   SELECT RT_CD_ID FROM FLXY_RATE_CODE 
+                                    WHERE :TODAYDATE: BETWEEN RT_CD_BEGIN_SELL_DT AND RT_CD_END_SELL_DT
+                                    AND RT_CD_ID = RT_DETAIL.RT_CD_ID 
+                                    AND RT_CD_NEGOTIATED != 1 
+                                    $day_use
+                                )
+                 ) RATEQUERY 
+            $closed
+            ) TEMP_QUERY CROSS APPLY STRING_SPLIT(RT_CD_DT_ROOM_TYPES,',')
             $groupby";
+
             $rateresult = $this->Db->query($sqlRate,$param)->getResultArray();  
             $roomType='';
             $physicalinv='';
@@ -2296,12 +2379,12 @@ class ApplicatioController extends BaseController
             // exit;
             foreach($response as $row){
                 $roomtypeStore[]=$row['RM_TY_CODE'];
-                $roomType.='<td style="width:120px;">'.$row['RM_TY_CODE'].'</td>';
+                $roomType.='<td style="width:120px;" data-roomtype-info="'.$row['RM_TY_DESC'].'">'.$row['RM_TY_CODE'].'</td>';
                 $physicalinv.='<td style="width:100px;word-wrap: break-word;">'.$row['RM_TY_TOTAL_ROOM'].'</td>';
                 $feature.='<td style="width:100px;word-wrap: break-word;">'.$row['TOTAL_OVER_BOOKING'].'</td>';
             }
             $trRow = '<tr><td style="width:210px;">Room Type</td>'.$roomType.'</tr>';
-            $trRow .= '<tr><td style="width:210px;">Physical  Inventory</td>'.$physicalinv.'</tr>';
+            $trRow .= '<tr><td style="width:210px;">Physical Inventory</td>'.$physicalinv.'</tr>';
             $trRow .= '<tr><td style="width:210px;">Include Overbooking</td>'.$feature.'</tr>';
             // print_r($rateresult);exit;
             $roomTypeArr=[];
@@ -2343,9 +2426,10 @@ class ApplicatioController extends BaseController
                 $trRow .='<td><input type="hidden" id="RT_DESCRIPTION" value="'.trim($key).'">'.$key.'</td>';
                 for($i=0;$i<$totalrmType;$i++){
                     if(!empty($data[$i])){
-                        $trRow .='<td class="clickPrice">'
-                        .'<input type="hidden" id="ACTUAL_ADULT_PRICE" value="'.$data[$i]['ACTUAL_ADULT_PRICE'].'">'
-                        .'<input type="hidden" id="ROOMTYPE" value="'.$data[$i]['ROOM_TYPE'].'">'.$data[$i]['ACTUAL_ADULT_PRICE'].'</td>';
+                        $active = ($data[$i]['ACTUAL_ADULT_PRICE'] == $RESV_RATE && $data[$i]['ROOM_TYPE'] == $RESV_ROOM_TYPE) ? 'active' : '';
+                        $trRow .='<td class="clickPrice '.$active.'" data-rate-info="'.$data[$i]['RT_INFO'].'">'
+                        .'<input type="hidden" id="ACTUAL_ADULT_PRICE" value="'.number_format($data[$i]['ACTUAL_ADULT_PRICE'], 2).'">'
+                        .'<input type="hidden" id="ROOMTYPE" value="'.$data[$i]['ROOM_TYPE'].'">'.number_format($data[$i]['ACTUAL_ADULT_PRICE'], 2).'</td>';
                     }else{
                         $trRow .='<td class=""></td>';
                     }
@@ -2491,18 +2575,19 @@ class ApplicatioController extends BaseController
         $className = $modeWindow=='C' ? 'getExistCust' : 'activeRow';
         foreach($response as $key=>$row){
             $table.='<tr class="'.$className.'" data_sysid="'.$row['CUST_ID'].'">'
+            .'<td class="editcustomer" data_sysid="'.$row['CUST_ID'].'"><i class="fa-solid fa-user-pen"></i></td>'
             .'<td>'
             .($key+1).'</td>'
-            .'<td>'.$row['CUST_FIRST_NAME'].'</td>'
-            .'<td>'.$row['CUST_LAST_NAME'].'</td>'
-            .'<td>'.$row['CUST_DOB'].'</td>'
-            .'<td>'.$row['CUST_PASSPORT'].'</td>'
-            .'<td>'.$row['CUST_ADDRESS_1'].'</td>'
-            .'<td>'.$row['CUST_CITY'].'</td>'
-            .'<td>'.$row['CUST_EMAIL'].'</td>'
-            .'<td>'.$row['CUST_MOBILE'].'</td>'
-            .'<td>'.$row['CUST_NATIONALITY'].'</td>'
-            .'<td>'.$row['CUST_VIP'].'</td>'
+            .'<td class="select">'.$row['CUST_FIRST_NAME'].'</td>'
+            .'<td class="select">'.$row['CUST_LAST_NAME'].'</td>'
+            .'<td class="select">'.$row['CUST_DOB'].'</td>'
+            .'<td class="select">'.$row['CUST_PASSPORT'].'</td>'
+            .'<td class="select">'.$row['CUST_ADDRESS_1'].'</td>'
+            .'<td class="select">'.$row['CUST_CITY'].'</td>'
+            .'<td class="select">'.$row['CUST_EMAIL'].'</td>'
+            .'<td class="select">'.$row['CUST_MOBILE'].'</td>'
+            .'<td class="select">'.$row['CUST_NATIONALITY'].'</td>'
+            .'<td class="select">'.$row['CUST_VIP'].'</td>'
             .'</tr>';
         }
         $return['table']=$table;

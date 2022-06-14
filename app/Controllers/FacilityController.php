@@ -777,9 +777,9 @@ class FacilityController extends BaseController
 
         $all_stops = $this->ShuttleRoute
             ->select('FLXY_SHUTTLE_ROUTE.*, st.SHUTL_STAGE_NAME')
-            ->join('FLXY_SHUTL_STAGES as st', 'FLXY_SHUTTLE_ROUTE.stage_id = st.SHUTL_STAGE_ID')
-            ->where('shuttle_id', $shuttle_id)
-            ->orderBy('order_no', 'asc')
+            ->join('FLXY_SHUTL_STAGES as st', 'FLXY_SHUTTLE_ROUTE.FSR_STAGE_ID = st.SHUTL_STAGE_ID')
+            ->where('FSR_SHUTTLE_ID', $shuttle_id)
+            ->orderBy('FSR_ORDER_NO', 'asc')
             ->findAll();
 
         return $this->respond(responseJson(200, false, "all stops list", $all_stops));
@@ -788,38 +788,38 @@ class FacilityController extends BaseController
     public function storeRouteStop()
     {
         $rules = [
-            'stage_id' => [
+            'FSR_STAGE_ID' => [
                 'label' => 'Stage',
                 'rules' => 'required',
                 'errors' => [
                     'required' => "Please select a stop."
                 ]
             ],
-            'duration_mins' => ['label' => 'Stop Duration', 'rules' => 'required|min_length[1]'],
+            'FSR_DURATION_MINS' => ['label' => 'Stop Duration', 'rules' => 'required|min_length[1]'],
         ];
 
         if (!$this->validate($rules)) {
             $errors = $this->validator->getErrors();
 
-            $result = responseJson("400", $errors);
+            $result = responseJson(403, $errors);
 
             return $this->respond($result);
         }
 
-        $last_shuttle_route = $this->ShuttleRoute->select('max(order_no) as order_no')
-            ->where('shuttle_id', $this->request->getPost('shuttle_id'))
+        $last_shuttle_route = $this->ShuttleRoute->select('max(FSR_ORDER_NO) as FSR_ORDER_NO_COUNT')
+            ->where('FSR_SHUTTLE_ID', $this->request->getPost('shuttle_id'))
             ->first();
 
         $order_no = 1;
         if ($last_shuttle_route) {
-            $order_no = $last_shuttle_route['order_no'] + 1;
+            $order_no = $last_shuttle_route['FSR_ORDER_NO_COUNT'] + 1;
         }
 
         $shuttle_route = $this->ShuttleRoute->insert([
-            'shuttle_id' => $this->request->getPost('shuttle_id'),
-            'stage_id' => $this->request->getPost('stage_id'),
-            'duration_mins' => $this->request->getPost('duration_mins'),
-            'order_no' => $order_no,
+            'FSR_SHUTTLE_ID' => $this->request->getPost('FSR_SHUTTLE_ID'),
+            'FSR_STAGE_ID' => $this->request->getPost('FSR_STAGE_ID'),
+            'FSR_DURATION_MINS' => $this->request->getPost('FSR_DURATION_MINS'),
+            'FSR_ORDER_NO' => $order_no,
         ]);
 
         if ($shuttle_route) {
@@ -838,7 +838,7 @@ class FacilityController extends BaseController
 
             $order_no = 1;
             foreach ($shuttle_route_ids as $id) {
-                $this->ShuttleRoute->update($id, ['order_no' => $order_no++]);
+                $this->ShuttleRoute->update($id, ['FSR_ORDER_NO' => $order_no++]);
             }
 
             return $this->respond(responseJson(200, false, "Order updated successfully."));

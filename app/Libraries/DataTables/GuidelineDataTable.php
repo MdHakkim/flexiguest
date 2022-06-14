@@ -10,14 +10,14 @@ class GuidelineDataTable{
     }
 
     public function generate_DatatTable(){
-        $table = 'guidelines';
+        $table = 'FLXY_GUIDELINES';
 
         $draw = $_POST['draw'];
         $row = $_POST['start'];
 
         $rowperpage = $_POST['length']; // Rows display per page
 
-        $columns = ['id', 'title', 'cover_image', 'description', 'body', 'created_at'];
+        $columns = ['GL_ID', 'GL_TITLE', 'GL_COVER_IMAGE', 'GL_DESCRIPTION', 'GL_BODY', 'GL_CREATED_AT'];
         
         $columnIndex = isset($_POST['order']) ? $_POST['order'][0]['column'] : ''; // Column index
         $columnName  = isset($_POST['order']) ? $columns[$columnIndex] : $columns[0]; // Column name
@@ -27,7 +27,7 @@ class GuidelineDataTable{
         $searchQuery = 'WHERE 1 = 1';
         $searchValue = isset($_POST['search']['value']) ? $_POST['search']['value'] : '';
         if($searchValue != ''){
-            $searchQuery .= " AND (title like '%$searchValue%' or description like '%$searchValue%' or body like '%$searchValue%' or cast(created_at as date) like '%$searchValue%')";
+            $searchQuery .= " AND (GL_TITLE like '%$searchValue%' or GL_DESCRIPTION like '%$searchValue%' or GL_BODY like '%$searchValue%' or cast(GL_CREATED_AT as date) like '%$searchValue%')";
         }
 
         ## Total number of records without filtering
@@ -44,16 +44,16 @@ class GuidelineDataTable{
 
         $return = [];
         foreach($records as $row){
-            $guideline_files = $this->DB->query("select * from guideline_files where guideline_id = {$row['id']}")->getResultArray();
+            $guideline_files = $this->DB->query("select * from FLXY_GUIDELINE_FILES where GLF_GUIDELINE_ID = {$row['GL_ID']}")->getResultArray();
 
             $return[] = [
-                'id' => $row['id'],
-                'title' => $row['title'],
-                'cover_image' => $row['cover_image'],
-                'description' => $row['description'],
-                'body' => $row['body'],
-                'created_at' => $row['created_at'],
-                'guideline_files' => $guideline_files
+                'GL_ID' => $row['GL_ID'],
+                'GL_TITLE' => $row['GL_TITLE'],
+                'GL_COVER_IMAGE' => $row['GL_COVER_IMAGE'],
+                'GL_DESCRIPTION' => $row['GL_DESCRIPTION'],
+                'GL_BODY' => $row['GL_BODY'],
+                'GL_CREATED_AT' => $row['GL_CREATED_AT'],
+                'GUIDELINE_FILES' => $guideline_files
             ];
         }
         ## Response

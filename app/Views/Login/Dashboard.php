@@ -14,7 +14,7 @@
                 <div class="col-md-12 col-lg-6 mb-4">
                   <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                      <h5 class="card-title mb-0">Website Analytics</h5>
+                      <h5 class="card-title mb-0">Hotel Analytics</h5>
                       <div class="dropdown">
                         <button
                           class="btn p-0"
@@ -37,26 +37,26 @@
                       <div class="d-flex flex-wrap justify-content-around align-items-center mb-4">
                         <div class="user-analytics text-center me-2">
                           <i class="bx bx-user me-1"></i>
-                          <span>Users</span>
+                          <span>InHouse Guests</span>
                           <div class="d-flex align-items-center mt-2">
-                            <div class="chart-report" data-color="success" data-series="35"></div>
-                            <h3 class="mb-0">61K</h3>
+                            <div class="chart-report" data-color="info" data-series="35"></div>
+                            <h3 class="mb-0">610</h3>
                           </div>
                         </div>
                         <div class="sessions-analytics text-center me-2">
                           <i class="bx bx-pie-chart-alt me-1"></i>
-                          <span>Sessions</span>
+                          <span>Arrivals</span>
                           <div class="d-flex align-items-center mt-2">
-                            <div class="chart-report" data-color="warning" data-series="76"></div>
-                            <h3 class="mb-0">92K</h3>
+                            <div class="chart-report" data-color="success" data-series="76"></div>
+                            <h3 class="mb-0">92</h3>
                           </div>
                         </div>
                         <div class="bounce-rate-analytics text-center">
                           <i class="bx bx-trending-up me-1"></i>
-                          <span>Bounce Rate</span>
+                          <span>Departures</span>
                           <div class="d-flex align-items-center mt-2">
                             <div class="chart-report" data-color="danger" data-series="65"></div>
-                            <h3 class="mb-0">72.6%</h3>
+                            <h3 class="mb-0">72</h3>
                           </div>
                         </div>
                       </div>
@@ -113,13 +113,13 @@
                               <div class="d-flex justify-content-between">
                                 <div class="gap-3 d-flex align-items-center">
                                   <div class="avatar">
-                                    <span class="avatar-initial bg-label-primary rounded-circle"
-                                      ><i class="bx bx-user fs-4"></i
+                                    <span class="avatar-initial bg-label-success rounded-circle"
+                                      ><i class="bx bx-dollar fs-4"></i
                                     ></span>
                                   </div>
                                   <div class="card-info">
                                     <h5 class="card-title me-2 mb-0">$38,566</h5>
-                                    <small class="text-muted">Conversion</small>
+                                    <small class="text-muted">Today's Revenue</small>
                                   </div>
                                 </div>
                                 <div id="conversationChart"></div>
@@ -138,8 +138,8 @@
                                     ></span>
                                   </div>
                                   <div class="card-info">
-                                    <h5 class="card-title me-2 mb-0">$53,659</h5>
-                                    <small class="text-muted">Income</small>
+                                    <h5 class="card-title me-2 mb-0">$5,369</h5>
+                                    <small class="text-muted">Today's Payments</small>
                                   </div>
                                 </div>
                                 <div id="incomeChart"></div>
@@ -157,7 +157,7 @@
                 <div class="col-xxl-3 col-md-6 col-lg-6 col-xl-6 mb-4">
                   <div class="card">
                     <div class="card-header">
-                      <h5 class="card-title mb-0">Activity</h5>
+                      <h5 class="card-title mb-0">Amenities</h5>
                     </div>
                     <div class="card-body">
                       <ul class="p-0 m-0">
@@ -290,13 +290,13 @@
                     <div class="col-12 col-sm-6 col-md-12 mb-4">
                       <div class="card">
                         <div class="card-header pb-2">
-                          <h5 class="card-title mb-0">Registration</h5>
+                          <h5 class="card-title mb-0">Reservations</h5>
                         </div>
                         <div class="card-body pb-2">
                           <div class="gap-3 d-flex justify-content-between align-items-end">
                             <div class="mb-3">
                               <div class="align-content-center d-flex">
-                                <h5 class="mb-1">58.4k</h5>
+                                <h5 class="mb-1">584</h5>
                                 <i class="bx bx-chevron-up text-success"></i>
                               </div>
                               <small class="text-success">12.8%</small>
@@ -315,7 +315,7 @@
                   <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-start">
                       <div class="card-title mb-0">
-                        <h5 class="m-0 me-2">Sales</h5>
+                        <h5 class="m-0 me-2">Check-Ins</h5>
                         <small class="card-subtitle text-muted">Calculated in last 7 days</small>
                       </div>
                       <div class="dropdown">
@@ -343,20 +343,20 @@
                           <span class="text-primary me-2"><i class="bx bx-up-arrow-alt bx-sm"></i></span>
                           <div class="gap-2 d-flex flex-wrap justify-content-between align-items-center w-100">
                             <div class="me-2">
-                              <h6 class="lh-1 mb-0">Best Selling</h6>
+                              <h6 class="lh-1 mb-0">Highest</h6>
                               <small class="text-muted">Saturday</small>
                             </div>
-                            <div class="item-progress">28.6k</div>
+                            <div class="item-progress">286</div>
                           </div>
                         </li>
                         <li class="d-flex">
                           <span class="text-secondary me-2"><i class="bx bx-down-arrow-alt bx-sm"></i></span>
                           <div class="gap-2 d-flex flex-wrap justify-content-between align-items-center w-100">
                             <div class="me-2">
-                              <h6 class="lh-1 mb-0">Lowest Selling</h6>
+                              <h6 class="lh-1 mb-0">Lowest</h6>
                               <small class="text-muted">Thursday</small>
                             </div>
-                            <div class="item-progress">7.9k</div>
+                            <div class="item-progress">79</div>
                           </div>
                         </li>
                       </ul>
@@ -400,7 +400,7 @@
                       <div class="d-flex align-items-center me-3">
                         <img src="assets/img/avatars/4.png" alt="Avatar" class="rounded-circle me-3" width="54" />
                         <div class="card-title mb-0">
-                          <h5 class="mb-0">Financial Report for Kiara Cruiser</h5>
+                          <h5 class="mb-0">Audit Report for Kiara Cruiser</h5>
                           <small class="text-muted">Awesome App for Project Management</small>
                         </div>
                       </div>
@@ -589,7 +589,7 @@
                           <span class="timeline-point timeline-point-info"></span>
                           <div class="timeline-event pb-0">
                             <div class="timeline-header mb-1">
-                              <h6 class="mb-0">Create a new project for client</h6>
+                              <h6 class="mb-0">Westside Room Renovation Project</h6>
                               <small class="text-muted">2 Day Ago</small>
                             </div>
                             <p class="mb-2">5 team members in a project</p>

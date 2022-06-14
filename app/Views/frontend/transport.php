@@ -8,7 +8,7 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> News</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Transport</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -18,10 +18,15 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Title</th>
-                            <th>Cover Image</th>
+                            <th>Transport Code</th>
+                            <th>Label</th>
                             <th>Description</th>
-                            <th>Body</th>
+                            <th>Phone</th>
+                            <th>Distance</th>
+                            <th>Min Price</th>
+                            <th>Max Price</th>
+                            <th>Comments</th>
+                            <th>Display Sequence</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
@@ -48,36 +53,60 @@
                 <div class="modal-body">
                     <form id="submit-form" class="needs-validation" novalidate>
                         <div class="row g-3">
-                            <input type="hidden" name="id" id="news-id" class="form-control" />
+                            <input type="hidden" name="id" class="form-control" />
 
                             <div class="col-md-6">
-
-                                <label class="form-label"><b>Title *</b></label>
-
-                                <input type="text" name="NS_TITLE" class="form-control" placeholder="Title" required />
+                                <label class="form-label"><b>Transport Code *</b></label>
+                                <input type="text" name="TR_TRANSPORT_CODE" class="form-control" placeholder="Transport Code" required />
                             </div>
 
                             <div class="col-md-6">
-
-                                <label class="form-label"><b>Cover Image *</b></label>
-
-                                <input type="file" name="NS_COVER_IMAGE" class="form-control" required />
+                                <label class="form-label"><b>Label *</b></label>
+                                <input type="text" name="TR_LABEL" class="form-control" placeholder="Label" required />
                             </div>
 
                             <div class="col-md-12">
-
                                 <label class="form-label"><b>Description *</b></label>
+                                <textarea name="TR_DESCRIPTION" class="form-control" placeholder="Description..."></textarea>
+                            </div>
 
-                                <textarea type="number" name="NS_DESCRIPTION" class="form-control" placeholder="Description..."></textarea>
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Phone *</b></label>
+                                <input type="text" name="TR_PHONE" class="form-control" placeholder="Phone" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Display Sequence *</b></label>
+                                <input type="number" name="TR_DISPLAY_SEQUENCE" class="form-control" placeholder="Display Sequence" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Distance *</b></label>
+                                <input type="number" name="TR_DISTANCE" class="form-control" placeholder="Distance" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Distance Unit *</b></label>
+                                <select class="select2" name="TR_DISTANCE_UNIT">
+                                    <option value="">Select Distance Unit</option>
+                                    <option value="miles">Miles</option>
+                                    <option value="km">KM</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Min Price *</b></label>
+                                <input type="number" name="TR_MIN_PRICE" class="form-control" placeholder="Min Price" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Max Price *</b></label>
+                                <input type="number" name="TR_MAX_PRICE" class="form-control" placeholder="Max Price" required />
                             </div>
 
                             <div class="col-md-12">
-
-                                <label class="form-label"><b>Body *</b></label>
-
-                                <textarea name="NS_BODY" class="d-none"></textarea>
-
-                                <div id="snow-editor"></div>
+                                <label class="form-label"><b>Comments *</b></label>
+                                <textarea name="TR_COMMENTS" class="form-control" placeholder="Comments..."></textarea>
                             </div>
 
                         </div>
@@ -107,14 +136,6 @@
 
 <?= $this->section("script") ?>
 <script>
-    $(document).ready(function() {
-        const snowEditor = new Quill('#snow-editor', {
-            bounds: '#snow-editor',
-            theme: 'snow',
-            placeholder: 'Content...',
-        });
-    });
-
     var compAgntMode = '';
     var linkMode = '';
 
@@ -126,32 +147,43 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('/news/all-news') ?>'
+                'url': '<?php echo base_url('/transport/all-transports') ?>'
             },
             'columns': [{
                     data: ''
                 },
                 {
-                    data: 'NS_TITLE'
+                    data: 'TR_TRANSPORT_CODE'
+                },
+                {
+                    data: 'TR_LABEL'
+                },
+                {
+                    data: 'TR_DESCRIPTION'
+                },
+                {
+                    data: 'TR_PHONE'
                 },
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        return (
-                            `
-                                <img src='${data['NS_COVER_IMAGE']}' width='80' height='80'/>
-                            `
-                        );
+                        return (`${data['TR_DISTANCE']} ${data['TR_DISTANCE_UNIT']}`);
                     }
                 },
                 {
-                    data: 'NS_DESCRIPTION'
+                    data: 'TR_MIN_PRICE'
                 },
                 {
-                    data: 'NS_BODY'
+                    data: 'TR_MAX_PRICE'
                 },
                 {
-                    data: 'NS_CREATED_AT'
+                    data: 'TR_COMMENTS'
+                },
+                {
+                    data: 'TR_DISPLAY_SEQUENCE'
+                },
+                {
+                    data: 'TR_CREATED_AT'
                 },
                 {
                     data: null,
@@ -166,7 +198,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['NS_ID']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['TR_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -174,7 +206,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['NS_ID']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['TR_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -185,28 +217,30 @@
                 },
             ],
             columnDefs: [{
-                width: "7%",
-                className: 'control',
-                responsivePriority: 1,
-                orderable: false,
-                targets: 0,
-                searchable: false,
-                render: function(data, type, full, meta) {
-                    return '';
-                }
-            }, {
-                width: "15%"
-            }, {
-                width: "10%"
-            }, {
-                width: "20%"
-            }, {
-                width: "20%"
-            }, {
-                width: "15%"
-            }],
+                    width: "7%",
+                    className: 'control',
+                    responsivePriority: 1,
+                    orderable: false,
+                    targets: 0,
+                    searchable: false,
+                    render: function(data, type, full, meta) {
+                        return '';
+                    }
+                },
+                // {
+                //     width: "15%"
+                // }, {
+                //     width: "10%"
+                // }, {
+                //     width: "20%"
+                // }, {
+                //     width: "20%"
+                // }, {
+                //     width: "15%"
+                // }
+            ],
             "order": [
-                [5, "desc"]
+                [10, "desc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -215,7 +249,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['title'];
+                            return 'Details of ' + data['TR_TRANSPORT_CODE'];
                         }
                     }),
                     type: 'column',
@@ -265,61 +299,47 @@
             '</ul>');
     }
 
-    function resetForm(){
+    // Show Add Rate Class Form
+    function addForm() {
+        resetForm();
+        $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
+        $('#popModalWindowlabel').html('Add Transport');
+
+        $('#popModalWindow').modal('show');
+    }
+
+    function resetForm() {
         let id = "submit-form";
 
         $(`#${id} input`).val('');
         $(`#${id} textarea`).val('');
-        $(`#${id} #snow-editor .ql-editor`).html('');
-    }
-
-    // Show Add Rate Class Form
-    function addForm() {
-        resetForm();
-
-        $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add News');
-
-        $('#popModalWindow').modal('show');
     }
 
     // Add New or Edit Rate Class submit Function
     function submitForm() {
         hideModalAlerts();
-
-        let id = 'submit-form';
-        $(`#${id} textarea[name='NS_BODY']`).val($("#snow-editor .ql-editor").html());
+        let id = "submit-form";
 
         var fd = new FormData($(`#${id}`)[0]);
-        fd.delete('NS_COVER_IMAGE');
-
-        let files = $(`#${id} input[name='NS_COVER_IMAGE']`)[0].files;
-        if (files.length)
-            fd.append('NS_COVER_IMAGE', files[0]);
 
         $.ajax({
-            url: '<?= base_url('/news/store') ?>',
+            url: '<?= base_url('/transport/store') ?>',
             type: "post",
             data: fd,
             processData: false,
             contentType: false,
             dataType: 'json',
-            success: function(respn) {
-                console.log(respn, "testing");
-                var response = respn['SUCCESS'];
-                if (response != 200) {
+            success: function(response) {
 
-                    var ERROR = respn['RESPONSE']['ERROR'];
+                if (response['SUCCESS'] != 200) {
                     var mcontent = '';
-                    $.each(ERROR, function(ind, data) {
-                        console.log(data, "SDF");
+                    $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
                         mcontent += '<li>' + data + '</li>';
                     });
+
                     showModalAlert('error', mcontent);
                 } else {
-                    var alertText = $(`#submit-form input[name='id']`).val() == '' ?
-                        '<li>News has been created</li>' :
-                        '<li>News has been updated</li>';
+                    var alertText = response['RESPONSE']['REPORT_RES']['msg'];
 
                     showModalAlert('success', alertText);
 
@@ -333,22 +353,22 @@
     // Show Edit Rate Class Form
     $(document).on('click', '.editWindow', function() {
         resetForm();
-        
+
+        let transport_id = $(this).attr('data_id');
         $('.dtr-bs-modal').modal('hide');
-        var news_id = $(this).attr('data_id');
 
         let id = "submit-form";
-        $(`#${id} input[name='id']`).val(news_id);
+        $(`#${id} input[name='id']`).val(transport_id);
 
-        $('#popModalWindowlabel').html('Edit News');
+        $('#popModalWindowlabel').html('Edit Transport');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('/news/edit') ?>';
+        var url = '<?php echo base_url('/transport/edit') ?>';
         $.ajax({
             url: url,
             type: "post",
             data: {
-                id: news_id
+                id: transport_id
             },
             dataType: 'json',
             success: function(respn) {
@@ -363,9 +383,8 @@
                         else if ($(`#${id} textarea[name='${field}']`).length)
                             $(`#${id} textarea[name='${field}']`).val(val);
 
-                        if(field == 'body')
-                            $("#snow-editor .ql-editor").html(val);
-
+                        else if ($(`#${id} select[name='${field}']`).length)
+                            $(`#${id} select[name='${field}']`).val(val).trigger('change');
                     });
                 });
 
@@ -395,7 +414,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('/news/delete') ?>',
+                        url: '<?php echo base_url('/transport/delete') ?>',
                         type: "post",
                         data: {
                             id: id,
@@ -405,9 +424,14 @@
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         dataType: 'json',
-                        success: function(respn) {
-                            showModalAlert('success', '<li>The News has been deleted</li>');
-                            $('#dataTable_view').dataTable().fnDraw();
+                        success: function(response) {
+                            if (response['SUCCESS'] != 200) {
+                                showModalAlert('error', response['RESPONSE']['REPORT_RES']['msg']);
+                            } else {
+                                showModalAlert('success', response['RESPONSE']['REPORT_RES']['msg']);
+
+                                $('#dataTable_view').dataTable().fnDraw();
+                            }
                         }
                     });
                 }

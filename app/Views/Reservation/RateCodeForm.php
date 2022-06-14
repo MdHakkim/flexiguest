@@ -1211,7 +1211,7 @@
                     </form>
 
                     <div class="table-responsive text-nowrap">
-                        <table id="combined_profiles" class="table table-hover table-bordered">
+                        <table id="combined_profiles" class="table table-hover table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th>Name</th>

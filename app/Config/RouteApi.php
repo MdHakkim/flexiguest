@@ -14,6 +14,8 @@ $routes->group("api", function ($routes) {
     $routes->post("register", "APIController::registerAPI");
     $routes->post("login", "APIController::loginAPI");
 
+    $routes->get('lookup-api', 'APIController::lookupApi');
+
 });
 $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 
@@ -28,9 +30,13 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     // API to upload the  documnets proof for checkin 
     $routes->post("checkin/docUplaod", "APIController::docUploadAPI"); 
     // API to upload the  Vaccine for checkin 
-    $routes->post("checkin/vaccineUplaod", "APIController::Vaccineupload"); 
+    $routes->post("checkin/vaccine-upload", "APIController::vaccineUpload"); 
+    
+    $routes->get('checkin/fetch-vaccine-details', 'APIController::fetchVaccineDetails');
+    $routes->get('checkin/delete-vaccine', 'APIController::deleteVaccine');
+    
     // API to fetch guest profile including the guest accomonaying persons
-    $routes->get("checkin/guestProfile", "APIController::getGuestAccompanyProfiles"); 
+    $routes->post("checkin/guestProfile", "APIController::getGuestAccompanyProfiles"); 
     // API to update the guest details from the doc uploaded.
     $routes->post("checkin/saveDoc", "APIController::saveDocDetails"); 
     // API to update the guest details from the doc uploaded.

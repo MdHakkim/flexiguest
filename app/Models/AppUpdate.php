@@ -6,20 +6,20 @@ use CodeIgniter\Model;
 
 class AppUpdate extends Model
 {
-    protected $table      = 'app_updates';
-    protected $primaryKey = 'id';
+    protected $table      = 'FLXY_APP_UPDATES';
+    protected $primaryKey = 'AU_ID';
     protected $allowedFields = [
-        'title',
-        'cover_image',
-        'description',
-        'body',
-        'created_by',
-        'updated_by',
+        'AU_TITLE',
+        'AU_COVER_IMAGE',
+        'AU_DESCRIPTION',
+        'AU_BODY',
+        'AU_CREATED_BY',
+        'AU_UPDATED_BY',
     ];
 
     protected $useAutoIncrement = true;
 
     protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
+    protected $createdField  = 'AU_CREATED_AT';
+    protected $updatedField  = 'AU_UPDATED_AT';
 }

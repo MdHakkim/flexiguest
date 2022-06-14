@@ -5,16 +5,19 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\API\ResponseTrait;
 use  App\Libraries\EmailLibrary;
+use App\Models\VaccineDetail;
 
 class APIController extends BaseController
 {
     use ResponseTrait;
 
     private $DB;
+    private $VaccineDetail;
 
     public function __construct()
     {
         $this->DB = \Config\Database::connect();
+        $this->VaccineDetail = new VaccineDetail();
     }
 
     // ----------- START API FOR FLEXI GUEST --------------//
@@ -44,7 +47,7 @@ class APIController extends BaseController
             "password" => [
                 "required" => "password is required"
             ],
-            
+
         ];
 
         if (!$this->validate($rules, $messages)) {
@@ -57,7 +60,7 @@ class APIController extends BaseController
             $isCustomer_data = $this->DB->table('FLXY_CUSTOMER')->where('CUST_EMAIL', $email)->get()->getRowArray();
 
             if (empty($isCustomer_data)) {
-                $result = responseJson(404, false, ["msg"=>"Sorry , You are not Reserved any room."]);
+                $result = responseJson(404, false, ["msg" => "Sorry , You are not Reserved any room."]);
                 return $this->respond($result);
             }
 
@@ -73,9 +76,9 @@ class APIController extends BaseController
             ];
 
             if ($this->DB->table('FLXY_USERS')->insert($data))
-                $result = responseJson(200, false, ["msg"=>"Successfully, user has been registered"]);
+                $result = responseJson(200, false, ["msg" => "Successfully, user has been registered"]);
             else
-                $result = responseJson(500, true, ["msg"=>"Failed to create user"]);
+                $result = responseJson(500, true, ["msg" => "Failed to create user"]);
 
             return $this->respond($result);
         }
@@ -112,13 +115,13 @@ class APIController extends BaseController
                 if (password_verify($this->request->getVar("password"), $userdata['USR_PASSWORD'])) {
                     // Token created  
                     $token =   getSignedJWTForUser($userdata);
-                    $result = responseJson(200, false, ["msg"=>'User logged In successfully'], ['token' => $token, 'user' => $userdata]);
-                } else{
-                    $result = responseJson(500, true, ["msg"=>'Incorrect details']);
-                 }
+                    $result = responseJson(200, false, ["msg" => 'User logged In successfully'], ['token' => $token, 'user' => $userdata]);
+                } else {
+                    $result = responseJson(500, true, ["msg" => 'Incorrect details']);
+                }
                 return $this->respond($result);
             } else {
-                $result = responseJson(404, false, ["msg"=>'User not found']);
+                $result = responseJson(404, false, ["msg" => 'User not found']);
                 return $this->respond($result);
             }
         }
@@ -128,7 +131,7 @@ class APIController extends BaseController
     {
         $user = $this->request->user;
 
-        $result = responseJson(200, false, ["msg"=>"User details"], $user);
+        $result = responseJson(200, false, ["msg" => "User details"], $user);
         return $this->respond($result);
     }
 
@@ -159,23 +162,22 @@ class APIController extends BaseController
 
             $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
                             LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
-                            LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM 
-                            LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.RESV_NAME WHERE RESV_ID=:RESV_ID:";
+                            LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM  WHERE RESV_ID=:RESV_ID:";
 
             $data = $this->DB->query($sql, $param)->getRowArray();
         } else {
             $param = ['RESV_NAME' => $cust_id];
-            $sql = "SELECT c.*, a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
+            $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
                             LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
                             LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM 
-                            LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.RESV_NAME WHERE RESV_NAME=:RESV_NAME:";
+                            WHERE RESV_NAME=:RESV_NAME:";
             $data = $this->DB->query($sql, $param)->getResultArray();
         }
 
         if (!empty($data))
-            $result = responseJson(200, false, ["msg"=>"Reservation fetched Successfully"], $data);
+            $result = responseJson(200, false, ["msg" => "Reservation fetched Successfully"], $data);
         else
-            $result = responseJson(500, true,["msg"=> "No reservation found for this user"], $data);
+            $result = responseJson(500, true, ["msg" => "No reservation found for this user"]);
 
         return $this->respond($result);
     }
@@ -196,9 +198,9 @@ class APIController extends BaseController
         $data = $this->DB->query($sql, $param)->getResultArray();
 
         if (!empty($data))
-            $result = responseJson(200, false, ["msg"=>"Doc Details fetched Successfully"], $data);
+            $result = responseJson(200, false, ["msg" => "Doc Details fetched Successfully"], $data);
         else
-            $result = responseJson(200, false, ["msg"=>"Fetching Failed"], $data);
+            $result = responseJson(200, false, ["msg" => "Fetching Failed"], $data);
 
         return $this->respond($result);
     }
@@ -209,19 +211,48 @@ class APIController extends BaseController
         OUTPUT : list and details of the accompanying the persons   */
     public function getGuestAccompanyProfiles()
     {
-        $resID = $this->request->user['RESV_ID'];
+        $customer_id = $this->request->user['USR_CUST_ID'];
+        $reservation_id = $this->request->getVar('reservation_id');
 
         // an indicator to inform this is accompanying person
-        $sql = "SELECT concat(b.CUST_FIRST_NAME,' ',b.CUST_MIDDLE_NAME,' ',b.CUST_LAST_NAME)NAME,c.*,a.ACCOMP_STATUS FROM FLXY_ACCOMPANY_PROFILE a
-                    LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.ACCOMP_CUST_ID
-                    LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.ACCOMP_CUST_ID WHERE a.ACCOMP_REF_RESV_ID =:ACCOMP_REF_RESV_ID: OR DOC_FILE_TYPE='PROOF'";
-        $param = ['ACCOMP_REF_RESV_ID' => $resID];
-        $data = $this->DB->query($sql, $param)->getResultArray();
+        $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name, 
+                        fc.CUST_ID, 
+                        count(fd.DOC_ID) as is_document_uploaded 
+                        FROM FLXY_CUSTOMER as fc
+                        left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID 
+                        where CUST_ID = :customer_id:
+                        group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID";
 
-        if (!empty($data))
-            $result = responseJson(200, false, ["msg"=>"Accompany list for the reservation"], $data);
+        $param = ['customer_id' => $customer_id];
+        $data = $this->DB->query($sql, $param)->getResultArray();
+        if (!count($data))
+            return $this->respond(responseJson(404, true, ["msg" => "Customer not found"]));
+
+        $guest = $data[0];
+
+        $sql = "select * from FLXY_ACCOMPANY_PROFILE where ACCOMP_CUST_ID = :customer_id: and ACCOMP_REF_RESV_ID = :reservation_id:";
+        $params = ['customer_id' => $customer_id, 'reservation_id' => $reservation_id];
+        $data = $this->DB->query($sql, $params)->getResultArray();
+
+        if (count($data)) // when user is not main guest
+            return $this->respond(responseJson(200, false, ["msg" => "Accompany person"], $guest));
+
+        $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name, 
+                        fc.CUST_ID, 
+                        count(fd.DOC_ID) as is_document_uploaded 
+                        FROM FLXY_CUSTOMER as fc
+                        inner join FLXY_ACCOMPANY_PROFILE as fap on fc.CUST_ID = fap.ACCOMP_CUST_ID 
+                        left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID 
+                        where fap.ACCOMP_REF_RESV_ID = :reservation_id:
+                        group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID";
+
+        $param = ['reservation_id' => $reservation_id];
+        $guest['accompany_profiles'] = $this->DB->query($sql, $param)->getResultArray();
+
+        if (!empty($guest['accompany_profiles']))
+            $result = responseJson(200, false, ["msg" => "Accompany list for the reservation"], $guest);
         else
-            $result = responseJson(201, false, ["msg"=>"There is no accompany person"], $data);
+            $result = responseJson(200, false, ["msg" => "There is no accompany person"], $guest);
 
         return $this->respond($result);
     }
@@ -232,36 +263,27 @@ class APIController extends BaseController
         OUTPUT : list and details of the accompanying the persons   */
     public function requestSelfUpload()
     {
-        $resID = $this->request->user['RESV_ID'];
-
-        $validate = $this->validate([
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'email' => 'required|valid_email',
-        ]);
-
-        if (!$validate) {
-            $validate = $this->validator->getErrors();
-            $result = responseJson("403", true, $validate);
-
-            return $this->respond($result);
-        }
-
-        $firstName = $this->request->getVar("firstName");
-        $lastName = $this->request->getVar("lastName");
-        $email = $this->request->getVar("email");
+        $reservation_id = $this->request->getVar('reservation_id');
+        $customer_id = $this->request->getVar('customer_id');
 
         // email sending to the accompany person
-        $param = ['RESV_ID' => $resID];
-        $sql = "SELECT RESV_ID,RESV_NO,RESV_ARRIVAL_DT,RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_FEATURE,CUST_FIRST_NAME,CUST_EMAIL FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:RESV_ID: AND RESV_NAME=CUST_ID";
+        $sql = "SELECT RESV_ID, RESV_NO, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO_F_ROOM, RESV_FEATURE, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_EMAIL 
+                FROM FLXY_RESERVATION, FLXY_CUSTOMER
+                WHERE RESV_ID = :reservation_id: 
+                    AND CUST_ID = :customer_id:";
+        $param = ['reservation_id' => $reservation_id, 'customer_id' => $customer_id];
+
         $reservationInfo = $this->DB->query($sql, $param)->getResultArray();
+        if (!count($reservationInfo))
+            return $this->respond(responseJson(404, true, ['msg' => 'Reservation not found.']));
+
         $emailCall = new EmailLibrary();
-        $emailResp = $emailCall->requestDocUploadEmail($reservationInfo, $email, $firstName . " " . $lastName);
+        $emailResp = $emailCall->requestDocUploadEmail($reservationInfo, $reservationInfo[0]['CUST_EMAIL'], $reservationInfo[0]['CUST_FIRST_NAME'] . " " . $reservationInfo[0]['CUST_LAST_NAME']);
 
         if ($emailResp)
-            $result = responseJson(200, false, ["msg"=>"Email send Successfully"]);
+            $result = responseJson(200, false, ["msg" => "Email send Successfully"]);
         else
-            $result = responseJson(500, false, ["msg"=>"Email sending failed"]);
+            $result = responseJson(500, false, ["msg" => "Email sending failed"]);
 
         return $this->respond($result);
     }
@@ -274,44 +296,50 @@ class APIController extends BaseController
     {
         $user = $this->request->user;
 
-        $userID = $user['USR_CUST_ID'];
-        $resID = $user['RESV_ID'];
+        $userID = $this->request->getVar('customerId'); // get from the frondend
+        $resID = $this->request->getVar('reservationId');
 
-        $file = $this->validate([
-            'images' => [
-                'uploaded[images]',
-                'mime_in[images,image/png, image/jpeg]',
-                'max_size[images,500]',
-            ],
+        $validate = $this->validate([
+            'customerId' => 'required',
+            'reservationId' => 'required'
         ]);
 
-        // adding validatoion to the files
-        if (!$file) {
+        if (!$validate) {
             $validate = $this->validator->getErrors();
-            $result = responseJson("403", true, $validate);
+            $result = responseJson(403, true, $validate);
             return $this->respond($result);
         }
 
         $fileNames = '';
         $fileArry = $this->request->getFileMultiple('images');
+
+        foreach ($fileArry as $key => $file) {
+            if (!$file->isValid()) {
+                return $this->respond(responseJson(500, true, ['msg' => "Please upload valid file. This file '{$file->getClientName()}' is not valid"]));
+            }
+        }
+
         $desc = $this->request->getVar("desc");
-        if (!empty($fileArry)) {
-            foreach ($fileArry as $key => $file) {
-                if ($file->isValid() && !$file->hasMoved()) {
-                    $newName = $file->getRandomName();
-                    $file->move(ROOTPATH . 'assets/Uploads/userDocuments/proof', $newName);
-                    $comma = '';
-                    if (isset($fileArry[$key + 1])) {
-                        $comma = ',';
-                    }
-                    $fileNames .= $newName . $comma;
+        foreach ($fileArry as $key => $file) {
+            if ($file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move(ROOTPATH . 'assets/Uploads/userDocuments/proof', $newName);
+                $comma = '';
+
+                if (isset($fileArry[$key + 1]) && $fileArry[$key + 1]->isValid()) {
+                    $comma = ',';
                 }
+
+                if ($newName)
+
+                    if ($newName)
+                        $fileNames .= $newName . $comma;
             }
         }
 
         if (!empty($fileNames)) {
             // check wheather there is any entry with this user. 
-            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_CUST_ID,DOC_FILE_PATH,DOC_RESV_ID')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID, 'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
+            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_CUST_ID,DOC_FILE_PATH,DOC_RESV_ID')->where(['DOC_CUST_ID' => $userID, 'DOC_FILE_TYPE' => 'PROOF','DOC_RESV_ID' => $resID])->get()->getRowArray();
             $data = [
                 "DOC_CUST_ID" => $userID,
                 "DOC_IS_VERIFY" => 0,
@@ -330,18 +358,20 @@ class APIController extends BaseController
 
             if (empty($doc_data))
                 $ins = $this->DB->table('FLXY_DOCUMENTS')->insert($data);
-            else
+            else {
+                $data['DOC_FILE_PATH'] = $doc_data['DOC_FILE_PATH'] . ',' . $fileNames;
                 $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID])->update($data);
+            }
 
             if ($ins || $update_data)
-                $result = responseJson(200, false, ["msg"=>"File uploaded successfully"], ["path" => $fileNames]);
+                $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => $fileNames]);
             else
-                $result = responseJson(500, true, ["msg"=>"Failed to upload image"]);
+                $result = responseJson(500, true, ["msg" => "Failed to upload image"]);
 
             return $this->respond($result);
         }
 
-        return $this->respond(responseJson(500, true, "something went wrong"));
+        return $this->respond(responseJson(500, true, ["msg" => "something went wrong"]));
     }
 
     /*  FUNCTION : SAVE GUEST DETAILS FROM THE IMAGE UPLOADED.
@@ -353,7 +383,7 @@ class APIController extends BaseController
         $validate = $this->validate([
             'title' => 'required',
             'firstName' => 'required',
-            'email' => 'required|valid_email',
+            //'email' => 'required|valid_email',
             'cor' => 'required',
             'DOB' => 'required',
             'phn' => 'required',
@@ -404,9 +434,9 @@ class APIController extends BaseController
 
         $update = $this->DB->table('FLXY_CUSTOMER')->where('CUST_ID', $CUST_ID)->update($data);
         if ($update)
-            $result = responseJson(200, true, ["msg"=>"updated the guest details"]);
+            $result = responseJson(200, true, ["msg" => "updated the guest details"]);
         else
-            $result = responseJson(500, true, ["msg"=>"updation Failed"]);
+            $result = responseJson(500, true, ["msg" => "updation Failed"]);
 
         return $this->respond($result);
     }
@@ -417,13 +447,14 @@ class APIController extends BaseController
         OUTPUT : CUSTOMER_DATA  */
     public function FetchSavedDocDetails()
     {
-        $CUST_ID = $this->request->user['USR_CUST_ID'];
+        $CUST_ID = $this->request->getVar('customerId');
+        $RESV_ID = $this->request->getVar('reservationId');
 
         $filePath = base_url('assets/Uploads/userDocuments/proof');
 
-        $param = ['CUST_ID' => $CUST_ID];
-        $sql = "SELECT  b.* ,a.DOC_FILE_PATH FROM FLXY_CUSTOMER b 
-                    LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID: AND a.DOC_FILE_TYPE ='PROOF'";
+        $param = ['CUST_ID' => $CUST_ID,'RESV_ID'=>$RESV_ID];
+        //$sql = "SELECT  b.* ,a.DOC_FILE_PATH FROM FLXY_CUSTOMER b LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID: OR a.DOC_FILE_TYPE ='PROOF'";
+        $sql ="SELECT b.*, (SELECT a.DOC_FILE_PATH FROM FLXY_DOCUMENTS a WHERE a.DOC_FILE_TYPE ='PROOF' AND a.DOC_CUST_ID = :CUST_ID: AND DOC_RESV_ID = :RESV_ID: ) as DOC_FILE_PATH FROM FLXY_CUSTOMER b WHERE CUST_ID=:CUST_ID:";
         $data = $this->DB->query($sql, $param)->getRowArray();
 
         if (!empty($data)) {
@@ -431,14 +462,14 @@ class APIController extends BaseController
             if ($data['DOC_FILE_PATH']) {
                 $files_array = explode(',', $data['DOC_FILE_PATH']);
                 foreach ($files_array as $key => $value) {
-                    $files[] = $filePath . '/' . $value;
+                    $files[$value] = $filePath . '/' . $value;
                 }
                 $data['DOCS'] = $files;
             }
 
-            $result = responseJson(200, true, ["msg"=>"Fetch the user details"], $data);
+            $result = responseJson(200, true, ["msg" => "Fetch the user details"], $data);
         } else {
-            $result = responseJson(500, true, ["msg"=> "user details fetching failed"]);
+            $result = responseJson(500, true, ["msg" => "user details fetching failed"]);
         }
 
         return $this->respond($result);
@@ -451,77 +482,148 @@ class APIController extends BaseController
     public function deleteUploadedDOC()
     {
         $user = $this->request->user;
-        $resID = $user['RESV_ID'];
-        $CUST_ID = $user['USR_CUST_ID'];
 
-        $doctype = $this->request->getVar("doctype"); //  proof
+        $CUST_ID = $this->request->getVar("customerId"); //  proof
         $filename = $this->request->getVar("filename"); // or path
+	$RESID = $this->request->getVar("reservationId");
 
         // fetch details from db
-        $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_RESV_ID' => $resID, 'DOC_FILE_TYPE' => 'PROOF'])->get()->getRowArray();
-        $filenames = $doc_data['DOC_FILE_PATH'];
+        $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID,  'DOC_FILE_TYPE' => 'PROOF', 'DOC_RESV_ID'=>$RESID])->get()->getRowArray();
+        //echo $this->DB->getLastQuery()->getQuery();die;
+	if(empty($doc_data)){
+	   return $this->respond(responseJson(500, true, ["msg" => "No Documents found for the customer =".$CUST_ID." with reservation =".$RESID]));die;
+	}
+            $filenames = $doc_data['DOC_FILE_PATH'];
+
         $filename_array = explode(',', $filenames);
+
+        if (count($filename_array) == 1) {
+            $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_FILE_TYPE' => 'PROOF'])->delete();
+            return $this->respond(responseJson(200, false, ['msg' => "Documents deletes successfully."]));
+        }
+
         // inarray then delete else msg 
-        if ($pos = array_search($filename, $filename_array)) {
+        $pos = array_search($filename, $filename_array);
+        if ($pos >= 0) {
+            $flag = true;
+        } else {
+            $flag = false;
+        }
+
+        if ($flag) {
             unset($filename_array[$pos]);
 
-            $folderPath = "assets/Uploads/userDocuments/" . $doctype . "/" . $filename;
+            $folderPath = $_SERVER['DOCUMENT_ROOT'] . "/assets/Uploads/userDocuments/proof/" .  $filename;
+            //echo $folderPath;die;
+            //var_dump(file_exists($folderPath));die;
             if (file_exists($folderPath)) {
                 unlink($folderPath);
+                $data = [
+                    "DOC_CUST_ID" => $CUST_ID,
+                    "DOC_IS_VERIFY" => 0,
+                    "DOC_FILE_PATH" => implode(',', $filename_array),
+                    "DOC_FILE_TYPE" => 'PROOF',
+                    "DOC_RESV_ID" => $doc_data['DOC_RESV_ID'],
+                    "DOC_FILE_DESC" => "",
+                    "DOC_UPDATE_UID" => $CUST_ID,
+                    "DOC_UPDATE_DT" => date("d-M-Y")
+                ];
+                $return = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_FILE_TYPE' => 'PROOF'])->update($data);
             }
 
-            $data = [
-                "DOC_CUST_ID" => $CUST_ID,
-                "DOC_IS_VERIFY" => 0,
-                "DOC_FILE_PATH" => implode(',', $filename_array),
-                "DOC_FILE_TYPE" => 'PROOF',
-                "DOC_RESV_ID" => $resID,
-                "DOC_FILE_DESC" => "",
-                "DOC_UPDATE_UID" => $CUST_ID,
-                "DOC_UPDATE_DT" => date("d-M-Y")
-            ];
-
-            $return = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_RESV_ID' => $resID, 'DOC_FILE_TYPE' => 'PROOF'])->update($data);
 
             if ($return)
-                $result = responseJson(200, false, ["msg"=>"Documents deleted successfully"], $return);
+                $result = responseJson(200, false, ["msg" => "Documents deleted successfully"], $return);
             else
-                $result = responseJson("500", true, ["msg"=>"Record not deleted"]);
+                $result = responseJson(500, true, ["msg" => "File not found on server"]);
 
             return $this->respond($result);
         }
 
-        return $this->respond(responseJson("500", true, ["msg"=>"Record not deleted"]));
+        return $this->respond(responseJson(500, true, ["msg" => "Something went worng"]));
     }
 
-    public function deleteSpecificVaccine()
-    {
-        $param = ['CUST_ID' => $this->request->getVar("CUST_ID")];
-        $sql = "DELETE FROM FLXY_VACCINE_DETAILS WHERE EXISTS
-        (SELECT VACCINE_ID FROM FLXY_VACCINE_DETAILS WHERE CUST_ID=:CUST_ID:)";
-        $response = $this->DB->query($sql, $param);
-        return $response;
+    public function deleteVaccine()
+    {   
+        $reservation_id = $this->request->getVar('reservation_id');
+        $customer_id = $this->request->getVar('customer_id');
+
+        $file_name = $this->request->getVar('file_name');
+
+        $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
+        $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
+        foreach($docs as $index => $doc){
+            if($doc == $file_name){
+                unset($docs[$index]);
+
+                $folder_path = $_SERVER['DOCUMENT_ROOT'] . "/assets/Uploads/userDocuments/proof/" .  $file_name;
+                if (file_exists($folder_path))
+                    unlink($folder_path);
+            }
+        }
+
+        $file_names = implode(",", $docs);
+        $response = $this->VaccineDetail
+                        ->where('VACC_CUST_ID', $customer_id)
+                        ->where('VACC_RESV_ID', $reservation_id)
+                        ->set(['VACC_FILE_PATH' => $file_names])
+                        ->update();
+
+        if(!$response)
+            return $this->respond(responseJson(500, true, ['msg' => 'delete failed']));
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Doc deleted']));
     }
 
-    /* FUNCTION : Vaccination Form
-    METHOD: POST 
-    INPUT : Header Authorization- Token
-    OUTPUT : Update the Vaccination details in table.  */
-
-    public function vaccineForm()
+    public function fetchVaccineDetails()
     {
-        $CUST_ID = $this->request->user['USR_CUST_ID'];
-        $del =  $this->deleteSpecificVaccine();
+        $reservation_id = $this->request->getVar('reservation_id');
+        $customer_id = $this->request->getVar('customer_id');
+
+        $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
+    
+        $vaccine_detail['vaccines'] = [
+            "Ipsar",
+            "BBIBP-CorV",
+            "Convidecia",
+            "CoronaVac",
+            "Covaxin",
+            "Johnson & John",
+            "Moderna",
+            "Oxford-AstraZeneca",
+            "Pfizer-BioNTech",
+            "Sputnik Light",
+            "Sputnik V"
+        ];
+        
+        if(isset($vaccine_detail['VACC_FILE_PATH'])){
+            $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
+            foreach($docs as $index => $doc){
+                $doc_name = $doc;
+                $doc_url = base_url($doc);
+
+                $doc_array = explode(".", $doc);
+                $doc_type = end($doc_array);
+
+                $docs[$index] = ['name' => $doc_name, 'url' => $doc_url, 'type' => $doc_type];
+            }
+            $vaccine_detail['docs'] = $docs;
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Vaccine Details'], $vaccine_detail));
+    }
+
+    public function vaccineUpload()
+    {
+        $user_id = $this->request->user['USR_ID'];
+        $reservation_id = $this->request->getVar('reservation_id');
+        $customer_id = $this->request->getVar('customer_id');
 
         $validate = $this->validate([
-            'vaccineDetail' => 'required',
-            'lastVaccineDate' => 'required',
-            'VaccineName' => 'required',
-            'cerIssuanceCountry' => 'required',
             'vaccine' => [
                 'uploaded[vaccine]',
-                'mime_in[vaccine,image/png, image/jpeg]',
-                'max_size[vaccine,500]',
+                'mime_in[vaccine,image/png,image/jpeg,image/jpg,application/pdf]',
+                'max_size[vaccine,50000]',
             ],
         ]);
 
@@ -532,44 +634,120 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        // Code for file upload [vaccine is uploading to FLXY_VACCINE_DETAILS table]
-        $fileNames = '';
         $fileArry = $this->request->getFileMultiple('vaccine');
-        $desc = $this->request->getVar("desc");
+
+        foreach ($fileArry as $key => $file) {
+            if (!$file->isValid()) {
+                return $this->respond(responseJson(500, true, ['msg' => "Please upload valid file. This file '{$file->getClientName()}' is not valid"]));
+            }
+        }
+
+        // Code for file upload [vaccine is uploading to FLXY_VACCINE_DETAILS table]
+        $file_names = '';
         if (!empty($fileArry)) {
             foreach ($fileArry as $key => $file) {
                 if ($file->isValid() && !$file->hasMoved()) {
                     $newName = $file->getRandomName();
                     $file->move(ROOTPATH . 'assets/Uploads/userDocuments/vaccination', $newName);
+                    
                     $comma = '';
                     if (isset($fileArry[$key + 1])) {
                         $comma = ',';
                     }
-                    $fileNames .= $newName . $comma;
+
+                    $file_names .= $newName . $comma;
                 }
             }
         }
 
+        $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
+        if(empty($vaccine_detail)){
+            $data = [
+                "VACC_CUST_ID" => $customer_id,
+                "VACC_DETAILS" => '', // values will be -- vaccinated, medicallyExempt, vaccinationLater 
+                "VACC_LAST_DT" => '',
+                "VACC_NAME" => '',
+                "VACC_ISSUED_COUNTRY" => '',
+                "VACC_IS_VERIFY" => 0,
+                "VACC_FILE_PATH" => $file_names,
+                "VACC_CREATE_UID" => $user_id,
+                "VACC_UPDATE_UID" => $user_id,
+                "VACC_RESV_ID" => $reservation_id
+            ];
+            $response = $this->VaccineDetail->insert($data);
+        }
+        else{
+            if(!empty($vaccine_detail['VACC_FILE_PATH'])){
+                $file_names = $vaccine_detail['VACC_FILE_PATH'] . "," . $file_names;
+            }
+
+            $data = [
+                "VACC_FILE_PATH" => $file_names,
+                "VACC_UPDATE_UID" => $user_id,
+            ];
+
+            $response = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->set($data)->update();
+        }
+
+        if(!$response)
+            return $this->respond(responseJson(500, true, ['msg' => 'Insert/Update failed']));
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Doc uploaded']));
+    }
+
+    /* FUNCTION : Vaccination Form
+    METHOD: POST 
+    INPUT : Header Authorization- Token
+    OUTPUT : Update the Vaccination details in table.  */
+
+    public function vaccineForm()
+    {
+        $user_id = $this->request->user['USR_ID'];
+        $customer_id = $this->request->getVar('VACC_CUST_ID');
+        $reservation_id = $this->request->getVar('VACC_RESV_ID');
+
+        $validate = $this->validate([
+            'VACC_DETAILS' => 'required',
+            'VACC_LAST_DT' => 'required',
+            'VACC_NAME' => 'required',
+            'VACC_ISSUED_COUNTRY' => 'required',
+        ]);
+
+        if (!$validate) {
+            $validate = $this->validator->getErrors();
+            $result = responseJson(403, true, $validate);
+
+            return $this->respond($result);
+        }
+
         $data = [
-            "CUST_ID" => $CUST_ID,
-            "VACCINED_DETAILS" => $this->request->getVar("vaccineDetail"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
-            "LAST_VACCINE_DT" => $this->request->getVar("lastVaccineDate"),
-            "VACCINE_NAME" => $this->request->getVar("VaccineName"),
-            "ISSUED_COUNTRY" => $this->request->getVar("cerIssuanceCountry"),
-            "VACCINE_IS_VERIFY" => 0,
-            "VACC_FILE_PATH" => $fileNames,
-            "VACC_CREATE_UID" => $CUST_ID,
-            "VACC_CREATE_DT" => date("d-M-Y"),
-            "VACC_UPDATE_UID" => $CUST_ID,
-            "VACC_UPDATE_DT" => date("d-M-Y")
+            "VACC_CUST_ID" => $customer_id,
+            "VACC_DETAILS" => $this->request->getVar("VACC_DETAILS"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
+            "VACC_LAST_DT" => $this->request->getVar("VACC_LAST_DT"),
+            "VACC_NAME" => $this->request->getVar("VACC_NAME"),
+            "VACC_ISSUED_COUNTRY" => $this->request->getVar("VACC_ISSUED_COUNTRY"),
+            "VACC_IS_VERIFY" => 0,
+            "VACC_FILE_PATH" => '',
+            "VACC_RESV_ID" =>$reservation_id,
+            "VACC_CREATE_UID" => $user_id,
+            "VACC_UPDATE_UID" => $user_id,
         ];
 
-        $insert = $this->DB->table('FLXY_VACCINE_DETAILS')->insert($data);
+        $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
+        if(empty($vaccine_detail)){
+            $response = $this->VaccineDetail->insert($data);
+        }
+        else{
+            unset($data['VACC_FILE_PATH']);
+            unset($data['VACC_CREATE_UID']);
 
-        if ($insert)
-            $result = responseJson(200, true, ["msg"=>"Added the guest vaccine details"]);
+            $response = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->set($data)->update();
+        }
+
+        if ($response)
+            $result = responseJson(200, false, ["msg" => "Added the guest vaccine details"]);
         else
-            $result = responseJson(500, true, ["msg"=>"Insertion  Failed"]);
+            $result = responseJson(500, true, ["msg" => "Insert/Update  Failed"]);
 
         return $this->respond($result);
     }
@@ -583,14 +761,14 @@ class APIController extends BaseController
     {
         $user = $this->request->user;
         $USR_ID = $user['USR_ID'];
-        $resID = $user['RESV_ID'];
+        $resID = $this->request->getVar('reservationId');
 
         $validate = $this->validate([
             'estimatedTimeOfArrival' => 'required',
             'signature' =>  [
                 'uploaded[signature]',
-                'mime_in[signature,image/png, image/jpeg]',
-                'max_size[signature,500]',
+                
+                'max_size[signature,50000]',
             ],
         ]);
 
@@ -613,16 +791,11 @@ class APIController extends BaseController
         $folderPath = "assets/Uploads/userDocuments/signature/";
         $cusUserID = $user['USR_CUST_ID'];
         $doc_up = documentUpload($doc_file, $doc_name, $cusUserID, $folderPath);
-        if ($doc_up['SUCCESS'] == 200) {
-            // check wheather there is any entry with this user. 
-            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_FILE_PATH,DOC_CUST_ID,DOC_FILE_TYPE')->where(['DOC_CUST_ID' => $cusUserID, 'DOC_FILE_TYPE' => 'SIGN', 'DOC_RESV_ID' => $resID])->get()->getRowArray();
 
-            if (!empty($doc_data)) {
-                $filepath = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
-                $data = [
+	$data = [
                     "DOC_CUST_ID" => $cusUserID,
                     "DOC_IS_VERIFY" => 0,
-                    "DOC_FILE_PATH" => $filepath,
+                    "DOC_FILE_PATH" => $doc_up['RESPONSE']['OUTPUT'],
                     "DOC_FILE_TYPE" => 'SIGN',
                     "DOC_RESV_ID" => $resID,
                     "DOC_FILE_DESC" => "",
@@ -630,24 +803,31 @@ class APIController extends BaseController
                     "DOC_UPDATE_DT" => date("d-M-Y")
                 ];
 
+        if ($doc_up['SUCCESS'] == 200) {
+            // check wheather there is any entry with this user. 
+            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_FILE_PATH,DOC_CUST_ID,DOC_FILE_TYPE')->where(['DOC_CUST_ID' => $cusUserID, 'DOC_FILE_TYPE' => 'SIGN','DOC_RESV_ID' => $resID])->get()->getRowArray();
+	 
+            if (!empty($doc_data)) {
+
                 $update_data = $this->DB->table('FLXY_DOCUMENTS')->where('DOC_ID', $doc_data['DOC_ID'])->update($data);
-                $res_data = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resID)->update($dataRes);
-                // echo $this->DB->getLastQuery()->getQuery();
-                // die;
 
-                if ($update_data &&  $res_data)
-                    $result = responseJson(200, false, ["msg"=>"File uploaded successfully"], ["path" => $filepath]);
-                else
-                    $result = responseJson(500, true, ["msg"=>"Failed to upload image or updation in reservation"]);
+            }else{
 
-                return $this->respond($result);
-            }
+		$update_data = $this->DB->table('FLXY_DOCUMENTS')->insert($data);
+		}
+          $res_data = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resID)->update($dataRes);
+	    if ($update_data &&  $res_data)
+                  $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT'])]);
+            else
+                  $result = responseJson(500, true, ["msg" => "Failed to upload image or updation in reservation"]);
 
-            $result = responseJson(404, true, ["msg"=>"User details not found"]);
+            
             return $this->respond($result);
+        }else{
+	     return $this->respond(responseJson(500, true, ["msg" => "Upload Failed Please try again"]));
         }
 
-        return $this->respond(responseJson(500, true, ["msg"=>"Something went wrong"]));
+        return $this->respond(responseJson(500, true, ["msg" => "Something went wrong"]));
     }
 
     // ----------------------------------------------------------------------- MAINTENANCE REQUEST API -------------------------------------------//
@@ -672,7 +852,7 @@ class APIController extends BaseController
             'attachement' =>  [
                 'uploaded[attachement]',
                 'mime_in[attachement,image/png, image/jpeg]',
-                'max_size[attachement,500]',
+                'max_size[attachement,50000]',
             ],
         ]);
 
@@ -709,14 +889,14 @@ class APIController extends BaseController
 
             $ins = $this->DB->table('FLXY_MAINTENANCE')->insert($data);
             if ($ins)
-                $result = responseJson(200, true, ["msg"=>"Maintenance request created"]);
+                $result = responseJson(200, true, ["msg" => "Maintenance request created"]);
             else
-                $result = responseJson(500, true, ["msg"=>"Creation Failed"]);
+                $result = responseJson(500, true, ["msg" => "Creation Failed"]);
 
             return $this->respond($result);
         }
 
-        $result = responseJson(500, true, ["msg"=>"User information not available"]);
+        $result = responseJson(500, true, ["msg" => "User information not available"]);
         return $this->respond($result);
     }
 
@@ -751,9 +931,9 @@ class APIController extends BaseController
         }
 
         if (!empty($data))
-            $result = responseJson(200, false, ["msg"=>"Maintenance list fetched Successfully"], [$data]);
+            $result = responseJson(200, false, ["msg" => "Maintenance list fetched Successfully"], [$data]);
         else
-            $result = responseJson(200, false, ["msg"=>"No Request List for this user"]);
+            $result = responseJson(200, false, ["msg" => "No Request List for this user"]);
 
         return $this->respond($result);
     }
@@ -780,7 +960,7 @@ class APIController extends BaseController
         $cust_id = $this->request->user['USR_CUST_ID'];
         $data = [
             "FB_RATINGS" => $this->request->getVar("rating"),
-            "FB_CUST_ID"  =>$cust_id,
+            "FB_CUST_ID"  => $cust_id,
             "FB_DESCRIPTION" => $this->request->getVar("comments"),
             "FB_CREATE_DT" => date("d-M-Y H:i"),
             "FB_CREATE_UID" => $cust_id,
@@ -790,9 +970,9 @@ class APIController extends BaseController
 
         $ins = $this->DB->table('FLXY_FEEDBACK')->insert($data);
         if ($ins)
-            $result = responseJson(200, false, ["msg"=>"Feedback Added"]);
+            $result = responseJson(200, false, ["msg" => "Feedback Added"]);
         else
-            $result = responseJson(500, true, ["msg"=>"Feedback addition Failed"]);
+            $result = responseJson(500, true, ["msg" => "Feedback addition Failed"]);
 
         return $this->respond($result);
     }
@@ -811,16 +991,14 @@ class APIController extends BaseController
             $sql = "SELECT * FROM FLXY_SHUTTLE";
             $data = $this->DB->query($sql)->getResultArray();
         }
-	
-	if($data){
 
-        	$result = responseJson(200, false, ["msg"=>"Shuttles deatils fetched Successfully"], [$data]);
-        	
-	}else{
-		$result = responseJson(500, true, ["msg"=>"Shuttles deatils fetched Failed"]);
-        	
-	}
-	return $this->respond($result);
+        if ($data) {
+
+            $result = responseJson(200, false, ["msg" => "Shuttles deatils fetched Successfully"], [$data]);
+        } else {
+            $result = responseJson(500, true, ["msg" => "Shuttles deatils fetched Failed"]);
+        }
+        return $this->respond($result);
     }
 
     //------------------------------------------------------------------------------------- HANDBOOK ----------------------------------------------------------------------------------------------//
@@ -833,9 +1011,9 @@ class APIController extends BaseController
         $path = base_url('assets/Uploads/handbook/hotel-handbook.pdf');
 
         if (file_exists($path))
-            $result = responseJson(200, false, ["msg"=>"Handbook URL fetched"], ['url' => $path]);
+            $result = responseJson(200, false, ["msg" => "Handbook URL fetched"], ['url' => $path]);
         else
-            $result = responseJson(500, false, ["msg"=>"No Handbook file uploaded"]);
+            $result = responseJson(500, false, ["msg" => "No Handbook file uploaded"]);
 
         return $this->respond($result);
     }
@@ -847,4 +1025,13 @@ class APIController extends BaseController
 
     // ----------- END API FOR FLEXIGUEST ----------------//
 
+    public function lookupApi()
+    {
+        $data['salutations'] = $this->DB->query("select SA_ID as id, SA_NAME as label from FLXY_SALUTATIONS")->getResultArray();
+        $data['genders'] = $this->DB->query("select GE_ID as id, GE_NAME as label from FLXY_GENDERS")->getResultArray();
+        $data['doc_types'] = $this->DB->query("select DT_ID as id, DT_NAME as label from FLXY_DOC_TYPES")->getResultArray();
+
+        $result = responseJson(200, false, ['msg' => 'LookUp Api'], $data);
+        return $this->respond($result);
+    }
 }

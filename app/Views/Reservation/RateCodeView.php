@@ -11,8 +11,7 @@
         <?= $this->include('Layout/ErrorReport') ?>
         <?= $this->include('Layout/SuccessReport') ?>
 
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Rate Management / Rate
-                Classifications /</span> Rate Codes</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters / </span> Rate Codes</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
