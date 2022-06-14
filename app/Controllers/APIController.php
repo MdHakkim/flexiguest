@@ -943,6 +943,41 @@ class APIController extends BaseController
 
         return $this->respond($result);
     }
+    /*  FUNCTION : GET  MAINTENANCE REQUEST GET CATEGORY LIST
+    METHOD: GET
+    INPUT : Header Authorization- Token
+    OUTPUT : LIST OF CATEGORIES   */
+    public function maintenanceCategoryList()
+    {
+        $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY";
+        $response = $this->DB->query($sql)->getResultArray();
+        if($response){
+           $result = responseJson(200, false, ["msg" => "Maintenance list categories fetched Successfully"], $response);
+           
+        }else{
+            $result = responseJson(500, True, ["msg" => "Server Error"]);
+        }
+        return $this->respond($result);
+    }
+    /*  FUNCTION : GET  MAINTENANCE REQUEST  SUBCATEGORY LIST
+    METHOD: GET
+    INPUT : Header Authorization- Token , CategoryID
+    OUTPUT : LIST OF SUBCATEGORIES   */
+
+    public function maintenanceSubCatByCategoryID()
+    {
+        $param = ['MAINT_CAT_ID' => $this->request->getVar("category")];
+        $sql = "SELECT a.MAINT_CAT_ID,b.MAINT_SUBCATEGORY ,b.MAINT_SUBCAT_ID FROM FLXY_MAINTENANCE_CATEGORY a
+        LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY b ON b.MAINT_CAT_ID = a.MAINT_CAT_ID WHERE a.MAINT_CAT_ID =:MAINT_CAT_ID:";
+        $response = $this->DB->query($sql, $param)->getResultArray();
+        if ($response) {
+            $result = responseJson(200, false, ["msg" => "Maintenance list sub categories fetched Successfully"], $response);
+           
+        }else{
+            $result = responseJson(500, True, ["msg" => "Server Error in subcategor fetching"]);
+        }
+        return $this->respond($result);
+    }
 
     /*  FUNCTION : FEEDBACK ADDING FROM GUEST
     METHOD: POST 
