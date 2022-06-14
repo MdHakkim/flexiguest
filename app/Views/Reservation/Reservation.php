@@ -12,16 +12,119 @@
         <!-- DataTable with Buttons -->
         <div class="card">
             <!-- <h5 class="card-header">Responsive Datatable</h5> -->
-            <div class="container-fluid" style="padding:6px;">
+            <div class="container-fluid p-3" style="padding:6px;">
+
+                <form class="dt_adv_search" method="POST">
+                    <div class="border rounded p-3">
+                        <div class="row g-3">
+                            <div class="col-4 col-sm-6 col-lg-4">
+
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-md-4"
+                                        style="text-align: right;"><b>Name:</b></label>
+                                    <div class="col-md-8">
+                                        <input type="text" id="S_GUEST_NAME" name="S_GUEST_NAME"
+                                            class="form-control dt-input" data-column="0" placeholder="" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>First
+                                            Name:</b></label>
+                                    <div class="col-md-8">
+                                        <input type="text" id="S_GUEST_FIRST_NAME" name="S_GUEST_FIRST_NAME"
+                                            class="form-control dt-input" data-column="0" placeholder="" />
+
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-md-4"
+                                        style="text-align: right;"><b>Company:</b></label>
+                                    <div class="col-md-8">
+                                        <input type="text" id="S_COMPNAME" name="S_COMPNAME" class="form-control dt-input"
+                                            data-column="19" placeholder="" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-4 col-sm-6 col-lg-4">
+
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Arrival
+                                            From:</b></label>
+                                    <div class="col-md-8">
+                                        <input type="text" id="S_ARRIVAL_FROM" name="S_ARRIVAL_FROM"
+                                            class="form-control dt-input" placeholder="" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Conf No:</b></label>
+                                    <div class="col-md-8">
+                                        <input type="text" id="S_RESV_NO" name="S_RESV_NO" class="form-control dt-input"
+                                            placeholder="" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Room
+                                            No:</b></label>
+                                    <div class="col-md-8">
+                                        <input type="text" id="S_RESV_ROOM" name="S_RESV_ROOM" class="form-control dt-input"
+                                            placeholder="" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-4 col-sm-6 col-lg-4">
+
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Arrival
+                                            To:</b></label>
+                                    <div class="col-md-8">
+                                        <input type="text" id="S_ARRIVAL_TO" name="S_ARRIVAL_TO"
+                                            class="form-control dt-input" data-column="16" placeholder="" />
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Search Type:</b></label>
+                                    <div class="col-md-8">
+                                        <select id="S_SEARCH_TYPE" name="S_SEARCH_TYPE" class="form-select dt-select"
+                                            data-column="1">
+                                            <option value="">View All</option>
+                                            <option value="1">Due In</option>
+                                            <option value="2">Due Out</option>
+                                            <option value="3">Day Use</option>
+                                            <option value="4">Cancellation</option>
+                                            <option value="5">Checked Out</option>
+                                            <option value="6">No Shows</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-12 text-end">
+                                        <button type="button" class="btn btn-secondary clearAdvSearch">Clear</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+
                 <table id="dataTable_view" class="table table-striped">
                     <thead>
                         <tr>
                             <th>Reservation No</th>
-                            <th>Reservation Name</th>
+                            <th>Guest Name</th>
                             <th>Arrival Date</th>
                             <th>Departure Date</th>
                             <th>Night</th>
-                            <th>No of Room</th>
+                            <th>No of Rooms</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -249,7 +352,7 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <input type="hidden" name="RESV_STATUS" id="RESV_STATUS" class="form-control" />
-                                    <lable class="form-lable">Arrival/Departure Date</lable>
+                                    <lable class="form-lable">Arrival / Departure Date</lable>
                                     <div class="input-group mb-3">
                                         <input type="text" id="RESV_ARRIVAL_DT" class="form-control RESV_ARRIVAL_DT"
                                             placeholder="DD-MM-YYYY">
@@ -268,21 +371,21 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Night/No of Room</lable>
+                                    <lable class="form-lable">Nights / No of Rooms</lable>
                                     <div class="input-group mb-3">
-                                        <input type="number" id="RESV_NIGHT" class="form-control RESV_NIGHT"
+                                        <input type="number" id="RESV_NIGHT" class="form-control RESV_NIGHT" min="0"
                                             placeholder="night" />
                                         <input type="number" id="RESV_NO_F_ROOM" class="form-control RESV_NO_F_ROOM"
-                                            placeholder="no of room" />
+                                            min="1" placeholder="no of room" />
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Adults/Children</lable>
+                                    <lable class="form-lable">Adults / Children</lable>
                                     <div class="input-group mb-3">
-                                        <input type="number" id="RESV_ADULTS" class="form-control RESV_ADULTS"
+                                        <input type="number" id="RESV_ADULTS" class="form-control RESV_ADULTS" min="1"
                                             placeholder="adults" />
                                         <input type="number" id="RESV_CHILDREN" class="form-control RESV_CHILDREN"
-                                            placeholder="children" />
+                                            min="0" placeholder="children" />
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
@@ -549,7 +652,7 @@
                                                 <input type="hidden" name="RESV_FEATURE" id="RESV_FEATURE"
                                                     class="form-control" />
                                                 <input type="hidden" name="RESV_ID" id="RESV_ID" class="form-control" />
-                                                <lable class="form-lable">Arrival/Departure Date</lable>
+                                                <lable class="form-lable">Arrival / Departure Date</lable>
                                                 <div class="input-group mb-3 flxy_fxcolm">
                                                     <div class="flxy_join ">
                                                         <div class="flxy_fixdate" required>
@@ -585,12 +688,14 @@
 
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Night/No of Room</lable>
+                                                <lable class="form-lable">Nights / No of Rooms</lable>
                                                 <div class="input-group mb-3">
                                                     <input type="number" name="RESV_NIGHT" id="RESV_NIGHT"
-                                                        class="form-control" placeholder="night" required />
+                                                        class="form-control RESV_NIGHT" placeholder="night" min="0"
+                                                        required />
                                                     <input type="number" name="RESV_NO_F_ROOM" id="RESV_NO_F_ROOM"
-                                                        class="form-control" placeholder="no of room" required />
+                                                        class="form-control" placeholder="no of room" min="1"
+                                                        required />
                                                 </div>
                                                 <div class="invalid-feedback">
                                                     Night required can't empty.
@@ -600,16 +705,18 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Adults/Children</lable>
+                                                <lable class="form-lable">Adults / Children</lable>
                                                 <div class="input-group mb-3 flxy_fxcolm">
                                                     <div class="flxy_join">
                                                         <input type="number" name="RESV_ADULTS" id="RESV_ADULTS"
-                                                            class="form-control" placeholder="adults" required />
+                                                            class="form-control" placeholder="adults" min="1"
+                                                            required />
                                                         <div class="invalid-feedback">Adults required can't empty.</div>
                                                     </div>
                                                     <div class="flxy_join">
                                                         <input type="number" name="RESV_CHILDREN" id="RESV_CHILDREN"
-                                                            class="form-control" placeholder="children" required />
+                                                            class="form-control" placeholder="children" min="0"
+                                                            required />
                                                         <div class="invalid-feedback"> Children required can't empty.
                                                         </div>
                                                     </div>
@@ -645,7 +752,7 @@
                                             <div class="col-md-3">
                                                 <lable class="form-lable">Rate</lable>
                                                 <input type="number" step="0.01" name="RESV_RATE" id="RESV_RATE"
-                                                    class="form-control" placeholder="rate" required />
+                                                    class="form-control" placeholder="rate" min="0" required />
                                                 <div class="invalid-feedback"> Rate required can't empty.</div>
                                             </div>
                                             <div class="col-md-3 mt-4">
@@ -1308,10 +1415,9 @@
                     </form>
                 </div>
                 <div class="modal-footer flxy_paddng">
-                    <div class="flxy_opertion flxy_opt1">
-                        <div class="flxy_radio">
+                    <div class="flxy_opertion flxy_opt1 border rounded">
+                        <div class="flxy_radio mb-2">
                             <div class="col-md-3 flxy_equal">
-                                <lable class="form-check-lable">Averate Rate</lable>
                                 <label class="switch">
                                     <input type="checkbox" class="switch-input rateRadio" mode="AVG" />
                                     <span class="switch-toggle-slider">
@@ -1322,10 +1428,10 @@
                                             <i class="bx bx-x"></i>
                                         </span>
                                     </span>
+                                    <span class="switch-label">Average Rate</span>
                                 </label>
                             </div>
                             <div class="col-md-3 flxy_equal1">
-                                <lable class="form-check-lable">Total Rate</lable>
                                 <label class="switch">
                                     <input type="checkbox" class="switch-input rateRadio" mode="TOT" />
                                     <span class="switch-toggle-slider">
@@ -1336,13 +1442,57 @@
                                             <i class="bx bx-x"></i>
                                         </span>
                                     </span>
+                                    <span class="switch-label">Total Rate</span>
                                 </label>
                             </div>
+                        </div>
 
+                        <div class="row flxy_radio">
+                            <div class="col-md-12 mb-2">
+                                <label class="switch">
+                                    <input type="checkbox" id="closedRateFilter" class="switch-input rateFilter"
+                                        value="1" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="bx bx-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="bx bx-x"></i>
+                                        </span>
+                                    </span>
+                                    <span class="switch-label">Closed</span>
+                                </label>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="switch">
+                                    <input type="checkbox" id="dayUseRateFilter" class="switch-input rateFilter"
+                                        value="1" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="bx bx-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="bx bx-x"></i>
+                                        </span>
+                                    </span>
+                                    <span class="switch-label">Day Use</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="flxy_opertion flxy_right">
-                        <button type="button" onClick="selectRate(event)" class="btn btn-primary">Ok</button>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="border rounded p-4" style="min-height: 118px;">
+                                    <div class="row mb-3">
+                                        <label class="col-md-1"><b>Info:</b></label>
+                                        <div class="col-md-11 text-start"><span id="roomRateInfo"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2"><button type="button" onclick="selectRate(event)"
+                                    class="btn btn-primary">Ok</button></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1363,7 +1513,8 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="table-responsive text-nowrap">
-                            <table id="reservation_changes" class="dt-responsive table table-striped table-bordered display nowrap">
+                            <table id="reservation_changes"
+                                class="dt-responsive table table-striped table-bordered display nowrap">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -1777,9 +1928,18 @@ $(document).ready(function() {
     $('#dataTable_view').DataTable({
         'processing': true,
         'serverSide': true,
+        'searching': false,
         'serverMethod': 'post',
         'ajax': {
-            'url': '<?php echo base_url('/reservationView')?>'
+            'url': '<?php echo base_url('/reservationView')?>',
+            'type': 'POST',
+            'data': function(d) {
+                var formSerialization = $('.dt_adv_search').serializeArray();
+                $(formSerialization).each(function(i, field) {
+                    d[field.name] = field.value;
+                });
+
+            },
         },
         'columns': [{
                 data: 'RESV_NO'
@@ -1839,17 +1999,19 @@ $(document).ready(function() {
         }
     });
     $("#dataTable_view_wrapper .row:first").before(
-        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addResvation()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>'
+        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addResvation()"><i class="fa-solid fa-plus fa-lg"></i> Add New</button></div></div>'
     );
 
     $('.RESV_ARRIVAL_DT').datepicker({
         format: 'd-M-yyyy',
-        autoclose: true,
+        autoclose: true
     });
+
     $('.RESV_DEPARTURE').datepicker({
         format: 'd-M-yyyy',
-        autoclose: true,
+        autoclose: true
     });
+
     $('.CUST_DOB').datepicker({
         format: 'd-M-yyyy',
         autoclose: true
@@ -1866,7 +2028,6 @@ $(document).ready(function() {
 
 });
 
-
 function generateRateQuery(mode = 'AVG') {
     var formData = {};
     $('.window-1').find('.input-group :input').each(function(i, data) {
@@ -1875,6 +2036,15 @@ function generateRateQuery(mode = 'AVG') {
         formData[field] = values;
         formData['mode'] = mode;
     });
+
+    // Closed and Day Use filters
+
+    formData['resv_room_type'] = $('#RESV_RM_TYPE').val();
+    formData['resv_rate'] = $('#RESV_RATE').val();
+
+    formData['closed'] = $('#closedRateFilter').is(':checked') ? '1' : '0';
+    formData['day_use'] = $('#dayUseRateFilter').is(':checked') ? '1' : '0';
+
     $.ajax({
         url: '<?php echo base_url('/getRateQueryData')?>',
         type: "post",
@@ -1885,6 +2055,16 @@ function generateRateQuery(mode = 'AVG') {
         dataType: 'json',
         success: function(respn) {
             $('#rateQueryTable').html(respn[0]);
+
+            var activeCol = $('.clickPrice.active');
+            var currentTDIndex = activeCol.index();
+
+            var roomTypeInfo = $('#rateQueryTable tr').eq(0).find('td').eq(currentTDIndex).data(
+                'roomtype-info');
+            var rateCodeInfo = activeCol.data('rate-info');
+
+            getRoomRateDetails(rateCodeInfo, roomTypeInfo);
+
             checkArrivalDate();
         }
     });
@@ -1897,10 +2077,10 @@ function avaiableDatePeriod() {
     var nofroom = $('#RESV_NO_F_ROOM').val();
     var adult = $('#RESV_ADULTS').val();
     var children = $('#RESV_CHILDREN').val();
-    var ulli = '<li>' + moment(arrival, 'DD-MMM-YYYY').format('dddd') + ' ,</li>';
-    ulli += '<li>&nbsp;' + moment(arrival, 'DD-MMM-YYYY').format('MMMM D YYYY') + ' ,</li>';
-    ulli += '<li>&nbsp;' + night + ' Night ,</li>';
-    ulli += '<li>&nbsp;' + nofroom + ' Rooms ,</li>';
+    var ulli = '<li>' + moment(arrival, 'DD-MMM-YYYY').format('dddd') + ', </li>';
+    ulli += '<li>&nbsp;' + moment(arrival, 'DD-MMM-YYYY').format('MMMM D YYYY') + ', </li>';
+    ulli += '<li>&nbsp;' + night + ' Night, </li>';
+    ulli += '<li>&nbsp;' + nofroom + ' Rooms, </li>';
     ulli += '<li>&nbsp;' + adult + ' Adults </li>';
     ulli += (children != 0 ? '<li>,&nbsp;' + children + ' Children</li>' : '');
     return '<ul class="flxy_row">' + ulli + '</ul>';
@@ -1929,7 +2109,24 @@ $(document).on('click', '.clickPrice', function() {
     $(this).addClass('active');
     var value = $(this).find('input').val();
     console.log(value);
+
+    var currentTDIndex = $(this).index();
+
+    var roomTypeInfo = $('#rateQueryTable tr').eq(0).find('td').eq(currentTDIndex).data('roomtype-info');
+    var rateCodeInfo = $(this).data('rate-info');
+
+    getRoomRateDetails(rateCodeInfo, roomTypeInfo);
 });
+
+function getRoomRateDetails(rateCodeInfo, roomTypeInfo) {
+    var info = '';
+    if (rateCodeInfo)
+        info += rateCodeInfo + ', ';
+
+    info += roomTypeInfo;
+
+    $('#roomRateInfo').html(info);
+}
 
 function selectRate() {
     $('#rateQueryWindow').modal('hide');
@@ -1980,7 +2177,45 @@ $(document).on('change', '.RESV_ARRIVAL_DT,.RESV_DEPARTURE', function() {
     var value = $(this).val();
     var name = $(this).attr('id');
     $('[name="' + name + '"]').val(value);
+
+    setNights($(this), $(this).val());
 });
+
+$(document).on('blur', '.RESV_NIGHT', function() {
+    var new_days = $(this).val();
+    var startField = $(this).closest('.col-md-3').prev('.col-md-6').find('.RESV_ARRIVAL_DT');
+    var endField = $(this).closest('.col-md-3').prev('.col-md-6').find('.RESV_DEPARTURE');
+
+    var new_date = moment(startField.val(), "DD-MMM-YYYY").add(new_days, 'days').format("DD-MMM-YYYY");
+
+    //alert(startField.val()); alert(new_date);
+
+    endField.datepicker("setDate", new_date);
+
+    //alert(value);
+});
+
+
+function setNights(element, val) {
+    var arr_date = element.hasClass('RESV_ARRIVAL_DT') ? val : element.closest('.input-group').find('.RESV_ARRIVAL_DT')
+        .val();
+    var dep_date = element.hasClass('RESV_DEPARTURE') ? val : element.closest('.input-group').find('.RESV_DEPARTURE')
+        .val();
+
+    //alert(arr_date); alert(dep_date);
+
+    var startDtFmt = moment(arr_date, 'DD-MMM-YYYY');
+    var endDtFmt = moment(dep_date, 'DD-MMM-YYYY');
+
+    if (startDtFmt <= endDtFmt) {
+        var no_of_nights = parseInt(endDtFmt.diff(startDtFmt, 'days'));
+        //alert(no_of_nights);
+
+        var endField = element.hasClass('RESV_DEPARTURE') ? element : element.closest('.input-group').find(
+            '.RESV_DEPARTURE');
+        endField.closest('.col-md-6').next('.col-md-3').find('.RESV_NIGHT').val(no_of_nights);
+    }
+}
 
 $(document).on('blur', '#RESV_RATE', function() {
     $('#RESV_FIXED_RATE_CHK').prop('checked', true);
@@ -2262,7 +2497,7 @@ function checkArrivalDate() {
     var startDtFmt = moment(startDt, 'DD-MMM-YYYY');
     var endDtFmt = moment(endDt, 'DD-MMM-YYYY');
     console.log(startDtFmt, endDtFmt, "startDtFmt TREU SDFF");
-    if (startDtFmt < endDtFmt) {
+    if (startDtFmt <= endDtFmt) {
         $(startField).removeClass("is-invalid");
         $(startField).addClass("is-valid");
         $(startField)[0].setCustomValidity("");
@@ -2282,7 +2517,7 @@ function checkDeparturDate() {
     var endDt = endField.val();
     var startDtFmt = moment(startDt, 'DD-MMM-YYYY');
     var endDtFmt = moment(endDt, 'DD-MMM-YYYY');
-    if (endDtFmt > startDtFmt) {
+    if (endDtFmt >= startDtFmt) {
         endField.removeClass("is-invalid");
         endField.addClass("is-valid");
         $(endField)[0].setCustomValidity("");
@@ -2675,12 +2910,20 @@ function companyAgentClick(type) {
 }
 
 $(document).on('change', '.rateRadio', function() {
-    $('.rateRadio').not(this).prop('checked', false);
+
+    var checked = jQuery(this).prop('checked');
+    $('.rateRadio').not(this).prop('checked', !checked);
+
     var thiss = $(this);
-    var mode = thiss.attr('mode');
-    if (thiss.is(':checked')) {
-        generateRateQuery(mode);
-    }
+    var mode = checked ? thiss.attr('mode') : $('.rateRadio').not(this).attr('mode');
+
+    generateRateQuery(mode);
+});
+
+$(document).on('change', '.rateFilter', function() {
+    var thiss = $(this);
+    var mode = $('.rateRadio:checkbox:checked').attr('mode');
+    generateRateQuery(mode);
 });
 
 var customPop = '';
@@ -3028,6 +3271,41 @@ $(document).on('click', '.show-activity-log', function() {
     showReservationChanges(ressysId);
 
 });
+
+
+// Reservation Advanced Search Functions Starts
+// --------------------------------------------------------------------
+
+const dt_adv_filter_table = $('#dataTable_view');
+
+// Filter column wise function
+function filterColumn(i, val) {
+    //dt_adv_filter_table.DataTable().column(i).search(val).draw();
+    dt_adv_filter_table.dataTable().fnDraw();
+}
+
+// on key up from input field
+$(document).on('keyup', 'input.dt-input', function() {
+    if ($(this).val().length == 0 || $(this).val().length >= 2)
+        dt_adv_filter_table.dataTable().fnDraw();
+});
+
+$(document).on('change', 'select.dt-select', function() {
+    dt_adv_filter_table.dataTable().fnDraw();
+});
+
+// Advanced Search Functions Ends
+
+$(document).on('click', '.clearAdvSearch', function() {
+
+    clearFormFields('.dt_adv_search');
+    dt_adv_filter_table.dataTable().fnDraw();
+
+});
+
+// Display function clearFormFields
+
+<?php echo isset($clearFormFields_javascript) ? $clearFormFields_javascript : ''; ?>
 </script>
 
 <?=$this->endSection()?>

@@ -30,3 +30,13 @@ function addActivityLog($activity_group, $activity_type, $element_id, $log_desc)
     if(!empty($log_desc))
         $Db->table('FLXY_ACTIVITY_LOG')->insert($data);    
 }
+
+function setNullOnEmpty($val)
+{
+    $val = trim($val);
+
+    if($val != '')
+        return $val;
+    else
+        return NULL;    
+}
