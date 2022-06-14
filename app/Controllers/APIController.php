@@ -602,7 +602,8 @@ class APIController extends BaseController
             "Sputnik V"
         ];
         
-        if(isset($vaccine_detail['VACC_FILE_PATH'])){
+        $docs = [];
+        if(isset($vaccine_detail['VACC_FILE_PATH']) && !empty($vaccine_detail['VACC_FILE_PATH'])){
             $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
             foreach($docs as $index => $doc){
                 $doc_name = $doc;
@@ -613,8 +614,9 @@ class APIController extends BaseController
 
                 $docs[$index] = ['name' => $doc_name, 'url' => $doc_url, 'type' => $doc_type];
             }
-            $vaccine_detail['docs'] = $docs;
         }
+
+        $vaccine_detail['docs'] = $docs;
 
         return $this->respond(responseJson(200, false, ['msg' => 'Vaccine Details'], $vaccine_detail));
     }
