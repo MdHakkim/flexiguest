@@ -317,6 +317,10 @@ class ApplicatioController extends BaseController
                 ];
                 $return = $this->Db->table('FLXY_RESERVATION')->insert($data); 
                 $sysid = $this->Db->insertID();
+
+                /////// Update Inventory with reservation ID
+                $this->updateInventory($sysid);
+
                 $emailProc='S';
 
                 foreach($data as $dkey => $dvalue)
@@ -2905,50 +2909,20 @@ class ApplicatioController extends BaseController
             return $option;
         }
 
-        public function insertItemInventory()
-        {
-           
-            try {
-                // if (!$validate) {
-                //     $validate = $this->validator->getErrors();
-                //     $result["SUCCESS"] = "-402";
-                //     $result[]["ERROR"] = $validate;
-                //     $result = $this->responseJson("-402", $validate);
-                //     echo json_encode($result);
-                //     exit;
-                // }
-                $sysid = $this->request->getPost('RSV_PRI_ID');
-                $data = [
-                    
-                    "RSV_ITM_ID" => trim($this->request->getPost('RSV_ITM_ID')),
-                    "RSV_ID" => '100',
-                    "RSV_ITM_BEGIN_DATE" => $this->request->getPost('ITEM_AVAIL_START_DT'),
-                    "RSV_ITM_END_DATE" => $this->request->getPost('ITEM_AVAIL_END_DT'),
-                    "RSV_ITM_QTY" => trim($this->request->getPost('RSV_ITM_QTY'))                   
-                ];
-    
-                $return = !empty($sysid) ? $this->Db->table('FLXY_RESERVATION_ITEM')->where('RSV_PRI_ID', $sysid)->update($data) : $this->Db->table('FLXY_RESERVATION_ITEM')->insert($data);
-                $newItemCodeID = empty($sysid) ? $this->Db->insertID() : '';                        
-                    
-                $result = $return ? $this->responseJson("1", "0", $return, !empty($sysid) ? $sysid : $newItemCodeID) : $this->responseJson("-444", "db insert not successful", $return);
-    
-                // if(empty($sysid))
-                // {
-                //     $blank_item_detail = [
-                //                              "RSV_ITM_ID" => '0', 
-                //                              "RSV_ITM_BEGIN_DATE" => date('Y-m-d'),
-                //                              "RSV_ID" => '100',
-                //                              "RSV_ITM_END_DATE" => date('Y-m-d', strtotime('+10 years')),
-                //                              "RSV_ITM_QTY" => '0'
-                //                             ];
-                    
-                //     $this->Db->table('FLXY_RESERVATION_ITEM')->insert($blank_item_detail);
-                // }
-    
-                echo json_encode($result);
+    public function updateInventory($reservationID)
+        {          
+            try {     
+                if($reservationID != ''){
+                    $where = array(
+                        'RSV_ID'  => '',
+                        'RSV_SESSION_ID' => session_id(),
+                    );
+                    $return = $this->Db->table('FLXY_RESERVATION_ITEM')->where($where)->update(array('RSV_ID'=>$reservationID));
+                } 
+
                 
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
+            } catch (\Exception $e) {
+                return $e->getMessage();
             }
         }
 

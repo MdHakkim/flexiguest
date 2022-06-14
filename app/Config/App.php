@@ -23,7 +23,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $baseURL = 'https://flexiguest.hitekservices.com/';
+    public $baseURL = 'http://localhost/FlexiGuest/';
 
     /**
      * --------------------------------------------------------------------------

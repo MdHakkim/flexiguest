@@ -806,22 +806,290 @@ class AdditionalController extends BaseController
         {
             $item_class_id = $this->request->getPost("item_class_id");
             $item_id = $this->request->getPost("item_id");
-
-            if($item_class_id != '')
+            $selected = "";
+            if($item_class_id != ''){
                 $sql = "SELECT * FROM FLXY_ITEM WHERE IT_CL_ID='$item_class_id' ";           
 
-            $response = $this->Db->query($sql)->getResultArray();
-            $option='<option value="">Select Item Class</option>';
-            $selected = "";
-            foreach($response as $row){
-                if($row['ITM_ID'] == $item_id){
-                    $selected = "selected";
-                }
+                $response = $this->Db->query($sql)->getResultArray();
+                $option='<option value="">Select Item Class</option>';
+                
+                foreach($response as $row){
+                    $selected = "";
+                    if($row['ITM_ID'] == $item_id){
+                       $selected = "selected";
+                    }
 
-                $option.= '<option value="'.$row['ITM_ID'].'"'.$selected.'>'.$row['ITM_CODE'].' | '.$row['ITM_NAME'].'</option>';
+                    $option.= '<option value="'.$row['ITM_ID'].'"'.$selected.'>'.$row['ITM_CODE'].' | '.$row['ITM_NAME'].'</option>';
+                }
+                echo $option;
             }
-            echo $option;
+            else echo $option = '';
+            
         }
+
+
+    /**************      Guest Type Functions      ***************/
+
+    public function guestType()
+    {
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+        
+        return view('Master/GuestTypeView', $data);
+    }
+
+    public function GuestTypeView()
+    {
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_GUEST_TYPE';
+        $columns = 'GST_TYPE_ID,GST_TYPE_CODE,GST_TYPE_DESC,GST_TYPE_DIS_SEQ,GST_TYPE_CRTD_DT';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+    public function insertGuestType()
+    {
+        try {
+            $sysid = $this->request->getPost('GST_TYPE_ID');
+
+            $validate = $this->validate([
+                'GST_TYPE_CODE' => ['label' => 'Guest Type Code', 'rules' => 'required|is_unique[FLXY_GUEST_TYPE.GST_TYPE_CODE,GST_TYPE_ID,' . $sysid . ']'],
+                'GST_TYPE_DESC' => ['label' => 'Guest Type Description', 'rules' => 'required'],
+                'GST_TYPE_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]']                
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $data = [
+                "GST_TYPE_CODE" => trim($this->request->getPost('GST_TYPE_CODE')),
+                "GST_TYPE_DESC" => trim($this->request->getPost('GST_TYPE_DESC')),
+                "GST_TYPE_DIS_SEQ" => trim($this->request->getPost('GST_TYPE_DIS_SEQ')) != '' ? trim($this->request->getPost('GST_TYPE_DIS_SEQ')) : '',
+               
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_GUEST_TYPE')->where('GST_TYPE_ID', $sysid)->update($data) : $this->Db->table('FLXY_GUEST_TYPE')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function checkGuestType($gtCode)
+    {
+        $sql = "SELECT GST_TYPE_ID
+                FROM FLXY_GUEST_TYPE
+                WHERE GST_TYPE_CODE = '" . $gtCode . "'";
+
+        $response = $this->Db->query($sql)->getNumRows();
+        return $gtCode == '' || strlen($gtCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
+    }
+
+    public function copyGuestType()
+    {
+        try {
+            $param = ['SYSID' => $this->request->getPost('main_GST_TYPE_ID')];
+
+            $sql = "SELECT GST_TYPE_ID, GST_TYPE_CODE, GST_TYPE_DESC, GST_TYPE_DIS_SEQ
+                    FROM FLXY_GUEST_TYPE
+                    WHERE GST_TYPE_ID=:SYSID:";
+
+            $origGuestCode = $this->Db->query($sql, $param)->getResultArray()[0];
+            $no_of_added = 0;
+            $submitted_fields = $this->request->getPost('group-a');
+
+            if ($submitted_fields != null) {
+                foreach ($submitted_fields as $submitted_field) {
+                    if (!$this->checkGuestType($submitted_field['GST_TYPE_CODE'])) // Check if entered Guest Type already exists
+                    {
+                        $newRateCode = [
+                            "GST_TYPE_CODE" => trim($submitted_field["GST_TYPE_CODE"]),
+                            "GST_TYPE_DESC" => $origGuestCode["GST_TYPE_DESC"],
+                            "GST_TYPE_DIS_SEQ" => '',
+                           
+                        ];
+
+                        $this->Db->table('FLXY_GUEST_TYPE')->insert($newRateCode);
+
+                        $no_of_added += $this->Db->affectedRows();
+                    }
+                }
+            }
+
+            echo $no_of_added;
+            exit;
+
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function GuestTypeList()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT GST_TYPE_CODE,GST_TYPE_DESC,GST_TYPE_DIS_SEQ
+                FROM FLXY_GUEST_TYPE";
+
+        if ($search != '') {
+            $sql .= " WHERE GST_TYPE_CODE LIKE '%$search%'
+                      OR GST_TYPE_DESC LIKE '%$search%'";
+        }
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['GST_TYPE_ID'] . '">' . $row['GST_TYPE_CODE'] . ' | ' . $row['GST_TYPE_DESC'] . '</option>';
+        }
+
+        return $option;
+    }
+
+    public function editGuestType()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT GST_TYPE_ID, GST_TYPE_CODE, GST_TYPE_DESC, GST_TYPE_DIS_SEQ                
+                FROM FLXY_GUEST_TYPE
+                WHERE GST_TYPE_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteGuestType()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_GUEST_TYPE')->delete(['GST_TYPE_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function registerCards(){
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+
+        $roomClassLists = $this->roomClassLists();
+        $membershipLists = $this->membershipLists();
+        $rateCodeLists = $this->rateCodeLists();
+        $vipCodeLists = $this->vipCodeLists();
+    
+        $data = [
+            'roomClassLists' => $roomClassLists,
+            'membershipLists' => $membershipLists,
+            'rateCodeLists' => $rateCodeLists,
+            'vipCodeLists' => $vipCodeLists
+        ];
+
+        
+        return view('Reservation/RegistrationCardView', $data);
+    }
+
+    public function roomClassLists()
+        {
+            $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+            $sql = "SELECT RM_CL_ID, RM_CL_CODE, RM_CL_DESC
+                    FROM FLXY_ROOM_CLASS";
+
+            if ($search != '') {
+                $sql .= " WHERE RM_CL_CODE LIKE '%$search%'
+                        OR RM_CL_DESC LIKE '%$search%'";
+            }
+
+            $response = $this->Db->query($sql)->getResultArray();
+
+            $option = '<option value="">Choose an Option</option>';
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['RM_CL_ID'] . '">' . $row['RM_CL_CODE'] . ' | ' . $row['RM_CL_DESC'] . '</option>';
+            }
+
+            return $option;
+        }
+        public function membershipLists()
+        {
+            $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+            $sql = "SELECT MEM_ID, MEM_CODE, MEM_DESC
+                    FROM FLXY_MEMBERSHIP";
+
+            if ($search != '') {
+                $sql .= " WHERE MEM_CODE LIKE '%$search%'
+                        OR MEM_DESC LIKE '%$search%'";
+            }
+
+            $response = $this->Db->query($sql)->getResultArray();
+
+            $option = '<option value="">Choose an Option</option>';
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['MEM_ID'] . '">' . $row['MEM_CODE'] . ' | ' . $row['MEM_DESC'] . '</option>';
+            }
+
+            return $option;
+        }
+
+        public function rateCodeLists()
+        {
+            $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+            $sql = "SELECT RT_CD_ID, RT_CD_CODE, RT_CD_DESC
+                    FROM FLXY_RATE_CODE";
+
+            if ($search != '') {
+                $sql .= " WHERE RT_CD_CODE LIKE '%$search%'
+                        OR RT_CD_DESC LIKE '%$search%'";
+            }
+
+            $response = $this->Db->query($sql)->getResultArray();
+
+            $option = '<option value="">Choose an Option</option>';
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['RT_CD_ID'] . '">' . $row['RT_CD_CODE'] . ' | ' . $row['RT_CD_DESC'] . '</option>';
+            }
+
+            return $option;
+        }
+
+        public function vipCodeLists()
+        {
+            $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+            $sql = "SELECT VIP_ID, VIP_DESC
+                    FROM FLXY_VIP";
+
+            if ($search != '') {
+                $sql .= " WHERE VIP_DESC LIKE '%$search%'
+                        ";
+            }
+
+            $response = $this->Db->query($sql)->getResultArray();
+
+            $option = '<option value="">Choose an Option</option>';
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['VIP_ID'] . '">' . $row['VIP_DESC']  . '</option>';
+            }
+
+            return $option;
+        }
+
+
+
+
+
+  
 
 
     

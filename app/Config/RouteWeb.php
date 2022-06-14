@@ -350,7 +350,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/editItem', 'AdditionalController::editItem');
       $routes->match(['post'],'/deleteItem', 'AdditionalController::deleteItem');
 
-      //Item  - 27/05 
+      //Daily Inventory  - 27/05 
       $routes->get('/dailyInventory', 'AdditionalController::dailyInventory');
       $routes->match(['post'],'/DailyInventoryView', 'AdditionalController::DailyInventoryView');
       $routes->match(['post'],'/insertDailyInventory', 'AdditionalController::insertDailyInventory');
@@ -360,15 +360,31 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/itemClassList', 'AdditionalController::itemClassList');
       $routes->match(['post'],'/itemDepartmentList', 'AdditionalController::itemDepartmentList');
       $routes->match(['post'],'/itemList', 'AdditionalController::itemList');
-
       $routes->match(['post'],'/insertItemInventory', 'ApplicatioController::insertItemInventory');
 
       	
-      $routes->get('/fullCalendar', 'FullCalendar::index');
 
-      //Item  - 26/05 
+      //Reservation Inventory  - 26/05 
       $routes->get('/inventory', 'InventoryController::inventory');
-      $routes->match(['post'],'/InventoryView', 'InventoryController::InventoryView');
+      $routes->match(['post'],'/showInventoryItems', 'InventoryController::showInventoryItems');
+      $routes->match(['post'],'/updateInventoryItems', 'InventoryController::updateInventoryItems');
+      $routes->match(['get'],'/showInventoryDetails', 'InventoryController::showInventoryDetails');
+      $routes->match(['post'],'/deleteItemInventory', 'InventoryController::deleteItemInventory');
+
+      //Guests Type Master
+      $routes->get('/guestType', 'AdditionalController::guestType');
+      $routes->match(['post'],'/guestTypeView', 'AdditionalController::GuestTypeView');
+      $routes->match(['post'],'/insertGuestType', 'AdditionalController::insertGuestType');
+      $routes->match(['post'],'/copyGuestType', 'AdditionalController::copyGuestType');
+      $routes->match(['post'],'/editGuestType', 'AdditionalController::editGuestType');
+      $routes->match(['post'],'/deleteGuestType', 'AdditionalController::deleteGuestType');  
+
+      //Register Cards
+      $routes->get('/registerCards', 'AdditionalController::registerCards');    
+      
+      
+      
+
     //   $routes->match(['post'],'/insertItem', 'AdditionalController::insertItem');
     //   $routes->match(['post'],'/editItem', 'AdditionalController::editItem');
     //   $routes->match(['post'],'/deleteItem', 'AdditionalController::deleteItem');
@@ -399,6 +415,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('store', 'AppUpdateController::store');
         $routes->post('edit', 'AppUpdateController::edit');
         $routes->delete('delete', 'AppUpdateController::delete');
+
     });
 
     $routes->group('concierge', function ($routes) {

@@ -595,7 +595,7 @@
         data:{deptcode:deptcode,class_id:param},
         // dataType:'json',
         success:function(respn){
-          console.log(respn,"testing");          
+          //console.log(respn,"testing");          
           $('#IT_CL_ID').html(respn).trigger('change');
         }
     });

@@ -241,7 +241,7 @@ $(document).ready(function() {
 
     });
     $("#dataTable_view_wrapper .row:first").before(
-        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>'
+        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()" ><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>'
     );
 });
 
@@ -266,7 +266,6 @@ function addForm() {
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('#popModalWindowlabel').html('Add New Currency');
     $("#CUR_CODE").prop("readonly", false);
-
     $('#popModalWindow').modal('show');
 }
 

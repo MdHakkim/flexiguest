@@ -40,7 +40,7 @@
     <script src="<?php echo base_url('assets/js/defaults-en_US.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/bootbox.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/bootbox.locales.js') ?>"></script>
-    <script src="<?php //echo base_url('assets/vendor/js/bootstrap.js') ?>"></script>
+    <script src="<?php //]echo base_url('assets/vendor/js/bootstrap.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/block-ui/block-ui.js') ?>"></script>
 
@@ -62,8 +62,21 @@
     <script src="<?= base_url('assets/vendor/libs/quill/quill.js') ?>"></script>
     <!--  -->
     <script src="<?= base_url('assets/vendor/libs/sortablejs/sortable.js') ?>"></script>
-    
 
+
+
+   
+    <script src="<?php //echo base_url('assets/vendor/js/bootstrap.js') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/hammer/hammer.js') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/i18n/i18n.js') ?>"></script> 
+    <!-- Vendors JS -->
+    <script src="<?php echo base_url('assets/vendor/libs/fullcalendar/fullcalendar.js') ?>"></script> 
+    
+   
+    <script src="<?php echo base_url('assets/vendor/libs/flatpickr/flatpickr.js') ?>"></script>  
+    <!-- Page JS -->
+    <script src="<?php ///echo base_url('assets/js/reservation-calendar-events.js') ?>"></script>
+    <script src="<?php //echo base_url('assets/js/reservation-calendar.js') ?>"></script>
     <!-- Added by Deleep -->
     <?php if (isset($js_to_load)) {
         foreach ($js_to_load as $row) {
@@ -71,4 +84,5 @@
     <?php
         }
     }
+    
     ?>

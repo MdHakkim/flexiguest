@@ -38,7 +38,10 @@
 ?>
 
 <script>
+
+
 $(document).on('click', '.btn-modal-close', function() {
     $(this).parents('.alertModal').hide();
+    
 });
 </script>
