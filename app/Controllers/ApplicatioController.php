@@ -68,17 +68,14 @@ class ApplicatioController extends BaseController
 
         $postValues = $this->request->getPost('columns');
 
-        $search_keys = ['S_GUEST_NAME', 'S_GUEST_FIRST_NAME', 'S_COMPANY', 'S_ARRIVAL_FROM', 'S_ARRIVAL_TO', 'S_ROOM_NO', 'S_RESV_STATUS'];
+        $search_keys = ['S_GUEST_NAME', 'S_GUEST_FIRST_NAME', 'S_COMPNAME', 'S_RESV_ROOM', 'S_RESV_NO', 
+                        'S_ARRIVAL_FROM', 'S_ARRIVAL_TO', 'S_ROOM_NO', 'S_SEARCH_TYPE'];
 
         $init_cond = array();
 
         if($search_keys != NULL){
             foreach($search_keys as $search_key)
             {
-                //echo json_encode(print_r($postData));
-                
-                //if(!is_numeric($key)) continue;
-
                 if(null !== $this->request->getPost($search_key) && !empty(trim($this->request->getPost($search_key))))
                 {
                     $value = trim($this->request->getPost($search_key));
@@ -87,15 +84,19 @@ class ApplicatioController extends BaseController
                     {
                         case 'S_GUEST_NAME': $init_cond["FULLNAME LIKE "] = "'%$value%'"; break;
                         case 'S_GUEST_FIRST_NAME': $init_cond["SUBSTRING(FULLNAME,1,(CHARINDEX(' ',FULLNAME + ' ')-1)) LIKE "] = "'%$value%'"; break;
-
+                        case 'S_ARRIVAL_FROM': $init_cond["RESV_ARRIVAL_DT >= "] = "'$value'"; break;
+                        case 'S_ARRIVAL_TO': $init_cond["RESV_ARRIVAL_DT <= "] = "'$value'"; break;
+                        
                         case 'S_SEARCH_TYPE': { switch($value)
                                                 {
-                                                    case '1': $init_cond["RESV_ARRIVAL_DT = "] = date('Y-m-d'); break;
-                                                    case '2': $init_cond["RESV_DEPARTURE = "] = date('Y-m-d'); break;
+                                                    case '1': $init_cond["RESV_ARRIVAL_DT = "] = "'".date('Y-m-d')."'"; break;
+                                                    case '2': $init_cond["RESV_DEPARTURE = "]  = "'".date('Y-m-d')."'"; break;
                                                     case '3': $init_cond["RESV_ARRIVAL_DT = "] = "RESV_DEPARTURE"; break;
+                                                    default: break;
                                                 }
-                                              } 
-                        default: $init_cond["".ltrim($search_key, 'S_')." LIKE "] = "'%$value%'"; break;
+                                              } break;
+
+                        default: $init_cond["".ltrim($search_key, "S_")." LIKE "] = "'%$value%'"; break;
                         
                     }
                     
