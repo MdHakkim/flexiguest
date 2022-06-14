@@ -163,11 +163,16 @@
                             </div>
                         </div>
                         <div class="row g-3 mt-2">   
-                            <div class="col-md-12">
-                            <button type="button" id="submitBtn"
-                            class="btn btn-primary">Preview</button>
-                            <button type="button" id="submitBtn" onClick="submitForm('submitForm')"
-                            class="btn btn-primary">Print</button>
+                            <div class="col-md-2">
+                            <a class="btn btn-primary d-grid w-100 mb-3" target="_blank" href="<?php echo base_url('registerCardPreview') ?>">
+                                Preview
+                            </a>
+                            </div>
+                            <div class="col-md-2">
+
+                            <a class="btn btn-primary d-grid w-100 mb-3" target="_blank" href="<?php echo base_url('registerCardPrint') ?>">
+                                Print
+                            </a>
                              
 
                             </div>

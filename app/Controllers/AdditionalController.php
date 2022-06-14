@@ -998,6 +998,17 @@ class AdditionalController extends BaseController
         return view('Reservation/RegistrationCardView', $data);
     }
 
+
+    public function registerCardPrint(){
+        $data['js_to_load'] = "app-invoice-print.js";
+        $data['css_to_load'] = "app-invoice-preview.js";
+        return view('Reservation/RegisterCard');
+
+    }
+    public function registerCardPreview(){
+        return view('Reservation/RegisterCardPreview');
+
+    }
     public function roomClassLists()
         {
             $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';

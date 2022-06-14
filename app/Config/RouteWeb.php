@@ -384,7 +384,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/deleteGuestType', 'AdditionalController::deleteGuestType');  
 
       //Register Cards
-      $routes->get('/registerCards', 'AdditionalController::registerCards');    
+      $routes->get('/registerCards', 'AdditionalController::registerCards');
+      $routes->get('/registerCardPrint', 'AdditionalController::registerCardPrint');
+      $routes->get('/registerCardPreview', 'AdditionalController::registerCardPreview');
+      
+      
       
       
       
