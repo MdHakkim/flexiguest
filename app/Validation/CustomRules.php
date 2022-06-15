@@ -121,4 +121,16 @@ class CustomRules{
     $response = $this->Db->query($sql)->getNumRows();
     return ($response==0 ? true : false);
   }
+
+  public function checkAvailableItemQty(string $str, string $fields, array $data)
+  {
+    /**
+     *  Check Item QTY is less than the available QTY 
+     */
+
+     
+
+
+  }
+
 }

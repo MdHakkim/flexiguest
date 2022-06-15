@@ -2,8 +2,8 @@
 
 
 
-function responseJson($action=null,$error=null,$report=null,$output=null){
-    $result["SUCCESS"] =$action;
+function responseJson($action = null, $error = null, $report = null, $output = null){
+    $result["SUCCESS"] = $action;
     $result["RESPONSE"] = array("ERROR"=>$error,"REPORT_RES"=>$report,"OUTPUT"=>$output);
     return $result;
 } 

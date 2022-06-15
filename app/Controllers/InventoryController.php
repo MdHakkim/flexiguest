@@ -104,7 +104,15 @@ class InventoryController extends BaseController
             }
            // $RESV_ID = $this->request->getPost('RESV_ID');
             $RESV_ID = 0;
-           
+
+             // Checks item quantity
+            $resvItemQty = $this->request->getPost('RSV_ITM_QTY');
+            $resvItemID  =  $this->request->getPost('RSV_ITM_ID');
+             
+            $ITEM_AVAIL_QTY = 0;
+ 
+            $ITEM_AVAIL_QTY = $this->Db->table('FLXY_ITEM')->select('ITEM_AVAIL_QTY')->where('ITM_ID', $this->request->getPost('RSV_ITM_ID'))->get()->getRowArray();
+            $ITEM_QTY = (int)$ITEM_AVAIL_QTY['ITEM_AVAIL_QTY'];           
 
             $data = [
                 "RSV_ID" => $RESV_ID,
@@ -122,7 +130,7 @@ class InventoryController extends BaseController
                         'RSV_ITM_ID' => ['label' => 'Item', 'rules' => 'required'],
                         'RSV_ITM_BEGIN_DATE' => ['label' => 'Start Date', 'rules' => 'required'],
                         'RSV_ITM_END_DATE' => ['label' => 'End Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Date should be after Begin Date']],
-                        'RSV_ITM_QTY' => ['label' => 'Quantity', 'rules' => 'required'],
+                        'RSV_ITM_QTY' => ['label' => 'Quantity', 'rules' => 'required|checkAvailableItemQty[RSV_ITM_QTY,'.$ITEM_QTY.']', 'errors' => ['checkAvailableItemQty' => 'Item available is less than the requested quantity']],
                      ];
 
             $validate = $this->validate($rules);
@@ -135,10 +143,30 @@ class InventoryController extends BaseController
                 echo json_encode($result);
                 exit;
             }
+           
 
-            $return = !empty($RSV_PRI_ID) ? $this->Db->table('FLXY_RESERVATION_ITEM')->where('RSV_PRI_ID', $RSV_PRI_ID)->update($data) : $this->Db->table('FLXY_RESERVATION_ITEM')->insert($data);
-            $result = $return ? $this->responseJson("1", "0", $return, !empty($RSV_PRI_ID) ? $RSV_PRI_ID : $this->Db->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
+             if($ITEM_QTY < $ITEM_AVAIL_QTY)
+             {
+          
+                (int)$ITEM_QTY = $ITEM_QTY-(int)$resvItemQty;
+                $this->Db->table('FLXY_ITEM')->where('ITM_ID', $resvItemID)->update(['ITEM_AVAIL_QTY' => $ITEM_QTY]);
 
+
+                $return = !empty($RSV_PRI_ID) ? $this->Db->table('FLXY_RESERVATION_ITEM')->where('RSV_PRI_ID', $RSV_PRI_ID)->update($data) : $this->Db->table('FLXY_RESERVATION_ITEM')->insert($data);
+
+                $result = $return ? $this->responseJson("1", "0", $return, !empty($RSV_PRI_ID) ? $RSV_PRI_ID : $this->Db->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
+
+
+            }
+            else{
+                $return = $this->session->setFlashdata('error', 'Item available is less than the requested quantity');
+                $result = $return ? $this->responseJson("1", "0", $return, !empty($RSV_PRI_ID) ? $RSV_PRI_ID : $this->Db->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
+            }
+
+            // $query = $this->Db->query('SELECT ITEM_AVAIL_QTY FROM FLXY_ITEM WHERE ITM_ID = '.$resvItemID);
+            // $row   = $query->getRowArray();
+            // echo $row['ITEM_AVAIL_QTY'];exit;
+           
             if(!$return)
                 $this->session->setFlashdata('error', 'There has been an error. Please try again.');
             else
