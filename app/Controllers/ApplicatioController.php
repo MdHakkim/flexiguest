@@ -615,6 +615,30 @@ class ApplicatioController extends BaseController
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
+
+    function printProfile($id = 0)
+    {
+        $param = ['SYSID'=> $id];
+        $sql = "SELECT  CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_LANG,CUST_TITLE,
+                        CUST_DOB,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
+                        CUST_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC,
+                        CUST_STATE,(SELECT sname FROM STATE WHERE STATE_CODE=CUST_STATE AND COUNTRY_CODE=CUST_COUNTRY) CUST_STATE_DESC,
+                        CUST_CITY,(SELECT ctname FROM CITY WHERE ID=CUST_CITY) CUST_CITY_DESC,
+                        CUST_EMAIL,CUST_MOBILE,CUST_PHONE,CUST_CLIENT_ID,CUST_POSTAL_CODE,CUST_VIP,CUST_NATIONALITY,CUST_BUS_SEGMENT,CUST_GENDER,
+                        CUST_CREATE_DT,CUST_UPDATE_DT 
+                        
+                FROM FLXY_CUSTOMER WHERE CUST_ID=:SYSID:";
+
+        $num = $this->Db->query($sql,$param)->getNumRows();
+        if(!$num)
+            return redirect()->to(base_url('customer'));        
+                
+        $data = $this->Db->query($sql,$param)->getRowArray();
+        $data['title'] = getMethodName();
+
+        return view('Reservation/PrintProfile', $data);
+    }
+
     function getSupportingLov(){
         $sql = 'SELECT VIP_ID,VIP_DESC FROM FLXY_VIP';
         $respon1 = $this->Db->query($sql)->getResultArray();

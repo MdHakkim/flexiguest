@@ -689,7 +689,7 @@
 
         var id = $(this).attr('data_id');
         bootbox.confirm({
-            message: "Are you confirm to delete this record?",
+            message: "Are you sure you want to delete this record?",
             buttons: {
                 confirm: {
                     label: 'Yes',
