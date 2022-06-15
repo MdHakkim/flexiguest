@@ -11,7 +11,7 @@
               <!-- DataTable with Buttons -->
               <div class="card">
                 <!-- <h5 class="card-header">Responsive Datatable</h5> -->
-                <div class="container-fluid" style="padding:6px;">
+                <div class="container-fluid p-3">
                   <table id="dataTable_view" class="table table-striped">
                     <thead>
                       <tr>
@@ -115,7 +115,7 @@
   $(document).on('click','.delete-record',function(){
     var sysid = $(this).attr('data_sysid');
     bootbox.confirm({
-    message: "Are you confirm to delete this request?",
+    message: "Are you sure you want to delete this request?",
     buttons: {
         confirm: {
             label: 'Yes',

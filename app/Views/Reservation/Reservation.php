@@ -12,9 +12,14 @@
         <!-- DataTable with Buttons -->
         <div class="card">
             <!-- <h5 class="card-header">Responsive Datatable</h5> -->
-            <div class="container-fluid p-3" style="padding:6px;">
+            <div class="container-fluid p-3">
 
-                <form class="dt_adv_search" method="POST">
+                <div class="row">
+                    <div class="col-md-3 mt-1 mb-3"><button type="button" class="btn btn-primary" onClick="addResvation()"><i
+                                class="fa-solid fa-plus fa-lg"></i> Add New</button></div>
+                </div>
+
+                <form class="dt_adv_search mb-2" method="POST">
                     <div class="border rounded p-3">
                         <div class="row g-3">
                             <div class="col-4 col-sm-6 col-lg-4">
@@ -42,8 +47,8 @@
                                     <label class="col-form-label col-md-4"
                                         style="text-align: right;"><b>Company:</b></label>
                                     <div class="col-md-8">
-                                        <input type="text" id="S_COMPNAME" name="S_COMPNAME" class="form-control dt-input"
-                                            data-column="19" placeholder="" />
+                                        <input type="text" id="S_COMPNAME" name="S_COMPNAME"
+                                            class="form-control dt-input" data-column="19" placeholder="" />
                                     </div>
                                 </div>
 
@@ -61,7 +66,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Conf No:</b></label>
+                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Conf
+                                            No:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_RESV_NO" name="S_RESV_NO" class="form-control dt-input"
                                             placeholder="" />
@@ -72,8 +78,8 @@
                                     <label class="col-form-label col-md-4" style="text-align: right;"><b>Room
                                             No:</b></label>
                                     <div class="col-md-8">
-                                        <input type="text" id="S_RESV_ROOM" name="S_RESV_ROOM" class="form-control dt-input"
-                                            placeholder="" />
+                                        <input type="text" id="S_RESV_ROOM" name="S_RESV_ROOM"
+                                            class="form-control dt-input" placeholder="" />
                                     </div>
                                 </div>
                             </div>
@@ -90,7 +96,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Search Type:</b></label>
+                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Search
+                                            Type:</b></label>
                                     <div class="col-md-8">
                                         <select id="S_SEARCH_TYPE" name="S_SEARCH_TYPE" class="form-select dt-select"
                                             data-column="1">
@@ -1915,12 +1922,12 @@
 <!-- Content wrapper -->
 <?=$this->include("Reservation/CompanyAgentModal")?>
 <script>
-    function showModalAlert(modalType, modalContent) {
-        $('#' + modalType + 'Modal').show();
-        $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
-            '</ul>');
-    }
-    
+function showModalAlert(modalType, modalContent) {
+    $('#' + modalType + 'Modal').show();
+    $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
+        '</ul>');
+}
+
 var compAgntMode = '';
 var linkMode = '';
 var windowmode = '';
@@ -2000,9 +2007,6 @@ $(document).ready(function() {
             $('#loader_flex_bg').hide();
         }
     });
-    $("#dataTable_view_wrapper .row:first").before(
-        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addResvation()"><i class="fa-solid fa-plus fa-lg"></i> Add New</button></div></div>'
-    );
 
     $('.RESV_ARRIVAL_DT').datepicker({
         format: 'd-M-yyyy',
@@ -2250,6 +2254,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     $('.flxyFooter').removeClass('flxy_space');
     $('#submitResrBtn').removeClass('submitResr');
     $('#reservationW').modal('show');
+    $('#reservationWlable').html('Edit Reservation');
     var sysid = $(this).attr('data_sysid');
     var mode = '';
     if (param) {
@@ -2310,7 +2315,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 $(document).on('click', '.delete-record', function() {
     var sysid = $(this).attr('data_sysid');
     bootbox.confirm({
-        message: "Are you confirm to delete this record?",
+        message: "Are you sure you want to delete this record?",
         buttons: {
             confirm: {
                 label: 'Yes',
@@ -2376,6 +2381,7 @@ function addResvation() {
     $('#RESV_NAME,#RESV_COMPANY,#RESV_AGENT,#RESV_BLOCK').html('<option value="">Select</option>').selectpicker(
         'refresh');
     $('#reservationW').modal('show');
+    $('#reservationWlable').html('Add New Reservation');
     runSupportingResevationLov();
     $('.window-1,#nextbtn,#previousbtn').show();
     $('.flxyFooter').addClass('flxy_space');
@@ -3241,7 +3247,7 @@ function showReservationChanges(rsrvId = 0) {
                 type: 'column',
                 renderer: function(api, rowIdx, columns) {
                     var data = $.map(columns, function(col, i) {
-                        
+
                         return col.title !==
                             '' // ? Do not show row in modal popup if title is blank (for check box)
                             ?
