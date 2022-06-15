@@ -847,12 +847,7 @@ class APIController extends BaseController
     public function createRequest()
     {
         $user = $this->request->user;
-        $appartment = $user['RM_NO'];
-        //$reservation_no = $this->request->getVar('reservationId');
-
-        $data['reservation_details'] = ['appartment' => $appartment
-					//"reservation_num" => $reservation_no
- 					];
+        $CUST_ID = $user['USR_CUST_ID'];
 
         $validate = $this->validate([
             'type' => 'required',
@@ -874,7 +869,6 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        $CUST_ID = $user['USR_CUST_ID'];
         $doc_file = $this->request->getFile('attachement');
         $doc_name = $doc_file->getName();
         $folderPath = "assets/Uploads/maintenance";
@@ -891,7 +885,8 @@ class APIController extends BaseController
                 "MAINT_PREFERRED_TIME" => date("d-M-Y H:i:s", strtotime($this->request->getVar("preferredTime"))),
                 "MAINT_ATTACHMENT" => $attached_path,
                 "MAINT_STATUS" => "New",
-                "MAINT_ROOM_NO" => $appartment,
+                "MAINT_ROOM_NO" => $this->request->getVar("roomNo"),
+                "MAINT_RESV_ID" => $this->request->getVar("reservationId"),
                 "MAINT_CREATE_DT" => date("d-M-Y"),
                 "MAINT_CREATE_UID" => $CUST_ID,
                 "MAINT_UPDATE_DT" => date("d-M-Y"),
@@ -922,13 +917,8 @@ class APIController extends BaseController
 
         $user = $this->request->user;
         $cust_id = $user['USR_CUST_ID'];
-	$data =[];
+    	$data =[];
 
-        //  get appartments and resrvation details from the token
-        $appartment = $user['RM_NO'];
-        $reservation_no = $user['RESV_NO'];
-
-        $data['reservation_details'] = ['appartment' => $appartment, "reservation_num" => $reservation_no];
         if ($reqID) {
             $param = ['MAINT_ID' => $reqID];
             $sql = "SELECT a.MAINT_ID, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,a.MAINT_SUB_CATEGORY,a.MAINT_DETAILS,a.MAINT_ACKNOWEDGE_TIME,a.MAINT_STATUS , a.MAINT_ROOM_NO FROM FLXY_MAINTENANCE a 
@@ -988,21 +978,16 @@ class APIController extends BaseController
     public function getMaintenanceRoomList()
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
-        $customer_id = 2005;
+
         $room_list = $this->DB->table('FLXY_RESERVATION')
-                            ->select('RESV_ROOM')
+                            ->select('RESV_ID, RESV_ROOM')
                             ->where('RESV_NAME', $customer_id)
                             ->where('RESV_STATUS', 'CHECKEDIN-COMPLETED')
                             ->where('RESV_ROOM !=', '')
                             ->get()
                             ->getResult();
 
-        $rooms = [];
-        foreach($room_list as $room){
-            $rooms[] = $room->RESV_ROOM;
-        }
-
-        return $this->respond(responseJson(200, false, ['msg' => 'Room list'], $rooms));
+        return $this->respond(responseJson(200, false, ['msg' => 'Room list'], $room_list));
     }
 
     /*  FUNCTION : FEEDBACK ADDING FROM GUEST
