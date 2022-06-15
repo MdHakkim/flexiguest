@@ -981,6 +981,26 @@ class APIController extends BaseController
         return $this->respond($result);
     }
 
+    public function getMaintenanceRoomList()
+    {
+        $customer_id = $this->request->user['USR_CUST_ID'];
+        $customer_id = 2005;
+        $room_list = $this->DB->table('FLXY_RESERVATION')
+                            ->select('RESV_ROOM')
+                            ->where('RESV_NAME', $customer_id)
+                            ->where('RESV_STATUS', 'CHECKEDIN-COMPLETED')
+                            ->where('RESV_ROOM !=', '')
+                            ->get()
+                            ->getResult();
+
+        $rooms = [];
+        foreach($room_list as $room){
+            $rooms[] = $room->RESV_ROOM;
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Room list'], $rooms));
+    }
+
     /*  FUNCTION : FEEDBACK ADDING FROM GUEST
     METHOD: POST 
     INPUT : Header Authorization- Token
