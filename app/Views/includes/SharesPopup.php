@@ -148,6 +148,5 @@
         setReservationBtnAttr();
 
         $(".shares-popup").click(sharesPopup);
-        sharesPopup();
     });
 </script>
