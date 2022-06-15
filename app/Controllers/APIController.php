@@ -177,7 +177,7 @@ class APIController extends BaseController
         if (!empty($data))
             $result = responseJson(200, false, ["msg" => "Reservation fetched Successfully"], $data);
         else
-            $result = responseJson(500, true, ["msg" => "No reservation found for this user"]);
+            $result = responseJson(200, true, ["msg" => "No reservation found for this user"], []);
 
         return $this->respond($result);
     }
@@ -895,9 +895,9 @@ class APIController extends BaseController
 
             $ins = $this->DB->table('FLXY_MAINTENANCE')->insert($data);
             if ($ins)
-                $result = responseJson(200, true, ["msg" => "Maintenance request created"],[]);
+                $result = responseJson(200, true, ["msg" => "Maintenance request created"]);
             else
-                $result = responseJson(500, true, ["msg" => "Creation Failed"],[]);
+                $result = responseJson(500, true, ["msg" => "Creation Failed"]);
 
             return $this->respond($result);
         }
@@ -982,7 +982,7 @@ class APIController extends BaseController
         $room_list = $this->DB->table('FLXY_RESERVATION')
                             ->select('RESV_ID, RESV_ROOM')
                             ->where('RESV_NAME', $customer_id)
-                            ->where('RESV_STATUS', 'CHECKEDIN-COMPLETED')
+                            ->where('RESV_STATUS', 'CheckedIn Completed')
                             ->where('RESV_ROOM !=', '')
                             ->get()
                             ->getResult();
