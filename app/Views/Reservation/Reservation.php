@@ -157,6 +157,7 @@
                 <div class="modal-body">
                     <div id="Accompany">
                         <div class="flxy_opt_btn text-center">
+                            <button type="button" class="btn btn-primary shares-popup">Shares</button>
                             <button type="button" onClick="reservExtraOption('ACP')"
                                 class="btn btn-primary">Accompanying</button>
                             <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add
@@ -1913,6 +1914,7 @@
     </div>
 
     <?= $this->include('includes/EditCustomerPopup') ?>
+    <?= $this->include('includes/SharesPopup') ?>
 
 
     <div class="content-backdrop fade"></div>

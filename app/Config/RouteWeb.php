@@ -30,7 +30,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/rateQueryDetailOption', 'ApplicatioController::rateQueryDetailOption');
 
     $routes->match(['post'],'/reservationChangesView', 'ApplicatioController::ReservationChangesView');
-
+    
+    $routes->get('/reservation/get-reservation-details', 'ReservationController::getReservationDetails');
     
 
     // $routes->match(['get'],'/testingApi/(:segment)', 'ApplicatioController::triggerReservationEmail/$1');
