@@ -848,9 +848,12 @@ class APIController extends BaseController
     {
         $user = $this->request->user;
         $appartment = $user['RM_NO'];
-        $reservation_no = $user['RESV_NO'];
+        //$reservation_no = $this->request->getVar('reservationId');
 
-        $data['reservation_details'] = ['appartment' => $appartment, "reservation_num" => $reservation_no];
+        $data['reservation_details'] = ['appartment' => $appartment
+					//"reservation_num" => $reservation_no
+ 					];
+
         $validate = $this->validate([
             'type' => 'required',
             'category' => 'required',
@@ -859,7 +862,7 @@ class APIController extends BaseController
             'preferredDate' => 'required',
             'attachement' =>  [
                 'uploaded[attachement]',
-                'mime_in[attachement,image/png, image/jpeg]',
+                'mime_in[attachement,image/png,image/jpeg]',
                 'max_size[attachement,50000]',
             ],
         ]);
@@ -897,14 +900,14 @@ class APIController extends BaseController
 
             $ins = $this->DB->table('FLXY_MAINTENANCE')->insert($data);
             if ($ins)
-                $result = responseJson(200, true, ["msg" => "Maintenance request created"]);
+                $result = responseJson(200, true, ["msg" => "Maintenance request created"],[]);
             else
-                $result = responseJson(500, true, ["msg" => "Creation Failed"]);
+                $result = responseJson(500, true, ["msg" => "Creation Failed"],[]);
 
             return $this->respond($result);
         }
 
-        $result = responseJson(500, true, ["msg" => "User information not available"]);
+        $result = responseJson(500, true, ["msg" => "Something went wrong"]);
         return $this->respond($result);
     }
 
@@ -919,6 +922,7 @@ class APIController extends BaseController
 
         $user = $this->request->user;
         $cust_id = $user['USR_CUST_ID'];
+	$data =[];
 
         //  get appartments and resrvation details from the token
         $appartment = $user['RM_NO'];
@@ -939,9 +943,9 @@ class APIController extends BaseController
         }
 
         if (!empty($data))
-            $result = responseJson(200, false, ["msg" => "Maintenance list fetched Successfully"], [$data]);
+            $result = responseJson(200, false, ["msg" => "Maintenance list fetched Successfully"], $data);
         else
-            $result = responseJson(200, false, ["msg" => "No Request List for this user"]);
+            $result = responseJson(200, false, ["msg" => "No Request List for this user"],[]);
 
         return $this->respond($result);
     }
