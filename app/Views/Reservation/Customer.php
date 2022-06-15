@@ -14,7 +14,7 @@
               <!-- DataTable with Buttons -->
               <div class="card">
                 <!-- <h5 class="card-header">Responsive Datatable</h5> -->
-                <div class="container-fluid" style="padding:6px;">
+                <div class="container-fluid p-3">
                   <table id="dataTable_view" class="table table-striped">
                     <thead>
                       <tr>
@@ -208,6 +208,8 @@
             </div>
             <!-- /Modal window -->
             
+            <?= $this->include('includes/CustomerOptionsPopup') ?>
+
             <div class="content-backdrop fade"></div>
           </div>
           <!-- Content wrapper -->
@@ -232,9 +234,11 @@
               '<div class="d-inline-block">' +
                 '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                 '<ul class="dropdown-menu dropdown-menu-end">' +
-                  '<li><a href="javascript:;" data_sysid="'+data['CUST_ID']+'" class="dropdown-item editWindow">Edit</a></li>' +
+                  '<li><a href="javascript:;" data_sysid="'+data['CUST_ID']+'" class="dropdown-item editWindow"><i class="fas fa-edit"></i> Edit</a></li>' +
                   '<div class="dropdown-divider"></div>' +
-                  '<li><a href="javascript:;" data_sysid="'+data['CUST_ID']+'" class="dropdown-item text-danger delete-record">Delete</a></li>' +
+                  '<li><a href="javascript:;" data_sysid="'+data['CUST_ID']+'" class="dropdown-item custOptions"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
+                  '<div class="dropdown-divider"></div>' +
+                  '<li><a href="javascript:;" data_sysid="'+data['CUST_ID']+'" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>' +
                 '</ul>' +
               '</div>'
             );
@@ -258,13 +262,14 @@
     runCountryList();
     runSupportingLov();
     $('#reservationChild').modal('show');
+    $('#reservationChildLabel').html('Add New Customer');
   }
 
   
   $(document).on('click','.delete-record',function(){
     var sysid = $(this).attr('data_sysid');
     bootbox.confirm({
-    message: "Are you confirm to delete this record?",
+    message: "Are you sure you want to delete this record?",
     buttons: {
         confirm: {
             label: 'Yes',
@@ -396,6 +401,8 @@
     runSupportingLov();
     var sysid = $(this).attr('data_sysid');
     $('#reservationChild').modal('show');
+    $('#reservationChildLabel').html('Edit Customer');
+
     $.ajax({
         url: '<?php echo base_url('/editCustomer')?>',
         type: "post",

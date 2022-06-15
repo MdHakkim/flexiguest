@@ -44,6 +44,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/getSupportingReservationLov', 'ApplicatioController::getSupportingReservationLov');
     $routes->match(['post'],'/insertCompAgent', 'ApplicatioController::insertCompAgent');
     $routes->match(['post'],'/getCustomerDetail', 'ApplicatioController::getCustomerDetail');
+    $routes->get('/printProfile/(:num)', 'ApplicatioController::printProfile/$1');
 
     $routes->get('/company', 'ApplicatioController::company');
     $routes->match(['post'],'/companyView', 'ApplicatioController::companyView');
