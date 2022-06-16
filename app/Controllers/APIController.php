@@ -970,12 +970,8 @@ class APIController extends BaseController
         $sql = "SELECT a.MAINT_CAT_ID,b.MAINT_SUBCATEGORY ,b.MAINT_SUBCAT_ID FROM FLXY_MAINTENANCE_CATEGORY a
         inner JOIN FLXY_MAINTENANCE_SUBCATEGORY b ON b.MAINT_CAT_ID = a.MAINT_CAT_ID WHERE a.MAINT_CAT_ID =:MAINT_CAT_ID:";
         $response = $this->DB->query($sql, $param)->getResultArray();
-        if ($response) {
-            $result = responseJson(200, false, ["msg" => "Maintenance list sub categories fetched Successfully"], $response);
-           
-        }else{
-            $result = responseJson(500, True, ["msg" => "Server Error in subcategor fetching"]);
-        }
+
+        $result = responseJson(200, false, ["msg" => "Maintenance list sub categories fetched Successfully"], $response);           
         return $this->respond($result);
     }
 
