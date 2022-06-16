@@ -791,7 +791,8 @@ class APIController extends BaseController
         $dataRes = [
             "RESV_ETA" => $this->request->getVar("estimatedTimeOfArrival"),
             "RESV_UPDATE_UID" => $USR_ID,
-            "RESV_UPDATE_DT" => date("d-M-Y")
+            "RESV_UPDATE_DT" => date("d-M-Y"),
+            "RESV_STATUS" => 'Pre Check-In Completed',
         ];
 
         // update the signature in the documents table
@@ -856,10 +857,10 @@ class APIController extends BaseController
             'subCategory' => 'required',
             'preferredTime' => 'required',
             'preferredDate' => 'required',
-            'attachement' =>  [
-                'uploaded[attachement]',
-                'mime_in[attachement,image/png,image/jpeg]',
-                'max_size[attachement,50000]',
+            'attachment' =>  [
+                'uploaded[attachment]',
+                'mime_in[attachment,image/png,image/jpeg,image/jpg]',
+                'max_size[attachment,50000]',
             ],
         ]);
 
@@ -870,7 +871,7 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        $doc_file = $this->request->getFile('attachement');
+        $doc_file = $this->request->getFile('attachment');
         $doc_name = $doc_file->getName();
         $folderPath = "assets/Uploads/maintenance";
         $doc_up = documentUpload($doc_file, $doc_name, $CUST_ID, $folderPath);
