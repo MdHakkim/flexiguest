@@ -156,6 +156,7 @@ class APIController extends BaseController
     public function listReservationsAPI($resID = null)
     {
         $cust_id = $this->request->user['USR_CUST_ID'];
+ 
 
         if ($resID) {
             $param = ['RESV_ID' => $resID];
