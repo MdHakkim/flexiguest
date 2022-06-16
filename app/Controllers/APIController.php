@@ -946,8 +946,11 @@ class APIController extends BaseController
     OUTPUT : LIST OF CATEGORIES   */
     public function maintenanceCategoryList()
     {
-        $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY";
-        $response = $this->DB->query($sql)->getResultArray();
+        $category_type = $this->request->getVar('category_type');        
+        $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY where MAINT_CATEGORY_TYPE = :category_type:";
+        $params = ['category_type' => $category_type];
+
+        $response = $this->DB->query($sql, $params)->getResultArray();
         if($response){
            $result = responseJson(200, false, ["msg" => "Maintenance list categories fetched Successfully"], $response);
            
