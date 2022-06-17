@@ -390,9 +390,9 @@ class APIController extends BaseController
             'title' => 'required',
             'firstName' => 'required',
             //'email' => 'required|valid_email',
-            'cor' => 'required',
+            'countryOfResidence' => 'required',
             'DOB' => 'required',
-            'phn' => 'required',
+            'mobile' => 'required',
             'gender' => 'required',
             'docType' => 'required',
             'address1' => 'required',
@@ -424,12 +424,13 @@ class APIController extends BaseController
             "CUST_DOC_TYPE" => $this->request->getVar("docType"),
             "CUST_DOC_NUMBER" => $this->request->getVar("docNumber"),
             "CUST_GENDER" => $this->request->getVar("gender"),
+            "CUST_MOBILE" => $this->request->getVar("mobile"),
             "CUST_NATIONALITY" => $this->request->getVar("nationality"),
-            "CUST_COR" => $this->request->getVar("cor"),
+            "CUST_COR" => $this->request->getVar("countryOfResidence"),
             "CUST_DOB" => date("d-M-Y", strtotime($this->request->getVar("DOB"))),
             "CUST_DOC_EXPIRY" => date("d-M-Y", strtotime($this->request->getVar("expiryDate"))),
             "CUST_DOC_ISSUE" => date("d-M-Y", strtotime($this->request->getVar("issueDate"))),
-            "CUST_PHONE" => $this->request->getVar("phn"),
+            "CUST_PHONE" => $this->request->getVar("phone"),
             "CUST_EMAIL" => $this->request->getVar("email"),
             "CUST_ADDRESS_1" => $this->request->getVar("address1"),
             "CUST_ADDRESS_2" => $this->request->getVar("address2"),
@@ -923,14 +924,18 @@ class APIController extends BaseController
 
         if ($reqID) {
             $param = ['MAINT_ID' => $reqID];
-            $sql = "SELECT a.MAINT_ID, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,a.MAINT_SUB_CATEGORY,a.MAINT_DETAILS,a.MAINT_ACKNOWEDGE_TIME,a.MAINT_STATUS , a.MAINT_ROOM_NO FROM FLXY_MAINTENANCE a 
+            $sql = "SELECT a.*, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME,c.MAINT_CATEGORY_TYPE,c.MAINT_CATEGORY,d.MAINT_SUBCATEGORY FROM FLXY_MAINTENANCE a 
                         LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.CUST_NAME
+                        LEFT JOIN FLXY_MAINTENANCE_CATEGORY c ON c.MAINT_CAT_ID = a.MAINT_CATEGORY
+			            LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY d ON d.MAINT_SUBCAT_ID = a.MAINT_SUB_CATEGORY
                         WHERE MAINT_ID=:MAINT_ID:";
             $data = $this->DB->query($sql, $param)->getRowArray();
         } else {
             $param = ['CUST_NAME' => $cust_id];
-            $sql = "SELECT MAINT_ID, MAINT_SUB_CATEGORY,MAINT_DETAILS,MAINT_ACKNOWEDGE_TIME,MAINT_STATUS, MAINT_ROOM_NO FROM
-                    FLXY_MAINTENANCE  WHERE MAINT_CREATE_UID=:CUST_NAME:";
+            $sql = "SELECT a.*,c.MAINT_CATEGORY_TYPE,c.MAINT_CATEGORY,d.MAINT_SUBCATEGORY FROM FLXY_MAINTENANCE a
+		    LEFT JOIN FLXY_MAINTENANCE_CATEGORY c ON c.MAINT_CAT_ID = a.MAINT_CATEGORY
+		    LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY d ON d.MAINT_SUBCAT_ID = a.MAINT_SUB_CATEGORY
+                    WHERE MAINT_CREATE_UID=:CUST_NAME:";
             $data = $this->DB->query($sql, $param)->getResultArray();
         }
 
