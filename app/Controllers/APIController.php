@@ -869,13 +869,14 @@ class APIController extends BaseController
 
         $fileNames = '';
         $fileArry = $this->request->getFileMultiple('attachment');
-
+     if(!empty($fileArry)){
         foreach ($fileArry as $key => $file) {
             if (!$file->isValid()) {
                 return $this->respond(responseJson(500, true, ['msg' => "Please upload valid file. This file '{$file->getClientName()}' is not valid"]));
             }
         }
-
+    }
+    if(!empty($fileArry)){
         foreach ($fileArry as $key => $file) {
             if ($file->isValid() && !$file->hasMoved()) {
                 $newName = $file->getRandomName();
@@ -890,8 +891,9 @@ class APIController extends BaseController
                     $fileNames .= $newName . $comma;
             }
         }
+    }
 
-        if (!empty($fileNames)) {
+        
             $data = [
                 "CUST_NAME" => $CUST_ID,
                 "MAINT_TYPE" => $this->request->getVar("type"),
@@ -917,10 +919,7 @@ class APIController extends BaseController
                 $result = responseJson(500, true, ["msg" => "Creation Failed"]);
 
             return $this->respond($result);
-        }
-
-        $result = responseJson(500, true, ["msg" => "Something went wrong"]);
-        return $this->respond($result);
+    
     }
 
     /*  FUNCTION : LIST MAINTENANCE REQUEST
