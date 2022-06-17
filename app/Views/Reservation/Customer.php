@@ -42,7 +42,7 @@
               <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="reservationChildLabel">New message</h5>
+                    <h5 class="modal-title" id="reservationChildLabel">Customer</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
@@ -201,6 +201,7 @@
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="custOptionsBtn" class="btn btn-primary custOptions" data_sysid="">Options</button>
                     <button type="button" id="submitBtn" onClick="submitForm('customerForm','C')" class="btn btn-primary">Save</button>
                   </div>
                 </div>
@@ -258,6 +259,7 @@
   function addForm(){
     $(':input','#customerForm').val('').prop('checked', false).prop('selected', false);
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
+    $('#custOptionsBtn').hide();
     $('#CUST_COUNTRY,#CUST_STATE,#CUST_CITY').html('<option value="">Select</option>').selectpicker('refresh');
     runCountryList();
     runSupportingLov();
@@ -402,6 +404,10 @@
     var sysid = $(this).attr('data_sysid');
     $('#reservationChild').modal('show');
     $('#reservationChildLabel').html('Edit Customer');
+
+    $('#custOptionsBtn').show();
+    $('#custOptionsBtn').attr('data_sysid', sysid);
+
 
     $.ajax({
         url: '<?php echo base_url('/editCustomer')?>',
