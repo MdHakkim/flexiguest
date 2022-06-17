@@ -872,21 +872,40 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        $doc_file = $this->request->getFile('attachment');
-        $doc_name = $doc_file->getName();
-        $folderPath = "assets/Uploads/maintenance";
-        $doc_up = documentUpload($doc_file, $doc_name, $CUST_ID, $folderPath);
+        $fileNames = '';
+        $fileArry = $this->request->getFileMultiple('attachment');
 
-        if ($doc_up['SUCCESS'] == 200) {
-            $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+        foreach ($fileArry as $key => $file) {
+            if (!$file->isValid()) {
+                return $this->respond(responseJson(500, true, ['msg' => "Please upload valid file. This file '{$file->getClientName()}' is not valid"]));
+            }
+        }
+
+        foreach ($fileArry as $key => $file) {
+            if ($file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move(ROOTPATH . 'assets/Uploads/Maintenance', $newName);
+                $comma = '';
+
+                if (isset($fileArry[$key + 1]) && $fileArry[$key + 1]->isValid()) {
+                    $comma = ',';
+                }
+
+                if ($newName)
+                    $fileNames .= $newName . $comma;
+            }
+        }
+
+        if (!empty($fileNames)) {
             $data = [
+                "CUST_NAME" => $CUST_ID,
                 "MAINT_TYPE" => $this->request->getVar("type"),
                 "MAINT_CATEGORY" => $this->request->getVar("category"),
                 "MAINT_SUB_CATEGORY" => $this->request->getVar("subCategory"),
                 "MAINT_DETAILS" => $this->request->getVar("details"),
                 "MAINT_PREFERRED_DT" => date("d-M-Y", strtotime($this->request->getVar("preferredDate"))),
                 "MAINT_PREFERRED_TIME" => date("d-M-Y H:i:s", strtotime($this->request->getVar("preferredTime"))),
-                "MAINT_ATTACHMENT" => $attached_path,
+                "MAINT_ATTACHMENT" => $fileNames,
                 "MAINT_STATUS" => "New",
                 "MAINT_ROOM_NO" => $this->request->getVar("roomNo"),
                 "MAINT_RESV_ID" => $this->request->getVar("reservationId"),
@@ -937,6 +956,16 @@ class APIController extends BaseController
 		    LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY d ON d.MAINT_SUBCAT_ID = a.MAINT_SUB_CATEGORY
                     WHERE MAINT_CREATE_UID=:CUST_NAME:";
             $data = $this->DB->query($sql, $param)->getResultArray();
+        }
+
+        foreach($data as $i => $maintenance_request){
+            $attachments = explode(",", $maintenance_request['MAINT_ATTACHMENT']);
+
+            foreach($attachments as $j => $attachment){
+                $attachments[$j] = base_url("assets/Uploads/Maintenance/$attachment");
+            }
+
+            $data[$i]['MAINT_ATTACHMENT'] = $attachments;
         }
 
         if (!empty($data))
