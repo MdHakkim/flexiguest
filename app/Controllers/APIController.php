@@ -855,7 +855,7 @@ class APIController extends BaseController
         $validate = $this->validate([
             'type' => 'required',
             'category' => 'required',
-            'subCategory' => 'required',
+            
             'preferredTime' => 'required',
             'preferredDate' => 'required',
             'attachment' =>  [
