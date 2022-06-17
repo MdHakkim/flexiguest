@@ -962,7 +962,13 @@ class APIController extends BaseController
             $attachments = explode(",", $maintenance_request['MAINT_ATTACHMENT']);
 
             foreach($attachments as $j => $attachment){
-                $attachments[$j] = base_url("assets/Uploads/Maintenance/$attachment");
+                $name = $attachment;
+                $url = base_url("assets/Uploads/Maintenance/$attachment");
+
+                $attachment_array = explode(".", $attachment);
+                $type = end($attachment_array);
+
+                $attachments[$j] = ['name' => $name, 'url' => $url, 'type' => $type];
             }
 
             $data[$i]['MAINT_ATTACHMENT'] = $attachments;
