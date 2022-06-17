@@ -854,7 +854,9 @@ class APIController extends BaseController
 
         $validate = $this->validate([
             'type' => 'required',
-            'category' => 'required'
+            'category' => 'required',
+            'roomNo' =>'required',
+            'reservationId' =>'required'
             
         ]);
 
