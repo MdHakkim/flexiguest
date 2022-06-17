@@ -11,7 +11,7 @@
                 <div class="flxy_opt_btn text-center">
                     <button type="button" class="btn btn-primary show-activity-log" data-bs-toggle="modal"
                         data-bs-target="#changesWindow">Changes</button>
-                    <a href="#" class="btn btn-primary data-port" target="_blank" data_sysid="">Data Porting</a>
+                    <button type="button" class="btn btn-primary data-port" data_sysid="">Data Porting</button>
                     <button type="button" class="btn btn-primary delete-record" data_sysid="">Delete</button>
                     <button type="button" class="btn btn-primary">Memberships</button>
                     <button type="button" class="btn btn-primary">Neg. Rates</button>
@@ -24,7 +24,6 @@
 <!-- option window end -->
 
 <script>
-
 var custOptId = '';
 
 $(document).on('click', '.custOptions', function() {
@@ -34,8 +33,41 @@ $(document).on('click', '.custOptions', function() {
     $('#custOptionsWindow').modal('show');
 
     $('#custOptionsWindow').find('.data-port,.delete-record').attr('data_sysid', custOptId);
-    $('#custOptionsWindow').find('.data-port').attr('href', '<?php echo base_url('/printProfile')?>/' +
-        custOptId);
 });
 
+// Print / Download PDF Popup
+
+$(document).on('click', '.data-port', function() {
+
+    var custOptId = $(this).attr('data_sysid');
+
+    bootbox.dialog({
+        title: 'Profile Data Portability',
+        message: "Do you want to Print or Download the Profile?",
+        backdrop: true,
+        buttons: {
+            ok: {
+                label: 'Print Profile',
+                className: 'btn-success',
+                callback: function() {
+                    window.open('<?php echo base_url('/printProfile')?>/' + custOptId, '_blank');
+                    return false;
+                }
+            },
+            noclose: {
+                label: "Download Profile (PDF)",
+                className: 'btn-info',
+                callback: function() {
+                    location.href = '<?php echo base_url('/exportProfile')?>/' + custOptId;
+                    return false;
+                }
+            },
+            cancel: {
+                label: 'Cancel',
+                className: 'btn-secondary'
+            }
+        }
+    });
+
+});
 </script>
