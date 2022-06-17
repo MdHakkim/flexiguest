@@ -2,6 +2,25 @@
 <?=$this->section("contentRender")?>
 <?= $this->include('Layout/SuccessReport') ?>
 <?= $this->include('Layout/ErrorReport') ?>
+
+<style>
+    .active-tr {
+        background-color: #d1e7ff !important;
+        --bs-table-striped-bg: none;
+    }
+    #combine-popup .text-right{
+        text-align: right !important;
+    }
+    #combine-popup .tab-content {
+        padding: 1rem 1.375rem 0 1.375rem;
+    }
+    #combine-popup .card {
+        box-shadow: unset;
+        margin-top: 0;
+    }
+
+</style>
+
 <!-- Content wrapper -->
 <div class="content-wrapper">
     <!-- Content -->
@@ -157,7 +176,7 @@
                 <div class="modal-body">
                     <div id="Accompany">
                         <div class="flxy_opt_btn text-center">
-                            <button type="button" class="btn btn-primary shares-popup">Shares</button>
+                            <button type="button" class="btn btn-primary shares-btn">Shares</button>
                             <button type="button" onClick="reservExtraOption('ACP')"
                                 class="btn btn-primary">Accompanying</button>
                             <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add
@@ -1915,6 +1934,7 @@
 
     <?= $this->include('includes/EditCustomerPopup') ?>
     <?= $this->include('includes/SharesPopup') ?>
+    <?= $this->include('includes/SearchReservationPopup') ?>
 
 
     <div class="content-backdrop fade"></div>
@@ -2892,6 +2912,10 @@ function runInitializeConfig() {
                 var options = '<option value=\'\'>Select</option>' + option;
                 console.log(options, "options");
                 $('#' + idArray[ind]).html(options);
+                
+                if($(`#combine-popup select[name='${idArray[ind]}']`).length) {
+                    $(`#combine-popup select[name='${idArray[ind]}']`).html(options);
+                }
             });
         }
     });
@@ -3019,6 +3043,13 @@ $(document).on('click', '.getExistCust .select', function() {
             var option = '<option value="' + jsonForm['CUST_ID'] + '">' + jsonForm['NAMES'] +
                 '</option>';
             $('*#RESV_NAME').html(option).selectpicker('refresh');
+
+            if($(`#combine-popup`).is(':visible')){
+                $(`#combine-popup input[name='CUST_ID']`).val(jsonForm['CUST_ID']);
+                $(`#combine-popup select[name='CUST_TITLE']`).val(jsonForm['CUST_TITLE']);
+                $(`#combine-popup input[name='CUST_FIRST_NAME']`).val(jsonForm['CUST_FIRST_NAME']);
+                $(`#combine-popup input[name='CUST_LAST_NAME']`).val(jsonForm['CUST_LAST_NAME']);
+            }
         }
     });
 });

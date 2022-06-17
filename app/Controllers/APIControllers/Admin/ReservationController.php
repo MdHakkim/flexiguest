@@ -11,7 +11,7 @@ class ReservationController extends BaseController
 {
     use ResponseTrait;
 
-    private $ReservationModel;
+    private $Reservation;
     private $Documents;
 
     public function __construct()

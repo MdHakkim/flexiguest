@@ -2689,7 +2689,7 @@ class ApplicatioController extends BaseController
 
     public function getExistCustomer(){
         $param = ['CUSTID'=> $this->request->getPost("custId")];
-        $sql="SELECT CUST_ID,CUST_FIRST_NAME+' '+CUST_LAST_NAME NAMES FROM FLXY_CUSTOMER WHERE CUST_ID=:CUSTID:";
+        $sql="SELECT CUST_ID, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_TITLE, CUST_FIRST_NAME+' '+CUST_LAST_NAME NAMES FROM FLXY_CUSTOMER WHERE CUST_ID=:CUSTID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
