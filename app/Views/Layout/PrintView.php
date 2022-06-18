@@ -12,9 +12,7 @@
 
 <body>
 
-    <div class="invoice-print p-5">
-        <?=$this->renderSection("contentRender")?>
-    </div>
+    <?= $this->renderSection("contentRender") ?>
 
     <?= $this->include('Layout/PrintFooterScript') ?>
 
