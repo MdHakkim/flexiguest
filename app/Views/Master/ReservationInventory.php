@@ -5,8 +5,6 @@
 <!-- Content wrapper -->
 <div class="content-wrapper">
   <!-- Content -->
-
-
          
 
   <!-- Modal Window -->
@@ -186,11 +184,11 @@
                       <hr class="container-m-nx my-4" />
 
                       <!-- Filter -->
-                      <div class="mb-4">
+                      <!-- <div class="mb-4">
                         <small class="text-small text-muted text-uppercase align-middle">Filter</small>
-                      </div>
+                      </div> -->
 
-                      <div class="form-check mb-2">
+                       <!-- <div class="form-check mb-2">
                         <input
                           class="form-check-input select-all"
                           type="checkbox"
@@ -199,10 +197,10 @@
                           checked
                         />
                         <label class="form-check-label" for="selectAll">View All</label>
-                      </div>
+                      </div>  -->
 
                       <div class="app-calendar-events-filter">
-                        <div class="form-check form-check-danger mb-2">
+                        <!-- <div class="form-check form-check-danger mb-2">
                           <input
                             class="form-check-input input-filter"
                             type="checkbox"
@@ -211,7 +209,7 @@
                             checked
                           />
                           <label class="form-check-label" for="select-personal">Personal</label>
-                        </div>
+                        </div> -->
                         <div class="form-check mb-2">
                           <input
                             class="form-check-input input-filter"
@@ -220,9 +218,9 @@
                             data-value="business"
                             checked
                           />
-                          <label class="form-check-label" for="select-business">Business</label>
+                          <label class="form-check-label" for="select-business">View All</label>
                         </div>
-                        <div class="form-check form-check-warning mb-2">
+                        <!-- <div class="form-check form-check-warning mb-2">
                           <input
                             class="form-check-input input-filter"
                             type="checkbox"
@@ -231,8 +229,8 @@
                             checked
                           />
                           <label class="form-check-label" for="select-family">Family</label>
-                        </div>
-                        <div class="form-check form-check-success mb-2">
+                        </div> -->
+                        <!-- <div class="form-check form-check-success mb-2">
                           <input
                             class="form-check-input input-filter"
                             type="checkbox"
@@ -241,8 +239,8 @@
                             checked
                           />
                           <label class="form-check-label" for="select-holiday">Holiday</label>
-                        </div>
-                        <div class="form-check form-check-info">
+                        </div> -->
+                        <!-- <div class="form-check form-check-info">
                           <input
                             class="form-check-input input-filter"
                             type="checkbox"
@@ -251,7 +249,7 @@
                             checked
                           />
                           <label class="form-check-label" for="select-etc">ETC</label>
-                        </div>
+                        </div> -->
                       </div>
                     </div>
                   </div>
@@ -294,7 +292,7 @@
                               placeholder="Event Title"
                             />
                           </div>
-                          <div class="mb-3">
+                          <!-- <div class="mb-3">
                             <label class="form-label" for="eventLabel">Item Class</label>
                             <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
                               <option data-label="primary" value="Business" selected>Business</option>
@@ -303,7 +301,7 @@
                               <option data-label="success" value="Holiday">Holiday</option>
                               <option data-label="info" value="ETC">ETC</option>
                             </select>
-                          </div>
+                          </div> -->
                           <div class="mb-3">
                             <label class="form-label" for="eventStartDate">Start Date</label>
                             <input
@@ -391,10 +389,11 @@
       showInventoryItems();
       itemClassList();
       //itemInventoryClassList();
-
+      var dateToday = new Date();
       $('.dateField').datepicker({
         format: 'dd-M-yyyy',
         autoclose: true,
+        startDate: '-0m',
         onSelect: function() {
           $(this).change();
         }
@@ -777,7 +776,7 @@ let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) 
    
 
     ?>  
-  {
+  ,{
     id: '<?php echo $row['ITM_ID'] ?>',
     url: '',
     title: '<?php echo $startTime.' - '.$endTime.'  | '.$row['ITM_CODE'].' - '. $row['ITM_CODE'] ?>',

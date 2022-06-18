@@ -1,4 +1,21 @@
-<title><?=isset($title) ? $title : '';?></title>
+<!DOCTYPE html>
+
+<html
+  lang="en"
+  class="light-style layout-navbar-fixed layout-menu-fixed"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="<?=base_url('assets')?>/"
+  data-template="vertical-menu-template"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+    />
+<!-- <title><?php /*echo isset($title) ? $title : '';*/ ?></title> -->
+<title>Guest Registration Card</title>
 <meta name="description" content="" />
 
 <!-- Favicon -->
@@ -36,15 +53,6 @@
 <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 <script src="<?php echo base_url('assets/js/config.js') ?>"></script>
 
-<?php if (isset($css_to_load)) {
-        foreach ($css_to_load as $row) {
-    ?> <script type="text/javascript" src="<?php echo base_url('assets/css/' . $row); ?>"></script>
-    <?php
-        }
-    }?>
-<style>
-/* #template-customizer{
-      display: none;
-    } */
-</style>
+
 <!-- Header Script End -->
+  </head>

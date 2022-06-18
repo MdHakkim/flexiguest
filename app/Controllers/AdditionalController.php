@@ -32,8 +32,7 @@ class AdditionalController extends BaseController
     public function currency()
     {
         $data['title'] = getMethodName();
-        $data['session'] = $this->session;
-        
+        $data['session'] = $this->session;        
         return view('Master/CurrencyView', $data);
     }
 
@@ -1000,16 +999,74 @@ class AdditionalController extends BaseController
 
 
     public function registerCardPrint(){
+        $response = $this->registerCardDataExists();        
         $data['title'] = getMethodName();
         $data['js_to_load'] = "app-invoice-print.js";
+        $data['response'] = $response['data'];
         return view('Reservation/RegisterCard',$data);
 
     }
     public function registerCardPreview(){
-        $data['title'] = getMethodName();
+        $response = $this->registerCardDataExists();  
+        $data['title'] = getMethodName(); 
+        $data['response'] = $response['data'];
         return view('Reservation/RegisterCardPreview',$data);
 
     }
+
+    public function registerCardSaveDetails(){
+        $response =  $this->registerCardDataExists();
+        $responseCount =   $response['count']; 
+        echo json_encode($responseCount);
+    }
+
+    public function registerCardDataExists(){
+        $_SESSION['ARRIVAL_DATE']       = date("Y-m-d",strtotime($this->request->getPost('ARRIVAL_DATE')));
+        $_SESSION['ETA_FROM_TIME']      = $this->request->getPost('ETA_FROM_TIME');
+        $_SESSION['ETA_TO_TIME']        = $this->request->getPost('ETA_TO_TIME');
+        $_SESSION['RESV_INDIV']         = $this->request->getPost('RESV_INDIV');
+        $_SESSION['RESV_BLOCK']         = $this->request->getPost('RESV_BLOCK');
+        $_SESSION['RESV_FROM_NAME']     = $this->request->getPost('RESV_FROM_NAME');
+        $_SESSION['RESV_TO_NAME']       = $this->request->getPost('RESV_TO_NAME');
+        $_SESSION['ROOM_CLASS']         = $this->request->getPost('ROOM_CLASS');
+        $_SESSION['RATE_CODE']          = $this->request->getPost('RATE_CODE');
+        $_SESSION['MEM_TYPE']           = $this->request->getPost('MEM_TYPE');
+        $_SESSION['VIP_CODE']           = $this->request->getPost('VIP_CODE');
+        $_SESSION['IN_HOUSE_GUESTS']    = $this->request->getPost('IN_HOUSE_GUESTS');  
+        
+        $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, RESV_RATE, RESV_RM_TYPE, RESV_NAME, (SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY) RESV_COMPANY_DESC, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, (SELECT ctname FROM CITY WHERE id=CUST_CITY) CUST_CITY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_NATIONALITY) CUST_NATIONALITY_DESC, CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID";
+       
+        if ($_SESSION['ARRIVAL_DATE'] != '') {
+            $ARRIVAL_DATE = $_SESSION['ARRIVAL_DATE'];
+            $sql .= " WHERE RESV_ARRIVAL_DT LIKE '%$ARRIVAL_DATE%' ";                   
+        }
+
+        if($_SESSION['ETA_FROM_TIME'] != '' && $_SESSION['ETA_TO_TIME'] !='')        
+            $sql .= " AND (RESV_ETA BETWEEN '".$_SESSION['ETA_FROM_TIME']."' AND '".$_SESSION['ETA_TO_TIME']."')";
+        
+        else if($_SESSION['ETA_FROM_TIME'] != '')         
+            $sql .= " OR  RESV_ETA > '".$_SESSION['ETA_FROM_TIME']."'";  
+
+        else if($_SESSION['ETA_TO_TIME'] != '')         
+            $sql .= " OR RESV_ETA < '".$_SESSION['ETA_TO_TIME']."'"; 
+
+        if($_SESSION['ROOM_CLASS'] != '')         
+            $sql .= " OR RESV_ROOM_CLASS = '".$_SESSION['ROOM_CLASS']."'"; 
+        
+        if($_SESSION['RATE_CODE'] != '')         
+            $sql .= " OR RESV_RATE_CODE = '".$_SESSION['RATE_CODE']."'";
+        
+        if($_SESSION['MEM_TYPE'] != '')         
+            $sql .= " OR RESV_MEMBER_TY = '".$_SESSION['MEM_TYPE']."'";
+      
+        $response['data'] = $this->Db->query($sql)->getResultArray(); 
+        $response['count'] = $this->Db->query($sql)->getNumRows();
+
+        return $response;
+
+    }   
+
+
     public function roomClassLists()
         {
             $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
@@ -1031,6 +1088,7 @@ class AdditionalController extends BaseController
 
             return $option;
         }
+        
         public function membershipLists()
         {
             $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';

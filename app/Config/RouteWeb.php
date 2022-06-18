@@ -389,6 +389,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->get('/registerCards', 'AdditionalController::registerCards');
       $routes->get('/registerCardPrint', 'AdditionalController::registerCardPrint');
       $routes->get('/registerCardPreview', 'AdditionalController::registerCardPreview');
+      $routes->match(['post'],'/registerCardSaveDetails', 'AdditionalController::registerCardSaveDetails');
+
+      
       
       
       
