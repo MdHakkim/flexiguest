@@ -2,6 +2,196 @@
 
 <?=$this->section("contentRender")?>
 
+<style>
+body {
+    font-family: 'Helvetica';
+    font-size: 15px !important;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.mb-5 {
+    margin-bottom: 3rem !important;
+}
+
+.w-50 {
+    width: 50% !important;
+}
+
+.w-70 {
+    width: 70% !important;
+}
+
+.justify-content-between {
+    justify-content: space-between !important;
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.text-nowrap {
+    white-space: nowrap !important;
+}
+
+td, th {
+    padding: 0.625rem 1.5rem;
+    background-color: var(--bs-table-bg);
+    border-bottom-width: 1px;
+    box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg);
+}
+
+h5, .h5 {
+    font-size: 1.125rem;
+}
+
+/*
+* demo.css
+* File include item demo only specific css only
+******************************************************************************/
+
+.light-style .menu .app-brand.demo {
+    height: 64px;
+}
+
+.dark-style .menu .app-brand.demo {
+    height: 64px;
+}
+
+.app-brand-logo.demo {
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    display: -ms-flexbox;
+    display: flex;
+    width: 30px;
+    height: 30px;
+}
+
+.app-brand-logo.demo svg {
+    width: 1.7rem;
+    height: 1.7rem;
+}
+
+.app-brand-text.demo {
+    font-size: 1.75rem;
+    letter-spacing: -0.45px;
+}
+
+/* ! For .layout-navbar-fixed added fix padding top tpo .layout-page */
+.layout-navbar-fixed .layout-wrapper:not(.layout-without-menu) .layout-page {
+    padding-top: 64px !important;
+}
+
+/* Navbar page z-index issue solution */
+.content-wrapper .navbar {
+    z-index: auto;
+}
+
+/*
+* Content
+******************************************************************************/
+
+.demo-blocks>* {
+    display: block !important;
+}
+
+.demo-inline-spacing>* {
+    margin: 1rem 0.375rem 0 0 !important;
+}
+
+/* ? .demo-vertical-spacing class is used to have vertical margins between elements. To remove margin-top from the first-child, use .demo-only-element class with .demo-vertical-spacing class. For example, we have used this class in forms-input-groups.html file. */
+.demo-vertical-spacing>* {
+    margin-top: 1rem !important;
+    margin-bottom: 0 !important;
+}
+
+.demo-vertical-spacing.demo-only-element> :first-child {
+    margin-top: 0 !important;
+}
+
+.demo-vertical-spacing-lg>* {
+    margin-top: 1.875rem !important;
+    margin-bottom: 0 !important;
+}
+
+.demo-vertical-spacing-lg.demo-only-element> :first-child {
+    margin-top: 0 !important;
+}
+
+.demo-vertical-spacing-xl>* {
+    margin-top: 5rem !important;
+    margin-bottom: 0 !important;
+}
+
+.demo-vertical-spacing-xl.demo-only-element> :first-child {
+    margin-top: 0 !important;
+}
+
+.rtl-only {
+    display: none !important;
+    text-align: left !important;
+    direction: ltr !important;
+}
+
+[dir='rtl'] .rtl-only {
+    display: block !important;
+}
+
+/*
+* Layout demo
+******************************************************************************/
+
+.layout-demo-wrapper {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+.layout-demo-placeholder img {
+    width: 900px;
+}
+
+.layout-demo-info {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+html,
+body {
+    background: #fff !important;
+}
+
+body> :not(.invoice-print) {
+    display: none !important;
+}
+
+.invoice-print {
+    min-width: 768px !important;
+    font-size: 15px !important;
+}
+
+.invoice-print svg {
+    fill: #677788 !important;
+}
+
+.invoice-print * {
+    border-color: rgba(38, 60, 85, 0.5) !important;
+    color: #677788 !important;
+}
+</style>
+
 <!-- Doc Header  -->
 <div class="d-flex flex-row justify-content-between">
     <div class="">
@@ -205,9 +395,9 @@ v14.8C5,178.5,15.2,164.2,28,154.9z"></path>
 
 <hr class="mb-5" />
 
-<div class="row d-flex justify-content-between mb-4">
-    <div class="col-sm-6 w-50 table-responsive text-nowrap">
-        <table class="table table-bordered">
+<div class="row">
+    <div class="col-sm-6 w-50 table-responsive text-nowrap" style="float: left; display: inline;">
+        <table class="table table-bordered" border="1" style="border-collapse:collapse">
             <tbody>
                 <tr>
                     <td class="pe-3"><b>Last:</b></td>
@@ -232,8 +422,8 @@ v14.8C5,178.5,15.2,164.2,28,154.9z"></path>
             </tbody>
         </table>
     </div>
-    <div class="col-sm-6 w-50">
-        <table class="table table-bordered">
+    <div class="col-sm-6 w-50" style="float: right; display: inline;">
+        <table class="table table-bordered" border="1" style="border-collapse:collapse">
             <tbody>
                 <tr>
                     <td class="pe-3"><b>Nationality:</b></td>
@@ -260,10 +450,10 @@ v14.8C5,178.5,15.2,164.2,28,154.9z"></path>
     </div>
 </div>
 
-<div class="table-responsive mb-4">
+<div class="table-responsive mb-4" style="padding-top: 30px;">
 
     <h5>Address Information:</h5>
-    <table class="table table-bordered mb-2">
+    <table class="table table-bordered mb-2" border="1" style="border-collapse:collapse; width: 94%;">
         <thead>
             <tr>
                 <th>Address1</th>
@@ -287,7 +477,7 @@ v14.8C5,178.5,15.2,164.2,28,154.9z"></path>
     </table>
 
     <div class="col-sm-8 w-70 table-responsive text-nowrap">
-        <table class="table table-bordered">
+        <table class="table table-bordered" border="1" style="border-collapse:collapse">
             <thead>
                 <tr>
                     <th>Postal Code</th>
@@ -310,7 +500,7 @@ v14.8C5,178.5,15.2,164.2,28,154.9z"></path>
     <div class="col-sm-7 w-70 table-responsive text-nowrap">
 
         <h5>Communication Information:</h5>
-        <table class="table table-bordered">
+        <table class="table table-bordered" border="1" style="border-collapse:collapse">
             <thead>
                 <tr>
                     <th>Type</th>

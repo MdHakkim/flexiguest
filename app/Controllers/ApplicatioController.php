@@ -616,7 +616,7 @@ class ApplicatioController extends BaseController
         echo json_encode($response);
     }
 
-    function printProfile($id = 0)
+    function getProfileDetails($id = 0)
     {
         $param = ['SYSID'=> $id];
         $sql = "SELECT  CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_LANG,CUST_TITLE,
@@ -629,14 +629,41 @@ class ApplicatioController extends BaseController
                         
                 FROM FLXY_CUSTOMER WHERE CUST_ID=:SYSID:";
 
-        $num = $this->Db->query($sql,$param)->getNumRows();
-        if(!$num)
+        $data = $this->Db->query($sql,$param)->getRowArray();
+
+        return $data;
+    }
+
+    function printProfile($id = 0)
+    {
+        $data = $this->getProfileDetails($id);
+        if(!$data)
             return redirect()->to(base_url('customer'));        
                 
-        $data = $this->Db->query($sql,$param)->getRowArray();
         $data['title'] = getMethodName();
+        $data['base_url'] = '/FlexiGuest/assets/';
+        $data['base_path'] = '/FlexiGuest/assets';
 
         return view('Reservation/PrintProfile', $data);
+    }    
+ 
+    function exportProfile($id = 0){
+
+        $data = $this->getProfileDetails($id);
+        if(!$data)
+            return redirect()->to(base_url('customer'));
+        
+            $data['base_url'] = '';
+            $data['base_path'] = '';
+            
+        $dompdf = new \Dompdf\Dompdf(); 
+        //$dompdf->getOptions()->setChroot('/FlexiGuest');
+
+        $dompdf->setBasePath('/FlexiGuest/assets');
+        $dompdf->loadHtml(view('Reservation/PrintProfile', $data));
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $dompdf->stream('Profile_Data_Export_'.$id.'_'.date('Y-m-d-H-i-s').'.pdf');
     }
 
     function getSupportingLov(){
