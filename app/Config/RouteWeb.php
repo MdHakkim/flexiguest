@@ -32,7 +32,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/reservationChangesView', 'ApplicatioController::ReservationChangesView');
     
     $routes->get('reservation/shares/get-reservation-details', 'ReservationController::getReservationDetails');
-    $routes->post('reservation/shares/create-reservation', 'ReservationController::createReservation');
+    $routes->post('reservation/shares/create-reservation', 'ReservationController::sharesCreateReservation');
+    $routes->post('reservation/shares/add-share-reservations', 'ReservationController::addShareReservations');
+    $routes->post('reservation/shares/break-share-reservation', 'ReservationController::breakShareReservation');
     $routes->post('reservation/search-reservation', 'ReservationController::searchReservation');
 
     // $routes->match(['get'],'/testingApi/(:segment)', 'ApplicatioController::triggerReservationEmail/$1');

@@ -4,7 +4,7 @@
 
             <div class="modal-header">
                 <h5 class="modal-title">Search Reservation</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
@@ -12,17 +12,17 @@
                     <div class="row">
 
                         <div class="col-md-3 mb-2">
-                            <lable class="form-lable">First Name</lable>
-                            <input type="text" name="CUST_LAST_NAME" class="form-control" placeholder="Last Name" />
-                        </div>
-
-                        <div class="col-md-3 mb-2">
-                            <lable class="form-lable">Last Name</lable>
+                            <label class="form-label">First Name</label>
                             <input type="text" name="CUST_FIRST_NAME" class="form-control" placeholder="First Name" />
                         </div>
 
+                        <div class="col-md-3 mb-2">
+                            <label class="form-label">Last Name</label>
+                            <input type="text" name="CUST_LAST_NAME" class="form-control" placeholder="Last Name" />
+                        </div>
+
                         <div class="col-md-2 mb-2">
-                            <lable class="form-lable">Room No</lable>
+                            <label class="form-label">Room No</label>
                             <input type="text" name="RESV_ROOM" class="form-control" placeholder="Room No" />
                         </div>
 
@@ -55,12 +55,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- <div class="modal-footer profileCreate">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" onClick="submitForm('customerForm','C',event)"
-                        class="btn btn-primary">Save</button>
-                </div> -->
         </div>
     </div>
 </div>
@@ -79,6 +73,7 @@
 
     function searchReservation() {
         let form_data = new FormData($(search_reservation_form_id)[0]);
+        form_data.append('current_reservation_id', ressysId);
 
         $.ajax({
             url: '<?= base_url('reservation/search-reservation') ?>',
@@ -89,37 +84,42 @@
             success: function(response) {
                 if (response['SUCCESS'] == 200) {
                     let output = response['RESPONSE']['OUTPUT'];
-                    $(`${search_reservation_popup_id} tbody`).html(output.html);
+                    $(`${search_reservation_popup_id} tbody`).html(output.searched_reservations);
                 }
             }
         });
     }
 
     $(document).on('click', `${search_reservation_popup_id} .select-reservation .select`, function() {
-        $(`${search_reservation_popup_id} .select-reservation`).removeClass('activeTr');
+        $(`${search_reservation_popup_id} .select-reservation`).removeClass('active-tr');
 
         $(this).parent().addClass('active-tr');
-
         reservation_id = $(this).parent().attr('data_sysid');
 
         $.ajax({
             url: '<?= base_url('reservation/search-reservation') ?>',
             type: "post",
             data: {
-                reservation_id
+                "RESV_ID": reservation_id,
+                'current_reservation_id': ressysId,
             },
-            dataType: 'json',
+            headers: {'X-Requested-With': 'XMLHttpRequest'},
+            dataType:'json',
             success: function(response) {
                 if (response['SUCCESS'] == 200) {
                     hideSearchReservationPopup();
 
+                    share_reservation = response.RESPONSE.OUTPUT;
                     let reservation = response.RESPONSE.OUTPUT.reservations[0];
-
+                    
                     if ($(`#combine-popup`).is(':visible')) {
                         $(`#combine-popup #reservation-tab input[name='RESV_ID']`).val(reservation['RESV_ID']);
                         $(`#combine-popup #reservation-tab select[name='CUST_TITLE']`).val(reservation['CUST_TITLE']);
                         $(`#combine-popup #reservation-tab input[name='CUST_FIRST_NAME']`).val(reservation['CUST_FIRST_NAME']);
                         $(`#combine-popup #reservation-tab input[name='CUST_LAST_NAME']`).val(reservation['CUST_LAST_NAME']);
+                        $(`#combine-popup #reservation-tab input[name='RESV_ADULTS']`).val(reservation['RESV_ADULTS']);
+                        $(`#combine-popup #reservation-tab input[name='RESV_CHILDREN']`).val(reservation['RESV_CHILDREN']);
+                        $(`#combine-popup #reservation-tab select[name='RESV_PAYMENT_TYPE']`).val(reservation['RESV_PAYMENT_TYPE']).trigger('change');
                     }
                 }
             }

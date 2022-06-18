@@ -79,7 +79,7 @@
                 <button type="button" class="btn btn-danger break-share-btn">Break Share</button>
                 <button type="button" class="btn btn-primary reservation-btn editReserWindow">Reservation</button>
 
-                <button type="button" class="btn btn-success share-save-btn">Save</button>
+                <button type="button" class="btn btn-success" onclick="addShareReservations()">Save</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -95,177 +95,177 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                    <div class="row g-3">
+                <div class="row g-3">
 
-                        <div class="card">
-                            
-                            <div class="card-header border-bottom">
-                                <ul class="nav nav-tabs card-header-tabs" role="tablist">
-                                    <li class="nav-item">
-                                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-tab" role="tab" aria-selected="true">
-                                            Profile
-                                        </button>
-                                    </li>
+                    <div class="card">
 
-                                    <li class="nav-item">
-                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reservation-tab" role="tab" aria-selected="false">
-                                            Reservation
-                                        </button>
-                                    </li>
-                                </ul>
+                        <div class="card-header border-bottom">
+                            <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-tab" role="tab" aria-selected="true">
+                                        Profile
+                                    </button>
+                                </li>
+
+                                <li class="nav-item">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reservation-tab" role="tab" aria-selected="false">
+                                        Reservation
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="tab-content">
+
+                            <div class="tab-pane fade show active" id="profile-tab" role="tabpanel">
+                                <form id="share-by-profile-form">
+                                    <input type="hidden" name="CUST_ID" />
+
+                                    <div class="row g-3">
+
+                                        <div class="col-md-6">
+                                            <lable class="form-lable">Title / First Name</lable>
+                                            <div class="input-group">
+                                                <select name="CUST_TITLE" class="form-select" data-allow-clear="true" disabled>
+                                                    <option value="">Select</option>
+                                                    <option value="Mr.">Mr.</option>
+                                                    <option value="Ms.">Ms.</option>
+                                                    <option value="Shiekh.">Shiekh.</option>
+                                                    <option value="Shiekha.">Shiekha.</option>
+                                                    <option value="Dr.">Dr.</option>
+                                                    <option value="Ambassador.">Ambassador.</option>
+                                                    <option value="Madam Ambassadress">Madam Ambassadress</option>
+                                                    <option value="Prince.">Prince.</option>
+                                                    <option value="Princess.">Princess.</option>
+                                                    <option value="President">President</option>
+                                                    <option value="Prof.">Prof.</option>
+                                                    <option value="Minister.">Minister.</option>
+                                                    <option value="Admiral">Admiral</option>
+                                                    <option value="Lieutenant.">Lieutenant.</option>
+                                                    <option value="Consul.">Consul.</option>
+                                                </select>
+
+                                                <input type="text" name="CUST_FIRST_NAME" class="form-control" placeholder="First Name" style="flex-basis: fit-content;" readonly />
+
+                                                <div class="invalid-feedback">
+                                                    Title required can't empty.
+                                                </div>
+
+                                                <button type="button" onClick="childReservation('C')" class="btn flxi_btn btn-sm btn-primary">
+                                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Last Name</label>
+                                            <input type="text" name="CUST_LAST_NAME" class="form-control" placeholder="Last Name" readonly />
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Adult</label>
+                                            <input type="number" name="RESV_ADULTS" class="form-control" />
+                                        </div>
+
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Children</label>
+                                            <input type="number" name="RESV_CHILDREN" class="form-control" />
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Reservation Type</label>
+                                            <select name="RESV_RESRV_TYPE" class="select2 form-select" data-allow-clear="true">
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Payment Type</label>
+                                            <select name="RESV_PAYMENT_TYPE" class="select2 form-select" data-allow-clear="true">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="pt-4 text-right">
+                                        <button class="btn btn-primary me-1 me-sm-3" onclick="submitShareByProfileForm()">Submit</button>
+                                        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    </div>
+                                </form>
                             </div>
 
-                            <div class="tab-content">
+                            <div class="tab-pane fade" id="reservation-tab" role="tabpanel">
+                                <form id="share-by-reservation-form">
+                                    <input type="hidden" name="RESV_ID" />
 
-                                <div class="tab-pane fade show active" id="profile-tab" role="tabpanel">
-                                    <form id="share-by-profile-form">
-                                        <input type="hidden" name="CUST_ID"/>
+                                    <div class="row g-3">
 
-                                        <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <lable class="form-lable">Title / First Name</lable>
+                                            <div class="input-group">
+                                                <select name="CUST_TITLE" class="form-select" data-allow-clear="true" disabled>
+                                                    <option value="">Select</option>
+                                                    <option value="Mr.">Mr.</option>
+                                                    <option value="Ms.">Ms.</option>
+                                                    <option value="Shiekh.">Shiekh.</option>
+                                                    <option value="Shiekha.">Shiekha.</option>
+                                                    <option value="Dr.">Dr.</option>
+                                                    <option value="Ambassador.">Ambassador.</option>
+                                                    <option value="Madam Ambassadress">Madam Ambassadress</option>
+                                                    <option value="Prince.">Prince.</option>
+                                                    <option value="Princess.">Princess.</option>
+                                                    <option value="President">President</option>
+                                                    <option value="Prof.">Prof.</option>
+                                                    <option value="Minister.">Minister.</option>
+                                                    <option value="Admiral">Admiral</option>
+                                                    <option value="Lieutenant.">Lieutenant.</option>
+                                                    <option value="Consul.">Consul.</option>
+                                                </select>
 
-                                            <div class="col-md-6">
-                                                <lable class="form-lable">Title / First Name</lable>
-                                                <div class="input-group">
-                                                    <select name="CUST_TITLE" class="form-select" data-allow-clear="true" disabled>
-                                                        <option value="">Select</option>
-                                                        <option value="Mr.">Mr.</option>
-                                                        <option value="Ms.">Ms.</option>
-                                                        <option value="Shiekh.">Shiekh.</option>
-                                                        <option value="Shiekha.">Shiekha.</option>
-                                                        <option value="Dr.">Dr.</option>
-                                                        <option value="Ambassador.">Ambassador.</option>
-                                                        <option value="Madam Ambassadress">Madam Ambassadress</option>
-                                                        <option value="Prince.">Prince.</option>
-                                                        <option value="Princess.">Princess.</option>
-                                                        <option value="President">President</option>
-                                                        <option value="Prof.">Prof.</option>
-                                                        <option value="Minister.">Minister.</option>
-                                                        <option value="Admiral">Admiral</option>
-                                                        <option value="Lieutenant.">Lieutenant.</option>
-                                                        <option value="Consul.">Consul.</option>
-                                                    </select>
+                                                <input type="text" name="CUST_FIRST_NAME" class="form-control" placeholder="First Name" style="flex-basis: fit-content;" readonly />
 
-                                                    <input type="text" name="CUST_FIRST_NAME" class="form-control" placeholder="First Name" style="flex-basis: fit-content;" readonly/>
-
-                                                    <div class="invalid-feedback">
-                                                        Title required can't empty.
-                                                    </div>
-
-                                                    <button type="button" onClick="childReservation('C')" class="btn flxi_btn btn-sm btn-primary">
-                                                        <i class="fa fa-search" aria-hidden="true"></i>
-                                                    </button>
+                                                <div class="invalid-feedback">
+                                                    Title required can't empty.
                                                 </div>
-                                            </div>
 
-                                            <div class="col-md-6">
-                                                <label class="form-label">Last Name</label>
-                                                <input type="text" name="CUST_LAST_NAME" class="form-control" placeholder="Last Name" readonly/>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label">Adult</label>
-                                                <input type="number" name="RESV_ADULTS" class="form-control" />
-                                            </div>
-
-
-                                            <div class="col-md-6">
-                                                <label class="form-label">Children</label>
-                                                <input type="number" name="RESV_CHILDREN" class="form-control" />
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label">Reservation Type</label>
-                                                <select name="RESV_RESRV_TYPE" class="select2 form-select" data-allow-clear="true">
-                                                </select>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label">Payment Type</label>
-                                                <select name="RESV_PAYMENT_TYPE" class="select2 form-select" data-allow-clear="true">
-                                                </select>
+                                                <button type="button" onClick="showSearchReservationPopup()" class="btn flxi_btn btn-sm btn-primary">
+                                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                                </button>
                                             </div>
                                         </div>
 
-                                        <div class="pt-4 text-right">
-                                            <button class="btn btn-primary me-1 me-sm-3" onclick="submitShareByProfileForm()">Submit</button>
-                                            <button class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
-                                        </div>
-                                    </form>
-                                </div>
-
-                                <div class="tab-pane fade" id="reservation-tab" role="tabpanel">
-                                    <form id="share-by-reservation-form">
-                                        <input type="hidden" name="RESV_ID"/>
-
-                                        <div class="row g-3">
-                                            
-                                            <div class="col-md-6">
-                                                <lable class="form-lable">Title / First Name</lable>
-                                                <div class="input-group">
-                                                    <select name="CUST_TITLE" class="form-select" data-allow-clear="true" disabled>
-                                                        <option value="">Select</option>
-                                                        <option value="Mr.">Mr.</option>
-                                                        <option value="Ms.">Ms.</option>
-                                                        <option value="Shiekh.">Shiekh.</option>
-                                                        <option value="Shiekha.">Shiekha.</option>
-                                                        <option value="Dr.">Dr.</option>
-                                                        <option value="Ambassador.">Ambassador.</option>
-                                                        <option value="Madam Ambassadress">Madam Ambassadress</option>
-                                                        <option value="Prince.">Prince.</option>
-                                                        <option value="Princess.">Princess.</option>
-                                                        <option value="President">President</option>
-                                                        <option value="Prof.">Prof.</option>
-                                                        <option value="Minister.">Minister.</option>
-                                                        <option value="Admiral">Admiral</option>
-                                                        <option value="Lieutenant.">Lieutenant.</option>
-                                                        <option value="Consul.">Consul.</option>
-                                                    </select>
-
-                                                    <input type="text" name="CUST_FIRST_NAME" class="form-control" placeholder="First Name" style="flex-basis: fit-content;" readonly/>
-
-                                                    <div class="invalid-feedback">
-                                                        Title required can't empty.
-                                                    </div>
-
-                                                    <button type="button" onClick="showSearchReservationPopup()" class="btn flxi_btn btn-sm btn-primary">
-                                                        <i class="fa fa-search" aria-hidden="true"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label">Last Name</label>
-                                                <input type="text" name="CUST_LAST_NAME" class="form-control" placeholder="Last Name" readonly/>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label">Adult</label>
-                                                <input type="number" name="RESV_ADULTS" class="form-control" readonly/>
-                                            </div>
-
-
-                                            <div class="col-md-6">
-                                                <label class="form-label">Children</label>
-                                                <input type="number" name="RESV_CHILDREN" class="form-control" readonly/>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label">Payment Type</label>
-                                                <select name="RESV_PAYMENT_TYPE" class="select2 form-select" data-allow-clear="true">
-                                                </select>
-                                            </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Last Name</label>
+                                            <input type="text" name="CUST_LAST_NAME" class="form-control" placeholder="Last Name" readonly />
                                         </div>
 
-                                        <div class="pt-4 text-right">
-                                            <button class="btn btn-primary me-1 me-sm-3" onclick="submitShareByReservationForm()">Submit</button>
-                                            <button class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Adult</label>
+                                            <input type="number" name="RESV_ADULTS" class="form-control" readonly />
                                         </div>
-                                    </form>
-                                </div>
 
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Children</label>
+                                            <input type="number" name="RESV_CHILDREN" class="form-control" readonly />
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label class="form-label">Payment Type</label>
+                                            <select name="RESV_PAYMENT_TYPE" class="select2 form-select" data-allow-clear="true">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="pt-4 text-right">
+                                        <button class="btn btn-primary me-1 me-sm-3" onclick="submitShareByReservationForm()">Submit</button>
+                                        <button class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    </div>
+                                </form>
                             </div>
+
                         </div>
                     </div>
+                </div>
             </div>
             <!-- <div class="modal-footer">
                 <button type="button" class="btn btn-success combine-save-btn">Save</button>
@@ -277,18 +277,29 @@
 
 
 <script>
-    // let spform_id = "#shares-popup form";
+    let share_popup_id = "#shares-popup";
     var share_by_profile_form_id = "#share-by-profile-form";
+    var share_by_reservation_form_id = "#share-by-reservation-form";
+    var share_reservation = false;
 
     // disable button if reservation is not shared
     function disableButtons() {
         $('.entire-btn').prop('disabled', true);
         $('.split-btn').prop('disabled', true);
         $('.full-btn').prop('disabled', true);
-        $('.break-share-btn').prop('disabled', true);
+        // $('.break-share-btn').prop('disabled', true);
     }
 
-    function sharesPopup() {
+    function displaySharePopup() {
+        getReservationDetails();
+        $("#shares-popup").modal('show');
+    }
+
+    function hideSharePopup() {
+        $("#shares-popup").modal('hide');
+    }
+
+    function getReservationDetails() {
         // ressysId, roomType, roomTypedesc;
         let data = {
             'reservation_id': ressysId
@@ -309,8 +320,6 @@
                 }
             }
         });
-
-        $("#shares-popup").modal('show');
     }
 
     function changeReservationId(e, reservation_id) {
@@ -318,15 +327,25 @@
         $(e).addClass('active-tr');
         // ressysId = reservation_id;
         setReservationBtnAttr(reservation_id);
+        setBreakShareBtnAttr(reservation_id);
     }
 
     function setReservationBtnAttr(reservation_id) {
         $('#shares-popup .reservation-btn').attr('data_sysid', reservation_id);
     }
 
-    function combinePopup() {
+    
+    function setBreakShareBtnAttr(reservation_id) {
+        $('#shares-popup .break-share-btn').attr('data_sysid', reservation_id);
+    }
+
+    function displayCombinePopup() {
         runInitializeConfig();
         $("#combine-popup").modal('show');
+    }
+
+    function hideCombinePopup() {
+        $("#combine-popup").modal('hide');
     }
 
     function submitShareByProfileForm() {
@@ -347,32 +366,75 @@
                     });
 
                     showModalAlert('error', errors);
-                }
-                else{
+                } else {
                     let output = response['RESPONSE']['OUTPUT'];
-                    $('.nightly_rate_details').append(output['nightly_rate_details']);
+                    $('.nightly-rate-details').append(output['nightly_rate_details']);
                     $('.reservation-arrival-details').append(output['reservation_arrival_details']);
                 }
             }
         });
     }
 
-    function submitShareByReservationForm(){
-        
+    function submitShareByReservationForm() {
+        hideCombinePopup();
+
+        if (share_reservation) {
+            $('.nightly-rate-details').append(share_reservation['nightly_rate_details']);
+            $('.reservation-arrival-details').append(share_reservation['reservation_arrival_details']);
+        }
     }
+
+    function addShareReservations() {
+        let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
+            return $(this).val();
+        }).get();
+
+        $.ajax({
+            url: '<?= base_url('reservation/shares/add-share-reservations') ?>',
+            type: 'post',
+            data: {
+                reservation_ids
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response['SUCCESS'] == 200){
+                    showModalAlert('success', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
+                }
+            }
+        });
+    }
+
+    $(document).on('click', '.break-share-btn', function() {
+        let reservation_id = $(this).attr('data_sysid');
+
+        $.ajax({
+            url: '<?= base_url('reservation/shares/break-share-reservation') ?>',
+            type: 'post',
+            data: {
+                reservation_id
+            },
+            dataType: 'json',
+            success: function(response) {
+                if(response['SUCCESS'] == 200){
+                    showModalAlert('success', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
+                    getReservationDetails();
+                }
+            }
+        });
+    });
 
     $(document).ready(function() {
         disableButtons();
         setReservationBtnAttr();
 
-        $(".shares-btn").click(sharesPopup);
-        $(".combine-btn").click(combinePopup);
+        $(".shares-btn").click(displaySharePopup);
+        $(".combine-btn").click(displayCombinePopup);
 
         $('#combine-popup li.nav-item').click(function(e) {
             e.preventDefault();
         });
 
-        $(share_by_profile_form_id).submit(function(e) {
+        $(`${share_by_profile_form_id}, ${share_by_reservation_form_id}`).submit(function(e) {
             e.preventDefault();
         });
 

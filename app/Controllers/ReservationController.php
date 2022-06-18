@@ -2,9 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Libraries\ServerSideDataTable;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\Reservation;
+use App\Models\ShareReservations;
 
 class ReservationController extends BaseController
 {
@@ -13,58 +13,76 @@ class ReservationController extends BaseController
 
     private $DB;
     private $Reservation;
+    private $ShareReservations;
 
     public function __construct()
     {
         $this->DB = \Config\Database::connect();
         $this->Reservation = new Reservation();
+        $this->ShareReservations = new ShareReservations();
     }
 
     public function getReservationDetails()
     {
         $reservation_id = $this->request->getvar('reservation_id');
+        $reservation_ids[] = $reservation_id;
 
-        $reservation = $this->Reservation
+        $share_reservations = $this->ShareReservations->where('FSR_RESERVATION_ID', $reservation_id)->findColumn('FSR_OTHER_RESERVATION_ID');
+        if ($share_reservations)
+            $reservation_ids = array_merge($reservation_ids, $share_reservations);
+
+        $reservations = $this->Reservation
             ->join('FLXY_CUSTOMER as fc', 'FLXY_RESERVATION.RESV_NAME = fc.CUST_ID', 'left')
             ->join('FLXY_ROOM as fr', 'FLXY_RESERVATION.RESV_ROOM = fr.RM_NO', 'left')
-            ->where('RESV_ID', $reservation_id)
-            ->first();
+            ->whereIn('RESV_ID', $reservation_ids)
+            ->findAll();
 
-        $output['room_details'] = <<<EOD
-            <tr>
-                <td>{$reservation['RM_NO']}</td>
-                <td>{$reservation['RM_DESC']}</td>
-                <td>{$reservation['RESV_ARRIVAL_DT']}</td>
-                <td>{$reservation['RESV_DEPARTURE']}</td>
-            </tr>
-        EOD;
+        $output['room_details'] = $output['nightly_rate_details'] = $output['reservation_arrival_details'] = '';
 
-        $output['nightly_rate_details'] = <<<EOD
-            <tr>
-                <td>{$reservation['RESV_RATE']}</td>
-                <td>{$reservation['RESV_RATE']}</td>
-                <td>{$reservation['RESV_RATE']}</td>
-                <td>{$reservation['RESV_RATE']}</td>
-            </tr>
-        EOD;
+        foreach ($reservations as $reservation) {
+            if (empty($output['room_details'])) {
+                $output['room_details'] = <<<EOD
+                    <tr>
+                        <td>{$reservation['RM_NO']}</td>
+                        <td>{$reservation['RM_DESC']}</td>
+                        <td>{$reservation['RESV_ARRIVAL_DT']}</td>
+                        <td>{$reservation['RESV_DEPARTURE']}</td>
+                    </tr>
+                EOD;
+            }
 
-        $output['reservation_arrival_details'] = <<<EOD
-            <tr class="active-tr" onclick="changeReservationId(this, {$reservation['RESV_ID']})">
-                <td>{$reservation['CUST_FIRST_NAME']} {$reservation['CUST_LAST_NAME']}</td>
-                <td>{$reservation['RESV_ARRIVAL_DT']}</td>
-                <td>{$reservation['RESV_DEPARTURE']}</td>
-                <td>{$reservation['RESV_STATUS']}</td>
-                <td>{$reservation['RESV_ADULTS']}</td>
-                <td>{$reservation['RESV_CHILDREN']}</td>
-                <td>{$reservation['RESV_RATE_CODE']}</td>
-                <td>{$reservation['RESV_RATE']}</td>
-            </tr>
-        EOD;
+            $output['nightly_rate_details'] .= <<<EOD
+                <tr>
+                    <td>{$reservation['RESV_RATE']}</td>
+                    <td>{$reservation['RESV_RATE']}</td>
+                    <td>{$reservation['RESV_RATE']}</td>
+                    <td>{$reservation['RESV_RATE']}</td>
+                </tr>
+            EOD;
+
+            $class_name = '';
+            if (empty($output['reservation_arrival_details']))
+                $class_name = 'active-tr';
+
+            $output['reservation_arrival_details'] .= <<<EOD
+                <tr class="$class_name" onclick="changeReservationId(this, {$reservation['RESV_ID']})">
+                    <input type="hidden" name="share_reservations[]" value="{$reservation['RESV_ID']}"/>
+                    <td>{$reservation['CUST_FIRST_NAME']} {$reservation['CUST_LAST_NAME']}</td>
+                    <td>{$reservation['RESV_ARRIVAL_DT']}</td>
+                    <td>{$reservation['RESV_DEPARTURE']}</td>
+                    <td>{$reservation['RESV_STATUS']}</td>
+                    <td>{$reservation['RESV_ADULTS']}</td>
+                    <td>{$reservation['RESV_CHILDREN']}</td>
+                    <td>{$reservation['RESV_RATE_CODE']}</td>
+                    <td>{$reservation['RESV_RATE']}</td>
+                </tr>
+            EOD;
+        }
 
         return $this->respond(responseJson(200, false, ['msg' => 'reservation details'], $output));
     }
 
-    public function createReservation()
+    public function sharesCreateReservation()
     {
         $user_id = session()->get('USR_ID');
 
@@ -130,6 +148,7 @@ class ReservationController extends BaseController
 
         $output['reservation_arrival_details'] = <<<EOD
             <tr onclick="changeReservationId(this, {$reservation['RESV_ID']})">
+                <input type="hidden" name="share_reservations[]" value="{$reservation['RESV_ID']}"/>
                 <td>{$reservation['CUST_FIRST_NAME']} {$reservation['CUST_LAST_NAME']}</td>
                 <td>{$reservation['RESV_ARRIVAL_DT']}</td>
                 <td>{$reservation['RESV_DEPARTURE']}</td>
@@ -147,27 +166,45 @@ class ReservationController extends BaseController
 
     public function searchReservation()
     {
-        $reservation_id = $this->request->getVar('RESV_ID');
+        $reservation_id = $this->request->getVar('RESV_ID'); // when searching for single reservation using RESV_ID (pass only this param)
+
+        // for reservation search filter
+        $current_reservation_id = $this->request->getVar('current_reservation_id');
         $first_name = $this->request->getVar('CUST_FIRST_NAME');
         $last_name = $this->request->getVar('CUST_LAST_NAME');
         $room_no = $this->request->getVar('RESV_ROOM');
 
-        $params = ['room_no' => $room_no, 'first_name' => $first_name, 'last_name' => $last_name, 'reservation_id' => $reservation_id];
+        $params = [
+            'room_no' => $room_no, 'first_name' => $first_name, 'last_name' => $last_name,
+            'reservation_id' => $reservation_id, 'current_reservation_id' => $current_reservation_id
+        ];
         $reservations = $this->DB->query(
             "select fr.*, fc.CUST_TITLE, fc.CUST_FIRST_NAME, fc.CUST_LAST_NAME from FLXY_RESERVATION fr
                 left join FLXY_CUSTOMER fc on fr.RESV_NAME = fc.CUST_ID 
-                where fr.RESV_ROOM = :room_no: 
+                where fr.RESV_ID != :current_reservation_id:
+                    and (fr.RESV_ROOM = :room_no: 
                     or fr.RESV_ID = :reservation_id:
-                    or fr.RESV_NAME in (select CUST_ID from FLXY_CUSTOMER where CUST_FIRST_NAME = :first_name: or CUST_LAST_NAME = :last_name:)",
+                    or fr.RESV_NAME in (select CUST_ID from FLXY_CUSTOMER where CUST_FIRST_NAME = :first_name: or CUST_LAST_NAME = :last_name:))",
             $params
         )->getResultArray();
-        
-        $output['reservation'] = $reservations;
-        $output['html'] = '';
+
+        $output['reservations'] = $reservations;
+        $output['searched_reservations'] = $output['nightly_rate_details'] = $output['reservation_arrival_details'] = '';
         foreach ($reservations as $reservation) {
             if ($reservation_id) { // when reservation is selected from search reservation popup
-                $output['html'] .= <<<EOD
+
+                $output['nightly_rate_details'] = <<<EOD
+                    <tr>
+                        <td>{$reservation['RESV_RATE']}</td>
+                        <td>{$reservation['RESV_RATE']}</td>
+                        <td>{$reservation['RESV_RATE']}</td>
+                        <td>{$reservation['RESV_RATE']}</td>
+                    </tr>
+                EOD;
+
+                $output['reservation_arrival_details'] .= <<<EOD
                     <tr onclick="changeReservationId(this, {$reservation['RESV_ID']})">
+                        <input type="hidden" name="share_reservations[]" value="{$reservation['RESV_ID']}"/>
                         <td>{$reservation['CUST_FIRST_NAME']} {$reservation['CUST_LAST_NAME']}</td>
                         <td>{$reservation['RESV_ARRIVAL_DT']}</td>
                         <td>{$reservation['RESV_DEPARTURE']}</td>
@@ -179,8 +216,8 @@ class ReservationController extends BaseController
                     </tr>
                 EOD;
             } else {
-                $output['html'] .= <<<EOD
-                    <tr class="select-reservation">
+                $output['searched_reservations'] .= <<<EOD
+                    <tr class="select-reservation" data_sysid="{$reservation['RESV_ID']}">
                         <td class="editReserWindow" data_sysid="{$reservation['RESV_ID']}">
                             <i class="fa-solid fa-user-pen"></i>
                         </td>
@@ -196,7 +233,7 @@ class ReservationController extends BaseController
             }
         }
 
-        if (empty($output['html']) && empty($reservation_id)) {
+        if (empty($output['searched_reservations']) && empty($reservation_id)) {
             $output['html'] = <<<EOD
                 <tr>
                     <li>No Record Found!</li>
@@ -206,5 +243,38 @@ class ReservationController extends BaseController
 
 
         return $this->respond(responseJson(200, false, ['msg' => 'reservations'], $output));
+    }
+
+    public function addShareReservations()
+    {
+        $user_id = session()->get('USR_ID');
+
+        $reservation_ids = $this->request->getVar('reservation_ids');
+        $this->ShareReservations->whereIn('FSR_RESERVATION_ID', $reservation_ids)->delete();
+
+        foreach ($reservation_ids as $reservation_id) {
+            foreach ($reservation_ids as $rid) {
+                if ($reservation_id != $rid) {
+                    $data = [
+                        'FSR_RESERVATION_ID' => $reservation_id,
+                        'FSR_OTHER_RESERVATION_ID' => $rid,
+                        'FSR_CREATED_BY' => $user_id,
+                        'FSR_UPDATED_BY' => $user_id,
+                    ];
+                    $this->ShareReservations->insert($data);
+                }
+            }
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Shared successfully.']));
+    }
+
+    public function breakShareReservation()
+    {
+        $reservation_id = $this->request->getVar('reservation_id');
+
+        $this->ShareReservations->where('FSR_RESERVATION_ID', $reservation_id)->orWhere('FSR_OTHER_RESERVATION_ID', $reservation_id)->delete();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Shared reservation removed successfully.']));
     }
 }
