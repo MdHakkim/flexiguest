@@ -1098,7 +1098,7 @@ class APIController extends BaseController
         $path = base_url('assets/Uploads/handbook/hotel-handbook.pdf');
 
         if (file_exists($path))
-            $result = responseJson(200, false, ["msg" => "Handbook URL fetched"], ['url' => $path]);
+            $result = responseJson(200, false, ["msg" => "Handbook URL fetched"], 'url' => $path);
         else
             $result = responseJson(500, false, ["msg" => "No Handbook file uploaded"]);
 

@@ -464,7 +464,7 @@ class FacilityController extends BaseController
             $HANDBOOK = $this->request->getFile("HANDBOOK");
             // $doc_name = $HANDBOOK->getName();
             $folderPath = "assets/Uploads/handbook/";
-            $doc_up = documentUpload($HANDBOOK, "hotel", "handbook", $folderPath);
+            $doc_up = documentUpload($HANDBOOK, "handbook.pdf", "hotel", $folderPath,1);
             if ($doc_up['SUCCESS'] == 200) {
 
                 $result = responseJson(200, false, "HandBook Uploaded successfully", []);
