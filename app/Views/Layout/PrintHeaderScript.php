@@ -12,7 +12,7 @@
     rel="stylesheet" media="all" />
 
 <!-- Core CSS -->
-<link rel="stylesheet" href="<?php echo $base_url.'vendor/css/rtl/core.css'; ?>" class="template-customizer-core-css"
+<link rel="stylesheet" href="<?php echo base_url('/assets/vendor/css/rtl/core.css'); ?>" class="template-customizer-core-css"
     media="all" />
 
 <?php if (isset($css_to_load)) {
