@@ -12,8 +12,10 @@
     rel="stylesheet" media="all" />
 
 <!-- Core CSS -->
-<link rel="stylesheet" href="<?php echo base_url('/assets/vendor/css/rtl/core.css'); ?>" class="template-customizer-core-css"
-    media="all" />
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/css/rtl/core.css'); ?>"
+    class="template-customizer-core-css" media="all" />
+<link rel="stylesheet" href="<?php echo base_url('assets/css/demo.css') ?>" />
+
 
 <?php if (isset($css_to_load)) {
         foreach ($css_to_load as $row) {
