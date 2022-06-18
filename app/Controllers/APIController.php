@@ -156,6 +156,7 @@ class APIController extends BaseController
     public function listReservationsAPI($resID = null)
     {
         $cust_id = $this->request->user['USR_CUST_ID'];
+ 
 
         if ($resID) {
             $param = ['RESV_ID' => $resID];
@@ -389,9 +390,9 @@ class APIController extends BaseController
             'title' => 'required',
             'firstName' => 'required',
             //'email' => 'required|valid_email',
-            'cor' => 'required',
+            'countryOfResidence' => 'required',
             'DOB' => 'required',
-            'phn' => 'required',
+            'mobile' => 'required',
             'gender' => 'required',
             'docType' => 'required',
             'address1' => 'required',
@@ -423,12 +424,13 @@ class APIController extends BaseController
             "CUST_DOC_TYPE" => $this->request->getVar("docType"),
             "CUST_DOC_NUMBER" => $this->request->getVar("docNumber"),
             "CUST_GENDER" => $this->request->getVar("gender"),
+            "CUST_MOBILE" => $this->request->getVar("mobile"),
             "CUST_NATIONALITY" => $this->request->getVar("nationality"),
-            "CUST_COR" => $this->request->getVar("cor"),
+            "CUST_COR" => $this->request->getVar("countryOfResidence"),
             "CUST_DOB" => date("d-M-Y", strtotime($this->request->getVar("DOB"))),
             "CUST_DOC_EXPIRY" => date("d-M-Y", strtotime($this->request->getVar("expiryDate"))),
             "CUST_DOC_ISSUE" => date("d-M-Y", strtotime($this->request->getVar("issueDate"))),
-            "CUST_PHONE" => $this->request->getVar("phn"),
+            "CUST_PHONE" => $this->request->getVar("phone"),
             "CUST_EMAIL" => $this->request->getVar("email"),
             "CUST_ADDRESS_1" => $this->request->getVar("address1"),
             "CUST_ADDRESS_2" => $this->request->getVar("address2"),
@@ -790,7 +792,8 @@ class APIController extends BaseController
         $dataRes = [
             "RESV_ETA" => $this->request->getVar("estimatedTimeOfArrival"),
             "RESV_UPDATE_UID" => $USR_ID,
-            "RESV_UPDATE_DT" => date("d-M-Y")
+            "RESV_UPDATE_DT" => date("d-M-Y"),
+            "RESV_STATUS" => 'Pre Check-In Completed',
         ];
 
         // update the signature in the documents table
@@ -852,14 +855,9 @@ class APIController extends BaseController
         $validate = $this->validate([
             'type' => 'required',
             'category' => 'required',
-            'subCategory' => 'required',
-            'preferredTime' => 'required',
-            'preferredDate' => 'required',
-            'attachement' =>  [
-                'uploaded[attachement]',
-                'mime_in[attachement,image/png,image/jpeg]',
-                'max_size[attachement,50000]',
-            ],
+            'roomNo' =>'required',
+            'reservationId' =>'required'
+            
         ]);
 
         if (!$validate) {
@@ -869,21 +867,42 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        $doc_file = $this->request->getFile('attachement');
-        $doc_name = $doc_file->getName();
-        $folderPath = "assets/Uploads/maintenance";
-        $doc_up = documentUpload($doc_file, $doc_name, $CUST_ID, $folderPath);
+        $fileNames = '';
+        $fileArry = $this->request->getFileMultiple('attachment');
+     if(!empty($fileArry)){
+        foreach ($fileArry as $key => $file) {
+            if (!$file->isValid()) {
+                return $this->respond(responseJson(500, true, ['msg' => "Please upload valid file. This file '{$file->getClientName()}' is not valid"]));
+            }
+        }
+    }
+    if(!empty($fileArry)){
+        foreach ($fileArry as $key => $file) {
+            if ($file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move(ROOTPATH . 'assets/Uploads/Maintenance', $newName);
+                $comma = '';
 
-        if ($doc_up['SUCCESS'] == 200) {
-            $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                if (isset($fileArry[$key + 1]) && $fileArry[$key + 1]->isValid()) {
+                    $comma = ',';
+                }
+
+                if ($newName)
+                    $fileNames .= $newName . $comma;
+            }
+        }
+    }
+
+        
             $data = [
+                "CUST_NAME" => $CUST_ID,
                 "MAINT_TYPE" => $this->request->getVar("type"),
                 "MAINT_CATEGORY" => $this->request->getVar("category"),
                 "MAINT_SUB_CATEGORY" => $this->request->getVar("subCategory"),
                 "MAINT_DETAILS" => $this->request->getVar("details"),
                 "MAINT_PREFERRED_DT" => date("d-M-Y", strtotime($this->request->getVar("preferredDate"))),
                 "MAINT_PREFERRED_TIME" => date("d-M-Y H:i:s", strtotime($this->request->getVar("preferredTime"))),
-                "MAINT_ATTACHMENT" => $attached_path,
+                "MAINT_ATTACHMENT" => $fileNames,
                 "MAINT_STATUS" => "New",
                 "MAINT_ROOM_NO" => $this->request->getVar("roomNo"),
                 "MAINT_RESV_ID" => $this->request->getVar("reservationId"),
@@ -900,10 +919,7 @@ class APIController extends BaseController
                 $result = responseJson(500, true, ["msg" => "Creation Failed"]);
 
             return $this->respond($result);
-        }
-
-        $result = responseJson(500, true, ["msg" => "Something went wrong"]);
-        return $this->respond($result);
+    
     }
 
     /*  FUNCTION : LIST MAINTENANCE REQUEST
@@ -921,15 +937,35 @@ class APIController extends BaseController
 
         if ($reqID) {
             $param = ['MAINT_ID' => $reqID];
-            $sql = "SELECT a.MAINT_ID, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME ,a.MAINT_SUB_CATEGORY,a.MAINT_DETAILS,a.MAINT_ACKNOWEDGE_TIME,a.MAINT_STATUS , a.MAINT_ROOM_NO FROM FLXY_MAINTENANCE a 
+            $sql = "SELECT a.*, b.CUST_FIRST_NAME+' '+b.CUST_MIDDLE_NAME+' '+b.CUST_LAST_NAME as NAME,c.MAINT_CATEGORY_TYPE,c.MAINT_CATEGORY as MAINT_CATEGORY_TEXT,d.MAINT_SUBCATEGORY FROM FLXY_MAINTENANCE a 
                         LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.CUST_NAME
+                        LEFT JOIN FLXY_MAINTENANCE_CATEGORY c ON c.MAINT_CAT_ID = a.MAINT_CATEGORY
+			            LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY d ON d.MAINT_SUBCAT_ID = a.MAINT_SUB_CATEGORY
                         WHERE MAINT_ID=:MAINT_ID:";
             $data = $this->DB->query($sql, $param)->getRowArray();
         } else {
             $param = ['CUST_NAME' => $cust_id];
-            $sql = "SELECT MAINT_ID, MAINT_SUB_CATEGORY,MAINT_DETAILS,MAINT_ACKNOWEDGE_TIME,MAINT_STATUS, MAINT_ROOM_NO FROM
-                    FLXY_MAINTENANCE  WHERE MAINT_CREATE_UID=:CUST_NAME:";
+            $sql = "SELECT a.*,c.MAINT_CATEGORY_TYPE,c.MAINT_CATEGORY as MAINT_CATEGORY_TEXT,d.MAINT_SUBCATEGORY FROM FLXY_MAINTENANCE a
+		    LEFT JOIN FLXY_MAINTENANCE_CATEGORY c ON c.MAINT_CAT_ID = a.MAINT_CATEGORY
+		    LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY d ON d.MAINT_SUBCAT_ID = a.MAINT_SUB_CATEGORY
+                    WHERE MAINT_CREATE_UID=:CUST_NAME:";
             $data = $this->DB->query($sql, $param)->getResultArray();
+        }
+
+        foreach($data as $i => $maintenance_request){
+            $attachments = explode(",", $maintenance_request['MAINT_ATTACHMENT']);
+
+            foreach($attachments as $j => $attachment){
+                $name = $attachment;
+                $url = base_url("assets/Uploads/Maintenance/$attachment");
+
+                $attachment_array = explode(".", $attachment);
+                $type = end($attachment_array);
+
+                $attachments[$j] = ['name' => $name, 'url' => $url, 'type' => $type];
+            }
+
+            $data[$i]['MAINT_ATTACHMENT'] = $attachments;
         }
 
         if (!empty($data))
@@ -945,8 +981,11 @@ class APIController extends BaseController
     OUTPUT : LIST OF CATEGORIES   */
     public function maintenanceCategoryList()
     {
-        $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY";
-        $response = $this->DB->query($sql)->getResultArray();
+        $category_type = $this->request->getVar('category_type');        
+        $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY where MAINT_CATEGORY_TYPE = :category_type:";
+        $params = ['category_type' => $category_type];
+
+        $response = $this->DB->query($sql, $params)->getResultArray();
         if($response){
            $result = responseJson(200, false, ["msg" => "Maintenance list categories fetched Successfully"], $response);
            
@@ -964,14 +1003,10 @@ class APIController extends BaseController
     {
         $param = ['MAINT_CAT_ID' => $this->request->getVar("category")];
         $sql = "SELECT a.MAINT_CAT_ID,b.MAINT_SUBCATEGORY ,b.MAINT_SUBCAT_ID FROM FLXY_MAINTENANCE_CATEGORY a
-        LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY b ON b.MAINT_CAT_ID = a.MAINT_CAT_ID WHERE a.MAINT_CAT_ID =:MAINT_CAT_ID:";
+        inner JOIN FLXY_MAINTENANCE_SUBCATEGORY b ON b.MAINT_CAT_ID = a.MAINT_CAT_ID WHERE a.MAINT_CAT_ID =:MAINT_CAT_ID:";
         $response = $this->DB->query($sql, $param)->getResultArray();
-        if ($response) {
-            $result = responseJson(200, false, ["msg" => "Maintenance list sub categories fetched Successfully"], $response);
-           
-        }else{
-            $result = responseJson(500, True, ["msg" => "Server Error in subcategor fetching"]);
-        }
+
+        $result = responseJson(200, false, ["msg" => "Maintenance list sub categories fetched Successfully"], $response);           
         return $this->respond($result);
     }
 

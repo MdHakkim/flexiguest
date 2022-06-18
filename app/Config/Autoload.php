@@ -43,6 +43,7 @@ class Autoload extends AutoloadConfig
     public $psr4 = [
         APP_NAMESPACE => APPPATH, // For custom app namespace
         'Config'      => APPPATH . 'Config',
+        'Dompdf'      => ROOTPATH . 'vendor/dompdf/dompdf/src',
     ];
 
     /**
@@ -50,7 +51,7 @@ class Autoload extends AutoloadConfig
      * Class Map
      * -------------------------------------------------------------------
      * The class map provides a map of class names and their exact
-     * location on the drive. Classes loaded in this manner will have
+     * location on the drive. Classes loaded in this manner will have                   
      * slightly faster performance because they will not have to be
      * searched for within one or more directories as they would if they
      * were being autoloaded through a namespace.
