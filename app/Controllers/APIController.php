@@ -1095,10 +1095,10 @@ class APIController extends BaseController
     OUTPUT : HANDBOOK URL         */
     public function getHandBookURL()
     {
-        $path = base_url('assets/Uploads/handbook/hotel-handbook.pdf');
+        $path = 'assets/Uploads/handbook/hotel-handbook.pdf';
 
         if (file_exists($path))
-            $result = responseJson(200, false, ["msg" => "Handbook URL fetched"], ['url' => $path]);
+            $result = responseJson(200, false, ["msg" => "Handbook URL fetched"], ['url' => base_url($path)]);
         else
             $result = responseJson(500, false, ["msg" => "No Handbook file uploaded"]);
 

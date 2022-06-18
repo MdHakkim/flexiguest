@@ -2,15 +2,23 @@
 
 use Config\Services;
 
-function documentUpload($file,$docname ,$userID,$folderPath)
+function documentUpload($file,$docname ,$userID,$folderPath,$micro = 0)
     {
         
 
         // Renaming file before upload and just uplaod the file
-		$temp = explode(".",$docname);
+	$temp = explode(".",$docname);
         $name_without_ext = implode(' ', array_slice($temp, 0, -1));
+        if($micro == 1 ){
+            $newfilename =  $userID . '-' . $name_without_ext . '.' . end($temp);
 
-		$newfilename = round(microtime(true)) . '-' . $userID . '-' . $name_without_ext . '.' . end($temp);
+        }else{
+          
+          $newfilename = round(microtime(true)) . '-' . $userID . '-' . $name_without_ext . '.' . end($temp);
+
+        }
+
+	
 
         if ($file->move($folderPath, $newfilename)) {
 

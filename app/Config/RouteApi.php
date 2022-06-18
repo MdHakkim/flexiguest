@@ -66,6 +66,8 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 // ---------------------------------------------------------------------------- Feedback --------------------------------------------------------------------------------//
     // API to fetch all requests
     $routes->post("addFeedback", "APIController::addFeedBack"); 
+// API to fetch Handbook
+    $routes->get("handbook", "APIController::getHandBookURL"); 
 // ---------------------------------------------------------------------------- Shuttle --------------------------------------------------------------------------------//
     // API to fetch all shuttles
     $routes->get("shuttles/list", "APIController::listShuttles");
