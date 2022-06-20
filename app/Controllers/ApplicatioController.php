@@ -393,10 +393,11 @@ class ApplicatioController extends BaseController
                 $this->updateCustomerData($custId);
                 
                 if($emailProc=='S'){ // New Reservation
-                    $this->triggerReservationEmail($sysid,'');
+                    
 
                     $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update(array('RESV_NO' => 'RES'.$sysid));
                     addActivityLog(1, 10, $sysid, $log_action_desc);
+                    $this->triggerReservationEmail($sysid,'');
                 }
                 else    // Update exisitng Reservation
                 {
@@ -421,6 +422,7 @@ class ApplicatioController extends BaseController
         RESV_NO_F_ROOM,RESV_FEATURE,CUST_FIRST_NAME+' '+CUST_LAST_NAME FULLNAME,CUST_EMAIL FROM FLXY_RESERVATION,FLXY_CUSTOMER 
         WHERE RESV_ID=:SYSID: AND RESV_NAME=CUST_ID";
         $reservationInfo = $this->Db->query($sql,$param)->getResultArray();
+       // print_r($reservationInfo);exit;
         $emailCall = new EmailLibrary();
         $emailResp = $emailCall->preCheckInEmail($reservationInfo,$parametr);
     }

@@ -1021,43 +1021,46 @@ class AdditionalController extends BaseController
     }
 
     public function registerCardDataExists(){
-        $_SESSION['ARRIVAL_DATE']       = date("Y-m-d",strtotime($this->request->getPost('ARRIVAL_DATE')));
-        $_SESSION['ETA_FROM_TIME']      = $this->request->getPost('ETA_FROM_TIME');
-        $_SESSION['ETA_TO_TIME']        = $this->request->getPost('ETA_TO_TIME');
-        $_SESSION['RESV_INDIV']         = $this->request->getPost('RESV_INDIV');
-        $_SESSION['RESV_BLOCK']         = $this->request->getPost('RESV_BLOCK');
-        $_SESSION['RESV_FROM_NAME']     = $this->request->getPost('RESV_FROM_NAME');
-        $_SESSION['RESV_TO_NAME']       = $this->request->getPost('RESV_TO_NAME');
-        $_SESSION['ROOM_CLASS']         = $this->request->getPost('ROOM_CLASS');
-        $_SESSION['RATE_CODE']          = $this->request->getPost('RATE_CODE');
-        $_SESSION['MEM_TYPE']           = $this->request->getPost('MEM_TYPE');
-        $_SESSION['VIP_CODE']           = $this->request->getPost('VIP_CODE');
-        $_SESSION['IN_HOUSE_GUESTS']    = $this->request->getPost('IN_HOUSE_GUESTS');  
+        $ARRIVAL_DATE        = date("Y-m-d",strtotime($this->request->getPost('ARRIVAL_DATE')));
+        $ETA_FROM_TIME       = $this->request->getPost('ETA_FROM_TIME');
+        $ETA_TO_TIME         = $this->request->getPost('ETA_TO_TIME');
+        $RESV_INDIV          = $this->request->getPost('RESV_INDIV');
+        $RESV_BLOCK          = $this->request->getPost('RESV_BLOCK');
+        $RESV_FROM_NAME      = $this->request->getPost('RESV_FROM_NAME');
+        $RESV_TO_NAME        = $this->request->getPost('RESV_TO_NAME');
+        $ROOM_CLASS          = $this->request->getPost('ROOM_CLASS');
+        $RATE_CODE           = $this->request->getPost('RATE_CODE');
+        $MEM_TYPE            = $this->request->getPost('MEM_TYPE');
+        $VIP_CODE            = $this->request->getPost('VIP_CODE');
+        $IN_HOUSE_GUESTS     = $this->request->getPost('IN_HOUSE_GUESTS');  
         
         $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, RESV_RATE, RESV_RM_TYPE, RESV_NAME, (SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY) RESV_COMPANY_DESC, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, (SELECT ctname FROM CITY WHERE id=CUST_CITY) CUST_CITY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_NATIONALITY) CUST_NATIONALITY_DESC, CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID";
        
-        if ($_SESSION['ARRIVAL_DATE'] != '') {
-            $ARRIVAL_DATE = $_SESSION['ARRIVAL_DATE'];
+        if ($ARRIVAL_DATE != '') {
+            $ARRIVAL_DATE = $ARRIVAL_DATE;
             $sql .= " WHERE RESV_ARRIVAL_DT LIKE '%$ARRIVAL_DATE%' ";                   
         }
 
-        if($_SESSION['ETA_FROM_TIME'] != '' && $_SESSION['ETA_TO_TIME'] !='')        
-            $sql .= " AND (RESV_ETA BETWEEN '".$_SESSION['ETA_FROM_TIME']."' AND '".$_SESSION['ETA_TO_TIME']."')";
+        if($ETA_FROM_TIME != '' && $ETA_TO_TIME !='')        
+            $sql .= " AND (RESV_ETA BETWEEN '".$ETA_FROM_TIME."' AND '".$ETA_TO_TIME."')";
         
-        else if($_SESSION['ETA_FROM_TIME'] != '')         
-            $sql .= " OR  RESV_ETA > '".$_SESSION['ETA_FROM_TIME']."'";  
+        else if($ETA_FROM_TIME != '')         
+            $sql .= " AND  RESV_ETA > '".$ETA_FROM_TIME."'";  
 
-        else if($_SESSION['ETA_TO_TIME'] != '')         
-            $sql .= " OR RESV_ETA < '".$_SESSION['ETA_TO_TIME']."'"; 
+        else if($ETA_TO_TIME != '')         
+            $sql .= " AND RESV_ETA < '".$ETA_TO_TIME."'"; 
 
-        if($_SESSION['ROOM_CLASS'] != '')         
-            $sql .= " OR RESV_ROOM_CLASS = '".$_SESSION['ROOM_CLASS']."'"; 
+        if($RESV_FROM_NAME != '')         
+            $sql .= " AND CUST_FIRST_NAME LIKE '%$_SESSION[RESV_FROM_NAME]%'"; 
+
+        if($ROOM_CLASS != '')         
+            $sql .= " AND RESV_ROOM_CLASS = '".$ROOM_CLASS."'"; 
         
-        if($_SESSION['RATE_CODE'] != '')         
-            $sql .= " OR RESV_RATE_CODE = '".$_SESSION['RATE_CODE']."'";
+        if($RATE_CODE != '')         
+            $sql .= " AND RESV_RATE_CODE = '".$RATE_CODE."'";
         
-        if($_SESSION['MEM_TYPE'] != '')         
-            $sql .= " OR RESV_MEMBER_TY = '".$_SESSION['MEM_TYPE']."'";
+        if($MEM_TYPE != '')         
+            $sql .= " AND RESV_MEMBER_TY = '".$MEM_TYPE."'";
       
         $response['data'] = $this->Db->query($sql)->getResultArray(); 
         $response['count'] = $this->Db->query($sql)->getNumRows();

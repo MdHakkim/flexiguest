@@ -101,14 +101,10 @@
                         <div class="row g-3 mt-2">
                             <h5 mb-0 pb-0>Filter </h5>                   
                             <div class="col-md-4">
-                                <lable class="form-lable"><b>From Name </b></lable>
+                                <lable class="form-lable"><b>Name </b></lable>
                                 <input type="text" name="RESV_FROM_NAME" id="RESV_FROM_NAME" class="form-control bootstrap-maxlength"  />                        
                             </div> 
 
-                            <div class="col-md-4">
-                                <lable class="form-lable"><b>To Name </b></lable>
-                                <input type="text" name="RESV_TO_NAME" id="RESV_TO_NAME" class="form-control bootstrap-maxlength"  />                        
-                            </div> 
 
                             <div class="col-md-4">
                                 <lable class="form-lable"><b>Room Class </b></lable>
@@ -205,7 +201,13 @@ $(document).ready(function() {
 function onClickPreview(action) { 
     $('#errorModal').hide();
     
-        if($('#ARRIVAL_DATE').val() == ''){
+        if($('#ARRIVAL_DATE').val() == '' && ( !$('#RESV_INDIV').is(':checked') && !$('#RESV_BLOCK').is(':checked'))){
+            $('#errorModal').show();        
+            error = '<ul><li>Arrival date is required</li><li>Reservation type is required</li></ul>';   
+            $('#formErrorMessage').html(error);
+            
+        }
+        else if($('#ARRIVAL_DATE').val() == ''){
             $('#errorModal').show();        
             error = '<ul><li>Arrival date is required</li></ul>';   
             $('#formErrorMessage').html(error);

@@ -1,5 +1,5 @@
 <?= $this->include('Layout/PrintHeaderScript.php') ?>
-  <body>
+  <body style="background-color: #fff;">
     <!-- Content -->
 
 
