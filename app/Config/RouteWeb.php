@@ -50,6 +50,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/getCustomerDetail', 'ApplicatioController::getCustomerDetail');
     $routes->get('/printProfile/(:num)', 'ApplicatioController::printProfile/$1');
     $routes->get('/exportProfile/(:num)', 'ApplicatioController::exportProfile/$1');
+    $routes->match(['post'],'/customerChangesView', 'ApplicatioController::CustomerChangesView');
 
     $routes->get('/company', 'ApplicatioController::company');
     $routes->match(['post'],'/companyView', 'ApplicatioController::companyView');
@@ -259,6 +260,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/editMarketCode', 'MastersController::editMarketCode');
     $routes->match(['post'],'/deleteMarketCode', 'MastersController::deleteMarketCode'); 
 
+    $routes->get('/membershipType', 'MastersController::membershipType');
+    $routes->match(['post'],'/membershipTypeView', 'MastersController::MembershipTypeView');
+    $routes->match(['post'],'/insertMembershipType', 'MastersController::insertMembershipType');
+    $routes->match(['post'],'/editMembershipType', 'MastersController::editMembershipType');
+    $routes->match(['post'],'/deleteMembershipType', 'MastersController::deleteMembershipType');  
+    $routes->match(['post'],'/copyMembershipType', 'MastersController::copyMembershipType');
 
 
     // Code By ALEESHA 

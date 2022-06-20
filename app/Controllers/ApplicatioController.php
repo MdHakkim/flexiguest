@@ -177,7 +177,8 @@ class ApplicatioController extends BaseController
     {
         $sysid = $this->request->getPost('sysid');
 
-        $init_cond = array("ELEMENT_ID = " => "'$sysid'"); // Add condition for main Rate Code
+        $init_cond = array( "AC_GP_ID = " => "1", 
+                            "ELEMENT_ID = " => "'$sysid'"); // Add condition for main Rate Code
 
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_ACTIVITY_LOG_VIEW';
@@ -426,14 +427,28 @@ class ApplicatioController extends BaseController
     }
 
     public function updateCustomerData($custId){
-        $data = ["CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
-            "CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
-            "CUST_COUNTRY" => $this->request->getPost("CUST_COUNTRY"),
-            "CUST_VIP" => $this->request->getPost("CUST_VIP"),
-            "CUST_PHONE" => $this->request->getPost("CUST_PHONE"),
-            "CUST_UPDATE_UID" => $this->session->name,
-            "CUST_UPDATE_DT" => date("d-M-Y")
-        ];
+        $data = [   "CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
+                    "CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
+                    "CUST_COUNTRY" => $this->request->getPost("CUST_COUNTRY"),
+                    "CUST_VIP" => $this->request->getPost("CUST_VIP"),
+                    "CUST_PHONE" => $this->request->getPost("CUST_PHONE"),
+                    "CUST_UPDATE_UID" => $this->session->name,
+                    "CUST_UPDATE_DT" => date("Y-m-d")
+                ];
+
+        $log_action_desc = '';
+        $currentCustomer = $this->getProfileDetails($custId);
+        foreach($currentCustomer as $ckey => $cvalue)
+        {
+            // Save changes in log description if data is updated/changed
+            if(isset($data[$ckey]) && !empty(trim($data[$ckey])) && !empty(trim($cvalue)) && trim($data[$ckey]) != trim($cvalue))
+            {
+                $log_action_desc .= "<b>".str_replace('CUST_', '', $ckey) . ": </b> '" . $cvalue . "' -> '". $data[$ckey]."'<br/>";
+            }
+        }
+
+        addActivityLog(3, 50, $custId, $log_action_desc); // Update Customer Log entry
+
         $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $custId)->update($data); 
         return true;
     }
@@ -494,7 +509,12 @@ class ApplicatioController extends BaseController
                 exit;
             }
             $sysid = $this->request->getPost("CUST_ID");
-            if(!empty($sysid)){
+            $log_action_desc = '';
+
+            if(!empty($sysid)){ // Edit Customer 
+
+                $currentCustomer = $this->getProfileDetails($sysid);
+
                 $data = ["CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
                     "CUST_MIDDLE_NAME" => $this->request->getPost("CUST_MIDDLE_NAME"),
                     "CUST_LAST_NAME" => $this->request->getPost("CUST_LAST_NAME"),
@@ -518,10 +538,20 @@ class ApplicatioController extends BaseController
                     "CUST_BUS_SEGMENT" => $this->request->getPost("CUST_BUS_SEGMENT"),
                     "CUST_COMMUNICATION" => $this->request->getPost("CUST_COMMUNICATION"),
                     "CUST_COMMUNICATION_DESC" => $this->request->getPost("CUST_COMMUNICATION_DESC"),
-                    "CUST_ACTIVE" => $this->request->getPost("CUST_ACTIVE"),
-                    "CUST_UPDATE_DT" => date("d-M-Y")
-                 ];
-            $return = $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $sysid)->update($data); 
+                    "CUST_ACTIVE" => null !== $this->request->getPost("CUST_ACTIVE") ? 'Y' : 'N',
+                    "CUST_UPDATE_DT" => date("Y-m-d")
+                ];
+                $return = $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $sysid)->update($data); 
+
+                foreach($currentCustomer as $ckey => $cvalue)
+                {
+                    // Save changes in log description if data is updated/changed
+                    if(isset($data[$ckey]) && !empty(trim($data[$ckey])) && !empty(trim($cvalue)) && trim($data[$ckey]) != trim($cvalue))
+                    {
+                        $log_action_desc .= "<b>".str_replace('CUST_', '', $ckey) . ": </b> '" . $cvalue . "' -> '". $data[$ckey]."'<br/>";
+                    }
+                }
+
             }else{
                 $data = ["CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
                     "CUST_MIDDLE_NAME" => $this->request->getPost("CUST_MIDDLE_NAME"),
@@ -546,10 +576,19 @@ class ApplicatioController extends BaseController
                     "CUST_BUS_SEGMENT" => $this->request->getPost("CUST_BUS_SEGMENT"),
                     "CUST_COMMUNICATION" => $this->request->getPost("CUST_COMMUNICATION"),
                     "CUST_COMMUNICATION_DESC" => $this->request->getPost("CUST_COMMUNICATION_DESC"),
-                    "CUST_ACTIVE" => $this->request->getPost("CUST_ACTIVE"),
+                    "CUST_ACTIVE" => null !== $this->request->getPost("CUST_ACTIVE") ? 'Y' : 'N',
                     "CUST_CREATE_DT" => date("d-M-Y")
                 ];
                 $return = $this->Db->table('FLXY_CUSTOMER')->insert($data); 
+
+                foreach($data as $dkey => $dvalue)
+                {
+                    // Save changes in log description if data is not empty
+                    if(!empty(trim($dvalue)))
+                    {
+                        $log_action_desc .= "<b>".str_replace('CUST_', '', $dkey) . ": </b> '" . $dvalue ."'<br/>";
+                    }
+                }
             }
             if($return){
                 if(empty($sysid)){
@@ -561,8 +600,11 @@ class ApplicatioController extends BaseController
                     $CUST_PHONE = $this->request->getPost("CUST_PHONE");
                     $CUST_COUNTRY = $this->request->getPost("CUST_COUNTRY");
                     $response = array("ID"=>$id,"FULLNAME"=>$fullname,"CUST_TITLE"=>$CUST_TITLE,"CUST_FIRST_NAME"=>$CUST_FIRST_NAME,"CUST_VIP"=>$CUST_VIP,"CUST_PHONE"=>$CUST_PHONE,"CUST_COUNTRY"=>$CUST_COUNTRY);
+
+                    addActivityLog(3, 41, $id, $log_action_desc);
                 }else{
                     $response ='';
+                    addActivityLog(3, 50, $sysid, $log_action_desc);
                 }
                 $result = $this->responseJson("1","0",$return,$response);
                 echo json_encode($result);
@@ -616,15 +658,30 @@ class ApplicatioController extends BaseController
         echo json_encode($response);
     }
 
+    public function CustomerChangesView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array( "AC_GP_ID = " => "3", 
+                            "ELEMENT_ID = " => "'$sysid'"); // Add condition for main Rate Code
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_ACTIVITY_LOG_VIEW';
+        $columns = 'LOG_ID,USR_NAME,LOG_DATE,LOG_TIME,AC_TY_DESC,LOG_ACTION_DESCRIPTION';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
     function getProfileDetails($id = 0)
     {
         $param = ['SYSID'=> $id];
         $sql = "SELECT  CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_LANG,CUST_TITLE,
-                        CUST_DOB,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
+                        CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
                         CUST_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC,
                         CUST_STATE,(SELECT sname FROM STATE WHERE STATE_CODE=CUST_STATE AND COUNTRY_CODE=CUST_COUNTRY) CUST_STATE_DESC,
                         CUST_CITY,(SELECT ctname FROM CITY WHERE ID=CUST_CITY) CUST_CITY_DESC,
-                        CUST_EMAIL,CUST_MOBILE,CUST_PHONE,CUST_CLIENT_ID,CUST_POSTAL_CODE,CUST_VIP,CUST_NATIONALITY,CUST_BUS_SEGMENT,CUST_GENDER,
+                        CUST_EMAIL,CUST_MOBILE,CUST_PHONE,CUST_CLIENT_ID,CUST_POSTAL_CODE,CUST_VIP,CUST_NATIONALITY,CUST_BUS_SEGMENT,
+                        CUST_GENDER,CUST_COMMUNICATION,CUST_COMMUNICATION_DESC,CUST_ACTIVE,
                         CUST_CREATE_DT,CUST_UPDATE_DT 
                         
                 FROM FLXY_CUSTOMER WHERE CUST_ID=:SYSID:";
@@ -2866,7 +2923,7 @@ class ApplicatioController extends BaseController
                 "CUST_STATE" => $this->request->getPost("CUST_STATE"),
                 "CUST_CITY" => $this->request->getPost("CUST_CITY"),
                 "CUST_UPDATE_UID" => $this->session->name,
-                "CUST_UPDATE_DT" => date("d-M-Y")
+                "CUST_UPDATE_DT" => date("Y-m-d")
             ];
             $return = $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $custId)->update($data); 
             if($return){
