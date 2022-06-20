@@ -184,13 +184,13 @@
                           </select>
                         </div>
                         <div class="col-md-3">
-                          <label class="form-label">Communcation Desc.</label>
+                          <label class="form-label">Communication Desc.</label>
                           <input type="text" name="CUST_COMMUNICATION_DESC"  id="CUST_COMMUNICATION_DESC" class="form-control" placeholder="communication desc" />
                         </div> 
                         <div class="col-md-3">
                             <div class="form-check mt-3">
                               <input class="form-check-input flxCheckBox" type="checkbox"  id="CUST_ACTIVE_CHK">
-                              <input type="hidden" name="CUST_ACTIVE" id="CUST_ACTIVE" value="N" class="form-control" />
+                              <input type="hidden" name="CUST_ACTIVE" id="CUST_ACTIVE" value="Y" class="form-control" />
                               <label class="form-check-label" for="defaultCheck1"> Active </label>
                             </div>
                             

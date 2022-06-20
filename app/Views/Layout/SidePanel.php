@@ -846,7 +846,7 @@
                                             'Item Class',
                                             'Items',
                                             'Daily Inventory',
-                                    
+                                            'Membership Type',                                    
                                         ))) {
                                             echo 'open active';
                                         } ?>">
@@ -929,43 +929,13 @@
                                 <div data-i18n="Market Codes">Market Codes</div>
                             </a>
                         </li>
-                        <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link">
-                                <div data-i18n="Contries">Contries</div>
+                        <li class="menu-item  <?php if (isset($title) && $title == 'Membership Type') {
+                                                    echo 'active';
+                                                } ?>">
+                            <a href="<?php echo base_url('membershipType') ?>" class="menu-link">
+                                <div data-i18n="Membership Types">Membership Types</div>
                             </a>
                         </li>
-                        <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link">
-                                <div data-i18n="Device Status">Device Status</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link">
-                                <div data-i18n="Device Types">Device Types</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link">
-                                <div data-i18n="Guest Document Types">Guest Document Types</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link">
-                                <div data-i18n="Region">Region</div>
-                            </a>
-                        </li>
-                        <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link">
-                                <div data-i18n="Speech Data Type">Speech Data Type</div>
-                            </a>
-                        </li>
-
-                        <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link">
-                                <div data-i18n="Speech Data">Speech Data</div>
-                            </a>
-                        </li>
-
                         <li class="menu-item">
                             <a href="javascript:void(0);" class="menu-link">
                                 <div data-i18n="Master Property Types">Master Property Types</div>

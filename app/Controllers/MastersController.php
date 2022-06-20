@@ -2423,4 +2423,145 @@ class MastersController extends BaseController
             return $this->respond($e->errors());
         }
     }
+
+    
+    /**************      Membership Type Functions      ***************/
+
+    public function membershipType()
+    {
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+        
+        return view('Reservation/MembershipTypeView', $data);
+    }
+
+    public function MembershipTypeView()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_MEMBERSHIP';
+        $columns = 'MEM_ID,MEM_CODE,MEM_DESC,MEM_DIS_SEQ,MEM_STATUS';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+    public function insertMembershipType()
+    {
+        try {
+            $sysid = $this->request->getPost('MEM_ID');
+
+            $validate = $this->validate([
+                'MEM_CODE' => ['label' => 'Membership Type', 'rules' => 'required|is_unique[FLXY_MEMBERSHIP.MEM_CODE,MEM_ID,' . $sysid . ']'],
+                'MEM_DESC' => ['label' => 'Description', 'rules' => 'required']
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            //echo json_encode(print_r($_POST)); exit;
+
+            $data = [
+                "MEM_CODE" => trim($this->request->getPost('MEM_CODE')),
+                "MEM_DESC" => trim($this->request->getPost('MEM_DESC')),
+                "MEM_DIS_SEQ" => trim($this->request->getPost('MEM_DIS_SEQ')),
+                "MEM_POINT_LABEL" => trim($this->request->getPost('MEM_POINT_LABEL')),
+                "MEM_CARD_LENGTH" => trim($this->request->getPost('MEM_CARD_LENGTH')),
+                "MEM_CARD_PREFIX" => trim($this->request->getPost('MEM_CARD_PREFIX')),
+                "MEM_EXP_DATE_REQ" => null !== $this->request->getPost('MEM_EXP_DATE_REQ') ? '1' : '0',
+                "MEM_STATUS" => null !== $this->request->getPost('MEM_STATUS') ? '1' : '0',
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_MEMBERSHIP')->where('MEM_ID', $sysid)->update($data) : $this->Db->table('FLXY_MEMBERSHIP')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function checkMembershipType($rcCode)
+    {
+        $sql = "SELECT MEM_ID
+                FROM FLXY_MEMBERSHIP
+                WHERE MEM_CODE = '" . $rcCode . "'";
+
+        $response = $this->Db->query($sql)->getNumRows();
+        return $rcCode == '' || strlen($rcCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
+    }
+
+    public function editMembershipType()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT FMT.*
+                FROM dbo.FLXY_MEMBERSHIP AS FMT
+                WHERE MEM_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function copyMembershipType()
+    {
+        try {
+            $param = ['SYSID' => $this->request->getPost('main_MEM_ID')];
+
+            $sql = "SELECT *
+                    FROM FLXY_MEMBERSHIP
+                    WHERE MEM_ID=:SYSID:";
+
+            $origMemType = $this->Db->query($sql, $param)->getResultArray()[0];
+
+            //echo json_encode($response);
+            //echo json_encode(print_r($origMemType)); exit;
+
+            $no_of_added = 0;
+            $submitted_fields = $this->request->getPost('group-a');
+
+            if ($submitted_fields != null) {
+                foreach ($submitted_fields as $submitted_field) {
+                    if (!$this->checkMembershipType($submitted_field['MEM_CODE'])) // Check if entered Rate Class already exists
+                    {
+                        $newMemType = [
+                            "MEM_CODE" => trim($submitted_field["MEM_CODE"]),
+                            "MEM_DESC" => trim($submitted_field["MEM_DESC"]),
+                            "MEM_DIS_SEQ" => $origMemType["MEM_DIS_SEQ"],
+                            "MEM_POINT_LABEL" => $origMemType["MEM_POINT_LABEL"],
+                            "MEM_CARD_LENGTH" => $origMemType["MEM_CARD_LENGTH"],
+                            "MEM_CARD_PREFIX" => $origMemType["MEM_CARD_PREFIX"],
+                            "MEM_EXP_DATE_REQ" => $origMemType["MEM_EXP_DATE_REQ"],
+                        ];
+
+                        $this->Db->table('FLXY_MEMBERSHIP')->insert($newMemType);
+
+                        $no_of_added += $this->Db->affectedRows();
+                    }
+                }
+            }
+
+            echo $no_of_added;
+            exit;
+
+            //echo json_encode(print_r($_POST)); exit;
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function deleteMembershipType()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_MEMBERSHIP')->delete(['MEM_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
 }
