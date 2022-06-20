@@ -21,6 +21,7 @@ class CustomRules{
                           array('start' => 'PKG_CD_START_DT', 'end' => 'PKG_CD_END_DT'),
                           array('start' => 'RSV_ITM_BEGIN_DATE', 'end' => 'RSV_ITM_END_DATE'));
 
+                       
     foreach($date_fields as $date_field)
     {
         if(isset($_POST[$date_field['start']]) && isset($_POST[$date_field['end']]))
@@ -128,9 +129,58 @@ class CustomRules{
      *  Check Item QTY is less than the available QTY 
      */
 
-     
+     if($data['RSV_ITM_QTY'] < $fields )
+     {
+      return true;
+     }
+      else {
+          return false;
+      }  
+
+  }
+
+  public function itemAvailableCheck(string $str, string $fields, array $data)
+  {
+    /**
+     *  Check Item QTY is less than the available QTY 
+     */
+
+    $RSV_ITM_BEGIN_DATE = date('Y-m-d',(strtotime($data['RSV_ITM_BEGIN_DATE'])));
+    $RSV_ITM_END_DATE   =  date('Y-m-d',(strtotime($data['RSV_ITM_END_DATE'])));
+
+    $sql = "SELECT FLXY_DAILY_INVENTORY.ITM_ID FROM FLXY_DAILY_INVENTORY INNER JOIN FLXY_ITEM ON FLXY_ITEM.ITM_ID = FLXY_DAILY_INVENTORY.ITM_ID WHERE ('".$RSV_ITM_BEGIN_DATE."' BETWEEN ITM_DLY_BEGIN_DATE AND ITM_DLY_END_DATE) AND ('".$RSV_ITM_END_DATE."' BETWEEN ITM_DLY_BEGIN_DATE AND ITM_DLY_END_DATE) AND FLXY_DAILY_INVENTORY.ITM_ID = ".$data['RSV_ITM_ID'];                 
+
+    $response = $this->Db->query($sql)->getNumRows();
+
+     if($response == 0)
+     {
+      return false;
+     }
+      else {
+          return true;
+      }  
+
+  }
+
+
+  public function itemDateOverlapCheck(string $str, string $fields, array $data)
+  {
+    /**
+     *  Check Item dates are overlapped or not */
+
+    $RSV_ITM_BEGIN_DATE = date('Y-m-d',(strtotime($data['RSV_ITM_BEGIN_DATE'])));
+    $RSV_ITM_END_DATE   =  date('Y-m-d',(strtotime($data['RSV_ITM_END_DATE'])));
+
+    $sql = "SELECT * FROM FLXY_RESERVATION_ITEM WHERE RSV_ITM_ID = '".$data['RSV_ITM_ID']."' AND ('".$RSV_ITM_BEGIN_DATE."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE) AND ('".$RSV_ITM_END_DATE."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE)";               
+
+   
+    $response = $this->Db->query($sql)->getNumRows();
+    return ($response==0 ? true : false);
+    
 
 
   }
+
+  
 
 }

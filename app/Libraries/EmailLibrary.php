@@ -12,7 +12,7 @@ class EmailLibrary{
         $paramraw['data'] = $rawparam[0];
         $paramraw['mode'] = $param;
         $html = view('EmailTemplates/ReservationTemplate',$paramraw);
-        $this->email->setFrom('notifications@farnek.com', 'FlexiGuest | Hitek');
+        $this->email->setFrom('notifications@farnek.com', 'FLEXIGUEST | HITEK');
         $this->email->setTo($toEmail);
         $this->email->setSubject('Pre Check-in Link');
         $this->email->setMessage($html);//your message here

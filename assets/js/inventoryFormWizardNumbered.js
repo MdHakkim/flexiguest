@@ -65,7 +65,7 @@
          RSV_ITM_QTY: {
            validators: {
              notEmpty: {
-               message: 'The Price cannot be empty'
+               message: 'The QTY cannot be empty'
              }
            }
          },

@@ -37,14 +37,13 @@
                     <div class="bs-stepper-content">
                     <form id="submitForm" class="needs-validation" novalidate>
                         
-                        <div class="row g-3 mt-2">
-                            
+                        <div class="row g-3 mt-2">                           
 
                             <div class="col-md-5">
                                 <lable class="form-lable"><b>Arrival Date *</b></lable>
                                 <div class="col-md-12">
                                 <div class="input-group">
-                                    <input type="text" id="ARRIVAL_DATE" name="ARRIVAL_DATE" class="form-control" placeholder="DD-MM-YYYY">
+                                    <input type="text" id="ARRIVAL_DATE" name="ARRIVAL_DATE" class="form-control" placeholder="DD-MM-YYYY" required>
                                     <span class="input-group-append">
                                         <span class="input-group-text bg-light d-block">
                                             <i class="fa fa-calendar"></i>
@@ -69,8 +68,8 @@
                             </h5>                          
                             <div class="col-md-3">
                                 <label class="switch">
-                                    <input id=""  value="1" name="RESV_INDIV" type="checkbox"
-                                        class="switch-input" />
+                                    <input  value="1" name="RESV_INDIV" id="RESV_INDIV" type="checkbox"
+                                        class="switch-input" required />
                                     <span class="switch-toggle-slider">
                                         <span class="switch-on">
                                             <i class="bx bx-check"></i>
@@ -86,7 +85,7 @@
                             <div class="col-md-3">
                                 <label class="switch">
                                     <input id="RESV_BLOCK"  value="1" name="RESV_BLOCK" type="checkbox"
-                                        class="switch-input" />
+                                        class="switch-input" required />
                                     <span class="switch-toggle-slider">
                                         <span class="switch-on">
                                             <i class="bx bx-check"></i>
@@ -102,14 +101,10 @@
                         <div class="row g-3 mt-2">
                             <h5 mb-0 pb-0>Filter </h5>                   
                             <div class="col-md-4">
-                                <lable class="form-lable"><b>From Name </b></lable>
+                                <lable class="form-lable"><b>Name </b></lable>
                                 <input type="text" name="RESV_FROM_NAME" id="RESV_FROM_NAME" class="form-control bootstrap-maxlength"  />                        
                             </div> 
 
-                            <div class="col-md-4">
-                                <lable class="form-lable"><b>To Name </b></lable>
-                                <input type="text" name="RESV_TO_NAME" id="RESV_TO_NAME" class="form-control bootstrap-maxlength"  />                        
-                            </div> 
 
                             <div class="col-md-4">
                                 <lable class="form-lable"><b>Room Class </b></lable>
@@ -164,13 +159,13 @@
                         </div>
                         <div class="row g-3 mt-2">   
                             <div class="col-md-2">
-                            <a class="btn btn-primary d-grid w-100 mb-3" target="_blank" href="<?php echo base_url('registerCardPreview') ?>">
+                            <a class="btn btn-primary d-grid w-100 mb-3" href="javascript:;" onclick ="onClickPreview('1')">
                                 Preview
                             </a>
                             </div>
                             <div class="col-md-2">
 
-                            <a class="btn btn-primary d-grid w-100 mb-3" target="_blank" href="<?php echo base_url('registerCardPrint') ?>">
+                            <a class="btn btn-primary d-grid w-100 mb-3"  href="javascript:;" onclick="onClickPreview('2')">
                                 Print
                             </a>
                              
@@ -199,8 +194,60 @@ $(document).ready(function() {
     $('#ARRIVAL_DATE').datepicker({
         format: 'd-M-yyyy',
         autoclose: true,
+        startDate: '-0m',
     });
 });
+
+function onClickPreview(action) { 
+    $('#errorModal').hide();
+    
+        if($('#ARRIVAL_DATE').val() == '' && ( !$('#RESV_INDIV').is(':checked') && !$('#RESV_BLOCK').is(':checked'))){
+            $('#errorModal').show();        
+            error = '<ul><li>Arrival date is required</li><li>Reservation type is required</li></ul>';   
+            $('#formErrorMessage').html(error);
+            
+        }
+        else if($('#ARRIVAL_DATE').val() == ''){
+            $('#errorModal').show();        
+            error = '<ul><li>Arrival date is required</li></ul>';   
+            $('#formErrorMessage').html(error);
+            
+        }
+    
+        else if( !$('#RESV_INDIV').is(':checked') && !$('#RESV_BLOCK').is(':checked')){
+            $('#errorModal').show();   
+            error = '<ul><li>Reservation type is required</li></ul>';  
+            $('#formErrorMessage').html(error);
+           
+        }
+        else{
+
+            $.ajax({
+                url: '<?= base_url('registerCardSaveDetails') ?>',
+                type: "post",
+                data: $('#submitForm').serializeArray(),
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response.success);                    
+                    if (response > 0) {
+                        if(action == 1)                   
+                        window.open('<?= base_url('/registerCardPreview') ?>', '_blank');
+                        else if(action == 2)
+                        window.open('<?= base_url('/registerCardPrint') ?>', '_blank');
+                        
+                    }
+                    else{
+                        $('#errorModal').show();   
+                        error = '<ul><li>No reservations found</li></ul>';  
+                        $('#formErrorMessage').html(error);
+
+                    }
+                }
+            });  
+    }
+          
+}
+
 </script>
 
 
