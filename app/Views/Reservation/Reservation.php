@@ -1942,11 +1942,6 @@
 <!-- Content wrapper -->
 <?=$this->include("Reservation/CompanyAgentModal")?>
 <script>
-function showModalAlert(modalType, modalContent) {
-    $('#' + modalType + 'Modal').show();
-    $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
-        '</ul>');
-}
 
 var compAgntMode = '';
 var linkMode = '';

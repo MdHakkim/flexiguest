@@ -1088,7 +1088,7 @@ class MastersController extends BaseController
     {
         $sysid = $this->request->getPost('sysid');
 
-        $init_cond = array("PKG_CD_ID = " => "'$sysid'"); // Add condition for main Rate Code
+        $init_cond = array("PKG_CD_ID = " => "'$sysid'"); // Add condition for Package Code
 
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_PACKAGE_CODE_DETAIL';

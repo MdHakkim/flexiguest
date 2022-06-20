@@ -403,20 +403,6 @@
 
   });
 
-  function hideModalAlerts() {
-    $('#errorModal').hide();
-    $('#successModal').hide();
-    $('#warningModal').hide();
-  }
-
-  function showModalAlert(modalType, modalContent) {
-   
-    $('#' + modalType + 'Modal').show();
-    $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
-        '</ul>');
-  }
-
-
 // Update existing Inventory Items Detail
   /*
   $(document).on('click', '.save-item-detail', function() {
@@ -520,7 +506,7 @@
               showModalAlert('info',
                 'Fill in the form and click the \'Save\' button to add the new item Detail'
               );
-              $('#infoModal').delay(2500).fadeOut();
+              //$('#infoModal').delay(2500).fadeOut();
               
             }
           }

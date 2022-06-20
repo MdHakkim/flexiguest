@@ -178,7 +178,7 @@ class ApplicatioController extends BaseController
         $sysid = $this->request->getPost('sysid');
 
         $init_cond = array( "AC_GP_ID = " => "1", 
-                            "ELEMENT_ID = " => "'$sysid'"); // Add condition for main Rate Code
+                            "ELEMENT_ID = " => "'$sysid'"); // Add condition for Reservation Item
 
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_ACTIVITY_LOG_VIEW';
@@ -198,14 +198,14 @@ class ApplicatioController extends BaseController
     function insertReservation(){
         try{
             $validate = $this->validate([
-                'RESV_ARRIVAL_DT' => 'required',
-                'RESV_DEPARTURE' => 'required',
-                'RESV_NIGHT' => 'required',
-                'RESV_ADULTS' => 'required'
+                'RESV_ARRIVAL_DT' => ['label' => 'Arrival Date', 'rules' => 'required'],
+                'RESV_DEPARTURE' => ['label' => 'Departure Date', 'rules' => 'required'],
+                'RESV_NIGHT' => ['label' => 'No. of Nights', 'rules' => 'required'],
+                'RESV_ADULTS' => ['label' => 'Rate Class Description', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
-                $result["SUCCESS"] = "-402";
+                $result["aSUCCESS"] = "-402";
                 $result[]["ERROR"] = $validate;
                 $result = $this->responseJson("-402",$validate);
                 echo json_encode($result);
@@ -294,7 +294,9 @@ class ApplicatioController extends BaseController
                 foreach($currentReservation as $rkey => $rvalue)
                 {
                     // Save changes in log description if data is updated/changed
-                    if(isset($data[$rkey]) && !empty(trim($data[$rkey])) && !empty(trim($rvalue)) && trim($data[$rkey]) != trim($rvalue))
+                    if( isset($data[$rkey]) && 
+                        (!empty(trim($data[$rkey])) || !empty(trim($rvalue))) && 
+                        trim($data[$rkey]) != trim($rvalue))
                     {
                         $log_action_desc .= "<b>".str_replace('RESV_', '', $rkey) . ": </b> '" . $rvalue . "' -> '". $data[$rkey]."'<br/>";
                     }
@@ -441,7 +443,9 @@ class ApplicatioController extends BaseController
         foreach($currentCustomer as $ckey => $cvalue)
         {
             // Save changes in log description if data is updated/changed
-            if(isset($data[$ckey]) && !empty(trim($data[$ckey])) && !empty(trim($cvalue)) && trim($data[$ckey]) != trim($cvalue))
+            if( isset($data[$ckey]) && 
+                (!empty(trim($data[$ckey])) || !empty(trim($cvalue))) && 
+                trim($data[$ckey]) != trim($cvalue))
             {
                 $log_action_desc .= "<b>".str_replace('CUST_', '', $ckey) . ": </b> '" . $cvalue . "' -> '". $data[$ckey]."'<br/>";
             }
@@ -488,17 +492,18 @@ class ApplicatioController extends BaseController
     function insertCustomer(){
         try{
             $validate = $this->validate([
-                'CUST_FIRST_NAME' => 'required',
+                'CUST_FIRST_NAME' => ['label' => 'First Name', 'rules' => 'required'],
                 'CUST_EMAIL' =>[
+                    'label' => 'Email Address',
                     'rules'  => "required|valid_email|emailVerification[CUST_EMAIL,CUST_ID]",
                     'errors' => [
-                        'required' => 'Email is required does not empty',
-                        'emailVerification' => 'Email already exist'
+                        'required' => 'Email is required and cannot be empty',
+                        'emailVerification' => 'Email already exists'
                         ]
                     ],
-                'CUST_MOBILE' => 'required',
-                'CUST_ADDRESS_1' => 'required',
-                'CUST_COUNTRY' => 'required'
+                'CUST_MOBILE' => ['label' => 'Mobile Number', 'rules' => 'required'],
+                'CUST_ADDRESS_1' => ['label' => 'Address', 'rules' => 'required'],
+                'CUST_COUNTRY' => ['label' => 'Country', 'rules' => 'required'],
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -546,7 +551,9 @@ class ApplicatioController extends BaseController
                 foreach($currentCustomer as $ckey => $cvalue)
                 {
                     // Save changes in log description if data is updated/changed
-                    if(isset($data[$ckey]) && !empty(trim($data[$ckey])) && !empty(trim($cvalue)) && trim($data[$ckey]) != trim($cvalue))
+                    if( isset($data[$ckey]) && 
+                        (!empty(trim($data[$ckey])) || !empty(trim($cvalue))) && 
+                        trim($data[$ckey]) != trim($cvalue))
                     {
                         $log_action_desc .= "<b>".str_replace('CUST_', '', $ckey) . ": </b> '" . $cvalue . "' -> '". $data[$ckey]."'<br/>";
                     }
@@ -663,7 +670,20 @@ class ApplicatioController extends BaseController
         $sysid = $this->request->getPost('sysid');
 
         $init_cond = array( "AC_GP_ID = " => "3", 
-                            "ELEMENT_ID = " => "'$sysid'"); // Add condition for main Rate Code
+                            "ELEMENT_ID = " => "'$sysid'"); // Add condition for Customer
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_ACTIVITY_LOG_VIEW';
+        $columns = 'LOG_ID,USR_NAME,LOG_DATE,LOG_TIME,AC_TY_DESC,LOG_ACTION_DESCRIPTION';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
+    public function CustomerMembershipsView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array( "CUST_ID = " => "'$sysid'"); // Add condition for Customer
 
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_ACTIVITY_LOG_VIEW';
@@ -785,9 +805,9 @@ class ApplicatioController extends BaseController
     function insertCompany(){
         try{
             $validate = $this->validate([
-                'COM_ACCOUNT' => 'required|min_length[3]',
-                'COM_CONTACT_EMAIL' => 'required|valid_email',
-                'COM_COUNTRY' => 'required'
+                'COM_ACCOUNT' => ['label' => 'Account', 'rules' => 'required|min_length[3]'],
+                'COM_CONTACT_EMAIL' => ['label' => 'Contact Email', 'rules' => 'required|valid_email'],
+                'COM_COUNTRY' => ['label' => 'Country', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -867,9 +887,9 @@ class ApplicatioController extends BaseController
     function insertAgent(){
         try{
             $validate = $this->validate([
-                'COM_ACCOUNT' => 'required|min_length[3]',
-                'COM_CONTACT_EMAIL' => 'required|valid_email',
-                'COM_COUNTRY' => 'required'
+                'COM_ACCOUNT' => ['label' => 'Account', 'rules' => 'required|min_length[3]'],
+                'COM_CONTACT_EMAIL' => ['label' => 'Contact Email', 'rules' => 'required|valid_email'],
+                'COM_COUNTRY' => ['label' => 'Country', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -1052,9 +1072,9 @@ class ApplicatioController extends BaseController
     function insertGroup(){
         try{
             $validate = $this->validate([
-                'GRP_NAME' => 'required|min_length[3]',
-                'GRP_EMAIL' => 'required|valid_email',
-                'GRP_COUNTRY' => 'required'
+                'GRP_NAME' => ['label' => 'Account', 'rules' => 'required|min_length[3]'],
+                'GRP_EMAIL' => ['label' => 'Contact Email', 'rules' => 'required|valid_email'],
+                'GRP_COUNTRY' => ['label' => 'Country', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -1209,11 +1229,11 @@ class ApplicatioController extends BaseController
     function insertBlock(){
         try{
             $validate = $this->validate([
-                'BLK_GROUP' => 'required',
-                'BLK_NAME' => 'required',
-                'BLK_CODE' => 'required',
-                'BLK_START_DT' => 'required',
-                'BLK_END_DT' => 'required'
+                'BLK_GROUP' => ['label' => 'Block Group', 'rules' => 'required'],
+                'BLK_NAME' => ['label' => 'Block Name', 'rules' => 'required'],
+                'BLK_CODE' => ['label' => 'Block Code', 'rules' => 'required'],
+                'BLK_START_DT' => ['label' => 'Start Date', 'rules' => 'required'],
+                'BLK_END_DT' => ['label' => 'End Date', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -1333,7 +1353,7 @@ class ApplicatioController extends BaseController
     function insertRoom(){
         try{
             $validate = $this->validate([
-                'RM_NO' => 'required'
+                'RM_NO' => ['label' => 'Room Number', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -1460,7 +1480,7 @@ class ApplicatioController extends BaseController
             // $data = $this->request->getRawInput();
             echo $test = $this->request->getPost("RM_CL_CODE");
             $validate = $this->validate([
-                'RM_CL_CODE' => 'required'
+                'RM_CL_CODE' => ['label' => 'Room Class Code', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -1537,7 +1557,7 @@ class ApplicatioController extends BaseController
     public function insertRoomType(){
         try{
             $validate = $this->validate([
-                'RM_TY_CODE' => 'required'
+                'RM_TY_CODE' => ['label' => 'Room Type', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -1735,7 +1755,7 @@ class ApplicatioController extends BaseController
     public function insertRoomFloor(){
         try{
             $validate = $this->validate([
-                'RM_FL_CODE' => 'required'
+                'RM_FL_CODE' => ['label' => 'Room Floor', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -1810,7 +1830,7 @@ class ApplicatioController extends BaseController
     public function insertRoomFeature(){
         try{
             $validate = $this->validate([
-                'RM_FT_CODE' => 'required'
+                'RM_FT_CODE' => ['label' => 'Room Feature', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -1885,7 +1905,7 @@ class ApplicatioController extends BaseController
     public function insertSection(){
         try{
             $validate = $this->validate([
-                'SC_FL_CODE' => 'required'
+                'SC_FL_CODE' => ['label' => 'Section Code', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -1965,7 +1985,7 @@ class ApplicatioController extends BaseController
     public function insertSource(){
         try{
             $validate = $this->validate([
-                'SOR_CODE' => 'required'
+                'SOR_CODE' => ['label' => 'Source Code', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -2044,7 +2064,7 @@ class ApplicatioController extends BaseController
     public function insertSourceGroup(){
         try{
             $validate = $this->validate([
-                'SOR_GR_CODE' => 'required'
+                'SOR_GR_CODE' => ['label' => 'Source Group Code', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -2121,7 +2141,7 @@ class ApplicatioController extends BaseController
     public function insertSpecial(){
         try{
             $validate = $this->validate([
-                'SPC_CODE' => 'required'
+                'SPC_CODE' => ['label' => 'Special Code', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -2196,7 +2216,7 @@ class ApplicatioController extends BaseController
     public function insertReservationType(){
         try{
             $validate = $this->validate([
-                'RESV_TY_CODE' => 'required'
+                'RESV_TY_CODE' => ['label' => 'Reservation Type', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -2271,7 +2291,7 @@ class ApplicatioController extends BaseController
     public function insertPurposeStay(){
         try{
             $validate = $this->validate([
-                'PUR_ST_CODE' => 'required'
+                'PUR_ST_CODE' => ['label' => 'Purpose Stay Code', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -2346,7 +2366,7 @@ class ApplicatioController extends BaseController
     public function insertPayment(){
         try{
             $validate = $this->validate([
-                'PYM_CODE' => 'required'
+                'PYM_CODE' => ['label' => 'Payment Code', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -2589,7 +2609,7 @@ class ApplicatioController extends BaseController
     public function insertOverBooking(){
         try{
             $validate = $this->validate([
-                'OB_FROM_DT' => 'required'
+                'OB_FROM_DT' => ['label' => 'From Date', 'rules' => 'required']
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();

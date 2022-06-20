@@ -18,30 +18,43 @@
       {
         if(isset($session) && null !== $session->getFlashdata($modalType)) { 
 ?>
-        <div class="alert alert-solid-<?=$modalType?> alert-dismissible d-flex align-items-center" role="alert">
-            <i class="bx bx-xs bx-store me-2"></i>
-            <?php echo $session->getFlashdata($modalType); ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div><br />
+<div class="alert alert-solid-<?=$modalType?> alert-dismissible d-flex align-items-center" role="alert">
+    <i class="bx bx-xs bx-store me-2"></i>
+    <?php echo $session->getFlashdata($modalType); ?>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div><br />
 
 <?php   }
 ?>
-        <div id="<?=$modalType?>Modal" class="alertModal">
-            <div class="alert alert-<?=$modalType?>" role="alert">
-                <button type="button" style="float: right;" class="btn-close btn-close-<?=$modalType?> btn-modal-close" aria-label="Close"></button>
-                <h6 class="alert-heading"><?=$modalType == 'success' ? ucfirst($modalType).'!' : ''?></h6>
-                <div id="form<?=ucfirst($modalType)?>Message"></div>
-            </div>
-        </div>
+<div id="<?=$modalType?>Modal" class="alertModal">
+    <div class="alert alert-<?=$modalType?>" role="alert">
+        <button type="button" style="float: right;" class="btn-close btn-close-<?=$modalType?> btn-modal-close"
+            aria-label="Close"></button>
+        <h6 class="alert-heading"><?=$modalType == 'success' ? ucfirst($modalType).'!' : ''?></h6>
+        <div id="form<?=ucfirst($modalType)?>Message"></div>
+    </div>
+</div>
 <?php
       }
 ?>
 
 <script>
+function hideModalAlerts() {
+    $('#errorModal').hide();
+    $('#successModal').hide();
+    $('#warningModal').hide();
+}
 
+function showModalAlert(modalType, modalContent) {
+    $('#' + modalType + 'Modal').show();
+    $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
+        '</ul>');
+
+    $('#' + modalType + 'Modal').delay(6000).fadeOut();
+}
 
 $(document).on('click', '.btn-modal-close', function() {
     $(this).parents('.alertModal').hide();
-    
+
 });
 </script>

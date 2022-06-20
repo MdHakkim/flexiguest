@@ -402,18 +402,6 @@
 
     });
 
-    function hideModalAlerts() {
-        $('#errorModal').hide();
-        $('#successModal').hide();
-        $('#warningModal').hide();
-    }
-
-    function showModalAlert(modalType, modalContent) {
-        $('#' + modalType + 'Modal').show();
-        $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
-            '</ul>');
-    }
-
     function addForm() {
         $(':input', '#submitForm').not('[type="radio"],[type="checkbox"]').val('').prop('checked', false).prop('selected', false);
         $('.select2').val(null).trigger('change');

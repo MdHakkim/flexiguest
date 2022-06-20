@@ -2304,19 +2304,6 @@ function showPackageCodeDetails(pkgCodeID, dtID = 0) {
     });
 }
 
-function hideModalAlerts() {
-    $('#errorModal').hide();
-    $('#successModal').hide();
-    $('#infoModal').hide();
-    $('#warningModal').hide();
-}
-
-function showModalAlert(modalType, modalContent) {
-    $('#' + modalType + 'Modal').show();
-    $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
-        '</ul>');
-}
-
 // Add / Edit Rate Code
 
 function submitForm(id) {

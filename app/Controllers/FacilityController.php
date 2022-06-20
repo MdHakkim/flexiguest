@@ -71,11 +71,11 @@ class FacilityController extends BaseController
             $attached_path = NULL;
             $validate = $this->validate([
 
-                'MAINT_ROOM_NO' => 'required',
-                'MAINT_TYPE' => 'required',
-                'MAINT_CATEGORY' => 'required',
-                'MAINT_PREFERRED_TIME' => 'required',
-                'MAINT_PREFERRED_DT' => 'required',
+                'MAINT_ROOM_NO' => ['label' => 'Room Number', 'rules' => 'required'],
+                'MAINT_TYPE' => ['label' => 'Maintenance Type', 'rules' => 'required'],
+                'MAINT_CATEGORY' => ['label' => 'Category', 'rules' => 'required'],
+                'MAINT_PREFERRED_TIME' => ['label' => 'Preferred Time', 'rules' => 'required'],
+                'MAINT_PREFERRED_DT' => ['label' => 'Preferred Date', 'rules' => 'required'],
                 'MAINT_ATTACHMENT' => [
                     'uploaded[MAINT_ATTACHMENT]',
                     'mime_in[MAINT_ATTACHMENT,image/png, image/jpeg]',
@@ -265,7 +265,7 @@ class FacilityController extends BaseController
     {
         try {
             $validate = $this->validate([
-                'MAINT_CATEGORY' => 'required',
+                'MAINT_CATEGORY' => ['label' => 'Category', 'rules' => 'required'],
 
             ]);
             if (!$validate) {
@@ -355,8 +355,8 @@ class FacilityController extends BaseController
     {
         try {
             $validate = $this->validate([
-                'MAINT_SUBCATEGORY' => 'required',
-                'MAINT_CATEGORY' => 'required',
+                'MAINT_SUBCATEGORY' => ['label' => 'Sub-category', 'rules' => 'required'],
+                'MAINT_CATEGORY' => ['label' => 'Category', 'rules' => 'required'],
 
             ]);
             if (!$validate) {
@@ -528,13 +528,13 @@ class FacilityController extends BaseController
             $attached_path = NULL;
             $validate = $this->validate([
 
-                'SHUTL_NAME' => 'required',
-                'SHUTL_FROM' => 'required',
-                'SHUTL_TO' => 'required',
-                'SHUTL_START_AT' => 'required',
-                'SHUTL_END_AT' => 'required',
-                'SHUTL_NEXT' => 'required',
-                'SHUTL_DESCRIPTION' => 'required',
+                'SHUTL_NAME' => ['label' => 'Shuttle Name', 'rules' => 'required'],
+                'SHUTL_FROM' => ['label' => 'Shuttle From', 'rules' => 'required'],
+                'SHUTL_TO' => ['label' => 'Shuttle To', 'rules' => 'required'],
+                'SHUTL_START_AT' => ['label' => 'Start At', 'rules' => 'required'],
+                'SHUTL_END_AT' => ['label' => 'End At', 'rules' => 'required'],
+                'SHUTL_NEXT' => ['label' => 'Shuttle Nect', 'rules' => 'required'],
+                'SHUTL_DESCRIPTION' => ['label' => 'Description', 'rules' => 'required'],
                 'SHUTL_ROUTE_IMG' => [
                     'uploaded[SHUTL_ROUTE_IMG]',
                     'mime_in[SHUTL_ROUTE_IMG,image/png, image/jpeg]',
@@ -686,7 +686,7 @@ class FacilityController extends BaseController
         try {
             $validate = $this->validate([
 
-                'SHUTL_STAGE_NAME' => 'required',
+                'SHUTL_STAGE_NAME' => ['label' => 'Shuttle A', 'rules' => 'required'],
 
             ]);
             if (!$validate) {

@@ -174,17 +174,6 @@
 
 <?= $this->section("script") ?>
 <script>
-    function hideModalAlerts() {
-        $('#errorModal').hide();
-        $('#successModal').hide();
-        $('#warningModal').hide();
-    }
-
-    function showModalAlert(modalType, modalContent) {
-        $('#' + modalType + 'Modal').show();
-        $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
-            '</ul>');
-    }
 
     $(document).ready(function() {
         Sortable.create($("#handle-list")[0], {

@@ -40,7 +40,7 @@
               <div class="modal-dialog modal-md">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="popModalWindowlable">New message</h5>
+                    <h5 class="modal-title" id="popModalWindowlable">Room</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                   </div>
                   <div class="modal-body">
@@ -48,7 +48,7 @@
                       <div class="row g-3">
                         <input type="hidden" name="RM_ID" id="RM_ID" class="form-control"/>
                         <div class="col-md-6">
-                          <lable class="form-lable">Room No/Room Class</lable>
+                          <lable class="form-lable">Room No / Room Class</lable>
                             <div class="input-group mb-3">
                                 <div class="col-md-6">
                                   <input type="number" name="RM_NO" id="RM_NO" class="form-control" placeholder="room no" />

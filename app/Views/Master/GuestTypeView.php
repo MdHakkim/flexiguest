@@ -253,17 +253,7 @@ $(document).ready(function() {
    
 });
 
-function hideModalAlerts() {
-    $('#errorModal').hide();
-    $('#successModal').hide();
-    $('#warningModal').hide();
-}
 
-function showModalAlert(modalType, modalContent) {
-    $('#' + modalType + 'Modal').show();
-    $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
-        '</ul>');
-}
 
 // Show Add Rate Class Form
 

@@ -403,17 +403,6 @@ $(document).ready(function() {
     );
 });
 
-function hideModalAlerts() {
-    $('#errorModal').hide();
-    $('#successModal').hide();
-    $('#warningModal').hide();
-}
-
-function showModalAlert(modalType, modalContent) {
-    $('#' + modalType + 'Modal').show();
-    $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
-        '</ul>');
-}
 
 // Show Add Membership Type Form
 
@@ -566,7 +555,7 @@ function submitForm(id) {
         },
         dataType: 'json',
         success: function(respn) {
-            console.log(respn, "testing");
+
             var response = respn['SUCCESS'];
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
