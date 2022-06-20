@@ -42,7 +42,7 @@ class ReservationController extends BaseController
             $reservsations[$index]['documents'] = $this->Documents->where('DOC_CUST_ID', $reservsation['CUST_ID'])->findAll();
         }
 
-        $result = responseJson(200, false, "Reservations list", $reservsations);
+        $result = responseJson(200, false, ['msg' => "Reservations list"], $reservsations);
         return $this->respond($result);
     }
     
