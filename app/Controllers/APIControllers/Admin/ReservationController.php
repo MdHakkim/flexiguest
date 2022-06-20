@@ -22,8 +22,6 @@ class ReservationController extends BaseController
 
     public function getReservationsList()
     {
-        $currentDate = date('Y-m-d');
-
         $reservsations = $this->Reservation
                                 ->select('RESV_ID, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, 
                                         RESV_CHILDREN, RESV_STATUS, RESV_ROOM, 
@@ -38,7 +36,6 @@ class ReservationController extends BaseController
                                 ->join('FLXY_ROOM as fr', 'FLXY_RESERVATION.RESV_ROOM = fr.RM_NO', 'left')
                                 ->join('CITY', 'fc.CUST_CITY = CITY.id', 'left')
                                 ->join('FLXY_VACCINE_DETAILS as fvd', 'fc.CUST_ID = fvd.VACC_CUST_ID', 'left')
-                                ->like('RESV_ARRIVAL_DT', $currentDate)
                                 ->findAll();
 
         foreach($reservsations as $index => $reservsation){
