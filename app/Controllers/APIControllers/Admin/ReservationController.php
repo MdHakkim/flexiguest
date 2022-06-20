@@ -33,11 +33,11 @@ class ReservationController extends BaseController
                                         fc.CUST_DOC_ISSUE, fc.CUST_DOC_EXPIRY, fc.CUST_GENDER, 
                                         fr.RM_DESC, 
                                         CITY.ctname, 
-                                        fvd.VACCINED_DETAILS, fvd.VACCINE_IS_VERIFY, fvd.ISSUED_COUNTRY')
-                                ->join('FLXY_CUSTOMER as fc', 'FLXY_RESERVATION.RESV_NAME = fc.CUST_ID')
-                                ->join('FLXY_ROOM as fr', 'FLXY_RESERVATION.RESV_ROOM = fr.RM_NO')
-                                ->join('CITY', 'fc.CUST_CITY = CITY.id')
-                                ->join('FLXY_VACCINE_DETAILS as fvd', 'fc.CUST_ID = fvd.CUST_ID', 'left')
+                                        fvd.VACC_DETAILS, fvd.VACC_IS_VERIFY, fvd.VACC_ISSUED_COUNTRY')
+                                ->join('FLXY_CUSTOMER as fc', 'FLXY_RESERVATION.RESV_NAME = fc.CUST_ID', 'left')
+                                ->join('FLXY_ROOM as fr', 'FLXY_RESERVATION.RESV_ROOM = fr.RM_NO', 'left')
+                                ->join('CITY', 'fc.CUST_CITY = CITY.id', 'left')
+                                ->join('FLXY_VACCINE_DETAILS as fvd', 'fc.CUST_ID = fvd.VACC_CUST_ID', 'left')
                                 ->like('RESV_ARRIVAL_DT', $currentDate)
                                 ->findAll();
 
