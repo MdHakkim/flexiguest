@@ -109,7 +109,7 @@
                 if (response['SUCCESS'] == 200) {
                     hideSearchReservationPopup();
 
-                    share_reservation = response.RESPONSE.OUTPUT;
+                    share_reservation = response.RESPONSE.OUTPUT.reservations[0];
                     let reservation = response.RESPONSE.OUTPUT.reservations[0];
                     
                     if ($(`#combine-popup`).is(':visible')) {
