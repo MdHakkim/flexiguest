@@ -79,7 +79,7 @@
                 <button type="button" class="btn btn-danger break-share-btn">Break Share</button>
                 <button type="button" class="btn btn-primary reservation-btn editReserWindow">Reservation</button>
 
-                <button type="button" class="btn btn-success" onclick="addShareReservations()">Save</button>
+                <!-- <button type="button" class="btn btn-success" onclick="saveShareReservations()">Save</button> -->
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
@@ -281,16 +281,29 @@
     var share_by_profile_form_id = "#share-by-profile-form";
     var share_by_reservation_form_id = "#share-by-reservation-form";
     var share_reservation = false;
+    var newly_added_reservation_ids = [];
 
     // disable button if reservation is not shared
-    function disableButtons() {
-        $('.entire-btn').prop('disabled', true);
-        $('.split-btn').prop('disabled', true);
-        $('.full-btn').prop('disabled', true);
-        // $('.break-share-btn').prop('disabled', true);
+    function enableDisableButtons() {
+        let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
+            return $(this).val();
+        }).get();
+
+        $('.entire-btn').prop('disabled', false);
+        $('.split-btn').prop('disabled', false);
+        $('.full-btn').prop('disabled', false);
+        $('.break-share-btn').prop('disabled', false);
+
+        if (reservation_ids.length == 1) {
+            $('.entire-btn').prop('disabled', true);
+            $('.split-btn').prop('disabled', true);
+            $('.full-btn').prop('disabled', true);
+            $('.break-share-btn').prop('disabled', true);
+        }
     }
 
     function displaySharePopup() {
+        setBtnsAttr(ressysId);
         getReservationDetails();
         $("#shares-popup").modal('show');
     }
@@ -317,6 +330,9 @@
                     $('.room-details').html(output.room_details);
                     $('.nightly-rate-details').html(output.nightly_rate_details);
                     $('.reservation-arrival-details').html(output.reservation_arrival_details);
+
+                    enableDisableButtons();
+                    setBtnsAttr(ressysId);
                 }
             }
         });
@@ -326,17 +342,15 @@
         $('.active-tr').removeClass('active-tr');
         $(e).addClass('active-tr');
         // ressysId = reservation_id;
-        setReservationBtnAttr(reservation_id);
-        setBreakShareBtnAttr(reservation_id);
+        setBtnsAttr(reservation_id);        
     }
 
-    function setReservationBtnAttr(reservation_id) {
+    function setBtnsAttr(reservation_id) {
         $('#shares-popup .reservation-btn').attr('data_sysid', reservation_id);
-    }
-
-    
-    function setBreakShareBtnAttr(reservation_id) {
         $('#shares-popup .break-share-btn').attr('data_sysid', reservation_id);
+        $('#shares-popup .entire-btn').attr('data_sysid', reservation_id);
+        $('#shares-popup .split-btn').attr('data_sysid', reservation_id);
+        $('#shares-popup .full-btn').attr('data_sysid', reservation_id);
     }
 
     function displayCombinePopup() {
@@ -349,6 +363,8 @@
     }
 
     function submitShareByProfileForm() {
+        hideCombinePopup();
+
         let form_data = new FormData($(share_by_profile_form_id)[0]);
         form_data.append('other_reservation_id', ressysId);
 
@@ -367,9 +383,9 @@
 
                     showModalAlert('error', errors);
                 } else {
-                    let output = response['RESPONSE']['OUTPUT'];
-                    $('.nightly-rate-details').append(output['nightly_rate_details']);
-                    $('.reservation-arrival-details').append(output['reservation_arrival_details']);
+                    let reservation_id = response['RESPONSE']['OUTPUT'];
+                    newly_added_reservation_ids.push(reservation_id);
+                    saveShareReservations();
                 }
             }
         });
@@ -379,15 +395,17 @@
         hideCombinePopup();
 
         if (share_reservation) {
-            $('.nightly-rate-details').append(share_reservation['nightly_rate_details']);
-            $('.reservation-arrival-details').append(share_reservation['reservation_arrival_details']);
+            newly_added_reservation_ids.push(share_reservation['RESV_ID']);
+            saveShareReservations();
         }
     }
 
-    function addShareReservations() {
+    function saveShareReservations() {
         let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
             return $(this).val();
         }).get();
+
+        reservation_ids = reservation_ids.concat(newly_added_reservation_ids);
 
         $.ajax({
             url: '<?= base_url('reservation/shares/add-share-reservations') ?>',
@@ -397,38 +415,87 @@
             },
             dataType: 'json',
             success: function(response) {
-                if(response['SUCCESS'] == 200){
+                if (response['SUCCESS'] == 200) {
+                    newly_added_reservation_ids = [];
+                    getReservationDetails();
                     showModalAlert('success', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
+                } else {
+                    showModalAlert('error', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
                 }
             }
         });
     }
 
     $(document).on('click', '.break-share-btn', function() {
-        let reservation_id = $(this).attr('data_sysid');
+        let selected_reservation_id = $(this).attr('data_sysid');
+        let main_reservation_id = ressysId;
+        
+        let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
+            return $(this).val();
+        }).get();
 
         $.ajax({
             url: '<?= base_url('reservation/shares/break-share-reservation') ?>',
             type: 'post',
             data: {
-                reservation_id
+                selected_reservation_id,
+                main_reservation_id,
+                reservation_ids,
+                share_rate: 'full',
             },
             dataType: 'json',
             success: function(response) {
-                if(response['SUCCESS'] == 200){
+                if (response['SUCCESS'] == 200) {
                     showModalAlert('success', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
                     getReservationDetails();
+                }else{
+                    showModalAlert('error', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
                 }
             }
         });
     });
 
+    function changeShareRate(selected_reservation_id, share_rate) {
+        let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
+            return $(this).val();
+        }).get();
+
+        $.ajax({
+            url: '<?= base_url('reservation/shares/change-share-rate') ?>',
+            type: 'post',
+            data: {
+                selected_reservation_id,
+                reservation_ids,
+                share_rate,
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response['SUCCESS'] == 200) {
+                    showModalAlert('success', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
+                    getReservationDetails();
+                }
+            }
+        });
+    }
+
     $(document).ready(function() {
-        disableButtons();
-        setReservationBtnAttr();
+        enableDisableButtons();
 
         $(".shares-btn").click(displaySharePopup);
         $(".combine-btn").click(displayCombinePopup);
+
+        $(".entire-btn").click(function() {
+            changeShareRate($(this).attr('data_sysid'), 'entire');
+        });
+
+        $(".split-btn").click(function() {
+            changeShareRate($(this).attr('data_sysid'), 'split');
+        });
+
+        $(".full-btn").click(function() {
+            changeShareRate($(this).attr('data_sysid'), 'full');
+        });
+
 
         $('#combine-popup li.nav-item').click(function(e) {
             e.preventDefault();
