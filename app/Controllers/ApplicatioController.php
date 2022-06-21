@@ -3113,7 +3113,7 @@ class ApplicatioController extends BaseController
 
     function confirmPrecheckinStatus(){
         $sysid = $this->request->getPost("DOC_RESV_ID");
-        $data = ["RESV_STATUS" => 'Pre Check-In Completed',
+        $data = ["RESV_STATUS" => 'Pre Checked-In',
             "RESV_UPDATE_UID" => $this->session->name,
             "RESV_UPDATE_DT" => date("d-M-Y")
         ];

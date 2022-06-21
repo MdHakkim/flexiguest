@@ -795,7 +795,7 @@ class APIController extends BaseController
             "RESV_ETA" => $this->request->getVar("estimatedTimeOfArrival"),
             "RESV_UPDATE_UID" => $USR_ID,
             "RESV_UPDATE_DT" => date("d-M-Y"),
-            "RESV_STATUS" => 'Pre Check-In Completed',
+            "RESV_STATUS" => 'Pre Checked-In',
         ];
 
         // update the signature in the documents table
@@ -1019,7 +1019,7 @@ class APIController extends BaseController
         $room_list = $this->DB->table('FLXY_RESERVATION')
                             ->select('RESV_ID, RESV_ROOM')
                             ->where('RESV_NAME', $customer_id)
-                            ->where('RESV_STATUS', 'CheckedIn Completed')
+                            ->where('RESV_STATUS', 'Checked-In')
                             ->where('RESV_ROOM !=', '')
                             ->get()
                             ->getResult();
