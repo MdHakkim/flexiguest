@@ -109,6 +109,8 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
     $routes->get("news", "NewsController::news");
     $routes->get("guideline", "GuidelineController::guideline");
     $routes->get("app-update", "AppUpdateController::appUpdate");
+
+    $routes->get("maintenance/maintenance-list", "MaintenanceController::maintenanceList");
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  
