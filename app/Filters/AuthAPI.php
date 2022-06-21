@@ -23,7 +23,7 @@ class AuthAPI implements FilterInterface
 
             if (!empty($decoded)) {
 
-                if (isset($arguments[0]) && isset($decoded['token_info']->data->USR_ROLE) && $arguments[0] == $decoded['token_info']->data->USR_ROLE) {
+                if (isset($arguments[0]) && isset($decoded['token_info']->data->USR_ROLE) && ($arguments[0] == 'admin_guest' || $arguments[0] == $decoded['token_info']->data->USR_ROLE)) {
 
                     $request->user = $decoded['table_info'];
                     return $request;
