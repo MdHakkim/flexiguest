@@ -396,7 +396,7 @@
                     var ERROR = response['RESPONSE']['REPORT_RES'];
                     var mcontent = '';
                     $.each(ERROR, function(ind, data) {
-                        console.log(data, "SDF");
+                        
                         mcontent += '<li>' + data + '</li>';
                     });
                     showModalAlert('error', mcontent);
@@ -435,7 +435,7 @@
             dataType: 'json',
             success: function(respn) {
                 $(respn).each(function(inx, data) {
-                    console.log(data);
+                    
 
                     $.each(data, function(field, val) {
 
@@ -538,7 +538,7 @@
             },
             dataType: 'json',
             success: function(respn) {
-                console.log(respn, "testing");
+                
                 var response = respn['SUCCESS'];
 
                 if (response != '200') {
@@ -546,7 +546,7 @@
                     var ERROR = respn['RESPONSE']['ERROR'];
                     var mcontent = '';
                     $.each(ERROR, function(ind, data) {
-                        console.log(data, "SDF");
+                        
                         mcontent += '<li>' + data + '</li>';
                     });
                     showModalAlert('error', mcontent);

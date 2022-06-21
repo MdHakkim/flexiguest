@@ -340,7 +340,7 @@ $(document).on('click', '.delete-record', function() {
                     },
                     dataType: 'json',
                     success: function(respn) {
-                        console.log(respn, "testing");
+                        
                         $('#dataTable_view').dataTable().fnDraw();
                     }
                 });
@@ -364,7 +364,7 @@ function runSupportingLov() {
             var busegmt = respn[1];
             var option = '<option value="">Select Vip</option>';
             var option2 = '<option value="">Select Segment</option>';
-            // console.log(vipData,busegmt,"testing");
+
             $(vipData).each(function(ind, data) {
                 option += '<option value="' + data['VIP_ID'] + '">' + data['VIP_DESC'] +
                     '</option>';
@@ -433,7 +433,7 @@ function runCountryList() {
         async: false,
         // dataType:'json',
         success: function(respn) {
-            // console.log(respn,"testing");
+            
             $('#CUST_COUNTRY').html(respn).selectpicker('refresh');
             $('#CUST_NATIONALITY').html(respn);
         }
@@ -453,7 +453,7 @@ $(document).on('change', '#CUST_COUNTRY', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            console.log(respn, "testing");
+            
             $('#CUST_STATE').html(respn).selectpicker('refresh');
         }
     });
@@ -473,7 +473,7 @@ $(document).on('change', '#CUST_STATE', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            console.log(respn, "testing");
+            
             $('#CUST_CITY').html(respn).selectpicker('refresh');
         }
     });
@@ -501,7 +501,7 @@ $(document).on('click', '.editWindow', function() {
         },
         dataType: 'json',
         success: function(respn) {
-            // console.log(respn,"testing");
+            
             $(respn).each(function(inx, data) {
                 $.each(data, function(fields, datavals) {
                     var field = $.trim(fields); //fields.trim();
@@ -518,12 +518,10 @@ $(document).on('click', '.editWindow', function() {
                     } else if (field == 'CUST_ACTIVE') {
                         // var rmSpace = dataval.trim();
                         if (dataval == 'Y') {
-                            console.log($('#CUST_ACTIVE_CHK'), dataval,
-                                "CUST_ACTIVE_CHK");
+                            
                             $('#CUST_ACTIVE_CHK').prop('checked', true);
                         } else {
-                            console.log($('#CUST_ACTIVE_CHK'), dataval,
-                                "CUST_ACTIVE_CHK");
+                            
                             $('#CUST_ACTIVE_CHK').prop('checked', false)
                         }
                     } else {
@@ -539,6 +537,10 @@ $(document).on('click', '.editWindow', function() {
         }
     });
 });
+
+// Display function clearFormFields
+<?php echo isset($clearFormFields_javascript) ? $clearFormFields_javascript : ''; ?>
+
 </script>
 <script src="<?php //echo base_url('assets/js/bootstrap.bundle.js')?>"></script>
 <script src="<?php //echo base_url('assets/js/bootstrap-select.js')?>"></script>

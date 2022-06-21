@@ -113,7 +113,7 @@
                 headers: {'X-Requested-With': 'XMLHttpRequest'},
                 dataType:'json',
                 success:function(respn){
-                  console.log(respn,"testing");
+                  
                   $('#dataTable_view').dataTable().fnDraw();
                 }
               });

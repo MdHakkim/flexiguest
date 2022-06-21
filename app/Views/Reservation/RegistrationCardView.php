@@ -228,7 +228,7 @@ function onClickPreview(action) {
                 data: $('#submitForm').serializeArray(),
                 dataType: 'json',
                 success: function(response) {
-                    console.log(response.success);                    
+
                     if (response > 0) {
                         if(action == 1)                   
                         window.open('<?= base_url('/registerCardPreview') ?>', '_blank');

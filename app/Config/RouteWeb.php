@@ -267,6 +267,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/deleteMembershipType', 'MastersController::deleteMembershipType');  
     $routes->match(['post'],'/copyMembershipType', 'MastersController::copyMembershipType');
 
+    $routes->match(['post'],'/customerMembershipsView', 'ApplicatioController::CustomerMembershipsView');
 
     // Code By ALEESHA 
     // Maintenance Request 

@@ -193,7 +193,7 @@
             },
             dataType: 'json',
             success: function(response) {
-                console.log(response);
+                
                 if (response['SUCCESS'] != '1') {
 
                     var ERROR = response['RESPONSE']['ERROR'];

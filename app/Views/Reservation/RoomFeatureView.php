@@ -150,7 +150,7 @@
                 headers: {'X-Requested-With': 'XMLHttpRequest'},
                 dataType:'json',
                 success:function(respn){
-                  console.log(respn,"testing");
+                  
                   $('#dataTable_view').dataTable().fnDraw();
                 }
               });
@@ -213,14 +213,14 @@
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         dataType:'json',
         success:function(respn){
-          console.log(respn,"testing");
+          
           var response = respn['SUCCESS'];
           if(response!='1'){
             $('#errorModal').show();
             var ERROR = respn['RESPONSE']['ERROR'];
             var error='<ul>';
             $.each(ERROR,function(ind,data){
-              console.log(data,"SDF");
+              
               error+='<li>'+data+'</li>';
             });
             error+='<ul>';

@@ -59,9 +59,7 @@
           { data: 'COM_CONTACT_NO' },
           // { data: 'CUST_CLIENT_ID' },
           { data: null , render : function ( data, type, row, meta ) {
-            // console.log(data,"GOAL DATA");
-            // console.log(type,"GOAL TYPE");
-            // console.log(row,"GOAL row");
+            
             return (
               '<div class="d-inline-block">' +
                 '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
@@ -120,7 +118,7 @@
                 headers: {'X-Requested-With': 'XMLHttpRequest'},
                 dataType:'json',
                 success:function(respn){
-                  console.log(respn,"testing");
+                  
                   $('#dataTable_view').dataTable().fnDraw();
                 }
               });

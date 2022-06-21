@@ -148,7 +148,7 @@
             headers: {'X-Requested-With': 'XMLHttpRequest'},
             dataType:'json',
             success:function(respn){
-              console.log(respn,"testing");
+              
               $('#dataTable_view').dataTable().fnDraw();
             }
           });
@@ -197,7 +197,7 @@
           
           if(respn.SUCCESS == 200){
             alert("Request Added successfully");
-            console.log(respn)
+            
             $('#reservationChild').modal('hide');
             // $('#dataTable_view').dataTable().fnDraw();
             // window.location.reload();
@@ -226,7 +226,7 @@
         // async:false,
         dataType:'json',
         success:function(respn){
-          console.log(respn);
+          ;
           $(respn).each(function(inx,data){
             var data = respn[0];
             var dataTrim=$.trim(data.MAINT_CAT_ID);

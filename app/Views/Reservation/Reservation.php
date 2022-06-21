@@ -2129,7 +2129,6 @@ $(document).on('click', '.clickPrice', function() {
     $('#rateQueryTable .active').removeClass('active');
     $(this).addClass('active');
     var value = $(this).find('input').val();
-    console.log(value);
 
     var currentTDIndex = $(this).index();
 
@@ -2292,7 +2291,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
         },
         dataType: 'json',
         success: function(respn) {
-            // console.log(respn,"testing");
+            
             $(respn).each(function(inx, data) {
                 $.each(data, function(fields, datavals) {
                     var field = $.trim(fields); //fields.trim();
@@ -2354,7 +2353,7 @@ $(document).on('click', '.delete-record', function() {
                     },
                     dataType: 'json',
                     success: function(respn) {
-                        console.log(respn, "testing");
+                        
                         $('#dataTable_view').dataTable().fnDraw();
                     }
                 });
@@ -2440,7 +2439,7 @@ $(document).on('change', '*#RESV_NAME', function() {
         success: function(respn) {
             if (respn != '') {
                 var json = respn[0];
-                console.log(json.CUST_COUNTRY, json.CUST_VIP, "GJLKES");
+
                 $('#CUST_FIRST_NAME').val($.trim(json.CUST_FIRST_NAME))
                 $('#CUST_TITLE').val($.trim(json.CUST_TITLE));
                 $('#CUST_COUNTRY').val($.trim(json.CUST_COUNTRY)).selectpicker('refresh');
@@ -2486,7 +2485,7 @@ function reservationValidate(event, id, mode) {
         var additionValid = false;
     }
     form.classList.add('was-validated');
-    // console.log(condition,additionValid,"additionValid sdfsf");
+
     if (condition || additionValid) { // -- customize validate user validUsername
         return false;
     } else {
@@ -2519,7 +2518,7 @@ function checkArrivalDate() {
     var endDt = $(endField).val();
     var startDtFmt = moment(startDt, 'DD-MMM-YYYY');
     var endDtFmt = moment(endDt, 'DD-MMM-YYYY');
-    console.log(startDtFmt, endDtFmt, "startDtFmt TREU SDFF");
+
     if (startDtFmt <= endDtFmt) {
         $(startField).removeClass("is-invalid");
         $(startField).addClass("is-valid");
@@ -2583,7 +2582,7 @@ function submitForm(id, mode, event) {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var error = '<ul>';
                 $.each(ERROR, function(ind, data) {
-                    console.log(data, "SDF");
+                    
                     error += '<li>' + data + '</li>';
                 });
                 error += '<ul>';
@@ -2697,7 +2696,7 @@ $(document).on('keyup', '.RESV_RM_TYPE,.RESV_RTC .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            console.log(respn, "testing");
+            
             $('#RESV_RM_TYPE,#RESV_RTC').html(respn).selectpicker('refresh');
         }
     });
@@ -2721,7 +2720,7 @@ $(document).on('keyup', '.RESV_BLOCK .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            console.log(respn, "testing");
+            
             $('*#RESV_BLOCK').html(respn).selectpicker('refresh');
         }
     });
@@ -2740,7 +2739,7 @@ $(document).on('keyup', '.RESV_COMPANY .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            console.log(respn, "testing");
+            
             $('*#RESV_COMPANY').html(respn).selectpicker('refresh');
         }
     });
@@ -2759,7 +2758,7 @@ $(document).on('keyup', '.RESV_AGENT .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            console.log(respn, "testing");
+            
             $('*#RESV_AGENT').html(respn).selectpicker('refresh');
         }
     });
@@ -2779,7 +2778,7 @@ $(document).on('keyup', '.RESV_NAME .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            console.log(respn, "testing");
+            
             $('*#RESV_NAME').html(respn).selectpicker('refresh');
         }
     });
@@ -2798,7 +2797,7 @@ $(document).on('keyup', '.RESV_ROOM .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            console.log(respn, "testing");
+            
             $('*#RESV_ROOM').html(respn).selectpicker('refresh');
         }
     });
@@ -2905,7 +2904,7 @@ function runInitializeConfig() {
                     option += '<option value=\'' + value + '\'>' + desc + '</option>';
                 });
                 var options = '<option value=\'\'>Select</option>' + option;
-                console.log(options, "options");
+
                 $('#' + idArray[ind]).html(options);
                 
                 if($(`#combine-popup select[name='${idArray[ind]}']`).length) {
@@ -2977,7 +2976,6 @@ function searchData(form, mode, event) {
             dataType: 'json',
             success: function(respn) {
                 var respone = respn['table'];
-                console.log(respone, "SDFF");
                 $('#searchRecord').html(respone);
             }
         });
@@ -3171,13 +3169,13 @@ function submitItemForm(id) {
         },
         dataType: 'json',
         success: function(respn) {
-            console.log(respn, "testing");
+            
             var response = respn['SUCCESS'];
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
                 $.each(ERROR, function(ind, data) {
-                    console.log(data, "SDF");
+                    
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);

@@ -643,6 +643,11 @@ class ApplicatioController extends BaseController
     }
 
     public function Customer(){
+
+        $membershipTypeOptions = $this->membershipTypeList();
+        $data['membershipTypeOptions'] = $membershipTypeOptions;
+        
+        $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['title'] = getMethodName();
         return view('Reservation/Customer', $data);
     }
@@ -688,10 +693,32 @@ class ApplicatioController extends BaseController
         $init_cond = array( "CUST_ID = " => "'$sysid'"); // Add condition for Customer
 
         $mine = new ServerSideDataTable(); // loads and creates instance
-        $tableName = 'FLXY_ACTIVITY_LOG_VIEW';
-        $columns = 'LOG_ID,USR_NAME,LOG_DATE,LOG_TIME,AC_TY_DESC,LOG_ACTION_DESCRIPTION';
+        $tableName = 'FLXY_CUSTOMER_MEMBERSHIP LEFT JOIN FLXY_MEMBERSHIP FM ON FM.MEM_ID = FLXY_CUSTOMER_MEMBERSHIP.MEM_ID';
+        $columns = 'CM_ID,CUST_ID,MEM_CODE,MEM_DESC,CM_DIS_SEQ,CM_CARD_NUMBER,CM_EXPIRY_DATE,CM_STATUS';
         $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
+    }
+
+    public function membershipTypeList()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT MEM_ID, MEM_CODE, MEM_DESC
+                FROM FLXY_MEMBERSHIP";
+
+        if ($search != '') {
+            $sql .= " WHERE MEM_CODE LIKE '%$search%'
+                      OR MEM_DESC LIKE '%$search%'";
+        }
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['MEM_ID'] . '">' . $row['MEM_CODE'] . ' | ' . $row['MEM_DESC'] . '</option>';
+        }
+
+        return $option;
     }
 
     function getProfileDetails($id = 0)

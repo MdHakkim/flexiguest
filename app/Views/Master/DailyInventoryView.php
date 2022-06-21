@@ -684,13 +684,13 @@
             },
             dataType: 'json',
             success: function(respn) {
-                //console.log(respn, "testing");
+                
                 var response = respn['SUCCESS'];
                 if (response != '1') {
                     var ERROR = respn['RESPONSE']['ERROR'];
                     var mcontent = '';
                     $.each(ERROR, function(ind, data) {
-                       // console.log(data, "SDF");
+                       
                         mcontent += '<li>' + data + '</li>';
                     });
                     showModalAlert('error', mcontent);
@@ -760,7 +760,7 @@
         async:false,
         // dataType:'json',
         success:function(respn){
-          // console.log(respn,"testing");
+          
           $('#IT_CL_ID').html(respn);
         }
     });
@@ -776,7 +776,7 @@
         data:{item_class_id:item_class_id,item_id:param},
         // dataType:'json',
         success:function(respn){
-          console.log(respn,"testing");          
+                    
           $('#ITM_ID').html(respn);
         }
     });

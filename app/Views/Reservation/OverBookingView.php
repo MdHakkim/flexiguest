@@ -234,7 +234,7 @@
                 headers: {'X-Requested-With': 'XMLHttpRequest'},
                 dataType:'json',
                 success:function(respn){
-                  console.log(respn,"testing");
+                  
                   $('#dataTable_view').dataTable().fnDraw();
                 }
               });
@@ -295,7 +295,7 @@
                 $.each(dayArr,function(i,data){
                   
                   dayArray.push(data);
-                  console.log(dayArray,data,"data SETS");
+
                   switch (data) {
                     case 'SUN':
                       $('.switch-input:eq(0)').prop('checked',false);
@@ -325,7 +325,7 @@
                 });
                 $('#'+field).val(dataval);
               }else{
-                // console.log(dataval,"SDF");
+
                 $('#'+field).val(dataval);
               }
             });
@@ -346,14 +346,14 @@
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         dataType:'json',
         success:function(respn){
-          console.log(respn,"testing");
+          
           var response = respn['SUCCESS'];
           if(response!='1'){
             $('#errorModal').show();
             var ERROR = respn['RESPONSE']['ERROR'];
             var error='<ul>';
             $.each(ERROR,function(ind,data){
-              console.log(data,"SDF");
+              
               error+='<li>'+data+'</li>';
             });
             error+='<ul>';

@@ -823,7 +823,6 @@ if(empty($condition)){
         farwrdClick=0;
       }
     }
-    // console.log(farwrdClick,"AVTION");
   }
 
   function continueToTaskSlide(){
@@ -855,7 +854,7 @@ if(empty($condition)){
         data:{DOC_CUST_ID:DOC_CUST_ID,DOC_RESV_ID:DOC_RESV_ID},
         dataType:'json',
         success:function(respn){
-          console.log(respn,"SDF");
+          
           generaListImage(respn);
         }
       });
@@ -868,7 +867,7 @@ if(empty($condition)){
         data:{VACC_CUST_ID:DOC_CUST_ID,VACC_RESV_ID:DOC_RESV_ID},
         dataType:'json',
         success:function(respn){
-          console.log(respn,"SDF");
+          
           if(respn!=''){
             $('*#vaccinePreview').remove();
             var jsonFrmt = respn[0];
@@ -937,9 +936,9 @@ if(empty($condition)){
         processData: false, //prevent jQuery from converting your FormData into a string
         contentType: false, //jQuery does not add a Content-Type header for you
         success: function (respn) {
-          console.log($('#croppingbox'),"Jcrop");
+
           var imagePath="<?php echo $folderPath;?>";
-          console.log(imagePath+respn,"Sdfsdf");
+
           if(jcrop_api!=''){
             jcrop_api.destroy();
             jcrop_api.setImage(imagePath+'/'+respn);
@@ -977,7 +976,7 @@ if(empty($condition)){
             var ERROR = respn['RESPONSE']['ERROR'];
             var error='<ul>';
             $.each(ERROR,function(ind,data){
-              console.log(data,"SDF");
+              
               error+='<li>'+data+'</li>';
             });
             error+='<ul>';
@@ -1070,7 +1069,7 @@ if(empty($condition)){
   $(document).on('click','#updateVaccine',function(){
     var formData = new FormData($('#vaccineForm')[0]);   
     formData.append('DELETEIMAGE', formImageDeletArr);   
-    console.log(formData,"ACTION");               
+
     $.ajax({
       url: '<?php echo base_url('/updateVaccineReport')?>',
       type: "post",
@@ -1080,14 +1079,14 @@ if(empty($condition)){
       contentType: false, //jQuery does not add a Content-Type header for you
       dataType:'json',
       success:function(respn){
-        console.log(respn,"SDF");
+        
         $('#vaccineModal').modal('hide');
         if(respn.SUCCESS!='1'){
           $('#errorModal').show();
           var ERROR = respn['RESPONSE']['ERROR'];
           var error='<ul>';
           $.each(ERROR,function(ind,data){
-            console.log(data,"SDF");
+            
             error+='<li>'+data+'</li>';
           });
           error+='<ul>';
@@ -1113,7 +1112,7 @@ if(empty($condition)){
             var ERROR = respn['RESPONSE']['ERROR'];
             var error='<ul>';
             $.each(ERROR,function(ind,data){
-              console.log(data,"SDF");
+              
               error+='<li>'+data+'</li>';
             });
             error+='<ul>';
@@ -1136,7 +1135,6 @@ if(empty($condition)){
       dataType:'json',
       success:function(respn){
         var jsonForm = respn[0];
-        // console.log(jsonForm.TOTAL_PROOF,"ACTION");
         if(jsonForm.TOTAL_PROOF>0 && jsonForm.TOTAL_VACC>0){
           $('.document-padding-done').html('<i class="fa-solid fa-circle-check me-1"></i> Document verified');
         }
@@ -1182,7 +1180,7 @@ if(empty($condition)){
       data:{RESV_ETA:arrivTime,RESV_ACCP_TRM_CONDI:AGREE_TERMS,signature:signature,DOC_RESV_ID:DOC_RESV_ID,modesignature:newImageSignature},
       dataType:'json',
       success:function(respn){
-       console.log(respn,"ACTIONSES");
+       
        $('#checkInConfirmWindow').modal('show');
       }
     });
@@ -1240,7 +1238,7 @@ if(empty($condition)){
       data:{DOC_RESV_ID:DOC_RESV_ID},
       dataType:'json',
       success:function(respn){
-       console.log(respn,"ACTIONSES");
+       
        window.location = '/reservationCheckin';
       }
     });

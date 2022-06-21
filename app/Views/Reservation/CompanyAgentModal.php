@@ -161,7 +161,7 @@
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         dataType:'json',
         success:function(respn){
-          console.log(respn,"testing");
+          
           $('#compnayAgentWindow').modal('hide');
           $('#dataTable_view').dataTable().fnDraw();
         }
@@ -235,7 +235,7 @@
         data:{sysid:sysid},
         dataType:'json',
         success:function(respn){
-          // console.log(respn,"testing");
+          
           $(respn).each(function(inx,data){
             $.each(data,function(fields,datavals){
               var field = $.trim(fields);//fields.trim();
@@ -296,14 +296,14 @@
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         dataType:'json',
         success:function(respn){
-          console.log(respn,"testing");
+          
           var response = respn['SUCCESS'];
           if(response!='1'){
             $('#errorModal').show();
             var ERROR = respn['RESPONSE']['ERROR'];
             var error='<ul>';
             $.each(ERROR,function(ind,data){
-              console.log(data,"SDF");
+              
               error+='<li>'+data+'</li>';
             });
             error+='<ul>';

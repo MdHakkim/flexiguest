@@ -561,7 +561,7 @@ function submitForm(id) {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
                 $.each(ERROR, function(ind, data) {
-                    console.log(data, "SDF");
+                    
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);

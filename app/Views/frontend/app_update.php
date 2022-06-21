@@ -298,7 +298,7 @@
                     var ERROR = response['RESPONSE']['REPORT_RES'];
                     var mcontent = '';
                     $.each(ERROR, function(ind, data) {
-                        console.log(data, "SDF");
+                        
                         mcontent += '<li>' + data + '</li>';
                     });
                     showModalAlert('error', mcontent);
@@ -337,7 +337,7 @@
             dataType: 'json',
             success: function(respn) {
                 $(respn).each(function(inx, data) {
-                    console.log(data);
+                    
 
                     $.each(data, function(field, val) {
 

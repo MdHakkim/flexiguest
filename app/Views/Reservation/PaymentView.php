@@ -194,7 +194,7 @@
                 headers: {'X-Requested-With': 'XMLHttpRequest'},
                 dataType:'json',
                 success:function(respn){
-                  console.log(respn,"testing");
+                  
                   $('#dataTable_view').dataTable().fnDraw();
                 }
               });
@@ -212,7 +212,7 @@
         data:{search:search},
         // dataType:'json',
         success:function(respn){
-          console.log(respn,"testing");
+          
           $('#RM_TY_ROOM_CLASS').html(respn).selectpicker('refresh');
         }
     });
@@ -267,14 +267,14 @@
         headers: {'X-Requested-With': 'XMLHttpRequest'},
         dataType:'json',
         success:function(respn){
-          console.log(respn,"testing");
+          
           var response = respn['SUCCESS'];
           if(response!='1'){
             $('#errorModal').show();
             var ERROR = respn['RESPONSE']['ERROR'];
             var error='<ul>';
             $.each(ERROR,function(ind,data){
-              console.log(data,"SDF");
+              
               error+='<li>'+data+'</li>';
             });
             error+='<ul>';

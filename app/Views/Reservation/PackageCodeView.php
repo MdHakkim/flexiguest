@@ -695,13 +695,13 @@ function submitForm(id) {
         },
         dataType: 'json',
         success: function(respn) {
-            console.log(respn, "testing");
+            
             var response = respn['SUCCESS'];
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
                 $.each(ERROR, function(ind, data) {
-                    console.log(data, "SDF");
+                    
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);
@@ -831,7 +831,7 @@ function submitDetailsForm(id) {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
                 $.each(ERROR, function(ind, data) {
-                    console.log(data, "SDF");
+                    
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);

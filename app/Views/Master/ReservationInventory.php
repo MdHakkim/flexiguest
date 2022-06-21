@@ -436,7 +436,7 @@
           var ERROR = respn['RESPONSE']['ERROR'];
           var mcontent = '';
           $.each(ERROR, function(ind, data) {
-            console.log(data, "SDF");
+            
             mcontent += '<li>' + data + '</li>';
           });
           showModalAlert('error', mcontent);
@@ -689,7 +689,7 @@ function itemClassList(){
         async:false,
         // dataType:'json',
         success:function(respn){
-          // console.log(respn,"testing");
+          
           $('#RSV_ITM_CL_ID').html(respn);
         }
     });
@@ -705,7 +705,7 @@ function itemClassList(){
         data:{item_class_id:item_class_id,item_id:param},
         // dataType:'json',
         success:function(respn){
-          //console.log(respn,"testing");
+          
           $('#RSV_ITM_ID').html('<option value="">Select Item</option>');          
           $('#RSV_ITM_ID').html(respn);
         }
@@ -726,7 +726,7 @@ function itemClassList(){
         async:false,
         // dataType:'json',
         success:function(respn){
-          // console.log(respn,"testing");
+          
           $('#eventLabel').html(respn);
         }
     });
