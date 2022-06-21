@@ -2909,7 +2909,7 @@ class ApplicatioController extends BaseController
                 "DOC_FILE_PATH" => $newFile,
                 "DOC_FILE_TYPE" => $this->request->getPost("DOC_FILE_TYPE"),
                 "DOC_FILE_DESC" => $this->request->getPost("DOC_FILE_DESC"),
-                "DOC_IS_VERIFY" => $this->request->getPost("DOC_IS_VERIFY"),
+                "DOC_IS_VERIFY" => $this->request->getPost("DOC_IS_VERIFY") ?? 0,
                 "DOC_CREATE_UID" => $this->session->name,
                 "DOC_CREATE_DT" => $dateTime
             ];

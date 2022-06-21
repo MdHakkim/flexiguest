@@ -116,6 +116,8 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  
     $routes->post("customer/update-customer-details", "APIController::saveDocDetails"); 
     $routes->get("profile", "APIController::profileAPI");
+
+    $routes->post("checkin/guestProfile", "APIController::getGuestAccompanyProfiles"); 
 });
 // ADMIN ROUTES (END)
 

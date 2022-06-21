@@ -212,17 +212,18 @@ class APIController extends BaseController
         OUTPUT : list and details of the accompanying the persons   */
     public function getGuestAccompanyProfiles()
     {
-        $customer_id = $this->request->user['USR_CUST_ID'];
+        $customer_id = $this->request->getVar('customer_id') ?? $this->request->user['USR_CUST_ID'];
         $reservation_id = $this->request->getVar('reservation_id');
 
         // an indicator to inform this is accompanying person
         $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name, 
                         fc.CUST_ID, 
-                        count(fd.DOC_ID) as is_document_uploaded 
+                        case when count(fd.DOC_ID) >= 1 then 1 else 0 end as is_document_uploaded,
+                        case when fd.DOC_IS_VERIFY = 1 then 1 else 0 end as DOC_IS_VERIFY
                         FROM FLXY_CUSTOMER as fc
                         left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID 
                         where CUST_ID = :customer_id:
-                        group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID";
+                        group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID, fd.DOC_IS_VERIFY";
 
         $param = ['customer_id' => $customer_id];
         $data = $this->DB->query($sql, $param)->getResultArray();
@@ -240,12 +241,13 @@ class APIController extends BaseController
 
         $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name, 
                         fc.CUST_ID, 
-                        count(fd.DOC_ID) as is_document_uploaded 
+                        case when count(fd.DOC_ID) >= 1 then 1 else 0 end as is_document_uploaded,
+                        case when fd.DOC_IS_VERIFY = 1 then 1 else 0 end as DOC_IS_VERIFY
                         FROM FLXY_CUSTOMER as fc
                         inner join FLXY_ACCOMPANY_PROFILE as fap on fc.CUST_ID = fap.ACCOMP_CUST_ID 
                         left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID 
                         where fap.ACCOMP_REF_RESV_ID = :reservation_id:
-                        group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID";
+                        group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID, fd.DOC_IS_VERIFY";
 
         $param = ['reservation_id' => $reservation_id];
         $guest['accompany_profiles'] = $this->DB->query($sql, $param)->getResultArray();
