@@ -4,6 +4,7 @@ namespace App\Controllers\APIControllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\Maintenance;
+use App\Models\Room;
 use CodeIgniter\API\ResponseTrait;
 
 class MaintenanceController extends BaseController
@@ -11,10 +12,12 @@ class MaintenanceController extends BaseController
     use ResponseTrait;
 
     private $Maintenance;
+    private $Room;
 
     public function __construct()
     {
         $this->Maintenance = new Maintenance();
+        $this->Room = new Room();
     }
 
     public function maintenanceList()
@@ -38,5 +41,12 @@ class MaintenanceController extends BaseController
         }
 
         return $this->respond(responseJson(200, false, ['msg' => 'Maintenance List'], $maintenace_list));
+    }
+
+    public function getRoomList()
+    {
+        $rooms = $this->Room->select('RM_NO as id, RM_DESC as label')->findAll();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Rooms list'], $rooms));
     }
 }
