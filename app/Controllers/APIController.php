@@ -339,9 +339,7 @@ class APIController extends BaseController
                 }
 
                 if ($newName)
-
-                    if ($newName)
-                        $fileNames .= $newName . $comma;
+                    $fileNames .= $newName . $comma;
             }
         }
 

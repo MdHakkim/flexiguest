@@ -40,178 +40,175 @@ class FacilityController extends BaseController
     {
         return view('Maintenance/MaintenanceRequestView');
     }
+
     public function getRequestList()
     {
-
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_MAINTENANCE_VIEW';
-        $columns = 'MAINT_ID|MAINT_ROOM_NO|TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS';
+        $columns = 'MAINT_ID|MAINT_ROOM_NO|TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_ATTACHMENT';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }
+    
     function getCustomerFromRoomNo()
     {
 
         $room = $this->request->getPost("room");
-        $sql = "SELECT concat(b.CUST_FIRST_NAME,' ',b.CUST_MIDDLE_NAME,' ',b.CUST_LAST_NAME)NAME FROM FLXY_RESERVATION a
-        LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID =a.RESV_NAME WHERE a.RESV_ROOM =:RESV_ROOM: AND a.RESV_STATUS='CHECKIN'";
+        $sql = "SELECT concat(b.CUST_FIRST_NAME,' ',b.CUST_MIDDLE_NAME,' ',b.CUST_LAST_NAME) NAME, b.CUST_ID, a.RESV_ID FROM FLXY_RESERVATION a
+        LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME WHERE a.RESV_ROOM =:RESV_ROOM: AND a.RESV_STATUS = 'Due Pre Check-In'";
+        // LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME WHERE a.RESV_ROOM =:RESV_ROOM: AND a.RESV_STATUS = 'Checked-In'";
         $param = ['RESV_ROOM' => $room];
         $response = $this->Db->query($sql, $param)->getResultArray();
-
+        
         $option = '<option value="">Select Customer</option>';
         foreach ($response as $row) {
-            $option .= '<option value="' . $row['NAME'] . '">' . $row['NAME'] . '</option>';
+            $option .= "<option value='{$row['CUST_ID']}' data-RESV_ID='{$row['RESV_ID']}'>
+                            {$row['RESV_ID']}-{$row['NAME']}-{$row['CUST_ID']}
+                        </option>";
         }
         echo $option;
     }
+
     public function insertMaintenanceRequest()
-    {
-        try {
+    {   
+        $user_id = session()->get('USR_ID');
 
-            $attached_path = NULL;
-            $validate = $this->validate([
-
-                'MAINT_ROOM_NO' => ['label' => 'Room Number', 'rules' => 'required'],
-                'MAINT_TYPE' => ['label' => 'Maintenance Type', 'rules' => 'required'],
-                'MAINT_CATEGORY' => ['label' => 'Category', 'rules' => 'required'],
-                'MAINT_PREFERRED_TIME' => ['label' => 'Preferred Time', 'rules' => 'required'],
-                'MAINT_PREFERRED_DT' => ['label' => 'Preferred Date', 'rules' => 'required'],
-                'MAINT_ATTACHMENT' => [
-                    'uploaded[MAINT_ATTACHMENT]',
-                    'mime_in[MAINT_ATTACHMENT,image/png, image/jpeg]',
-                    'max_size[MAINT_ATTACHMENT,500]',
+        $attached_path = '';
+        $validate = $this->validate([
+            'MAINT_ROOM_NO' => [
+                'label' => 'Room Number', 
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select a room.'
                 ]
+            ],
+            'CUST_NAME' => [
+                'label' => 'Guest', 
+                'rules' => 'required', 
+                'errors' => [
+                'required' => 'Please select a guest.'
+                ]
+            ],
+            'MAINT_TYPE' => ['label' => 'Maintenance Type', 'rules' => 'required'],
+            'MAINT_CATEGORY' => ['label' => 'Category', 'rules' => 'required'],
+            'MAINT_PREFERRED_TIME' => ['label' => 'Preferred Time', 'rules' => 'required'],
+            'MAINT_PREFERRED_DT' => ['label' => 'Preferred Date', 'rules' => 'required'],
+            // 'MAINT_ATTACHMENT' => [
+                // 'uploaded[MAINT_ATTACHMENT]',
+                // 'mime_in[MAINT_ATTACHMENT,image/png,image/jpeg,image/jpg]',
+                // 'max_size[MAINT_ATTACHMENT,5000]',
+            // ],
+            'MAINT_STATUS' => [
+                'label' => 'Status',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'please select a status'
+                ]
+            ]
+        ]);
 
-            ]);
-            if (!$validate) {
-
-                $validate = $this->validator->getErrors();
-                $result["SUCCESS"] = "-402";
-                $result[]["ERROR"] = $validate;
-                $result = responseJson("-402", $validate);
-                echo json_encode($result);
-                exit;
-            }
-            $doc_file = $this->request->getFile('MAINT_ATTACHMENT');
-            $sysid = $this->request->getPost("sysid");
-            if (empty($sysid)) {
-
-                // INSERT
-                if ($doc_file) {
-                    $doc_name = $doc_file->getName();
-                    $folderPath = "assets/Uploads/Maintenance";
-                    $doc_up = documentUpload($doc_file, $doc_name, $this->session->name, $folderPath);
-                    if ($doc_up['SUCCESS'] == 200) {
-                        $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
-                    }
-                }
-                $data =
-                    [
-                        "MAINT_TYPE" => $this->request->getPost("MAINT_TYPE"),
-                        "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
-                        "MAINT_SUB_CATEGORY" => $this->request->getPost("MAINT_SUB_CATEGORY"),
-                        "MAINT_DETAILS" => $this->request->getPost("MAINT_DETAILS"),
-                        "MAINT_PREFERRED_DT" => date("d-M-Y", strtotime($this->request->getPost("MAINT_PREFERRED_DT"))),
-                        "MAINT_PREFERRED_TIME" => date("d-M-Y H:i:s", strtotime($this->request->getPost("MAINT_PREFERRED_TIME"))),
-                        "MAINT_ATTACHMENT" => $attached_path,
-                        "MAINT_STATUS" => "New",
-                        "MAINT_ROOM_NO" => $this->request->getPost("MAINT_ROOM_NO"),
-                        "MAINT_CREATE_DT" => date("d-M-Y"),
-                        "MAINT_CREATE_UID" => $this->session->name,
-                        "MAINT_UPDATE_DT" => date("d-M-Y"),
-                        "MAINT_UPDATE_UID" => $this->session->name,
-                    ];
-                $ins = $this->Db->table('FLXY_MAINTENANCE')->insert($data);
-            } else {
-
-
-                // UPDATE
-                // unlink the old file from the folder and update the column in db
-                $doc_data = $this->Db->table('FLXY_MAINTENANCE')->select('MAINT_ATTACHMENT')->where('MAINT_ID', $sysid)->get()->getRowArray();
-                $filename = $doc_data['MAINT_ATTACHMENT'];
-                if ($filename) {
-                    $filename = explode('/', $filename);
-                    $file = end($filename);
-                    $folderPath = "assets/Uploads/Maintenance/" . $file;
-                    if (file_exists($folderPath)) {
-                        if (unlink($folderPath)) {
-                            if ($doc_file) {
-                                $doc_name = $doc_file->getName();
-                                $folderPath = "assets/Uploads/Maintenance";
-                                // 
-                                $doc_up = documentUpload($doc_file, $doc_name, $this->session->name, $folderPath);
-                                if ($doc_up['SUCCESS'] == 200) {
-                                    $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if ($doc_file) {
-                        $doc_name = $doc_file->getName();
-                        $folderPath = "assets/Uploads/Maintenance";
-                        // 
-                        $doc_up = documentUpload($doc_file, $doc_name, $this->session->name, $folderPath);
-                        if ($doc_up['SUCCESS'] == 200) {
-                            $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
-                        }
-                    }
-                }
-                $data =
-                    [
-                        "MAINT_TYPE" => $this->request->getPost("MAINT_TYPE"),
-                        "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
-                        "MAINT_SUB_CATEGORY" => $this->request->getPost("MAINT_SUB_CATEGORY"),
-                        "MAINT_DETAILS" => $this->request->getPost("MAINT_DETAILS"),
-                        "MAINT_PREFERRED_DT" => date("d-M-Y", strtotime($this->request->getPost("MAINT_PREFERRED_DT"))),
-                        "MAINT_PREFERRED_TIME" => date("d-M-Y H:i:s", strtotime($this->request->getPost("MAINT_PREFERRED_TIME"))),
-                        "MAINT_ATTACHMENT" => $attached_path,
-                        "MAINT_STATUS" => "New",
-                        "MAINT_ROOM_NO" => $this->request->getPost("MAINT_ROOM_NO"),
-                        "MAINT_CREATE_DT" => date("d-M-Y"),
-                        "MAINT_CREATE_UID" => $this->session->name,
-                        "MAINT_UPDATE_DT" => date("d-M-Y"),
-                        "MAINT_UPDATE_UID" => $this->session->name,
-                    ];
-                $ins = $this->Db->table('FLXY_MAINTENANCE')->where('MAINT_ID', $sysid)->update($data);
-            }
-            if ($ins) {
-                $result = responseJson(200, true, "Maintenance request Added", []);
-                echo json_encode($result);
-                die;
-            } else {
-                $result = responseJson(500, true, "Creation Failed", []);
-                echo json_encode($result);
-                die;
-            }
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        if (!$validate) {
+            $validate = $this->validator->getErrors();            
+            return $this->respond(responseJson(403, true, $validate));
         }
+        
+
+        $doc_files = $this->request->getFileMultiple('MAINT_ATTACHMENT');
+        if($doc_files){
+            foreach ($doc_files as $key => $file) {
+                $file_name = $file->getRandomName();
+                $directory = "assets/Uploads/Maintenance/";
+
+                $response = documentUpload($file, $file_name, $user_id, $directory);
+
+                if ($response['SUCCESS'] != 200)
+                    return $this->respond(responseJson(500, true, ['msg' => "file not uploaded"]));
+
+                $file_name = $response['RESPONSE']['OUTPUT'];
+
+                $comma = '';
+                if (isset($doc_files[$key + 1]) && $doc_files[$key + 1]->isValid()) {
+                    $comma = ',';
+                }
+
+                if ($file_name)
+                    $attached_path .= $file_name . $comma;
+            }
+        }
+
+        $sysid = $this->request->getPost("sysid");
+        if (empty($sysid)) {
+            $data =
+                [
+                    "CUST_NAME" => $this->request->getPost("CUST_NAME"),
+                    "MAINT_RESV_ID" => $this->request->getPost("MAINT_RESV_ID"),
+                    "MAINT_TYPE" => $this->request->getPost("MAINT_TYPE"),
+                    "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
+                    "MAINT_SUB_CATEGORY" => $this->request->getPost("MAINT_SUB_CATEGORY"),
+                    "MAINT_DETAILS" => $this->request->getPost("MAINT_DETAILS"),
+                    "MAINT_PREFERRED_DT" => date("d-M-Y", strtotime($this->request->getPost("MAINT_PREFERRED_DT"))),
+                    "MAINT_PREFERRED_TIME" => date("d-M-Y H:i:s", strtotime($this->request->getPost("MAINT_PREFERRED_TIME"))),
+                    "MAINT_ATTACHMENT" => $attached_path,
+                    "MAINT_STATUS" => $this->request->getPost("MAINT_STATUS"),
+                    "MAINT_COMMENT" => $this->request->getPost("MAINT_COMMENT"),
+                    "MAINT_ROOM_NO" => $this->request->getPost("MAINT_ROOM_NO"),
+                    "MAINT_CREATE_DT" => date("d-M-Y"),
+                    "MAINT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_CREATE_UID" => $user_id,
+                    "MAINT_UPDATE_UID" => $user_id,
+                ];
+            $ins = $this->Db->table('FLXY_MAINTENANCE')->insert($data);
+        } else {
+            // UPDATE
+            $data =
+                [
+                    "CUST_NAME" => $this->request->getPost("CUST_NAME"),
+                    "MAINT_RESV_ID" => $this->request->getPost("MAINT_RESV_ID"),
+                    "MAINT_TYPE" => $this->request->getPost("MAINT_TYPE"),
+                    "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
+                    "MAINT_SUB_CATEGORY" => $this->request->getPost("MAINT_SUB_CATEGORY"),
+                    "MAINT_DETAILS" => $this->request->getPost("MAINT_DETAILS"),
+                    "MAINT_PREFERRED_DT" => date("d-M-Y", strtotime($this->request->getPost("MAINT_PREFERRED_DT"))),
+                    "MAINT_PREFERRED_TIME" => date("d-M-Y H:i:s", strtotime($this->request->getPost("MAINT_PREFERRED_TIME"))),
+                    "MAINT_ATTACHMENT" => $attached_path,
+                    "MAINT_STATUS" => $this->request->getPost("MAINT_STATUS"),
+                    "MAINT_COMMENT" => $this->request->getPost("MAINT_COMMENT"),
+                    "MAINT_ROOM_NO" => $this->request->getPost("MAINT_ROOM_NO"),
+                    "MAINT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_UPDATE_UID" => $user_id,
+                ];
+            $ins = $this->Db->table('FLXY_MAINTENANCE')->where('MAINT_ID', $sysid)->update($data);
+        }
+
+        if ($ins)
+            $result = responseJson(200, false, ['msg' => "Request created/updated successfully"]);
+        else
+            $result = responseJson(500, true, ['msg' => "Creation Failed"]);
+
+        return $this->respond($result);
     }
+    
     public function deleteRequest()
     {
         $sysid = $this->request->getPost("sysid");
-        try {
-            $doc_data = $this->Db->table('FLXY_MAINTENANCE')->select('MAINT_ATTACHMENT')->where(['MAINT_ID' => $sysid])->get()->getRowArray();
+        $doc_data = $this->Db->table('FLXY_MAINTENANCE')->select('MAINT_ATTACHMENT')->where(['MAINT_ID' => $sysid])->get()->getRowArray();
 
-            $return = $this->Db->table('FLXY_MAINTENANCE')->delete(['MAINT_ID' => $sysid]);
+        $return = $this->Db->table('FLXY_MAINTENANCE')->delete(['MAINT_ID' => $sysid]);
 
-            // unlink the document attached
-            $folderPath = "assets/Uploads/Maintenance/" . $doc_data['MAINT_ATTACHMENT'];
-            if (file_exists($folderPath)) {
-                unlink($folderPath);
-            }
-            if ($return) {
-                $result = $this->responseJson(200, false, "Deleted the request", $return);
-                echo json_encode($result);
-            } else {
-                $result = $this->responseJson(500, true, "Record not deleted", []);
-                echo json_encode($result);
-            }
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        // unlink the document attached
+        $folderPath = "assets/Uploads/Maintenance/" . $doc_data['MAINT_ATTACHMENT'];
+        if (file_exists($folderPath)) {
+            unlink($folderPath);
         }
+
+        if ($return)
+            $result = $this->responseJson(200, false, ['msg' => "Maintenance request deleted successfully"]);
+        else
+            $result = $this->responseJson(500, true, ['msg' => "Not able to delete"]);
+
+        return $this->respond($result);
     }
+
     function editMaintenanceRequest()
     {
         $param = ['MAINT_ID' => $this->request->getPost("sysid")];
@@ -221,8 +218,12 @@ class FacilityController extends BaseController
     }
     public function maintenanceCategoryList()
     {
-        $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY";
-        $response = $this->Db->query($sql)->getResultArray();
+        $category_type = $this->request->getVar('category_type');
+
+        $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY where MAINT_CATEGORY_TYPE = :category_type:";
+        $params = ['category_type' => $category_type];
+
+        $response = $this->Db->query($sql, $params)->getResultArray();
         echo json_encode($response);
     }
     public function maintenanceSubCatByCategoryID($api = 0)
@@ -250,69 +251,75 @@ class FacilityController extends BaseController
     {
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_MAINTENANCE_CATEGORY';
-        $columns = 'MAINT_CAT_ID|MAINT_CATEGORY|MAINT_CAT_CREATE_UID|FORMAT(MAINT_CAT_CREATE_DT,\'dd-MMM-yyyy\')MAINT_CAT_CREATE_DT';
+        $columns = 'MAINT_CAT_ID|MAINT_CATEGORY_TYPE|MAINT_CATEGORY|MAINT_CAT_CREATE_UID|FORMAT(MAINT_CAT_CREATE_DT,\'dd-MMM-yyyy\')MAINT_CAT_CREATE_DT';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }
     function editCategory()
     {
         $param = ['MAINT_CAT_ID' => $this->request->getPost("sysid")];
-        $sql = "SELECT MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY WHERE MAINT_CAT_ID =:MAINT_CAT_ID:";
+        $sql = "SELECT MAINT_CATEGORY_TYPE, MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY WHERE MAINT_CAT_ID =:MAINT_CAT_ID:";
         $response = $this->Db->query($sql, $param)->getResultArray();
         echo json_encode($response);
     }
+
     public function insertCategory()
     {
-        try {
-            $validate = $this->validate([
-                'MAINT_CATEGORY' => ['label' => 'Category', 'rules' => 'required'],
+        $user_id = session()->get('USR_ID');
 
-            ]);
-            if (!$validate) {
+        $validate = $this->validate([
+            'MAINT_CATEGORY' => [
+                'label' => 'Category', 
+                'rules' => 'required'
+            ],
+            'MAINT_CATEGORY_TYPE' => [
+                'label' => 'Category Type', 
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select a category type.'
+                ]
+            ]
+        ]);
 
-                $validate = $this->validator->getErrors();
-                $result["SUCCESS"] = "-402";
-                $result[]["ERROR"] = $validate;
-                $result = responseJson("-402", $validate);
-                echo json_encode($result);
-                exit;
-            }
-            $sysid = $this->request->getPost("sysid");
-            if (empty($sysid)) {
-                $data =
-                    [
-                        "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
-                        "MAINT_CAT_CREATE_DT" => date("d-M-Y"),
-                        "MAINT_CAT_CREATE_UID" => $this->session->name,
-                        "MAINT_CAT_UPDATE_DT" => date("d-M-Y"),
-                        "MAINT_CAT_UPDATE_UID" => $this->session->name,
-                    ];
-                $ins = $this->Db->table('FLXY_MAINTENANCE_CATEGORY')->insert($data);
-            } else {
-                // UPDATE
-                $data =
-                    [
-                        "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
-                        "MAINT_CAT_CREATE_DT" => date("d-M-Y"),
-                        "MAINT_CAT_CREATE_UID" => $this->session->name,
-                        "MAINT_CAT_UPDATE_DT" => date("d-M-Y"),
-                        "MAINT_CAT_UPDATE_UID" => $this->session->name,
-                    ];
-                $ins = $this->Db->table('FLXY_MAINTENANCE_CATEGORY')->where('MAINT_CAT_ID', $sysid)->update($data);
-            }
-            if ($ins) {
-                $result = responseJson(200, true, "Category  Added", []);
-                echo json_encode($result);
-                die;
-            } else {
-                $result = responseJson(500, true, "Category addition Failed", []);
-                echo json_encode($result);
-                die;
-            }
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        if (!$validate) {
+            $validate = $this->validator->getErrors();
+            $result = responseJson(403, true, $validate);
+
+            return $this->respond($result);
         }
+
+        $sysid = $this->request->getPost("sysid");
+        if (empty($sysid)) {
+            $data =
+                [
+                    "MAINT_CATEGORY_TYPE" => $this->request->getPost("MAINT_CATEGORY_TYPE"),
+                    "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
+                    "MAINT_CAT_CREATE_DT" => date("d-M-Y"),
+                    "MAINT_CAT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_CAT_CREATE_UID" => $user_id,
+                    "MAINT_CAT_UPDATE_UID" => $user_id,
+                ];
+            $ins = $this->Db->table('FLXY_MAINTENANCE_CATEGORY')->insert($data);
+        } else {
+            // UPDATE
+            $data =
+                [
+                    "MAINT_CATEGORY_TYPE" => $this->request->getPost("MAINT_CATEGORY_TYPE"),
+                    "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
+                    "MAINT_CAT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_CAT_UPDATE_UID" => $user_id,
+                ];
+            $ins = $this->Db->table('FLXY_MAINTENANCE_CATEGORY')->where('MAINT_CAT_ID', $sysid)->update($data);
+        }
+
+        if ($ins)
+            $result = responseJson(200, false, ['msg' => "Category Added/updated"]);
+        else
+            $result = responseJson(500, true, ['msg' => "Category addition Failed"]);
+
+        return $this->respond($result);
     }
+
     public function deleteCategory()
     {
         $sysid = $this->request->getPost("sysid");
