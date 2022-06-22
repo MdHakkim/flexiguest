@@ -11,11 +11,13 @@ class MaintenanceController extends BaseController
 {
     use ResponseTrait;
 
+    private $DB;
     private $Maintenance;
     private $Room;
 
     public function __construct()
     {
+        $this->DB = \Config\Database::connect();
         $this->Maintenance = new Maintenance();
         $this->Room = new Room();
     }
@@ -45,8 +47,23 @@ class MaintenanceController extends BaseController
 
     public function getRoomList()
     {
-        $rooms = $this->Room->select('RM_NO as id, RM_DESC as label')->findAll();
+        $rooms = $this->Room->select('RM_NO, RM_DESC')->findAll();
 
         return $this->respond(responseJson(200, false, ['msg' => 'Rooms list'], $rooms));
+    }
+
+    public function reservationOfRoom($room_no)
+    {
+        $sql = "SELECT concat(b.CUST_FIRST_NAME,' ',b.CUST_MIDDLE_NAME,' ',b.CUST_LAST_NAME) NAME, 
+                    b.CUST_ID, 
+                    a.RESV_ID, 
+                    concat(a.RESV_ID, '-', b.CUST_FIRST_NAME,' ', b.CUST_MIDDLE_NAME,' ', b.CUST_LAST_NAME, '-', b.CUST_ID) as DD_STR 
+                    FROM FLXY_RESERVATION a
+                    LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME WHERE a.RESV_ROOM =:RESV_ROOM: AND a.RESV_STATUS = 'Checked-In'";
+
+        $param = ['RESV_ROOM' => $room_no];
+        $response = $this->DB->query($sql, $param)->getResultArray();
+        
+        return $this->respond(responseJson(200, true, ['msg' => 'Reservation detail'], $response));
     }
 }

@@ -113,6 +113,7 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
 
     $routes->get("maintenance/maintenance-list", "MaintenanceController::maintenanceList");
     $routes->get("maintenance/get-room-list", "MaintenanceController::getRoomList");
+    $routes->get("maintenance/reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  

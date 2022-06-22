@@ -55,8 +55,8 @@ class FacilityController extends BaseController
 
         $room = $this->request->getPost("room");
         $sql = "SELECT concat(b.CUST_FIRST_NAME,' ',b.CUST_MIDDLE_NAME,' ',b.CUST_LAST_NAME) NAME, b.CUST_ID, a.RESV_ID FROM FLXY_RESERVATION a
-        LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME WHERE a.RESV_ROOM =:RESV_ROOM: AND a.RESV_STATUS = 'Due Pre Check-In'";
-        // LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME WHERE a.RESV_ROOM =:RESV_ROOM: AND a.RESV_STATUS = 'Checked-In'";
+        LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME WHERE a.RESV_ROOM =:RESV_ROOM: AND a.RESV_STATUS = 'Checked-In'";
+        
         $param = ['RESV_ROOM' => $room];
         $response = $this->Db->query($sql, $param)->getResultArray();
         
