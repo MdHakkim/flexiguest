@@ -60,23 +60,28 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     $routes->get("shuttles/list", "APIController::listShuttles");
     // API to fetch  shuttles details by id
     $routes->get("shuttles/list/(:segment)", "APIController::listShuttles/$1");
-    
+
+    $routes->group('maintenance', function($routes) {
+        // API to create Maintenance request
+        $routes->post("addRequest", "APIController::createRequest"); 
+        // API to get details of single request
+        $routes->get("listRequests/(:segment)", "APIController::listRequests/$1");
+        // API to fetch all requests
+        $routes->get("listRequests", "APIController::listRequests");
+        $routes->get('get-maintenance-room-list', 'APIController::getMaintenanceRoomList');    
+    });
 });
 
 //  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
 
 $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Controllers'], function ($routes) {    
-    // API to create Maintenance request
-    $routes->post("maintenance/addRequest", "APIController::createRequest"); 
-    // API to get details of single request
-    $routes->get("maintenance/listRequests/(:segment)", "APIController::listRequests/$1");
-    // API to fetch all requests
-    $routes->get("maintenance/listRequests", "APIController::listRequests"); 
-    // API to get category list of maintenance
-    $routes->get('maintenance/getCategory', 'APIController::maintenanceCategoryList');  
-     // API to get Subcategory list of maintenance by categoryID
-    $routes->post('maintenance/getSubCategory', 'APIController::maintenanceSubCatByCategoryID'); 
-    $routes->get('maintenance/get-maintenance-room-list', 'APIController::getMaintenanceRoomList');
+
+    $routes->group('maintenance', function($routes) {
+        // API to get category list of maintenance
+        $routes->get('getCategory', 'APIController::maintenanceCategoryList');  
+        // API to get Subcategory list of maintenance by categoryID
+        $routes->post('getSubCategory', 'APIController::maintenanceSubCatByCategoryID'); 
+    });
 });
 
 $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
@@ -111,9 +116,12 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
     $routes->get("guideline", "GuidelineController::guideline");
     $routes->get("app-update", "AppUpdateController::appUpdate");
 
-    $routes->get("maintenance/maintenance-list", "MaintenanceController::maintenanceList");
-    $routes->get("maintenance/get-room-list", "MaintenanceController::getRoomList");
-    $routes->get("maintenance/reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
+    $routes->group('maintenance', function($routes) {
+        $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
+        $routes->get("get-room-list", "MaintenanceController::getRoomList");
+        $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
+        $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
+    });
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  

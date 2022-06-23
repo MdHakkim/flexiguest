@@ -24,13 +24,17 @@ class MaintenanceController extends BaseController
 
     public function maintenanceList()
     {
-        $maintenace_list = $this->Maintenance->findAll();
+        $maintenace_list = $this->Maintenance
+        ->select('FLXY_MAINTENANCE.*, fmc.MAINT_CATEGORY as MAINT_CATEGORY_TEXT, fmsc.MAINT_SUBCATEGORY as MAINT_SUBCATEGORY')
+        ->join('FLXY_MAINTENANCE_CATEGORY as fmc', 'FLXY_MAINTENANCE.MAINT_CATEGORY = fmc.MAINT_CAT_ID', 'left')
+        ->join('FLXY_MAINTENANCE_SUBCATEGORY as fmsc', 'FLXY_MAINTENANCE.MAINT_SUB_CATEGORY = fmsc.MAINT_SUBCAT_ID', 'left')
+        ->findAll();
 
-        foreach($maintenace_list as $i => $maintenance_request){
+        foreach ($maintenace_list as $i => $maintenance_request) {
             $attachments = explode(",", $maintenance_request['MAINT_ATTACHMENT']);
 
-            foreach($attachments as $j => $attachment){
-                $name = $attachment;
+            foreach ($attachments as $j => $attachment) {
+                $name = getOriginalFileName($attachment);
                 $url = base_url("assets/Uploads/Maintenance/$attachment");
 
                 $attachment_array = explode(".", $attachment);
@@ -63,7 +67,98 @@ class MaintenanceController extends BaseController
 
         $param = ['RESV_ROOM' => $room_no];
         $response = $this->DB->query($sql, $param)->getResultArray();
-        
+
         return $this->respond(responseJson(200, true, ['msg' => 'Reservation detail'], $response));
+    }
+
+    public function createUpdateMaintenanceRequest()
+    {
+        $user = $this->request->user;
+        $user_id = $user['USR_ID'];
+
+        $validate = $this->validate([
+            'type' => 'required',
+            'category' => 'required',
+            'subCategory' => 'required',
+            'roomNo' => 'required',
+            'reservationId' => 'required',
+            'customerId' => 'required',
+            'status' => 'required',
+        ]);
+
+        if (!$validate) {
+            $validate = $this->validator->getErrors();
+            $result = responseJson(403, true, $validate);
+
+            return $this->respond($result);
+        }
+
+        $fileArry = $this->request->getFileMultiple('attachment');
+        if (!empty($fileArry)) {
+            foreach ($fileArry as $key => $file) {
+                if (!$file->isValid()) {
+                    return $this->respond(responseJson(500, true, ['msg' => "Please upload valid file. This file '{$file->getClientName()}' is not valid"]));
+                }
+            }
+        }
+
+        $fileNames = '';
+        if (!empty($fileArry)) {
+            foreach ($fileArry as $key => $file) {
+                if ($file->isValid() && !$file->hasMoved()) {
+                    $newName = newFileName($file, $user_id);
+
+                    $file->move(ROOTPATH . 'assets/Uploads/Maintenance', $newName);
+                    $comma = '';
+
+                    if (isset($fileArry[$key + 1]) && $fileArry[$key + 1]->isValid()) {
+                        $comma = ',';
+                    }
+
+                    if ($newName)
+                        $fileNames .= $newName . $comma;
+                }
+            }
+        }
+
+        $request_id = $this->request->getVar('requestId');
+        $data = [
+            "CUST_NAME" => $this->request->getVar("customerId"),
+            "MAINT_TYPE" => $this->request->getVar("type"),
+            "MAINT_CATEGORY" => $this->request->getVar("category"),
+            "MAINT_SUB_CATEGORY" => $this->request->getVar("subCategory"),
+            "MAINT_DETAILS" => $this->request->getVar("details"),
+            "MAINT_PREFERRED_DT" => date("d-M-Y", strtotime($this->request->getVar("preferredDate"))),
+            "MAINT_PREFERRED_TIME" => date("d-M-Y H:i:s", strtotime($this->request->getVar("preferredTime"))),
+            "MAINT_ATTACHMENT" => $fileNames,
+            "MAINT_ROOM_NO" => $this->request->getVar("roomNo"),
+            "MAINT_RESV_ID" => $this->request->getVar("reservationId"),
+            "MAINT_STATUS" => $this->request->getVar("status"),
+            "MAINT_COMMENT" => $this->request->getVar("comment"),
+            "MAINT_CREATE_DT" => date("d-M-Y"),
+            "MAINT_UPDATE_DT" => date("d-M-Y"),
+            "MAINT_CREATE_UID" => $user_id,
+            "MAINT_UPDATE_UID" => $user_id
+        ];
+
+        if(empty($request_id)){
+            $ins = $this->DB->table('FLXY_MAINTENANCE')->insert($data);
+        }
+        else{
+            if(empty($fileNames))
+                unset($data['MAINT_ATTACHMENT']);
+
+            unset($data['MAINT_CREATE_DT']);
+            unset($data['MAINT_CREATE_UID']);
+
+            $ins = $this->DB->table('FLXY_MAINTENANCE')->where('MAINT_ID', $request_id)->update($data);
+        }
+
+        if ($ins)
+            $result = responseJson(200, false, ["msg" => "Maintenance request created/updated successfully."]);
+        else
+            $result = responseJson(500, true, ["msg" => "insert/update Failed"]);
+
+        return $this->respond($result);
     }
 }
