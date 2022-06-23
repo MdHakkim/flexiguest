@@ -87,8 +87,11 @@ $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Co
 $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
 
     $routes->get("concierge/concierge-offers", "ConciergeController::conciergeOffers");
-
     $routes->post("concierge/make-concierge-request", "ConciergeController::makeConciergeRequest");
+
+    $routes->get("news", "NewsController::news");
+    $routes->get("guideline", "GuidelineController::guideline");
+    $routes->get("app-update", "AppUpdateController::appUpdate");
 });
 
 //  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
@@ -112,9 +115,6 @@ $routes->get("maintenance/listRequests", "APIController::listRequests");
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
 
     $routes->get("reservation/get-reservations-list", "ReservationController::getReservationsList");
-    $routes->get("news", "NewsController::news");
-    $routes->get("guideline", "GuidelineController::guideline");
-    $routes->get("app-update", "AppUpdateController::appUpdate");
 
     $routes->group('maintenance', function($routes) {
         $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
