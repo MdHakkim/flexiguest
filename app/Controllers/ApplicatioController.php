@@ -3003,7 +3003,7 @@ class ApplicatioController extends BaseController
                 "DOC_FILE_PATH" => $newFile,
                 "DOC_FILE_TYPE" => $this->request->getPost("DOC_FILE_TYPE"),
                 "DOC_FILE_DESC" => $this->request->getPost("DOC_FILE_DESC"),
-                "DOC_IS_VERIFY" => $this->request->getPost("DOC_IS_VERIFY"),
+                "DOC_IS_VERIFY" => $this->request->getPost("DOC_IS_VERIFY") ?? 0,
                 "DOC_CREATE_UID" => $this->session->name,
                 "DOC_CREATE_DT" => $dateTime
             ];
@@ -3207,7 +3207,7 @@ class ApplicatioController extends BaseController
 
     function confirmPrecheckinStatus(){
         $sysid = $this->request->getPost("DOC_RESV_ID");
-        $data = ["RESV_STATUS" => 'Pre Check-In Completed',
+        $data = ["RESV_STATUS" => 'Pre Checked-In',
             "RESV_UPDATE_UID" => $this->session->name,
             "RESV_UPDATE_DT" => date("d-M-Y")
         ];

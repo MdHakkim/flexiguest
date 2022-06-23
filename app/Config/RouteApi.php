@@ -50,19 +50,6 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     // API to send mail to accompany person to uplaod the docs self
     $routes->post("checkin/requestSelfUpload", "APIController::requestSelfUpload"); 
     
-//----------------------------------------------------------------------------- Maintenance Request --------------------------------------------------------------------//
-    // API to create Maintenance request
-    $routes->post("maintenance/addRequest", "APIController::createRequest"); 
-    // API to get details of single request
-    $routes->get("maintenance/listRequests/(:segment)", "APIController::listRequests/$1");
-    // API to fetch all requests
-    $routes->get("maintenance/listRequests", "APIController::listRequests"); 
-    // API to get category list of maintenance
-    $routes->get('maintenance/getCategory', 'APIController::maintenanceCategoryList');  
-     // API to get Subcategory list of maintenance by categoryID
-    $routes->post('maintenance/getSubCategory', 'APIController::maintenanceSubCatByCategoryID'); 
-
-    $routes->get('maintenance/get-maintenance-room-list', 'APIController::getMaintenanceRoomList');
 // ---------------------------------------------------------------------------- Feedback --------------------------------------------------------------------------------//
     // API to fetch all requests
     $routes->post("addFeedback", "APIController::addFeedBack"); 
@@ -77,6 +64,20 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 });
 
 //  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
+
+$routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Controllers'], function ($routes) {    
+    // API to create Maintenance request
+    $routes->post("maintenance/addRequest", "APIController::createRequest"); 
+    // API to get details of single request
+    $routes->get("maintenance/listRequests/(:segment)", "APIController::listRequests/$1");
+    // API to fetch all requests
+    $routes->get("maintenance/listRequests", "APIController::listRequests"); 
+    // API to get category list of maintenance
+    $routes->get('maintenance/getCategory', 'APIController::maintenanceCategoryList');  
+     // API to get Subcategory list of maintenance by categoryID
+    $routes->post('maintenance/getSubCategory', 'APIController::maintenanceSubCatByCategoryID'); 
+    $routes->get('maintenance/get-maintenance-room-list', 'APIController::getMaintenanceRoomList');
+});
 
 $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
 
@@ -109,11 +110,17 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
     $routes->get("news", "NewsController::news");
     $routes->get("guideline", "GuidelineController::guideline");
     $routes->get("app-update", "AppUpdateController::appUpdate");
+
+    $routes->get("maintenance/maintenance-list", "MaintenanceController::maintenanceList");
+    $routes->get("maintenance/get-room-list", "MaintenanceController::getRoomList");
+    $routes->get("maintenance/reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  
     $routes->post("customer/update-customer-details", "APIController::saveDocDetails"); 
     $routes->get("profile", "APIController::profileAPI");
+
+    $routes->post("checkin/guestProfile", "APIController::getGuestAccompanyProfiles"); 
 });
 // ADMIN ROUTES (END)
 
