@@ -2322,7 +2322,7 @@ class MastersController extends BaseController
         //echo json_encode(print_r($postValues));
         //exit;
 
-        // Hide profiles with negortiated rates already created 
+        // Hide profiles with negotiated rates already created 
         /*
         $init_cond = array("CONCAT_WS('_',PROFILE_ID,PROFILE_TYPE) NOT IN" => "(SELECT CONCAT_WS('_',PROFILE_ID,PROFILE_TYPE)
         FROM FLXY_RATE_CODE_NEGOTIATED_RATE_VIEW WHERE RT_CD_ID = '".$sysid."')");

@@ -410,8 +410,7 @@ function submitForm(id) {
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
-                $.each(ERROR, function(ind, data) {
-                    
+                $.each(ERROR, function(ind, data) {                    
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);

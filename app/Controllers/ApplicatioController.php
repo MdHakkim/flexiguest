@@ -644,9 +644,6 @@ class ApplicatioController extends BaseController
 
     public function Customer(){
 
-        $membershipTypeOptions = $this->membershipTypeList();
-        $data['membershipTypeOptions'] = $membershipTypeOptions;
-        
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['title'] = getMethodName();
         return view('Reservation/Customer', $data);
@@ -655,7 +652,7 @@ class ApplicatioController extends BaseController
     public function customerView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_CUSTOMER';
-        $columns = 'CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_PASSPORT,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID';
+        $columns = 'CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_PASSPORT,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID';
         $mine->generate_DatatTable($tableName,$columns);
         exit;
         // return view('Dashboard');
@@ -690,35 +687,132 @@ class ApplicatioController extends BaseController
     {
         $sysid = $this->request->getPost('sysid');
 
-        $init_cond = array( "CUST_ID = " => "'$sysid'"); // Add condition for Customer
+        $init_cond = array( "CUST_ID = " => "'$sysid'", "MEM_STATUS = " => "1"); // Add condition for Customer
 
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_CUSTOMER_MEMBERSHIP LEFT JOIN FLXY_MEMBERSHIP FM ON FM.MEM_ID = FLXY_CUSTOMER_MEMBERSHIP.MEM_ID';
-        $columns = 'CM_ID,CUST_ID,MEM_CODE,MEM_DESC,CM_DIS_SEQ,CM_CARD_NUMBER,CM_EXPIRY_DATE,CM_STATUS';
+        $columns = 'CM_ID,CUST_ID,MEM_CODE,MEM_DESC,CM_DIS_SEQ,CM_CARD_NUMBER,CM_EXPIRY_DATE,CM_STATUS,MEM_STATUS';
         $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
 
-    public function membershipTypeList()
+    public function getMembershipTypeList()
     {
-        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+        $custId = $this->request->getPost('custId');
+        $mode   = $this->request->getPost('mode');
 
-        $sql = "SELECT MEM_ID, MEM_CODE, MEM_DESC
-                FROM FLXY_MEMBERSHIP";
+        $sql = "SELECT MEM_ID, MEM_CODE, MEM_DESC, MEM_EXP_DATE_REQ
+                FROM FLXY_MEMBERSHIP WHERE MEM_STATUS = 1";
 
-        if ($search != '') {
-            $sql .= " WHERE MEM_CODE LIKE '%$search%'
-                      OR MEM_DESC LIKE '%$search%'";
+        // Remove options from dropdown that have already been added by 
+        if (!empty($custId) && $mode == 'add') {
+            $sql .= " AND MEM_ID NOT IN ( SELECT MEM_ID FROM FLXY_CUSTOMER_MEMBERSHIP 
+                                            WHERE CUST_ID = '".$custId."' AND CM_STATUS = 1 )";
         }
 
         $response = $this->Db->query($sql)->getResultArray();
 
-        $option = '<option value="">Choose an Option</option>';
-        foreach ($response as $row) {
-            $option .= '<option value="' . $row['MEM_ID'] . '">' . $row['MEM_CODE'] . ' | ' . $row['MEM_DESC'] . '</option>';
+        $membershipTypes = array();
+        if($response != NULL)
+        {
+            foreach ($response as $row) {
+                $membershipTypes[] = array( "id" => $row['MEM_ID'], "text" => $row["MEM_CODE"] . " | " . $row["MEM_DESC"], "exp_date_req" => $row["MEM_EXP_DATE_REQ"] == '1' ? '1' : '0');
+            }
         }
 
-        return $option;
+        echo json_encode($membershipTypes);
+    }
+
+    public function insertCustomerMembership()
+    {
+        try {
+            $sysid = $this->request->getPost('CM_ID');
+
+            $validation_rules = [
+                'CM_CUST_ID' => ['label' => 'Customer', 'rules' => 'required'],
+                'MEM_ID' => ['label' => 'Membership Type', 'rules' => 'required'],
+                'CM_CARD_NUMBER' => ['label' => 'Card Number', 'rules' => 'required|is_unique[FLXY_CUSTOMER_MEMBERSHIP.CM_CARD_NUMBER,CM_ID,' . $sysid . ']'],
+                'CM_NAME_CARD' => ['label' => 'Name on Card', 'rules' => 'required'],
+                'CM_EXPIRY_DATE' => ['label' => 'Expiry Date', 'rules' => 'compareDate', 'errors' => ['compareDate' => 'The Membership has already expired. Try another date']]               
+            ];
+
+            // Check if EXPIRY DATE required for selected Membership Type
+            if(null !== $this->request->getPost('MEM_ID'))
+            {
+                $param = ['SYSID' => $this->request->getPost('MEM_ID')];
+
+                $sql = "SELECT FMT.MEM_EXP_DATE_REQ
+                        FROM dbo.FLXY_MEMBERSHIP AS FMT
+                        WHERE MEM_ID=:SYSID:";
+
+                $response = $this->Db->query($sql, $param)->getRowArray();
+
+                if($response['MEM_EXP_DATE_REQ'] == '1')
+                    $validation_rules['CM_EXPIRY_DATE']['rules'] = 'required|compareDate';
+            }
+
+            $validate = $this->validate($validation_rules);
+
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $seqparam = ['SYSID' => $this->request->getPost('CM_CUST_ID')];
+
+            $seqsql = " SELECT ISNULL(MAX(CM_DIS_SEQ),0)+1 AS NEW_DIS_SEQ 
+                        FROM FLXY_CUSTOMER_MEMBERSHIP 
+                        WHERE CUST_ID=:SYSID:";
+
+            $seqresponse = $this->Db->query($seqsql, $seqparam)->getRowArray();
+
+            $data = [
+                "CUST_ID" => trim($this->request->getPost('CM_CUST_ID')),
+                "MEM_ID" => trim($this->request->getPost('MEM_ID')),
+                "CM_NAME_CARD" => trim($this->request->getPost('CM_NAME_CARD')),
+                "CM_CARD_NUMBER" => trim($this->request->getPost('CM_CARD_NUMBER')),
+                "CM_EXPIRY_DATE" => trim($this->request->getPost('CM_EXPIRY_DATE')),
+                "CM_MEMBER_SINCE" => trim($this->request->getPost('CM_MEMBER_SINCE')),
+                "CM_DIS_SEQ" => !empty($this->request->getPost('CM_DIS_SEQ')) ? trim($this->request->getPost('CM_DIS_SEQ')) : $seqresponse['NEW_DIS_SEQ'],
+                "CM_COMMENTS" => trim($this->request->getPost('CM_COMMENTS')),
+                "CM_STATUS" => null !== $this->request->getPost('CM_STATUS') ? '1' : '0',
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_CUSTOMER_MEMBERSHIP')->where('CM_ID', $sysid)->update($data) : $this->Db->table('FLXY_CUSTOMER_MEMBERSHIP')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function editCustomerMembership()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT FCM.*
+                FROM dbo.FLXY_CUSTOMER_MEMBERSHIP AS FCM
+                WHERE CM_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteCustomerMembership()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_CUSTOMER_MEMBERSHIP')->delete(['CM_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
     }
 
     function getProfileDetails($id = 0)

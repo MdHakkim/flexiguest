@@ -224,8 +224,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="custOptionsBtn" class="btn btn-primary custOptions"
-                        data_sysid="" data_custname="">Options</button>
+                    <button type="button" id="custOptionsBtn" class="btn btn-primary custOptions" data_sysid=""
+                        data_custname="">Options</button>
                     <button type="button" id="submitBtn" onClick="submitForm('customerForm','C')"
                         class="btn btn-primary">Save</button>
                 </div>
@@ -277,7 +277,7 @@ $(document).ready(function() {
                         '" class="dropdown-item editWindow"><i class="fas fa-edit"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['CUST_ID'] +
-                        '" data_custname="' + data['CUST_FIRST_NAME'] +
+                        '" data_custname="' + data['CUST_FIRST_NAME'] + ' ' + data['CUST_LAST_NAME'] +
                         '" class="dropdown-item custOptions"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['CUST_ID'] +
@@ -340,7 +340,7 @@ $(document).on('click', '.delete-record', function() {
                     },
                     dataType: 'json',
                     success: function(respn) {
-                        
+
                         $('#dataTable_view').dataTable().fnDraw();
                     }
                 });
@@ -433,7 +433,7 @@ function runCountryList() {
         async: false,
         // dataType:'json',
         success: function(respn) {
-            
+
             $('#CUST_COUNTRY').html(respn).selectpicker('refresh');
             $('#CUST_NATIONALITY').html(respn);
         }
@@ -453,7 +453,7 @@ $(document).on('change', '#CUST_COUNTRY', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            
+
             $('#CUST_STATE').html(respn).selectpicker('refresh');
         }
     });
@@ -473,7 +473,7 @@ $(document).on('change', '#CUST_STATE', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            
+
             $('#CUST_CITY').html(respn).selectpicker('refresh');
         }
     });
@@ -489,6 +489,9 @@ $(document).on('click', '.editWindow', function() {
     $('#custOptionsBtn').show();
     $('#custOptionsBtn').attr('data_sysid', sysid);
 
+    var custArray = getCustomerDetails(sysid);
+    $('#custOptionsBtn').attr('data_custname', custArray.CUST_FIRST_NAME + ' ' + custArray.CUST_LAST_NAME);
+
 
     $.ajax({
         url: '<?php echo base_url('/editCustomer')?>',
@@ -501,7 +504,7 @@ $(document).on('click', '.editWindow', function() {
         },
         dataType: 'json',
         success: function(respn) {
-            
+
             $(respn).each(function(inx, data) {
                 $.each(data, function(fields, datavals) {
                     var field = $.trim(fields); //fields.trim();
@@ -518,10 +521,10 @@ $(document).on('click', '.editWindow', function() {
                     } else if (field == 'CUST_ACTIVE') {
                         // var rmSpace = dataval.trim();
                         if (dataval == 'Y') {
-                            
+
                             $('#CUST_ACTIVE_CHK').prop('checked', true);
                         } else {
-                            
+
                             $('#CUST_ACTIVE_CHK').prop('checked', false)
                         }
                     } else {
@@ -540,7 +543,6 @@ $(document).on('click', '.editWindow', function() {
 
 // Display function clearFormFields
 <?php echo isset($clearFormFields_javascript) ? $clearFormFields_javascript : ''; ?>
-
 </script>
 <script src="<?php //echo base_url('assets/js/bootstrap.bundle.js')?>"></script>
 <script src="<?php //echo base_url('assets/js/bootstrap-select.js')?>"></script>

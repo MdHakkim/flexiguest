@@ -19,7 +19,8 @@ class CustomRules{
                           array('start' => 'rep_RT_CD_START_DT', 'end' => 'rep_RT_CD_END_DT'), 
                           array('start' => 'NG_RT_START_DT', 'end' => 'NG_RT_END_DT'), 
                           array('start' => 'PKG_CD_START_DT', 'end' => 'PKG_CD_END_DT'),
-                          array('start' => 'RSV_ITM_BEGIN_DATE', 'end' => 'RSV_ITM_END_DATE'));
+                          array('start' => 'RSV_ITM_BEGIN_DATE', 'end' => 'RSV_ITM_END_DATE'),
+                          array('start' => 'CM_TODAY', 'end' => 'CM_EXPIRY_DATE'));
 
                        
     foreach($date_fields as $date_field)

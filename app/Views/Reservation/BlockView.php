@@ -371,7 +371,7 @@
           var source = respn[1];
           var option = '<option value="">Select Market</option>';
           var option2 = '<option value="">Select Source</option>';
-          // console.log(vipData,busegmt,"testing");
+
           $(market).each(function(ind,data){
             option += '<option value="'+data['CODE']+'">'+data['DESCS']+'</option>';
           });
