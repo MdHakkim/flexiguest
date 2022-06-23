@@ -139,8 +139,8 @@ class MaintenanceController extends BaseController
             "MAINT_RESV_ID" => $this->request->getVar("reservationId"),
             "MAINT_STATUS" => $this->request->getVar("status"),
             "MAINT_COMMENT" => $this->request->getVar("comment"),
-            "MAINT_CREATE_DT" => date("d-m-Y H:i:s"),
-            "MAINT_UPDATE_DT" => date("d-m-Y H:i:s"),
+            "MAINT_CREATE_DT" => date("Y-m-d H:i:s"),
+            "MAINT_UPDATE_DT" => date("Y-m-d H:i:s"),
             "MAINT_CREATE_UID" => $user_id,
             "MAINT_UPDATE_UID" => $user_id
         ];
