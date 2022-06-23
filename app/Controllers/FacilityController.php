@@ -74,7 +74,7 @@ class FacilityController extends BaseController
         $user_id = session()->get('USR_ID');
 
         $attached_path = '';
-        $validate = $this->validate([
+        $rules = [
             'MAINT_ROOM_NO' => [
                 'label' => 'Room Number', 
                 'rules' => 'required',
@@ -105,7 +105,12 @@ class FacilityController extends BaseController
                     'required' => 'please select a status'
                 ]
             ]
-        ]);
+        ];
+
+        if(!empty($this->request->getVar('MAINT_TYPE')) && $this->request->getVar('MAINT_TYPE') == 'maintenance')
+            $rules['MAINT_SUB_CATEGORY'] = ['label' => 'Sub Category', 'rules' => 'required'];
+
+        $validate = $this->validate($rules);
 
         if (!$validate) {
             $validate = $this->validator->getErrors();            

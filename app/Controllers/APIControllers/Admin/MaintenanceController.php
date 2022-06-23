@@ -76,15 +76,19 @@ class MaintenanceController extends BaseController
         $user = $this->request->user;
         $user_id = $user['USR_ID'];
 
-        $validate = $this->validate([
+        $rules = [
             'type' => 'required',
             'category' => 'required',
-            'subCategory' => 'required',
             'roomNo' => 'required',
             'reservationId' => 'required',
             'customerId' => 'required',
             'status' => 'required',
-        ]);
+        ];
+
+        if(!empty($this->request->getVar('type')) && $this->request->getVar('type') == 'maintenance')
+            $rules['subCategory'] = 'required';
+
+        $validate = $this->validate($rules);
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
