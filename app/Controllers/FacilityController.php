@@ -157,8 +157,8 @@ class FacilityController extends BaseController
                     "MAINT_STATUS" => $this->request->getPost("MAINT_STATUS"),
                     "MAINT_COMMENT" => $this->request->getPost("MAINT_COMMENT"),
                     "MAINT_ROOM_NO" => $this->request->getPost("MAINT_ROOM_NO"),
-                    "MAINT_CREATE_DT" => date("d-M-Y"),
-                    "MAINT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_CREATE_DT" => date("d-m-Y H:i:s"),
+                    "MAINT_UPDATE_DT" => date("d-m-Y H:i:s"),
                     "MAINT_CREATE_UID" => $user_id,
                     "MAINT_UPDATE_UID" => $user_id,
                 ];
@@ -179,7 +179,7 @@ class FacilityController extends BaseController
                     "MAINT_STATUS" => $this->request->getPost("MAINT_STATUS"),
                     "MAINT_COMMENT" => $this->request->getPost("MAINT_COMMENT"),
                     "MAINT_ROOM_NO" => $this->request->getPost("MAINT_ROOM_NO"),
-                    "MAINT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_UPDATE_DT" => date("d-m-Y H:i:s"),
                     "MAINT_UPDATE_UID" => $user_id,
                 ];
             $ins = $this->Db->table('FLXY_MAINTENANCE')->where('MAINT_ID', $sysid)->update($data);

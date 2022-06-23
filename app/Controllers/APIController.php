@@ -906,9 +906,9 @@ class APIController extends BaseController
                 "MAINT_STATUS" => "New",
                 "MAINT_ROOM_NO" => $this->request->getVar("roomNo"),
                 "MAINT_RESV_ID" => $this->request->getVar("reservationId"),
-                "MAINT_CREATE_DT" => date("d-M-Y"),
+                "MAINT_CREATE_DT" => date("d-m-Y H:i:s"),
+                "MAINT_UPDATE_DT" => date("d-m-Y H:i:s"),
                 "MAINT_CREATE_UID" => $CUST_ID,
-                "MAINT_UPDATE_DT" => date("d-M-Y"),
                 "MAINT_UPDATE_UID" => $CUST_ID
             ];
 
