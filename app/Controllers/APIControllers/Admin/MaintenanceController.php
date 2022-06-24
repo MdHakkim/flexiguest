@@ -25,24 +25,28 @@ class MaintenanceController extends BaseController
     public function maintenanceList()
     {
         $maintenace_list = $this->Maintenance
-        ->select('FLXY_MAINTENANCE.*, fmc.MAINT_CATEGORY as MAINT_CATEGORY_TEXT, fmsc.MAINT_SUBCATEGORY as MAINT_SUBCATEGORY')
-        ->join('FLXY_MAINTENANCE_CATEGORY as fmc', 'FLXY_MAINTENANCE.MAINT_CATEGORY = fmc.MAINT_CAT_ID', 'left')
-        ->join('FLXY_MAINTENANCE_SUBCATEGORY as fmsc', 'FLXY_MAINTENANCE.MAINT_SUB_CATEGORY = fmsc.MAINT_SUBCAT_ID', 'left')
-        ->findAll();
+            ->select('FLXY_MAINTENANCE.*, fmc.MAINT_CATEGORY as MAINT_CATEGORY_TEXT, fmsc.MAINT_SUBCATEGORY as MAINT_SUBCATEGORY')
+            ->join('FLXY_MAINTENANCE_CATEGORY as fmc', 'FLXY_MAINTENANCE.MAINT_CATEGORY = fmc.MAINT_CAT_ID', 'left')
+            ->join('FLXY_MAINTENANCE_SUBCATEGORY as fmsc', 'FLXY_MAINTENANCE.MAINT_SUB_CATEGORY = fmsc.MAINT_SUBCAT_ID', 'left')
+            ->orderBy('FLXY_MAINTENANCE.MAINT_ID', 'desc')
+            ->findAll();
 
         foreach ($maintenace_list as $i => $maintenance_request) {
-            $attachments = explode(",", $maintenance_request['MAINT_ATTACHMENT']);
 
-            foreach ($attachments as $j => $attachment) {
-                $name = getOriginalFileName($attachment);
-                $url = base_url("assets/Uploads/Maintenance/$attachment");
+            $attachments = [];
+            if ($maintenance_request['MAINT_ATTACHMENT']) {
+                $attachments = explode(",", $maintenance_request['MAINT_ATTACHMENT']);
 
-                $attachment_array = explode(".", $attachment);
-                $type = end($attachment_array);
+                foreach ($attachments as $j => $attachment) {
+                    $name = getOriginalFileName($attachment);
+                    $url = base_url("assets/Uploads/Maintenance/$attachment");
 
-                $attachments[$j] = ['name' => $name, 'url' => $url, 'type' => $type];
+                    $attachment_array = explode(".", $attachment);
+                    $type = end($attachment_array);
+
+                    $attachments[$j] = ['name' => $name, 'url' => $url, 'type' => $type];
+                }
             }
-
             $maintenace_list[$i]['MAINT_ATTACHMENT'] = $attachments;
         }
 
@@ -85,7 +89,7 @@ class MaintenanceController extends BaseController
             'status' => 'required',
         ];
 
-        if(!empty($this->request->getVar('type')) && $this->request->getVar('type') == 'maintenance')
+        if (!empty($this->request->getVar('type')) && $this->request->getVar('type') == 'maintenance')
             $rules['subCategory'] = 'required';
 
         $validate = $this->validate($rules);
@@ -145,11 +149,10 @@ class MaintenanceController extends BaseController
             "MAINT_UPDATE_UID" => $user_id
         ];
 
-        if(empty($request_id)){
+        if (empty($request_id)) {
             $ins = $this->DB->table('FLXY_MAINTENANCE')->insert($data);
-        }
-        else{
-            if(empty($fileNames))
+        } else {
+            if (empty($fileNames))
                 unset($data['MAINT_ATTACHMENT']);
 
             unset($data['MAINT_CREATE_DT']);

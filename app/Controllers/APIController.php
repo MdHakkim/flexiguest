@@ -941,14 +941,14 @@ class APIController extends BaseController
                         LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.CUST_NAME
                         LEFT JOIN FLXY_MAINTENANCE_CATEGORY c ON c.MAINT_CAT_ID = a.MAINT_CATEGORY
 			            LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY d ON d.MAINT_SUBCAT_ID = a.MAINT_SUB_CATEGORY
-                        WHERE MAINT_ID=:MAINT_ID:";
+                        WHERE MAINT_ID=:MAINT_ID: order by a.MAINT_ID desc";
             $data = $this->DB->query($sql, $param)->getRowArray();
         } else {
             $param = ['CUST_NAME' => $cust_id];
             $sql = "SELECT a.*,c.MAINT_CATEGORY_TYPE,c.MAINT_CATEGORY as MAINT_CATEGORY_TEXT,d.MAINT_SUBCATEGORY FROM FLXY_MAINTENANCE a
 		    LEFT JOIN FLXY_MAINTENANCE_CATEGORY c ON c.MAINT_CAT_ID = a.MAINT_CATEGORY
 		    LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY d ON d.MAINT_SUBCAT_ID = a.MAINT_SUB_CATEGORY
-                    WHERE CUST_NAME = :CUST_NAME:";
+                    WHERE CUST_NAME = :CUST_NAME: order by a.MAINT_ID desc";
             $data = $this->DB->query($sql, $param)->getResultArray();
         }
 
