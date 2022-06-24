@@ -225,7 +225,10 @@ class FacilityController extends BaseController
     {
         $category_type = $this->request->getVar('category_type');
 
-        $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY where MAINT_CATEGORY_TYPE = :category_type:";
+        $sql = "SELECT MAINT_CAT_ID, MAINT_CATEGORY, MAINT_CATEGORY_TYPE FROM FLXY_MAINTENANCE_CATEGORY";
+        if(!empty($category_type))
+            $sql = "SELECT MAINT_CAT_ID, MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY where MAINT_CATEGORY_TYPE = :category_type:";
+
         $params = ['category_type' => $category_type];
 
         $response = $this->Db->query($sql, $params)->getResultArray();
@@ -352,7 +355,7 @@ class FacilityController extends BaseController
     {
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_MAINT_SUBCATEGORY_VIEW';
-        $columns = 'MAINT_SUBCAT_ID|MAINT_SUBCATEGORY|MAINT_CATEGORY|CUST_FULLNAME|FORMAT(MAINT_SUBCAT_CREATE_DT,\'dd-MMM-yyyy\')MAINT_SUBCAT_CREATE_DT';
+        $columns = 'MAINT_CAT_ID|MAINT_SUBCAT_ID|MAINT_SUBCATEGORY|MAINT_CATEGORY|CUST_FULLNAME|FORMAT(MAINT_SUBCAT_CREATE_DT,\'dd-MMM-yyyy\')MAINT_SUBCAT_CREATE_DT';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }
