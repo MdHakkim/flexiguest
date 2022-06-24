@@ -44,8 +44,8 @@ class FacilityController extends BaseController
     public function getRequestList()
     {
         $mine = new ServerSideDataTable(); // loads and creates instance
-        $tableName = 'FLXY_MAINTENANCE_VIEW';
-        $columns = 'MAINT_ID|MAINT_ROOM_NO|MAINT_TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_ATTACHMENT';
+        $tableName = 'FLXY_MAINTENANCE_VIEW left join FLXY_CUSTOMER on FLXY_MAINTENANCE_VIEW.CUST_NAME = FLXY_CUSTOMER.CUST_ID';
+        $columns = 'MAINT_ID|MAINT_ROOM_NO|MAINT_TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_ATTACHMENT|MAINT_CREATE_DT|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }

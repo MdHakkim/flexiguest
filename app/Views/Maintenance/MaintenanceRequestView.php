@@ -18,15 +18,17 @@
                 <table id="dataTable_view" class="table table-striped">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th class="all"></th>
                             <th>ID</th>
                             <th>Apartment</th>
+                            <th>Guest Name</th>
                             <th>Type</th>
                             <th>Category</th>
                             <th>SubCategory</th>
                             <th>Prefered Date & Time</th>
                             <th>Status</th>
                             <th>Image</th>
+                            <th>Created AT</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -176,13 +178,20 @@
                     data: ''
                 },
                 {
-                    data: 'MAINT_ID'
+                    data: 'MAINT_ID',
                 },
                 {
                     data: 'MAINT_ROOM_NO'
                 },
                 {
-                    data: 'MAINT_TYPE'
+                    data: null,
+                    render: function(data, type, row, meta){
+                        return `${data['CUST_FIRST_NAME']} ${data['CUST_MIDDLE_NAME']} ${data['CUST_LAST_NAME']}`;
+                    }
+                },
+                {
+                    data: 'MAINT_TYPE',
+                    className: 'none'
                 },
                 {
                     data: 'MAINT_CATEGORY'
@@ -212,6 +221,9 @@
                     }
                 },
                 {
+                    data: 'MAINT_CREATE_DT',
+                },
+                {
                     data: null,
                     render: function(data, type, row, meta) {
                         return (
@@ -229,7 +241,7 @@
             ],
             columnDefs: [{
                 width: "5%",
-                className: 'control',
+                className: 'all control',
                 responsivePriority: 1,
                 orderable: false,
                 targets: 0,
@@ -237,6 +249,9 @@
                 render: function(data, type, full, meta) {
                     return '';
                 }
+            },{
+                targets: 11,
+                responsivePriority: 1,
             }],
             autowidth: true,
             "order": [
