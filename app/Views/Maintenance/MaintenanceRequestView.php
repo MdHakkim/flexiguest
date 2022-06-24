@@ -186,7 +186,17 @@
                 {
                     data: null,
                     render: function(data, type, row, meta){
-                        return `${data['CUST_FIRST_NAME']} ${data['CUST_MIDDLE_NAME']} ${data['CUST_LAST_NAME']}`;
+                        let name = '';
+                        if(data['CUST_FIRST_NAME'])
+                            name += data['CUST_FIRST_NAME'] + ' ';
+
+                        if(data['CUST_MIDDLE_NAME'])
+                            name += data['CUST_MIDDLE_NAME'] + ' ';
+                        
+                        if(data['CUST_LAST_NAME'])
+                            name += data['CUST_LAST_NAME'];
+                        
+                        return name;
                     }
                 },
                 {
@@ -263,7 +273,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['title'];
+                            return 'Details of request';
                         }
                     }),
                     type: 'column',
