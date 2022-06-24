@@ -17,6 +17,7 @@ $routes->group("api", function ($routes) {
     $routes->get('lookup-api', 'APIController::lookupApi');
 
 });
+
 $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 
     $routes->get("profile", "APIController::profileAPI"); // user profile 
@@ -71,9 +72,10 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
         $routes->get('get-maintenance-room-list', 'APIController::getMaintenanceRoomList');    
     });
 });
+//  ------------------------------------ALEESHA CODES ENDS--------------------------------------- //
+
 
 //  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
-
 $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Controllers'], function ($routes) {    
 
     $routes->group('maintenance', function($routes) {
@@ -93,23 +95,6 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
     $routes->get("guideline", "GuidelineController::guideline");
     $routes->get("app-update", "AppUpdateController::appUpdate");
 });
-
-//  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
-
-
-
-// ---------- FLEXI GUEST API ROUTES -----------------//
-
-// --------------------------------------------------------- FLEXI GUEST ADMIN API ROUTES -----------------------------------------------//
-// API to get details of single request
-$routes->get("maintenance/listRequests/(:segment)", "APIController::listRequests/$1");
-// API to fetch all requests
-$routes->get("maintenance/listRequests", "APIController::listRequests"); 
-
-//  ------------------------------------ALEESHA CODES ENDS--------------------------------------- //
-
-
-//  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
 
 // ADMIN ROUTES (START)
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
@@ -132,5 +117,5 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
 });
 // ADMIN ROUTES (END)
 
-
 //  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
+
