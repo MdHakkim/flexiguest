@@ -45,7 +45,7 @@ class FacilityController extends BaseController
     {
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_MAINTENANCE_VIEW';
-        $columns = 'MAINT_ID|MAINT_ROOM_NO|TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_ATTACHMENT';
+        $columns = 'MAINT_ID|MAINT_ROOM_NO|MAINT_TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_ATTACHMENT';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }

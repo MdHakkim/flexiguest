@@ -182,7 +182,7 @@
                     data: 'MAINT_ROOM_NO'
                 },
                 {
-                    data: 'TYPE'
+                    data: 'MAINT_TYPE'
                 },
                 {
                     data: 'MAINT_CATEGORY'
@@ -502,7 +502,6 @@
     $(document).on('click', '.editWindow', function() {
         resetForm();
         runRoomList();
-        runCatList();
 
         setTimeout(() => {
             var sysid = $(this).attr('data_sysid');
@@ -530,6 +529,15 @@
                         $('#InHouseBooking').val(data.CUST_NAME).trigger('change');
                     }, 500);
 
+                    if (data['MAINT_TYPE'] == 'bulb_key') {
+                        $('#MAINT_TYPE1').prop('checked', true);
+                        $('#MAINT_TYPE2').prop('checked', false);
+                    } else {
+                        $('#MAINT_TYPE1').prop('checked', false);
+                        $('#MAINT_TYPE2').prop('checked', true);
+                    }
+                    runCatList();
+
                     $('#MAINT_CATEGORY').val(data.MAINT_CATEGORY).trigger('change');
                     $('#MAINT_SUB_CATEGORY').val(dataTrim).trigger('change');
 
@@ -539,14 +547,6 @@
                     var javaDate = new Date(data['MAINT_PREFERRED_TIME']);
                     var time = javaDate.getHours() + ":" + javaDate.getMinutes() + ":00";
                     $('#MAINT_PREFERRED_TIME').val(time);
-
-                    if (data['MAINT_TYPE'] == 'MT') {
-                        $('#MAINT_TYPE1').prop('checked', true);
-                        $('#MAINT_TYPE2').prop('checked', false);
-                    } else {
-                        $('#MAINT_TYPE2').prop('checked', true);
-                        $('#MAINT_TYPE1').prop('checked', false);
-                    }
 
                     $('select[name="MAINT_STATUS"]').val(data.MAINT_STATUS).trigger('change');
                     $('textarea[name="MAINT_COMMENT"]').val(data.MAINT_COMMENT);
