@@ -1075,13 +1075,16 @@ class APIController extends BaseController
             $sql = "SELECT * FROM FLXY_SHUTTLE_ROUTE WHERE SHUTL_ID=:SHUTL_ID:";
             $data = $this->DB->query($sql, $param)->getResultArray();
         } else {
-            $sql = "SELECT * FROM FLXY_SHUTTLE";
+            $sql = "SELECT fs.*, 
+                        (select SHUTL_STAGE_NAME from FLXY_SHUTL_STAGES where SHUTL_STAGE_ID = fs.SHUTL_FROM) as FROM_STAGE,
+                        (select SHUTL_STAGE_NAME from FLXY_SHUTL_STAGES where SHUTL_STAGE_ID = fs.SHUTL_TO) as TO_STAGE 
+                        FROM FLXY_SHUTTLE as fs";
             $data = $this->DB->query($sql)->getResultArray();
         }
 
         if ($data) {
 
-            $result = responseJson(200, false, ["msg" => "Shuttles deatils fetched Successfully"], [$data]);
+            $result = responseJson(200, false, ["msg" => "Shuttles deatils fetched Successfully"], $data);
         } else {
             $result = responseJson(500, true, ["msg" => "Shuttles deatils fetched Failed"]);
         }
