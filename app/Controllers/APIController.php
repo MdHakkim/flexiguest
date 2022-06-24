@@ -948,7 +948,7 @@ class APIController extends BaseController
             $sql = "SELECT a.*,c.MAINT_CATEGORY_TYPE,c.MAINT_CATEGORY as MAINT_CATEGORY_TEXT,d.MAINT_SUBCATEGORY FROM FLXY_MAINTENANCE a
 		    LEFT JOIN FLXY_MAINTENANCE_CATEGORY c ON c.MAINT_CAT_ID = a.MAINT_CATEGORY
 		    LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY d ON d.MAINT_SUBCAT_ID = a.MAINT_SUB_CATEGORY
-                    WHERE MAINT_CREATE_UID=:CUST_NAME:";
+                    WHERE CUST_NAME = :CUST_NAME:";
             $data = $this->DB->query($sql, $param)->getResultArray();
         }
 
