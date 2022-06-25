@@ -94,6 +94,10 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
     $routes->get("news", "NewsController::news");
     $routes->get("guideline", "GuidelineController::guideline");
     $routes->get("app-update", "AppUpdateController::appUpdate");
+
+    $routes->group('reservation', function($routes) {
+        $routes->get("make-checkout-request/(:segment)", "ReservationController::makeCheckoutRequest/$1");
+    });
 });
 
 // ADMIN ROUTES (START)
