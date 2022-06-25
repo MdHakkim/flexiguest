@@ -40,8 +40,8 @@ class ReservationController extends BaseController
         file_put_contents($file_name, $dompdf->output()); 
         // $dompdf->stream("RES{$reservation['RESV_ID']}-Invoice.pdf");
 
-        $reservation['RESV_STATUS'] = 'Checked-Out-Requested';
-        $this->Reservation->save($reservation);
+        // $reservation['RESV_STATUS'] = 'Checked-Out-Requested';
+        // $this->Reservation->save($reservation);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Checkout request has been submitted successfully.'], base_url($file_name)));
     }
