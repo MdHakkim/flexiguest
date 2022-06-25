@@ -23,10 +23,10 @@ class ReservationController extends BaseController
         $reservation = $this->Reservation->find($reservation_id);
 
         if($reservation['RESV_NAME'] != $customer_id)
-            return $this->respond(responseJson(200, false, ['msg' => 'Invalid request.']));
+            return $this->respond(responseJson(404, false, ['msg' => 'Invalid reservation.']));
 
         if ($reservation['RESV_STATUS'] == 'Checked-Out')
-            return $this->respond(responseJson(200, false, ['msg' => 'This reservation is already checked-out.']));
+            return $this->respond(responseJson(202, false, ['msg' => 'This reservation is already checked-out.']));
 
         if ($reservation['RESV_STATUS'] == 'Checked-Out-Requested')
             return $this->respond(responseJson(200, false, ['msg' => 'Check-Out already requested.']));
