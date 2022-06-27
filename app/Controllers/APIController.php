@@ -906,9 +906,9 @@ class APIController extends BaseController
                 "MAINT_STATUS" => "New",
                 "MAINT_ROOM_NO" => $this->request->getVar("roomNo"),
                 "MAINT_RESV_ID" => $this->request->getVar("reservationId"),
-                "MAINT_CREATE_DT" => date("d-M-Y"),
+                "MAINT_CREATE_DT" => date("Y-m-d H:i:s"),
+                "MAINT_UPDATE_DT" => date("Y-m-d H:i:s"),
                 "MAINT_CREATE_UID" => $CUST_ID,
-                "MAINT_UPDATE_DT" => date("d-M-Y"),
                 "MAINT_UPDATE_UID" => $CUST_ID
             ];
 
@@ -941,14 +941,14 @@ class APIController extends BaseController
                         LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.CUST_NAME
                         LEFT JOIN FLXY_MAINTENANCE_CATEGORY c ON c.MAINT_CAT_ID = a.MAINT_CATEGORY
 			            LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY d ON d.MAINT_SUBCAT_ID = a.MAINT_SUB_CATEGORY
-                        WHERE MAINT_ID=:MAINT_ID:";
+                        WHERE MAINT_ID=:MAINT_ID: order by a.MAINT_ID desc";
             $data = $this->DB->query($sql, $param)->getRowArray();
         } else {
             $param = ['CUST_NAME' => $cust_id];
             $sql = "SELECT a.*,c.MAINT_CATEGORY_TYPE,c.MAINT_CATEGORY as MAINT_CATEGORY_TEXT,d.MAINT_SUBCATEGORY FROM FLXY_MAINTENANCE a
 		    LEFT JOIN FLXY_MAINTENANCE_CATEGORY c ON c.MAINT_CAT_ID = a.MAINT_CATEGORY
 		    LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY d ON d.MAINT_SUBCAT_ID = a.MAINT_SUB_CATEGORY
-                    WHERE MAINT_CREATE_UID=:CUST_NAME:";
+                    WHERE CUST_NAME = :CUST_NAME: order by a.MAINT_ID desc";
             $data = $this->DB->query($sql, $param)->getResultArray();
         }
 
@@ -1075,13 +1075,16 @@ class APIController extends BaseController
             $sql = "SELECT * FROM FLXY_SHUTTLE_ROUTE WHERE SHUTL_ID=:SHUTL_ID:";
             $data = $this->DB->query($sql, $param)->getResultArray();
         } else {
-            $sql = "SELECT * FROM FLXY_SHUTTLE";
+            $sql = "SELECT fs.*, 
+                        (select SHUTL_STAGE_NAME from FLXY_SHUTL_STAGES where SHUTL_STAGE_ID = fs.SHUTL_FROM) as FROM_STAGE,
+                        (select SHUTL_STAGE_NAME from FLXY_SHUTL_STAGES where SHUTL_STAGE_ID = fs.SHUTL_TO) as TO_STAGE 
+                        FROM FLXY_SHUTTLE as fs";
             $data = $this->DB->query($sql)->getResultArray();
         }
 
         if ($data) {
 
-            $result = responseJson(200, false, ["msg" => "Shuttles deatils fetched Successfully"], [$data]);
+            $result = responseJson(200, false, ["msg" => "Shuttles deatils fetched Successfully"], $data);
         } else {
             $result = responseJson(500, true, ["msg" => "Shuttles deatils fetched Failed"]);
         }

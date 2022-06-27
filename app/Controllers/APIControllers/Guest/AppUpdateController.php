@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\APIControllers\Admin;
+namespace App\Controllers\APIControllers\Guest;
 
 use App\Controllers\BaseController;
 use App\Models\AppUpdate;

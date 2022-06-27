@@ -1,13 +1,16 @@
 <?php
-
 namespace App\Controllers;
+
 use  App\Libraries\ServerSideDataTable;
 use  App\Libraries\EmailLibrary;
+use CodeIgniter\API\ResponseTrait;
 use DateTime;
 use DateTimeZone;
 
 class ApplicatioController extends BaseController
 {
+    use ResponseTrait;
+
     public $Db;
     public $session;
     public $request;
@@ -2980,13 +2983,33 @@ class ApplicatioController extends BaseController
     public function webLineReservation($resvid){
         try{
             $param = ['RESV_ID'=> $resvid];
-            $sql="SELECT RESV_ID,RESV_NO,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,CUST_FIRST_NAME+' '+CUST_LAST_NAME FULLNAME,
-            (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC,RESV_ROOM,RESV_NO_F_ROOM,RESV_NAME,RESV_RM_TYPE,RESV_STATUS,CUST_FIRST_NAME,CUST_ID,CUST_LAST_NAME,CUST_TITLE,FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,CUST_COUNTRY,CUST_STATE,(SELECT SNAME FROM STATE WHERE STATE_CODE=CUST_STATE AND COUNTRY_CODE=CUST_COUNTRY)CUST_STATE_DESC,CUST_CITY,(SELECT CTNAME FROM CITY WHERE ID=CUST_CITY)CUST_CITY_DESC,CUST_EMAIL,CUST_MOBILE,CUST_PHONE,CUST_POSTAL_CODE,CUST_NATIONALITY,CUST_DOC_TYPE,CUST_GENDER,CUST_DOC_EXPIRY,CUST_DOC_NUMBER,FORMAT(CUST_DOC_ISSUE,'dd-MMM-yyyy')CUST_DOC_ISSUE,RESV_ACCP_TRM_CONDI,RESV_SINGATURE_URL,RESV_ETA FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:RESV_ID: AND RESV_NAME=CUST_ID";
+            $sql = "SELECT RESV_ID, RESV_NO, FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy') RESV_ARRIVAL_DT, 
+                        RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy') RESV_DEPARTURE,
+                        CUST_FIRST_NAME+' '+CUST_LAST_NAME FULLNAME,
+                        RESV_ROOM, RESV_NO_F_ROOM, RESV_NAME, RESV_RM_TYPE, RESV_STATUS, CUST_FIRST_NAME, CUST_ID, CUST_LAST_NAME, CUST_TITLE, 
+                        FORMAT(CUST_DOB,'dd-MMM-yyyy') CUST_DOB, CUST_PASSPORT, CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3, 
+                        CUST_COUNTRY, CUST_STATE, CUST_CITY, 
+                        CUST_EMAIL, CUST_MOBILE, CUST_PHONE, CUST_POSTAL_CODE, CUST_NATIONALITY, CUST_DOC_TYPE, 
+                        CUST_GENDER, CUST_DOC_EXPIRY, CUST_DOC_NUMBER, FORMAT(CUST_DOC_ISSUE,'dd-MMM-yyyy') CUST_DOC_ISSUE,
+                        RESV_ACCP_TRM_CONDI, RESV_SINGATURE_URL, RESV_ETA,
+                        (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE) RM_TY_DESC, 
+                        (SELECT SNAME FROM STATE WHERE STATE_CODE = CUST_STATE AND COUNTRY_CODE = CUST_COUNTRY) CUST_STATE_DESC, 
+                        (SELECT CTNAME FROM CITY WHERE ID = CUST_CITY) CUST_CITY_DESC
+                        FROM FLXY_RESERVATION, FLXY_CUSTOMER 
+                        WHERE RESV_ID = :RESV_ID: AND RESV_NAME = CUST_ID";
+
             $response = $this->Db->query($sql,$param)->getResultArray();
-            $data['data']=$response;
-            $data['condition']='';
-            return view('WebCheckin/CheckInReservation',$data);
-        }catch (Exception $e){
+
+            if(empty($response)){
+                echo "This link is not valid!";
+                die();
+            }
+
+            $data['data'] = $response;
+            $data['condition'] = '';
+
+            return view('WebCheckin/CheckInReservation', $data);
+        }catch (\Exception $e){
             return $this->respond($e->errors());
         }
     }

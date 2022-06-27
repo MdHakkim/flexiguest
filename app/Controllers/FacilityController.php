@@ -44,8 +44,8 @@ class FacilityController extends BaseController
     public function getRequestList()
     {
         $mine = new ServerSideDataTable(); // loads and creates instance
-        $tableName = 'FLXY_MAINTENANCE_VIEW';
-        $columns = 'MAINT_ID|MAINT_ROOM_NO|TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_ATTACHMENT';
+        $tableName = 'FLXY_MAINTENANCE_VIEW left join FLXY_CUSTOMER on FLXY_MAINTENANCE_VIEW.CUST_NAME = FLXY_CUSTOMER.CUST_ID';
+        $columns = 'MAINT_ID|MAINT_ROOM_NO|MAINT_TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_ATTACHMENT|MAINT_CREATE_DT|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }
@@ -74,7 +74,7 @@ class FacilityController extends BaseController
         $user_id = session()->get('USR_ID');
 
         $attached_path = '';
-        $validate = $this->validate([
+        $rules = [
             'MAINT_ROOM_NO' => [
                 'label' => 'Room Number', 
                 'rules' => 'required',
@@ -105,7 +105,12 @@ class FacilityController extends BaseController
                     'required' => 'please select a status'
                 ]
             ]
-        ]);
+        ];
+
+        if(!empty($this->request->getVar('MAINT_TYPE')) && $this->request->getVar('MAINT_TYPE') == 'maintenance')
+            $rules['MAINT_SUB_CATEGORY'] = ['label' => 'Sub Category', 'rules' => 'required'];
+
+        $validate = $this->validate($rules);
 
         if (!$validate) {
             $validate = $this->validator->getErrors();            
@@ -152,8 +157,8 @@ class FacilityController extends BaseController
                     "MAINT_STATUS" => $this->request->getPost("MAINT_STATUS"),
                     "MAINT_COMMENT" => $this->request->getPost("MAINT_COMMENT"),
                     "MAINT_ROOM_NO" => $this->request->getPost("MAINT_ROOM_NO"),
-                    "MAINT_CREATE_DT" => date("d-M-Y"),
-                    "MAINT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_CREATE_DT" => date("Y-m-d H:i:s"),
+                    "MAINT_UPDATE_DT" => date("Y-m-d H:i:s"),
                     "MAINT_CREATE_UID" => $user_id,
                     "MAINT_UPDATE_UID" => $user_id,
                 ];
@@ -174,7 +179,7 @@ class FacilityController extends BaseController
                     "MAINT_STATUS" => $this->request->getPost("MAINT_STATUS"),
                     "MAINT_COMMENT" => $this->request->getPost("MAINT_COMMENT"),
                     "MAINT_ROOM_NO" => $this->request->getPost("MAINT_ROOM_NO"),
-                    "MAINT_UPDATE_DT" => date("d-M-Y"),
+                    "MAINT_UPDATE_DT" => date("Y-m-d H:i:s"),
                     "MAINT_UPDATE_UID" => $user_id,
                 ];
             $ins = $this->Db->table('FLXY_MAINTENANCE')->where('MAINT_ID', $sysid)->update($data);
@@ -220,7 +225,10 @@ class FacilityController extends BaseController
     {
         $category_type = $this->request->getVar('category_type');
 
-        $sql = "SELECT MAINT_CAT_ID,MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY where MAINT_CATEGORY_TYPE = :category_type:";
+        $sql = "SELECT MAINT_CAT_ID, MAINT_CATEGORY, MAINT_CATEGORY_TYPE FROM FLXY_MAINTENANCE_CATEGORY";
+        if(!empty($category_type))
+            $sql = "SELECT MAINT_CAT_ID, MAINT_CATEGORY FROM FLXY_MAINTENANCE_CATEGORY where MAINT_CATEGORY_TYPE = :category_type:";
+
         $params = ['category_type' => $category_type];
 
         $response = $this->Db->query($sql, $params)->getResultArray();
@@ -347,7 +355,7 @@ class FacilityController extends BaseController
     {
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_MAINT_SUBCATEGORY_VIEW';
-        $columns = 'MAINT_SUBCAT_ID|MAINT_SUBCATEGORY|MAINT_CATEGORY|CUST_FULLNAME|FORMAT(MAINT_SUBCAT_CREATE_DT,\'dd-MMM-yyyy\')MAINT_SUBCAT_CREATE_DT';
+        $columns = 'MAINT_CAT_ID|MAINT_SUBCAT_ID|MAINT_SUBCATEGORY|MAINT_CATEGORY|CUST_FULLNAME|FORMAT(MAINT_SUBCAT_CREATE_DT,\'dd-MMM-yyyy\')MAINT_SUBCAT_CREATE_DT';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }

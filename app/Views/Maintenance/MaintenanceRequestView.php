@@ -18,15 +18,17 @@
                 <table id="dataTable_view" class="table table-striped">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th class="all"></th>
                             <th>ID</th>
                             <th>Apartment</th>
+                            <th>Guest Name</th>
                             <th>Type</th>
                             <th>Category</th>
                             <th>SubCategory</th>
                             <th>Prefered Date & Time</th>
                             <th>Status</th>
                             <th>Image</th>
+                            <th>Created AT</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -176,13 +178,30 @@
                     data: ''
                 },
                 {
-                    data: 'MAINT_ID'
+                    data: 'MAINT_ID',
                 },
                 {
                     data: 'MAINT_ROOM_NO'
                 },
                 {
-                    data: 'TYPE'
+                    data: null,
+                    render: function(data, type, row, meta){
+                        let name = '';
+                        if(data['CUST_FIRST_NAME'])
+                            name += data['CUST_FIRST_NAME'] + ' ';
+
+                        if(data['CUST_MIDDLE_NAME'])
+                            name += data['CUST_MIDDLE_NAME'] + ' ';
+                        
+                        if(data['CUST_LAST_NAME'])
+                            name += data['CUST_LAST_NAME'];
+                        
+                        return name;
+                    }
+                },
+                {
+                    data: 'MAINT_TYPE',
+                    className: 'none'
                 },
                 {
                     data: 'MAINT_CATEGORY'
@@ -212,6 +231,9 @@
                     }
                 },
                 {
+                    data: 'MAINT_CREATE_DT',
+                },
+                {
                     data: null,
                     render: function(data, type, row, meta) {
                         return (
@@ -229,7 +251,7 @@
             ],
             columnDefs: [{
                 width: "5%",
-                className: 'control',
+                className: 'all control',
                 responsivePriority: 1,
                 orderable: false,
                 targets: 0,
@@ -237,6 +259,9 @@
                 render: function(data, type, full, meta) {
                     return '';
                 }
+            },{
+                targets: 11,
+                responsivePriority: 1,
             }],
             autowidth: true,
             "order": [
@@ -248,7 +273,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['title'];
+                            return 'Details of request';
                         }
                     }),
                     type: 'column',
@@ -502,7 +527,6 @@
     $(document).on('click', '.editWindow', function() {
         resetForm();
         runRoomList();
-        runCatList();
 
         setTimeout(() => {
             var sysid = $(this).attr('data_sysid');
@@ -530,6 +554,15 @@
                         $('#InHouseBooking').val(data.CUST_NAME).trigger('change');
                     }, 500);
 
+                    if (data['MAINT_TYPE'] == 'bulb_key') {
+                        $('#MAINT_TYPE1').prop('checked', true);
+                        $('#MAINT_TYPE2').prop('checked', false);
+                    } else {
+                        $('#MAINT_TYPE1').prop('checked', false);
+                        $('#MAINT_TYPE2').prop('checked', true);
+                    }
+                    runCatList();
+
                     $('#MAINT_CATEGORY').val(data.MAINT_CATEGORY).trigger('change');
                     $('#MAINT_SUB_CATEGORY').val(dataTrim).trigger('change');
 
@@ -539,14 +572,6 @@
                     var javaDate = new Date(data['MAINT_PREFERRED_TIME']);
                     var time = javaDate.getHours() + ":" + javaDate.getMinutes() + ":00";
                     $('#MAINT_PREFERRED_TIME').val(time);
-
-                    if (data['MAINT_TYPE'] == 'MT') {
-                        $('#MAINT_TYPE1').prop('checked', true);
-                        $('#MAINT_TYPE2').prop('checked', false);
-                    } else {
-                        $('#MAINT_TYPE2').prop('checked', true);
-                        $('#MAINT_TYPE1').prop('checked', false);
-                    }
 
                     $('select[name="MAINT_STATUS"]').val(data.MAINT_STATUS).trigger('change');
                     $('textarea[name="MAINT_COMMENT"]').val(data.MAINT_COMMENT);
