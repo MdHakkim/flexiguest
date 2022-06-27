@@ -317,29 +317,33 @@
         </table>
       </div>
 
-      <div class="row p-3">
+      <!-- <div class="row p-3">
         <div class="col-12">
           <span class="fw-semibold">Note:</span>
           <span
             >Property facilities such as swimming pool and gym are available for Residents and may use it at your own risk. </span
           >
         </div>
-      </div>
+      </div> -->
 
       <div class="row row p-3">
         <div class="col-12">
+        <span class="fw-semibold">Note:</span>
+          <span
+            >Property facilities such as swimming pool and gym are available for Residents and may use it at your own risk. </span
+          >
           <span
             >My signature on this registration card is an authorization to use my credit card for any unpaid bills. I accept full liability for any bills 
 associated during my stay and I agree to be held personally liable in the event that the indicated person/company or third party fails to pay
-for any part of the charges or full amount. <br><br>
+for any part of the charges or full amount. <br>
 Early Departures:<br>
 All Reservations are confirmed and charged in full for the entire duration of stay. No refunds will apply in the event of Early Departures. <br>
 I agree that I will be liable to pay for any damages or missing items in the apartment unit assigned to me for the entire stay including 
 furnishings, fixtures and equipment. All related repairs and replacements required will be subject to evaluation and/or assessment of the 
-damage or lost.<br><br>
+damage or lost.<br>
 All Apartment units are strictly Non-Smoking.<br>
 I agree to supervise all children (below 16 years and under) on the balcony at all times and to ensure that balcony and windows are 
-locked before exiting the room or apartment.<br><br>
+locked before exiting the room or apartment.<br>
 In the event of a fire evacuation, it is the Residents responsibility to exit his/her apartment in the quickest and most orderly fashion 
 possible and follow the exit signs out of the building, towards a designated assembly point. The Management of Expo Village will not be 
 held liable or responsible for any loss, damage or injury caused to any person/s or private property, in the event of an emergency 

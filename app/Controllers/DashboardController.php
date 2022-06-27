@@ -8,7 +8,7 @@ class DashboardController extends BaseController
 {
     public function __construct()
     {
-        if (session()->get('USR_ROLE') != "admin") {
+        if (session()->get('USR_ROLE') != "1") {
             echo 'Access denied';
             exit;
         }
