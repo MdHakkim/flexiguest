@@ -176,6 +176,7 @@
                 <div class="modal-body">
                     <div id="Accompany">
                         <div class="flxy_opt_btn text-center">
+                            <button type="button" class="btn btn-primary" onclick="reservationCheckout()">Checkout</button>
                             <button type="button" class="btn btn-primary shares-btn">Shares</button>
                             <button type="button" onClick="reservExtraOption('ACP')"
                                 class="btn btn-primary">Accompanying</button>
@@ -3333,6 +3334,25 @@ $(document).on('click', '.clearAdvSearch', function() {
     dt_adv_filter_table.dataTable().fnDraw();
 
 });
+
+function reservationCheckout() {
+    $.ajax({
+        url: `<?= base_url('/reservation/checkout') ?>/${ressysId}`,
+        type: 'post',
+        dataType: 'json',
+        success: function (response) {
+            if(response['SUCCESS'] == 200) {
+                console.log(response);
+                showModalAlert('success', `<li>${response['RESPONSE']['REPORT_RES']['msg']}</li>`);
+                let invoice = response['RESPONSE']['OUTPUT']['invoice'];
+                window.open(invoice, "_blank", 'fullscreen=yes');
+            }
+            else{
+                showModalAlert('info', `<li>${response['RESPONSE']['REPORT_RES']['msg']}</li>`);
+            }
+        }
+    });
+}
 
 // Display function clearFormFields
 

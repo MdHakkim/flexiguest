@@ -31,12 +31,19 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
     $routes->match(['post'],'/reservationChangesView', 'ApplicatioController::ReservationChangesView');
     
-    $routes->get('reservation/shares/get-reservation-details', 'ReservationController::getReservationDetails');
-    $routes->post('reservation/shares/create-reservation', 'ReservationController::sharesCreateReservation');
-    $routes->post('reservation/shares/add-share-reservations', 'ReservationController::addShareReservations');
-    $routes->post('reservation/shares/break-share-reservation', 'ReservationController::breakShareReservation');
-    $routes->post('reservation/shares/change-share-rate', 'ReservationController::changeShareRate');
-    $routes->post('reservation/search-reservation', 'ReservationController::searchReservation');
+    $routes->group('reservation', function($routes) {
+        $routes->post('search-reservation', 'ReservationController::searchReservation');
+        
+        $routes->post('checkout/(:segment)', 'CheckInOutController::checkout/$1');
+        
+        $routes->group('shares', function($routes) {
+            $routes->get('get-reservation-details', 'ReservationController::getReservationDetails');
+            $routes->post('create-reservation', 'ReservationController::sharesCreateReservation');
+            $routes->post('add-share-reservations', 'ReservationController::addShareReservations');
+            $routes->post('break-share-reservation', 'ReservationController::breakShareReservation');
+            $routes->post('change-share-rate', 'ReservationController::changeShareRate');
+        });
+    });
 
     // $routes->match(['get'],'/testingApi/(:segment)', 'ApplicatioController::triggerReservationEmail/$1');
 
