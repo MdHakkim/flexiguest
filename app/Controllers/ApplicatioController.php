@@ -119,7 +119,7 @@ class ApplicatioController extends BaseController
         $addColumnCopty='RESV_ID,RESV_PAYMENT_TYPE,RESV_SPECIALS,RESV_COMMENTS,RESV_PACKAGES,RESV_ITEM_INVT,RESV_NAME,(CUST_FIRST_NAME+\' \'+CUST_LAST_NAME)RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
                         (SELECT CNAME FROM COUNTRY WHERE ISO2=CUST_COUNTRY)CUST_COUNTRY_DESC,CUST_VIP,CUST_PHONE';
 
-        $sql = "SELECT $addColumnCopty,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_MEMBER_TY,
+        $sql = "SELECT $addColumnCopty,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_MEMBER_TY,RESV_CUST_MEMBERSHIP,
         RESV_COMPANY,(SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY)RESV_COMPANY_DESC,
         RESV_AGENT,(SELECT AGN_ACCOUNT FROM FLXY_AGENT_PROFILE WHERE AGN_ID=RESV_AGENT)RESV_AGENT_DESC,
         RESV_BLOCK,(SELECT BLK_NAME+' - '+BLK_CODE+' - '+BLK_START_DT+' - '+BLK_END_DT AS BLOCKDESC FROM FLXY_BLOCK WHERE BLK_ID=RESV_BLOCK)RESV_BLOCK_DESC,RESV_MEMBER_NO,RESV_CORP_NO,RESV_IATA_NO,RESV_CLOSED,RESV_DAY_USE,
@@ -160,7 +160,7 @@ class ApplicatioController extends BaseController
             $addColumnCopty='RESV_ID,RESV_PAYMENT_TYPE,RESV_SPECIALS,RESV_COMMENTS,RESV_PACKAGES,RESV_ITEM_INVT,RESV_NAME,(CUST_FIRST_NAME+\' \'+CUST_LAST_NAME)RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
             (SELECT CNAME FROM COUNTRY WHERE ISO2=CUST_COUNTRY)CUST_COUNTRY_DESC,CUST_VIP,CUST_PHONE';
         }
-        $sql = "SELECT $addColumnCopty,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_MEMBER_TY,
+        $sql = "SELECT $addColumnCopty,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_MEMBER_TY,RESV_CUST_MEMBERSHIP,
         RESV_COMPANY,(SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY)RESV_COMPANY_DESC,
         RESV_AGENT,(SELECT AGN_ACCOUNT FROM FLXY_AGENT_PROFILE WHERE AGN_ID=RESV_AGENT)RESV_AGENT_DESC,
         RESV_BLOCK,(SELECT BLK_NAME+' - '+BLK_CODE+' - '+BLK_START_DT+' - '+BLK_END_DT AS BLOCKDESC FROM FLXY_BLOCK WHERE BLK_ID=RESV_BLOCK)RESV_BLOCK_DESC,RESV_MEMBER_NO,RESV_CORP_NO,RESV_IATA_NO,RESV_CLOSED,RESV_DAY_USE,
@@ -225,6 +225,7 @@ class ApplicatioController extends BaseController
                 "RESV_DEPARTURE" => $this->request->getPost("RESV_DEPARTURE"),
                 "RESV_NO_F_ROOM" => $this->request->getPost("RESV_NO_F_ROOM"),
                 "RESV_NAME" => $this->request->getPost("RESV_NAME"),
+                "RESV_CUST_MEMBERSHIP" => $this->request->getPost("RESV_CUST_MEMBERSHIP"),
                 "RESV_MEMBER_TY" => $this->request->getPost("RESV_MEMBER_TY"),
                 "RESV_COMPANY" => $this->request->getPost("RESV_COMPANY"),
                 "RESV_AGENT" => $this->request->getPost("RESV_AGENT"),
@@ -310,6 +311,7 @@ class ApplicatioController extends BaseController
                     "RESV_DEPARTURE" => $this->request->getPost("RESV_DEPARTURE"),
                     "RESV_NO_F_ROOM" => $this->request->getPost("RESV_NO_F_ROOM"),
                     "RESV_NAME" => $this->request->getPost("RESV_NAME"),
+                    "RESV_CUST_MEMBERSHIP" => $this->request->getPost("RESV_CUST_MEMBERSHIP"),
                     "RESV_MEMBER_TY" => $this->request->getPost("RESV_MEMBER_TY"),
                     "RESV_COMPANY" => $this->request->getPost("RESV_COMPANY"),
                     "RESV_AGENT" => $this->request->getPost("RESV_AGENT"),
@@ -723,6 +725,30 @@ class ApplicatioController extends BaseController
         echo json_encode($membershipTypes);
     }
 
+    public function getCustomerMembershipsList()
+    {
+        $custId = $this->request->getPost('custId');
+
+        $sql = "SELECT CM_ID,CUST_ID,MEM_CODE,MEM_DESC,CM_CARD_NUMBER
+                FROM FLXY_CUSTOMER_MEMBERSHIP 
+                LEFT JOIN FLXY_MEMBERSHIP FM ON FM.MEM_ID = FLXY_CUSTOMER_MEMBERSHIP.MEM_ID 
+                WHERE FLXY_CUSTOMER_MEMBERSHIP.CUST_ID = '".$custId."' 
+                AND FLXY_CUSTOMER_MEMBERSHIP.CM_STATUS = 1
+                AND FM.MEM_STATUS = 1";
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $customerMemberships = array();
+        if($response != NULL)
+        {
+            foreach ($response as $row) {
+                $customerMemberships[] = array( "id" => $row['CM_ID'], "text" => $row["MEM_CODE"] . " | " . $row["MEM_DESC"], "card_no" => $row["CM_CARD_NUMBER"]);
+            }
+        }
+
+        echo json_encode($customerMemberships);
+    }
+
     public function insertCustomerMembership()
     {
         try {
@@ -898,6 +924,7 @@ class ApplicatioController extends BaseController
     }
 
     function getSupportingReservationLov(){
+
         $sql = 'SELECT MEM_CODE CODE,MEM_DESC DESCS FROM FLXY_MEMBERSHIP';
         $respon1 = $this->Db->query($sql)->getResultArray();
         $sql = 'SELECT RT_CL_CODE CODE,RT_CL_DESC DESCS FROM FLXY_RATE_CLASS';
