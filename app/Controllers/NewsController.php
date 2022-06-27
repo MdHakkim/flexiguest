@@ -42,9 +42,9 @@ class NewsController extends BaseController
         $id = $this->request->getPost('id');
         
         $rules = [
-            'NS_TITLE' => ['required'],
-            'NS_DESCRIPTION' => ['required'],
-            'NS_BODY' => ['required'],
+            'NS_TITLE' => ['label' => 'title', 'rules' => 'required'],
+            'NS_DESCRIPTION' => ['label' => 'decription', 'rules' => 'required'],
+            'NS_BODY' => ['label' => 'body', 'rules' => 'required'],
         ];
 
         if (empty($id) || $this->request->getFile('NS_COVER_IMAGE'))

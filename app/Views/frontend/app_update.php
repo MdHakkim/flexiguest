@@ -148,7 +148,10 @@
                     data: 'AU_DESCRIPTION'
                 },
                 {
-                    data: 'AU_BODY'
+                    data: null,
+                    render: function(data) {
+                        return data['AU_BODY'].substr(0, 30);
+                    }
                 },
                 {
                     data: 'AU_CREATED_AT'
@@ -277,6 +280,8 @@
         let id = "submit-form";
 
         $(`#${id} textarea[name='AU_BODY']`).val($("#snow-editor .ql-editor").html());
+        if ($("#snow-editor .ql-editor").html() == "<p><br></p>")
+            $(`#${id} textarea[name='AU_BODY']`).val('');
 
         var fd = new FormData($(`#${id}`)[0]);
         fd.delete('AU_COVER_IMAGE');
@@ -347,7 +352,7 @@
                         else if ($(`#${id} textarea[name='${field}']`).length)
                             $(`#${id} textarea[name='${field}']`).val(val);
 
-                        if(field == 'body')
+                        if(field == 'AU_BODY')
                             $("#snow-editor .ql-editor").html(val);
 
                     });

@@ -148,7 +148,10 @@
                     data: 'NS_DESCRIPTION'
                 },
                 {
-                    data: 'NS_BODY'
+                    data: null,
+                    render: function(data) {
+                        return data['NS_BODY'].substr(0, 30);
+                    }
                 },
                 {
                     data: 'NS_CREATED_AT'
@@ -276,7 +279,10 @@
         hideModalAlerts();
 
         let id = 'submit-form';
+
         $(`#${id} textarea[name='NS_BODY']`).val($("#snow-editor .ql-editor").html());
+        if ($("#snow-editor .ql-editor").html() == "<p><br></p>")
+            $(`#${id} textarea[name='NS_BODY']`).val('');
 
         var fd = new FormData($(`#${id}`)[0]);
         fd.delete('NS_COVER_IMAGE');
@@ -297,7 +303,7 @@
                 var response = respn['SUCCESS'];
                 if (response != 200) {
 
-                    var ERROR = respn['RESPONSE']['ERROR'];
+                    var ERROR = respn['RESPONSE']['REPORT_RES'];
                     var mcontent = '';
                     $.each(ERROR, function(ind, data) {
                         
@@ -351,7 +357,7 @@
                         else if ($(`#${id} textarea[name='${field}']`).length)
                             $(`#${id} textarea[name='${field}']`).val(val);
 
-                        if(field == 'body')
+                        if(field == 'NS_BODY')
                             $("#snow-editor .ql-editor").html(val);
 
                     });

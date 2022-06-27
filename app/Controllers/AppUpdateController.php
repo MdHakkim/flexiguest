@@ -42,9 +42,9 @@ class AppUpdateController extends BaseController
         $id = $this->request->getPost('id');
 
         $rules = [
-            'AU_TITLE' => ['required'],
-            'AU_DESCRIPTION' => ['required'],
-            'AU_BODY' => ['required'],
+            'AU_TITLE' => ['label' => 'title', 'rules' => 'required'],
+            'AU_DESCRIPTION' => ['label' => 'description', 'rules' => 'required'],
+            'AU_BODY' => ['label' => 'body', 'rules' => 'required'],
         ];
 
         if (empty($id) || $this->request->getFile('AU_COVER_IMAGE'))
