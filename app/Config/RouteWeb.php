@@ -280,6 +280,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/getMembershipTypeList', 'ApplicatioController::getMembershipTypeList');
     $routes->match(['post'],'/editCustomerMembership', 'ApplicatioController::editCustomerMembership');
 
+    $routes->match(['post'],'/getCustomerMembershipsList', 'ApplicatioController::getCustomerMembershipsList');
+
     // Code By ALEESHA 
     // Maintenance Request 
     $routes->get('/maintenance', 'FacilityController::maintenanceRequest');

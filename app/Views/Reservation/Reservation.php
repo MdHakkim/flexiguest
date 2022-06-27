@@ -4,21 +4,28 @@
 <?= $this->include('Layout/ErrorReport') ?>
 
 <style>
-    .active-tr {
-        background-color: #d1e7ff !important;
-        --bs-table-striped-bg: none;
-    }
-    #combine-popup .text-right{
-        text-align: right !important;
-    }
-    #combine-popup .tab-content {
-        padding: 1rem 1.375rem 0 1.375rem;
-    }
-    #combine-popup .card {
-        box-shadow: unset;
-        margin-top: 0;
-    }
+.active-tr {
+    background-color: #d1e7ff !important;
+    --bs-table-striped-bg: none;
+}
 
+#combine-popup .text-right {
+    text-align: right !important;
+}
+
+#combine-popup .tab-content {
+    padding: 1rem 1.375rem 0 1.375rem;
+}
+
+#combine-popup .card {
+    box-shadow: unset;
+    margin-top: 0;
+}
+
+.memtypeContainer .select2-container {
+    width: 87% !important;
+    float: left;
+}
 </style>
 
 <!-- Content wrapper -->
@@ -34,8 +41,8 @@
             <div class="container-fluid p-3">
 
                 <div class="row">
-                    <div class="col-md-3 mt-1 mb-3"><button type="button" class="btn btn-primary" onClick="addResvation()"><i
-                                class="fa-solid fa-plus fa-lg"></i> Add New</button></div>
+                    <div class="col-md-3 mt-1 mb-3"><button type="button" class="btn btn-primary"
+                            onClick="addResvation()"><i class="fa-solid fa-plus fa-lg"></i> Add New</button></div>
                 </div>
 
                 <form class="dt_adv_search mb-2" method="POST">
@@ -429,9 +436,14 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <lable class="form-lable">Member Type</lable>
-                                    <select id="RESV_MEMBER_TY" class=" select2 form-select" data-allow-clear="true">
-                                        <option value="">Select</option>
-                                    </select>
+                                    <div class="memtypeContainer mb-3">
+                                        <select id="RESV_MEMBER_TY_ADD" class="select2 form-select"
+                                            data-allow-clear="true">
+                                        </select>
+                                        <button type="button" onClick="checkAddMem('window-1')"
+                                            class="btn flxi_btn btn-sm btn-primary text-end"><i class="fa fa-plus"
+                                                aria-hidden="true"></i></button>
+                                    </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <lable class="form-lable">Company</lable>
@@ -466,7 +478,7 @@
                                 <div class="col-md-3 mt-0">
                                     <lable class="form-lable">Member No</lable>
                                     <input type="text" id="RESV_MEMBER_NO" class="form-control RESV_MEMBER_NO"
-                                        placeholder="member no" />
+                                        placeholder="member no" readonly />
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <lable class="form-lable">CORP NO</lable>
@@ -614,15 +626,19 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <lable class="form-lable">Member Type</lable>
-                                    <select name="RESV_MEMBER_TY" id="RESV_MEMBER_TY" class=" select2 form-select"
-                                        data-allow-clear="true">
-                                        <option value="">Select</option>
-                                    </select>
+                                    <div class="memtypeContainer mb-3">
+                                        <select name="RESV_MEMBER_TY" id="RESV_MEMBER_TY" class="select2 form-select"
+                                            data-allow-clear="true">
+                                        </select>
+                                        <button type="button" onClick="checkAddMem('window-2')"
+                                            class="btn flxi_btn btn-sm btn-primary text-end"><i class="fa fa-plus"
+                                                aria-hidden="true"></i></button>
+                                    </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <lable class="form-lable">Member No</lable>
                                     <input type="text" name="RESV_MEMBER_NO" id="RESV_MEMBER_NO" class="form-control"
-                                        placeholder="member no" />
+                                        placeholder="member no" readonly />
                                     <div class="invalidfx-feedback"></div>
                                 </div>
                                 <div class="col-md-3 mt-0">
@@ -1937,13 +1953,13 @@
     <?= $this->include('includes/SharesPopup') ?>
     <?= $this->include('includes/SearchReservationPopup') ?>
 
+    <?= $this->include('includes/CustomerMembershipPopup') ?>
 
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
 <?=$this->include("Reservation/CompanyAgentModal")?>
 <script>
-
 var compAgntMode = '';
 var linkMode = '';
 var windowmode = '';
@@ -2153,6 +2169,11 @@ function selectRate() {
     $('#rateQueryWindow').modal('hide');
     $('.window-1,#nextbtn').hide();
     $('.window-2').show();
+
+    //Update membership select 
+    fillCustomerMemberships($('#CM_CUST_ID').val(), 'edit', '[name="RESV_MEMBER_TY"]');
+    $('[name="RESV_MEMBER_TY"]').val($('#RESV_MEMBER_TY_ADD').val()).trigger('change').trigger('select2:select');
+
     $('#submitResrBtn').removeClass('submitResr');
     runInitializeConfig();
     var activeRow = $('.clickPrice.active');
@@ -2260,7 +2281,8 @@ $(document).on('click', '.reserOption', function() {
 
 $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
-    $('#RESV_NAME,#RESV_COMPANY,#RESV_AGENT,#RESV_BLOCK').html('<option value="">Select</option>').selectpicker(
+    $('#RESV_NAME,#RESV_COMPANY,#RESV_AGENT,#RESV_BLOCK').html(
+        '<option value="">Select</option>').selectpicker(
         'refresh');
     runSupportingResevationLov();
     runInitializeConfig();
@@ -2292,7 +2314,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
         },
         dataType: 'json',
         success: function(respn) {
-            
+
             $(respn).each(function(inx, data) {
                 $.each(data, function(fields, datavals) {
                     var field = $.trim(fields); //fields.trim();
@@ -2308,6 +2330,16 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                         var option = '<option value="' + dataval + '">' + data[
                             field + '_DESC'] + '</option>';
                         $('*#' + field).html(option).selectpicker('refresh');
+
+                        if (field == 'RESV_NAME' && dataval != '') {
+                            fillCustomerMemberships(dataval, 'edit', '[name="RESV_MEMBER_TY"]');
+                            $('#CM_CUST_ID').val(dataval);
+                        }
+                    }
+                    else if(field == 'RESV_CUST_MEMBERSHIP')
+                    {
+                        $('[name="RESV_MEMBER_TY"]').val(dataval).trigger('change');
+
                     } else if (field == 'RESV_CONFIRM_YN' || field ==
                         'RESV_PICKUP_YN' || field == 'RESV_DROPOFF_YN' || field ==
                         'RESV_EXT_PRINT_RT' || field == 'RESV_FIXED_RATE') {
@@ -2354,7 +2386,7 @@ $(document).on('click', '.delete-record', function() {
                     },
                     dataType: 'json',
                     success: function(respn) {
-                        
+
                         $('#dataTable_view').dataTable().fnDraw();
                     }
                 });
@@ -2396,6 +2428,8 @@ function addResvation() {
     $('#RESV_NAME,#RESV_COMPANY,#RESV_AGENT,#RESV_BLOCK').html('<option value="">Select</option>').selectpicker(
         'refresh');
     $('#reservationW').modal('show');
+    $('#reservationForm').removeClass('was-validated');
+
     $('#reservationWlable').html('Add New Reservation');
     runSupportingResevationLov();
     $('.window-1,#nextbtn,#previousbtn').show();
@@ -2404,6 +2438,9 @@ function addResvation() {
     $('#submitResrBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('.window-2').hide();
     runCountryList();
+
+    fillMembershipTypes('', 'add', '#RESV_MEMBER_TY_ADD');
+
     var today = moment().format('DD-MM-YYYY');
     var end = moment().add(1, 'days').format('DD-MM-YYYY');
     $('.RESV_ARRIVAL_DT').datepicker().datepicker("setDate", today);
@@ -2423,6 +2460,7 @@ $(document).on('click', '.flxCheckBox', function() {
 });
 
 $(document).on('change', '*#RESV_NAME', function() {
+
     var custId = $(this).find('option:selected').val();
     var thisActive = $(this).hasClass('activeName')
     thisActive ? '' : $('[name="RESV_NAME"]').val(custId).selectpicker('refresh');
@@ -2446,6 +2484,10 @@ $(document).on('change', '*#RESV_NAME', function() {
                 $('#CUST_COUNTRY').val($.trim(json.CUST_COUNTRY)).selectpicker('refresh');
                 $('#CUST_VIP').val($.trim(json.CUST_VIP));
                 $('#CUST_PHONE').val($.trim(json.CUST_PHONE));
+
+                fillCustomerMemberships(custId, 'edit', $('.window-2').is(':visible') ? '[name="RESV_MEMBER_TY"]' : '#RESV_MEMBER_TY_ADD');
+                $('#CM_CUST_ID').val(custId);
+
             } else {
                 $('#CUST_FIRST_NAME,#CUST_TITLE,#CUST_COUNTRY,#CUST_VIP,#CUST_PHONE').val('');
             }
@@ -2559,14 +2601,33 @@ function submitForm(id, mode, event) {
     if (!validate) {
         return false;
     }
-    if (mode == 'R') {
-        var url = '<?php echo base_url('/insertReservation')?>';
-    } else {
-        var url = '<?php echo base_url('/insertCustomer')?>';
-    }
+
     $('#loader_flex_bg').show();
     $('#errorModal').hide();
     var formSerialization = $('#' + id).serializeArray();
+
+    if (mode == 'R') {
+        
+        var url = '<?php echo base_url('/insertReservation')?>';
+
+        // Change membership type and id
+        var formType = $('.window-2').is(':visible') ? 'edit' : 'add';
+        var cust_membership = $('[name="RESV_MEMBER_TY"]').val();
+        var membership_code = $('[name="RESV_MEMBER_TY"]').find(':selected').attr('membership-type'); 
+
+        formSerialization.find(function(input) {
+            return input.name == 'RESV_MEMBER_TY';
+        }).value = membership_code;
+
+        formSerialization.push({
+            name: 'RESV_CUST_MEMBERSHIP',
+            value: cust_membership
+        });
+
+    } else {
+        var url = '<?php echo base_url('/insertCustomer')?>';
+    }
+
     $.ajax({
         url: url,
         type: "post",
@@ -2583,7 +2644,7 @@ function submitForm(id, mode, event) {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var error = '<ul>';
                 $.each(ERROR, function(ind, data) {
-                    
+
                     error += '<li>' + data + '</li>';
                 });
                 error += '<ul>';
@@ -2697,7 +2758,7 @@ $(document).on('keyup', '.RESV_RM_TYPE,.RESV_RTC .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            
+
             $('#RESV_RM_TYPE,#RESV_RTC').html(respn).selectpicker('refresh');
         }
     });
@@ -2721,7 +2782,7 @@ $(document).on('keyup', '.RESV_BLOCK .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            
+
             $('*#RESV_BLOCK').html(respn).selectpicker('refresh');
         }
     });
@@ -2740,7 +2801,7 @@ $(document).on('keyup', '.RESV_COMPANY .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            
+
             $('*#RESV_COMPANY').html(respn).selectpicker('refresh');
         }
     });
@@ -2759,7 +2820,7 @@ $(document).on('keyup', '.RESV_AGENT .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            
+
             $('*#RESV_AGENT').html(respn).selectpicker('refresh');
         }
     });
@@ -2779,7 +2840,7 @@ $(document).on('keyup', '.RESV_NAME .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            
+
             $('*#RESV_NAME').html(respn).selectpicker('refresh');
         }
     });
@@ -2798,7 +2859,7 @@ $(document).on('keyup', '.RESV_ROOM .form-control', function() {
         },
         // dataType:'json',
         success: function(respn) {
-            
+
             $('*#RESV_ROOM').html(respn).selectpicker('refresh');
         }
     });
@@ -2843,6 +2904,7 @@ $(document).on('change', '#CUST_STATE', function() {
 });
 
 function runSupportingResevationLov() {
+
     $.ajax({
         url: '<?php echo base_url('/getSupportingReservationLov')?>',
         type: "post",
@@ -2858,17 +2920,18 @@ function runSupportingResevationLov() {
                 'RESV_ENTRY_PONT', 'RESV_PROFILE'
             ];
             $(respn).each(function(ind, data) {
+
                 var option = '<option value="">Select</option>';
                 $.each(data, function(i, valu) {
                     var value = $.trim(valu['CODE']); //fields.trim();
                     var desc = $.trim(valu['DESCS']); //datavals.trim();
+
                     option += '<option value="' + value + '">' + desc + '</option>';
                 });
-                if (idArray[ind] == 'RESV_MEMBER_TY') {
-                    $('*#' + idArray[ind]).html(option);
-                } else if (idArray[ind] == 'RESV_RATE_CLASS') {
+
+                if (idArray[ind] == 'RESV_RATE_CLASS') {
                     $('#RESV_RATE_CATEGORY').html(option);
-                } else {
+                } else if (idArray[ind] != 'RESV_MEMBER_TY') {
                     $('#' + idArray[ind]).html(option);
                     if (idArray[ind] == 'RESV_TRANSPORT_TYP') {
                         $('#RESV_TRANSPORT_TYP_DO').html(option);
@@ -2907,8 +2970,8 @@ function runInitializeConfig() {
                 var options = '<option value=\'\'>Select</option>' + option;
 
                 $('#' + idArray[ind]).html(options);
-                
-                if($(`#combine-popup select[name='${idArray[ind]}']`).length) {
+
+                if ($(`#combine-popup select[name='${idArray[ind]}']`).length) {
                     $(`#combine-popup select[name='${idArray[ind]}']`).html(options);
                 }
             });
@@ -3038,7 +3101,7 @@ $(document).on('click', '.getExistCust .select', function() {
                 '</option>';
             $('*#RESV_NAME').html(option).selectpicker('refresh');
 
-            if($(`#combine-popup`).is(':visible')){
+            if ($(`#combine-popup`).is(':visible')) {
                 $(`#combine-popup input[name='CUST_ID']`).val(jsonForm['CUST_ID']);
                 $(`#combine-popup select[name='CUST_TITLE']`).val(jsonForm['CUST_TITLE']);
                 $(`#combine-popup input[name='CUST_FIRST_NAME']`).val(jsonForm['CUST_FIRST_NAME']);
@@ -3170,12 +3233,12 @@ function submitItemForm(id) {
         },
         dataType: 'json',
         success: function(respn) {
-            
+
             var response = respn['SUCCESS'];
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
-                $.each(ERROR, function(ind, data) {                    
+                $.each(ERROR, function(ind, data) {
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);
@@ -3299,10 +3362,17 @@ function showReservationChanges(rsrvId = 0) {
 }
 
 $(document).on('click', '.show-activity-log', function() {
-
     showReservationChanges(ressysId);
-
 });
+
+// Funtion to execute after Customer Memberhsip form submit
+
+function afterMemFormClose() {
+    fillCustomerMemberships($('.window-2').is(':visible') ? $('.window-2').find('#RESV_NAME').val() : $('.window-1').find('#RESV_NAME').val(), 
+                            'edit', 
+                            $('.window-2').is(':visible') ? '[name="RESV_MEMBER_TY"]' : '#RESV_MEMBER_TY_ADD');
+}
+
 
 
 // Reservation Advanced Search Functions Starts
