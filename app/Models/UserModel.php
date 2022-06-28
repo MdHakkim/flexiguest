@@ -20,6 +20,7 @@ class UserModel extends Model
 		"USR_PHONE",
 		"USR_PASSWORD",
 		"USR_ROLE",
+		"USR_ROLE_ID",
 		"USR_CUST_ID"
 	];
 
