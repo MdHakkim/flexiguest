@@ -455,7 +455,7 @@ class ApplicatioController extends BaseController
         $emailResp = $emailCall->preCheckInEmail($reservationInfo,$parametr);
     }
 
-    public function updateCustomerData($custId){
+    public function updateCustomerData($custId) {
         $data = [   "CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
                     "CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
                     "CUST_COUNTRY" => $this->request->getPost("CUST_COUNTRY"),
@@ -484,16 +484,17 @@ class ApplicatioController extends BaseController
         return true;
     }
 
-    function countryList(){
+    public function countryList(){
         $response = $this->Db->table('COUNTRY')->select('iso2,cname')->get()->getResultArray();
         $option='<option value="">Select Country</option>';
         foreach($response as $row){
             $option.= '<option value="'.$row['iso2'].'">'.$row['cname'].'</option>';
         }
         echo $option;
+        die();
     }
 
-    function stateList(){
+    public function stateList(){
         $ccode = $this->request->getPost("ccode");
         $sql = "SELECT sname,state_code FROM STATE WHERE COUNTRY_CODE='$ccode'";
         $response = $this->Db->query($sql)->getResultArray();
@@ -504,7 +505,7 @@ class ApplicatioController extends BaseController
         echo $option;
     }
 
-    function cityList(){
+    public function cityList(){
         $ccode = $this->request->getPost("ccode");
         $scode = $this->request->getPost("scode");
         $sql = "SELECT ctname,id FROM CITY WHERE COUNTRY_CODE='$ccode' AND STATE_CODE='$scode'";
@@ -516,7 +517,7 @@ class ApplicatioController extends BaseController
         echo $option;
     }
 
-    function insertCustomer(){
+    public function insertCustomer(){
         try{
             $validate = $this->validate([
                 'CUST_FIRST_NAME' => ['label' => 'First Name', 'rules' => 'required'],
@@ -651,7 +652,7 @@ class ApplicatioController extends BaseController
         }
     }
 
-    function deleteCustomer(){
+    public function deleteCustomer(){
         $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_CUSTOMER')->delete(['CUST_ID' => $sysid]); 
@@ -709,7 +710,7 @@ class ApplicatioController extends BaseController
         // return view('Dashboard');
     }
 
-    function editCustomer(){
+    public function editCustomer(){
         $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_LANG,CUST_TITLE,CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
         CUST_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC
@@ -3097,7 +3098,7 @@ class ApplicatioController extends BaseController
         }
     }
     public function webLineReservation($resvid){
-        try{
+        // try{
             $param = ['RESV_ID'=> $resvid];
             $sql = "SELECT RESV_ID, RESV_NO, FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy') RESV_ARRIVAL_DT, 
                         RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy') RESV_DEPARTURE,
@@ -3108,11 +3109,15 @@ class ApplicatioController extends BaseController
                         CUST_EMAIL, CUST_MOBILE, CUST_PHONE, CUST_POSTAL_CODE, CUST_NATIONALITY, CUST_DOC_TYPE, 
                         CUST_GENDER, CUST_DOC_EXPIRY, CUST_DOC_NUMBER, FORMAT(CUST_DOC_ISSUE,'dd-MMM-yyyy') CUST_DOC_ISSUE,
                         RESV_ACCP_TRM_CONDI, RESV_SINGATURE_URL, RESV_ETA,
-                        (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE) RM_TY_DESC, 
-                        (SELECT SNAME FROM STATE WHERE STATE_CODE = CUST_STATE AND COUNTRY_CODE = CUST_COUNTRY) CUST_STATE_DESC, 
-                        (SELECT CTNAME FROM CITY WHERE ID = CUST_CITY) CUST_CITY_DESC
-                        FROM FLXY_RESERVATION, FLXY_CUSTOMER 
-                        WHERE RESV_ID = :RESV_ID: AND RESV_NAME = CUST_ID";
+                        RM_TY_DESC,
+                        SNAME as CUST_STATE_DESC,
+                        CTNAME as CUST_CITY_DESC 
+                        FROM FLXY_RESERVATION
+                        left join FLXY_CUSTOMER on FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID
+                        left join FLXY_ROOM_TYPE on FLXY_RESERVATION.RESV_RM_TYPE = FLXY_ROOM_TYPE.RM_TY_CODE
+                        left join STATE on STATE.STATE_CODE = FLXY_CUSTOMER.CUST_STATE
+                        left join CITY on CITY.ID = FLXY_CUSTOMER.CUST_CITY
+                        WHERE RESV_ID = :RESV_ID:";
 
             $response = $this->Db->query($sql,$param)->getResultArray();
 
@@ -3125,19 +3130,19 @@ class ApplicatioController extends BaseController
             $data['condition'] = '';
 
             return view('WebCheckin/CheckInReservation', $data);
-        }catch (\Exception $e){
-            return $this->respond($e->errors());
-        }
+        // }catch (\Exception $e){
+            // return $this->respond($e->getMessage());
+        // }
     }
 
     function imageUpload(){
         try{
             $avatar = $this->request->getFile('file');
-            $avatar->move(ROOTPATH . 'assets/Uploads/');
+            $avatar->move(ROOTPATH . 'assets/Uploads/UserDocuments/proof/');
             echo $avatar->getClientName();
             exit;
-        }catch (Exception $e){
-            return $this->respond($e->errors());
+        }catch (\Exception $e){
+            return $this->respond($e->getMessage());
         }
     }
 
@@ -3154,13 +3159,13 @@ class ApplicatioController extends BaseController
                 $dst_r = ImageCreateTrueColor( $_POST['w'], $_POST['h'] );
                 imagecopyresampled($dst_r, $img_r, 0, 0, $_POST['x'], $_POST['y'], $_POST['w'], $_POST['h'], $_POST['w'],$_POST['h']);
                 // header('Content-type: image/jpeg');
-                imagejpeg($dst_r,'assets/Uploads/userDocuments/'.$newFile);
+                imagejpeg($dst_r,'assets/Uploads/UserDocuments/proof/'.$newFile);
             }else{
-                $sourcePath = dirname(__DIR__,2). '/assets/Uploads/userDocuments/'.$imageName;
-                $newPath = dirname(__DIR__,2). '/assets/Uploads/userDocuments/'.$newFile;
+                $sourcePath = dirname(__DIR__,2). '/assets/Uploads/UserDocuments/proof/'.$imageName;
+                $newPath = dirname(__DIR__,2). '/assets/Uploads/UserDocuments/proof/'.$newFile;
                 rename($sourcePath,$newPath);
             }
-            $file_unlink = dirname(__DIR__,2).'/assets/Uploads/userDocuments/'.$imageName;
+            $file_unlink = dirname(__DIR__,2).'/assets/Uploads/UserDocuments/proof/'.$imageName;
             if(file_exists($file_unlink)){
                 unlink($file_unlink);
             }
@@ -3173,16 +3178,29 @@ class ApplicatioController extends BaseController
                 "DOC_CREATE_UID" => $this->session->name,
                 "DOC_CREATE_DT" => $dateTime
             ];
-            $return = $this->Db->table('FLXY_DOCUMENTS')->insert($data);
+
+            $uploaded_documents = $this->Db->table('FLXY_DOCUMENTS')->where('DOC_CUST_ID', $this->request->getPost("DOC_CUST_ID"))
+                ->where('DOC_RESV_ID', $this->request->getPost("DOC_RESV_ID"))->get()->getResultArray();
+            
+            if(count($uploaded_documents)){
+                $return = $this->Db->table('FLXY_DOCUMENTS')->where('DOC_CUST_ID', $this->request->getPost("DOC_CUST_ID"))
+                                    ->where('DOC_RESV_ID', $this->request->getPost("DOC_RESV_ID"))
+                                    ->update(['DOC_FILE_PATH' => $uploaded_documents[0]['DOC_FILE_PATH'] . ',' . $newFile]);
+            }
+            else{
+                $return = $this->Db->table('FLXY_DOCUMENTS')->insert($data);
+            }
+
             if($return){
                 $array = array('DOC_CUST_ID' => $this->request->getPost("DOC_CUST_ID"), 'DOC_RESV_ID' => $this->request->getPost("DOC_RESV_ID"));
                 $listImage = $this->Db->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_FILE_PATH,DOC_FILE_TYPE')->where($array)->orderBy('DOC_ID', 'DESC')->get()->getResultArray();
-                $imagePath = array('IMAGEPATH'=>$newFile);
-                $outPut = array_merge($imagePath,$listImage);
+                // $imagePath = array('IMAGEPATH'=>$newFile);
+                // $outPut = array_merge($imagePath,$listImage);
+                $outPut = $listImage[0];
                 $result = $this->responseJson("1","0",$return,$outPut);
                 echo json_encode($result);
             }else{
-                $result = $this->responseJson("-444",$message,$return);
+                $result = $this->responseJson("-444", $message, $return);
                 echo json_encode($result);
             }
         }catch (Exception $e){
@@ -3198,13 +3216,29 @@ class ApplicatioController extends BaseController
 
     public function deleteUploadImages(){
         try{
+            $return = false;
+
             $sysid = $this->request->getPost("sysid");
-            $return = $this->Db->table('FLXY_DOCUMENTS')->delete(['DOC_ID' => $sysid]); 
+            $file_name = $this->request->getPost("file_name");
+
+            $uploaded_documents = $this->Db->table('FLXY_DOCUMENTS')->where('DOC_ID', $sysid)->get()->getResultArray(); 
+            if(count($uploaded_documents)){
+                $uploaded_documents = $uploaded_documents[0];
+                $uploaded_documents_arr = explode(",", $uploaded_documents['DOC_FILE_PATH']);
+                
+                if(count($uploaded_documents_arr) == 1){
+                    $return = $this->Db->table('FLXY_DOCUMENTS')->delete(['DOC_ID' => $sysid]); 
+                }
+
+                $return = $this->Db->table('FLXY_DOCUMENTS')->where('DOC_ID', $sysid)
+                                    ->update(['DOC_FILE_PATH' => str_replace(",$file_name", '', $uploaded_documents['DOC_FILE_PATH'])]); 
+            }
+
             if($return){
                 $result = $this->responseJson("1","0",$return,$response='');
                 echo json_encode($result);
             }else{
-                $result = $this->responseJson("-444",$message,$return);
+                $result = $this->responseJson("-444", 'No documents', $return);
                 echo json_encode($result);
             }
         }catch (Exception $e){
@@ -3214,7 +3248,35 @@ class ApplicatioController extends BaseController
 
     public function updateCustomerDetail(){
         try{
+            $resvid = $this->request->getPost("DOC_RESV_ID");
             $custId = $this->request->getPost("DOC_CUST_ID");
+
+            $validate = $this->validate([
+                'CUST_TITLE' => ['label' => 'title', 'rules' => 'required'],
+                'CUST_FIRST_NAME' => ['label' => 'first name', 'rules' => 'required'],
+                'CUST_LAST_NAME' => ['label' => 'last name', 'rules' => 'required'],
+                'CUST_GENDER' => ['label' => 'gender', 'rules' => 'required'],
+                'CUST_NATIONALITY' => ['label' => 'nationality', 'rules' => 'required'],
+                'CUST_DOB' => ['label' => 'date of birth', 'rules' => 'required'],
+                'CUST_COUNTRY' => ['label' => 'country', 'rules' => 'required'],
+                'CUST_DOC_TYPE' => ['label' => 'document type', 'rules' => 'required'],
+                'CUST_DOC_NUMBER' => ['label' => 'document number', 'rules' => 'required'],
+                'CUST_DOC_ISSUE' => ['label' => 'issue date', 'rules' => 'required'],
+                'CUST_PHONE' => ['label' => 'phone', 'rules' => 'required'],
+                'CUST_EMAIL' => ['label' => 'email', 'rules' => 'required'],
+                'CUST_ADDRESS_1' => ['label' => 'address line 1', 'rules' => 'required'],
+                'CUST_STATE' => ['label' => 'state', 'rules' => 'required'],
+                'CUST_CITY' => ['label' => 'city', 'rules' => 'required'],                
+            ]);
+
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+
+                $result = $this->responseJson(403, $validate);
+                echo json_encode($result);
+                exit;
+            }
+
             $data = ["CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
                 "CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
                 "CUST_LAST_NAME" => $this->request->getPost("CUST_LAST_NAME"),
@@ -3235,16 +3297,17 @@ class ApplicatioController extends BaseController
                 "CUST_UPDATE_DT" => date("Y-m-d")
             ];
             $return = $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $custId)->update($data); 
+
             if($return){
                 $response = $this->checkStatusUploadFiles('RTN',$custId,$resvid);
                 $result = $this->responseJson("1","0",$return,$response);
                 echo json_encode($result);
             }else{
-                $result = $this->responseJson("-444",$message,$return);
+                $result = $this->responseJson("-444", 'unable to update customer data.', $return);
                 echo json_encode($result);
             }
-        }catch (Exception $e){
-            return $this->respond($e->errors());
+        }catch (\Exception $e){
+            return $this->respond($e->getMessage());
         }
     }
 
@@ -3254,8 +3317,19 @@ class ApplicatioController extends BaseController
         }else{
             $param = ['CUST_ID'=> $this->request->getPost("custid"),'RESV_ID'=> $this->request->getPost("resrid")];
         }
-        $sql="SELECT COUNT(*)TOTAL_PROOF,(SELECT COUNT(*) FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:CUST_ID: AND VACC_RESV_ID=:RESV_ID:) TOTAL_VACC FROM FLXY_DOCUMENTS WHERE DOC_CUST_ID=:CUST_ID: AND DOC_RESV_ID=:RESV_ID:";
+        $sql="SELECT COUNT(*)TOTAL_PROOF, (SELECT COUNT(*) FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:CUST_ID: AND VACC_RESV_ID=:RESV_ID:) TOTAL_VACC FROM FLXY_DOCUMENTS WHERE DOC_CUST_ID=:CUST_ID: AND DOC_RESV_ID=:RESV_ID:";
         $response = $this->Db->query($sql,$param)->getResultArray();  
+
+        $sql2 = 'select * from FLXY_CUSTOMER where CUST_ID = :CUST_ID:';
+        $customer = $this->Db->query($sql2, $param)->getRowArray();
+
+        if($customer){
+            if(!$customer['CUST_EMAIL'] || !$customer['CUST_TITLE'] || !$customer['CUST_FIRST_NAME']
+                || !$customer['CUST_COUNTRY'] || !$customer['CUST_STATE'] || !$customer['CUST_CITY']){
+                $response[0]['TOTAL_PROOF'] = 0;
+            }
+        }
+
         if($condi){
             return $response;
         }
@@ -3264,6 +3338,25 @@ class ApplicatioController extends BaseController
 
     public function updateVaccineReport(){
         try{
+            $validate = $this->validate([
+                'VACC_DETL' => ['label' => 'vaccine detail', 'rules' => 'required'],
+                'VACC_LAST_DT' => ['label' => 'vaccine last date', 'rules' => 'required'],
+                'VACC_NAME' => ['label' => 'vaccine name', 'rules' => 'required'],
+                'files' => [
+                    'label' => 'vaccine certificate', 
+                    'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg]', 'max_size[files,5000]'
+                ],
+                'VACC_ISSUED_COUNTRY' => ['label' => 'vaccine issue country', 'rules' => 'required']
+            ]);
+
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+
+                $result = $this->responseJson(403, $validate);
+                echo json_encode($result);
+                exit;
+            }
+
             $this->deleteSpecificVaccine();
             $fileNames='';
             $fileNm='';
@@ -3272,7 +3365,7 @@ class ApplicatioController extends BaseController
                     $fileArry=$this->request->getFileMultiple('files');
                     foreach($fileArry as $key=>$file){ 
                         $newName = $file->getRandomName();
-                        $file->move(ROOTPATH . 'assets/Uploads/userDocuments/vaccination',$newName);
+                        $file->move(ROOTPATH . 'assets/Uploads/UserDocuments/vaccination',$newName);
                         $comma='';
                         if (isset($fileArry[$key+1])) {
                             $comma=',';
@@ -3310,14 +3403,14 @@ class ApplicatioController extends BaseController
             $return = $this->Db->table('FLXY_VACCINE_DETAILS')->insert($data); 
             // $return = $this->Db->table('FLXY_VACCINE_DETAILS')->where('CUST_ID', $custId)->update($data); 
             if($return){
-                $result = $this->responseJson("1","0",$return,$response='');
+                $result = $this->responseJson("1", "success", $return);
                 echo json_encode($result);
             }else{
-                $result = $this->responseJson("-444",$message,$return);
+                $result = $this->responseJson("-444", 'unable to insert/update', $return);
                 echo json_encode($result);
             }
-        }catch (Exception $e){
-            return $this->respond($e->errors());
+        }catch (\Exception $e){
+            return $this->respond($e->getMessage());
         }
     }
 
@@ -3348,7 +3441,7 @@ class ApplicatioController extends BaseController
                 $fileName = time();
                 $signature=base64_decode($parts[1]);
                 $fileNameExt = $fileName.'.'.$extension;
-                file_put_contents('assets/Uploads/userDocuments/signature/'.$fileNameExt,$signature);
+                file_put_contents('assets/Uploads/UserDocuments/signature/'.$fileNameExt,$signature);
             }else{
                 $fileNameExt = basename($signature);   
             }
