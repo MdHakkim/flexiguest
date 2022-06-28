@@ -1544,7 +1544,7 @@ class AdditionalController extends BaseController
            $addRole =  '<button
             data-bs-target="#viewRoleModal"
             data-bs-toggle="modal"
-            class="btn btn-primary add-new-role text-nowrap mb-3"
+            class="btn btn-primary view-user-role text-nowrap mb-3"
             >
             View All
             </button>';
@@ -1573,8 +1573,6 @@ class AdditionalController extends BaseController
                         <h4 class="mb-1">{$row['ROLE_NAME']}</h4>
                         <a
                         href="javascript:;"
-                        data-bs-toggle="modal"
-                        data-bs-target="#addRoleModal"
                         class="role-edit-modal" data_sysid="{$row['ROLE_ID']}"
                         ><small>Edit Role</small></a
                         >
@@ -1635,6 +1633,18 @@ public function editRolePermission(){
 
     $response = $this->Db->query($sql, $param)->getResultArray();
     echo json_encode($response);
+}
+
+
+
+public function viewUserRoles(){   
+
+    $mine      = new ServerSideDataTable(); 
+    $tableName = 'FLXY_USERS_ROLES_VIEW';
+    $columns   = 'ROLE_ID,ROLE_NAME,USR_COUNT';
+    $mine->generate_DatatTable($tableName, $columns);
+    exit;
+
 }
 
 }

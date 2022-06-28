@@ -446,6 +446,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
       $routes->get('/loadUserRoles', 'AdditionalController::loadUserRoles');
       $routes->get('/userRoles', 'AdditionalController::userRoles');
+     
+      $routes->match(['post'],'/viewUserRoles', 'AdditionalController::viewUserRoles'); 
       $routes->match(['post'],'/addRolePermission', 'AdditionalController::addRolePermission'); 
       $routes->match(['post'],'/editRolePermission', 'AdditionalController::editRolePermission'); 
       
