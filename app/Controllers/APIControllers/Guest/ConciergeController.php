@@ -36,6 +36,7 @@ class ConciergeController extends BaseController
 
     public function makeConciergeRequest()
     {
+        $user_id = $this->request->user['USR_CUST_ID'];
         $user_id = $this->request->user['USR_ID'];
         $id = $this->request->getVar('id');
 
@@ -83,6 +84,7 @@ class ConciergeController extends BaseController
 
         $quantity = $data->CR_QUANTITY;
 
+        $data->CR_CUSTOMER_ID = $customer_id;
         $data->CR_RESERVATION_ID = $reservation['RESV_ID'];
         $data->CR_TOTAL_AMOUNT = $quantity * $concierge_offer['CO_OFFER_PRICE'];
         $data->CR_TAX_AMOUNT = $quantity * $concierge_offer['CO_TAX_AMOUNT'];
@@ -102,5 +104,11 @@ class ConciergeController extends BaseController
             $msg = 'Concierge request has been updated.';
 
         return $this->respond(responseJson(200, false, ['msg' => $msg]));
+    }
+
+    public function listConciergeRequests()
+    {
+        $user_id = $this->request->user['USR_ID'];
+
     }
 }

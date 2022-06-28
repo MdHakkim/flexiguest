@@ -15,6 +15,7 @@ class ConciergeRequest extends Model
         'CR_GUEST_NAME',
         'CR_GUEST_EMAIL',
         'CR_GUEST_PHONE',
+        'CR_CUSTOMER_ID',
         'CR_RESERVATION_ID',
         'CR_TOTAL_AMOUNT',
         'CR_TAX_AMOUNT',
