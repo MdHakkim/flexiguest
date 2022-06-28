@@ -994,8 +994,8 @@ class ApplicatioController extends BaseController
                 'neg_RT_CD_ID' => ['label' => 'Rate Code', 'rules' => 'required'],
                 'neg_PROFILE_ID' => ['label' => 'Profiles', 'rules' => 'required', 'errors' => ['required' => 'No Profiles have been selected. Please try again.']],
                 'NG_RT_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
-                'NG_RT_START_DT' => ['label' => 'Start Date', 'rules' => 'required|dateOverlapCheckNR[NG_RT_START_DT,'.$this->request->getPost('neg_PROFILE_IDS').']', 'errors' => ['dateOverlapCheckNR' => 'The Start Date overlaps with an existing Negotiated Rate. Change the date or selected user(s)']],
-                'NG_RT_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate|dateOverlapCheckNR[NG_RT_END_DT,'.$this->request->getPost('neg_PROFILE_IDS').']', 'errors' => ['compareDate' => 'The End Date should be after Start Date', 'dateOverlapCheckNR' => 'The End Date overlaps with an existing Negotiated Rate. Change the date or selected user(s)']],
+                'NG_RT_START_DT' => ['label' => 'Start Date', 'rules' => 'required|dateOverlapCheckNR[NG_RT_START_DT,'.$this->request->getPost('neg_PROFILE_ID').']', 'errors' => ['dateOverlapCheckNR' => 'The Start Date overlaps with an existing Negotiated Rate. Change the date or selected user(s)']],
+                'NG_RT_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate|dateOverlapCheckNR[NG_RT_END_DT,'.$this->request->getPost('neg_PROFILE_ID').']', 'errors' => ['compareDate' => 'The End Date should be after Start Date', 'dateOverlapCheckNR' => 'The End Date overlaps with an existing Negotiated Rate. Change the date or selected user(s)']],
             ]);
             if (!$validate) {
                 $validate = $this->validator->getErrors();
@@ -1007,13 +1007,14 @@ class ApplicatioController extends BaseController
             }
 
             $no_of_added = 0;
+            $profile_data = explode('_', trim($this->request->getPost('neg_PROFILE_ID')));
             $data = [
                 "RT_CD_ID" => trim($this->request->getPost('neg_RT_CD_ID')),
-                "PROFILE_ID" => trim($this->request->getPost('neg_PROFILE_ID')),
+                "PROFILE_ID" => $profile_data[3],
                 "PROFILE_TYPE" => 1,
                 "NG_RT_DIS_SEQ" => trim($this->request->getPost('NG_RT_DIS_SEQ')) != '' ? trim($this->request->getPost('NG_RT_DIS_SEQ')) : '',
-                "NG_RT_START_DT" => trim($this->request->getPost('NG_RT_START_DT')),
-                "NG_RT_END_DT" => trim($this->request->getPost('NG_RT_END_DT')) != '' ? trim($this->request->getPost('NG_RT_END_DT')) : '2030-12-31',
+                "NG_RT_START_DT" => date('Y-m-d', strtotime(trim($this->request->getPost('NG_RT_START_DT')))),
+                "NG_RT_END_DT" => trim($this->request->getPost('NG_RT_END_DT')) != '' ? date('Y-m-d', strtotime(trim($this->request->getPost('NG_RT_END_DT')))) : '2030-12-31',
             ];
 
             //$return = $this->Db->table('FLXY_RATE_CODE_NEGOTIATED_RATE')->insert($data);

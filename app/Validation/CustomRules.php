@@ -103,7 +103,7 @@ class CustomRules{
     if(!empty($negotiated_rate_id))
       $sql .= " AND NG_RT_ID != '".$negotiated_rate_id."'";
             
-    $sql .= " AND ('".$check_date."' BETWEEN NG_RT_START_DT AND NG_RT_END_DT)";
+    $sql .= " AND ('".date('Y-m-d', strtotime($check_date))."' BETWEEN NG_RT_START_DT AND NG_RT_END_DT)";
 
     if($profiles != NULL)
     {

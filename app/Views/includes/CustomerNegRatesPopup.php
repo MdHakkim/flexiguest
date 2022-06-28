@@ -67,7 +67,7 @@
                             <label class="form-label"><b>Begin Date *</b></label>
                             <div class="input-group mb-6">
                                 <input type="text" id="NG_RT_START_DT" name="NG_RT_START_DT"
-                                    class="form-control dateField" placeholder="d-Mon-yyyy" required />
+                                    class="form-control dateField" placeholder="dd/mm/yyyy" required />
                                 <span class="input-group-append">
                                     <span class="input-group-text bg-light d-block">
                                         <i class="fa fa-calendar"></i>
@@ -79,7 +79,7 @@
                             <label class="form-label">End Date</label>
                             <div class="input-group mb-6">
                                 <input type="text" id="NG_RT_END_DT" name="NG_RT_END_DT" class="form-control dateField"
-                                    placeholder="d-Mon-yyyy" />
+                                    placeholder="dd/mm/yyyy" />
                                 <span class="input-group-append">
                                     <span class="input-group-text bg-light d-block">
                                         <i class="fa fa-calendar"></i>
@@ -101,6 +101,16 @@
 </div>
 
 <script>
+
+$(document).ready(function() {
+
+    $('.dateField').datepicker({
+        autoclose: true,
+        format: 'dd-M-yyyy',
+    });
+
+});
+
 // Click Negotiated Rate button
 
 $(document).on('click', '.show-cust-negotiated-rates', function() {
@@ -192,6 +202,9 @@ function showCustomerNegotiatedRates(custId = 0) {
             emptyTable: 'There are no negotiated rates added'
         }
     });
+    $("#customer_negotiatedrates_wrapper .row:first").before(
+        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick="addNegotiatedForm()"><i class="fa-solid fa-plus fa-lg"></i> Add New</button></div></div>'
+    );
 }
 
 const rateCodeList = <?php echo json_encode($rateCodeOptions); ?>;
@@ -201,12 +214,74 @@ $(document).on('click', '.edit-negotiated-rate', function() {
     hideModalAlerts();
 
     $('#NG_RT_ID').val($(this).attr('data_sysid'));
-    $('#neg_PROFILE_ID').val($(this).attr('data-profile-id'));
+    $('#neg_PROFILE_ID').val('profile_chk_1_' + $(this).attr('data-profile-id'));
     $('#neg_RT_CD_ID').val($(this).attr('data-ratecode-id')).trigger('change');
     $("#NG_RT_START_DT").datepicker("setDate", new Date($(this).attr('data-start-date')));
     $("#NG_RT_END_DT").datepicker("setDate", new Date($(this).attr('data-edit-date')));
     $("#NG_RT_DIS_SEQ").val($(this).attr('data-display-seq'));
 
+    $('#addNegotiatedRatelabel').html('Edit Negotiated Rate');
+
+    $('#customerNegotiatedRatesWindow').modal('hide');
     $('#addNegotiatedRate').modal('show');
 });
+
+function addNegotiatedForm() {
+
+    $("#NG_RT_ID").val("");
+    $('#neg_RT_CD_ID').val(null).trigger('change');
+    $("#NG_RT_START_DT").datepicker("setDate", new Date(<?php date('d-M-Y'); ?>));
+    $("#NG_RT_END_DT").datepicker("setDate", new Date(<?php date('d-M-Y', strtotime('+1 day')); ?>));
+    $("#NG_RT_DIS_SEQ").val("");
+
+    $('#addNegotiatedRatelabel').html('Add New Negotiated Rate');
+
+    $('#customerNegotiatedRatesWindow').modal('hide');
+    $('#addNegotiatedRate').modal('show');
+}
+
+// Add / Edit Negotiated Rate
+
+function submitNegotiatedForm(id) {
+    hideModalAlerts();
+    var formSerialization = $('#' + id).serializeArray();
+    var url = '<?php echo base_url('/insertCustomerNegotiatedRate')?>';
+    $.ajax({
+        url: url,
+        type: "post",
+        data: formSerialization,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        dataType: 'json',
+        success: function(respn) {
+
+            var response = respn['SUCCESS'];
+            if (response != '1') {
+                var ERROR = respn['RESPONSE']['ERROR'];
+                var mcontent = '';
+                $.each(ERROR, function(ind, data) {
+                    mcontent += '<li>' + data + '</li>';
+                });
+                showModalAlert('error', mcontent);
+            } else {
+
+                if (respn['RESPONSE']['OUTPUT'] != '0') {
+
+                    var alertText = $('#NG_RT_ID').val() == '' ?
+                        '<li>The new Negotiated Rate has been created</li>' :
+                        '<li>The Negotiated Rate has been updated</li>';
+
+                    showModalAlert('success', alertText);
+                } else
+                    showModalAlert('error',
+                        '<li>No new Negotiated Rates could be created. Please try again</li>');
+
+                $('#addNegotiatedRate').modal('hide');
+                $('#customer_negotiatedrates').dataTable().fnDraw();
+                $('#customerNegotiatedRatesWindow').modal('show');
+            }
+        }
+    });
+}
 </script>

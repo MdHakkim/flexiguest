@@ -128,6 +128,7 @@ $(document).on('click', '.custOptions', function() {
 
     $('#CM_CUST_ID').val(custOptId);
     $('#RESV_NAME').val(custOptId);
+    $('#neg_PROFILE_ID').val('profile_chk_1_' + custOptId);
 });
 
 // Print / Download PDF Popup
