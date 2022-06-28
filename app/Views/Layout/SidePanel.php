@@ -313,7 +313,8 @@
                                             'Reservation Type',
                                             'Purpose Stay',
                                             'Payment',
-                                            'Over Booking'
+                                            'Over Booking',
+                                            'Guest Registration Cards'
                                         ))) {
                                             echo 'open active';
                                         } ?>">
@@ -331,6 +332,7 @@
                                 <div data-i18n="Add / List Reservations">Add / List Reservations</div>
                             </a>
                         </li>
+                      
                         <li class="menu-item  <?php if (isset($title) && $title == 'Room Class') {
                                                     echo 'active';
                                                 } ?>">
@@ -484,6 +486,15 @@
                                 <div data-i18n="Vaccine Types">Vaccine Types</div>
                             </a>
                         </li>
+
+                        <li class="menu-item  <?php if (isset($title) && $title == 'Guest Registration Cards') {
+                                    echo 'active';
+                                } ?>">
+                            <a href="<?php echo base_url('registerCards'); ?>" class="menu-link">
+                                <div data-i18n="Registration Cards">Registration Cards</div>
+                            </a>
+                        </li>
+                        
 
                     </ul>
                 </li>
@@ -846,7 +857,9 @@
                                             'Item Class',
                                             'Items',
                                             'Daily Inventory',
-                                            'Membership Type',                                    
+                                            'Membership Type', 
+                                            'Menu', 
+                                            'Sub Menu'                                   
                                         ))) {
                                             echo 'open active';
                                         } ?>">
@@ -1040,6 +1053,18 @@
                         <li class="menu-item <?= (isset($title) && $title == 'Daily Inventory') ? 'active' : '' ?>">
                             <a href="<?= base_url('/dailyInventory') ?>" class="menu-link">
                                 <div data-i18n="Daily Inventory">Daily Inventory</div>
+                            </a>
+                        </li>
+
+                        <li class="menu-item <?= (isset($title) && $title == 'Menu') ? 'active' : '' ?>">
+                            <a href="<?= base_url('/Menu') ?>" class="menu-link">
+                                <div data-i18n="Menu">Menu</div>
+                            </a>
+                        </li>
+
+                        <li class="menu-item <?= (isset($title) && $title == 'Sub Menu') ? 'active' : '' ?>">
+                            <a href="<?= base_url('SubMenu') ?>" class="menu-link">
+                                <div data-i18n="Sub Menu">Sub Menu</div>
                             </a>
                         </li>
 

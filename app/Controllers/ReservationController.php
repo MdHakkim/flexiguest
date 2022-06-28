@@ -20,6 +20,7 @@ class ReservationController extends BaseController
         $this->DB = \Config\Database::connect();
         $this->Reservation = new Reservation();
         $this->ShareReservations = new ShareReservations();
+        
     }
 
     public function getReservationDetails()
@@ -316,4 +317,230 @@ class ReservationController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'Share rate updated successfully!']));
     }
+
+
+
+    //// Registration Card Single and Batch
+
+    public function registerCards(){
+        
+        $roomClassLists = $this->roomClassLists();
+        $membershipLists = $this->membershipLists();
+        $rateCodeLists = $this->rateCodeLists();
+        $vipCodeLists = $this->vipCodeLists();
+    
+        $data = [
+            'roomClassLists' => $roomClassLists,
+            'membershipLists' => $membershipLists,
+            'rateCodeLists' => $rateCodeLists,
+            'vipCodeLists' => $vipCodeLists,
+            'title'        => 'Guest Registration Cards'
+        ];
+
+        
+        return view('Reservation/RegistrationCardView', $data);
+    }
+
+    public function registerCardDataExists(){
+        
+        
+        $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, RESV_RATE, RESV_RM_TYPE, RESV_NAME, (SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY) RESV_COMPANY_DESC, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, (SELECT ctname FROM CITY WHERE id=CUST_CITY) CUST_CITY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_NATIONALITY) CUST_NATIONALITY_DESC, CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID";
+       
+        if ($_SESSION['ARRIVAL_DATE'] != '') {
+            $ARRIVAL_DATE = $_SESSION['ARRIVAL_DATE'];
+            $sql .= " WHERE RESV_ARRIVAL_DT LIKE '%$ARRIVAL_DATE%' ";                   
+        }
+
+        if($_SESSION['ETA_FROM_TIME'] != '' && $_SESSION['ETA_TO_TIME'] !='')        
+            $sql .= " AND (RESV_ETA BETWEEN '".$_SESSION['ETA_FROM_TIME']."' AND '".$_SESSION['ETA_TO_TIME']."')";
+        
+        else if($_SESSION['ETA_FROM_TIME'] != '')         
+            $sql .= " AND  RESV_ETA >= '".$_SESSION['ETA_FROM_TIME']."'";  
+
+        else if($_SESSION['ETA_TO_TIME'] != '')         
+            $sql .= " AND RESV_ETA <= '".$_SESSION['ETA_TO_TIME']."'"; 
+
+        if($_SESSION['RESV_FROM_NAME'] != '')         
+            $sql .= " AND CUST_FIRST_NAME LIKE '%'".$_SESSION['RESV_FROM_NAME']."'%'"; 
+
+        if($_SESSION['ROOM_CLASS'] != '')         
+            $sql .= " AND RESV_ROOM_CLASS = '".$_SESSION['ROOM_CLASS']."'"; 
+        
+        if($_SESSION['RATE_CODE'] != '')         
+            $sql .= " AND RESV_RATE_CODE = '".$_SESSION['RATE_CODE']."'";
+        
+        if($_SESSION['MEM_TYPE'] != '')         
+            $sql .= " AND RESV_MEMBER_TY = '".$_SESSION['MEM_TYPE']."'";
+
+          // echo $sql;
+
+        $response['sql'] = $sql;
+      
+        $response['data'] = $this->DB->query($sql)->getResultArray(); 
+
+        $response['count'] = $this->DB->query($sql)->getNumRows();
+       //print_r($response);
+        return $response;
+
+    }   
+
+
+    public function registerCardPrint(){
+        $response = $this->registerCardDataExists();        
+        $data['title'] = getMethodName();
+        $data['js_to_load'] = "app-invoice-print.js";
+        $data['response'] = $response['data'];
+        return view('Reservation/RegisterCard',$data);
+
+    }
+    public function registerCardPreview(){
+        $response = $this->registerCardDataExists();  
+        $data['title'] = getMethodName(); 
+        $data['response'] = $response['data'];
+        return view('Reservation/RegisterCardPreview',$data);
+
+    }
+
+    public function registerCardSaveDetails(){
+        $_SESSION['ARRIVAL_DATE']  = date("Y-m-d",strtotime($this->request->getPost('ARRIVAL_DATE')));
+        $_SESSION['ETA_FROM_TIME'] = $this->request->getPost('ETA_FROM_TIME');
+        $_SESSION['ETA_TO_TIME']   = $this->request->getPost('ETA_TO_TIME');
+        $_SESSION['RESV_INDIV']    = $this->request->getPost('RESV_INDIV');
+        $_SESSION['RESV_BLOCK']    = $this->request->getPost('RESV_BLOCK');
+        $_SESSION['RESV_FROM_NAME']= $this->request->getPost('RESV_FROM_NAME');
+        $_SESSION['RESV_TO_NAME']  = $this->request->getPost('RESV_TO_NAME');
+        $_SESSION['ROOM_CLASS']    = $this->request->getPost('ROOM_CLASS');
+        $_SESSION['RATE_CODE']     = $this->request->getPost('RATE_CODE');
+        $_SESSION['MEM_TYPE']      = $this->request->getPost('MEM_TYPE');
+        $_SESSION['VIP_CODE']      = $this->request->getPost('VIP_CODE');
+        $_SESSION['IN_HOUSE_GUESTS'] = $this->request->getPost('IN_HOUSE_GUESTS');  
+        $response =  $this->registerCardDataExists();
+        $responseCount =   $response['count']; 
+        echo json_encode($responseCount);
+    }
+
+    
+
+    
+
+    public function roomClassLists()
+        {
+            $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+            $sql = "SELECT RM_CL_ID, RM_CL_CODE, RM_CL_DESC
+                    FROM FLXY_ROOM_CLASS";
+
+            if ($search != '') {
+                $sql .= " WHERE RM_CL_CODE LIKE '%$search%'
+                        OR RM_CL_DESC LIKE '%$search%'";
+            }
+
+            $response = $this->DB->query($sql)->getResultArray();
+
+            $option = '<option value="">Choose an Option</option>';
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['RM_CL_ID'] . '">' . $row['RM_CL_CODE'] . ' | ' . $row['RM_CL_DESC'] . '</option>';
+            }
+
+            return $option;
+        }
+        
+    public function membershipLists()
+        {
+            $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+            $sql = "SELECT MEM_ID, MEM_CODE, MEM_DESC
+                    FROM FLXY_MEMBERSHIP";
+
+            if ($search != '') {
+                $sql .= " WHERE MEM_CODE LIKE '%$search%'
+                        OR MEM_DESC LIKE '%$search%'";
+            }
+
+            $response = $this->DB->query($sql)->getResultArray();
+
+            $option = '<option value="">Choose an Option</option>';
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['MEM_ID'] . '">' . $row['MEM_CODE'] . ' | ' . $row['MEM_DESC'] . '</option>';
+            }
+
+            return $option;
+        }
+
+    public function rateCodeLists()
+        {
+            $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+            $sql = "SELECT RT_CD_ID, RT_CD_CODE, RT_CD_DESC
+                    FROM FLXY_RATE_CODE";
+
+            if ($search != '') {
+                $sql .= " WHERE RT_CD_CODE LIKE '%$search%'
+                        OR RT_CD_DESC LIKE '%$search%'";
+            }
+
+            $response = $this->DB->query($sql)->getResultArray();
+
+            $option = '<option value="">Choose an Option</option>';
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['RT_CD_ID'] . '">' . $row['RT_CD_CODE'] . ' | ' . $row['RT_CD_DESC'] . '</option>';
+            }
+
+            return $option;
+        }
+
+    public function vipCodeLists()
+        {
+            $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+            $sql = "SELECT VIP_ID, VIP_DESC
+                    FROM FLXY_VIP";
+
+            if ($search != '') {
+                $sql .= " WHERE VIP_DESC LIKE '%$search%'
+                        ";
+            }
+
+            $response = $this->DB->query($sql)->getResultArray();
+
+            $option = '<option value="">Choose an Option</option>';
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['VIP_ID'] . '">' . $row['VIP_DESC']  . '</option>';
+            }
+
+            return $option;
+    }
+
+
+    public function singleReservRegCards(){
+        $reservationID = $this->request->getPost('reservID');         
+        $_SESSION['RESV_ID'] = $reservationID;
+        $response = $this->registerCardData();
+        $data['count'] = $response['count'];
+        echo json_encode($data);
+
+    }
+
+    public function singleReservRegCardPrint(){
+
+        $response = $this->registerCardData();  
+        $data['title'] = getMethodName(); 
+        $data['response'] = $response['response'];
+        return view('Reservation/RegisterCard',$data);
+    }
+
+    public function registerCardData(){        
+         $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, RESV_RATE, RESV_RM_TYPE, RESV_NAME, (SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY) RESV_COMPANY_DESC, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, (SELECT ctname FROM CITY WHERE id=CUST_CITY) CUST_CITY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_NATIONALITY) CUST_NATIONALITY_DESC, CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID WHERE RESV_ID = ".$_SESSION['RESV_ID'];       
+        $data['response'] = $this->DB->query($sql)->getResultArray(); 
+        $data['count'] = $this->DB->query($sql)->getNumRows();
+        return $data;
+    }
+
+
+
+    
+
+
+
+
 }

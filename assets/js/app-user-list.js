@@ -343,18 +343,18 @@ $(function () {
 
 // Validation & Phone mask
 (function () {
-  const phoneMaskList = document.querySelectorAll('.phone-mask'),
-    addNewUserForm = document.getElementById('addNewUserForm');
+  //const phoneMaskList = document.querySelectorAll('.phone-mask'),
+  const addNewUserForm = document.getElementById('addNewUserForm');
 
   // Phone Number
-  if (phoneMaskList) {
-    phoneMaskList.forEach(function (phoneMask) {
-      new Cleave(phoneMask, {
-        phone: true,
-        phoneRegionCode: 'US'
-      });
-    });
-  }
+  // if (phoneMaskList) {
+  //   phoneMaskList.forEach(function (phoneMask) {
+  //     new Cleave(phoneMask, {
+  //       phone: true,
+  //       phoneRegionCode: 'US'
+  //     });
+  //   });
+  // }
   // Add New User Form Validation
   const fv = FormValidation.formValidation(addNewUserForm, {
     fields: {

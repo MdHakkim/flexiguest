@@ -23,13 +23,19 @@ class ApplicatioController extends BaseController
         $this->todayDate = new DateTime("now", new DateTimeZone('Asia/Dubai'));
     }
 
-    public function Reservation(){
-        $itemLists = $this->itemList();    
-        $data['itemLists'] = $itemLists;    
+    public function Reservation(){   
         $data['title'] = getMethodName();
         $data['session'] = $this->session;
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
-        $data['js_to_load'] = array("inventoryFormWizardNumbered.js");
+        $itemLists = $this->itemList();    
+        $data['itemLists'] = $itemLists;                 
+        $data['itemAvail'] = $this->ItemCalendar();     
+        $data['classList'] = $this->itemInventoryClassList();
+
+        $data['toggleButton_javascript'] = toggleButton_javascript();
+        $data['clearFormFields_javascript'] = clearFormFields_javascript();
+        $data['blockLoader_javascript'] = blockLoader_javascript();
+        $data['js_to_load'] = array("inventoryFormWizardNumbered.js","reservation-calendar.js");
         return view('Reservation/Reservation', $data);
     }
 
@@ -306,6 +312,14 @@ class ApplicatioController extends BaseController
                     }
                 }
 
+                /////// Update Inventory with reservation ID
+
+                $sessionID = session_id(); 
+                $sql="UPDATE FLXY_RESERVATION_ITEM SET RSV_ID = ".$sysid." WHERE RSV_ID = 0 AND RSV_SESSION_ID LIKE '%$sessionID%'";
+                $resvItemUpdate = $this->Db->query($sql);
+
+                 /////// Update Inventory with reservation ID
+
             }else{ // Add New Reservation
                 $data = ["RESV_ARRIVAL_DT" => $this->request->getPost("RESV_ARRIVAL_DT"),
                     "RESV_NIGHT" => $this->request->getPost("RESV_NIGHT"),
@@ -383,7 +397,13 @@ class ApplicatioController extends BaseController
                 $sysid = $this->Db->insertID();
 
                 /////// Update Inventory with reservation ID
-                $this->updateInventory($sysid);
+
+                $sessionID = session_id(); 
+                $sql="UPDATE FLXY_RESERVATION_ITEM SET RSV_ID = ".$sysid." WHERE RSV_ID = 0 AND RSV_SESSION_ID LIKE '%$sessionID%'";
+                $resvItemUpdate = $this->Db->query($sql);
+
+                 /////// Update Inventory with reservation ID
+                
 
                 $emailProc='S';
 
@@ -3304,7 +3324,7 @@ class ApplicatioController extends BaseController
                         'RSV_ID'  => '',
                         'RSV_SESSION_ID' => session_id(),
                     );
-                    $return = $this->Db->table('FLXY_RESERVATION_ITEM')->where($where)->update(array('RSV_ID'=>$reservationID));
+                    $return = $this->Db->table('FLXY_RESERVATION_ITEM')->where("RSV_SESSION_ID",session_id())->update(array('RSV_ID'=>$reservationID));
                 } 
 
                 
@@ -3312,6 +3332,55 @@ class ApplicatioController extends BaseController
                 return $e->getMessage();
             }
         }
+
+        public function itemInventoryClassList()
+        {       
+            $response = NULL;     
+            $sql = "SELECT IT_CL_ID,IT_CL_CODE,IT_CL_DESC FROM FLXY_ITEM_CLASS";                 
+            $responseCount = $this->Db->query($sql)->getNumRows();
+            if($responseCount > 0) 
+            $response = $this->Db->query($sql)->getResultArray(); 
+            return $response;
+        }
+
+
+
+
+    public function ItemCalendar(){
+        $response = NULL;
+        $sql = "SELECT dbo.FLXY_ITEM.ITM_ID, ITM_CODE, ITM_NAME, ITM_DESC, dbo.FLXY_ITEM.IT_CL_ID, IT_CL_CODE, IT_CL_DESC, ITM_AVAIL_FROM_TIME, ITM_AVAIL_TO_TIME, ITM_DLY_BEGIN_DATE, ITM_DLY_END_DATE          
+                FROM dbo.FLXY_ITEM LEFT JOIN dbo.FLXY_DAILY_INVENTORY ON dbo.FLXY_ITEM.ITM_ID = dbo.FLXY_DAILY_INVENTORY.ITM_ID INNER JOIN dbo.FLXY_ITEM_CLASS ON dbo.FLXY_ITEM.IT_CL_ID = dbo.FLXY_ITEM_CLASS.IT_CL_ID ";       
+        $responseCount = $this->Db->query($sql)->getNumRows();
+        if($responseCount > 0)
+        $response = $this->Db->query($sql)->getResultArray();
+
+      return $response;
+    }
+
+
+    public function showInventoryItems()
+    { 
+        $mine = new ServerSideDataTable(); // loads and creates instance
+
+        //Reservation ID 
+        $RESV_ID = $this->request->getPost('RESV_ID');
+       // $RESV_ID = '3070';
+        $session_id = session_id();
+
+            if($RESV_ID > 0)
+            $init_cond = array("RSV_ID = " => $RESV_ID); 
+            else
+            $init_cond = array("RSV_SESSION_ID LIKE " => "'".$session_id."'", "RSV_ID = " => 0); 
+
+           
+            $tableName = 'FLXY_RESERVATION_ITEM INNER JOIN FLXY_ITEM ON FLXY_RESERVATION_ITEM.RSV_ITM_ID = FLXY_ITEM.ITM_ID';
+            $columns = 'RSV_PRI_ID,ITM_CODE,ITM_NAME,RSV_ITM_ID,RSV_ITM_CL_ID,RSV_ITM_BEGIN_DATE,RSV_ITM_END_DATE,RSV_ITM_QTY';
+            $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        
+        
+        exit;
+    }
+
 
        
 }

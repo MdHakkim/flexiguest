@@ -191,6 +191,9 @@
                                 On</button>
                             <button type="button" class="btn btn-primary show-activity-log" data-bs-toggle="modal"
                                 data-bs-target="#changesWindow">Changes</button>
+
+                            <button type="button" class="btn btn-primary mt-2" id="registerCardButton"  data_sysid="" style="width: 135px;"
+                                >Registration Card</button>
                             <!-- <button type="button" onClick="reservExtraOption('CHG')" class="btn btn-primary">Changes</button> -->
                         </div>
                     </div>
@@ -220,7 +223,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="col-md-12">
-                                        <lable class="form-lable col-md-12">Room Type</lable>
+                                        <lable class="form-lable col-md-12">Room Type</label>
                                         <select name="COPY_RM_TYPE" id="COPY_RM_TYPE" data-width="100%"
                                             class="selectpicker COPY_RM_TYPE" data-live-search="true">
                                             <option value="">Select</option>
@@ -239,7 +242,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Payment Method</lable>
+                                        <lable class="form-check-lable flxy_lab_left"> Payment Method</label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -254,7 +257,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Specials</lable>
+                                        <lable class="form-check-lable flxy_lab_left"> Specials</label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -269,7 +272,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Custome Referance</lable>
+                                        <lable class="form-check-lable flxy_lab_left"> Custome Referance</label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -285,7 +288,7 @@
                                             </span>
                                         </label>
                                         <lable class="form-check-lable flxy_lab_left"> Window/Room Routing instr.
-                                        </lable>
+                                        </label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -300,7 +303,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Comments</lable>
+                                        <lable class="form-check-lable flxy_lab_left"> Comments</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -318,7 +321,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Packages</lable>
+                                        <lable class="form-check-lable flxy_lab_left"> Packages</label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -333,7 +336,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Item Inventory</lable>
+                                        <lable class="form-check-lable flxy_lab_left"> Item Inventory</label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -348,7 +351,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Guest Name</lable>
+                                        <lable class="form-check-lable flxy_lab_left"> Guest Name</label>
                                     </div>
                                 </div>
                             </div>
@@ -387,7 +390,7 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <input type="hidden" name="RESV_STATUS" id="RESV_STATUS" class="form-control" />
-                                    <lable class="form-lable">Arrival / Departure Date</lable>
+                                    <label class="form-label">Arrival / Departure Date</label>
                                     <div class="input-group mb-3">
                                         <input type="text" id="RESV_ARRIVAL_DT" class="form-control RESV_ARRIVAL_DT"
                                             placeholder="DD-MM-YYYY">
@@ -406,7 +409,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Nights / No of Rooms</lable>
+                                    <label class="form-label">Nights / No of Rooms</label>
                                     <div class="input-group mb-3">
                                         <input type="number" id="RESV_NIGHT" class="form-control RESV_NIGHT" min="0"
                                             placeholder="night" />
@@ -415,7 +418,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Adults / Children</lable>
+                                    <label class="form-label">Adults / Children</label>
                                     <div class="input-group mb-3">
                                         <input type="number" id="RESV_ADULTS" class="form-control RESV_ADULTS" min="1"
                                             placeholder="adults" />
@@ -424,7 +427,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Guest Name</lable>
+                                    <label class="form-label">Guest Name</label>
                                     <div class="input-group mb-3">
                                         <select id="RESV_NAME" class="selectpicker RESV_NAME" data-live-search="true">
                                             <option value="">Select</option>
@@ -446,7 +449,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Company</lable>
+                                    <label class="form-label">Company</label>
                                     <div class="input-group mb-3">
                                         <select id="RESV_COMPANY" class="selectpicker RESV_COMPANY"
                                             data-live-search="true">
@@ -458,7 +461,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Agent</lable>
+                                    <label class="form-label">Agent</label>
                                     <div class="input-group mb-3">
                                         <select id="RESV_AGENT" class="selectpicker RESV_AGENT" data-live-search="true">
                                             <option value="">Select</option>
@@ -469,24 +472,24 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Block</lable>
+                                    <label class="form-label">Block</label>
                                     <select id="RESV_BLOCK" data-width="100%" class="selectpicker RESV_BLOCK"
                                         data-live-search="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Member No</lable>
+                                    <label class="form-label">Member No</label>
                                     <input type="text" id="RESV_MEMBER_NO" class="form-control RESV_MEMBER_NO"
                                         placeholder="member no" readonly />
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">CORP NO</lable>
+                                    <label class="form-label">CORP NO</label>
                                     <input type="text" name="RESV_CORP_NO" id="RESV_CORP_NO" class="form-control"
                                         placeholder="CORP no" />
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">IATA NO</lable>
+                                    <label class="form-label">IATA NO</label>
                                     <input type="text" name="RESV_IATA_NO" id="RESV_IATA_NO" class="form-control"
                                         placeholder="IATA no" />
                                 </div>
@@ -494,62 +497,62 @@
                                     <div class="form-check mt-3 me-1">
                                         <input class="form-check-input flxCheckBox" type="checkbox"
                                             id="RESV_CLOSED_CHK">
-                                        <lable class="form-check-lable" for="defaultCheck1"> Closed </lable>
+                                        <lable class="form-check-lable" for="defaultCheck1"> Closed </label>
                                     </div>
                                     <div class="form-check mt-3 me-1">
                                         <input class="form-check-input flxCheckBox" type="checkbox" value="N"
                                             id="RESV_DAY_USE_CHK">
                                         <!-- <input type="hidden" name="RESV_DAY_USE" id="RESV_DAY_USE" value="N" class="form-control" /> -->
-                                        <lable class="form-check-lable" for="defaultCheck1"> Day Use </lable>
+                                        <lable class="form-check-lable" for="defaultCheck1"> Day Use </label>
                                     </div>
                                     <div class="form-check mt-3">
                                         <input class="form-check-input flxCheckBox" type="checkbox" value="N"
                                             id="RESV_PSEUDO_CHK">
                                         <!-- <input type="hidden" name="RESV_PSEUDO" id="RESV_PSEUDO" value="N" class="form-control" /> -->
-                                        <lable class="form-check-lable" for="defaultCheck1"> Pseudo </lable>
+                                        <lable class="form-check-lable" for="defaultCheck1"> Pseudo </label>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Rate Class</lable>
+                                    <label class="form-label">Rate Class</label>
                                     <select name="RESV_RATE_CLASS" id="RESV_RATE_CLASS" class="select2 form-select"
                                         data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Rate Category</lable>
+                                    <label class="form-label">Rate Category</label>
                                     <select name="RESV_RATE_CATEGORY" id="RESV_RATE_CATEGORY"
                                         class="select2 form-select" data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Rate Code</lable>
+                                    <label class="form-label">Rate Code</label>
                                     <select id="RESV_RATE_CODE" class="select2 form-select" data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Room Class</lable>
+                                    <label class="form-label">Room Class</label>
                                     <select name="RESV_ROOM_CLASS" id="RESV_ROOM_CLASS" class="select2 form-select"
                                         data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Feature</lable>
+                                    <label class="form-label">Feature</label>
                                     <select id="RESV_FEATURE" class="select2 form-select" data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Packages</lable>
+                                    <label class="form-label">Packages</label>
                                     <select id="RESV_PACKAGES" class="select2 form-select" data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Purpose Of Stay</lable>
+                                    <label class="form-label">Purpose Of Stay</label>
                                     <select name="RESV_PURPOSE_STAY" id="RESV_PURPOSE_STAY" class="select2 form-select"
                                         data-allow-clear="true">
                                         <option value="">Select</option>
@@ -560,7 +563,7 @@
                         <div class="window-2">
                             <div class="row g-3">
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Guest Name</lable>
+                                    <label class="form-label">Guest Name</label>
                                     <div class="input-group mb-3">
                                         <select name="RESV_NAME" id="RESV_NAME"
                                             class="selectpicker RESV_NAME activeName" data-live-search="true" required>
@@ -576,7 +579,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Title / First Name</lable>
+                                    <label class="form-label">Title / First Name</label>
                                     <div class="input-group">
                                         <select name="CUST_TITLE" id="CUST_TITLE" class="form-select"
                                             data-allow-clear="true" required>
@@ -606,21 +609,21 @@
 
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">Country</lable>
+                                    <label class="form-label">Country</label>
                                     <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%"
                                         class="selectpicker CUST_COUNTRY" data-live-search="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3">
-                                    <lable class="form-lable">VIP</lable>
+                                    <label class="form-label">VIP</label>
                                     <select name="CUST_VIP" id="CUST_VIP" class="select2 form-select"
                                         data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Phone</lable>
+                                    <label class="form-label">Phone</label>
                                     <input type="text" name="CUST_PHONE" id="CUST_PHONE" class="form-control"
                                         placeholder="phone" />
                                 </div>
@@ -636,13 +639,13 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Member No</lable>
+                                    <label class="form-label">Member No</label>
                                     <input type="text" name="RESV_MEMBER_NO" id="RESV_MEMBER_NO" class="form-control"
                                         placeholder="member no" readonly />
                                     <div class="invalidfx-feedback"></div>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Company</lable>
+                                    <label class="form-label">Company</label>
                                     <div class="input-group mb-3">
                                         <select name="RESV_COMPANY" id="RESV_COMPANY" class="selectpicker RESV_COMPANY"
                                             data-live-search="true">
@@ -654,7 +657,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Agent</lable>
+                                    <label class="form-label">Agent</label>
                                     <div class="input-group mb-3">
                                         <select name="RESV_AGENT" id="RESV_AGENT" class="selectpicker RESV_AGENT"
                                             data-live-search="true">
@@ -666,14 +669,14 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Block</lable>
+                                    <label class="form-label">Block</label>
                                     <select name="RESV_BLOCK" id="RESV_BLOCK" data-width="100%"
                                         class="selectpicker RESV_BLOCK" data-live-search="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Guest Balance</lable>
+                                    <label class="form-label">Guest Balance</label>
                                     <input type="text" name="RESV_GUST_BAL" value="0.00" readonly id="RESV_GUST_BAL"
                                         class="form-control" placeholder="Guest Balance" />
                                 </div>
@@ -696,7 +699,7 @@
                                                 <input type="hidden" name="RESV_FEATURE" id="RESV_FEATURE"
                                                     class="form-control" />
                                                 <input type="hidden" name="RESV_ID" id="RESV_ID" class="form-control" />
-                                                <lable class="form-lable">Arrival / Departure Date</lable>
+                                                <label class="form-label">Arrival / Departure Date</label>
                                                 <div class="input-group mb-3 flxy_fxcolm">
                                                     <div class="flxy_join ">
                                                         <div class="flxy_fixdate" required>
@@ -732,7 +735,7 @@
 
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Nights / No of Rooms</lable>
+                                                <label class="form-label">Nights / No of Rooms</label>
                                                 <div class="input-group mb-3">
                                                     <input type="number" name="RESV_NIGHT" id="RESV_NIGHT"
                                                         class="form-control RESV_NIGHT" placeholder="night" min="0"
@@ -749,7 +752,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Adults / Children</lable>
+                                                <label class="form-label">Adults / Children</label>
                                                 <div class="input-group mb-3 flxy_fxcolm">
                                                     <div class="flxy_join">
                                                         <input type="number" name="RESV_ADULTS" id="RESV_ADULTS"
@@ -768,21 +771,21 @@
 
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Room Type</lable>
+                                                <label class="form-label">Room Type</label>
                                                 <select name="RESV_RM_TYPE" id="RESV_RM_TYPE" data-width="100%"
                                                     class="selectpicker RESV_RM_TYPE" data-live-search="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Room</lable>
+                                                <label class="form-label">Room</label>
                                                 <select name="RESV_ROOM" id="RESV_ROOM" data-width="100%"
                                                     class="selectpicker RESV_ROOM" data-live-search="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Rate Code</lable>
+                                                <label class="form-label">Rate Code</label>
                                                 <div class="input-group mb-3">
                                                     <input type="text" readonly name="RESV_RATE_CODE"
                                                         id="RESV_RATE_CODE" class="form-control" placeholder="rate"
@@ -794,13 +797,13 @@
                                                 <div class="invalid-feedback"> Rate Code required can't empty.</div>
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Rate</lable>
+                                                <label class="form-label">Rate</label>
                                                 <input type="number" step="0.01" name="RESV_RATE" id="RESV_RATE"
                                                     class="form-control" placeholder="rate" min="0" required />
                                                 <div class="invalid-feedback"> Rate required can't empty.</div>
                                             </div>
                                             <div class="col-md-3 mt-4">
-                                                <lable class="form-check-lable"> Fixed Rate</lable>
+                                                <lable class="form-check-lable"> Fixed Rate</label>
                                                 <label class="switch">
                                                     <input type="checkbox" class="switch-input"
                                                         id="RESV_FIXED_RATE_CHK" />
@@ -817,14 +820,14 @@
                                                 </label>
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Package</lable>
+                                                <label class="form-label">Package</label>
                                                 <select name="RESV_PACKAGES" id="RESV_PACKAGES" data-width="100%"
                                                     class="selectpicker RESV_PACKAGES" data-live-search="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">ETA - C/O Time</lable>
+                                                <label class="form-label">ETA - C/O Time</label>
                                                 <div class="flxi_flex">
                                                     <input type="time" name="RESV_ETA" id="RESV_ETA"
                                                         class="form-control" placeholder="estime Time" />
@@ -834,42 +837,42 @@
                                             </div>
 
                                             <div class="col-md-3">
-                                                <lable class="form-lable">RTC</lable>
+                                                <label class="form-label">RTC</label>
                                                 <select name="RESV_RTC" id="RESV_RTC" data-width="100%"
                                                     class="selectpicker RESV_RTC" data-live-search="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 mt-2">
-                                                <lable class="form-lable">Reservation Type</lable>
+                                                <label class="form-label">Reservation Type</label>
                                                 <select name="RESV_RESRV_TYPE" id="RESV_RESRV_TYPE"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 mt-2">
-                                                <lable class="form-lable">Market</lable>
+                                                <label class="form-label">Market</label>
                                                 <select name="RESV_MARKET" id="RESV_MARKET" class="select2 form-select"
                                                     data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 mt-2">
-                                                <lable class="form-lable">Source</lable>
+                                                <label class="form-label">Source</label>
                                                 <select name="RESV_SOURCE" id="RESV_SOURCE" class="select2 form-select"
                                                     data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 mt-2">
-                                                <lable class="form-lable">Origin</lable>
+                                                <label class="form-label">Origin</label>
                                                 <select name="RESV_ORIGIN" id="RESV_ORIGIN" class="select2 form-select"
                                                     data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 mt-2">
-                                                <lable class="form-lable">Payment</lable>
+                                                <label class="form-label">Payment</label>
                                                 <select name="RESV_PAYMENT_TYPE" id="RESV_PAYMENT_TYPE"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <!-- <option value="">Select</option> -->
@@ -877,33 +880,53 @@
                                                 <div class="invalid-feedback"> Payment required can't empty.</div>
                                             </div>
                                             <div class="col-md-3 mt-2">
-                                                <lable class="form-lable">Specials</lable>
+                                                <label class="form-label">Specials</label>
                                                 <select name="RESV_SPECIALS" id="RESV_SPECIALS"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 mt-2">
-                                                <lable class="form-lable">Comments</lable>
+                                                <label class="form-label">Comments</label>
                                                 <textarea class="form-control" name="RESV_COMMENTS" id="RESV_COMMENTS"
                                                     rows="1"></textarea>
                                             </div>
-                                            <div class="col-md-3 mt-2">
-                                                <lable class="form-lable">Item Inventory</lable>
+
+                                        <!-- Item Inventory  -->
+
+                                        <div class="col-md-3 mt-2" >
+                                            <label class="form-label">Item Inventory</label>
+                                            <div class="input-group mb-3">
+                                                <input type="text" readonly name="RESV_INV_ITEM"
+                                                    id="RESV_INV_ITEM" class="form-control" placeholder="Items"
+                                                    required />
+                                                <button type="button" onClick="getInventoryItems()"
+                                                    class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus"
+                                                        aria-hidden="true"></i></button>
+                                            </div>
+                                            <div class="invalid-feedback"> Item required can't empty.</div>
+                                        </div>
 
 
+                                            <!-- <div class="col-md-3 mt-2">
+                                                <label class="form-label">Item Inventory</label>
                                                 <div class="input-group mb-3">
-                                                    <input type="text" readonly name="RESV_ITEM_INVT"
-                                                        id="RESV_ITEM_INVT" class="form-control" placeholder="Item"
-                                                        required />
+                                                   
+                                                    <select name="itemsArray" id="itemsArray" class="select2 form-select" data-allow-clear="true" multiple>  
+
+                                                    </select>
+                                                    <?php  ?>
                                                     <button type="button" onClick="getInventoryItems()"
                                                         class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus"
                                                             aria-hidden="true"></i></button>
                                                 </div>
                                                 <div class="invalid-feedback"> Item required can't empty.</div>
-                                            </div>
+                                            </div> -->
+                                            <!-- End Item Inventory  -->
+
+
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Booker Last / First</lable>
+                                                <label class="form-label">Booker Last / First</label>
                                                 <div class="flxi_flex">
                                                     <input type="text" name="RESV_BOKR_LAST" id="RESV_BOKR_LAST"
                                                         class="form-control" placeholder="booker last" />
@@ -912,7 +935,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Booker Email/Phone</lable>
+                                                <label class="form-label">Booker Email/Phone</label>
                                                 <div class="flxi_flex">
                                                     <input type="text" name="RESV_BOKR_EMAIL" id="RESV_BOKR_EMAIL"
                                                         class="form-control" placeholder="email" />
@@ -921,7 +944,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mt-4">
-                                                <lable class="form-check-lable" for="defaultCheck1"> Confimation</lable>
+                                                <lable class="form-check-lable" for="defaultCheck1"> Confimation</label>
                                                 <label class="switch">
                                                     <input type="checkbox" class="switch-input"
                                                         id="RESV_CONFIRM_YN_CHK" />
@@ -942,25 +965,25 @@
                                     <div class="tab-pane fade" id="moreDetails">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <lable class="form-lable">C/O Time</lable>
+                                                <label class="form-label">C/O Time</label>
                                                 <input type="time" name="RESV_C_O_TIME" id="RESV_C_O_TIME"
                                                     class="form-control" placeholder="c/o time" />
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Tax Type</lable>
+                                                <label class="form-label">Tax Type</label>
                                                 <select name="RESV_TAX_TYPE" id="RESV_TAX_TYPE"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Exempt No</lable>
+                                                <label class="form-label">Exempt No</label>
                                                 <input type="text" name="RESV_EXEMPT_NO" id="RESV_EXEMPT_NO"
                                                     class="form-control" placeholder="exempt no" />
                                             </div>
                                             <div class="col-md-3"></div>
                                             <div class="col-md-3 mt-4">
-                                                <lable class="form-lable">Pickup Requested ?</lable>
+                                                <label class="form-label">Pickup Requested ?</label>
                                                 <label class="switch">
                                                     <input type="checkbox" class="switch-input"
                                                         id="RESV_PICKUP_YN_CHK" />
@@ -977,29 +1000,29 @@
                                                 </label>
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Transport Type</lable>
+                                                <label class="form-label">Transport Type</label>
                                                 <select name="RESV_TRANSPORT_TYP" id="RESV_TRANSPORT_TYP"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Station Code</lable>
+                                                <label class="form-label">Station Code</label>
                                                 <input type="text" name="RESV_STATION_CD" id="RESV_STATION_CD"
                                                     class="form-control" placeholder="station code" />
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Carrier Code</lable>
+                                                <label class="form-label">Carrier Code</label>
                                                 <input type="text" name="RESV_CARRIER_CD" id="RESV_CARRIER_CD"
                                                     class="form-control" placeholder="carrier code" />
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Transport No</lable>
+                                                <label class="form-label">Transport No</label>
                                                 <input type="text" name="RESV_TRANSPORT_NO" id="RESV_TRANSPORT_NO"
                                                     class="form-control" placeholder="tranport no" />
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Arrival Date</lable>
+                                                <label class="form-label">Arrival Date</label>
                                                 <div class="input-group ">
                                                     <input type="text" id="RESV_ARRIVAL_DT_PK" name="RESV_ARRIVAL_DT_PK"
                                                         class="form-control" placeholder="DD-MM-YYYY">
@@ -1011,13 +1034,13 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Pick up Time</lable>
+                                                <label class="form-label">Pick up Time</label>
                                                 <input type="time" name="RESV_PICKUP_TIME" id="RESV_PICKUP_TIME"
                                                     class="form-control" placeholder="pickup time" />
                                             </div>
                                             <div class="col-md-3"></div>
                                             <div class="col-md-3 mt-4">
-                                                <lable class="form-lable">Drop off Requested ?</lable>
+                                                <label class="form-label">Drop off Requested ?</label>
                                                 <label class="switch">
                                                     <input type="checkbox" class="switch-input"
                                                         id="RESV_DROPOFF_YN_CHK" />
@@ -1034,29 +1057,29 @@
                                                 </label>
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Transport Type</lable>
+                                                <label class="form-label">Transport Type</label>
                                                 <select name="RESV_TRANSPORT_TYP_DO" id="RESV_TRANSPORT_TYP_DO"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Station Code</lable>
+                                                <label class="form-label">Station Code</label>
                                                 <input type="text" name="RESV_STATION_CD_DO" id="RESV_STATION_CD_DO"
                                                     class="form-control" placeholder="station code" />
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Carrier Code</lable>
+                                                <label class="form-label">Carrier Code</label>
                                                 <input type="text" name="RESV_CARRIER_CD_DO" id="RESV_CARRIER_CD_DO"
                                                     class="form-control" placeholder="carrier code" />
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Transport No</lable>
+                                                <label class="form-label">Transport No</label>
                                                 <input type="text" name="RESV_TRANSPORT_NO_DO" id="RESV_TRANSPORT_NO_DO"
                                                     class="form-control" placeholder="transport no" />
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Arrival Date</lable>
+                                                <label class="form-label">Arrival Date</label>
                                                 <div class="input-group">
                                                     <input type="text" id="RESV_ARRIVAL_DT_DO" name="RESV_ARRIVAL_DT_DO"
                                                         class="form-control" placeholder="DD-MM-YYYY">
@@ -1068,46 +1091,46 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Drop off Time</lable>
+                                                <label class="form-label">Drop off Time</label>
                                                 <input type="time" name="RESV_DROPOFF_TIME" id="RESV_DROPOFF_TIME"
                                                     class="form-control" placeholder="drop off time" />
                                             </div>
                                             <div class="col-md-3"></div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Guest Type</lable>
+                                                <label class="form-label">Guest Type</label>
                                                 <select name="RESV_GUST_TY" id="RESV_GUST_TY"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Purpose of Stay</lable>
+                                                <label class="form-label">Purpose of Stay</label>
                                                 <select name="RESV_EXT_PURP_STAY" id="RESV_EXT_PURP_STAY"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 ">
-                                                <lable class="form-lable">Entry Point</lable>
+                                                <label class="form-label">Entry Point</label>
                                                 <select name="RESV_ENTRY_PONT" id="RESV_ENTRY_PONT"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
-                                                <lable class="form-lable">Reserv. Profile</lable>
+                                                <label class="form-label">Reserv. Profile</label>
                                                 <select name="RESV_PROFILE" id="RESV_PROFILE"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 mt-3">
-                                                <lable class="form-lable">Name on Card</lable>
+                                                <label class="form-label">Name on Card</label>
                                                 <input type="text" name="RESV_NAME_ON_CARD" id="RESV_NAME_ON_CARD"
                                                     class="form-control" placeholder="name on code" />
                                             </div>
                                             <div class="col-md-3 mt-5">
-                                                <lable class="form-lable">Print Rate</lable>
+                                                <label class="form-label">Print Rate</label>
                                                 <label class="switch">
                                                     <input type="checkbox" class="switch-input"
                                                         id="RESV_EXT_PRINT_RT_CHK" />
@@ -1148,55 +1171,55 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="reservationChildlable">Customer</h5>
+                    <h5 class="modal-title" id="reservationChildlable">Search Customer</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row profileSearch">
                         <div class="col-md-3 mb-2">
-                            <lable class="form-lable">Name</lable>
+                            <label class="form-label">Name</label>
                             <input type="text" id="CUST_LAST_NAME" class="form-control" placeholder="Name" />
                         </div>
                         <div class="col-md-3 mb-2">
-                            <lable class="form-lable">First Name</lable>
+                            <label class="form-label">First Name</label>
                             <input type="text" id="CUST_FIRST_NAME" class="form-control" placeholder="First name" />
                         </div>
                         <div class="col-md-3 mb-2">
-                            <lable class="form-lable">City</lable>
+                            <label class="form-label">City</label>
                             <input type="text" id="CUST_CITY" class="form-control" placeholder="City" />
                         </div>
                         <div class="col-md-3 mb-2">
-                            <lable class="form-lable">Email ID</lable>
+                            <label class="form-label">Email ID</label>
                             <input type="text" name="CUST_EMAIL" id="CUST_EMAIL" class="form-control"
                                 placeholder="Email" />
                         </div>
                         <div class="col-md-3 mb-2">
-                            <lable class="form-lable">Client ID</lable>
+                            <label class="form-label">Client ID</label>
                             <input type="text" id="CUST_CLIENT_ID" class="form-control" placeholder="Client ID" />
                         </div>
                         <div class="col-md-3 mb-2">
-                            <lable class="form-lable">IATA No</lable>
+                            <label class="form-label">IATA No</label>
                             <input type="text" id="CUST_IATA_NO" class="form-control" placeholder="IATA No" />
                         </div>
                         <div class="col-md-3 mb-2">
-                            <lable class="form-lable">Corp No</lable>
+                            <label class="form-label">Corp No</label>
                             <input type="text" id="CUST_CORP_NO" class="form-control" placeholder="Corp No" />
                         </div>
                         <div class="col-md-3 mb-2">
-                            <lable class="form-lable">A/R No</lable>
+                            <label class="form-label">A/R No</label>
                             <input type="text" id="CUST_AR_NO" class="form-control" placeholder="A/R No" />
                         </div>
                         <div class="col-md-3 mb-2">
-                            <lable class="form-lable">Mobile</lable>
+                            <label class="form-label">Mobile</label>
                             <input type="text" id="CUST_MOBILE" class="form-control" placeholder="Mobile" />
                         </div>
                         <div class="col-md-3 mb-2">
-                            <lable class="form-lable">Communication</lable>
+                            <label class="form-label">Communication</label>
                             <input type="text" id="CUST_COMMUNICATION_DESC" class="form-control"
                                 placeholder="Communication" />
                         </div>
                         <div class="col-md-2 mb-2">
-                            <lable class="form-lable">Passport No</lable>
+                            <label class="form-label">Passport No</label>
                             <input type="text" id="CUST_PASSPORT" class="form-control" placeholder="Passport No" />
                         </div>
                         <div class="col-md-4 mt-4">
@@ -1241,7 +1264,7 @@
                         <div class="row g-3">
                             <div class="col-md-3">
                                 <input type="hidden" name="CUST_ID" id="CUST_ID" class="form-control" />
-                                <lable class="form-lable">First Name</lable>
+                                <label class="form-label">First Name</label>
                                 <input type="text" name="CUST_FIRST_NAME" id="CUST_FIRST_NAME" class="form-control"
                                     placeholder="first name" required />
                                 <div class="invalid-feedback">
@@ -1249,17 +1272,17 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Middle Name</lable>
+                                <label class="form-label">Middle Name</label>
                                 <input type="text" name="CUST_MIDDLE_NAME" id="CUST_MIDDLE_NAME" class="form-control"
                                     placeholder="middle name" />
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Last Name</lable>
+                                <label class="form-label">Last Name</label>
                                 <input type="text" name="CUST_LAST_NAME" id="CUST_LAST_NAME" class="form-control"
                                     placeholder="last name" />
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Language/Title</lable>
+                                <label class="form-label">Language/Title</label>
                                 <div class="form-group flxi_join">
                                     <select name="CUST_LANG" id="CUST_LANG" class="form-select" data-allow-clear="true">
                                         <option value="">Select</option>
@@ -1281,7 +1304,7 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">DOB</lable>
+                                <label class="form-label">DOB</label>
                                 <div class="input-group mb-3">
                                     <input type="text" id="CUST_DOB" name="CUST_DOB" class="form-control CUST_DOB"
                                         placeholder="YYYY-MM-DD">
@@ -1293,12 +1316,12 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Passport</lable>
+                                <label class="form-label">Passport</label>
                                 <input type="text" name="CUST_PASSPORT" id="CUST_PASSPORT" class="form-control"
                                     placeholder="passport" />
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Address</lable>
+                                <label class="form-label">Address</label>
                                 <input type="text" name="CUST_ADDRESS_1" id="CUST_ADDRESS_1" class="form-control"
                                     placeholder="addresss 1" required />
                                 <div class="invalid-feedback">
@@ -1306,17 +1329,17 @@
                                 </div>
                             </div>
                             <div class="col-md-3 flxy_mgtop">
-                                <lable class="form-lable"></lable>
+                                <label class="form-label"></label>
                                 <input type="text" name="CUST_ADDRESS_2" id="CUST_ADDRESS_2" class="form-control"
                                     placeholder="address 2" />
                             </div>
                             <div class="col-md-3" style="margin-top: 23px !important;">
-                                <lable class="form-lable"></lable>
+                                <label class="form-label"></label>
                                 <input type="text" name="CUST_ADDRESS_3" id="CUST_ADDRESS_3" class="form-control"
                                     placeholder="address 3" />
                             </div>
                             <div class="col-md-3 mt-0">
-                                <lable class="form-lable col-md-12">Country</lable>
+                                <lable class="form-lable col-md-12">Country</label>
                                 <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%"
                                     class="selectpicker CUST_COUNTRY" data-live-search="true" required>
                                     <option value="">Select</option>
@@ -1326,21 +1349,21 @@
                                 </div>
                             </div>
                             <div class="col-md-3 mt-0">
-                                <lable class="form-lable col-md-12">State</lable>
+                                <lable class="form-lable col-md-12">State</label>
                                 <select name="CUST_STATE" id="CUST_STATE" data-width="100%"
                                     class="selectpicker CUST_STATE" data-live-search="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
                             <div class="col-md-3 mt-0">
-                                <lable class="form-lable col-md-12">City</lable>
+                                <lable class="form-lable col-md-12">City</label>
                                 <select name="CUST_CITY" id="CUST_CITY" data-width="100%" class="selectpicker CUST_CITY"
                                     data-live-search="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Email</lable>
+                                <label class="form-label">Email</label>
                                 <input type="text" name="CUST_EMAIL" id="CUST_EMAIL" class="form-control"
                                     placeholder="email" required />
                                 <div class="invalid-feedback">
@@ -1348,7 +1371,7 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Mobile</lable>
+                                <label class="form-label">Mobile</label>
                                 <input type="text" name="CUST_MOBILE" id="CUST_MOBILE" class="form-control"
                                     placeholder="mobile" required />
                                 <div class="invalid-feedback">
@@ -1356,43 +1379,43 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Phone</lable>
+                                <label class="form-label">Phone</label>
                                 <input type="text" name="CUST_PHONE" id="CUST_PHONE" class="form-control"
                                     placeholder="phone" />
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Client ID</lable>
+                                <label class="form-label">Client ID</label>
                                 <input type="text" name="CUST_CLIENT_ID" id="CUST_CLIENT_ID" class="form-control"
                                     placeholder="client id" />
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Postal Code</lable>
+                                <label class="form-label">Postal Code</label>
                                 <input type="text" name="CUST_POSTAL_CODE" id="CUST_POSTAL_CODE" class="form-control"
                                     placeholder="postal" />
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">VIP</lable>
+                                <label class="form-label">VIP</label>
                                 <select name="CUST_VIP" id="CUST_VIP" class="select2 form-select"
                                     data-allow-clear="true">
                                     <option value="">Select VIP</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Nationality</lable>
+                                <label class="form-label">Nationality</label>
                                 <select name="CUST_NATIONALITY" id="CUST_NATIONALITY" class="select2 form-select"
                                     data-allow-clear="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Business Segment</lable>
+                                <label class="form-label">Business Segment</label>
                                 <select name="CUST_BUS_SEGMENT" id="CUST_BUS_SEGMENT" class="select2 form-select"
                                     data-allow-clear="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Communication</lable>
+                                <label class="form-label">Communication</label>
                                 <select name="CUST_COMMUNICATION" id="CUST_COMMUNICATION" class="select2 form-select"
                                     data-allow-clear="true">
                                     <option value="">Select Communication</option>
@@ -1403,7 +1426,7 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable">Communcation Desc.</lable>
+                                <label class="form-label">Communcation Desc.</label>
                                 <input type="text" name="CUST_COMMUNICATION_DESC" id="CUST_COMMUNICATION_DESC"
                                     class="form-control" placeholder="communication desc" />
                             </div>
@@ -1412,7 +1435,7 @@
                                     <input class="form-check-input flxCheckBox" type="checkbox" id="CUST_ACTIVE_CHK">
                                     <input type="hidden" name="CUST_ACTIVE" id="CUST_ACTIVE" value="N"
                                         class="form-control" />
-                                    <lable class="form-check-lable" for="defaultCheck1"> Active </lable>
+                                    <lable class="form-check-lable" for="defaultCheck1"> Active </label>
                                 </div>
 
                             </div>
@@ -1653,302 +1676,351 @@
         </div>
     </div>
     <!--  RateQuery Detail window end -->
+  <!-- Modal Window Item Inventory -->
 
-    <!-- Modal Window Item Inventory -->
-
-    <div class="modal fade" id="ItemInventory" data-backdrop="static" data-keyboard="false"
-        aria-labelledby="popModalWindowlabel">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="popModalWindowlabel">Item Inventory</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                    <div id="wizard-validation" class="bs-stepper mt-2">
-                        <div class="bs-stepper-header">
-                            <div class="step" data-target="#select_items">
-                                <button type="button" class="step-trigger">
-                                    <span class="bs-stepper-circle">1</span>
-                                    <span class="bs-stepper-label">Items</span>
-                                </button>
-                            </div>
-                            <div class="line"></div>
-                            <div class="step" data-target="#item_availability">
-                                <button type="button" class="step-trigger">
-                                    <span class="bs-stepper-circle">2</span>
-                                    <span class="bs-stepper-label">Inventory Availability</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="bs-stepper-content">
-
-
-                            <form id="item-submit-form" onSubmit="return false">
-
-                                <div id="select_items" class="content">
-                                    <input type="hidden" name="RSV_PRI_ID" id="RSV_PRI_ID" class="form-control" />
-                                    <div class="row g-3">
-
-                                        <div class="col-md-5">
-                                            <div class="border rounded p-4 mb-3">
-                                                <div class="row mb-3">
-                                                    <label for="RSV_ITM_ID" class="col-form-label col-md-4"><b>Items
-                                                            *</b></label>
-                                                    <div class="col-md-8">
-                                                        <select id="RSV_ITM_ID" name="RSV_ITM_ID"
-                                                            class="select2 form-select form-select-lg">
-                                                            <?php echo $itemLists;?>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <label for="ITEM_AVAIL_START_DT"
-                                                        class="col-form-label col-md-4"><b>Start
-                                                            Date *</b></label>
-                                                    <div class="col-md-8">
-                                                        <input class="form-control dateField" type="text"
-                                                            placeholder="d-Mon-yyyy" id="ITEM_AVAIL_START_DT"
-                                                            name="ITEM_AVAIL_START_DT" />
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <label for="ITEM_AVAIL_END_DT"
-                                                        class="col-form-label col-md-4"><b>End
-                                                            Date *</b></label>
-                                                    <div class="col-md-8">
-                                                        <input class="form-control dateField" type="text"
-                                                            placeholder="d-Mon-yyyy" id="ITEM_AVAIL_END_DT"
-                                                            name="ITEM_AVAIL_END_DT" />
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <label for="RSV_ITM_QTY" class="col-form-label col-md-4"><b>Quantity
-                                                            *</b></label>
-                                                    <div class="col-md-8">
-                                                        <input type="number" name="RSV_ITM_QTY" id="RSV_ITM_QTY"
-                                                            class="form-control" min="1" step="1"
-                                                            placeholder="eg: 12" />
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <div class="col-md-8 float-right">
-                                                        <button type="button"
-                                                            class="btn btn-success save-package-code-detail"
-                                                            onclick="submitItemForm('item-submit-form')">
-                                                            <i class="fa-solid fa-floppy-disk"></i>&nbsp; Save
-                                                        </button>&nbsp;
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-
-                                        </div>
-
-                                        <div class="col-md-7">
-
-                                            <div class="border rounded p-4 mb-3">
-                                                <div class="col-md-6 mb-3">
-                                                    <button type="button"
-                                                        class="btn btn-primary add-package-code-detail">
-                                                        <i class="fa-solid fa-circle-plus"></i>&nbsp; Add New
-                                                    </button>&nbsp;
-
-                                                    <button type="button"
-                                                        class="btn btn-danger delete-package-code-detail">
-                                                        <i class="fa-solid fa-ban"></i>&nbsp; Delete
-                                                    </button>&nbsp;
-                                                </div>
-
-                                                <div class="table-responsive text-nowrap">
-                                                    <table id="PKG_CD_Details" class="table table-bordered table-hover">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="all">Start</th>
-                                                                <th class="all">End</th>
-                                                                <th class="all">Price</th>
-                                                                <th class="all">Active</th>
-                                                            </tr>
-                                                        </thead>
-                                                    </table>
-                                                </div>
-
-                                                <br />
-
-                                                <input type="hidden" name="PKG_CD_DT_ID" id="PKG_CD_DT_ID" readonly />
-
-
-                                            </div>
-                                        </div>
-                                        <div class="d-flex col-12 justify-content-between">
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-
-                                            <button type="button" class="btn btn-primary btn-next">
-                                                <span class="d-none d-sm-inline-block me-sm-1">Next</span>
-                                                <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
-                                            </button>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                                <div id="item_availability" class="content">
-
-                                    <div class="row g-3">
-                                        <input type="hidden" name="PKG_CD_ID" id="PKG_CD_ID" />
-
-                                        <div class="border rounded p-3">
-
-                                            <div class="col-md-12">
-                                                <div class="row mb-3">
-                                                    <label for="html5-text-input"
-                                                        class="col-form-label col-md-3"><b>Code
-                                                            *</b></label>
-                                                    <div class="col-md-3">
-                                                        <input type="text" name="PKG_CD_CODE" id="PKG_CD_CODE"
-                                                            class="form-control bootstrap-maxlength textField"
-                                                            maxlength="10" placeholder="eg: 1001" required />
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <label for="html5-text-input" class="col-form-label col-md-3">Short
-                                                        Description</label>
-                                                    <div class="col-md-5">
-                                                        <input type="text" name="PKG_CD_SHORT_DESC"
-                                                            id="PKG_CD_SHORT_DESC"
-                                                            class="form-control bootstrap-maxlength" maxlength="50"
-                                                            placeholder="eg: Online Travel Agent" />
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <label for="html5-text-input"
-                                                        class="col-form-label col-md-3"><b>Description
-                                                            *</b></label>
-                                                    <div class="col-md-7">
-                                                        <input type="text" name="PKG_CD_DESC" id="PKG_CD_DESC"
-                                                            class="form-control bootstrap-maxlength textField"
-                                                            maxlength="50" placeholder="eg: Online Travel Agent" />
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="border rounded p-3">
-                                            <h6>Transaction Details</h6>
-                                            <div class="row g-3 mb-3">
-                                                <label for="TR_CD_ID" class="col-form-label col-md-3"><b>Transaction
-                                                        Code *</b></label>
-                                                <div class="col-md-4">
-                                                    <select id="TR_CD_ID" name="TR_CD_ID"
-                                                        class="select2 form-select form-select-lg">
-
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <label class="switch">
-                                                        <input type="checkbox" class="switch-input"
-                                                            id="PKG_CD_TAX_INCLUDED" name="PKG_CD_TAX_INCLUDED"
-                                                            value="1" />
-                                                        <span class="switch-toggle-slider">
-                                                            <span class="switch-on">
-                                                                <i class="bx bx-check"></i>
-                                                            </span>
-                                                            <span class="switch-off">
-                                                                <i class="bx bx-x"></i>
-                                                            </span>
-                                                        </span>
-                                                        <span class="switch-label">Tax Included</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="border rounded p-3">
-                                            <h6>Attributes</h6>
-                                            <div class="row mb-3">
-
-                                                <div class="col-md-4">
-
-
-                                                </div>
-
-                                                <div class="col-md-8">
-                                                    <div class="row mb-3">
-
-                                                        <label for="PO_RH_ID" class="col-form-label col-md-4"
-                                                            style="text-align: right;"><b>Posting Rhythm *</b></label>
-                                                        <div class="col-md-8">
-                                                            <select id="PO_RH_ID" name="PO_RH_ID"
-                                                                class="select2 form-select form-select-lg">
-
-                                                            </select>
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div class="row mb-3">
-
-                                                        <label for="CLC_RL_ID" class="col-form-label col-md-4"
-                                                            style="text-align: right;"><b>Calculation Rule *</b></label>
-                                                        <div class="col-md-8">
-                                                            <select id="CLC_RL_ID" name="CLC_RL_ID"
-                                                                class="select2 form-select form-select-lg">
-
-                                                            </select>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-4 mb-3">
-                                            <label class="switch">
-                                                <input id="PKG_CD_SELL_SEP" name="PKG_CD_SELL_SEP" type="checkbox"
-                                                    value="1" class="switch-input" />
-                                                <span class="switch-toggle-slider">
-                                                    <span class="switch-on">
-                                                        <i class="bx bx-check"></i>
-                                                    </span>
-                                                    <span class="switch-off">
-                                                        <i class="bx bx-x"></i>
-                                                    </span>
-                                                </span>
-                                                <span class="switch-label">Sell Separately</span>
-                                            </label>
-                                        </div>
-
-                                        <div class="d-flex col-12 justify-content-between">
-
-                                            <button class="btn btn-primary btn-prev">
-                                                <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
-                                                <span class="d-none d-sm-inline-block">Previous</span>
-                                            </button>
-
-                                            <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="modal fade" id="ItemInventory" data-backdrop="static" data-keyboard="false" aria-labelledby="popModalWindowlabel">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="popModalWindowlabel">Item Inventory</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-    </div>
+        <div class="modal-body">
 
+          <div id="wizard-validation" class="bs-stepper mt-2">
+            <div class="bs-stepper-header">
+              <div class="step" data-target="#select_items">
+                <button type="button" class="step-trigger">
+                  <span class="bs-stepper-circle">1</span>
+                  <span class="bs-stepper-label">Items</span>
+                </button>
+              </div>
+              <div class="line"></div>
+              <div class="step" data-target="#item_availability">
+                <button type="button" class="step-trigger" >
+                  <span class="bs-stepper-circle">2</span>
+                  <span class="bs-stepper-label" >Inventory Availability</span>
+                </button>
+              </div>
+            </div>
+            <div class="bs-stepper-content">             
+            <form id="item-submit-form" onSubmit="return false">
+                <div id="select_items" class="content">
+                
+                  <input type="hidden" name="RSV_ID" id="RSV_ID" class="form-control" />
+                  <input type="hidden" name="RSV_PRI_ID" id="RSV_PRI_ID" class="form-control" />
+                  <div class="row g-3">
+
+                    <div class="col-md-5">
+                      <div class="border rounded p-4 mb-3">
+                      <div class="row mb-3">
+                          <label for="RSV_ITM_CL_ID" class="col-form-label col-md-4"><b>Item Class *</b></label>
+                          <div class="col-md-8">
+                            <select id="RSV_ITM_CL_ID" name="RSV_ITM_CL_ID" class="select2 form-select form-select-lg">
+                             
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="RSV_ITM_ID" class="col-form-label col-md-4"><b>Items *</b></label>
+                          <div class="col-md-8">
+                            <select id="RSV_ITM_ID" name="RSV_ITM_ID" class="select2 form-select form-select-lg">
+                              
+                            </select>
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="RSV_ITM_BEGIN_DATE" class="col-form-label col-md-4"><b>Start
+                              Date *</b></label>
+                          <div class="col-md-8">
+                            <input class="form-control dateFieldItem" type="text" placeholder="d-Mon-yyyy" id="RSV_ITM_BEGIN_DATE" name="RSV_ITM_BEGIN_DATE" />
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <label for="RSV_ITM_END_DATE" class="col-form-label col-md-4"><b>End
+                              Date *</b></label>
+                          <div class="col-md-8">
+                            <input class="form-control dateFieldItem" type="text" placeholder="d-Mon-yyyy" id="RSV_ITM_END_DATE" name="RSV_ITM_END_DATE" />
+                          </div>
+                        </div>
+
+                        <div class="row mb-3">
+                          <label for="RSV_ITM_QTY" class="col-form-label col-md-4"><b>Quantity *</b></label>
+                          <div class="col-md-8">
+                            <input type="number" name="RSV_ITM_QTY" id="RSV_ITM_QTY" class="form-control" min="1" step="1" placeholder="eg: 12" />
+                          </div>
+                        </div>
+                        <div class="row mb-3">
+                          <div class="col-md-8 float-right">
+                            <button type="button" class="btn btn-success save-item-detail">
+                              <i class="fa-solid fa-floppy-disk"></i>&nbsp; Save
+                            </button>&nbsp;
+                          </div>
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div class="col-md-7">
+                    
+                      <div class="border rounded p-4 mb-3">
+                        <div class="col-md-6 mb-3">
+                          <button type="button" class="btn btn-primary add-item-detail">
+                            <i class="fa-solid fa-circle-plus"></i>&nbsp; Add New
+                          </button>&nbsp;
+
+                          <button type="button" class="btn btn-danger delete-item-detail">
+                            <i class="fa-solid fa-ban"></i>&nbsp; Delete
+                          </button>&nbsp;
+                        </div>
+
+                        <div class="table-responsive text-nowrap">
+                          <table id="Inventory_Details" class="table table-bordered table-hover">
+                            <thead>
+                              <tr>
+                                <th class="all">ID</th>
+                                <th class="all">Items</th>
+                                <th class="all">Start</th>
+                                <th class="all">End</th>
+                                <th class="all">Quantity</th>
+                              </tr>
+                            </thead>
+                          </table>
+                        </div>
+
+                        <br />
+
+                      
+
+
+                      </div>
+                    </div>
+                    <div class="d-flex col-12 justify-content-between">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                      <!-- <button type="button" class="btn btn-primary btn-next">
+                        <span class="d-none d-sm-inline-block me-sm-1">Next</span>
+                        <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
+                      </button> -->
+                    </div>
+
+                  </div>
+                 
+                </div>
+                </form>
+                <div id="item_availability" class="content">                
+                <div class="card app-calendar-wrapper">
+                <div class="row g-0">
+                 
+                  <!-- Calendar Sidebar -->
+                  <div class="app-calendar-sidebar col" id="app-calendar-sidebar">
+                    <div class="border-bottom p-4 my-sm-0 mb-3">
+                      <div class="d-grid">
+                        <button
+                          class="btn btn-primary btn-toggle-sidebar"
+                          
+                        >
+                          
+                          <span class="align-middle">Available Items</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="p-4">
+                      <!-- inline calendar (flatpicker) -->
+                      <div class="ms-n2">
+                        <div class="inline-calendar"></div>
+                      </div>
+
+                      <hr class="container-m-nx my-4" />
+
+                      <!-- Filter -->
+                      <!-- <div class="mb-4">
+                        <small class="text-small text-muted text-uppercase align-middle">Filter</small>
+                      </div> -->
+
+                       <!-- <div class="form-check mb-2">
+                        <input
+                          class="form-check-input select-all"
+                          type="checkbox"
+                          id="selectAll"
+                          data-value="all"
+                          checked
+                        />
+                        <label class="form-check-label" for="selectAll">View All</label>
+                      </div>  -->
+
+                      <div class="app-calendar-events-filter">
+                        <!-- <div class="form-check form-check-danger mb-2">
+                          <input
+                            class="form-check-input input-filter"
+                            type="checkbox"
+                            id="select-personal"
+                            data-value="personal"
+                            checked
+                          />
+                          <label class="form-check-label" for="select-personal">Personal</label>
+                        </div> -->
+                        <div class="form-check mb-2" style="display: none">
+                          <input
+                            class="form-check-input input-filter"
+                            type="checkbox"
+                            id="select-business"
+                            data-value="business"
+                            checked
+                          />
+                          <label class="form-check-label" for="select-business">View All</label>
+                        </div>
+                        <!-- <div class="form-check form-check-warning mb-2">
+                          <input
+                            class="form-check-input input-filter"
+                            type="checkbox"
+                            id="select-family"
+                            data-value="family"
+                            checked
+                          />
+                          <label class="form-check-label" for="select-family">Family</label>
+                        </div> -->
+                        <!-- <div class="form-check form-check-success mb-2">
+                          <input
+                            class="form-check-input input-filter"
+                            type="checkbox"
+                            id="select-holiday"
+                            data-value="holiday"
+                            checked
+                          />
+                          <label class="form-check-label" for="select-holiday">Holiday</label>
+                        </div> -->
+                        <!-- <div class="form-check form-check-info">
+                          <input
+                            class="form-check-input input-filter"
+                            type="checkbox"
+                            id="select-etc"
+                            data-value="etc"
+                            checked
+                          />
+                          <label class="form-check-label" for="select-etc">ETC</label>
+                        </div> -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /Calendar Sidebar -->
+
+                  <!-- Calendar & Modal -->
+                  <div class="app-calendar-content col">
+                    <div class="card shadow-none border-0">
+                      <div class="card-body pb-0">
+                        <!-- FullCalendar -->
+                        <div id="calendar"></div>
+                      </div>
+                    </div>
+                    <div class="app-overlay"></div>
+                    <!-- FullCalendar Offcanvas -->
+                    <div
+                      class="offcanvas offcanvas-end event-sidebar"
+                      tabindex="-1"
+                      id="addEventSidebar"
+                      aria-labelledby="addEventSidebarLabel"
+                    >
+                      <div class="offcanvas-header border-bottom">
+                        <h6 class="offcanvas-title" id="addEventSidebarLabel">Show Item Details</h6>
+                        <button
+                          type="button"
+                          class="btn-close text-reset"
+                          data-bs-dismiss="offcanvas"
+                          aria-label="Close"
+                        ></button>
+                      </div>
+                      <div class="offcanvas-body">
+                        <form class="event-form pt-0" id="eventForm" onsubmit="return false">
+                          <div class="mb-3">
+                            <label class="form-label" for="eventTitle">Title</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="eventTitle"
+                              name="eventTitle"
+                              placeholder="Event Title"
+                            />
+                          </div>
+                          <!-- <div class="mb-3">
+                            <label class="form-label" for="eventLabel">Item Class</label>
+                            <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
+                              <option data-label="primary" value="Business" selected>Business</option>
+                              <option data-label="danger" value="Personal">Personal</option>
+                              <option data-label="warning" value="Family">Family</option>
+                              <option data-label="success" value="Holiday">Holiday</option>
+                              <option data-label="info" value="ETC">ETC</option>
+                            </select>
+                          </div> -->
+                          <div class="mb-3">
+                            <label class="form-label" for="eventStartDate">Start Date</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="eventStartDate"
+                              name="eventStartDate"
+                              placeholder="Start Date"
+                            />
+                          </div>
+                          <div class="mb-3">
+                            <label class="form-label" for="eventEndDate">End Date</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="eventEndDate"
+                              name="eventEndDate"
+                              placeholder="End Date"
+                            />
+                          </div>
+                          <div class="mb-3">
+                            <label class="switch">
+                              <input type="checkbox" class="switch-input allDay-switch" />
+                              <span class="switch-toggle-slider">
+                                <span class="switch-on"></span>
+                                <span class="switch-off"></span>
+                              </span>
+                              <span class="switch-label">All Day</span>
+                            </label>
+                          </div>
+                        
+                          
+                          <div class="mb-3">
+                            <label class="form-label" for="eventDescription">Description</label>
+                            <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea>
+                          </div>
+
+
+                          <div class="d-flex justify-content-start justify-content-sm-between my-4 mb-3" style="display:none !important">
+                            <div>
+                              <button type="submit" class="btn btn-primary btn-add-event me-1 me-sm-3">Add</button>
+                              <button type="submit" class="btn btn-primary btn-update-event d-none me-1 me-sm-3">
+                                Update
+                              </button>
+                              
+                            </div>
+                            <div><button class="btn btn-label-danger btn-delete-event d-none">Delete</button></div>
+                          </div>
+
+                          
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /Calendar & Modal -->
+                </div>
+              </div>
+                </div>
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- /Modal window -->
     <?= $this->include('includes/EditCustomerPopup') ?>
     <?= $this->include('includes/SharesPopup') ?>
     <?= $this->include('includes/SearchReservationPopup') ?>
@@ -1964,6 +2036,11 @@ var compAgntMode = '';
 var linkMode = '';
 var windowmode = '';
 $(document).ready(function() {
+
+    
+    ////Item Inventory
+    showInventoryItems();
+    itemClassList();
     linkMode = 'EX';
     $('#loader_flex_bg').show();
     $('#dataTable_view').DataTable({
@@ -2063,6 +2140,15 @@ $(document).ready(function() {
         format: 'd-M-yyyy',
         autoclose: true,
     });
+
+    $('.dateFieldItem').datepicker({
+        format: 'dd-M-yyyy',
+        autoclose: true,
+        startDate: '-0m',
+        onSelect: function() {
+          $(this).change();
+        }
+      });
 
 });
 
@@ -2166,6 +2252,7 @@ function getRoomRateDetails(rateCodeInfo, roomTypeInfo) {
 }
 
 function selectRate() {
+
     $('#rateQueryWindow').modal('hide');
     $('.window-1,#nextbtn').hide();
     $('.window-2').show();
@@ -2176,31 +2263,50 @@ function selectRate() {
 
     $('#submitResrBtn').removeClass('submitResr');
     runInitializeConfig();
-    var activeRow = $('.clickPrice.active');
-    var rmtype = $(activeRow).find('#ROOMTYPE').val();
-    var rmprice = $(activeRow).find('#ACTUAL_ADULT_PRICE').val();
-    var rateCode = $(activeRow).parent('.ratePrice').find('#RT_DESCRIPTION').val();
-    $('[name="RESV_RATE_CODE"]').val(rateCode);
-    $('#RESV_RATE').val(rmprice);
-    localStorage.setItem('activerate', rmprice);
-    $.ajax({
-        url: '<?php echo base_url('/getRoomTypeDetails')?>',
-        type: "post",
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        data: {
-            rmtype: rmtype
-        },
-        dataType: 'json',
-        success: function(respn) {
-            var dataSet = respn[0];
-            var option = '<option data-feture="' + $.trim(dataSet['RM_TY_FEATURE']) + '" data-desc="' + $
-                .trim(dataSet['RM_TY_DESC']) + '" data-rmclass="' + $.trim(dataSet['RM_TY_ROOM_CLASS']) +
-                '" value="' + dataSet['RM_TY_CODE'] + '">' + dataSet['RM_TY_DESC'] + '</option>';
-            $('#RESV_RM_TYPE,#RESV_RTC').html(option).selectpicker('refresh');
-        }
-    });
+
+        $('#errorModal').hide(); 
+        
+        var activeRow = $('.clickPrice.active');
+        var rmtype = $(activeRow).find('#ROOMTYPE').val();
+        var rmprice = $(activeRow).find('#ACTUAL_ADULT_PRICE').val();
+        var rateCode = $(activeRow).parent('.ratePrice').find('#RT_DESCRIPTION').val();
+        $('[name="RESV_RATE_CODE"]').val(rateCode);
+        $('#RESV_RATE').val(rmprice);
+        localStorage.setItem('activerate', rmprice);
+    if(rmtype == '' || rmtype == undefined){
+        $('#errorModal').show();    
+        var error = '<ul>';       
+            error += '<li>Please select a room type</li>';      
+            error += '<ul>';
+        $('#formErrorMessage').html(error);
+        return;
+    }
+    else{
+        $('#errorModal').hide();
+        $('#rateQueryWindow').modal('hide');
+        $('.window-1,#nextbtn').hide();
+        $('.window-2').show();
+        $('#submitResrBtn').removeClass('submitResr');
+        runInitializeConfig();
+        $.ajax({
+            url: '<?php echo base_url('/getRoomTypeDetails')?>',
+            type: "post",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                rmtype: rmtype
+            },
+            dataType: 'json',
+            success: function(respn) {
+                var dataSet = respn[0];
+                var option = '<option data-feture="' + $.trim(dataSet['RM_TY_FEATURE']) + '" data-desc="' + $
+                    .trim(dataSet['RM_TY_DESC']) + '" data-rmclass="' + $.trim(dataSet['RM_TY_ROOM_CLASS']) +
+                    '" value="' + dataSet['RM_TY_CODE'] + '">' + dataSet['RM_TY_DESC'] + '</option>';
+                $('#RESV_RM_TYPE,#RESV_RTC').html(option).selectpicker('refresh');
+            }
+        });
+    }
 }
 
 function previous() {
@@ -2266,6 +2372,7 @@ $(document).on('blur', '#RESV_RATE', function() {
 var ressysId = '';
 var roomType = '';
 var roomTypedesc = '';
+
 $(document).on('click', '.reserOption', function() {
     ressysId = $(this).attr('data_sysid');
     roomType = $(this).attr('rmtype');
@@ -2277,9 +2384,12 @@ $(document).on('click', '.reserOption', function() {
     $('.profileSearch').find('input,select').val('');
     windowmode = 'AC';
     customPop = '';
+
+    $('#registerCardButton').attr('data_sysid', ressysId);
 });
 
 $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
+   
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
     $('#RESV_NAME,#RESV_COMPANY,#RESV_AGENT,#RESV_BLOCK').html(
         '<option value="">Select</option>').selectpicker(
@@ -2293,6 +2403,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     $('#reservationW').modal('show');
     $('#reservationWlable').html('Edit Reservation');
     var sysid = $(this).attr('data_sysid');
+    showInventoryItems(sysid);
     var mode = '';
     if (param) {
         sysid = param;
@@ -2417,6 +2528,7 @@ function childReservation(param) {
     }
     $('.profileCreate').hide();
     $('.profileSearch').show();
+    $('#reservationChildlable').html('Search Customer');
     $('#reservationChild').modal('show');
     runCountryList();
     runSupportingLov();
@@ -3047,6 +3159,7 @@ function searchData(form, mode, event) {
         $('#customerForm').find('input,select').val('');
         $('.profileCreate').show();
         $('.profileSearch').hide();
+        $('#reservationChildlable').html('Add Customer');
         customPop = '-N';
     }
 }
@@ -3424,9 +3537,429 @@ function reservationCheckout() {
     });
 }
 
+$(document).on('click', '#registerCardButton', function() {
+var reservID = $(this).attr('data_sysid');
+$.ajax({
+        url: '<?= base_url('singleReservRegCards') ?>',
+        type: "post",
+        'data': {
+                "reservID": reservID
+            },
+        dataType: 'json',
+        success: function(response) {              
+            if (response.count > 0) {               
+                window.open('<?= base_url('/singleReservRegCardPrint') ?>', '_blank');                
+            }
+            else{
+                $('#errorModal').show();   
+                error = '<ul><li>No reservations found</li></ul>';  
+                $('#formErrorMessage').html(error);
+
+            }
+        }
+    }); 
+
+});
+
+
+ // Add / Edit Inventory Items Detail
+
+ function submitDetailsForm(id) {
+    hideModalAlerts();
+    var formSerialization = $('#' + id).serializeArray();
+    var url = '<?php echo base_url('/updateInventoryItems') ?>';
+    $.ajax({
+      url: url,
+      type: "post",
+      data: formSerialization,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      dataType: 'json',
+      success: function(respn) {
+
+        var response = respn['SUCCESS'];
+        if (response == '2') {
+          mcontent = '<li>Item Combination already exists</li>';
+          showModalAlert('error', mcontent);
+        }
+        else if (response != '1') {
+         
+          var ERROR = respn['RESPONSE']['ERROR'];
+          var mcontent = '';
+          $.each(ERROR, function(ind, data) {
+            console.log(data, "SDF");
+            mcontent += '<li>' + data + '</li>';
+          });
+          showModalAlert('error', mcontent);
+        } else {
+          var alertText = $('#RSV_PRI_ID').val() == '' ?
+            '<li>The new Inventory Item has been created</li>' :
+            '<li>The Inventory Item has been updated</li>';
+            
+            hideModalAlerts();
+            if($('#RSV_PRI_ID').val() == ''){
+              item_id = $('#RSV_ITM_ID').val();
+              item_text = $('#RSV_ITM_ID option:selected').text();
+
+              ///Append the items to dropdown
+                var data = {
+                  id: item_id,
+                  text: item_text
+              };
+
+              var newOption = new Option(data.text, data.id, false, false);
+              $('#itemsArray').append(newOption).trigger('change');
+              $('#itemsArray').select2('destroy').find('option').prop('selected', 'selected').end().select2();
+              
+            } 
+
+
+
+          showModalAlert('success', alertText);
+          clearFormFields('#select_items');
+          $("#RSV_ITM_ID").html('');
+          
+
+          if (respn['RESPONSE']['OUTPUT'] != '') {         
+
+            $('#RSV_PRI_ID').val(respn['RESPONSE']['OUTPUT']);
+            
+
+            showInventoryItems($('#RSV_ID').val());
+            clearFormFields('#select_items');
+          }
+        }
+      }
+    });
+  }
+
+  // Add new item Detail
+
+  $(document).on('click', '.add-item-detail', function() {
+    hideModalAlerts();
+    $('.dtr-bs-modal').modal('hide');
+    $('#IT_CL_ID,#ITM_ID').html('<option value="">Select</option>');
+    bootbox.dialog({
+      message: "Do you want to add a new item Detail?",
+      buttons: {
+        ok: {
+          label: 'Yes',
+          className: 'btn-success',
+          callback: function(result) {
+            if (result) {
+              clearFormFields('#select_items');
+              $('#Inventory_Details').find('tr.table-warning').removeClass('table-warning');
+
+              //Disable Delete button
+             toggleButton('.delete-item-detail', 'btn-danger', 'btn-dark', true);
+
+              showModalAlert('info',
+                'Fill in the form and click the \'Save\' button to add the new item Detail'
+              );
+              $('#infoModal').delay(2500).fadeOut();
+              
+            }
+          }
+        },
+        cancel: {
+          label: 'No',
+          className: 'btn-danger'
+        }
+      }
+    });
+  });
+
+
+  // Delete Inventory Items Detail
+
+  $(document).on('click', '.delete-item-detail', function() {
+    hideModalAlerts();
+    $('.dtr-bs-modal').modal('hide');
+    var RSV_PRI_ID = $('#Inventory_Details').find("tr.table-warning").data("itemid");
+    var delete_id = $(this).attr("data-val");
+    var delete_option = $('#itemsArray option[value="'+ $('#RSV_ITM_ID').val() +'"]');
+    delete_option.prop('selected', false);
+    $('#itemsArray option[value="'+ $('#RSV_ITM_ID').val() +'"]').remove();
+    $('#itemsArray').trigger('change.select2');
+
+   
+
+    bootbox.confirm({
+      message: "Inventory Items is active. Do you want to Delete?",
+      buttons: {
+        confirm: {
+          label: 'Yes',
+          className: 'btn-success'
+        },
+        cancel: {
+          label: 'No',
+          className: 'btn-danger'
+        }
+      },
+      callback: function(result) {
+        if (result) {
+          $.ajax({
+            url: '<?php echo base_url('/deleteItemInventory') ?>',
+            type: "post",
+            data: {
+              RSV_PRI_ID: RSV_PRI_ID
+            },
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            dataType: 'json',
+            success: function(respn) {
+              var response = respn['SUCCESS'];
+              if (response == '0') {
+                clearFormFields('#select_items');
+                showModalAlert('error',
+                  '<li>The Inventory Items cannot be deleted</li>');
+              } else {
+                blockLoader('select_items');
+                showModalAlert('warning',
+                  '<li>The Inventory Items has been deleted</li>');
+                clearFormFields('#select_items');
+                showInventoryItems();
+              }
+            }
+          });
+        }
+      }
+    });
+  });
+
+
+  function showInventoryItems(resvID) {
+   
+    $('#Inventory_Details').find('tr.table-warning').removeClass('table-warning');
+    
+    $('#Inventory_Details').DataTable({
+      'processing': true,
+      async: false,
+      'serverSide': true,
+      'serverMethod': 'post',
+      'ajax': {
+        'url': '<?php echo base_url('/showInventoryItems') ?>',
+        'data': {
+          "RESV_ID": resvID
+        }
+      },
+      'columns': [
+        {        
+          data: 'RSV_PRI_ID',
+          'visible':false
+        },{
+            
+          data: 'RSV_ITM_ID',
+                     render: function(data, type, full, meta) {
+                         if(full['ITM_CODE'] != null)
+                         return full['ITM_CODE']+' | '+full['ITM_NAME'];
+                         else
+                         return '';
+                    }
+        },
+        {
+          data: 'RSV_ITM_BEGIN_DATE'
+        },
+        {
+          data: 'RSV_ITM_END_DATE'
+        },
+        {
+          data: 'RSV_ITM_QTY'
+        },
+
+      ],
+      "order": [
+            [1, "asc"]
+        ],
+        'createdRow': function(row, data, dataIndex) {
+            
+            $(row).attr('data-itemid', data['RSV_PRI_ID']);
+            
+
+            if (dataIndex == 0) {
+              
+                $(row).addClass('table-warning');
+                loadInventoryDetails(data['RSV_PRI_ID']);
+            }
+        },
+
+
+      destroy: true,
+      "ordering": true,
+      "searching": false,
+      autowidth: true,
+      responsive: true
+    });
+  }
+
+  // Show Package Code Detail
+
+function loadInventoryDetails(itemID) { 
+
+var url = '<?php echo base_url('/showInventoryDetails')?>';
+$.ajax({
+    url: url,
+    async: false,
+    'processing': true,   
+    'serverSide': true,   
+    'serverMethod': 'get',
+    data: {
+      RSV_PRI_ID: itemID
+    },
+    dataType: 'json',
+    success: function(respn) {
+
+        //Enable Repeat and Delete buttons
+        toggleButton('.delete-item-detail', 'btn-dark', 'btn-danger', false);
+      
+
+        $(respn).each(function(inx, data) {
+            $.each(data, function(fields, datavals) {
+                var field = $.trim(fields); 
+                var dataval = $.trim(datavals); 
+                  if(field == 'RSV_ITM_ID')  {  
+                    class_val = dataval;                            
+                  }else if(field == 'RSV_ITM_CL_ID')  {                                                                              
+                    $('#' + field).val(dataval).trigger('change',class_val);                           
+                      
+                  }else {
+                    $('#' + field).val(dataval);
+                  }
+            });
+        });
+    }
+});
+}
+
+
+function itemClassList(){
+    $.ajax({
+        url: '<?php echo base_url('/itemClassList')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        async:false,
+        // dataType:'json',
+        success:function(respn){
+          // console.log(respn,"testing");
+          $('#RSV_ITM_CL_ID').html(respn);
+        }
+    });
+  }
+
+  $("#RSV_ITM_CL_ID").change(function(e,param = 0) {  
+      
+        var item_class_id = $(this).val();
+        $.ajax({
+        url: '<?php echo base_url('/itemList')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        data:{item_class_id:item_class_id,item_id:param},
+        // dataType:'json',
+        success:function(respn){
+          //console.log(respn,"testing");
+          $('#RSV_ITM_ID').html('<option value="">Select Item</option>');          
+          $('#RSV_ITM_ID').html(respn);
+        }
+    });
+  });
+
+
+  function getInventoryItems() {
+    $('#ItemInventory').modal('show');
+  }
+
+  function itemInventoryClassSingle(){
+    $.ajax({
+        url: '<?php echo base_url('/itemInventoryClassSingle')?>',
+        type: "post",
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+        async:false,
+        // dataType:'json',
+        success:function(respn){
+          // console.log(respn,"testing");
+          $('#eventLabel').html(respn);
+        }
+    });
+  }
+
+
+
+  let date = new Date();
+let nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+// prettier-ignore
+let nextMonth = date.getMonth() === 11 ? new Date(date.getFullYear() + 1, 0, 1) : new Date(date.getFullYear(), date.getMonth() + 1, 1);
+// prettier-ignore
+let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) : new Date(date.getFullYear(), date.getMonth() - 1, 1);
+
+
+
+    // $row['ITM_AVAIL_TO_TIME']
+    // $row['ITM_AVAIL_FROM_TIME']
+  let events = [
+  <?php 
+  if(!empty($itemAvail)){ 
+  foreach ($itemAvail as $row) {
+   
+      $start= $row['ITM_DLY_BEGIN_DATE'];
+      $startDate= date("Y-m-d",strtotime($start)); 
+  
+      $end = $row['ITM_DLY_END_DATE'];
+      $endDate = date("Y-m-d",strtotime($end));
+
+      $startTime= date("H:i A",strtotime($row['ITM_AVAIL_FROM_TIME'])); 
+  
+      $endTime = date("H:i A",strtotime($row['ITM_AVAIL_TO_TIME']));
+   
+
+    ?>  
+  ,{
+    id: '<?php echo $row['ITM_ID'] ?>',
+    url: '',
+    title: '<?php echo $startTime.' - '.$endTime.'  | '.$row['ITM_CODE'].' - '. $row['ITM_CODE'] ?>',
+    start: '<?php echo $startDate; ?>',
+    end: '<?php echo $endDate; ?>',
+    allDay: false,
+    description:'',
+    extendedProps: {
+      
+      calendar: 'Business'
+    }
+  },
+
+  <?php } 
+  } ?>
+ 
+];
+
+
+
+
+
+function hideModalAlerts() {
+    $('#errorModal').hide();
+    $('#successModal').hide();
+    $('#warningModal').hide();
+  }
+
+  function showModalAlert(modalType, modalContent) {
+   
+    $('#' + modalType + 'Modal').show();
+    $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
+        '</ul>');
+  }
+
 // Display function clearFormFields
 
+  // Display function toggleButton
+  <?php echo isset($toggleButton_javascript) ? $toggleButton_javascript : ''; ?>
+
+// Display function clearFormFields
 <?php echo isset($clearFormFields_javascript) ? $clearFormFields_javascript : ''; ?>
+
+// Display function blockLoader
+<?php echo isset($blockLoader_javascript) ? $blockLoader_javascript : ''; ?>
 </script>
 
 <?=$this->endSection()?>

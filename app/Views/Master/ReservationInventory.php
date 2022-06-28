@@ -82,14 +82,14 @@
                           <label for="RSV_ITM_BEGIN_DATE" class="col-form-label col-md-4"><b>Start
                               Date *</b></label>
                           <div class="col-md-8">
-                            <input class="form-control dateField" type="text" placeholder="d-Mon-yyyy" id="RSV_ITM_BEGIN_DATE" name="RSV_ITM_BEGIN_DATE" />
+                            <input class="form-control dateFieldItem" type="text" placeholder="d-Mon-yyyy" id="RSV_ITM_BEGIN_DATE" name="RSV_ITM_BEGIN_DATE" />
                           </div>
                         </div>
                         <div class="row mb-3">
                           <label for="RSV_ITM_END_DATE" class="col-form-label col-md-4"><b>End
                               Date *</b></label>
                           <div class="col-md-8">
-                            <input class="form-control dateField" type="text" placeholder="d-Mon-yyyy" id="RSV_ITM_END_DATE" name="RSV_ITM_END_DATE" />
+                            <input class="form-control dateFieldItem" type="text" placeholder="d-Mon-yyyy" id="RSV_ITM_END_DATE" name="RSV_ITM_END_DATE" />
                           </div>
                         </div>
 

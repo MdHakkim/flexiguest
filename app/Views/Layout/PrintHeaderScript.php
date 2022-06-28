@@ -1,5 +1,5 @@
 
-<title>Guest Registration Card</title>
+<title><?=isset($title) ? $title : '';?></title>
 <meta name="description" content="" />
 
 <!-- Favicon -->
