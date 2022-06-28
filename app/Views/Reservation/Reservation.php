@@ -2727,7 +2727,7 @@ function submitForm(id, mode, event) {
         var cust_membership = $('[name="RESV_MEMBER_TY"]').val();
         var membership_code = $('[name="RESV_MEMBER_TY"]').find(':selected').attr('membership-type');
 
-        if (cust_membership != '') {
+        if (membership_code) {
             formSerialization.find(function(input) {
                 return input.name == 'RESV_MEMBER_TY';
             }).value = membership_code;
