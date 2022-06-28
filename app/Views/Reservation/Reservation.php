@@ -26,6 +26,9 @@
     width: 87% !important;
     float: left;
 }
+.fc a[data-navlink] {
+    pointer-events: none;
+}
 </style>
 
 <!-- Content wrapper -->
@@ -1703,12 +1706,16 @@
                 </button>
               </div>
             </div>
-            <div class="bs-stepper-content">             
+            <div class="bs-stepper-content">    
+                    
             <form id="item-submit-form" onSubmit="return false">
+            <input type="hidden" name="RSV_ID" id="RSV_ID" class="form-control" />
+            
+            <input type="hidden" name="RESV_ID" id="RESV_ID" class="form-control" /> 
+
                 <div id="select_items" class="content">
                 
-                  <input type="hidden" name="RSV_ID" id="RSV_ID" class="form-control" />
-                  <input type="hidden" name="RSV_PRI_ID" id="RSV_PRI_ID" class="form-control" />
+                <input type="hidden" name="RSV_PRI_ID" id="RSV_PRI_ID" class="form-control" />
                   <div class="row g-3">
 
                     <div class="col-md-5">
@@ -2035,9 +2042,7 @@
 var compAgntMode = '';
 var linkMode = '';
 var windowmode = '';
-$(document).ready(function() {
-
-    
+$(document).ready(function() {    
     ////Item Inventory
     showInventoryItems();
     itemClassList();
@@ -2253,10 +2258,7 @@ function getRoomRateDetails(rateCodeInfo, roomTypeInfo) {
 
 function selectRate() {
 
-    $('#rateQueryWindow').modal('hide');
-    $('.window-1,#nextbtn').hide();
-    $('.window-2').show();
-
+    
     //Update membership select 
     fillCustomerMemberships($('#CM_CUST_ID').val(), 'edit', '[name="RESV_MEMBER_TY"]');
     $('[name="RESV_MEMBER_TY"]').val($('#RESV_MEMBER_TY_ADD').val()).trigger('change').trigger('select2:select');
@@ -2282,6 +2284,11 @@ function selectRate() {
         return;
     }
     else{
+        $('#rateQueryWindow').modal('hide');
+        $('.window-1,#nextbtn').hide();
+        $('.window-2').show();
+        
+
         $('#errorModal').hide();
         $('#rateQueryWindow').modal('hide');
         $('.window-1,#nextbtn').hide();
@@ -2388,7 +2395,7 @@ $(document).on('click', '.reserOption', function() {
     $('#registerCardButton').attr('data_sysid', ressysId);
 });
 
-$(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
+$(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) { 
    
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
     $('#RESV_NAME,#RESV_COMPANY,#RESV_AGENT,#RESV_BLOCK').html(
@@ -2403,7 +2410,9 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     $('#reservationW').modal('show');
     $('#reservationWlable').html('Edit Reservation');
     var sysid = $(this).attr('data_sysid');
+    clearFormFields('#select_items');
     showInventoryItems(sysid);
+    
     var mode = '';
     if (param) {
         sysid = param;
@@ -2535,6 +2544,8 @@ function childReservation(param) {
 }
 
 function addResvation() {
+    showInventoryItems();
+    clearFormFields('#select_items');
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
     $('#RESV_NAME,#RESV_COMPANY,#RESV_AGENT,#RESV_BLOCK').html('<option value="">Select</option>').selectpicker(
         'refresh');
@@ -3336,7 +3347,6 @@ function getInventoryItems() {
 
 function submitItemForm(id) {
     //hideModalAlerts();
-    alert('q');
     var formSerialization = $('#' + id).serializeArray();
     var url = '<?php echo base_url('/insertItemInventory') ?>';
     $.ajax({
@@ -3566,15 +3576,17 @@ $.ajax({
 
 // Update existing Inventory Items Detail
   
-  $(document).on('click', '.save-item-detail', function() {
+//   $(document).on('click', '.save-item-detail', function() {
 
-    submitDetailsForm('item-submit-form');
-  });
+//     submitDetailsForm('item-submit-form');
+//   });
   
 
  // Add / Edit Inventory Items Detail
 
  function submitDetailsForm(id) {
+    var RESV_ID = $('#RESV_ID').val();
+    
     hideModalAlerts();
     var formSerialization = $('#' + id).serializeArray();
     var url = '<?php echo base_url('/updateInventoryItems') ?>';
@@ -3589,6 +3601,7 @@ $.ajax({
       success: function(respn) {
 
         var response = respn['SUCCESS'];
+        //alert(response);
         if (response == '2') {
           mcontent = '<li>Item Combination already exists</li>';
           showModalAlert('error', mcontent);
@@ -3608,6 +3621,7 @@ $.ajax({
             '<li>The Inventory Item has been updated</li>';
             
             hideModalAlerts();
+            
             if($('#RSV_PRI_ID').val() == ''){
               item_id = $('#RSV_ITM_ID').val();
               item_text = $('#RSV_ITM_ID option:selected').text();
@@ -3627,6 +3641,9 @@ $.ajax({
 
 
           showModalAlert('success', alertText);
+          $('#infoModal').delay(2500).fadeOut();
+         
+          
           clearFormFields('#select_items');
           $("#RSV_ITM_ID").html('');
           
@@ -3636,7 +3653,7 @@ $.ajax({
             $('#RSV_PRI_ID').val(respn['RESPONSE']['OUTPUT']);
             
 
-            showInventoryItems($('#RSV_ID').val());
+            showInventoryItems(RESV_ID);
             clearFormFields('#select_items');
           }
         }
@@ -3685,6 +3702,7 @@ $.ajax({
 
   $(document).on('click', '.delete-item-detail', function() {
     hideModalAlerts();
+    resvID = $('#RESV_ID').val();
     $('.dtr-bs-modal').modal('hide');
     var RSV_PRI_ID = $('#Inventory_Details').find("tr.table-warning").data("itemid");
     var delete_id = $(this).attr("data-val");
@@ -3692,8 +3710,6 @@ $.ajax({
     delete_option.prop('selected', false);
     $('#itemsArray option[value="'+ $('#RSV_ITM_ID').val() +'"]').remove();
     $('#itemsArray').trigger('change.select2');
-
-   
 
     bootbox.confirm({
       message: "Inventory Items is active. Do you want to Delete?",
@@ -3713,7 +3729,8 @@ $.ajax({
             url: '<?php echo base_url('/deleteItemInventory') ?>',
             type: "post",
             data: {
-              RSV_PRI_ID: RSV_PRI_ID
+              RSV_PRI_ID: RSV_PRI_ID,
+              RESV_ID: resvID
             },
             headers: {
               'X-Requested-With': 'XMLHttpRequest'
@@ -3725,22 +3742,31 @@ $.ajax({
                 clearFormFields('#select_items');
                 showModalAlert('error',
                   '<li>The Inventory Items cannot be deleted</li>');
+                  $('#warningModal').delay(2500).fadeOut();
               } else {
                 blockLoader('select_items');
                 showModalAlert('warning',
                   '<li>The Inventory Items has been deleted</li>');
+                  $('#warningModal').delay(2500).fadeOut();
                 clearFormFields('#select_items');
-                showInventoryItems();
+                
+                showInventoryItems(resvID);
               }
             }
           });
+
+
         }
       }
     });
+
+   
   });
 
 
   function showInventoryItems(resvID) {
+    if(resvID == '')
+    resvID = $('#RESV_ID').val();
    
     $('#Inventory_Details').find('tr.table-warning').removeClass('table-warning');
     
@@ -3807,14 +3833,16 @@ $.ajax({
   // Show Package Code Detail
 
 function loadInventoryDetails(itemID) { 
-
+    
+   
 var url = '<?php echo base_url('/showInventoryDetails')?>';
 $.ajax({
     url: url,
+    type: "post",
     async: false,
     'processing': true,   
     'serverSide': true,   
-    'serverMethod': 'get',
+    'serverMethod': 'post',
     data: {
       RSV_PRI_ID: itemID
     },
