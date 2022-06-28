@@ -77,7 +77,8 @@ class UserController extends BaseController
             'USR_PHONE' => $user['USR_PHONE'],
             'USR_EMAIL' => $user['USR_EMAIL'],
             'isLoggedIn' => true,
-            "USR_ROLE" => $user['USR_ROLE'],
+            "USR_ROLE" => $user['USR_ROLE'],            
+            'USR_ROLE_ID' => $user['USR_ROLE_ID']
         ];
 
         session()->set($data);
