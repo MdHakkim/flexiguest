@@ -108,7 +108,13 @@ class ConciergeController extends BaseController
 
     public function listConciergeRequests()
     {
-        $user_id = $this->request->user['USR_ID'];
+        $customer_id = $this->request->user['USR_CUST_ID'];
+        $concierge_requests = $this->ConciergeRequest
+                                    ->select('FLXY_CONCIERGE_REQUESTS.*, fco.CO_TITLE, fco.CO_DESCRIPTION, fco.CO_VALID_FROM_DATE, fco.CO_VALID_TO_DATE')
+                                    ->join('FLXY_CONCIERGE_OFFERS as fco', 'FLXY_CONCIERGE_REQUESTS.CR_OFFER_ID = fco.CO_ID')
+                                    ->where('CR_CUSTOMER_ID', $customer_id)
+                                    ->findAll();
 
+        return $this->respond(responseJson(200, false, ['msg' => 'Concierge requests list'], $concierge_requests));
     }
 }

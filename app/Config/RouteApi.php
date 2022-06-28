@@ -88,8 +88,11 @@ $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Co
 
 $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
 
-    $routes->get("concierge/concierge-offers", "ConciergeController::conciergeOffers");
-    $routes->post("concierge/make-concierge-request", "ConciergeController::makeConciergeRequest");
+    $routes->group('concierge', function($routes) {
+        $routes->get("concierge-offers", "ConciergeController::conciergeOffers");
+        $routes->post("make-concierge-request", "ConciergeController::makeConciergeRequest");
+        $routes->get("list-concierge-requests", "ConciergeController::listConciergeRequests");
+    });
 
     $routes->get("news", "NewsController::news");
     $routes->get("guideline", "GuidelineController::guideline");
