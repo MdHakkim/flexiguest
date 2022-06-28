@@ -5,6 +5,9 @@
  * --------------------------------------------------------------------
  */
 $routes->match(['get', 'post'], 'login', 'UserController::login', ["filter" => "noauth"]);
+
+$routes->match(['post'],'/countryList', 'ApplicatioController::countryList');
+
 // Admin routes
 $routes->get('/', 'DashboardController::index',["filter" => "auth"]);
 $routes->group("/", ["filter" => "auth"], function ($routes) {
@@ -14,9 +17,6 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/reservation', 'ApplicatioController::Reservation');
     $routes->match(['post'],'/reservationView', 'ApplicatioController::reservationView');
     $routes->match(['post'],'/insertReservation', 'ApplicatioController::insertReservation');
-    $routes->match(['post'],'/countryList', 'ApplicatioController::countryList');
-    $routes->match(['post'],'/stateList', 'ApplicatioController::stateList');
-    $routes->match(['post'],'/cityList', 'ApplicatioController::cityList');
     $routes->match(['post'],'/insertCustomer', 'ApplicatioController::insertCustomer');
     $routes->match(['post'],'/editReservation', 'ApplicatioController::editReservation');
     $routes->match(['post'],'/deleteReservation', 'ApplicatioController::deleteReservation');

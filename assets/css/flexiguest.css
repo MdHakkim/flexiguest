@@ -525,9 +525,10 @@ button.close {
 #listImagePresentDb{
   margin:0px;
   padding:0px !important;
-  min-width: 30em;
+  /* min-width: 30em; */
   overflow-x: auto;
   display: flex;
+  flex-wrap: wrap;
 }
 .activeLink{
   border: 3px solid #d2d1d1bf;

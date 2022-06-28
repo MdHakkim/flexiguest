@@ -1,3 +1,6 @@
+<?= $this->include('Layout/ErrorReport') ?>
+<?= $this->include('Layout/SuccessReport') ?>
+
 <?php
 if (empty($condition)) {
     $data = $data[0];
@@ -647,7 +650,8 @@ $folderPath = base_url('assets/Uploads/');
                                 <div class="row" style="justify-content: right;padding: 48px;">
                                     <div class="col-md-3">
                                         <button type="button" <?php echo $data['RESV_SINGATURE_URL'] != '' ? 'style="display:none;"' : ''; ?> id="clickSignature" class="btn btn-secondary">Click to sign here</button>
-                                        <img id="captureSignature" style="width:100%;" src="<?php echo base_url('assets/upload/' . $data['RESV_SINGATURE_URL']); ?>" />
+
+                                        <img id="captureSignature" class="<?= $data['RESV_SINGATURE_URL'] ? '' : 'd-none' ?>" style="width:100%;" src="<?= $data['RESV_SINGATURE_URL'] ? base_url('assets/Uploads/UserDocuments/signature/' . $data['RESV_SINGATURE_URL']) : '' ?>" />
                                     </div>
                                 </div>
                             </div>
@@ -656,7 +660,13 @@ $folderPath = base_url('assets/Uploads/');
                         <div class="flxy_web-footer text-end">
                             <button type="button" onClick="sliderWebWid('P')" class="btn btn-blue btn-primary"><i class="fa-solid fa-chevron-left"></i> Back</button>
                             <button type="button" onClick="sliderWebWid('N')" class="btn continueDefult btn-blue btn-primary">Continue <i class="fa-solid fa-chevron-right"></i></button>
-                            <button type="button" onClick="updateSignature()" class="btn btn-success updateSignature signHideClass">Continue <i class="fa-solid fa-chevron-right"></i></button>
+                            <?php
+                            if ($data['RESV_STATUS'] == 'Due Pre Check-In') {
+                            ?>
+                                <button type="button" onClick="updateSignature()" class="btn btn-success updateSignature signHideClass">Continue <i class="fa-solid fa-chevron-right"></i></button>
+                            <?php
+                            }
+                            ?>
                             <button type="button" onClick="updateCustomer()" class="btn saveContinue btn-success">Save & Continue <i class="fa-solid fa-chevron-right"></i></button>
                         </div>
                     </div>
@@ -787,8 +797,9 @@ $folderPath = base_url('assets/Uploads/');
                             <div class="col-sm-8">
                                 <input class="form-control form-control-sm" id="fileUpload" name="files[]" multiple onChange="uploadVaccine(this)" type="file">
                             </div>
-                            <div class="col-sm-12 text-center previewClass">
 
+                            <div class="col-sm-4"></div>
+                            <div class="col-sm-8 text-center previewClass" style="flex-wrap: wrap">
                             </div>
                         </div>
                         <div class="row ">
@@ -893,7 +904,10 @@ $folderPath = base_url('assets/Uploads/');
 
     function sliderWebWid(param) {
         $('.updateSignature').addClass('signHideClass');
+        checkStatusUploadFiles();
+
         if (docuClick == 'PROOF') {
+            docuClick = '';
             $('.sliderclass:eq(1)').addClass('activeslide');
             $('.flxy_web-blockcont').removeClass('flxy_none');
             $('.flxy_doc_block').addClass('flxy_none');
@@ -905,15 +919,13 @@ $folderPath = base_url('assets/Uploads/');
         if (param == 'N') {
             var length = $('.sliderclass.activeslide').next('.sliderclass').length;
             if (length == 0) {
-                checkStatusUploadFiles();
-
                 if ($('.flxy_doc_prof').text() != 'Uploaded' && $('.flxy_doc_vacc').text() != 'Uploaded') {
-                    alert('Please upload required Identity and Vaccine documents.');
+                    alert('Please upload required Guest details, Identity and Vaccine documents.');
                     return false;
                 }
 
                 if ($('.flxy_doc_prof').text() != 'Uploaded') {
-                    alert('Please upload required Identity documents.');
+                    alert('Please upload required Guest details & Identity documents.');
                     return false;
                 }
 
@@ -1025,7 +1037,7 @@ $folderPath = base_url('assets/Uploads/');
                         if (filePath != '') {
                             var arrayPath = filePath.split(",");
                             $.each(arrayPath, function(i) {
-                                $('.previewClass').append('<span id="vaccinePreview"><span id="' + arrayPath[i] + '" class="vaccdelete"><i class="fa-solid fa-xmark"></i></span><img src="<?php echo $folderPath; ?>' + '/' + arrayPath[i] + '" id=""></span>');
+                                $('.previewClass').append('<span id="vaccinePreview"><span id="' + arrayPath[i] + '" class="vaccdelete"><i class="fa-solid fa-xmark"></i></span><img src="<?php echo $folderPath; ?>' + '/UserDocuments/vaccination/' + arrayPath[i] + '" id=""></span>');
                             });
                         }
                         $('#VACC_DOC_SAVED').val(filePath);
@@ -1191,7 +1203,7 @@ $folderPath = base_url('assets/Uploads/');
         var sysid = $('.activeLink').attr('data_id');
         var file_name = $('.activeLink').attr('data-file_name');
 
-        if(!sysid){
+        if (!sysid) {
             alert('please select an image to delete');
             return false;
         }
@@ -1209,8 +1221,9 @@ $folderPath = base_url('assets/Uploads/');
             dataType: 'json',
             success: function(respn) {
                 var element = $('.activeLink');
-                element.next().addClass('activeLink');
+                // element.next().addClass('activeLink');
                 element.remove();
+                $('.linkImg').last().addClass('activeLink');
             }
         });
     });
@@ -1273,7 +1286,14 @@ $folderPath = base_url('assets/Uploads/');
 
     $(document).on('click', '#updateVaccine', function() {
         var formData = new FormData($('#vaccineForm')[0]);
+
         formData.append('DELETEIMAGE', formImageDeletArr);
+
+        formData.delete('files[]');
+
+        let files = $(`#vaccineForm input[name='files[]']`)[0].files;
+        for (let i = 0; i < files.length; i++)
+            formData.append('files[]', files[i]);
 
         $.ajax({
             url: '<?php echo base_url('/updateVaccineReport') ?>',
@@ -1287,19 +1307,21 @@ $folderPath = base_url('assets/Uploads/');
             dataType: 'json',
             success: function(respn) {
 
-                $('#vaccineModal').modal('hide');
                 if (respn.SUCCESS != '1') {
-                    $('#errorModal').show();
+                    // $('#errorModal').show();
                     var ERROR = respn['RESPONSE']['ERROR'];
-                    var error = '<ul>';
+                    var error = '';
                     $.each(ERROR, function(ind, data) {
-
                         error += '<li>' + data + '</li>';
                     });
-                    error += '<ul>';
-                    $('#formErrorMessage').html(error);
+                    showModalAlert('error', error);
+                    // $('#formErrorMessage').html(error);
                 } else {
+                    showModalAlert('success', respn['RESPONSE']['ERROR']);
 
+                    formImageDeletArr = []; // reset array after updating
+                    checkStatusUploadFiles();
+                    $('#vaccineModal').modal('hide');
                 }
             }
         });
@@ -1318,15 +1340,15 @@ $folderPath = base_url('assets/Uploads/');
             dataType: 'json',
             success: function(respn) {
                 if (respn.SUCCESS != '1') {
-                    $('#errorModal').show();
+                    // $('#errorModal').show();
+                    
                     var ERROR = respn['RESPONSE']['ERROR'];
-                    var error = '<ul>';
+                    var error = '';
                     $.each(ERROR, function(ind, data) {
-
                         error += '<li>' + data + '</li>';
                     });
-                    error += '<ul>';
-                    $('#formErrorMessage').html(error);
+                    showModalAlert('error', error);
+                    // $('#formErrorMessage').html(error);
                 } else {
                     sliderWebWid('');
                     var object = respn['RESPONSE']['OUTPUT'];
@@ -1385,9 +1407,27 @@ $folderPath = base_url('assets/Uploads/');
     }
 
     function updateSignature() {
+        let errors = '';
+
         var arrivTime = $('#RESV_ETA').val();
         var signature = $('#captureSignature').attr('src');
         var DOC_RESV_ID = $('[name="DOC_RESV_ID"]').val();
+        var agree_terms = $('#agreeTerms').is(':checked');
+
+        if (!arrivTime)
+            errors += '<li>Please select a arrive time.</li>';
+
+        if (!signature)
+            errors += '<li>Please add your signature.</li>';
+
+        if (!agree_terms)
+            errors += '<li>Please accept terms & conditions.</li>';
+
+        if (errors) {
+            showModalAlert('error', errors);
+            return false;
+        }
+
         $.ajax({
             url: '<?php echo base_url('/updateSignatureReserv') ?>',
             type: "POST",
@@ -1402,6 +1442,8 @@ $folderPath = base_url('assets/Uploads/');
                 modesignature: newImageSignature
             },
             dataType: 'json',
+            // processData: false,
+            // contentType: false,
             success: function(respn) {
 
                 $('#checkInConfirmWindow').modal('show');
@@ -1432,6 +1474,8 @@ $folderPath = base_url('assets/Uploads/');
     $(document).on('click', '#submitSignatureImage', function() {
         var data = signaturePad.toDataURL('image/png');
         $('#captureSignature').attr("src", data);
+        $('#captureSignature').removeClass('d-none');
+
         $('#clickSignature').hide();
         $('#signaturWindow').modal('hide');
         newImageSignature = 1;
@@ -1465,8 +1509,7 @@ $folderPath = base_url('assets/Uploads/');
             },
             dataType: 'json',
             success: function(respn) {
-
-                window.location = '/reservationCheckin';
+                window.location.href = '<?= base_url('/reservationCheckin') ?>';
             }
         });
     }

@@ -435,7 +435,7 @@ class ApplicatioController extends BaseController
         $emailResp = $emailCall->preCheckInEmail($reservationInfo,$parametr);
     }
 
-    public function updateCustomerData($custId){
+    public function updateCustomerData($custId) {
         $data = [   "CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
                     "CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
                     "CUST_COUNTRY" => $this->request->getPost("CUST_COUNTRY"),
@@ -464,16 +464,17 @@ class ApplicatioController extends BaseController
         return true;
     }
 
-    function countryList(){
+    public function countryList(){
         $response = $this->Db->table('COUNTRY')->select('iso2,cname')->get()->getResultArray();
         $option='<option value="">Select Country</option>';
         foreach($response as $row){
             $option.= '<option value="'.$row['iso2'].'">'.$row['cname'].'</option>';
         }
         echo $option;
+        die();
     }
 
-    function stateList(){
+    public function stateList(){
         $ccode = $this->request->getPost("ccode");
         $sql = "SELECT sname,state_code FROM STATE WHERE COUNTRY_CODE='$ccode'";
         $response = $this->Db->query($sql)->getResultArray();
@@ -484,7 +485,7 @@ class ApplicatioController extends BaseController
         echo $option;
     }
 
-    function cityList(){
+    public function cityList(){
         $ccode = $this->request->getPost("ccode");
         $scode = $this->request->getPost("scode");
         $sql = "SELECT ctname,id FROM CITY WHERE COUNTRY_CODE='$ccode' AND STATE_CODE='$scode'";
@@ -496,7 +497,7 @@ class ApplicatioController extends BaseController
         echo $option;
     }
 
-    function insertCustomer(){
+    public function insertCustomer(){
         try{
             $validate = $this->validate([
                 'CUST_FIRST_NAME' => ['label' => 'First Name', 'rules' => 'required'],
@@ -631,7 +632,7 @@ class ApplicatioController extends BaseController
         }
     }
 
-    function deleteCustomer(){
+    public function deleteCustomer(){
         $sysid = $this->request->getPost("sysid");
         try{
             $return = $this->Db->table('FLXY_CUSTOMER')->delete(['CUST_ID' => $sysid]); 
@@ -663,7 +664,7 @@ class ApplicatioController extends BaseController
         // return view('Dashboard');
     }
 
-    function editCustomer(){
+    public function editCustomer(){
         $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_LANG,CUST_TITLE,CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
         CUST_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC
@@ -3134,6 +3135,32 @@ class ApplicatioController extends BaseController
             $resvid = $this->request->getPost("DOC_RESV_ID");
             $custId = $this->request->getPost("DOC_CUST_ID");
 
+            $validate = $this->validate([
+                'CUST_TITLE' => ['label' => 'title', 'rules' => 'required'],
+                'CUST_FIRST_NAME' => ['label' => 'first name', 'rules' => 'required'],
+                'CUST_LAST_NAME' => ['label' => 'last name', 'rules' => 'required'],
+                'CUST_GENDER' => ['label' => 'gender', 'rules' => 'required'],
+                'CUST_NATIONALITY' => ['label' => 'nationality', 'rules' => 'required'],
+                'CUST_DOB' => ['label' => 'date of birth', 'rules' => 'required'],
+                'CUST_COUNTRY' => ['label' => 'country', 'rules' => 'required'],
+                'CUST_DOC_TYPE' => ['label' => 'document type', 'rules' => 'required'],
+                'CUST_DOC_NUMBER' => ['label' => 'document number', 'rules' => 'required'],
+                'CUST_DOC_ISSUE' => ['label' => 'issue date', 'rules' => 'required'],
+                'CUST_PHONE' => ['label' => 'phone', 'rules' => 'required'],
+                'CUST_EMAIL' => ['label' => 'email', 'rules' => 'required'],
+                'CUST_ADDRESS_1' => ['label' => 'address line 1', 'rules' => 'required'],
+                'CUST_STATE' => ['label' => 'state', 'rules' => 'required'],
+                'CUST_CITY' => ['label' => 'city', 'rules' => 'required'],                
+            ]);
+
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+
+                $result = $this->responseJson(403, $validate);
+                echo json_encode($result);
+                exit;
+            }
+
             $data = ["CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
                 "CUST_FIRST_NAME" => $this->request->getPost("CUST_FIRST_NAME"),
                 "CUST_LAST_NAME" => $this->request->getPost("CUST_LAST_NAME"),
@@ -3174,8 +3201,19 @@ class ApplicatioController extends BaseController
         }else{
             $param = ['CUST_ID'=> $this->request->getPost("custid"),'RESV_ID'=> $this->request->getPost("resrid")];
         }
-        $sql="SELECT COUNT(*)TOTAL_PROOF,(SELECT COUNT(*) FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:CUST_ID: AND VACC_RESV_ID=:RESV_ID:) TOTAL_VACC FROM FLXY_DOCUMENTS WHERE DOC_CUST_ID=:CUST_ID: AND DOC_RESV_ID=:RESV_ID:";
+        $sql="SELECT COUNT(*)TOTAL_PROOF, (SELECT COUNT(*) FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:CUST_ID: AND VACC_RESV_ID=:RESV_ID:) TOTAL_VACC FROM FLXY_DOCUMENTS WHERE DOC_CUST_ID=:CUST_ID: AND DOC_RESV_ID=:RESV_ID:";
         $response = $this->Db->query($sql,$param)->getResultArray();  
+
+        $sql2 = 'select * from FLXY_CUSTOMER where CUST_ID = :CUST_ID:';
+        $customer = $this->Db->query($sql2, $param)->getRowArray();
+
+        if($customer){
+            if(!$customer['CUST_EMAIL'] || !$customer['CUST_TITLE'] || !$customer['CUST_FIRST_NAME']
+                || !$customer['CUST_COUNTRY'] || !$customer['CUST_STATE'] || !$customer['CUST_CITY']){
+                $response[0]['TOTAL_PROOF'] = 0;
+            }
+        }
+
         if($condi){
             return $response;
         }
@@ -3184,6 +3222,25 @@ class ApplicatioController extends BaseController
 
     public function updateVaccineReport(){
         try{
+            $validate = $this->validate([
+                'VACC_DETL' => ['label' => 'vaccine detail', 'rules' => 'required'],
+                'VACC_LAST_DT' => ['label' => 'vaccine last date', 'rules' => 'required'],
+                'VACC_NAME' => ['label' => 'vaccine name', 'rules' => 'required'],
+                'files' => [
+                    'label' => 'vaccine certificate', 
+                    'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg]', 'max_size[files,5000]'
+                ],
+                'VACC_ISSUED_COUNTRY' => ['label' => 'vaccine issue country', 'rules' => 'required']
+            ]);
+
+            if(!$validate){
+                $validate = $this->validator->getErrors();
+
+                $result = $this->responseJson(403, $validate);
+                echo json_encode($result);
+                exit;
+            }
+
             $this->deleteSpecificVaccine();
             $fileNames='';
             $fileNm='';
@@ -3230,14 +3287,14 @@ class ApplicatioController extends BaseController
             $return = $this->Db->table('FLXY_VACCINE_DETAILS')->insert($data); 
             // $return = $this->Db->table('FLXY_VACCINE_DETAILS')->where('CUST_ID', $custId)->update($data); 
             if($return){
-                $result = $this->responseJson("1","0",$return,$response='');
+                $result = $this->responseJson("1", "success", $return);
                 echo json_encode($result);
             }else{
-                $result = $this->responseJson("-444",$message,$return);
+                $result = $this->responseJson("-444", 'unable to insert/update', $return);
                 echo json_encode($result);
             }
-        }catch (Exception $e){
-            return $this->respond($e->errors());
+        }catch (\Exception $e){
+            return $this->respond($e->getMessage());
         }
     }
 
