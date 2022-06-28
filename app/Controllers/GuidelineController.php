@@ -43,9 +43,9 @@ class GuidelineController extends BaseController
         $id = $this->request->getPost('id');
 
         $rules = [
-            'GL_TITLE' => ['required'],
-            'GL_DESCRIPTION' => ['required'],
-            'GL_BODY' => ['required'],
+            'GL_TITLE' => ['label' => 'title', 'rules' => 'required'],
+            'GL_DESCRIPTION' => ['label' => 'description', 'rules' => 'required'],
+            'GL_BODY' => ['label' => 'body', 'rules' => 'required'],
         ];
 
         if (empty($id) || $this->request->getFile('GL_COVER_IMAGE'))

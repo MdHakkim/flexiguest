@@ -32,7 +32,8 @@ class AdditionalController extends BaseController
     public function currency()
     {
         $data['title'] = getMethodName();
-        $data['session'] = $this->session;        
+        $data['session'] = $this->session;
+        
         return view('Master/CurrencyView', $data);
     }
 
@@ -204,11 +205,10 @@ class AdditionalController extends BaseController
         }
     }
 
-       /**************      Exchange Rate Functions      ***************/
+    /**************      Exchange Rate Functions      ***************/
 
         public function exchangeRates()
-        {
-    
+        {    
             $currencyLists = $this->currencyLists();
             $exchangeCodesLists = $this->exchangeCodesLists();
     
@@ -999,77 +999,63 @@ class AdditionalController extends BaseController
 
 
     public function registerCardPrint(){
-        $response = $this->registerCardDataExists();        
         $data['title'] = getMethodName();
         $data['js_to_load'] = "app-invoice-print.js";
-        $data['response'] = $response['data'];
         return view('Reservation/RegisterCard',$data);
 
     }
     public function registerCardPreview(){
-        $response = $this->registerCardDataExists();  
-        $data['title'] = getMethodName(); 
-        $data['response'] = $response['data'];
+
+        $data['title'] = getMethodName();
+        $sql = "SELECT RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_RATE, RESV_RM_TYPE, FROM FLXY_RESERVATION";
+
+        if ($_SESSION['ARRIVAL_DATE'] != '') {
+            $ARRIVAL_DATE = $_SESSION['ARRIVAL_DATE'];
+            $sql .= " WHERE RESV_ARRIVAL_DT LIKE '%$ARRIVAL_DATE%' ";                   
+        }
+
+        if($_SESSION['ETA_FROM_TIME'] != '' && $_SESSION['ETA_TO_TIME'] !='')        
+            $sql .= " OR RESV_ETA BETWEEN '".$_SESSION['ETA_FROM_TIME']." AND '".$_SESSION['ETA_TO_TIME'];
+        
+        if($_SESSION['ETA_FROM_TIME'] != '')         
+            $sql .= " OR  RESV_ETA > '".$_SESSION['ETA_FROM_TIME'];  
+
+        if($_SESSION['ETA_TO_TIME'] != '')         
+            $sql .= " OR RESV_ETA < '".$_SESSION['ETA_TO_TIME']; 
+
+        if($_SESSION['ROOM_CLASS'] != '')         
+            $sql .= " OR RESV_ROOM_CLASS = '".$_SESSION['ROOM_CLASS']; 
+        
+        if($_SESSION['RATE_CODE'] != '')         
+            $sql .= " OR RESV_RATE_CODE = '".$_SESSION['RATE_CODE'];
+        
+        if($_SESSION['MEM_TYPE'] != '')         
+            $sql .= " OR RESV_MEMBER_TY = '".$_SESSION['MEM_TYPE'];
+        
+        $response = $this->Db->query($sql)->getResultArray(); 
+
         return view('Reservation/RegisterCardPreview',$data);
 
     }
 
     public function registerCardSaveDetails(){
-        $response =  $this->registerCardDataExists();
-        $responseCount =   $response['count']; 
-        echo json_encode($responseCount);
+
+        $_SESSION['ARRIVAL_DATE']       = date("Y-m-d",strtotime($this->request->getPost('ARRIVAL_DATE')));
+        $_SESSION['ETA_FROM_TIME']      = $this->request->getPost('ETA_FROM_TIME');
+        $_SESSION['ETA_TO_TIME']        = $this->request->getPost('ETA_TO_TIME');
+        $_SESSION['RESV_INDIV']         = $this->request->getPost('RESV_INDIV');
+        $_SESSION['RESV_BLOCK']         = $this->request->getPost('RESV_BLOCK');
+        $_SESSION['RESV_FROM_NAME']     = $this->request->getPost('RESV_FROM_NAME');
+        $_SESSION['RESV_TO_NAME']       = $this->request->getPost('RESV_TO_NAME');
+        $_SESSION['ROOM_CLASS']         = $this->request->getPost('ROOM_CLASS');
+        $_SESSION['RATE_CODE']          = $this->request->getPost('RATE_CODE');
+        $_SESSION['MEM_TYPE']           = $this->request->getPost('MEM_TYPE');
+        $_SESSION['VIP_CODE']           = $this->request->getPost('VIP_CODE');
+        $_SESSION['IN_HOUSE_GUESTS']    = $this->request->getPost('IN_HOUSE_GUESTS');       
+
+        echo json_encode(['success' => '200']);
     }
-
-    public function registerCardDataExists(){
-        $ARRIVAL_DATE        = date("Y-m-d",strtotime($this->request->getPost('ARRIVAL_DATE')));
-        $ETA_FROM_TIME       = $this->request->getPost('ETA_FROM_TIME');
-        $ETA_TO_TIME         = $this->request->getPost('ETA_TO_TIME');
-        $RESV_INDIV          = $this->request->getPost('RESV_INDIV');
-        $RESV_BLOCK          = $this->request->getPost('RESV_BLOCK');
-        $RESV_FROM_NAME      = $this->request->getPost('RESV_FROM_NAME');
-        $RESV_TO_NAME        = $this->request->getPost('RESV_TO_NAME');
-        $ROOM_CLASS          = $this->request->getPost('ROOM_CLASS');
-        $RATE_CODE           = $this->request->getPost('RATE_CODE');
-        $MEM_TYPE            = $this->request->getPost('MEM_TYPE');
-        $VIP_CODE            = $this->request->getPost('VIP_CODE');
-        $IN_HOUSE_GUESTS     = $this->request->getPost('IN_HOUSE_GUESTS');  
-        
-        $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, RESV_RATE, RESV_RM_TYPE, RESV_NAME, (SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY) RESV_COMPANY_DESC, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, (SELECT ctname FROM CITY WHERE id=CUST_CITY) CUST_CITY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_NATIONALITY) CUST_NATIONALITY_DESC, CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID";
-       
-        if ($ARRIVAL_DATE != '') {
-            $ARRIVAL_DATE = $ARRIVAL_DATE;
-            $sql .= " WHERE RESV_ARRIVAL_DT LIKE '%$ARRIVAL_DATE%' ";                   
-        }
-
-        if($ETA_FROM_TIME != '' && $ETA_TO_TIME !='')        
-            $sql .= " AND (RESV_ETA BETWEEN '".$ETA_FROM_TIME."' AND '".$ETA_TO_TIME."')";
-        
-        else if($ETA_FROM_TIME != '')         
-            $sql .= " AND  RESV_ETA > '".$ETA_FROM_TIME."'";  
-
-        else if($ETA_TO_TIME != '')         
-            $sql .= " AND RESV_ETA < '".$ETA_TO_TIME."'"; 
-
-        if($RESV_FROM_NAME != '')         
-            $sql .= " AND CUST_FIRST_NAME LIKE '%$_SESSION[RESV_FROM_NAME]%'"; 
-
-        if($ROOM_CLASS != '')         
-            $sql .= " AND RESV_ROOM_CLASS = '".$ROOM_CLASS."'"; 
-        
-        if($RATE_CODE != '')         
-            $sql .= " AND RESV_RATE_CODE = '".$RATE_CODE."'";
-        
-        if($MEM_TYPE != '')         
-            $sql .= " AND RESV_MEMBER_TY = '".$MEM_TYPE."'";
-      
-        $response['data'] = $this->Db->query($sql)->getResultArray(); 
-        $response['count'] = $this->Db->query($sql)->getNumRows();
-
-        return $response;
-
-    }   
-
-
+   
     public function roomClassLists()
         {
             $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
@@ -1091,7 +1077,6 @@ class AdditionalController extends BaseController
 
             return $option;
         }
-        
         public function membershipLists()
         {
             $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
@@ -1159,11 +1144,507 @@ class AdditionalController extends BaseController
         }
 
 
+        ///////////// Menu ///////////
+
+
+        public function Menu()  
+        {            
+            $data['title'] = getMethodName();
+            $data['session'] = $this->session;  
+            return view('Master/MenuView', $data);           
+        }
+    
+        public function MenuView()
+        {
+            $mine      = new ServerSideDataTable(); 
+            $tableName = 'FLXY_MENU';
+            $columns = 'MENU_ID,MENU_CODE,MENU_NAME,MENU_DESC,MENU_DIS_SEQ,MENU_STATUS';  
+            $mine->generate_DatatTable($tableName, $columns);
+            exit;
+        }
+    
+        public function insertMenu()
+        {
+            try {
+                $sysid = $this->request->getPost('MENU_ID');
+
+                $validate = $this->validate([
+                    'MENU_CODE' => ['label' => 'Menu Code', 'rules' => 'required|is_unique[FLXY_MENU.MENU_CODE,MENU_ID,' . $sysid . ']'],
+                    'MENU_NAME' => ['label' => 'Menu Name', 'rules' => 'required|is_unique[FLXY_MENU.MENU_NAME,MENU_ID,' . $sysid . ']'],
+                    'MENU_DESC' => ['label' => 'Description', 'rules' => 'required']                        
+                    
+                ]);
+                if (!$validate) {
+                    $validate = $this->validator->getErrors();
+                    $result["SUCCESS"] = "-402";
+                    $result[]["ERROR"] = $validate;
+                    $result = $this->responseJson("-402", $validate);
+                    echo json_encode($result);
+                    exit;
+                }
+    
+                $data = [
+                    "MENU_CODE" => trim($this->request->getPost('MENU_CODE')),
+                    "MENU_NAME" => trim($this->request->getPost('MENU_NAME')),
+                    "MENU_DESC" => trim($this->request->getPost('MENU_DESC')),
+                    "MENU_DIS_SEQ" => trim($this->request->getPost('MENU_DIS_SEQ')),
+                    "MENU_STATUS" => trim($this->request->getPost('MENU_STATUS'))               
+                ];
+    
+                $return = !empty($sysid) ? $this->Db->table('FLXY_MENU')->where('MENU_ID', $sysid)->update($data) : $this->Db->table('FLXY_MENU')->insert($data);
+                $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+                echo json_encode($result);
+            } catch (Exception $e) {
+                return $this->respond($e->errors());
+            }
+        }
+    
+        public function editMenu()
+        {
+            $param = ['SYSID' => $this->request->getPost('sysid')];
+    
+            $sql = "SELECT MENU_ID, MENU_CODE, MENU_NAME, MENU_DESC, MENU_DIS_SEQ, MENU_STATUS
+                    FROM FLXY_MENU
+                    WHERE MENU_ID=:SYSID: ";
+    
+            $response = $this->Db->query($sql, $param)->getResultArray();
+            echo json_encode($response);
+        }
+    
+    
+        public function checkMenu($menuCode)
+        {
+            $sql = "SELECT MENU_ID
+                    FROM FLXY_MENU
+                    WHERE MENU_CODE = '" . $menuCode . "'";
+    
+            $response = $this->Db->query($sql)->getNumRows();
+            return $menuCode == '' || strlen($menuCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
+        }
+    
+        public function copyMenu()
+        {
+            try {
+                $param = ['SYSID' => $this->request->getPost('main_Menu_ID')];
+    
+                $sql = "SELECT MENU_ID, MENU_CODE, MENU_NAME, MENU_DESC, MENU_DIS_SEQ, MENU_STATUS
+                        FROM FLXY_MENU
+                        WHERE MENU_ID=:SYSID:";
+    
+                $origGuestCode = $this->Db->query($sql, $param)->getResultArray()[0];
+                $no_of_added = 0;
+                $submitted_fields = $this->request->getPost('group-a');
+    
+                if ($submitted_fields != null) {
+                    foreach ($submitted_fields as $submitted_field) {
+                        if (!$this->checkMenu($submitted_field['MENU_CODE'])) // Check if entered Guest Type already exists
+                        {
+                            $newRateCode = [
+                                "MENU_CODE" => trim($submitted_field["MENU_CODE"]),
+                                "MENU_NAME" => $origGuestCode["MENU_NAME"],
+                                "MENU_DESC" => $origGuestCode["MENU_DESC"],
+                                "MENU_DIS_SEQ" => '',
+                                "MENU_STATUS" => $origGuestCode["MENU_STATUS"],
+                               
+                            ];
+    
+                            $this->Db->table('FLXY_MENU')->insert($newRateCode);
+    
+                            $no_of_added += $this->Db->affectedRows();
+                        }
+                    }
+                }
+    
+                echo $no_of_added;
+                exit;
+    
+            } catch (Exception $e) {
+                return $this->respond($e->errors());
+            }
+        }
+
+
+        public function deleteMenu()
+        {
+            $sysid = $this->request->getPost('sysid');
+    
+            try {
+                //Soft Delete
+                //$data = ["CUR_DELETED" => "1"];
+                //$return =  $this->Db->table('FLXY_CURRENCY')->where('CUR_ID', $sysid)->update($data);
+                $return = $this->Db->table('FLXY_MENU')->delete(['MENU_ID' => $sysid]);
+                $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+                echo json_encode($result);
+            } catch (Exception $e) {
+                return $this->respond($e->errors());
+            }
+        }
+    
 
 
 
-  
+        
+        ///////////// Sub Menu ///////////
 
+
+        public function SubMenu()  
+        {            
+            $data['title'] = getMethodName();
+            $data['session'] = $this->session;  
+            $data['menuLists'] = $this->menuLists();
+            return view('Master/SubMenuView', $data);           
+        }
+    
+        public function SubMenuView()
+        {
+            $mine      = new ServerSideDataTable(); 
+            $tableName = 'FLXY_SUB_MENU INNER JOIN FLXY_MENU ON FLXY_SUB_MENU.MENU_ID = FLXY_MENU.MENU_ID';
+            $columns = 'MENU_NAME,SUB_MENU_ID,SUB_MENU_CODE,SUB_MENU_NAME,SUB_MENU_URL,SUB_MENU_DESC,SUB_MENU_DIS_SEQ,SUB_MENU_STATUS';  
+            $mine->generate_DatatTable($tableName, $columns);
+            exit;
+        }
+    
+        public function insertSubMenu()
+        {
+            try {
+                $sysid = $this->request->getPost('SUB_MENU_ID');
+
+                $validate = $this->validate([
+                    'MENU_ID' => ['label' => 'Menu', 'rules' => 'required'] ,
+                    'SUB_MENU_CODE' => ['label' => 'Sub Menu Code', 'rules' => 'required|is_unique[FLXY_SUB_MENU.SUB_MENU_CODE,SUB_MENU_ID,' . $sysid . ']'],
+                    'SUB_MENU_URL' => ['label' => 'Sub Menu URL', 'rules' => 'required|is_unique[FLXY_SUB_MENU.SUB_MENU_URL,SUB_MENU_ID,' . $sysid . ']'],
+                    'SUB_MENU_NAME' => ['label' => 'Sub Menu Name', 'rules' => 'required|is_unique[FLXY_SUB_MENU.SUB_MENU_NAME,SUB_MENU_ID,' . $sysid . ']'],
+                    'SUB_MENU_DESC' => ['label' => 'Description', 'rules' => 'required']                        
+                    
+                ]);
+                if (!$validate) {
+                    $validate = $this->validator->getErrors();
+                    $result["SUCCESS"] = "-402";
+                    $result[]["ERROR"] = $validate;
+                    $result = $this->responseJson("-402", $validate);
+                    echo json_encode($result);
+                    exit;
+                }
+    
+                $data = [
+                    "MENU_ID" => trim($this->request->getPost('MENU_ID')),
+                    "SUB_MENU_CODE" => trim($this->request->getPost('SUB_MENU_CODE')),
+                    "SUB_MENU_NAME" => trim($this->request->getPost('SUB_MENU_NAME')),
+                    "SUB_MENU_URL" => trim($this->request->getPost('SUB_MENU_URL')),
+                    "SUB_MENU_DESC" => trim($this->request->getPost('SUB_MENU_DESC')),
+                    "SUB_MENU_DIS_SEQ" => trim($this->request->getPost('SUB_MENU_DIS_SEQ')),
+                    "SUB_MENU_STATUS" => trim($this->request->getPost('SUB_MENU_STATUS'))               
+                ];
+    
+                $return = !empty($sysid) ? $this->Db->table('FLXY_SUB_MENU')->where('SUB_MENU_ID', $sysid)->update($data) : $this->Db->table('FLXY_SUB_MENU')->insert($data);
+                $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+                echo json_encode($result);
+            } catch (Exception $e) {
+                return $this->respond($e->errors());
+            }
+        }
+
+        
+    
+        public function editSubMenu()
+        {
+            $param = ['SYSID' => $this->request->getPost('sysid')];
+    
+            $sql = "SELECT MENU_ID, SUB_MENU_ID, SUB_MENU_CODE, SUB_MENU_NAME,SUB_MENU_URL, SUB_MENU_DESC, SUB_MENU_DIS_SEQ, SUB_MENU_STATUS
+                    FROM FLXY_SUB_MENU
+                    WHERE SUB_MENU_ID=:SYSID: ";
+    
+            $response = $this->Db->query($sql, $param)->getResultArray();
+            echo json_encode($response);
+        }
+    
+    
+        public function checkSubMenu($subMenuCode)
+        {
+            $sql = "SELECT SUB_MENU_ID
+                    FROM FLXY_SUB_MENU
+                    WHERE SUB_MENU_CODE = '" . $subMenuCode . "'";
+    
+            $response = $this->Db->query($sql)->getNumRows();
+            return $subMenuCode == '' || strlen($subMenuCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
+        }
+    
+        public function copySubMenu()
+        {
+            try {
+                $param = ['SYSID' => $this->request->getPost('main_SubMenu_ID')];
+    
+                $sql = "SELECT MENU_ID, SUB_MENU_ID, SUB_MENU_CODE, SUB_MENU_NAME,SUB_MENU_DESC, SUB_MENU_DIS_SEQ, SUB_MENU_STATUS
+                        FROM FLXY_SUB_MENU
+                        WHERE SUB_MENU_ID=:SYSID:";
+    
+                $origGuestCode = $this->Db->query($sql, $param)->getResultArray()[0];
+                $no_of_added = 0;
+                $submitted_fields = $this->request->getPost('group-a');
+    
+                if ($submitted_fields != null) {
+                    foreach ($submitted_fields as $submitted_field) {
+                        if (!$this->checkMenu($submitted_field['SUB_MENU_CODE'])) // Check if entered Guest Type already exists
+                        {
+                            $newRateCode = [
+                                "SUB_MENU_CODE" => trim($submitted_field["SUB_MENU_CODE"]),
+                                "MENU_ID"       => $origGuestCode["MENU_ID"],
+                                "SUB_MENU_NAME" => $origGuestCode["SUB_MENU_NAME"],
+                                "SUB_MENU_DESC" => $origGuestCode["SUB_MENU_DESC"],
+                                "SUB_MENU_DIS_SEQ" => '',
+                                "SUB_MENU_STATUS" => $origGuestCode["SUB_MENU_STATUS"],
+                               
+                            ];
+    
+                            $this->Db->table('FLXY_SUB_MENU')->insert($newRateCode);
+    
+                            $no_of_added += $this->Db->affectedRows();
+                        }
+                    }
+                }
+    
+                echo $no_of_added;
+                exit;
+    
+            } catch (Exception $e) {
+                return $this->respond($e->errors());
+            }
+        }
+
+
+        public function deleteSubMenu()
+        {
+            $sysid = $this->request->getPost('sysid');
+    
+            try {
+                //Soft Delete
+                //$data = ["CUR_DELETED" => "1"];
+                //$return =  $this->Db->table('FLXY_CURRENCY')->where('CUR_ID', $sysid)->update($data);
+                $return = $this->Db->table('FLXY_SUB_MENU')->delete(['SUB_MENU_ID' => $sysid]);
+                $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+                echo json_encode($result);
+            } catch (Exception $e) {
+                return $this->respond($e->errors());
+            }
+        }
+    
+
+        public function menuLists(){
+            $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+            $sql = "SELECT MENU_ID, MENU_NAME
+                    FROM FLXY_MENU";
+
+            if ($search != '') {
+                $sql .= " WHERE MENU_NAME LIKE '%$search%'
+                        ";
+            }
+
+            $response = $this->Db->query($sql)->getResultArray();
+
+            $option = '<option value="">Choose an Option</option>';
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['MENU_ID'] . '">' . $row['MENU_NAME']  . '</option>';
+            }
+
+            return $option;
+        }
+
+
+        public function userRoles()
+        {               
+            try{
+                $data['title'] = getMethodName();
+                $data['session'] = $this->session; 
+                $sql = "SELECT ROLE_NAME,COUNT(USR_ID) AS USR_COUNT FROM FLXY_USERS RIGHT JOIN FLXY_USER_ROLE ON USR_ROLE = ROLE_ID GROUP BY ROLE_NAME"; 
+                $response = $this->Db->query($sql)->getResultArray();
+                $responseCount = $this->Db->query($sql)->getNumRows();
+
+                $sql = "SELECT MENU_ID,MENU_NAME FROM FLXY_MENU"; 
+                $responseMenu = $this->Db->query($sql)->getResultArray();
+                $responseMenuCount = $this->Db->query($sql)->getNumRows();
+
+
+                $data['response'] = $response; 
+                $data['responseCount'] = $responseCount; 
+                $data['responseMenu'] = $responseMenu; 
+                $data['responseMenuCount'] = $responseMenuCount;
+                return view('Master/UserRoles', $data);
+            }catch (Exception $e){
+                echo json_encode($e->errors());
+            }
+
+        }
+
+        public function addRolePermission()
+        {
+            try {
+                $sysid = $this->request->getPost('ROLE_ID');
+
+                $validate = $this->validate([
+                    'ROLE_NAME' => ['label' => 'Role', 'rules' => 'required|is_unique[FLXY_USER_ROLE.ROLE_NAME,ROLE_ID,' . $sysid . ']',],
+                    'MENU_ID' => ['label' => 'Permission', 'rules' => 'required']
+                                   
+                    
+                ]);
+                if (!$validate) {
+                    $validate = $this->validator->getErrors();
+                    $result["SUCCESS"] = "-402";
+                    $result[]["ERROR"] = $validate;
+                    $result = $this->responseJson("-402", $validate);
+                    echo json_encode($result);
+                    exit;
+                }
+              
+                $data = [ "ROLE_NAME" => trim($this->request->getPost('ROLE_NAME')),
+                "ROLE_CODE" => trim($this->request->getPost('ROLE_NAME'))];
+
+
+
+                $return = !empty($sysid) ? $this->Db->table('FLXY_USER_ROLE')->where('ROLE_ID', $sysid)->update($data) : $this->Db->table('FLXY_USER_ROLE')->insert($data);
+                $ROLE_ID = !empty($sysid) ? $sysid : $this->Db->insertID(); 
+
+                // if($sysid > 0 ){
+                    $deleteRolePerm = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->delete(['ROLE_ID' => $sysid]);
+
+                
+                    $MENU_PERM = $this->request->getPost('MENU_ID');
+                    if(!empty($MENU_PERM)){               
+                        for($i = 0; $i< count($MENU_PERM); $i++){
+                            $data = [ "ROLE_ID" => trim($ROLE_ID),
+                                "ROLE_MENU_ID" => $MENU_PERM[$i],
+                                "ROLE_PERM_STATUS" => 1];
+                            $return = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->insert($data);
+                        
+                        }
+                    }
+               // }
+               
+                
 
     
+                // $return = !empty($sysid) ? $this->Db->table('FLXY_SUB_MENU')->where('SUB_MENU_ID', $sysid)->update($data) : $this->Db->table('FLXY_SUB_MENU')->insert($data);
+                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+                echo json_encode($result);
+            } catch (Exception $e) {
+                return $this->respond($e->errors());
+            }
+        }
+
+
+    public function loadUserRoles()
+    {
+        $sql = "SELECT ROLE_ID,ROLE_NAME,COUNT(USR_ID) AS USR_COUNT FROM FLXY_USERS RIGHT JOIN FLXY_USER_ROLE ON USR_ROLE = ROLE_ID GROUP BY ROLE_NAME,ROLE_ID ORDER BY ROLE_ID OFFSET 0 ROWS FETCH FIRST 5 ROWS ONLY"; 
+        $sql1 = "SELECT ROLE_ID,ROLE_NAME,COUNT(USR_ID) AS USR_COUNT FROM FLXY_USERS RIGHT JOIN FLXY_USER_ROLE ON USR_ROLE = ROLE_ID GROUP BY ROLE_NAME,ROLE_ID ORDER BY ROLE_ID "; 
+        $response = $this->Db->query($sql)->getResultArray();
+        $responseCount = $this->Db->query($sql1)->getNumRows();
+        $rolesOutput = $rolesAddNew = $addRole = '';
+
+        if($responseCount > 5 ) {
+           $addRole =  '<button
+            data-bs-target="#viewRoleModal"
+            data-bs-toggle="modal"
+            class="btn btn-primary view-user-role text-nowrap mb-3"
+            >
+            View All
+            </button>';
+         }
+
+
+        if(!empty($response)) {               
+            foreach( $response as $row ){            
+            $rolesOutput.= <<<EOD
+            <div class="col-md-6 col-lg-6 col-xl-4">
+                <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                    <h6 class="fw-normal">Total {$row['USR_COUNT']} users</h6>
+                    <ul class="list-unstyled avatar-group d-flex align-items-center mb-0">
+                            <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" title="" class="avatar avatar-sm pull-up">
+                            <span class="avatar-initial rounded-circle bg-label-info">
+                                <i class="fa fa-user"></i>
+                            
+                            </span>
+                            </li>
+                    </ul>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-end">
+                    <div class="role-heading">
+                        <h4 class="mb-1">{$row['ROLE_NAME']}</h4>
+                        <a
+                        href="javascript:;"
+                        class="role-edit-modal" data_sysid="{$row['ROLE_ID']}"
+                        ><small>Edit Role</small></a
+                        >
+                    </div>
+                    <a href="javascript:void(0);" class="text-muted"><i class="bx bx-copy"></i></a>
+                    </div>
+                </div>
+                </div>
+                </div>
+        
+            EOD;
+            }
+        }
+
+
+        $rolesOutput.= <<<EOD
+        <div class="col-md-6 col-lg-6 col-xl-4">
+        <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+            <h6 class="fw-normal">Add role, if it does not exist</h6>
+            <ul class="list-unstyled avatar-group d-flex align-items-center mb-0">
+                    <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top" title="" class="avatar avatar-sm pull-up">
+                      <span class="avatar-initial rounded-circle bg-label-info">
+                        <i class="fa fa-user"></i>
+                    
+                    </span>
+                      </li>
+            </ul>
+            </div>
+            <div class="d-flex justify-content-between align-items-end">
+            <button
+                data-bs-target="#addRoleModal"
+                data-bs-toggle="modal"
+                class="btn btn-primary add-new-role text-nowrap mb-3"
+                >
+                Add Role
+                </button>
+                
+                {$addRole}
+            
+            <a href="javascript:void(0);" class="text-muted"><i class="bx bx-copy"></i></a>
+            </div>
+        </div>
+        </div>
+    </div></div>
+    EOD;
+
+  echo $rolesOutput;
+}
+
+
+public function editRolePermission(){
+    $param = ['SYSID' => $this->request->getPost('sysid')];    
+    $sql = "SELECT FLXY_USER_ROLE.ROLE_ID, ROLE_MENU_ID as MENU_ID, ROLE_NAME
+            FROM FLXY_USER_ROLE INNER JOIN FLXY_USER_ROLE_PERMISSION ON FLXY_USER_ROLE.ROLE_ID = FLXY_USER_ROLE_PERMISSION.ROLE_ID
+            WHERE FLXY_USER_ROLE_PERMISSION.ROLE_ID=:SYSID: ";
+
+    $response = $this->Db->query($sql, $param)->getResultArray();
+    echo json_encode($response);
+}
+
+
+
+public function viewUserRoles(){   
+
+    $mine      = new ServerSideDataTable(); 
+    $tableName = 'FLXY_USERS_ROLES_VIEW';
+    $columns   = 'ROLE_ID,ROLE_NAME,USR_COUNT';
+    $mine->generate_DatatTable($tableName, $columns);
+    exit;
+
+}
+
 }

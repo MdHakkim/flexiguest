@@ -418,7 +418,7 @@
     }
 
 
-    // Show Edit Exchange  Code Form
+    // Show Edit Item Form
 
     $(document).on('click', '.editWindow', function() {
         departmentList();
@@ -476,7 +476,7 @@
 
 
 
-    // Add New or Edit Exchange Rate submit Function
+    // Add New or Edit Item submit Function
 
     function submitForm(id) {
         hideModalAlerts();
@@ -516,7 +516,7 @@
     }
 
 
-    // Delete Exchange Rate 
+    // Delete Item 
 
     $(document).on('click', '.delete-record', function() {
         hideModalAlerts();

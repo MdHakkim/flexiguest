@@ -29,9 +29,17 @@
     <script src="<?php echo base_url('assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') ?>"></script>
+
     <script src="<?php echo base_url('assets/vendor/libs/datatables-select/datatables-select.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/datatables-select-bs5/select.bootstrap5.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.js') ?>"></script>
+
+    <script src="<?php echo base_url('assets/vendor/libs/datatables-buttons/datatables-buttons.js') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/jszip/jszip.js">') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/pdfmake/pdfmake.js') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/datatables-buttons/buttons.html5.js') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/datatables-buttons/buttons.print.js') ?>"></script>
 
     <!-- Added by Deleep -->
 
@@ -55,6 +63,9 @@
     <script src="<?php echo base_url('assets/js/main.js') ?>"></script>
     <!-- Page JS -->
     <script src="<?php echo base_url('assets/js/dashboards-analytics.js') ?>"></script>
+
+    <script src="<?php echo base_url('assets/vendor/libs/cleavejs/cleave.js') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/cleavejs/cleave-phone.js')?>"></script>
     <!-- Footer Script End -->
     <script src="<?php echo base_url('assets/js/form-layouts.js') ?>"></script>
 

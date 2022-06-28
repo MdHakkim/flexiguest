@@ -31,12 +31,19 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
     $routes->match(['post'],'/reservationChangesView', 'ApplicatioController::ReservationChangesView');
     
-    $routes->get('reservation/shares/get-reservation-details', 'ReservationController::getReservationDetails');
-    $routes->post('reservation/shares/create-reservation', 'ReservationController::sharesCreateReservation');
-    $routes->post('reservation/shares/add-share-reservations', 'ReservationController::addShareReservations');
-    $routes->post('reservation/shares/break-share-reservation', 'ReservationController::breakShareReservation');
-    $routes->post('reservation/shares/change-share-rate', 'ReservationController::changeShareRate');
-    $routes->post('reservation/search-reservation', 'ReservationController::searchReservation');
+    $routes->group('reservation', function($routes) {
+        $routes->post('search-reservation', 'ReservationController::searchReservation');
+        
+        $routes->post('checkout/(:segment)', 'CheckInOutController::checkout/$1');
+        
+        $routes->group('shares', function($routes) {
+            $routes->get('get-reservation-details', 'ReservationController::getReservationDetails');
+            $routes->post('create-reservation', 'ReservationController::sharesCreateReservation');
+            $routes->post('add-share-reservations', 'ReservationController::addShareReservations');
+            $routes->post('break-share-reservation', 'ReservationController::breakShareReservation');
+            $routes->post('change-share-rate', 'ReservationController::changeShareRate');
+        });
+    });
 
     // $routes->match(['get'],'/testingApi/(:segment)', 'ApplicatioController::triggerReservationEmail/$1');
 
@@ -390,6 +397,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/itemDepartmentList', 'AdditionalController::itemDepartmentList');
       $routes->match(['post'],'/itemList', 'AdditionalController::itemList');
       $routes->match(['post'],'/insertItemInventory', 'ApplicatioController::insertItemInventory');
+      $routes->match(['post'],'/showInventoryItems', 'ApplicatioController::showInventoryItems');  
 
       	
 
@@ -409,23 +417,65 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/deleteGuestType', 'AdditionalController::deleteGuestType');  
 
       //Register Cards
-      $routes->get('/registerCards', 'AdditionalController::registerCards');
-      $routes->get('/registerCardPrint', 'AdditionalController::registerCardPrint');
-      $routes->get('/registerCardPreview', 'AdditionalController::registerCardPreview');
-      $routes->match(['post'],'/registerCardSaveDetails', 'AdditionalController::registerCardSaveDetails');
+      $routes->get('/registerCards', 'ReservationController::registerCards');
+      $routes->get('/registerCardPrint', 'ReservationController::registerCardPrint');
+      $routes->get('/registerCardPreview', 'ReservationController::registerCardPreview');
+      $routes->match(['post'],'/registerCardSaveDetails', 'ReservationController::registerCardSaveDetails'); 
 
-      
-      
-      
-      
-      
+      $routes->match(['post'],'/singleReservRegCards', 'ReservationController::singleReservRegCards');
+      $routes->get('/singleReservRegCardPrint', 'ReservationController::singleReservRegCardPrint');
       
 
-    //   $routes->match(['post'],'/insertItem', 'AdditionalController::insertItem');
-    //   $routes->match(['post'],'/editItem', 'AdditionalController::editItem');
-    //   $routes->match(['post'],'/deleteItem', 'AdditionalController::deleteItem');
+
+      
+      //Users
+      $routes->match(['post'],'/UsersList', 'UserController::UsersList');
+      $routes->match(['post'],'/insertUser', 'UserController::insertUser');
+      $routes->match(['post'],'/editUser', 'UserController::editUser');
+      $routes->match(['post'],'/suspendUser', 'UserController::suspendUser');
+      $routes->get('/Users', 'UserController::Users');
+      $routes->match(['post'],'/userCountryList', 'UserController::userCountryList');
+      $routes->match(['post'],'/userStateList', 'UserController::userStateList');
+      $routes->match(['post'],'/userCityList', 'UserController::userCityList');
+
+      //User Role
+      $routes->get('/UserRole', 'UserController::UserRole');
+      $routes->match(['post'],'/userRoleView', 'UserController::userRoleView');
+      $routes->match(['post'],'/insertUserRole', 'UserController::insertUserRole');
+      $routes->match(['post'],'/copyUserRole', 'UserController::copyUserRole');
+      $routes->match(['post'],'/editUserRole', 'UserController::editUserRole');
+      $routes->match(['post'],'/deleteUserRole', 'UserController::deleteUserRole'); 
+      
+      //User Menu      
+      $routes->get('/Menu', 'AdditionalController::Menu');
+      $routes->match(['post'],'/MenuView', 'AdditionalController::MenuView');
+      $routes->match(['post'],'/insertMenu', 'AdditionalController::insertMenu');
+      $routes->match(['post'],'/copyMenu', 'AdditionalController::copyMenu');
+      $routes->match(['post'],'/editMenu', 'AdditionalController::editMenu');
+      $routes->match(['post'],'/deleteMenu', 'AdditionalController::deleteMenu'); 
+
+      // User Submenu      
+      $routes->get('/SubMenu', 'AdditionalController::SubMenu');
+      $routes->match(['post'],'/SubMenuView', 'AdditionalController::SubMenuView');
+      $routes->match(['post'],'/insertSubMenu', 'AdditionalController::insertSubMenu');
+      $routes->match(['post'],'/copySubMenu', 'AdditionalController::copySubMenu');
+      $routes->match(['post'],'/editSubMenu', 'AdditionalController::editSubMenu');
+      $routes->match(['post'],'/deleteSubMenu', 'AdditionalController::deleteSubMenu'); 
+
+
+      $routes->get('/loadUserRoles', 'AdditionalController::loadUserRoles');
+      $routes->get('/userRoles', 'AdditionalController::userRoles');
+     
+      $routes->match(['post'],'/viewUserRoles', 'AdditionalController::viewUserRoles'); 
+      $routes->match(['post'],'/addRolePermission', 'AdditionalController::addRolePermission'); 
+      $routes->match(['post'],'/editRolePermission', 'AdditionalController::editRolePermission'); 
+      
+      
+     
       
    //Subina Code (END)  
+
+
    
     // ABUBAKAR CODE (START)
     $routes->group('news', function ($routes) {

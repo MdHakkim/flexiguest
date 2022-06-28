@@ -210,7 +210,10 @@
                     data: 'GL_DESCRIPTION'
                 },
                 {
-                    data: 'GL_BODY'
+                    data: null,
+                    render: function(data) {
+                        return data['GL_BODY'].substr(0, 30);
+                    }
                 },
                 {
                     data: 'GL_CREATED_AT'
@@ -367,8 +370,9 @@
         hideModalAlerts();
         let id = "submit-form";
 
-        if ($("#snow-editor .ql-editor").html() != "<p><br></p>")
-            $(`#${id} textarea[name='GL_BODY']`).val($("#snow-editor .ql-editor").html());
+        $(`#${id} textarea[name='GL_BODY']`).val($("#snow-editor .ql-editor").html());
+        if ($("#snow-editor .ql-editor").html() == "<p><br></p>")
+            $(`#${id} textarea[name='GL_BODY']`).val('');
 
         var fd = new FormData($(`#${id}`)[0]);
         fd.delete('GL_COVER_IMAGE');
