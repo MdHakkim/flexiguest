@@ -2331,12 +2331,11 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                         $('*#' + field).html(option).selectpicker('refresh');
 
                         if (field == 'RESV_NAME' && dataval != '') {
-                            fillCustomerMemberships(dataval, 'edit', '[name="RESV_MEMBER_TY"]');
+                            fillCustomerMemberships(dataval, 'edit',
+                                '[name="RESV_MEMBER_TY"]');
                             $('#CM_CUST_ID').val(dataval);
                         }
-                    }
-                    else if(field == 'RESV_CUST_MEMBERSHIP')
-                    {
+                    } else if (field == 'RESV_CUST_MEMBERSHIP') {
                         $('[name="RESV_MEMBER_TY"]').val(dataval).trigger('change');
 
                     } else if (field == 'RESV_CONFIRM_YN' || field ==
@@ -2484,7 +2483,8 @@ $(document).on('change', '*#RESV_NAME', function() {
                 $('#CUST_VIP').val($.trim(json.CUST_VIP));
                 $('#CUST_PHONE').val($.trim(json.CUST_PHONE));
 
-                fillCustomerMemberships(custId, 'edit', $('.window-2').is(':visible') ? '[name="RESV_MEMBER_TY"]' : '#RESV_MEMBER_TY_ADD');
+                fillCustomerMemberships(custId, 'edit', $('.window-2').is(':visible') ?
+                    '[name="RESV_MEMBER_TY"]' : '#RESV_MEMBER_TY_ADD');
                 $('#CM_CUST_ID').val(custId);
 
             } else {
@@ -2606,22 +2606,24 @@ function submitForm(id, mode, event) {
     var formSerialization = $('#' + id).serializeArray();
 
     if (mode == 'R') {
-        
+
         var url = '<?php echo base_url('/insertReservation')?>';
 
         // Change membership type and id
         var formType = $('.window-2').is(':visible') ? 'edit' : 'add';
         var cust_membership = $('[name="RESV_MEMBER_TY"]').val();
-        var membership_code = $('[name="RESV_MEMBER_TY"]').find(':selected').attr('membership-type'); 
+        var membership_code = $('[name="RESV_MEMBER_TY"]').find(':selected').attr('membership-type');
 
-        formSerialization.find(function(input) {
-            return input.name == 'RESV_MEMBER_TY';
-        }).value = membership_code;
+        if (cust_membership != '') {
+            formSerialization.find(function(input) {
+                return input.name == 'RESV_MEMBER_TY';
+            }).value = membership_code;
 
-        formSerialization.push({
-            name: 'RESV_CUST_MEMBERSHIP',
-            value: cust_membership
-        });
+            formSerialization.push({
+                name: 'RESV_CUST_MEMBERSHIP',
+                value: cust_membership
+            });
+        }
 
     } else {
         var url = '<?php echo base_url('/insertCustomer')?>';
@@ -3367,9 +3369,10 @@ $(document).on('click', '.show-activity-log', function() {
 // Funtion to execute after Customer Memberhsip form submit
 
 function afterMemFormClose() {
-    fillCustomerMemberships($('.window-2').is(':visible') ? $('.window-2').find('#RESV_NAME').val() : $('.window-1').find('#RESV_NAME').val(), 
-                            'edit', 
-                            $('.window-2').is(':visible') ? '[name="RESV_MEMBER_TY"]' : '#RESV_MEMBER_TY_ADD');
+    fillCustomerMemberships($('.window-2').is(':visible') ? $('.window-2').find('#RESV_NAME').val() : $('.window-1')
+        .find('#RESV_NAME').val(),
+        'edit',
+        $('.window-2').is(':visible') ? '[name="RESV_MEMBER_TY"]' : '#RESV_MEMBER_TY_ADD');
 }
 
 

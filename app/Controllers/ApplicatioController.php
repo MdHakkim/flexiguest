@@ -647,9 +647,35 @@ class ApplicatioController extends BaseController
         }
     }
 
+    public function rateCodeList()
+    {
+        $search = $this->request->getPost('search');
+
+        $sql = "SELECT  RT_CD_ID, RTRIM(LTRIM(REPLACE(REPLACE(REPLACE(RT_CD_CODE, CHAR(9), ' '), CHAR(10), ' '), CHAR(13), ' '))) AS RT_CD_CODE,
+                        RT_CD_DESC, RT_CD_BEGIN_SELL_DT, RT_CD_END_SELL_DT
+
+                FROM FLXY_RATE_CODE
+                WHERE 1=1";
+                
+        if (trim($search) != '')
+            $sql .= "RT_CD_CODE LIKE '%$search%' OR RT_CD_DESC LIKE '%$search%'";
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $options = array();
+
+        foreach ($response as $row) {
+            $options[] = array( "id" => $row['RT_CD_ID'], "value" => $row['RT_CD_CODE']. ' | ' .$row['RT_CD_DESC']);
+        }
+
+        return $options;
+    }
+
     public function Customer(){
 
+        $data['rateCodeOptions'] = $this->rateCodeList();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
+        $data['js_to_load'] = array("rateCodeList.js");
         $data['title'] = getMethodName();
         return view('Reservation/Customer', $data);
     }
@@ -923,6 +949,76 @@ class ApplicatioController extends BaseController
             echo $option;
         }catch (Exception $e){
             echo json_encode($e->errors());
+        }
+    }
+
+    public function CustomerNegotiatedRateView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array("PROFILE_ID = " => "'$sysid'", "PROFILE_TYPE = " => "1", "RT_CD_CODE IS NOT" => "NULL"); // Add condition for main Rate Code
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_RATE_CODE_NEGOTIATED_RATE_VIEW';
+        $columns = 'NG_RT_ID,RT_CD_ID,RT_CD_CODE,PROFILE_ID,PROFILE_TYPE,NG_RT_START_DT,NG_RT_END_DT,NG_RT_DIS_SEQ';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
+    public function insertCustomerNegotiatedRate()
+    {
+        try {
+            $sysid = $this->request->getPost('NG_RT_ID');
+
+            $validate = $this->validate([
+                'neg_RT_CD_ID' => ['label' => 'Rate Code', 'rules' => 'required'],
+                'neg_PROFILE_ID' => ['label' => 'Profiles', 'rules' => 'required', 'errors' => ['required' => 'No Profiles have been selected. Please try again.']],
+                'NG_RT_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
+                'NG_RT_START_DT' => ['label' => 'Start Date', 'rules' => 'required|dateOverlapCheckNR[NG_RT_START_DT,'.$this->request->getPost('neg_PROFILE_IDS').']', 'errors' => ['dateOverlapCheckNR' => 'The Start Date overlaps with an existing Negotiated Rate. Change the date or selected user(s)']],
+                'NG_RT_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate|dateOverlapCheckNR[NG_RT_END_DT,'.$this->request->getPost('neg_PROFILE_IDS').']', 'errors' => ['compareDate' => 'The End Date should be after Start Date', 'dateOverlapCheckNR' => 'The End Date overlaps with an existing Negotiated Rate. Change the date or selected user(s)']],
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $no_of_added = 0;
+            $data = [
+                "RT_CD_ID" => trim($this->request->getPost('neg_RT_CD_ID')),
+                "PROFILE_ID" => trim($this->request->getPost('neg_PROFILE_ID')),
+                "PROFILE_TYPE" => 1,
+                "NG_RT_DIS_SEQ" => trim($this->request->getPost('NG_RT_DIS_SEQ')) != '' ? trim($this->request->getPost('NG_RT_DIS_SEQ')) : '',
+                "NG_RT_START_DT" => trim($this->request->getPost('NG_RT_START_DT')),
+                "NG_RT_END_DT" => trim($this->request->getPost('NG_RT_END_DT')) != '' ? trim($this->request->getPost('NG_RT_END_DT')) : '2030-12-31',
+            ];
+
+            //$return = $this->Db->table('FLXY_RATE_CODE_NEGOTIATED_RATE')->insert($data);
+            $return = !empty($sysid) ? $this->Db->table('FLXY_RATE_CODE_NEGOTIATED_RATE')->where('NG_RT_ID', $sysid)->update($data) : $this->Db->table('FLXY_RATE_CODE_NEGOTIATED_RATE')->insert($data);
+
+            $no_of_added = $this->Db->affectedRows(); 
+            
+            $result = $no_of_added > 0 ? $this->responseJson("1", "0", $return, $no_of_added) : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+            
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function deleteCustomerNegotiatedRate()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_RATE_CODE_NEGOTIATED_RATE')->delete(['NG_RT_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
         }
     }
 

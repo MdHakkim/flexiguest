@@ -211,6 +211,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertNegotiatedRate', 'MastersController::insertNegotiatedRate');
     $routes->match(['post'],'/deleteNegotiatedRate', 'MastersController::deleteNegotiatedRate');    
     
+    $routes->match(['post'],'/customerNegotiatedRateView', 'ApplicatioController::CustomerNegotiatedRateView');
+    $routes->match(['post'],'/insertCustomerNegotiatedRate', 'ApplicatioController::insertCustomerNegotiatedRate');
+    $routes->match(['post'],'/deleteCustomerNegotiatedRate', 'ApplicatioController::deleteCustomerNegotiatedRate');    
+    
+    
     $routes->get('/transactionCodeGroup', 'MastersController::transactionCodeGroup');
     $routes->match(['post'],'/transactionCodeGroupView', 'MastersController::TransactionCodeGroupView');
     $routes->match(['post'],'/insertTransactionCodeGroup', 'MastersController::insertTransactionCodeGroup');

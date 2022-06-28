@@ -52,18 +52,18 @@ class ServerSideDataTable{
             $searchQuery = " AND ($joinQr) ";
         }
         ## Total number of records without filtering
-        $result = $this->Db->query("select count(*) as allcount from $table")->getResultArray();
+        $result = $this->Db->query("SELECT COUNT(*) AS allcount FROM $table")->getResultArray();
         // $records = mysqli_fetch_assoc($sel);
        
         $totalRecords = $result[0]['allcount'];
         ## Total number of record with filtering
-        // echo "select count(*) as allcount from $table".$searchQuery;exit;
-        $result1 = $this->Db->query("select count(*) as allcount from $table".$searchQuery)->getResultArray();
+        // echo "SELECT COUNT(*) AS allcount FROM $table".$searchQuery;exit;
+        $result1 = $this->Db->query("SELECT COUNT(*) AS allcount FROM $table".$searchQuery)->getResultArray();
         $totalRecordwithFilter = $result1[0]['allcount'];
         // print_r($totalRecordwithFilter);exit;
         ## Fetch records
         $formatColumns = str_replace("|",",",$columns);
-        $empQuery="select $formatColumns from $table".$searchQuery." order by ".$columnName." ".$columnSortOrder." OFFSET ".$row." ROWS FETCH NEXT ".$rowperpage." ROWS ONLY";
+        $empQuery="SELECT $formatColumns FROM $table".$searchQuery." ORDER BY ".$columnName." ".$columnSortOrder." OFFSET ".$row." ROWS FETCH NEXT ".$rowperpage." ROWS ONLY";
         // exit;
         $empRecords = $this->Db->query($empQuery)->getResultArray();
 
@@ -87,7 +87,8 @@ class ServerSideDataTable{
           "draw" => intval($draw),
           "iTotalRecords" => $totalRecords,
           "iTotalDisplayRecords" => $totalRecordwithFilter,
-          "aaData" => $return
+          "aaData" => $return,
+          "query" => $empQuery
         );
         echo json_encode($response);
     }
