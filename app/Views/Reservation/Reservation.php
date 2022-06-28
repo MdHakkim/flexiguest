@@ -184,6 +184,7 @@
                     <div id="Accompany">
                         <div class="flxy_opt_btn text-center">
                             <button type="button" class="btn btn-primary" onclick="reservationCheckout()">Checkout</button>
+                            <button type="button" class="btn btn-primary web-link-btn">Docs</button>
                             <button type="button" class="btn btn-primary shares-btn">Shares</button>
                             <button type="button" onClick="reservExtraOption('ACP')"
                                 class="btn btn-primary">Accompanying</button>
@@ -3539,6 +3540,9 @@ function reservationCheckout() {
         }
     });
 }
+$('.web-link-btn').click(function() {
+    window.location.href = `<?= base_url('webline/ReservationDetail') ?>/${ressysId}`;
+});
 
 $(document).on('click', '#registerCardButton', function() {
 var reservID = $(this).attr('data_sysid');
