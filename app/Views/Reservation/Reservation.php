@@ -3561,6 +3561,13 @@ $.ajax({
 
 });
 
+// Update existing Inventory Items Detail
+  
+  $(document).on('click', '.save-item-detail', function() {
+
+    submitDetailsForm('item-submit-form');
+  });
+  
 
  // Add / Edit Inventory Items Detail
 
