@@ -36,7 +36,7 @@ class ConciergeController extends BaseController
 
     public function makeConciergeRequest()
     {
-        $user_id = $this->request->user['USR_CUST_ID'];
+        $customer_id = $this->request->user['USR_CUST_ID'];
         $user_id = $this->request->user['USR_ID'];
         $id = $this->request->getVar('id');
 
