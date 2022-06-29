@@ -40,3 +40,16 @@ function setNullOnEmpty($val)
     else
         return NULL;    
 }
+
+function checkValueinTable($column, $value, $table)
+{
+    $Db = \Config\Database::connect();
+    $param = ['COLUMN' => $column, 'VALUE' => $value, 'TABLENAME' => $table];
+
+    $sql = "SELECT :COLUMN:
+            FROM :TABLENAME:
+            WHERE :COLUMN: = :VALUE:";
+
+    $response = $this->Db->query($sql,$param)->getNumRows();
+    return $response;    
+}
