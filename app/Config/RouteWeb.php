@@ -7,7 +7,9 @@
 $routes->match(['get', 'post'], 'login', 'UserController::login', ["filter" => "noauth"]);
 
 $routes->match(['post'],'/countryList', 'ApplicatioController::countryList');
-
+$routes->match(['post'],'/stateList', 'ApplicatioController::stateList');
+$routes->match(['post'],'/cityList', 'ApplicatioController::cityList');
+    
 // Admin routes
 $routes->get('/', 'DashboardController::index',["filter" => "auth"]);
 $routes->group("/", ["filter" => "auth"], function ($routes) {
@@ -397,7 +399,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/itemDepartmentList', 'AdditionalController::itemDepartmentList');
       $routes->match(['post'],'/itemList', 'AdditionalController::itemList');
       $routes->match(['post'],'/insertItemInventory', 'ApplicatioController::insertItemInventory');
-      $routes->match(['post'],'/showInventoryItems', 'ApplicatioController::showInventoryItems');  
+      //$routes->match(['post'],'/showInventoryItems', 'ApplicatioController::showInventoryItems');  
 
       	
 
@@ -405,7 +407,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->get('/inventory', 'InventoryController::inventory');
       $routes->match(['post'],'/showInventoryItems', 'InventoryController::showInventoryItems');
       $routes->match(['post'],'/updateInventoryItems', 'InventoryController::updateInventoryItems');
-      $routes->match(['get'],'/showInventoryDetails', 'InventoryController::showInventoryDetails');
+      $routes->match(['post'],'/showInventoryDetails', 'InventoryController::showInventoryDetails');
       $routes->match(['post'],'/deleteItemInventory', 'InventoryController::deleteItemInventory');
 
       //Guests Type Master
