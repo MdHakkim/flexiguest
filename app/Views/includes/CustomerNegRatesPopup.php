@@ -226,6 +226,7 @@ $(document).on('click', '.edit-negotiated-rate', function() {
     $('#addNegotiatedRate').modal('show');
 });
 
+<<<<<<< Updated upstream
 function addNegotiatedForm() {
 
     $("#NG_RT_ID").val("");
@@ -240,12 +241,18 @@ function addNegotiatedForm() {
     $('#addNegotiatedRate').modal('show');
 }
 
+=======
+>>>>>>> Stashed changes
 // Add / Edit Negotiated Rate
 
 function submitNegotiatedForm(id) {
     hideModalAlerts();
     var formSerialization = $('#' + id).serializeArray();
+<<<<<<< Updated upstream
     var url = '<?php echo base_url('/insertCustomerNegotiatedRate')?>';
+=======
+    var url = '<?php echo base_url('/insertNegotiatedRate')?>';
+>>>>>>> Stashed changes
     $.ajax({
         url: url,
         type: "post",
@@ -268,8 +275,13 @@ function submitNegotiatedForm(id) {
 
                 if (respn['RESPONSE']['OUTPUT'] != '0') {
 
+<<<<<<< Updated upstream
                     var alertText = $('#NG_RT_ID').val() == '' ?
                         '<li>The new Negotiated Rate has been created</li>' :
+=======
+                    var alertText = $('#NG_RT_ID').val() == '' ? '<li>' + respn['RESPONSE']['OUTPUT'] +
+                        ' new Negotiated Rates have been created</li>' :
+>>>>>>> Stashed changes
                         '<li>The Negotiated Rate has been updated</li>';
 
                     showModalAlert('success', alertText);
@@ -278,8 +290,12 @@ function submitNegotiatedForm(id) {
                         '<li>No new Negotiated Rates could be created. Please try again</li>');
 
                 $('#addNegotiatedRate').modal('hide');
+<<<<<<< Updated upstream
                 $('#customer_negotiatedrates').dataTable().fnDraw();
                 $('#customerNegotiatedRatesWindow').modal('show');
+=======
+                $('#negotiated_rates').dataTable().fnDraw();
+>>>>>>> Stashed changes
             }
         }
     });

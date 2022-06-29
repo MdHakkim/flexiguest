@@ -28,7 +28,7 @@ class ConciergeRequestDataTable
             'CR_GUEST_NAME', 
             'CR_GUEST_PHONE', 
             'CR_GUEST_EMAIL', 
-            'CR_GUEST_ROOM', 
+            'CR_RESERVATION_ID', 
             'CR_QUANTITY', 
             'CR_TOTAL_AMOUNT', 
             'CR_TAX_AMOUNT', 
@@ -50,7 +50,7 @@ class ConciergeRequestDataTable
                                     or CR_GUEST_NAME like '%$searchValue%' 
                                     or CR_GUEST_PHONE like '%$searchValue%' 
                                     or CR_GUEST_EMAIL like '%$searchValue%' 
-                                    or CR_GUEST_ROOM like '%$searchValue%' 
+                                    or CR_RESERVATION_ID like '%$searchValue%' 
                                     or CR_QUANTITY like '%$searchValue%' 
                                     or CR_TOTAL_AMOUNT like '%$searchValue%' 
                                     or CR_TAX_AMOUNT like '%$searchValue%' 
@@ -69,9 +69,8 @@ class ConciergeRequestDataTable
         $totalRecordwithFilter = $result1[0]['allcount'];
 
         ## Fetch records
-        $query = "select $table.*, co.CO_TITLE, rm.RM_NO from $table 
+        $query = "select $table.*, co.CO_TITLE from $table 
                     inner join FLXY_CONCIERGE_OFFERS as co on $table.CR_OFFER_ID = co.CO_ID 
-                    inner join FLXY_ROOM as rm on $table.CR_GUEST_ROOM_ID = rm.RM_ID
                     $searchQuery order by " . $columnName . " " . $columnSortOrder . " OFFSET " . $row . " ROWS FETCH NEXT " . $rowperpage . " ROWS ONLY";
         $records = $this->DB->query($query)->getResultArray();
         

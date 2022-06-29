@@ -277,7 +277,8 @@ $(document).ready(function() {
                         '" class="dropdown-item editWindow"><i class="fas fa-edit"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['CUST_ID'] +
-                        '" data_custname="' + data['CUST_FIRST_NAME'] + ' ' + data['CUST_LAST_NAME'] +
+                        '" data_custname="' + data['CUST_FIRST_NAME'] + ' ' + data[
+                            'CUST_LAST_NAME'] +
                         '" class="dropdown-item custOptions"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['CUST_ID'] +
@@ -298,6 +299,13 @@ $(document).ready(function() {
         format: 'd-M-yyyy',
         autoclose: true
     });
+
+    <?php
+    if(!empty($editId)) {  ?>
+        editCust(<?php echo $editId; ?>);
+    <?php
+    }
+    ?>
 
 });
 
@@ -479,10 +487,10 @@ $(document).on('change', '#CUST_STATE', function() {
     });
 });
 
-$(document).on('click', '.editWindow', function() {
+function editCust(sysid) {
     runCountryList();
     runSupportingLov();
-    var sysid = $(this).attr('data_sysid');
+    
     $('#reservationChild').modal('show');
     $('#reservationChildLabel').html('Edit Customer');
 
@@ -491,7 +499,6 @@ $(document).on('click', '.editWindow', function() {
 
     var custArray = getCustomerDetails(sysid);
     $('#custOptionsBtn').attr('data_custname', custArray.CUST_FIRST_NAME + ' ' + custArray.CUST_LAST_NAME);
-
 
     $.ajax({
         url: '<?php echo base_url('/editCustomer')?>',
@@ -521,10 +528,8 @@ $(document).on('click', '.editWindow', function() {
                     } else if (field == 'CUST_ACTIVE') {
                         // var rmSpace = dataval.trim();
                         if (dataval == 'Y') {
-
                             $('#CUST_ACTIVE_CHK').prop('checked', true);
                         } else {
-
                             $('#CUST_ACTIVE_CHK').prop('checked', false)
                         }
                     } else {
@@ -533,12 +538,16 @@ $(document).on('click', '.editWindow', function() {
                             $('#' + field).selectpicker('refresh');
                         }
                     }
-
                 });
             });
             $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
         }
     });
+}
+
+$(document).on('click', '.editWindow', function() {
+    var sysid = $(this).attr('data_sysid');
+    editCust(sysid);
 });
 
 // Display function clearFormFields

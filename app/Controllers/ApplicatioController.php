@@ -694,6 +694,10 @@ class ApplicatioController extends BaseController
 
     public function Customer(){
 
+        $data['editId'] = null !== $this->request->getGet("editId") ? $this->request->getGet("editId") : null;
+        if(!checkValueinTable())
+            return redirect()->to(base_url('customer'));  
+
         $data['rateCodeOptions'] = $this->rateCodeList();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['js_to_load'] = array("rateCodeList.js");
@@ -1235,8 +1239,11 @@ class ApplicatioController extends BaseController
             return $this->respond($e->errors());
         }
     }
+
     // company modal 
     public function company(){
+
+        $data['editId'] = null !== $this->request->getGet("editId") ? $this->request->getGet("editId") : null;
         $data['title'] = getMethodName();
         return view('Reservation/Company', $data);
     }
@@ -1288,6 +1295,7 @@ class ApplicatioController extends BaseController
     // agent modal
 
     public function agent(){
+        $data['editId'] = null !== $this->request->getGet("editId") ? $this->request->getGet("editId") : null;
         $data['title'] = getMethodName();
         return view('Reservation/Agent', $data);
     }
@@ -1318,6 +1326,7 @@ class ApplicatioController extends BaseController
     // agent modal
     // Group modal
     public function group(){
+        $data['editId'] = null !== $this->request->getGet("editId") ? $this->request->getGet("editId") : null;
         $data['title'] = getMethodName();
         return view('Reservation/Group', $data);
     }

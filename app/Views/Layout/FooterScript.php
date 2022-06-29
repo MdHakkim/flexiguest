@@ -36,7 +36,7 @@
 
     <script src="<?php echo base_url('assets/vendor/libs/datatables-buttons/datatables-buttons.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.js') ?>"></script>
-    <script src="<?php echo base_url('assets/vendor/libs/jszip/jszip.js">') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/jszip/jszip.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/pdfmake/pdfmake.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/datatables-buttons/buttons.html5.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/datatables-buttons/buttons.print.js') ?>"></script>
