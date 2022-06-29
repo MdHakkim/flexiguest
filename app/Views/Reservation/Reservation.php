@@ -3979,22 +3979,6 @@ let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) 
 ];
 
 
-
-
-
-function hideModalAlerts() {
-    $('#errorModal').hide();
-    $('#successModal').hide();
-    $('#warningModal').hide();
-}
-
-function showModalAlert(modalType, modalContent) {
-
-    $('#' + modalType + 'Modal').show();
-    $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
-        '</ul>');
-}
-
 // Display function clearFormFields
 
 // Display function toggleButton

@@ -734,21 +734,6 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
     });
   }
 
-  function hideModalAlerts() {
-      $('#errorModal').hide();
-      $('#successModal').hide();
-      $('#warningModal').hide();
-  }
-
-    
-    function showModalAlert(modalType, modalContent) {
-      $('#' + modalType + 'Modal').show();
-      $('#form' + modalType.charAt(0).toUpperCase() + modalType.slice(1) + 'Message').html('<ul>' + modalContent +
-          '</ul>');
-    }
-
-
-
         // User Edit Form
 
         $(document).on('click', '.editWindow', function() {  
