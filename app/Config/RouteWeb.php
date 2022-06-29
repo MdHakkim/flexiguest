@@ -7,6 +7,8 @@
 $routes->match(['get', 'post'], 'login', 'UserController::login', ["filter" => "noauth"]);
 
 $routes->match(['post'],'/countryList', 'ApplicatioController::countryList');
+$routes->match(['post'],'/stateList', 'ApplicatioController::stateList');
+$routes->match(['post'],'/cityList', 'ApplicatioController::cityList');
 
 // Admin routes
 $routes->get('/', 'DashboardController::index',["filter" => "auth"]);
