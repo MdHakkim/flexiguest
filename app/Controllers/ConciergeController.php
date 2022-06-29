@@ -8,6 +8,7 @@ use App\Libraries\DataTables\ConciergeRequestDataTable;
 use App\Models\ConciergeOffer;
 use App\Models\ConciergeRequest;
 use App\Models\Currency;
+use App\Models\Reservation;
 use App\Models\Room;
 use CodeIgniter\API\ResponseTrait;
 
@@ -19,6 +20,7 @@ class ConciergeController extends BaseController
     private $ConciergeOffer;
     private $ConciergeRequest;
     private $Room;
+    private $Reservation;
 
     public function __construct()
     {
@@ -26,6 +28,7 @@ class ConciergeController extends BaseController
         $this->ConciergeOffer = new ConciergeOffer();
         $this->ConciergeRequest = new ConciergeRequest();
         $this->Room = new Room();
+        $this->Reservation = new Reservation();
     }
 
     public function conciergeOffer()
@@ -65,6 +68,10 @@ class ConciergeController extends BaseController
             ],
             'CO_ACTUAL_PRICE' => ['label' => 'Actual price', 'rules' => 'required'],
             'CO_OFFER_PRICE' => ['label' => 'Offer price', 'rules' => 'required'],
+            'CO_MIN_QUANTITY' => ['label' => 'Min Quantity', 'rules' => 'required|greater_than_equal_to[1]'],
+            'CO_MAX_QUANTITY' => ['label' => 'Max Quantity', 'rules' => 'required|greater_than_equal_to[1]'],
+            'CO_MIN_AGE' => ['label' => 'Min Age', 'rules' => 'required'],
+            'CO_MAX_AGE' => ['label' => 'Max Age', 'rules' => 'required'],
             'CO_TAX_RATE' => ['label' => 'Tax rate', 'rules' => 'required'],
             'CO_TAX_AMOUNT' => ['label' => 'Tax amount', 'rules' => 'required'],
             'CO_NET_PRICE' => ['label' => 'Net price', 'rules' => 'required'],
@@ -171,7 +178,14 @@ class ConciergeController extends BaseController
     {
         $data['title'] = getMethodName();
         $data['session'] = session();
-        $data['rooms'] = $this->Room->findAll();
+        $data['reservations'] = $this->Reservation
+            ->select('FLXY_RESERVATION.RESV_ID, fc.CUST_ID, fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME')
+            ->join('FLXY_CUSTOMER as fc', 'FLXY_RESERVATION.RESV_NAME = fc.CUST_ID')
+            ->where('RESV_STATUS', 'Due Pre Check-In')
+            ->orWhere('RESV_STATUS', 'Pre Checked-In')
+            ->orWhere('RESV_STATUS', 'Checked-In')
+            ->findAll();
+
         $data['concierge_offers'] = $this->ConciergeOffer->where('CO_STATUS', 'enabled')->findAll();
 
         return view('frontend/concierge/concierge_request', $data);
@@ -192,7 +206,7 @@ class ConciergeController extends BaseController
 
         $min_quantity = $max_quantity = 1;
         $offer_id = $this->request->getVar('CR_OFFER_ID');
-        if(!empty($offer_id)){
+        if (!empty($offer_id)) {
             $concierge_offer = $this->ConciergeOffer->where('CO_ID', $offer_id)->first();
             $min_quantity = $concierge_offer['CO_MIN_QUANTITY'] ?? 1;
             $max_quantity = $concierge_offer['CO_MAX_QUANTITY'] ?? 1;
@@ -209,10 +223,16 @@ class ConciergeController extends BaseController
             'CR_GUEST_NAME' => ['label' => 'Guest name', 'rules' => 'required'],
             'CR_GUEST_EMAIL' => ['label' => 'Guest email', 'rules' => 'required|valid_email'],
             'CR_GUEST_PHONE' => ['label' => 'Guest phone', 'rules' => 'required'],
-            'CR_GUEST_ROOM_ID' => [
+            'CR_RESERVATION_ID' => [
                 'rules' => 'required',
                 'errors' => [
-                    'required' => 'Please select a room.'
+                    'required' => 'Please select a reservation.'
+                ]
+            ],
+            'CR_CUSTOMER_ID' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Guest field is required. Please select a reservation.'
                 ]
             ],
             'CR_TOTAL_AMOUNT' => ['label' => 'Total amount', 'rules' => 'required'],
@@ -224,6 +244,10 @@ class ConciergeController extends BaseController
                     'required' => 'Please select a status.'
                 ]
             ],
+            'CR_PREFERRED_DATE' => [
+                'label' => 'Preferred Date',
+                'rules' => 'required'
+            ]
         ];
 
         if (!$this->validate($rules)) {
