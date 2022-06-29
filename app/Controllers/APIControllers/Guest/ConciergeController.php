@@ -55,7 +55,7 @@ class ConciergeController extends BaseController
                     'required' => 'Please select an offer.'
                 ]
             ],
-            'CR_QUANTITY' => ['label' => 'Quantity', 'rules' => "required|greater_than[$min_quantity]|less_than[$max_quantity]"],
+            'CR_QUANTITY' => ['label' => 'Quantity', 'rules' => "required|greater_than_equal_to[$min_quantity]|less_than_equal_to[$max_quantity]"],
             'CR_GUEST_NAME' => ['label' => 'Guest Name', 'rules' => 'required'],
             'CR_GUEST_EMAIL' => ['label' => 'Guest Email', 'rules' => 'required|valid_email'],
             'CR_GUEST_PHONE' => ['label' => 'Guest Phone', 'rules' => 'required'],

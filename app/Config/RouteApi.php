@@ -26,28 +26,7 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     $routes->get("checkin/listReservations", "APIController::listReservationsAPI"); 
     // API to get the reservation details from reservation number
     $routes->get("checkin/listReservations/(:segment)", "APIController::listReservationsAPI/$1"); 
-    // API to upload the  documnets proof for checkin 
-    $routes->get("checkin/checkPrevDocs", "APIController::checkDocDetails"); 
-    // API to upload the  documnets proof for checkin 
-    $routes->post("checkin/docUplaod", "APIController::docUploadAPI"); 
-    // API to upload the  Vaccine for checkin 
-    $routes->post("checkin/vaccine-upload", "APIController::vaccineUpload"); 
-    
-    $routes->get('checkin/fetch-vaccine-details', 'APIController::fetchVaccineDetails');
-    $routes->delete('checkin/delete-vaccine', 'APIController::deleteVaccine');
-    
-    // API to fetch guest profile including the guest accomonaying persons
-    $routes->post("checkin/guestProfile", "APIController::getGuestAccompanyProfiles"); 
-    // API to update the guest details from the doc uploaded.
-    $routes->post("checkin/saveDoc", "APIController::saveDocDetails"); 
-    // API to update the guest details from the doc uploaded.
-    $routes->get("checkin/getUserDetails", "APIController::FetchSavedDocDetails"); 
-    // API to Delete doc uploaded.
-    $routes->delete("checkin/deleteDoc", "APIController::deleteUploadedDOC"); 
-    // API to Add the details of the vaccine details 
-    $routes->post("checkin/vaccineForm", "APIController::vaccineForm"); 
-    // API to upload the signature and accept terms and conditions.
-    $routes->post("checkin/signatureUpload", "APIController::acceptAndSignatureUpload"); 
+
     // API to send mail to accompany person to uplaod the docs self
     $routes->post("checkin/requestSelfUpload", "APIController::requestSelfUpload"); 
     
@@ -84,6 +63,29 @@ $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Co
         // API to get Subcategory list of maintenance by categoryID
         $routes->post('getSubCategory', 'APIController::maintenanceSubCatByCategoryID'); 
     });
+
+    // API to upload the  documnets proof for checkin 
+    $routes->post("checkin/docUplaod", "APIController::docUploadAPI"); 
+    // API to update the guest details from the doc uploaded.
+    $routes->post("checkin/saveDoc", "APIController::saveDocDetails");
+    // API to upload the  documnets proof for checkin
+    $routes->get("checkin/checkPrevDocs", "APIController::checkDocDetails");
+    // API to update the guest details from the doc uploaded.
+    $routes->get("checkin/getUserDetails", "APIController::FetchSavedDocDetails"); 
+    // API to Delete doc uploaded.
+    $routes->delete("checkin/deleteDoc", "APIController::deleteUploadedDOC");
+    // API to fetch guest profile including the guest accomonaying persons
+    $routes->post("checkin/guestProfile", "APIController::getGuestAccompanyProfiles");
+
+    // API to Add the details of the vaccine details
+    $routes->post("checkin/vaccineForm", "APIController::vaccineForm");
+    $routes->post("checkin/vaccine-upload", "APIController::vaccineUpload");
+    // API to upload the  Vaccine for checkin 
+    $routes->get('checkin/fetch-vaccine-details', 'APIController::fetchVaccineDetails');
+    $routes->delete('checkin/delete-vaccine', 'APIController::deleteVaccine');
+
+    // API to upload the signature and accept terms and conditions.
+    $routes->post("checkin/signatureUpload", "APIController::acceptAndSignatureUpload");
 });
 
 $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
@@ -117,10 +119,7 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  
-    $routes->post("customer/update-customer-details", "APIController::saveDocDetails"); 
-    $routes->get("profile", "APIController::profileAPI");
-
-    $routes->post("checkin/guestProfile", "APIController::getGuestAccompanyProfiles"); 
+    $routes->get("profile", "APIController::profileAPI"); 
 });
 // ADMIN ROUTES (END)
 
