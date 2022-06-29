@@ -73,10 +73,10 @@ class ConciergeController extends BaseController
 
         if (empty($reservation))
             return $this->respond(responseJson(200, false, ['msg' => 'Sorry, you can\'t make request without reservation.']));
-        
+
         $offer_id = $this->request->getVar('CR_OFFER_ID');
         $concierge_offer = $this->ConciergeOffer->where('CO_STATUS', 'enabled')->where('CO_ID', $offer_id)->first();
-        if(empty($concierge_offer))
+        if (empty($concierge_offer))
             return $this->respond(responseJson(200, false, ['msg' => 'Invalid Offer Selected.']));
 
         $data = $this->request->getVar();
@@ -110,10 +110,14 @@ class ConciergeController extends BaseController
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
         $concierge_requests = $this->ConciergeRequest
-                                    ->select('FLXY_CONCIERGE_REQUESTS.*, fco.CO_TITLE, fco.CO_DESCRIPTION, fco.CO_VALID_FROM_DATE, fco.CO_VALID_TO_DATE')
-                                    ->join('FLXY_CONCIERGE_OFFERS as fco', 'FLXY_CONCIERGE_REQUESTS.CR_OFFER_ID = fco.CO_ID')
-                                    ->where('CR_CUSTOMER_ID', $customer_id)
-                                    ->findAll();
+            ->select('FLXY_CONCIERGE_REQUESTS.*, fco.CO_TITLE, fco.CO_DESCRIPTION, fco.CO_VALID_FROM_DATE, fco.CO_VALID_TO_DATE, fco.CO_COVER_IMAGE')
+            ->join('FLXY_CONCIERGE_OFFERS as fco', 'FLXY_CONCIERGE_REQUESTS.CR_OFFER_ID = fco.CO_ID')
+            ->where('CR_CUSTOMER_ID', $customer_id)
+            ->findAll();
+
+        foreach ($concierge_requests as $index => $request) {
+            $concierge_requests[$index]['CO_COVER_IMAGE'] = base_url($request['CO_COVER_IMAGE']);
+        }
 
         return $this->respond(responseJson(200, false, ['msg' => 'Concierge requests list'], $concierge_requests));
     }
