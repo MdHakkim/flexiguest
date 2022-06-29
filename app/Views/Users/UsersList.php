@@ -13,12 +13,12 @@
     <!-- Users List Table -->
     <div class="card">
       <div class="card-header border-bottom">
-        <h5 class="card-title">Search</h5>
+        <!-- <h5 class="card-title">Search</h5>
         <div class="row gap-3 gap-md-0 d-flex justify-content-between align-items-center py-3">
           <div class="user_role col-md-4"></div>
           <div class="user_dept col-md-4"></div>
           <div class="user_status col-md-4"></div>
-        </div>
+        </div> -->
       </div>
       <div class="card-datatable table-responsive">
         <table class="datatables-users table border-top">
@@ -115,9 +115,9 @@
                   <div class="col-md-4">
                     <label for="html5-text-input" class="col-form-label"><b>User Role
                         *</b></label>
-                        <select id="USR_ROLE" name="USR_ROLE" class="select2 form-select form-select-lg" data-allow-clear="true" required>
-                            <?= $roleList ?>
+                        <select id="USR_ROLE_ID" name="USR_ROLE_ID" class="select2 form-select form-select-lg" data-allow-clear="true" required>                           
                         </select>
+                        <input type="hidden" name="USR_ROLE" id="USR_ROLE" class="form-control" />
                     </div>  
 
                     <div class="col-md-4">
@@ -276,7 +276,7 @@
     // Variable declaration for table
     var dt_user_table = $('.datatables-users'),
       select2 = $('.select2'),
-      userView = 'app-user-view-account.html',
+      userView = '',
       statusObj = {
         // 0: {
         //   title: 'Pending',
@@ -387,9 +387,9 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
             targets: 1,
             responsivePriority: 4,
             render: function(data, type, full, meta) {
-              var $name = full['USR_FIRST_NAME'] + '' + full['USR_LAST_NAME'],
-                $email = full['USR_EMAIL'],
-                $image = full['USR_IMAGE'];
+              var $name = full['USR_FIRST_NAME']??'' + '' + full['USR_LAST_NAME']??'',
+                $email = full['USR_EMAIL']??'',
+                $image = full['USR_IMAGE']??'';
               if ($image) {
                 // For Avatar image
                 var $output =
@@ -413,9 +413,8 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                 '</div>' +
                 '</div>' +
                 '<div class="d-flex flex-column">' +
-                '<a href="' +
-                userView +
-                '" class="text-body text-truncate"><span class="fw-semibold">' +
+                '<a href="javascript:;" class="text-body text-truncate editWindow" data_sysid="' + full['USR_ID'] +
+                            '"><span class="fw-semibold">' +
                 $name +
                 '</span></a>' +
                 '<small class="text-muted">' +
@@ -430,14 +429,15 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
             // User Role
             targets: 2,
             render: function(data, type, full, meta) {
-              var $role = full['ROLE_DESC'];
-              if (full['USR_ROLE'] <= 3) {
+              var $role = full['ROLE_NAME'] ?? '';
+              if (full['USR_ROLE_ID'] <= 3) {
                 var roleBadgeObj = {
-                  Guest: '<span class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i class="bx bx-user bx-xs"></i></span>',
+                  GUEST: '<span class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i class="bx bx-user bx-xs"></i></span>',
                   Editor: '<span class="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2"><i class="bx bx-edit bx-xs"></i></span>',
                   Admin: '<span class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30 me-2"><i class="bx bx-mobile-alt bx-xs"></i></span>'
                 };
-                return "<span class='text-truncate d-flex align-items-center'>" + roleBadgeObj[$role] + $role + '</span>';
+                roleBadge = roleBadgeObj[$role] ?? '';
+                return "<span class='text-truncate d-flex align-items-center'>" + roleBadge + $role + '</span>';
               } else {
                 return "<span class='text-truncate d-flex align-items-center'><span class='badge badge-center rounded-pill bg-label-primary w-px-30 h-px-30 me-2'><i class='bx bx-pie-chart-alt bx-xs'></i></span>" + $role + '</span>';
               }
@@ -448,7 +448,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
             targets: 3,
             render: function(data, type, full, meta) {
               var $DEPT_CODE = (full['DEPT_CODE'] + '| ' + full['DEPT_DESC']);
-              return '<span class="fw-semibold">' + $DEPT_CODE + '</span>';
+              return '<span class="fw-semibold">' + $DEPT_CODE  + '</span>';
             }
           },
           {
@@ -468,7 +468,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
             render: function(data, type, full, meta) {
 
               if(full['USR_STATUS'] == 0)
-                   suspend =  '<a href="javascript:;" data_sysid="' + full['USR_ID'] +
+                  suspend =  '<a href="javascript:;" data_sysid="' + full['USR_ID'] +
                             '" class="dropdown-item text-primary suspend-record" rel="1"><i class="fa-solid fa-check"></i> Restore</a>';
                 
               else
@@ -514,7 +514,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                 text: '<i class="bx bx-printer me-2" ></i>Print',
                 className: 'dropdown-item',
                 exportOptions: {
-                  columns: [2, 3, 4, 5]
+                  columns: [1,2, 3, 4]
                 }
               },
               {
@@ -522,7 +522,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                 text: '<i class="bx bx-file me-2" ></i>Csv',
                 className: 'dropdown-item',
                 exportOptions: {
-                  columns: [2, 3, 4, 5]
+                  columns: [1,2, 3, 4]
                 }
               },
               {
@@ -530,7 +530,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                 text: 'Excel',
                 className: 'dropdown-item',
                 exportOptions: {
-                  columns: [2, 3, 4, 5]
+                  columns: [1,2, 3, 4]
                 }
               },
               {
@@ -538,7 +538,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                 text: '<i class="bx bxs-file-pdf me-2"></i>Pdf',
                 className: 'dropdown-item',
                 exportOptions: {
-                  columns: [2, 3, 4, 5]
+                  columns: [1,2, 3, 4]
                 }
               },
               {
@@ -546,7 +546,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                 text: '<i class="bx bx-copy me-2" ></i>Copy',
                 className: 'dropdown-item',
                 exportOptions: {
-                  columns: [2, 3, 4, 5]
+                  columns: [1,2, 3, 4]
                 }
               }
             ]
@@ -698,6 +698,8 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
  // Add New or Edit Users submit Function
 
  function submitForm(id) {
+    var user_role_text = $("#USR_ROLE_ID option:selected").text();
+    $("#USR_ROLE").val(user_role_text);
     hideModalAlerts();
     var formSerialization = $('#' + id).serializeArray();
     var url = '<?php echo base_url('/insertUser') ?>';
@@ -724,7 +726,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
 
 
                 showModalAlert('success', alertText);
-
+                roleList();
                 $('#popModalWindow').modal('hide');
                 $('.datatables-users').dataTable().fnDraw();
             }
@@ -752,6 +754,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
         $(document).on('click', '.editWindow', function() {  
              
         countryList(); 
+        roleList();
         $('.dtr-bs-modal').modal('hide');
 
         var sysid = $(this).attr('data_sysid');
@@ -783,7 +786,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                         var dataval = $.trim(datavals); //datavals.trim();                       
 
                      
-                        if (field == 'USR_ROLE' || field == 'USR_DEPARTMENT') {
+                        if (field == 'USR_ROLE_ID' || field == 'USR_DEPARTMENT') {
                          
                            $('#' + field).select2("val", dataval);
 
@@ -939,6 +942,22 @@ $("#USR_STATE").change(function(e,param = 0) {
             }
         });
     });
+
+
+    function roleList() {
+    $.ajax({
+      url: '<?php echo base_url('/roleList') ?>',
+      type: "GET",
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      async: false,
+      success: function(respn) {
+        $('#USR_ROLE_ID').html(respn);
+      }
+    });
+
+  }
     
 
  

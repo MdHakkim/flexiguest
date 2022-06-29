@@ -14,16 +14,9 @@
     </p>
     <!-- Role cards -->
     <div class="row g-4">
-
-
       <div class="row g-4" id="roleDiv">
 
       </div>
-
-
-
-
-
       <div class="col-12">
         <!-- Role Table -->
         <div class="card">
@@ -155,6 +148,8 @@
     <!--/ Add Role Modal -->
 
 
+
+
     <!-- View Role Modal -->
     <div class="modal fade" id="viewRoleModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered modal-add-new-role">
@@ -182,11 +177,234 @@
             </div>
 
             <!--/ view role table -->
+
+
+
           </div>
         </div>
       </div>
     </div>
     <!--/ View Role Modal -->
+
+
+
+    <!-- Modal Window -->
+
+    <div class="modal fade" id="popModalWindow" data-backdrop="static" data-keyboard="false" aria-labelledby="popModalWindowlabel">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="popModalWindowlabel">Add User</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form id="submitUserForm" class="needs-validation" novalidate>
+              <div class="row g-3">
+                <input type="hidden" name="USR_ID" id="USR_ID" class="form-control" />
+                <div class="border rounded p-3">
+
+                  <div class="col-md-12">
+                    <div class="row mb-3">
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>USER NAME
+                            *</b></label>
+                        <input type="text" id="USR_NAME" name="USR_NAME" class="form-control" placeholder="User Name">
+
+                      </div>
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>FIRST NAME
+                            *</b></label>
+                        <input type="text" id="USR_FIRST_NAME" name="USR_FIRST_NAME" class="form-control" placeholder="First Name">
+
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>LAST NAME
+                            *</b></label>
+                        <input type="text" id="USR_LAST_NAME" name="USR_LAST_NAME" class="form-control" placeholder="Last Name">
+
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>EMAIL
+                            *</b></label>
+                        <input type="text" id="USR_EMAIL" name="USR_EMAIL" class="form-control" placeholder="Email">
+
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>PASSWORD
+                            *</b></label>
+                        <input type="password" id="USR_PASSWORD" name="USR_PASSWORD" class="form-control" placeholder="">
+
+                      </div>
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>CONFIRM PASSWORD
+                            *</b></label>
+                        <input type="password" id="USR_CONFIRM_PASSWORD" name="USR_CONFIRM_PASSWORD" class="form-control" placeholder="">
+
+                      </div>
+
+                    </div>
+                    <div class="row mb-3">
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>Employee Number
+                            *</b></label>
+                        <input type="text" id="USR_NUMBER" name="USR_NUMBER" class="form-control" placeholder="Employee Number">
+                        </select>
+                      </div>
+
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>User Role
+                            *</b></label>
+                        <select id="USR_ROLE_ID" name="USR_ROLE_ID" class="select2 form-select form-select-lg" data-allow-clear="true" required>
+                          
+                        </select>
+                        <input type="hidden" name="USR_ROLE" id="USR_ROLE" class="form-control" />
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>Department
+                            *</b></label>
+                        <select id="USR_DEPARTMENT" name="USR_DEPARTMENT" class="select2 form-select form-select-lg" data-allow-clear="true" required>
+                          <?= $departmentList ?>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>DOJ
+                            *</b></label>
+                        <div class="col-md-12">
+                          <div class="input-group">
+                            <input type="text" id="USR_DOJ" name="USR_DOJ" class="form-control" placeholder="DD-MM-YYYY">
+                            <span class="input-group-append">
+                              <span class="input-group-text bg-light d-block">
+                                <i class="fa fa-calendar"></i>
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>COUNTRY
+                            *</b></label>
+                        <select id="USR_COUNTRY" name="USR_COUNTRY" class="select2 form-select form-select-lg" data-allow-clear="true" required>
+
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>STATE
+                            *</b></label>
+                        <select id="USR_STATE" name="USR_STATE" class="select2 form-select form-select-lg" data-allow-clear="true" required>
+
+                        </select>
+                      </div>
+
+
+                    </div>
+
+                    <div class="row mb-3">
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>CITY
+                            *</b></label>
+                        <select id="USR_CITY" name="USR_CITY" class="select2 form-select form-select-lg" data-allow-clear="true" required>
+                        </select>
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>ADDRESS
+                            *</b></label>
+                        <textarea class="form-control" name="USR_ADDRESS" id="USR_ADDRESS" rows="1"></textarea>
+                      </div>
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>DOB
+                            *</b></label>
+                        <div class="col-md-12">
+                          <div class="input-group">
+                            <input type="text" id="USR_DOB" name="USR_DOB" class="form-control" placeholder="DD-MM-YYYY">
+                            <span class="input-group-append">
+                              <span class="input-group-text bg-light d-block">
+                                <i class="fa fa-calendar"></i>
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                    <div class="row mb-3">
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>Phone Number
+                            *</b></label>
+                        <input type="text" id="USR_PHONE" name="USR_PHONE" class="form-control" placeholder="Phone Number">
+                        </select>
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label"><b>Extension
+                            *</b></label>
+                        <input type="text" id="USR_TEL_EXT" name="USR_TEL_EXT" class="form-control" placeholder="Extension">
+                        </select>
+                      </div>
+
+                      <div class="col-md-4">
+                        <label for="html5-text-input" class="col-form-label" style="display: block"><b>GENDER
+                            *</b></label>
+                        <div class="form-check mb-2" style="float:left;margin-right:10px">
+                          <input type="radio" id="USR_GENDER_1" name="USR_GENDER" value="1" class="form-check-input" required="">
+                          <label class="form-check-label" for="bs-validation-radio-male">Male</label>
+                        </div>
+                        <div class="form-check" style="float:left">
+                          <input type="radio" id="USR_GENDER_0" name="USR_GENDER" value="0" class="form-check-input" required="">
+                          <label class="form-check-label" for="bs-validation-radio-female">Female</label>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="text-left">
+                  <div class="col-md-12">
+                    <label class="switch switch-lg">
+                      <input id="USR_STATUS" name="USR_STATUS" type="checkbox" value="1" class="switch-input" />
+                      <span class="switch-toggle-slider">
+                        <span class="switch-on">
+                          <i class="bx bx-check"></i>
+                        </span>
+                        <span class="switch-off">
+                          <i class="bx bx-x"></i>
+                        </span>
+                      </span>
+                      <span class="switch-label"><b>Active</b></span>
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" id="submitBtn" onClick="submitUserForm('submitUserForm')" class="btn btn-primary">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- /Modal window -->
 
   </div>
   <!-- / Content -->
@@ -196,11 +414,22 @@
   $(document).ready(function() {
 
     loadRoles();
+    roleList();
+
+    $('#USR_DOB').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true,
+    });
+    $('#USR_DOJ').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true,
+    });
+    
 
     // Users datatable
     var dt_user_table = $('.datatables-users');
     var dt_user_roles_table = $('.datatables-users-roles');
-    userView = 'app-user-view-account.html';
+
     statusObj = {
       // 0: {
       //   title: 'Pending',
@@ -261,9 +490,9 @@
             targets: 1,
             responsivePriority: 4,
             render: function(data, type, full, meta) {
-              var $name = full['USR_FIRST_NAME'] + '' + full['USR_LAST_NAME'],
-                $email = full['USR_EMAIL'],
-                $image = full['USR_IMAGE'];
+              var $name = (full['USR_FIRST_NAME'] ?? '') + '' + (full['USR_LAST_NAME'] ?? ''),
+                $email = full['USR_EMAIL'] ?? '',
+                $image = full['USR_IMAGE'] ?? '';
               if ($image) {
                 // For Avatar image
                 var $output =
@@ -287,9 +516,8 @@
                 '</div>' +
                 '</div>' +
                 '<div class="d-flex flex-column">' +
-                '<a href="' +
-                userView +
-                '" class="text-body text-truncate"><span class="fw-semibold">' +
+                '<a href="javascript:;" class="text-body text-truncate editWindow" data_sysid="' + full['USR_ID'] +
+                '"><span class="fw-semibold">' +
                 $name +
                 '</span></a>' +
                 '<small class="text-muted">' +
@@ -304,14 +532,15 @@
             // User Role
             targets: 2,
             render: function(data, type, full, meta) {
-              var $role = full['ROLE_DESC'];
-              if (full['USR_ROLE'] <= 3) {
+              var $role = full['ROLE_NAME'] ?? '';
+              if (full['USR_ROLE_ID'] <= 3) {
                 var roleBadgeObj = {
-                  Guest: '<span class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i class="bx bx-user bx-xs"></i></span>',
+                  GUEST: '<span class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i class="bx bx-user bx-xs"></i></span>',
                   Editor: '<span class="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2"><i class="bx bx-edit bx-xs"></i></span>',
                   Admin: '<span class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30 me-2"><i class="bx bx-mobile-alt bx-xs"></i></span>'
                 };
-                return "<span class='text-truncate d-flex align-items-center'>" + roleBadgeObj[$role] + $role + '</span>';
+                roleBadge = roleBadgeObj[$role] ?? '';
+                return "<span class='text-truncate d-flex align-items-center'>" + roleBadge + $role + '</span>';
               } else {
                 return "<span class='text-truncate d-flex align-items-center'><span class='badge badge-center rounded-pill bg-label-primary w-px-30 h-px-30 me-2'><i class='bx bx-pie-chart-alt bx-xs'></i></span>" + $role + '</span>';
               }
@@ -321,8 +550,8 @@
             // Department
             targets: 3,
             render: function(data, type, full, meta) {
-              var $DEPT_CODE = (full['DEPT_CODE'] + '| ' + full['DEPT_DESC']);
-              return '<span class="fw-semibold">' + $DEPT_CODE + '</span>';
+              var $DEPT_DESC = (full['DEPT_DESC']);
+              return '<span class="fw-semibold">' + $DEPT_DESC + '</span>';
             }
           },
           {
@@ -542,6 +771,7 @@
         });
       });
 
+
     });
 
 
@@ -626,6 +856,54 @@
 
 
 
+  // Add New or Edit Users submit Function
+
+ function submitUserForm(id) {
+    hideModalAlerts();
+
+    var user_role_text = $("#USR_ROLE_ID option:selected").text();
+    $("#USR_ROLE").val(user_role_text);
+
+    var formSerialization = $('#' + id).serializeArray();
+    var url = '<?php echo base_url('/insertUser') ?>';
+    $.ajax({
+        url: url,
+        type: "post",
+        data: formSerialization,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        dataType: 'json',
+        success: function(respn) {
+            var response = respn['SUCCESS'];
+            if (response != '1') {
+                var ERROR = respn['RESPONSE']['ERROR'];
+                var mcontent = '';
+                $.each(ERROR, function(ind, data) {
+                    mcontent += '<li>' + data + '</li>';
+                });
+                showModalAlert('error', mcontent);
+            } else {
+                
+                var alertText = $('#USR_ID').val() == '' ? '<li>New user has been added </li>' : '<li>The user has been updated</li>';
+
+
+                showModalAlert('success', alertText);
+
+                $('#popModalWindow').modal('hide');
+                $('.datatables-users').dataTable().fnDraw();
+                $('.datatables-users-roles').dataTable().fnDraw();
+                
+            }
+        }
+    });
+  }
+
+
+
+
+
+
 
 
   // Add Permissions Function
@@ -659,7 +937,12 @@
             '\' has been updated</li>';
           showModalAlert('success', alertText);
           $('#addRoleModal').modal('hide');
+          $('.datatables-users').dataTable().fnDraw();
+          $('.datatables-users-roles').dataTable().fnDraw();
           loadRoles();
+          roleList();
+          
+      
         }
       }
     });
@@ -692,6 +975,156 @@
       }
     });
   }
+
+
+  // User Edit Form
+
+  $(document).on('click', '.editWindow', function() {
+
+    countryList();
+    $('.dtr-bs-modal').modal('hide');
+
+    var sysid = $(this).attr('data_sysid');
+    $('#USR_ID').val(sysid);
+
+    $('#popModalWindowlabel').html('Edit User');
+
+    $(".statusCheck").show();
+
+    $('#popModalWindow').modal('show');
+
+    var url = '<?php echo base_url('/editUser') ?>';
+
+    $.ajax({
+      url: url,
+      type: "post",
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      data: {
+        sysid: sysid
+      },
+      dataType: 'json',
+      success: function(respn) {
+        var state_val = city_val = '';
+        $(respn).each(function(inx, data) {
+          $.each(data, function(fields, datavals) {
+            var field = $.trim(fields); //fields.trim();
+            var dataval = $.trim(datavals); //datavals.trim();                       
+
+
+            if (field == 'USR_ROLE_ID' || field == 'USR_DEPARTMENT') {
+
+              $('#' + field).select2("val", dataval);
+
+            } else if ($('#' + field).attr('type') == 'checkbox') {
+
+              $('#' + field).prop('checked', dataval == 1 ? true : false);
+
+            } else if ($('[name=' + field + ']').attr('type') == 'radio') {
+
+              $('#' + field + '_' + dataval).prop('checked', true);
+            } else if (field == 'USR_CITY') {
+
+
+              city_val = dataval;
+
+            } else if (field == 'USR_STATE') {
+
+              state_val = dataval;
+
+            } else if (field == 'USR_COUNTRY') {
+
+              $('#USR_COUNTRY').val(dataval).trigger('change', state_val);
+              $('#USR_STATE').val(state_val).trigger('change', city_val);
+
+            } else if (field == 'USR_PASSWORD') {
+              $('#USR_CONFIRM_PASSWORD').val($('#USR_PASSWORD').val());
+            } else {
+
+              $('#' + field).val(dataval);
+            }
+
+
+          });
+        });
+        $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
+      }
+    });
+  });
+
+function countryList() {
+    $.ajax({
+      url: '<?php echo base_url('/userCountryList') ?>',
+      type: "post",
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      async: false,
+      success: function(respn) {
+        $('#USR_COUNTRY').html(respn);
+      }
+    });
+
+  }
+
+  function roleList() {
+    $.ajax({
+      url: '<?php echo base_url('/roleList') ?>',
+      type: "GET",
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      async: false,
+      success: function(respn) {
+        $('#USR_ROLE_ID').html(respn);
+      }
+    });
+
+  }
+
+
+  $("#USR_COUNTRY").change(function(e, param = 0) {
+    var ccode = $(this).val();
+    $.ajax({
+      url: '<?php echo base_url('/userStateList') ?>',
+      type: "post",
+      async: false,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      data: {
+        ccode: ccode,
+        state_id: param
+      },
+      success: function(respn) {
+        $('#USR_STATE').html(respn);
+
+      }
+    });
+  });
+
+
+
+  $("#USR_STATE").change(function(e, param = 0) {
+    var scode = $('#USR_STATE').val();
+    var ccode = $('#USR_COUNTRY').val();
+    $.ajax({
+      url: '<?php echo base_url('/userCityList') ?>',
+      type: "post",
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      data: {
+        ccode: ccode,
+        scode: scode,
+        cityid: param
+      },
+      success: function(respn) {
+        $('#USR_CITY').html(respn).trigger('change');
+      }
+    });
+  });
 </script>
 
 

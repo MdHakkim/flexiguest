@@ -462,13 +462,16 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/editSubMenu', 'AdditionalController::editSubMenu');
       $routes->match(['post'],'/deleteSubMenu', 'AdditionalController::deleteSubMenu'); 
 
+      
+      $routes->get('/roleList', 'UserController::roleList');
+      $routes->get('/loadUserRoles', 'UserController::loadUserRoles');
+      $routes->get('/userRoles', 'UserController::userRoles');    
+      $routes->get('/roleList', 'UserController::roleList'); 
+      $routes->match(['post'],'/viewUserRoles', 'UserController::viewUserRoles'); 
+      $routes->match(['post'],'/addRolePermission', 'UserController::addRolePermission'); 
+      $routes->match(['post'],'/editRolePermission', 'UserController::editRolePermission'); 
 
-      $routes->get('/loadUserRoles', 'AdditionalController::loadUserRoles');
-      $routes->get('/userRoles', 'AdditionalController::userRoles');
      
-      $routes->match(['post'],'/viewUserRoles', 'AdditionalController::viewUserRoles'); 
-      $routes->match(['post'],'/addRolePermission', 'AdditionalController::addRolePermission'); 
-      $routes->match(['post'],'/editRolePermission', 'AdditionalController::editRolePermission'); 
       
       
      
