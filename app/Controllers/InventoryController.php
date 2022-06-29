@@ -46,16 +46,16 @@ class InventoryController extends BaseController
         $mine = new ServerSideDataTable(); // loads and creates instance
 
         //Reservation ID 
-        //$RESV_ID = $this->request->getPost('RESV_ID');
-        $RESV_ID = 0;
-        $session_id = session_id();
+        $RESV_ID = $this->request->getPost('RESV_ID');
+       // $RESV_ID = 0;
+         $session_id = session_id();
 
-            if($RESV_ID > 0)
+            if($RESV_ID  > 0 || $RESV_ID != NULL)
             $init_cond = array("RSV_ID = " => $RESV_ID); 
             else
             $init_cond = array("RSV_SESSION_ID LIKE " => "'".$session_id."'", "RSV_ID = " => 0); 
 
-           
+           //echo $init_cond;
             $tableName = 'FLXY_RESERVATION_ITEM INNER JOIN FLXY_ITEM ON FLXY_RESERVATION_ITEM.RSV_ITM_ID = FLXY_ITEM.ITM_ID';
             $columns = 'RSV_PRI_ID,ITM_CODE,ITM_NAME,RSV_ITM_ID,RSV_ITM_CL_ID,RSV_ITM_BEGIN_DATE,RSV_ITM_END_DATE,RSV_ITM_QTY';
             $mine->generate_DatatTable($tableName, $columns, $init_cond);
@@ -102,7 +102,9 @@ class InventoryController extends BaseController
                     return;
                  }
             }
-           // $RESV_ID = $this->request->getPost('RESV_ID');
+            $RESV_ID = $this->request->getPost('RESV_ID');
+
+            if($RESV_ID == '') 
             $RESV_ID = 0;
 
              // Checks item quantity
@@ -113,7 +115,7 @@ class InventoryController extends BaseController
             $ITEM_AVAIL_QTY = 0;
  
             $ITEM_AVAIL_QTY = $this->Db->table('FLXY_ITEM')->select('ITEM_AVAIL_QTY')->where('ITM_ID', $this->request->getPost('RSV_ITM_ID'))->get()->getRowArray();
-            $ITEM_QTY = (int)$ITEM_AVAIL_QTY['ITEM_AVAIL_QTY']; 
+             $ITEM_QTY = (int)$ITEM_AVAIL_QTY['ITEM_AVAIL_QTY']; 
 
             $data = [
                 "RSV_ID" => $RESV_ID,
@@ -187,7 +189,7 @@ class InventoryController extends BaseController
 
     public function showInventoryDetails()
     {
-        $itemDetailsList = $this->getItemDetails($this->request->getGet('RSV_PRI_ID'));
+        $itemDetailsList = $this->getItemDetails($this->request->getPost('RSV_PRI_ID'));
         echo json_encode($itemDetailsList);
     }
 

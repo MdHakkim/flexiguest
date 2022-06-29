@@ -70,6 +70,7 @@ class APIController extends BaseController
                 "USR_PHONE" => $this->request->getVar("phone_no"),
                 "USR_PASSWORD" => password_hash($this->request->getVar("password"), PASSWORD_DEFAULT),
                 "USR_ROLE" => "GUEST",
+                "USR_ROLE_ID" => "3",
                 "USR_CUST_ID" => $isCustomer_data['CUST_ID'],
                 "USR_CREATED_DT" =>  date("d-M-Y"),
                 "USR_UPDATED_DT" => date("d-M-Y")

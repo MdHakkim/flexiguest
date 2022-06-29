@@ -63,7 +63,7 @@ class ServerSideDataTable{
         // print_r($totalRecordwithFilter);exit;
         ## Fetch records
         $formatColumns = str_replace("|",",",$columns);
-        $empQuery="SELECT $formatColumns FROM $table".$searchQuery." ORDER BY ".$columnName." ".$columnSortOrder." OFFSET ".$row." ROWS FETCH NEXT ".$rowperpage." ROWS ONLY";
+       $empQuery="SELECT $formatColumns FROM $table".$searchQuery." ORDER BY ".$columnName." ".$columnSortOrder." OFFSET ".$row." ROWS FETCH NEXT ".$rowperpage." ROWS ONLY";
         // exit;
         $empRecords = $this->Db->query($empQuery)->getResultArray();
 
