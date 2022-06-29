@@ -50,7 +50,7 @@
                             <th>Guest Name</th>
                             <th>Guest Phone</th>
                             <th>Guest Email</th>
-                            <th>Guest Room</th>
+                            <th>Reservation ID</th>
                             <th>Quantity</th>
                             <th>Total Amount</th>
                             <th>Tax Amount</th>
@@ -84,6 +84,7 @@
                     <form id="concierge-request-form" class="needs-validation" novalidate>
                         <div class="row g-3">
                             <input type="hidden" name="id" class="form-control" />
+                            <input type="hidden" name="CR_CUSTOMER_ID" class="form-control" />
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Offer *</b></label>
@@ -116,18 +117,20 @@
                                 <input type="text" name="CR_GUEST_PHONE" class="form-control" placeholder="Guest phone" />
                             </div>
 
-
                             <div class="col-md-6">
-                                <label class="form-label"><b>Guest Room No *</b></label>
-                                <select class="select2" name="CR_GUEST_ROOM_ID">
-                                    <?php foreach ($rooms as $room) : ?>
-                                        <option value="<?= $room['RM_ID'] ?>">
-                                            <?= $room['RM_NO'] ?>
+                                <label class="form-label"><b>Reservations *</b></label>
+                                <select class="select2" name="CR_RESERVATION_ID" onchange="setCustomerId()">
+                                    <?php foreach ($reservations as $reservation) : ?>
+                                        <option value="<?= $reservation['RESV_ID'] ?>" data-customer_id="<?= $reservation['CUST_ID'] ?>">
+                                            RES<?= $reservation['RESV_ID'] ?>
+                                            -
+                                            <?= $reservation['CUST_FIRST_NAME'] . ' ' . $reservation['CUST_MIDDLE_NAME'] . ' ' . $reservation['CUST_LAST_NAME'] ?>
+                                            -
+                                            <?= $reservation['CUST_ID'] ?>
                                         </option>
                                     <?php endforeach ?>
                                 </select>
                             </div>
-
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Net Amount</b></label>
@@ -147,12 +150,24 @@
                             <div class="col-md-6">
                                 <label class="form-label"><b>Status *</b></label>
                                 <select class="select2" name="CR_STATUS">
-                                    <option value="pending">Pending</option>
+                                    <option value="in-progress">In Progress</option>
                                     <option value="approved">Approved</option>
                                     <option value="rejected">Rejected</option>
                                     <option value="closed">Closed</option>
-
                                 </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Preferred Date *</b></label>
+
+                                <div class="input-group">
+                                    <input type="text" name="CR_PREFERRED_DATE" placeholder="YYYY-MM-DD" class="form-control">
+                                    <span class="input-group-append">
+                                        <span class="input-group-text bg-light d-block">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </span>
+                                </div>
                             </div>
 
                             <div class="col-md-12">
@@ -194,6 +209,11 @@
     var linkMode = '';
 
     $(document).ready(function() {
+        $('input[name="CR_PREFERRED_DATE"]').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+        });
+
         linkMode = 'EX';
 
         $('#dataTable_view').DataTable({
@@ -201,7 +221,7 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('/concierge/all-concierge-requests') ?>'
+                'url': '<?php echo base_url('concierge/all-concierge-requests') ?>'
             },
             'columns': [{
                     data: ''
@@ -217,7 +237,7 @@
                         else if (data['CR_STATUS'] == 'rejected')
                             class_name += ' bg-label-danger';
 
-                        else if (data['CR_STATUS'] == 'pending')
+                        else if (data['CR_STATUS'] == 'in-progress')
                             class_name += ' bg-label-warning';
 
                         else
@@ -241,7 +261,7 @@
                     data: 'CR_GUEST_EMAIL'
                 },
                 {
-                    data: 'RM_NO'
+                    data: 'CR_RESERVATION_ID'
                 },
                 {
                     data: 'CR_QUANTITY'
@@ -390,6 +410,11 @@
         });
     }
 
+    function setCustomerId() {
+        let customer_id = $('select[name="CR_RESERVATION_ID"]').find(":selected").data('customer_id');
+        $('input[name="CR_CUSTOMER_ID"]').val(customer_id);
+    }
+
     // Show Add Rate Class Form
 
     function addForm() {
@@ -488,7 +513,7 @@
             dataType: 'json',
             success: function(respn) {
                 $(respn).each(function(inx, data) {
-                    
+
 
                     $.each(data, function(field, val) {
 
@@ -535,7 +560,7 @@
             contentType: false,
             dataType: 'json',
             success: function(respn) {
-                
+
                 var response = respn['SUCCESS'];
                 if (response != '200') {
 

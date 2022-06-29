@@ -141,9 +141,9 @@
 
                                                 <label class="form-label"><b>Description *</b></label>
 
-                                                <textarea name="CO_DESCRIPTION" class="d-none"></textarea>
+                                                <textarea name="CO_DESCRIPTION" class="form-control" placeholder="Description..."></textarea>
 
-                                                <div id="snow-editor"></div>
+                                                <!-- <div id="snow-editor"></div> -->
                                             </div>
 
                                             <div class="col-md-6">
@@ -327,22 +327,22 @@
                                             </div>
 
                                             <div class="col-md-3">
-                                                <label class="form-label"><b>Min Quantity</b></label>
+                                                <label class="form-label"><b>Min Quantity *</b></label>
                                                 <input type="number" name="CO_MIN_QUANTITY" class="form-control" placeholder="Min quantity" />
                                             </div>
 
                                             <div class="col-md-3">
-                                                <label class="form-label"><b>Max Quantity</b></label>
+                                                <label class="form-label"><b>Max Quantity *</b></label>
                                                 <input type="number" name="CO_MAX_QUANTITY" class="form-control" placeholder="Max quantity" />
                                             </div>
 
                                             <div class="col-md-3">
-                                                <label class="form-label"><b>Min Age</b></label>
+                                                <label class="form-label"><b>Min Age *</b></label>
                                                 <input type="number" name="CO_MIN_AGE" class="form-control" placeholder="Min age" />
                                             </div>
 
                                             <div class="col-md-3">
-                                                <label class="form-label"><b>Max Age</b></label>
+                                                <label class="form-label"><b>Max Age *</b></label>
                                                 <input type="number" name="CO_MAX_AGE" class="form-control" placeholder="Max age" />
                                             </div>
 
@@ -398,11 +398,11 @@
             autoclose: true,
         });
 
-        const snowEditor = new Quill('#snow-editor', {
-            bounds: '#snow-editor',
-            theme: 'snow',
-            placeholder: 'Content...',
-        });
+        // const snowEditor = new Quill('#snow-editor', {
+        //     bounds: '#snow-editor',
+        //     theme: 'snow',
+        //     placeholder: 'Content...',
+        // });
 
         const wizard_form = $(".wizard-numbered")[0];
         if (typeof wizard_form !== undefined && wizard_form !== null) {
@@ -801,8 +801,8 @@
                         else if ($(`#${id} select[name='${field}']`).length)
                             $(`#${id} select[name='${field}']`).select2('val', `${val}`);
 
-                        if (field == 'CO_DESCRIPTION')
-                            $("#snow-editor .ql-editor").html(val);
+                        // if (field == 'CO_DESCRIPTION')
+                        //     $("#snow-editor .ql-editor").html(val);
                     });
                 });
 
@@ -829,8 +829,8 @@
         let id = "concierge-offer-form";
         hideModalAlerts();
 
-        if ($("#snow-editor .ql-editor").html() != "<p><br></p>")
-            $(`#${id} textarea[name='CO_DESCRIPTION']`).val($("#snow-editor .ql-editor").html());
+        // if ($("#snow-editor .ql-editor").html() != "<p><br></p>")
+        //     $(`#${id} textarea[name='CO_DESCRIPTION']`).val($("#snow-editor .ql-editor").html());
 
         var fd = new FormData($(`#${id}`)[0]);
         fd.delete('CO_COVER_IMAGE');

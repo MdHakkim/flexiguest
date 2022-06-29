@@ -70,6 +70,7 @@ class APIController extends BaseController
                 "USR_PHONE" => $this->request->getVar("phone_no"),
                 "USR_PASSWORD" => password_hash($this->request->getVar("password"), PASSWORD_DEFAULT),
                 "USR_ROLE" => "GUEST",
+                "USR_ROLE_ID" => "3",
                 "USR_CUST_ID" => $isCustomer_data['CUST_ID'],
                 "USR_CREATED_DT" =>  date("d-M-Y"),
                 "USR_UPDATED_DT" => date("d-M-Y")
@@ -189,13 +190,14 @@ class APIController extends BaseController
         OUTPUT : list and details of the accompanying the persons   */
     public function checkDocDetails()
     {
-        $userID = $this->request->user['USR_CUST_ID'];
+        // for admin => will get customerId from parameters
+        $CUST_ID = $this->request->getVar('customerId') ?? $this->request->user['USR_CUST_ID'];
 
         // an indicator to inform Docs are uploaded and verified.
         $sql = "SELECT concat(a.CUST_FIRST_NAME,' ',a.CUST_MIDDLE_NAME,' ',a.CUST_LAST_NAME)NAME,c.*,b.VACCINE_IS_VERIFY,c.DOC_IS_VERIFY FROM FLXY_CUSTOMER a
                     LEFT JOIN FLXY_VACCINE_DETAILS b ON b.CUST_ID = a.CUST_ID 
                     LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.CUST_ID WHERE DOC_FILE_TYPE='PROOF' AND a.CUST_ID = :CUST_ID:";
-        $param = ['CUST_ID' => $userID];
+        $param = ['CUST_ID' => $CUST_ID];
         $data = $this->DB->query($sql, $param)->getResultArray();
 
         if (!empty($data))
@@ -386,6 +388,9 @@ class APIController extends BaseController
         OUTPUT : UPDATED STATUS.     */
     public function saveDocDetails()
     {
+        // for admin => will get customerId from parameters
+        $CUST_ID = $this->request->getVar('customerId') ?? $this->request->user['USR_CUST_ID'];
+
         $validate = $this->validate([
             'title' => 'required',
             'firstName' => 'required',
@@ -409,7 +414,6 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        $CUST_ID = $this->request->user['USR_CUST_ID'];
         if ($this->request->getVar("expiryDate") < $this->request->getVar("issueDate") && $this->request->getVar("expiryDate") <  date("d-M-Y")) {
             $validate = "Your Document is expired";
             $result = responseJson("403", true, $validate);
@@ -771,6 +775,9 @@ class APIController extends BaseController
     {
         $user = $this->request->user;
         $USR_ID = $user['USR_ID'];
+
+        // for admin => will get customerId from parameters
+        $cusUserID = $this->request->getVar('customerId') ?? $user['USR_CUST_ID'];
         $resID = $this->request->getVar('reservationId');
 
         $validate = $this->validate([
@@ -800,7 +807,6 @@ class APIController extends BaseController
         $doc_file = $this->request->getFile('signature');
         $doc_name = $doc_file->getName();
         $folderPath = "assets/Uploads/userDocuments/signature/";
-        $cusUserID = $user['USR_CUST_ID'];
         $doc_up = documentUpload($doc_file, $doc_name, $cusUserID, $folderPath);
 
 	$data = [

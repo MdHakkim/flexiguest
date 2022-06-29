@@ -604,6 +604,7 @@ class AdditionalController extends BaseController
                 }
 
                 //echo json_encode(print_r($_POST)); exit;
+                $ITEM_AVAIL_QTY = (int)$this->request->getPost('ITM_QTY_IN_STOCK')-(int)$this->request->getPost('ITM_QTY_DEFAULT');
 
                 $data = [
                     "ITM_NAME" => trim($this->request->getPost('ITM_NAME')),
@@ -619,7 +620,8 @@ class AdditionalController extends BaseController
                     "ITM_PRINT" => trim($this->request->getPost('ITM_PRINT')),
                     "ITM_SELL_CONTROL" => trim($this->request->getPost('ITM_SELL_CONTROL')),
                     "ITM_SELL_SEPARATE" => trim($this->request->getPost('ITM_SELL_SEPARATE')),
-                    "ITM_STATUS" => trim($this->request->getPost('ITM_STATUS'))
+                    "ITM_STATUS" => trim($this->request->getPost('ITM_STATUS')),
+                    "ITEM_AVAIL_QTY" => $ITEM_AVAIL_QTY
                 ];
 
                 $return = !empty($sysid) ? $this->Db->table('FLXY_ITEM')->where('ITM_ID', $sysid)->update($data) : $this->Db->table('FLXY_ITEM')->insert($data);
