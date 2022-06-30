@@ -116,10 +116,13 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
         $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
         $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
     });
+
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  
-    $routes->get("profile", "APIController::profileAPI"); 
+    $routes->get("profile", "APIController::profileAPI");
+
+    $routes->post('checkin/verify-documents', 'APIController::verifyDocuments');
 });
 // ADMIN ROUTES (END)
 

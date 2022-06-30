@@ -16,4 +16,13 @@ class CommonValidation{
         $response = $this->Db->query($sql)->getNumRows();
         return ($response==0 ? true : false);
     }
+
+    public function strongPassword(string $str, string $field, array $data)
+    {
+        if (preg_match('/\d/', $data['password']) && preg_match('/[a-zA-Z]/', $data['password']) && preg_match('/\W/', $data['password']) && !preg_match("/\s/", $data['password'])) {
+            return true;
+        }
+
+        return false;
+    }
 }
