@@ -26,7 +26,7 @@ class APIController extends BaseController
     public function registerAPI()
     {
         $rules = [
-            "name" => "required",
+            "name" => "required|is_unique[FLXY_USERS.USR_NAME]",
             "email" => "required|valid_email|is_unique[FLXY_USERS.USR_EMAIL]|min_length[6]|max_length[50]",
             "phone_no" => "required",
             "password" => 'required|min_length[8]|max_length[255]'
@@ -66,6 +66,8 @@ class APIController extends BaseController
 
             $data = [
                 "USR_NAME" => $this->request->getVar("name"),
+                "USR_FIRST_NAME" => $this->request->getVar("name"),
+                "USR_LAST_NAME" => '',
                 "USR_EMAIL" => $email,
                 "USR_PHONE" => $this->request->getVar("phone_no"),
                 "USR_PASSWORD" => password_hash($this->request->getVar("password"), PASSWORD_DEFAULT),
@@ -269,21 +271,25 @@ class APIController extends BaseController
     public function requestSelfUpload()
     {
         $reservation_id = $this->request->getVar('reservation_id');
-        $customer_id = $this->request->getVar('customer_id');
+        $email = $this->request->getVar('email');
+        $first_name = $this->request->getVar('first_name');
+        $last_name = $this->request->getVar('last_name');
 
         // email sending to the accompany person
-        $sql = "SELECT RESV_ID, RESV_NO, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO_F_ROOM, RESV_FEATURE, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_EMAIL 
-                FROM FLXY_RESERVATION, FLXY_CUSTOMER
-                WHERE RESV_ID = :reservation_id: 
-                    AND CUST_ID = :customer_id:";
-        $param = ['reservation_id' => $reservation_id, 'customer_id' => $customer_id];
+        $sql = "SELECT RESV_ID, RESV_NO, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO_F_ROOM, RESV_FEATURE FROM FLXY_RESERVATION
+                WHERE RESV_ID = :reservation_id:";
+        $param = ['reservation_id' => $reservation_id];
 
         $reservationInfo = $this->DB->query($sql, $param)->getResultArray();
         if (!count($reservationInfo))
             return $this->respond(responseJson(404, true, ['msg' => 'Reservation not found.']));
 
+        $reservationInfo[0]['CUST_EMAIL'] = $email;
+        $reservationInfo[0]['CUST_FIRST_NAME'] = $first_name;
+        $reservationInfo[0]['CUST_LAST_NAME'] = $last_name;
+
         $emailCall = new EmailLibrary();
-        $emailResp = $emailCall->requestDocUploadEmail($reservationInfo, $reservationInfo[0]['CUST_EMAIL'], $reservationInfo[0]['CUST_FIRST_NAME'] . " " . $reservationInfo[0]['CUST_LAST_NAME']);
+        $emailResp = $emailCall->requestDocUploadEmail($reservationInfo, $email, $first_name . " " . $last_name);
 
         if ($emailResp)
             $result = responseJson(200, false, ["msg" => "Email send Successfully"]);
