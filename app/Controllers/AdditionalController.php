@@ -1160,7 +1160,7 @@ class AdditionalController extends BaseController
         {
             $mine      = new ServerSideDataTable(); 
             $tableName = 'FLXY_MENU';
-            $columns = 'MENU_ID,MENU_CODE,MENU_NAME,MENU_DESC,MENU_DIS_SEQ,MENU_STATUS';  
+            $columns = 'MENU_ID,MENU_CODE,MENU_NAME,MENU_URL,MENU_DESC,MENU_DIS_SEQ,MENU_STATUS';  
             $mine->generate_DatatTable($tableName, $columns);
             exit;
         }
@@ -1173,7 +1173,8 @@ class AdditionalController extends BaseController
                 $validate = $this->validate([
                     'MENU_CODE' => ['label' => 'Menu Code', 'rules' => 'required|is_unique[FLXY_MENU.MENU_CODE,MENU_ID,' . $sysid . ']'],
                     'MENU_NAME' => ['label' => 'Menu Name', 'rules' => 'required|is_unique[FLXY_MENU.MENU_NAME,MENU_ID,' . $sysid . ']'],
-                    'MENU_DESC' => ['label' => 'Description', 'rules' => 'required']                        
+                    'MENU_DESC' => ['label' => 'Description', 'rules' => 'required'],
+                    'MENU_URL' => ['label' => 'Description', 'rules' => 'required']                         
                     
                 ]);
                 if (!$validate) {
@@ -1189,6 +1190,7 @@ class AdditionalController extends BaseController
                     "MENU_CODE" => trim($this->request->getPost('MENU_CODE')),
                     "MENU_NAME" => trim($this->request->getPost('MENU_NAME')),
                     "MENU_DESC" => trim($this->request->getPost('MENU_DESC')),
+                    "MENU_URL" => trim($this->request->getPost('MENU_URL')),
                     "MENU_DIS_SEQ" => trim($this->request->getPost('MENU_DIS_SEQ')),
                     "MENU_STATUS" => trim($this->request->getPost('MENU_STATUS'))               
                 ];
@@ -1205,7 +1207,7 @@ class AdditionalController extends BaseController
         {
             $param = ['SYSID' => $this->request->getPost('sysid')];
     
-            $sql = "SELECT MENU_ID, MENU_CODE, MENU_NAME, MENU_DESC, MENU_DIS_SEQ, MENU_STATUS
+            $sql = "SELECT MENU_ID, MENU_CODE, MENU_NAME, MENU_URL, MENU_DESC, MENU_DIS_SEQ, MENU_STATUS
                     FROM FLXY_MENU
                     WHERE MENU_ID=:SYSID: ";
     
@@ -1229,7 +1231,7 @@ class AdditionalController extends BaseController
             try {
                 $param = ['SYSID' => $this->request->getPost('main_Menu_ID')];
     
-                $sql = "SELECT MENU_ID, MENU_CODE, MENU_NAME, MENU_DESC, MENU_DIS_SEQ, MENU_STATUS
+                $sql = "SELECT MENU_ID, MENU_CODE, MENU_NAME, MENU_DESC, MENU_URL, MENU_DIS_SEQ, MENU_STATUS
                         FROM FLXY_MENU
                         WHERE MENU_ID=:SYSID:";
     

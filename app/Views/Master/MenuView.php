@@ -19,8 +19,9 @@
                         <tr>
                             <th></th>
                             <th>Code</th>
-                            <th>Name</th>  
-                            <th>Description</th>  
+                            <th>Name</th>                            
+                            <th>Description</th> 
+                            <th>URL</th> 
                             <th>Seq.</th>
                             <th class="all">Action</th>
                         </tr>
@@ -59,10 +60,18 @@
                                     class="form-control bootstrap-maxlength" maxlength="50"
                                     placeholder="eg: Reservation" required />
                             </div>
+                            
                             <div class="col-md-12">
                                 <label class="form-label"><b>Menu Description *</b></label>
                                 <textarea class="form-control" name="MENU_DESC" id="MENU_DESC" rows="1"></textarea> 
                                 
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b> URL *</b></label>
+                                <input type="text" name="MENU_URL" id="MENU_URL"
+                                    class="form-control bootstrap-maxlength" maxlength="50"
+                                    placeholder="reservation" required />
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label"><b>Display Sequence</b></label>
@@ -185,6 +194,9 @@ $(document).ready(function() {
             {
                 data: 'MENU_DESC'
             },
+            {
+                data: 'MENU_URL'
+            },
             
             {
                 data: 'MENU_DIS_SEQ'
@@ -228,7 +240,12 @@ $(document).ready(function() {
         }, {
             width: "8%"
         
-        }, {
+        },
+        {
+            width: "8%"
+        
+        },
+         {
             width: "8%"
         }],
         "order": [

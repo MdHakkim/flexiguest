@@ -3645,10 +3645,9 @@ $(document).on('click', '#registerCardButton', function() {
               
             } 
 
-
-
           showModalAlert('success', alertText);
           $('#infoModal').delay(2500).fadeOut();
+          $('#successModal').delay(2500).fadeOut();        
          
           
           clearFormFields('#select_items');
