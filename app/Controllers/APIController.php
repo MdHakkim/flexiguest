@@ -27,27 +27,27 @@ class APIController extends BaseController
     {
         $rules = [
             "name" => "required|is_unique[FLXY_USERS.USR_NAME]",
-            "email" => "required|valid_email|is_unique[FLXY_USERS.USR_EMAIL]|min_length[6]|max_length[50]",
+            "email" => "required|valid_email|is_unique[FLXY_USERS.USR_EMAIL]",
             "phone_no" => "required",
-            "password" => 'required|min_length[8]|max_length[255]'
-
+            "password" => 'required|min_length[8]|max_length[255]|strongPassword[password]'
         ];
+
         $messages = [
             "name" => [
                 "required" => "Name is required"
             ],
             "email" => [
                 "required" => "Email required",
-                "valid_email" => "Email address is not in format",
+                "valid_email" => "Email address is not in valid format",
                 "is_unique" => "Email already Exist"
             ],
             "phone_no" => [
                 "required" => "Phone Number is required"
             ],
             "password" => [
-                "required" => "password is required"
+                "required" => "password is required",
+                'strongPassword' => 'Password is not strong. It should contain at least one digit, one capital letter, one small letter, and one special character. (white spaces are not allowed).'
             ],
-
         ];
 
         if (!$this->validate($rules, $messages)) {
@@ -1135,5 +1135,24 @@ class APIController extends BaseController
 
         $result = responseJson(200, false, ['msg' => 'LookUp Api'], $data);
         return $this->respond($result);
+    }
+
+    public function verifyDocuments() 
+    {
+        $reservation_id = $this->request->getVar('reservation_id');
+        $customer_id = $this->request->getVar('customer_id');
+
+        $params = [
+            'reservation_id' => $reservation_id,
+            'customer_id' => $customer_id
+        ];
+
+        $check_exist = $this->DB->query('select * from FLXY_DOCUMENTS where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:', $params)->getResultArray();
+        if(!count($check_exist))
+            return $this->respond(responseJson(404, true, ['msg' => 'No Documents uploaded for this guest.']));
+
+        $this->DB->query('update FLXY_DOCUMENTS set DOC_IS_VERIFY = 1 where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:', $params);
+        
+        return $this->respond(responseJson(200, false, ['msg' => 'Documents are verified.']));
     }
 }
