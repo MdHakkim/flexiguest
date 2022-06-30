@@ -198,6 +198,7 @@ $(document).ready(function() {
             },
             {
                 data: null,
+                className: "text-center",
                 "orderable": false,
                 render: function(data, type, row, meta) {
                     return (

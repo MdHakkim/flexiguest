@@ -89,10 +89,10 @@
           { data: 'SOR_GR_CODE' },
           { data: 'SOR_GR_DESC' },
           { data: 'SOR_GR_DIS_SEQ' },
-          { data: null , render : function ( data, type, row, meta ) {
+          { data: null, className: "text-center", "orderable": false, render : function ( data, type, row, meta ) {
             return (
               '<div class="d-inline-block">' +
-                '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
+                '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                 '<ul class="dropdown-menu dropdown-menu-end">' +
                   '<li><a href="javascript:;" data_sysid="'+data['SOR_GR_ID']+'" class="dropdown-item editWindow">Edit</a></li>' +
                   '<div class="dropdown-divider"></div>' +

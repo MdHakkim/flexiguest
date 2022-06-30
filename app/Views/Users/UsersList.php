@@ -478,7 +478,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
 
               return (
                 '<div class="d-inline-block">' +
-                '<button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>' +
+                '<button class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>' +
                 '<div class="dropdown-menu dropdown-menu-end">' +
                 '<a href="javascript:;" data_sysid="' + full['USR_ID'] +
                             '" class="dropdown-item editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a>' +suspend

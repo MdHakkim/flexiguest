@@ -210,10 +210,12 @@
 
                 {
                     data: null,
+                    className: "text-center",
+                    "orderable": false,
                     render: function(data, type, row, meta) {
                         return (
                             '<div class="d-inline-block">' +
-                            '<a href="javascript:;" class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
+                            '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                             '<ul class="dropdown-menu dropdown-menu-end">' +
 
                             '<li><a href="javascript:;" data_id="' + data['SHUTL_ID'] + '" class="dropdown-item add-stops-Window">Stops</a></li>' +

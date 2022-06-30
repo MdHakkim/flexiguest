@@ -699,9 +699,10 @@ class ApplicatioController extends BaseController
         if($data['editId'] && !checkValueinTable('CUST_ID', $data['editId'], 'FLXY_CUSTOMER'))
             return redirect()->to(base_url('customer'));  
 
+        $data['add'] = null !== $this->request->getGet("add") ? '1' : null;
+
         $data['rateCodeOptions'] = $this->rateCodeList();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
-        $data['js_to_load'] = array("rateCodeList.js");
         $data['title'] = getMethodName();
         return view('Reservation/Customer', $data);
     }
@@ -1256,6 +1257,8 @@ class ApplicatioController extends BaseController
         if($data['editId'] && !checkValueinTable('COM_ID', $data['editId'], 'FLXY_COMPANY_PROFILE'))
             return redirect()->to(base_url('company'));  
 
+        $data['add'] = null !== $this->request->getGet("add") ? '1' : null;
+
         $data['title'] = getMethodName();
         return view('Reservation/Company', $data);
     }
@@ -1312,6 +1315,8 @@ class ApplicatioController extends BaseController
         if($data['editId'] && !checkValueinTable('AGN_ID', $data['editId'], 'FLXY_AGENT_PROFILE'))
             return redirect()->to(base_url('agent'));  
 
+        $data['add'] = null !== $this->request->getGet("add") ? '1' : null;
+
         $data['title'] = getMethodName();
         return view('Reservation/Agent', $data);
     }
@@ -1347,6 +1352,8 @@ class ApplicatioController extends BaseController
         //Check if edit ID exists in Group table
         if($data['editId'] && !checkValueinTable('GRP_ID', $data['editId'], 'FLXY_GROUP'))
             return redirect()->to(base_url('group'));
+
+        $data['add'] = null !== $this->request->getGet("add") ? '1' : null;    
 
         $data['title'] = getMethodName();
         return view('Reservation/Group', $data);
