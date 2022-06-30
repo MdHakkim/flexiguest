@@ -695,7 +695,8 @@ class ApplicatioController extends BaseController
     public function Customer(){
 
         $data['editId'] = null !== $this->request->getGet("editId") ? $this->request->getGet("editId") : null;
-        if(!checkValueinTable())
+        //Check if edit ID exists in Customer table
+        if($data['editId'] && !checkValueinTable('CUST_ID', $data['editId'], 'FLXY_CUSTOMER'))
             return redirect()->to(base_url('customer'));  
 
         $data['rateCodeOptions'] = $this->rateCodeList();
@@ -1244,6 +1245,10 @@ class ApplicatioController extends BaseController
     public function company(){
 
         $data['editId'] = null !== $this->request->getGet("editId") ? $this->request->getGet("editId") : null;
+        //Check if edit ID exists in Company table
+        if($data['editId'] && !checkValueinTable('COM_ID', $data['editId'], 'FLXY_COMPANY_PROFILE'))
+            return redirect()->to(base_url('company'));  
+
         $data['title'] = getMethodName();
         return view('Reservation/Company', $data);
     }
@@ -1296,6 +1301,10 @@ class ApplicatioController extends BaseController
 
     public function agent(){
         $data['editId'] = null !== $this->request->getGet("editId") ? $this->request->getGet("editId") : null;
+        //Check if edit ID exists in Agent table
+        if($data['editId'] && !checkValueinTable('AGN_ID', $data['editId'], 'FLXY_AGENT_PROFILE'))
+            return redirect()->to(base_url('agent'));  
+
         $data['title'] = getMethodName();
         return view('Reservation/Agent', $data);
     }
@@ -1327,6 +1336,10 @@ class ApplicatioController extends BaseController
     // Group modal
     public function group(){
         $data['editId'] = null !== $this->request->getGet("editId") ? $this->request->getGet("editId") : null;
+        //Check if edit ID exists in Group table
+        if($data['editId'] && !checkValueinTable('GRP_ID', $data['editId'], 'FLXY_GROUP'))
+            return redirect()->to(base_url('group'));
+
         $data['title'] = getMethodName();
         return view('Reservation/Group', $data);
     }

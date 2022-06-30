@@ -46,10 +46,10 @@ function checkValueinTable($column, $value, $table)
     $Db = \Config\Database::connect();
     $param = ['COLUMN' => $column, 'VALUE' => $value, 'TABLENAME' => $table];
 
-    $sql = "SELECT :COLUMN:
-            FROM :TABLENAME:
-            WHERE :COLUMN: = :VALUE:";
+    $sql = "SELECT ".$param['COLUMN']."
+            FROM ".$param['TABLENAME']."
+            WHERE ".$param['COLUMN']." = :VALUE:";
 
-    $response = $this->Db->query($sql,$param)->getNumRows();
+    $response = $Db->query($sql,$param)->getNumRows();
     return $response;    
 }
