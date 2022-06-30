@@ -3627,54 +3627,55 @@ function submitDetailsForm(id) {
                 mcontent = '<li>Item Combination already exists</li>';
                 showModalAlert('error', mcontent);
             } else if (response != '1') {
+         
+         var ERROR = respn['RESPONSE']['ERROR'];
+         var mcontent = '';
+         $.each(ERROR, function(ind, data) {
+           console.log(data, "SDF");
+           mcontent += '<li>' + data + '</li>';
+         });
+         showModalAlert('error', mcontent);
+       } else {
+         var alertText = $('#RSV_PRI_ID').val() == '' ?
+           '<li>The new Inventory Item has been created</li>' :
+           '<li>The Inventory Item has been updated</li>';
+           
+           hideModalAlerts();
+           
+           if($('#RSV_PRI_ID').val() == ''){
+             item_id = $('#RSV_ITM_ID').val();
+             item_text = $('#RSV_ITM_ID option:selected').text();
 
-                var ERROR = respn['RESPONSE']['ERROR'];
-                var mcontent = '';
-                $.each(ERROR, function(ind, data) {
-                    console.log(data, "SDF");
-                    mcontent += '<li>' + data + '</li>';
-                });
-                showModalAlert('error', mcontent);
-            } else {
-                var alertText = $('#RSV_PRI_ID').val() == '' ?
-                    '<li>The new Inventory Item has been created</li>' :
-                    '<li>The Inventory Item has been updated</li>';
+             ///Append the items to dropdown
+               var data = {
+                 id: item_id,
+                 text: item_text
+             };
 
-                hideModalAlerts();
+             var newOption = new Option(data.text, data.id, false, false);
+             $('#itemsArray').append(newOption).trigger('change');
+             $('#itemsArray').select2('destroy').find('option').prop('selected', 'selected').end().select2();
+             
+           } 
 
-                if ($('#RSV_PRI_ID').val() == '') {
-                    item_id = $('#RSV_ITM_ID').val();
-                    item_text = $('#RSV_ITM_ID option:selected').text();
+         showModalAlert('success', alertText);
+         $('#infoModal').delay(2500).fadeOut();
+         $('#successModal').delay(2500).fadeOut();        
+        
+         
+         clearFormFields('#select_items');
+         $("#RSV_ITM_ID").html('');
+         
 
-                    ///Append the items to dropdown
-                    var data = {
-                        id: item_id,
-                        text: item_text
-                    };
+         if (respn['RESPONSE']['OUTPUT'] != '') {         
 
-                    var newOption = new Option(data.text, data.id, false, false);
-                    $('#itemsArray').append(newOption).trigger('change');
-                    $('#itemsArray').select2('destroy').find('option').prop('selected', 'selected').end()
-                        .select2();
-                }
+           $('#RSV_PRI_ID').val(respn['RESPONSE']['OUTPUT']);
+           
 
-                showModalAlert('success', alertText);
-                $('#infoModal').delay(2500).fadeOut();
-
-
-                clearFormFields('#select_items');
-                $("#RSV_ITM_ID").html('');
-
-
-                if (respn['RESPONSE']['OUTPUT'] != '') {
-
-                    $('#RSV_PRI_ID').val(respn['RESPONSE']['OUTPUT']);
-
-
-                    showInventoryItems(RESV_ID);
-                    clearFormFields('#select_items');
-                }
-            }
+           showInventoryItems(RESV_ID);
+           clearFormFields('#select_items');
+         }
+       }
         }
     });
 }
