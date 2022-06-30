@@ -896,6 +896,13 @@ class ApplicatioController extends BaseController
         }
     }
 
+    function profiles()
+    {
+        $data['title'] = 'All Profiles';
+        
+        return view('Reservation/ProfileView', $data);
+    }
+
     function getProfileDetails($id = 0)
     {
         $param = ['SYSID'=> $id];
@@ -1333,6 +1340,7 @@ class ApplicatioController extends BaseController
         }
     }
     // agent modal
+
     // Group modal
     public function group(){
         $data['editId'] = null !== $this->request->getGet("editId") ? $this->request->getGet("editId") : null;
@@ -1343,6 +1351,7 @@ class ApplicatioController extends BaseController
         $data['title'] = getMethodName();
         return view('Reservation/Group', $data);
     }
+
     public function GroupView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_GROUP';

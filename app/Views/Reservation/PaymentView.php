@@ -3,8 +3,10 @@
 
 <?=$this->extend("Layout/AppView")?>
 <?=$this->section("contentRender")?>
+<?= $this->include('Layout/SuccessReport') ?>
 <?= $this->include('Layout/ErrorReport') ?>
-          <!-- Content wrapper -->
+
+  <!-- Content wrapper -->
           <div class="content-wrapper">
             <!-- Content -->
 
