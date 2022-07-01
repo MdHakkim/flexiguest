@@ -103,6 +103,15 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
     $routes->group('reservation', function($routes) {
         $routes->get("make-checkout-request/(:segment)", "ReservationController::makeCheckoutRequest/$1");
     });
+
+    $routes->group('laundry-amenities', function($routes) {
+        $routes->get("all-categories", "ProductCategoryController::allCategories");
+        $routes->get("all-products", "ProductController::allProducts");
+        $routes->post("place-order", "LaundryAmenitiesController::placeOrder");
+        $routes->get("list-orders", "LaundryAmenitiesController::listOrders");
+        $routes->get("download-invoice", "LaundryAmenitiesController::downloadInvoice");
+    });
+
 });
 
 // ADMIN ROUTES (START)

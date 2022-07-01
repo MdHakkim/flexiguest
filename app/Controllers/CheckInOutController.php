@@ -44,11 +44,11 @@ class CheckInOutController extends BaseController
             return $this->respond(responseJson(202, false, ['msg' => 'This reservation is already checked-out.']));
         
         $dompdf = new \Dompdf\Dompdf();
-        $dompdf->loadHtml(view('includes/InvoiceTemplate', ['reservation' => $reservation]));
+        $dompdf->loadHtml(view('Templates/ReservationInvoiceTemplate', ['reservation' => $reservation]));
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
         
-        $file_name = "assets/invoices/RES{$reservation['RESV_ID']}-Invoice.pdf";
+        $file_name = "assets/reservation-invoices/RES{$reservation['RESV_ID']}-Invoice.pdf";
         file_put_contents($file_name, $dompdf->output());
 
         $reservation['RESV_STATUS'] = 'Checked-Out';

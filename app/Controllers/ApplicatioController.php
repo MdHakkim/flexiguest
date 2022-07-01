@@ -3205,11 +3205,14 @@ class ApplicatioController extends BaseController
             ];
 
             $uploaded_documents = $this->Db->table('FLXY_DOCUMENTS')->where('DOC_CUST_ID', $this->request->getPost("DOC_CUST_ID"))
-                ->where('DOC_RESV_ID', $this->request->getPost("DOC_RESV_ID"))->get()->getResultArray();
+                ->where('DOC_RESV_ID', $this->request->getPost("DOC_RESV_ID"))
+                ->where('DOC_FILE_TYPE', 'PROOF')
+                ->get()->getResultArray();
             
             if(count($uploaded_documents)){
                 $return = $this->Db->table('FLXY_DOCUMENTS')->where('DOC_CUST_ID', $this->request->getPost("DOC_CUST_ID"))
                                     ->where('DOC_RESV_ID', $this->request->getPost("DOC_RESV_ID"))
+                                    ->where('DOC_FILE_TYPE', 'PROOF')
                                     ->update(['DOC_FILE_PATH' => $uploaded_documents[0]['DOC_FILE_PATH'] . ',' . $newFile]);
             }
             else{
@@ -3217,7 +3220,7 @@ class ApplicatioController extends BaseController
             }
 
             if($return){
-                $array = array('DOC_CUST_ID' => $this->request->getPost("DOC_CUST_ID"), 'DOC_RESV_ID' => $this->request->getPost("DOC_RESV_ID"));
+                $array = array('DOC_CUST_ID' => $this->request->getPost("DOC_CUST_ID"), 'DOC_RESV_ID' => $this->request->getPost("DOC_RESV_ID"), 'DOC_FILE_TYPE' => 'PROOF');
                 $listImage = $this->Db->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_FILE_PATH,DOC_FILE_TYPE')->where($array)->orderBy('DOC_ID', 'DESC')->get()->getResultArray();
                 // $imagePath = array('IMAGEPATH'=>$newFile);
                 // $outPut = array_merge($imagePath,$listImage);
