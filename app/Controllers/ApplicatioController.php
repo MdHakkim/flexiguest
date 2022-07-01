@@ -754,30 +754,9 @@ class ApplicatioController extends BaseController
         exit;
     }
 
-    public function getMembershipTypeList()
+    public function showMembershipTypeList()
     {
-        $custId = $this->request->getPost('custId');
-        $mode   = $this->request->getPost('mode');
-
-        $sql = "SELECT MEM_ID, MEM_CODE, MEM_DESC, MEM_EXP_DATE_REQ
-                FROM FLXY_MEMBERSHIP WHERE MEM_STATUS = 1";
-
-        // Remove options from dropdown that have already been added by 
-        if (!empty($custId) && $mode == 'add') {
-            $sql .= " AND MEM_ID NOT IN ( SELECT MEM_ID FROM FLXY_CUSTOMER_MEMBERSHIP 
-                                            WHERE CUST_ID = '".$custId."' AND CM_STATUS = 1 )";
-        }
-
-        $response = $this->Db->query($sql)->getResultArray();
-
-        $membershipTypes = array();
-        if($response != NULL)
-        {
-            foreach ($response as $row) {
-                $membershipTypes[] = array( "id" => $row['MEM_ID'], "text" => $row["MEM_CODE"] . " | " . $row["MEM_DESC"], "exp_date_req" => $row["MEM_EXP_DATE_REQ"] == '1' ? '1' : '0');
-            }
-        }
-
+        $membershipTypes = getMembershipTypeList(null !== $this->request->getGet('custId') ? $this->request->getGet('custId') : 0, $this->request->getGet('mode'));
         echo json_encode($membershipTypes);
     }
 
@@ -899,10 +878,17 @@ class ApplicatioController extends BaseController
 
     function profiles()
     {
+        $profileTypes = profileTypeList();
+        $data['profileTypeOptions'] = $profileTypes;
+
+        $data['membershipTypes'] = getMembershipTypeList(NULL, 'edit');
+        $data['clearFormFields_javascript'] = clearFormFields_javascript();
+        $data['blockLoader_javascript'] = blockLoader_javascript();
+
         $data['title'] = 'All Profiles';
         
         return view('Reservation/ProfileView', $data);
-    }
+    }    
 
     function getProfileDetails($id = 0)
     {

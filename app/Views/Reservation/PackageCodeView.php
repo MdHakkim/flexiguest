@@ -836,7 +836,7 @@ function submitDetailsForm(id) {
                 showModalAlert('error', mcontent);
             } else {
 
-                blockLoader('package-detail-validation');
+                blockLoader('#package-detail-validation');
 
                 var alertText = $('#PKG_CD_DT_ID').val() == '' ?
                     '<li>The new Package Code Detail has been created</li>' :
@@ -894,7 +894,7 @@ $(document).on('click', '.delete-package-code-detail', function() {
                             showModalAlert('error',
                                 '<li>The Package Code Detail cannot be deleted</li>');
                         } else {
-                            blockLoader('package-detail-validation');
+                            blockLoader('#package-detail-validation');
                             showModalAlert('warning',
                                 '<li>The Package Code Detail has been deleted</li>');
 

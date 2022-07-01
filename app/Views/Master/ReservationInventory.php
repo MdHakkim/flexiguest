@@ -564,7 +564,7 @@
                 showModalAlert('error',
                   '<li>The Inventory Items cannot be deleted</li>');
               } else {
-                blockLoader('select_items');
+                blockLoader('#select_items');
                 showModalAlert('warning',
                   '<li>The Inventory Items has been deleted</li>');
                 clearFormFields('#select_items');

@@ -129,7 +129,7 @@ if (!function_exists("blockLoader_javascript")) {
     function blockLoader_javascript()
     {
         return "function blockLoader(elem, duration = 500, alert = '') {
-                    $('#' + elem).block({
+                    $(elem).block({
                         message: '<div class=\"spinner-border text-white\" role=\"status\"></div>',
                         timeout: duration,
                         css: {

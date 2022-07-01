@@ -276,7 +276,7 @@ $(document).ready(function() {
                         '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                         '<ul class="dropdown-menu dropdown-menu-end">' +
                         '<li><a href="javascript:;" data_sysid="' + data['CUST_ID'] +
-                        '" class="dropdown-item editWindow"><i class="fas fa-edit"></i> Edit</a></li>' +
+                        '" class="dropdown-item editWindow text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['CUST_ID'] +
                         '" data_custname="' + data['CUST_FIRST_NAME'] + ' ' + data[

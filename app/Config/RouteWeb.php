@@ -286,7 +286,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
     $routes->match(['post'],'/customerMembershipsView', 'ApplicatioController::CustomerMembershipsView');
     $routes->match(['post'],'/insertCustomerMembership', 'ApplicatioController::insertCustomerMembership');
-    $routes->match(['post'],'/getMembershipTypeList', 'ApplicatioController::getMembershipTypeList');
+    $routes->match(['post'],'/showMembershipTypeList', 'ApplicatioController::showMembershipTypeList');
     $routes->match(['post'],'/editCustomerMembership', 'ApplicatioController::editCustomerMembership');
 
     $routes->match(['post'],'/getCustomerMembershipsList', 'ApplicatioController::getCustomerMembershipsList');

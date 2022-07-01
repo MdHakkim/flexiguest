@@ -1072,172 +1072,9 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="dt_adv_search" method="POST">
-                        <div class="border rounded p-3">
-                            <div class="row g-3">
-                                <div class="col-4 col-sm-6 col-lg-4">
 
-                                    <div class="row mb-3">
-                                        <label class="col-form-label col-md-4"
-                                            style="text-align: right;"><b>Name:</b></label>
-                                        <div class="col-md-8">
-                                            <input type="text" id="PROFILE_NAME" name="PROFILE_NAME"
-                                                class="form-control dt-input dt-full-name" data-column="0"
-                                                placeholder="" />
-                                        </div>
-                                    </div>
+                    <?= $this->include('includes/CombinedProfilesTable') ?>
 
-                                    <div class="row mb-3">
-                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>First
-                                                Name:</b></label>
-                                        <div class="col-md-8">
-                                            <input type="text" name="PROFILE_FIRST_NAME"
-                                                class="form-control dt-input dt-first-name" data-column="0"
-                                                placeholder="" />
-
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>View
-                                                By:</b></label>
-                                        <div class="col-md-8">
-                                            <select id="searchProfileType" name="PROFILE_TYPE"
-                                                class="form-select dt-select dt-view-by" data-column="1">
-                                                <option value="">View All</option>
-                                                <option value="1">Individual</option>
-                                                <option value="2">Company</option>
-                                                <option value="3">Travel Agent</option>
-                                                <option value="4">Group</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-4 col-sm-6 col-lg-4">
-
-                                    <div class="row mb-3">
-                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>City /
-                                                Postal Code:</b></label>
-                                        <div class="col-md-5" style="padding-right:  0;">
-                                            <input type="text" name="PROFILE_CITY" class="form-control dt-input dt-city"
-                                                data-column="4" placeholder="" />
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="text" name="PROFILE_POSTAL_CODE"
-                                                class="form-control dt-input dt-postal-code" data-column="5"
-                                                placeholder="" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>Mem. Type /
-                                                No:</b></label>
-                                        <div class="col-md-4" style="padding-right:  0;">
-                                            <select id="defaultSelect" class="form-select dt-input dt-mem-type">
-                                                <option></option>
-                                                <option value="AA">AA | American Airlines</option>
-                                                <option value="AC">AC | Air Canada</option>
-                                                <option value="US">US | US Air</option>
-                                                <option value="VX">Virgin American Airlines</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="text" class="form-control dt-input dt-mem-no" placeholder="" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label class="col-form-label col-md-4"
-                                            style="text-align: right;"><b>Communication:</b></label>
-                                        <div class="col-md-8">
-                                            <input type="text" class="form-control dt-input dt-communication"
-                                                placeholder="" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>Passport
-                                                No:</b></label>
-                                        <div class="col-md-8">
-                                            <input type="text" name="PROFILE_PASSPORT"
-                                                class="form-control dt-input dt-passport-no" data-column="19"
-                                                placeholder="" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-4 col-sm-6 col-lg-4">
-
-                                    <div class="row mb-3">
-                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>Client
-                                                ID:</b></label>
-                                        <div class="col-md-8">
-                                            <input type="text" name="PROFILE_NUMBER"
-                                                class="form-control dt-input dt-client-id" data-column="16"
-                                                placeholder="" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>IATA
-                                                No:</b></label>
-                                        <div class="col-md-8">
-                                            <input type="text" class="form-control dt-input dt-iata-no"
-                                                placeholder="" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>Corp
-                                                No:</b></label>
-                                        <div class="col-md-8">
-                                            <input type="text" class="form-control dt-input dt-corp-no"
-                                                placeholder="" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row mb-3">
-                                        <label class="col-form-label col-md-4" style="text-align: right;"><b>A/R
-                                                No:</b></label>
-                                        <div class="col-md-8">
-                                            <input type="text" class="form-control dt-input dt-ar-no" placeholder="" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </form>
-
-                    <div class="table-responsive text-nowrap">
-                        <table id="combined_profiles" class="table table-hover table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Type ID</th>
-                                    <th>Type</th>
-                                    <th>Address</th>
-                                    <th>City</th>
-                                    <th>Postal Code</th>
-                                    <th>Company</th>
-                                    <th>A/R No.</th>
-                                    <th>VIP</th>
-                                    <th>Rate Code</th>
-                                    <th>Next Stay</th>
-                                    <th>Last Stay</th>
-                                    <th>Last Room</th>
-                                    <th>Last Group</th>
-                                    <th>Title</th>
-                                    <th>Country</th>
-                                    <th>Client ID/IATA/Corp No</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Passport</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-label-secondary close_selected_profiles"
@@ -1821,184 +1658,6 @@ $(document).ready(function() {
         }
     });
 
-    var clicked_profile_ids = [];
-
-    $(document).on('click', '#combined_profiles > tbody > tr', function() {
-
-        var profile_chk_str = 'profile_chk_' + $(this).attr('data-profile-type') + '_' + $(this).attr(
-            'data-profile-id');
-
-        //If value in array
-        if (jQuery.inArray(profile_chk_str, clicked_profile_ids) !==
-            -1) {
-            if ($(this).hasClass("table-warning")) {
-                // Remove value from array
-                clicked_profile_ids = $.grep(clicked_profile_ids, function(value) {
-                    return value != profile_chk_str;
-                });
-            }
-        } else {
-            if (!$(this).hasClass("table-warning")) {
-                clicked_profile_ids.push(profile_chk_str);
-            }
-        }
-
-        if (clicked_profile_ids.length == 0) {
-            toggleButton('.use_selected_profiles', 'btn-primary', 'btn-dark', true);
-        } else {
-            toggleButton('.use_selected_profiles', 'btn-dark', 'btn-primary', false);
-        }
-
-        //alert(clicked_profile_ids);
-        $(this).toggleClass('table-warning');
-    });
-
-    function getProfileName() {
-        return $('#PROFILE_NAME').val();
-    }
-
-    // Combined Profiles (Customer, Company, Agent, Group) List for Negotiated Rates
-
-    $('#combined_profiles').DataTable({
-        'processing': true,
-        'serverSide': true,
-        'serverMethod': 'post',
-        'ajax': {
-            'url': '<?php echo base_url('/combinedProfilesView')?>',
-            'data': {
-                "sysid": rateCodeID
-            }
-        },
-        'columns': [{
-                data: 'PROFILE_NAME'
-            },
-            {
-                data: 'PROFILE_TYPE',
-                "visible": false,
-            },
-            {
-                data: 'PROFILE_TYPE_NAME'
-            },
-            {
-                data: 'PROFILE_ADDRESS'
-            },
-            {
-                data: 'PROFILE_CITY'
-            },
-            {
-                data: 'PROFILE_POSTAL_CODE'
-            },
-            {
-                data: 'PROFILE_COMP_CODE'
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                data: 'PROFILE_VIP'
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                "defaultContent": ""
-            },
-            {
-                data: 'PROFILE_TITLE'
-            },
-            {
-                data: 'PROFILE_COUNTRY'
-            },
-            {
-                data: 'PROFILE_NUMBER'
-            },
-            {
-                data: 'PROFILE_EMAIL'
-            },
-            {
-                data: 'PROFILE_MOBILE'
-            },
-            {
-                data: 'PROFILE_PASSPORT'
-            },
-        ],
-        'createdRow': function(row, data, dataIndex) {
-            var check_str = 'profile_chk_' + data['PROFILE_TYPE'] + '_' + data['PROFILE_ID'];
-
-            $(row).attr('data-profile-type', data['PROFILE_TYPE']);
-            $(row).attr('data-profile-id', data['PROFILE_ID']);
-
-            if (jQuery.inArray(check_str, clicked_profile_ids) !== -1 && !$(row).hasClass(
-                    'table-warning')) {
-                $(row).addClass('table-warning');
-            } else if (jQuery.inArray(check_str, clicked_profile_ids) == -1 && $(row).hasClass(
-                    'table-warning')) {
-                $(row).removeClass('table-warning');
-            }
-        },
-        columnDefs: [{
-            width: "25%"
-        }, {
-            width: "20%"
-        }, {
-            width: "15%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
-        }, {
-            width: "25%"
-        }, {
-            width: "20%"
-        }, {
-            width: "15%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
-        }, {
-            width: "25%"
-        }, {
-            width: "20%"
-        }, {
-            width: "15%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
-        }, {
-            width: "10%"
-        }],
-        "order": [
-            [1, "asc"]
-        ],
-        destroy: true,
-        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end">>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-        language: {
-            emptyTable: 'There are no profiles in the system'
-        },
-        select: {
-            // Select style
-            style: 'multi',
-            info: false
-        }
-    });
-
     $(document).on('click', '.new-negotiated-rate', function() {
 
         hideModalAlerts();
@@ -2173,12 +1832,12 @@ function submitRatePackageForm(id) {
         },
         dataType: 'json',
         success: function(respn) {
-            
+
             var response = respn['SUCCESS'];
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
-                $.each(ERROR, function(ind, data) {                    
+                $.each(ERROR, function(ind, data) {
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);
@@ -2324,12 +1983,12 @@ function submitForm(id) {
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
-                $.each(ERROR, function(ind, data) {                    
+                $.each(ERROR, function(ind, data) {
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);
             } else {
-                blockLoader('rate-header-validation');
+                blockLoader('#rate-header-validation');
 
                 if (respn['RESPONSE']['OUTPUT'] != '') // if Add Rate Code
                 {
@@ -2425,7 +2084,7 @@ function submitNegotiatedForm(id) {
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
-                $.each(ERROR, function(ind, data) {                    
+                $.each(ERROR, function(ind, data) {
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);
@@ -2581,13 +2240,13 @@ function submitDetailsForm(id) {
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
-                $.each(ERROR, function(ind, data) {                    
+                $.each(ERROR, function(ind, data) {
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);
             } else {
 
-                blockLoader('rate-detail-validation');
+                blockLoader('#rate-detail-validation');
 
                 var alertText = $('#RT_CD_DT_ID').val() == '' ?
                     '<li>The new Rate Code Detail has been created</li>' :
@@ -2634,13 +2293,13 @@ function repeatForm() {
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
-                $.each(ERROR, function(ind, data) {                    
+                $.each(ERROR, function(ind, data) {
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);
             } else {
 
-                blockLoader('rate-detail-validation');
+                blockLoader('#rate-detail-validation');
 
                 var alertText = '<li>The Rate Code Detail has been repeated</li>';
 

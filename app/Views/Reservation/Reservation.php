@@ -2106,12 +2106,14 @@ $(document).ready(function() {
                         '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                         '<ul class="dropdown-menu dropdown-menu-end">' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
-                        '" class="dropdown-item editReserWindow"><i class="fas fa-edit"></i> Edit</a></li>' +
+                        '" class="dropdown-item editReserWindow text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
+                        '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
                         '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
                             'RM_TY_DESC'] +
-                        '"  class="dropdown-item reserOption"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
+                        '"  class="dropdown-item reserOption text-success"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
                         // '<div class="dropdown-divider"></div>' +
+                        '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
                         '" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>' +
                         '</ul>' +
@@ -3629,55 +3631,56 @@ function submitDetailsForm(id) {
                 mcontent = '<li>Item Combination already exists</li>';
                 showModalAlert('error', mcontent);
             } else if (response != '1') {
-         
-         var ERROR = respn['RESPONSE']['ERROR'];
-         var mcontent = '';
-         $.each(ERROR, function(ind, data) {
-           console.log(data, "SDF");
-           mcontent += '<li>' + data + '</li>';
-         });
-         showModalAlert('error', mcontent);
-       } else {
-         var alertText = $('#RSV_PRI_ID').val() == '' ?
-           '<li>The new Inventory Item has been created</li>' :
-           '<li>The Inventory Item has been updated</li>';
-           
-           hideModalAlerts();
-           
-           if($('#RSV_PRI_ID').val() == ''){
-             item_id = $('#RSV_ITM_ID').val();
-             item_text = $('#RSV_ITM_ID option:selected').text();
 
-             ///Append the items to dropdown
-               var data = {
-                 id: item_id,
-                 text: item_text
-             };
+                var ERROR = respn['RESPONSE']['ERROR'];
+                var mcontent = '';
+                $.each(ERROR, function(ind, data) {
+                    console.log(data, "SDF");
+                    mcontent += '<li>' + data + '</li>';
+                });
+                showModalAlert('error', mcontent);
+            } else {
+                var alertText = $('#RSV_PRI_ID').val() == '' ?
+                    '<li>The new Inventory Item has been created</li>' :
+                    '<li>The Inventory Item has been updated</li>';
 
-             var newOption = new Option(data.text, data.id, false, false);
-             $('#itemsArray').append(newOption).trigger('change');
-             $('#itemsArray').select2('destroy').find('option').prop('selected', 'selected').end().select2();
-             
-           } 
+                hideModalAlerts();
 
-         showModalAlert('success', alertText);
-         $('#infoModal').delay(2500).fadeOut();
-         $('#successModal').delay(2500).fadeOut();        
-        
-         
-         clearFormFields('#select_items');
-         $("#RSV_ITM_ID").html('');
-         
+                if ($('#RSV_PRI_ID').val() == '') {
+                    item_id = $('#RSV_ITM_ID').val();
+                    item_text = $('#RSV_ITM_ID option:selected').text();
 
-         if (respn['RESPONSE']['OUTPUT'] != '') {         
+                    ///Append the items to dropdown
+                    var data = {
+                        id: item_id,
+                        text: item_text
+                    };
 
-           $('#RSV_PRI_ID').val(respn['RESPONSE']['OUTPUT']);
-           
+                    var newOption = new Option(data.text, data.id, false, false);
+                    $('#itemsArray').append(newOption).trigger('change');
+                    $('#itemsArray').select2('destroy').find('option').prop('selected', 'selected').end()
+                        .select2();
 
-           showInventoryItems(RESV_ID);
-           clearFormFields('#select_items');
-         }
-       }
+                }
+
+                showModalAlert('success', alertText);
+                $('#infoModal').delay(2500).fadeOut();
+                $('#successModal').delay(2500).fadeOut();
+
+
+                clearFormFields('#select_items');
+                $("#RSV_ITM_ID").html('');
+
+
+                if (respn['RESPONSE']['OUTPUT'] != '') {
+
+                    $('#RSV_PRI_ID').val(respn['RESPONSE']['OUTPUT']);
+
+
+                    showInventoryItems(RESV_ID);
+                    clearFormFields('#select_items');
+                }
+            }
         }
     });
 }
@@ -3766,7 +3769,7 @@ $(document).on('click', '.delete-item-detail', function() {
                                 '<li>The Inventory Items cannot be deleted</li>');
                             $('#warningModal').delay(2500).fadeOut();
                         } else {
-                            blockLoader('select_items');
+                            blockLoader('#select_items');
                             showModalAlert('warning',
                                 '<li>The Inventory Items has been deleted</li>');
                             $('#warningModal').delay(2500).fadeOut();

@@ -148,7 +148,7 @@ $(document).ready(function() {
 
 function fillMembershipTypes(custId, mode = 'add', field = '#MEM_ID') {
     var jqXHR2 = $.ajax({
-        url: '<?php echo base_url('/getMembershipTypeList')?>',
+        url: '<?php echo base_url('/showMembershipTypeList')?>',
         type: "post",
         async: false,
         headers: {
@@ -165,7 +165,7 @@ function fillMembershipTypes(custId, mode = 'add', field = '#MEM_ID') {
             memTypeSelect.empty().trigger("change");
 
             $(respn).each(function(inx, data) {
-                var newOption = new Option(data.text, data.id, false, false);
+                var newOption = new Option(data.code + ' | ' + data.text, data.id, false, false);
                 newOption.setAttribute('expdate-req', data.exp_date_req);
                 memTypeSelect.append(newOption);
             });

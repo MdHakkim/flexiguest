@@ -1909,6 +1909,8 @@ class MastersController extends BaseController
             'transactionCodeOptions' => $transactionCodes,
             'pkgTransactionCodeOptions' => $pkgTransactionCodes,
             'rateCodeDetailsList' => $rateCodeDetailsList, 
+            'profileTypeOptions' => profileTypeList(), 
+            'membershipTypes' => getMembershipTypeList(NULL, 'edit'), 
             'color_array' => jumble_color_array(),
             'jumble_array_javascript' => jumble_array_javascript(),
             'color_badges_javascript' => show_color_badges_javascript(),
@@ -2328,21 +2330,27 @@ class MastersController extends BaseController
         FROM FLXY_RATE_CODE_NEGOTIATED_RATE_VIEW WHERE RT_CD_ID = '".$sysid."')");
         */
 
+        $search_keys = ['S_PROFILE_NAME', 'S_PROFILE_FIRST_NAME', 'S_PROFILE_COMMUNICATION', 'S_PROFILE_TYPE', 'S_PROFILE_CITY', 
+                        'S_MEMBERSHIP_TYPE', 'S_MEMBERSHIP_NUMBER', 'S_PROFILE_PASSPORT', 'S_PROFILE_NUMBER', 
+                        'S_AGN_IATA', 'S_COM_CORP_ID'];
+        
         $init_cond = array();
 
-        if($postValues != NULL){
-            foreach($postValues as $postData)
+        if($search_keys != NULL){
+            foreach($search_keys as $search_key)
             {
-                //echo json_encode(print_r($postData));
-                
-                //if(!is_numeric($key)) continue;
-
-                $field = $postData['data'];
-                $value = $postData['search']['value'];
-
-                if(!empty(trim($value)))
+                if(null !== $this->request->getPost($search_key) && !empty(trim($this->request->getPost($search_key))))
                 {
-                    $init_cond["".$field." LIKE "] = "'%$value%'";
+                    $value = trim($this->request->getPost($search_key));
+
+                    switch($search_key)
+                    {
+                        case 'S_PROFILE_COMMUNICATION': $init_cond["(PROFILE_NUMBER LIKE '%$value%' OR PROFILE_MOBILE LIKE '%$value%')"] = ""; break;
+                        case 'S_MEMBERSHIP_TYPE': $init_cond["(SELECT COUNT(*) FROM FLXY_CUSTOMER_MEMBERSHIP WHERE CUST_ID = PROFILE_ID AND MEM_ID = '$value' AND CM_STATUS = 1) = "] = "1"; break;
+                        case 'S_MEMBERSHIP_NUMBER': $init_cond["(SELECT COUNT(*) FROM FLXY_CUSTOMER_MEMBERSHIP WHERE CUST_ID = PROFILE_ID AND CM_CARD_NUMBER LIKE '%$value%' AND CM_STATUS = 1) = "] = "1"; break;
+                        
+                        default: $init_cond["".ltrim($search_key, "S_")." LIKE "] = "'%$value%'"; break;                        
+                    }                    
                 }
             }
         }
@@ -2350,8 +2358,12 @@ class MastersController extends BaseController
         //echo json_encode(print_r($init_cond));
 
         $mine = new ServerSideDataTable(); // loads and creates instance
-        $tableName = 'FLXY_COMBINED_PROFILES_VIEW';
-        $columns = 'PROFILE_ID,PROFILE_NAME,PROFILE_FIRST_NAME,PROFILE_TYPE,PROFILE_ADDRESS,PROFILE_CITY,PROFILE_POSTAL_CODE,PROFILE_COMP_CODE,PROFILE_VIP,PROFILE_TITLE,PROFILE_COUNTRY,PROFILE_NUMBER,PROFILE_EMAIL,PROFILE_MOBILE,PROFILE_PASSPORT,COUNTRY_NAME,PROFILE_TYPE_NAME';
+        $tableName = 'FLXY_COMBINED_PROFILES_VIEW
+                      LEFT JOIN FLXY_COMPANY_PROFILE ON (FLXY_COMPANY_PROFILE.COM_ID = [FLXY_COMBINED_PROFILES_VIEW].PROFILE_ID AND [FLXY_COMBINED_PROFILES_VIEW].PROFILE_TYPE = 2)
+                      LEFT JOIN FLXY_AGENT_PROFILE ON (FLXY_AGENT_PROFILE.AGN_ID = [FLXY_COMBINED_PROFILES_VIEW].PROFILE_ID AND [FLXY_COMBINED_PROFILES_VIEW].PROFILE_TYPE = 3)';
+
+        $columns = 'PROFILE_ID,PROFILE_NAME,PROFILE_FIRST_NAME,PROFILE_TYPE,PROFILE_ADDRESS,PROFILE_CITY,PROFILE_POSTAL_CODE,PROFILE_COMP_CODE,PROFILE_VIP,PROFILE_TITLE,PROFILE_COUNTRY,PROFILE_NUMBER,PROFILE_EMAIL,PROFILE_MOBILE,PROFILE_PASSPORT,COUNTRY_NAME,PROFILE_TYPE_NAME,COM_CORP_ID,AGN_ID';
+
         $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
