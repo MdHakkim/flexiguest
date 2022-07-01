@@ -109,6 +109,7 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
         $routes->get("all-products", "ProductController::allProducts");
         $routes->post("place-order", "LaundryAmenitiesController::placeOrder");
         $routes->get("list-orders", "LaundryAmenitiesController::listOrders");
+        $routes->get("download-invoice", "LaundryAmenitiesController::downloadInvoice");
     });
 
 });
