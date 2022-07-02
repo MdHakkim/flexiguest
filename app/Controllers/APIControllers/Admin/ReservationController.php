@@ -35,12 +35,9 @@ class ReservationController extends BaseController
                                 ->join('FLXY_CUSTOMER as fc', 'FLXY_RESERVATION.RESV_NAME = fc.CUST_ID', 'left')
                                 ->join('FLXY_ROOM as fr', 'FLXY_RESERVATION.RESV_ROOM = fr.RM_NO', 'left')
                                 ->join('CITY', 'fc.CUST_CITY = CITY.id', 'left')
-                                ->join('FLXY_VACCINE_DETAILS as fvd', 'fc.CUST_ID = fvd.VACC_CUST_ID', 'left')
+                                // ->join('FLXY_VACCINE_DETAILS as fvd', 'FLXY_RESERVATION.RESV_NAME = fvd.VACC_CUST_ID AND FLXY_RESERVATION.RESV_ID = fvd.VACC_RESV_ID', 'left')
+                                // ->join('FLXY_Documents as fd', 'FLXY_RESERVATION.RESV_NAME = fd.DOC_CUST_ID AND FLXY_RESERVATION.RESV_ID = fd.DOC_RESV_ID', 'left')
                                 ->findAll();
-
-        foreach($reservsations as $index => $reservsation){
-            $reservsations[$index]['documents'] = $this->Documents->where('DOC_CUST_ID', $reservsation['CUST_ID'])->findAll();
-        }
 
         $result = responseJson(200, false, ['msg' => "Reservations list"], $reservsations);
         return $this->respond($result);
