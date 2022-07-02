@@ -362,9 +362,9 @@ class APIController extends BaseController
                 "DOC_RESV_ID" => $resID,
                 "DOC_FILE_DESC" => $desc,
                 "DOC_CREATE_UID" => $userID,
-                "DOC_CREATE_DT" => date("d-M-Y"),
+                "DOC_CREATE_DT" => date("Y-m-d H:i:s"),
                 "DOC_UPDATE_UID" => $userID,
-                "DOC_UPDATE_DT" => date("d-M-Y")
+                "DOC_UPDATE_DT" => date("Y-m-d H:i:s")
             ];
 
             $ins = 0;
@@ -373,6 +373,9 @@ class APIController extends BaseController
             if (empty($doc_data))
                 $ins = $this->DB->table('FLXY_DOCUMENTS')->insert($data);
             else {
+                unset($data['DOC_CREATE_UID']);
+                unset($data['DOC_CREATE_DT']);
+
                 $data['DOC_FILE_PATH'] = $doc_data['DOC_FILE_PATH'] . ',' . $fileNames;
                 $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID])->update($data);
             }
@@ -506,17 +509,17 @@ class APIController extends BaseController
 	    $RESID = $this->request->getVar("reservationId");
 
         // fetch details from db
-        $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID,  'DOC_FILE_TYPE' => 'PROOF', 'DOC_RESV_ID'=>$RESID])->get()->getRowArray();
+        $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID,  'DOC_FILE_TYPE' => 'PROOF', 'DOC_RESV_ID' => $RESID])->get()->getRowArray();
         // echo $this->DB->getLastQuery()->getQuery();die;
 	if(empty($doc_data)){
 	   return $this->respond(responseJson(500, true, ["msg" => "No Documents found for the customer =".$CUST_ID." with reservation =".$RESID]));die;
 	}
-            $filenames = $doc_data['DOC_FILE_PATH'];
+        $filenames = $doc_data['DOC_FILE_PATH'];
 
         $filename_array = explode(',', $filenames);
 
         if (count($filename_array) == 1) {
-            $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_FILE_TYPE' => 'PROOF'])->delete();
+            $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_FILE_TYPE' => 'PROOF', 'DOC_RESV_ID' => $RESID])->delete();
             return $this->respond(responseJson(200, false, ['msg' => "Documents deletes successfully."]));
         }
 
@@ -538,15 +541,11 @@ class APIController extends BaseController
                 unlink($folderPath);
                 $data = [
                     "DOC_CUST_ID" => $CUST_ID,
-                    "DOC_IS_VERIFY" => 0,
                     "DOC_FILE_PATH" => implode(',', $filename_array),
-                    "DOC_FILE_TYPE" => 'PROOF',
-                    "DOC_RESV_ID" => $doc_data['DOC_RESV_ID'],
-                    "DOC_FILE_DESC" => "",
                     "DOC_UPDATE_UID" => $CUST_ID,
-                    "DOC_UPDATE_DT" => date("d-M-Y")
+                    "DOC_UPDATE_DT" => date("Y-m-d H:i:s")
                 ];
-                $return = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_FILE_TYPE' => 'PROOF'])->update($data);
+                $return = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_FILE_TYPE' => 'PROOF', 'DOC_RESV_ID' => $RESID])->update($data);
             }
 
 
