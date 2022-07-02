@@ -225,11 +225,11 @@ class APIController extends BaseController
                         case when count(fd.DOC_ID) >= 1 then 1 else 0 end as is_document_uploaded,
                         case when fd.DOC_IS_VERIFY = 1 then 1 else 0 end as DOC_IS_VERIFY
                         FROM FLXY_CUSTOMER as fc
-                        left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID 
+                        left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID AND fd.DOC_FILE_TYPE = 'PROOF' AND fd.DOC_RESV_ID = :reservation_id:
                         where CUST_ID = :customer_id:
                         group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID, fd.DOC_IS_VERIFY";
 
-        $param = ['customer_id' => $customer_id];
+        $param = ['customer_id' => $customer_id, 'reservation_id' => $reservation_id];
         $data = $this->DB->query($sql, $param)->getResultArray();
         if (!count($data))
             return $this->respond(responseJson(404, true, ["msg" => "Customer not found"]));
