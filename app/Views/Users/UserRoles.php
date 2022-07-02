@@ -2,7 +2,36 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<style>
+  .parent:hover{
+    background-color: #96b0d726;
 
+  }
+  .parent{
+  cursor: pointer; 
+  }
+  .childClass{
+    padding: 1px 1px 0px 10px !important;
+    display:none;
+    background-color: #96b0d726;
+  }
+  .childClass td{
+    padding: 4px 1px 4px 15px !important;
+    font-size: 14px;
+    
+  }
+
+  .fa-chevron-down {
+				transform: rotate(0deg);
+				transition: all 0.6s;
+  }
+
+  .active {
+      transform: rotate(180deg);
+    }
+			
+
+</style>
 <div class="content-wrapper">
   <!-- Content -->
 
@@ -30,6 +59,7 @@
                   <th>Department</th>
                   <th>DOJ</th>
                   <th>Status</th>
+                  <th></th>
                 </tr>
               </thead>
             </table>
@@ -62,7 +92,7 @@
                 <h5>Role Permissions</h5>
                 <!-- Permission table -->
                 <div class="table-responsive">
-                  <table class="table table-flush-spacing">
+                  <table class="table table-flush-spacing" id="role_table">
                     <tbody>
                       <tr>
                         <td class="text-nowrap">
@@ -80,7 +110,7 @@
                           <div class="d-flex">
                             <div class="form-check me-3 me-lg-5">
                               <label class="switch switch-lg">
-                                <input id="selectAll" name="MENU_ID[]" id="MENU_ID0" type="checkbox" value="0" class="switch-input" />
+                                <input id="selectAll" name="" id="MENU_ID0" type="checkbox" value="0" class="switch-input " />
                                 <span class="switch-toggle-slider">
                                   <span class="switch-on">
                                     <i class="bx bx-check"></i>
@@ -94,19 +124,21 @@
                             </div>
 
                           </div>
-                        </td>
+                        </td><td></td>
                       </tr>
 
-                      <?php if (!empty($responseMenu)) {
+                      <?php //print_r($responseSubMenu);
+                      
+                      if (!empty($responseMenu)) {
                         foreach ($responseMenu as $row) {
                       ?>
-                          <tr>
+                          <tr class="parent" id="parent<?php echo $row['MENU_ID'] ?>" rel="<?php echo $row['MENU_ID'] ?>">
                             <td class="text-nowrap"><?php echo $row['MENU_NAME'] ?></td>
                             <td>
                               <div class="d-flex">
                                 <div class="form-check me-3 me-lg-5">
-                                  <label class="switch switch-lg">
-                                    <input id="MENU_ID<?php echo $row['MENU_ID'] ?>" name="MENU_ID[]" type="checkbox" value="<?php echo $row['MENU_ID'] ?>" class="switch-input" />
+                                  <label class="switch switch-md">
+                                    <input id="MENU_ID<?php echo $row['MENU_ID'] ?>" name="MENU_ID[]" type="checkbox" value="<?php echo $row['MENU_ID'] ?>" class="switch-input menu-perm" />
                                     <span class="switch-toggle-slider">
                                       <span class="switch-on">
                                         <i class="bx bx-check"></i>
@@ -118,15 +150,41 @@
                                     <span class="switch-label"><b>Active</b></span>
                                   </label>
                                 </div>
-
                               </div>
                             </td>
-                          </tr>
+                            <td><i class="fas fa-chevron-down fa-sm"></i></td>
+                          </tr>                            
+                            <?php 
+                                if (!empty($responseSubMenu[$row['MENU_ID']])) {
+                                  foreach ($responseSubMenu[$row['MENU_ID']] as $row1) {                        
+                                  
+                                  ?>
+                                <tr class="child<?php echo $row['MENU_ID'] ?> childClass"  rel="<?php echo $row['MENU_ID'] ?>">
+                                    <td class="text-nowrap"><i class="fa-solid fa-circle-arrow-right" style="padding-right:5px"></i><?php echo $row1['sub_menu_name'] ?></td>
+                                    <td>
+                                      <div class="d-flex">
+                                        <div class="form-check me-3 me-lg-5">
+                                          <label class="switch switch-md">
+                                            <input id="sub_menu_id<?php echo $row1['sub_menu_id'] ?>" name="sub_menu_id[]" type="checkbox" value="<?php echo $row1['sub_menu_id'] ?>" class="switch-input menu-perm" />
+                                            <span class="switch-toggle-slider">
+                                              <span class="switch-on">
+                                                <i class="bx bx-check"></i>
+                                              </span>
+                                              <span class="switch-off">
+                                                <i class="bx bx-x"></i>
+                                              </span>
+                                            </span>
+                                            <span class="switch-label"><b>Active</b></span>
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td></td>
+                                  </tr>
+                                  <?php //}
+                                } }?>
                       <?php }
-                      } ?>
-
-
-
+                      } ?> 
                     </tbody>
                   </table>
                 </div>
@@ -472,6 +530,9 @@
           {
             data: 'USR_STATUS'
           },
+          {
+            data: ''
+          }
 
         ],
         columnDefs: [{
@@ -562,6 +623,23 @@
               return '<span class="badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';
             }
           },
+          {
+            // Actions
+            targets: -1,
+            title: 'Action',
+            searchable: false,
+            orderable: false,
+            render: function(data, type, full, meta) {
+                
+
+              return (
+               
+                '<a href="javascript:;" data_sysid="' + full['USR_ID'] +
+                            '" class=" editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> </a>' 
+                
+              );
+            }
+          }
 
         ],
         order: [
@@ -745,6 +823,7 @@
 
 
     $(document).on("click", ".add-new-role", function() {
+      $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Submit');
       $('#ROLE_NAME').val('');
       $('#ROLE_ID').val('');
       $('[type="checkbox"]').prop('checked', false);
@@ -762,14 +841,7 @@
         });
       }
 
-      // Select All checkbox click
-      const selectAll = document.querySelector('#selectAll'),
-        checkboxList = document.querySelectorAll('[type="checkbox"]');
-      selectAll.addEventListener('change', t => {
-        checkboxList.forEach(e => {
-          e.checked = t.target.checked;
-        });
-      });
+      
 
 
     });
@@ -802,13 +874,65 @@
 
     });
 
+
+    $('.menu-perm').change(function() {   
+      var thisVal = $(this).val();
+      // get parent menu id
+      var parent = $(this).closest('tr').attr("rel");
+
+      if(thisVal != parent)
+      {
+
+      }
+
+
+
+      if($(this).is(":checked") == false){      
+        
+        var totalChildMenu = document.querySelectorAll('.child'+parent).length; 
+        var totalChildMenuChecked = $('.child'+parent).find($('[name="sub_menu_id[]"]:checked')).length;         
+         
+        if(totalChildMenuChecked == 0){
+           $("#MENU_ID"+ parent).prop('checked', false);  
+        }  
+
+        $(".child"+ $(this).val()).find('.menu-perm').prop('checked', false);  
+      }
+      
+      else{
+        $('#MENU_ID'+parent).prop('checked', true);
+        $(".child"+ $(this).val()).find('.menu-perm').prop('checked', true);
+      }
+
+
+      
+
+
+      ////  Administrator Access
+      var totalMenu = $('[name="MENU_ID[]"]').length; 
+      var totalSubMenu = $('[name="sub_menu_id[]"]').length; 
+          
+      if(($('[name="MENU_ID[]"]:checked').length + $('[name="sub_menu_id[]"]:checked').length) === (totalMenu + totalSubMenu))
+      $('#selectAll').prop('checked', true);
+      else
+      $('#selectAll').prop('checked', false);      
+   
+    });
+
+    // Select All checkbox click
+    const selectAll = document.querySelector('#selectAll'),
+        checkboxList = document.querySelectorAll('[type="checkbox"]');
+        selectAll.addEventListener('change', t => {
+        checkboxList.forEach(e => {
+          e.checked = t.target.checked;
+        });
+      });
+
   });
 
   // Edit Role Permissions
 
   $(document).on('click', '.role-edit-modal', function() {
-
-
     $('[type="checkbox"]').prop('checked', false);
     $('.dtr-bs-modal').modal('hide');
     roleTitle = document.querySelector('.role-title');
@@ -1113,6 +1237,20 @@ function countryList() {
       }
     });
   });
+
+
+  $("#slide1").click(function(){
+    $("#slide1").slideToggle('slow');
+  });
+
+
+  $( ".parent" ).click(function() {
+    
+    child = $(this).attr('rel');
+    $(".child"+ child).slideToggle(400);
+    $(this).find($(".fa-chevron-down")).toggleClass("active");
+ 
+});
 </script>
 
 

@@ -691,6 +691,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
     $('#popModalWindowlabel').html('Add New User');
     $('#popModalWindow').modal('show');
     countryList();
+    roleList()
   }
 
  

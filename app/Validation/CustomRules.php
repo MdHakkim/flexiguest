@@ -187,6 +187,18 @@ class CustomRules{
 
   }
 
+  	//Create strong password 
+	public function is_password_strong($password = '')
+	{
+   
+		if (preg_match('#[0-9]#', $password) && preg_match('#[a-zA-Z]#', $password)) {
+      return TRUE;
+    }
+    else
+		return FALSE;
+	}
+	//strong password end
+
   
 
 }

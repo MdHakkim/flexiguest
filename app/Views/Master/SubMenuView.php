@@ -17,11 +17,11 @@
                 <table id="dataTable_view" class="dt-responsive table table-striped display nowrap" style="width:100%">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>ID</th>
                             <th>Code</th>
                             <th>Name</th>  
                             <th>URL</th>  
-                            <th>Menu</th>
+                            <th>Parent Menu</th>
                             <th>Seq.</th>
                             <th class="all">Action</th>
                         </tr>
@@ -47,49 +47,49 @@
                 <div class="modal-body">
                     <form id="submitForm" class="needs-validation" novalidate>
                         <div class="row g-3">
-                            <input type="hidden" name="SUB_MENU_ID" id="SUB_MENU_ID" class="form-control" />
+                            <input type="hidden" name="MENU_ID" id="MENU_ID" class="form-control" />
 
                             <div class="col-md-8">
                                 <lable class="form-lable"><b>Menu *</b></lable>
 
-                                <select id="MENU_ID" name="MENU_ID" class="select2 form-select form-select-lg" data-allow-clear="true" required>
-                                        <?= $menuLists ?>
+                                <select id="PARENT_MENU_ID" name="PARENT_MENU_ID" class="select2 form-select form-select-lg" data-allow-clear="true" required>
+                                       
                                 </select>                                
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label"><b> Code *</b></label>
-                                <input type="text" name="SUB_MENU_CODE" id="SUB_MENU_CODE"
+                                <input type="text" name="MENU_CODE" id="MENU_CODE"
                                     class="form-control bootstrap-maxlength" maxlength="10" placeholder="eg: ADDRESV"
                                     required />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label"><b> Name *</b></label>
-                                <input type="text" name="SUB_MENU_NAME" id="SUB_MENU_NAME"
+                                <input type="text" name="MENU_NAME" id="MENU_NAME"
                                     class="form-control bootstrap-maxlength" maxlength="50"
                                     placeholder="eg: Add Reservation" required />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label"><b> Description *</b></label>
-                                <textarea class="form-control" name="SUB_MENU_DESC" id="SUB_MENU_DESC" rows="1"></textarea> 
+                                <textarea class="form-control" name="MENU_DESC" id="MENU_DESC" rows="1"></textarea> 
                                 
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label"><b> URL *</b></label>
-                                <input type="text" name="SUB_MENU_URL" id="SUB_MENU_URL"
+                                <input type="text" name="MENU_URL" id="MENU_URL"
                                     class="form-control bootstrap-maxlength" maxlength="50"
                                     placeholder="reservation" required />
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label"><b> Display Sequence</b></label>
-                                <input type="number" name="SUB_MENU_DIS_SEQ" id="SUB_MENU_DIS_SEQ" class="form-control"
+                                <input type="number" name="MENU_DIS_SEQ" id="MENU_DIS_SEQ" class="form-control"
                                     min="0" placeholder="eg: 3" />
                             </div>      
                             <div class="col-md-4">
                             <div class="text-left mt-4">
                                 <div class="col-md-12">
                                     <label class="switch switch-lg">
-                                        <input id="SUB_MENU_STATUS" name="SUB_MENU_STATUS" type="checkbox" value="1"
+                                        <input id="MENU_STATUS" name="MENU_STATUS" type="checkbox" value="1"
                                             class="switch-input" />
                                         <span class="switch-toggle-slider">
                                             <span class="switch-on">
@@ -116,58 +116,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="copyModalWindow" data-backdrop="static" data-keyboard="false"
-        aria-lableledby="copyModalWindowlable">
-        <div class="modal-dialog modal-md">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="copyModalWindowlabel">Create submenu copies</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="copyForm" class="form-repeater needs-validation" novalidate>
-                        <div data-repeater-list="group-a">
-                            <div data-repeater-item>
-                                <div class="row">
-                                    <div class="col-12 col-md-8 mb-0 mb-3">
-                                        <label class="form-label" for="form-repeater-1-1"><b>Submenu Code
-                                                *</b></label>
-                                        <input type="text" name="SUB_MENU_CODE" id="form-repeater-1-1" class="form-control"
-                                            maxlength="10" placeholder="eg: GST_XYZ" required />
-                                    </div>
-
-                                    <div class="d-flex col-12 col-md-4 align-items-center mb-0 mb-3">
-                                        <button class="btn btn-label-danger mt-4" data-repeater-delete>
-                                            <i class="bx bx-x"></i>
-                                            <span class="align-left">Delete</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <hr />
-                            </div>
-                        </div>
-                        <div class="mb-0" style="float: left;">
-                            <button class="btn btn-primary" data-repeater-create>
-                                <i class="bx bx-plus"></i>
-                                <span class="align-middle">Add New</span>
-                            </button>
-                        </div>
-                        <div style="float: right;">
-                            <input type="hidden" name="main_SubMenu_ID" id="main_SubMenu_ID" class="form-control" />
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" id="copyBtn" onClick="copyForm('copyForm')"
-                                class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
-                    <div class="form-text" style="clear: both; padding-top: 20px;">Submenu Description will
-                        be copied from original </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
+    
     <!-- /Modal window -->
 
     <div class="content-backdrop fade"></div>
@@ -179,6 +128,7 @@ var compAgntMode = '';
 var linkMode = '';
 
 $(document).ready(function() {
+    menuList();
     linkMode = 'EX';
 
     $('#dataTable_view').DataTable({
@@ -189,24 +139,22 @@ $(document).ready(function() {
             'url': '<?php echo base_url('/SubMenuView')?>'
         },
         'columns': [{
-                data: ''
+                data: 'MENU_ID'
             },
             {
-                data: 'SUB_MENU_CODE'
+                data: 'MENU_CODE'
             },
-            {
-                data: 'SUB_MENU_NAME'
-            },
-            {
-                data: 'SUB_MENU_URL'
-            },
-
             {
                 data: 'MENU_NAME'
             },
-            
             {
-                data: 'SUB_MENU_DIS_SEQ'
+                data: 'MENU_URL'
+            },
+            {
+                data: 'P_MENU_NAME'
+            },            
+            {
+                data: 'MENU_DIS_SEQ'
             },
             {
                 data: null,
@@ -216,11 +164,11 @@ $(document).ready(function() {
                         '<div class="d-inline-block">' +
                         '<a href="javascript:;" title="Edit or Delete" class="btn btn-label-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                         '<ul class="dropdown-menu dropdown-menu-end">' +
-                        '<li><a href="javascript:;" data_sysid="' + data['SUB_MENU_ID'] +
+                        '<li><a href="javascript:;" data_sysid="' + data['MENU_ID'] +
                         '" class="dropdown-item editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +                      
                         
-                        '<li><a href="javascript:;" data_sysid="' + data['SUB_MENU_ID'] +
+                        '<li><a href="javascript:;" data_sysid="' + data['MENU_ID'] +
                         '" class="dropdown-item text-danger delete-record"><i class="fa-solid fa-ban"></i> Delete</a></li>' +
                         '</ul>' +
                         '</div>'
@@ -255,7 +203,7 @@ $(document).ready(function() {
             width: "8%"
         }],
         "order": [
-            [3, "asc"]
+            [0, "asc"]
         ],
         destroy: true,
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -264,7 +212,7 @@ $(document).ready(function() {
                 display: $.fn.dataTable.Responsive.display.modal({
                     header: function(row) {
                         var data = row.data();
-                        return 'Details of ' + data['SUB_MENU_CODE'];
+                        return 'Details of ' + data['MENU_CODE'];
                     }
                 }),
                 type: 'column',
@@ -305,12 +253,13 @@ $(document).ready(function() {
 // Show Add Menu Form
 
 function addForm() {
+   
     $(':input', '#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
     $('.select2').val(null).trigger('change');
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-    $('#popModalWindowlabel').html('Add new Submenu');
-    $("#SUBMENU_CODE").prop("readonly", false);  
-    $('#popModalWindow').modal('show');
+    $('#popModalWindowlabel').html('Add new menu');   
+    menuList();
+    $('#popModalWindow').modal('show');    
 }
 
 // Delete Submenu
@@ -335,7 +284,7 @@ $(document).on('click', '.delete-record', function() {
         callback: function(result) {
             if (result) {
                 $.ajax({
-                    url: '<?php echo base_url('/deleteSubMenu')?>',
+                    url: '<?php echo base_url('/deleteMenu')?>',
                     type: "post",
                     data: {
                         sysid: sysid
@@ -360,11 +309,10 @@ $(document).on('click', '.delete-record', function() {
 // Show Edit Submenu Form
 
 $(document).on('click', '.editWindow', function() {
-
     $('.dtr-bs-modal').modal('hide');
     var sysid = $(this).attr('data_sysid');
-    $('#popModalWindowlabel').html('Edit Submenu');
-    $("#SUB_MENU_CODE").prop("readonly", true);
+    $('#popModalWindowlabel').html('Edit Menu');
+    $("#MENU_CODE").prop("readonly", true);
     $('#popModalWindow').modal('show');
 
     var url = '<?php echo base_url('/editSubMenu')?>';
@@ -383,7 +331,7 @@ $(document).on('click', '.editWindow', function() {
                 $.each(data, function(fields, datavals) {
                     var field = $.trim(fields); //fields.trim();
                     var dataval = $.trim(datavals); //datavals.trim(); 
-                    if (field == 'MENU_ID') {
+                    if (field == 'PARENT_MENU_ID') {
                         $('#' + field).select2("val", dataval);
                     } 
                     else                 
@@ -444,16 +392,35 @@ function submitForm(id) {
                 });
                 showModalAlert('error', mcontent);
             } else {
-                var alertText = $('#SUB_MENU_ID').val() == '' ? '<li>The new Submenu \'' + $('#SUB_MENU_CODE')
-                    .val() + '\' has been created</li>' : '<li>The Menu \'' + $('#SUB_MENU_CODE').val() +
+                var alertText = $('#MENU_ID').val() == '' ? '<li>The new Submenu \'' + $('#MENU_CODE')
+                    .val() + '\' has been created</li>' : '<li>The Menu \'' + $('#MENU_CODE').val() +
                     '\' has been updated</li>';
                 showModalAlert('success', alertText);
-
+                menuList();
                 $('#popModalWindow').modal('hide');
                 $('#dataTable_view').dataTable().fnDraw();
+               
+                
             }
         }
     });
+}
+
+function menuList() {
+  
+
+$.ajax({
+      url: '<?php echo base_url('/menuList')?>',
+      type: "get",
+      headers: {'X-Requested-With': 'XMLHttpRequest'},
+       async:false,
+      success:function(respn){
+        
+        $('#PARENT_MENU_ID').html(respn);
+      }
+  });
+  
+  
 }
 
 // Copy Submenu to Multiple submit Function
@@ -484,43 +451,6 @@ function copyForm(id) {
     });
 }
 
-
-// bootstrap-maxlength & repeater (jquery)
-$(function() {
-    var maxlengthInput = $('.bootstrap-maxlength'),
-        formRepeater = $('.form-repeater');
-
-
-    if (formRepeater.length) {
-        var row = 2;
-        var col = 1;
-        formRepeater.on('submit', function(e) {
-            e.preventDefault();
-        });
-        formRepeater.repeater({
-            show: function() {
-                var fromControl = $(this).find('.form-control, .form-select');
-                var formLabel = $(this).find('.form-label');
-
-                fromControl.each(function(i) {
-                    var id = 'form-repeater-' + row + '-' + col;
-                    $(fromControl[i]).attr('id', id);
-                    $(formLabel[i]).attr('for', id);
-                    col++;
-                });
-
-                row++;
-
-                $(this).slideDown();
-            },
-            hide: function(e) {
-                confirm('Are you sure you want to delete this element?') && $(this).slideUp(e);
-            },
-            isFirstItemUndeletable: true
-
-        });
-    }
-});
 </script>
 
 <?=$this->endSection()?>

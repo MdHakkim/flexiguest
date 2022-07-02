@@ -1062,11 +1062,7 @@
                             </a>
                         </li>
 
-                        <li class="menu-item <?= (isset($title) && $title == 'Sub Menu') ? 'active' : '' ?>">
-                            <a href="<?= base_url('SubMenu') ?>" class="menu-link">
-                                <div data-i18n="Sub Menu">Sub Menu</div>
-                            </a>
-                        </li>
+                       
 
                     </ul>
                 </li>

@@ -450,25 +450,16 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       
       //User Menu      
       $routes->get('/Menu', 'AdditionalController::Menu');
+      $routes->get('/menuList', 'AdditionalController::menuList');
       $routes->match(['post'],'/MenuView', 'AdditionalController::MenuView');
       $routes->match(['post'],'/insertMenu', 'AdditionalController::insertMenu');
       $routes->match(['post'],'/copyMenu', 'AdditionalController::copyMenu');
       $routes->match(['post'],'/editMenu', 'AdditionalController::editMenu');
       $routes->match(['post'],'/deleteMenu', 'AdditionalController::deleteMenu'); 
 
-      // User Submenu      
-      $routes->get('/SubMenu', 'AdditionalController::SubMenu');
-      $routes->match(['post'],'/SubMenuView', 'AdditionalController::SubMenuView');
-      $routes->match(['post'],'/insertSubMenu', 'AdditionalController::insertSubMenu');
-      $routes->match(['post'],'/copySubMenu', 'AdditionalController::copySubMenu');
-      $routes->match(['post'],'/editSubMenu', 'AdditionalController::editSubMenu');
-      $routes->match(['post'],'/deleteSubMenu', 'AdditionalController::deleteSubMenu'); 
-
-      
       $routes->get('/roleList', 'UserController::roleList');
       $routes->get('/loadUserRoles', 'UserController::loadUserRoles');
-      $routes->get('/userRoles', 'UserController::userRoles');    
-      $routes->get('/roleList', 'UserController::roleList'); 
+      $routes->get('/userRoles', 'UserController::userRoles'); 
       $routes->match(['post'],'/viewUserRoles', 'UserController::viewUserRoles'); 
       $routes->match(['post'],'/addRolePermission', 'UserController::addRolePermission'); 
       $routes->match(['post'],'/editRolePermission', 'UserController::editRolePermission'); 
