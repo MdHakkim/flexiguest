@@ -3348,15 +3348,15 @@ class ApplicatioController extends BaseController
         $sql="SELECT COUNT(*)TOTAL_PROOF, (SELECT COUNT(*) FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:CUST_ID: AND VACC_RESV_ID=:RESV_ID:) TOTAL_VACC FROM FLXY_DOCUMENTS WHERE DOC_CUST_ID=:CUST_ID: AND DOC_RESV_ID=:RESV_ID:";
         $response = $this->Db->query($sql,$param)->getResultArray();  
 
-        $sql2 = 'select * from FLXY_CUSTOMER where CUST_ID = :CUST_ID:';
-        $customer = $this->Db->query($sql2, $param)->getRowArray();
+        // $sql2 = 'select * from FLXY_CUSTOMER where CUST_ID = :CUST_ID:';
+        // $customer = $this->Db->query($sql2, $param)->getRowArray();
 
-        if($customer){
-            if(!$customer['CUST_EMAIL'] || !$customer['CUST_TITLE'] || !$customer['CUST_FIRST_NAME']
-                || !$customer['CUST_COUNTRY'] || !$customer['CUST_STATE'] || !$customer['CUST_CITY']){
-                $response[0]['TOTAL_PROOF'] = 0;
-            }
-        }
+        // if($customer){
+        //     if(!$customer['CUST_EMAIL'] || !$customer['CUST_TITLE'] || !$customer['CUST_FIRST_NAME']
+        //         || !$customer['CUST_COUNTRY'] || !$customer['CUST_STATE'] || !$customer['CUST_CITY']){
+        //         $response[0]['TOTAL_PROOF'] = 0;
+        //     }
+        // }
 
         if($condi){
             return $response;
