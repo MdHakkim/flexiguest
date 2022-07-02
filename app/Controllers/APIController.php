@@ -482,7 +482,7 @@ class APIController extends BaseController
         $data = $this->DB->query($sql, $param)->getRowArray();
 
         if (!empty($data)) {
-            $data['DOCS'] = [];
+            $data['DOCS'] = NULL;
             if ($data['DOC_FILE_PATH']) {
                 $files_array = explode(',', $data['DOC_FILE_PATH']);
                 foreach ($files_array as $key => $value) {
