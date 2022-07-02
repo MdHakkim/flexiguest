@@ -305,9 +305,9 @@ class APIController extends BaseController
         OUTPUT: PATH OF UPLAODED DOCUMENT */
     public function docUploadAPI()
     {
-        $user = $this->request->user;
+        $user_id = $this->request->user['USR_ID'];
 
-        $userID = $this->request->getVar('customerId'); // get from the frondend
+        $customerID = $this->request->getVar('customerId'); // get from the frondend
         $resID = $this->request->getVar('reservationId');
 
         $validate = $this->validate([
@@ -353,17 +353,17 @@ class APIController extends BaseController
 
         if (!empty($fileNames)) {
             // check wheather there is any entry with this user. 
-            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_CUST_ID,DOC_FILE_PATH,DOC_RESV_ID')->where(['DOC_CUST_ID' => $userID, 'DOC_FILE_TYPE' => 'PROOF','DOC_RESV_ID' => $resID])->get()->getRowArray();
+            $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('DOC_ID,DOC_CUST_ID,DOC_FILE_PATH,DOC_RESV_ID')->where(['DOC_CUST_ID' => $customerID, 'DOC_FILE_TYPE' => 'PROOF','DOC_RESV_ID' => $resID])->get()->getRowArray();
             $data = [
-                "DOC_CUST_ID" => $userID,
+                "DOC_CUST_ID" => $customerID,
                 "DOC_IS_VERIFY" => 0,
                 "DOC_FILE_PATH" => $fileNames,
                 "DOC_FILE_TYPE" => 'PROOF',
                 "DOC_RESV_ID" => $resID,
                 "DOC_FILE_DESC" => $desc,
-                "DOC_CREATE_UID" => $userID,
+                "DOC_CREATE_UID" => $user_id,
                 "DOC_CREATE_DT" => date("Y-m-d H:i:s"),
-                "DOC_UPDATE_UID" => $userID,
+                "DOC_UPDATE_UID" => $user_id,
                 "DOC_UPDATE_DT" => date("Y-m-d H:i:s")
             ];
 
@@ -377,7 +377,7 @@ class APIController extends BaseController
                 unset($data['DOC_CREATE_DT']);
 
                 $data['DOC_FILE_PATH'] = $doc_data['DOC_FILE_PATH'] . ',' . $fileNames;
-                $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $userID, 'DOC_RESV_ID' => $resID])->update($data);
+                $update_data = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $customerID, 'DOC_RESV_ID' => $resID])->update($data);
             }
 
             if ($ins || $update_data)
@@ -397,6 +397,7 @@ class APIController extends BaseController
         OUTPUT : UPDATED STATUS.     */
     public function saveDocDetails()
     {
+        $user_id = $this->request->user['USR_ID'];
         // for admin => will get customerId from parameters
         $CUST_ID = $this->request->getVar('customerId') ?? $this->request->user['USR_CUST_ID'];
 
@@ -448,7 +449,7 @@ class APIController extends BaseController
             "CUST_ADDRESS_1" => $this->request->getVar("address1"),
             "CUST_ADDRESS_2" => $this->request->getVar("address2"),
             "CUST_CITY" => $this->request->getVar("city"),
-            "CUST_UPDATE_UID" => $CUST_ID,
+            "CUST_UPDATE_UID" => $user_id,
             "CUST_UPDATE_DT" => date("d-M-Y")
         ];
 
@@ -501,7 +502,7 @@ class APIController extends BaseController
         OUTPUT : DELETED STATUS.  */
     public function deleteUploadedDOC()
     {
-        $user = $this->request->user;
+        $user_id = $this->request->user['USR_ID'];
         $return = false;
 
         $CUST_ID = $this->request->getVar("customerId"); //  proof
@@ -512,7 +513,7 @@ class APIController extends BaseController
         $doc_data = $this->DB->table('FLXY_DOCUMENTS')->select('*')->where(['DOC_CUST_ID' => $CUST_ID,  'DOC_FILE_TYPE' => 'PROOF', 'DOC_RESV_ID' => $RESID])->get()->getRowArray();
         // echo $this->DB->getLastQuery()->getQuery();die;
 	if(empty($doc_data)){
-	   return $this->respond(responseJson(500, true, ["msg" => "No Documents found for the customer =".$CUST_ID." with reservation =".$RESID]));die;
+	   return $this->respond(responseJson(500, true, ["msg" => "No Documents found for the customer = ".$CUST_ID." with reservation =".$RESID]));die;
 	}
         $filenames = $doc_data['DOC_FILE_PATH'];
 
@@ -542,7 +543,7 @@ class APIController extends BaseController
                 $data = [
                     "DOC_CUST_ID" => $CUST_ID,
                     "DOC_FILE_PATH" => implode(',', $filename_array),
-                    "DOC_UPDATE_UID" => $CUST_ID,
+                    "DOC_UPDATE_UID" => $user_id,
                     "DOC_UPDATE_DT" => date("Y-m-d H:i:s")
                 ];
                 $return = $this->DB->table('FLXY_DOCUMENTS')->where(['DOC_CUST_ID' => $CUST_ID, 'DOC_FILE_TYPE' => 'PROOF', 'DOC_RESV_ID' => $RESID])->update($data);
