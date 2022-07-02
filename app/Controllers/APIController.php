@@ -475,7 +475,11 @@ class APIController extends BaseController
 
         $param = ['CUST_ID' => $CUST_ID,'RESV_ID'=>$RESV_ID];
         //$sql = "SELECT  b.* ,a.DOC_FILE_PATH FROM FLXY_CUSTOMER b LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID: OR a.DOC_FILE_TYPE ='PROOF'";
-        $sql ="SELECT b.*, (SELECT a.DOC_FILE_PATH FROM FLXY_DOCUMENTS a WHERE a.DOC_FILE_TYPE ='PROOF' AND a.DOC_CUST_ID = :CUST_ID: AND DOC_RESV_ID = :RESV_ID: ) as DOC_FILE_PATH FROM FLXY_CUSTOMER b WHERE CUST_ID=:CUST_ID:";
+        $sql ="SELECT fc.*, fd.DOC_FILE_PATH 
+                FROM FLXY_CUSTOMER fc 
+                left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID
+                WHERE fc.CUST_ID = :CUST_ID:
+                    AND fd.DOC_RESV_ID = :RESV_ID: AND fd.DOC_FILE_TYPE = 'PROOF'";
         $data = $this->DB->query($sql, $param)->getRowArray();
 
         if (!empty($data)) {
