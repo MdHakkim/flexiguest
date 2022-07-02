@@ -473,17 +473,16 @@ class APIController extends BaseController
 
         $filePath = base_url('assets/Uploads/userDocuments/proof');
 
-        $param = ['CUST_ID' => $CUST_ID,'RESV_ID'=>$RESV_ID];
+        $param = ['CUST_ID' => $CUST_ID,'RESV_ID' => $RESV_ID];
         //$sql = "SELECT  b.* ,a.DOC_FILE_PATH FROM FLXY_CUSTOMER b LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID: OR a.DOC_FILE_TYPE ='PROOF'";
         $sql ="SELECT fc.*, fd.DOC_FILE_PATH 
                 FROM FLXY_CUSTOMER fc 
-                left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID
-                WHERE fc.CUST_ID = :CUST_ID:
-                    AND fd.DOC_RESV_ID = :RESV_ID: AND fd.DOC_FILE_TYPE = 'PROOF'";
+                left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID AND fd.DOC_RESV_ID = :RESV_ID: AND fd.DOC_FILE_TYPE = 'PROOF'
+                WHERE fc.CUST_ID = :CUST_ID:";
         $data = $this->DB->query($sql, $param)->getRowArray();
 
         if (!empty($data)) {
-            $data['DOCS'] = NULL;
+            $data['DOCS'] = [];
             if ($data['DOC_FILE_PATH']) {
                 $files_array = explode(',', $data['DOC_FILE_PATH']);
                 foreach ($files_array as $key => $value) {
