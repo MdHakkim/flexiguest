@@ -1196,8 +1196,9 @@ class AdditionalController extends BaseController
                     "MENU_NAME" => trim($this->request->getPost('MENU_NAME')),
                     "MENU_URL" => trim($this->request->getPost('MENU_URL')),
                     "MENU_DESC" => trim($this->request->getPost('MENU_DESC')),
+                    "MENU_ICON" => trim($this->request->getPost('MENU_ICON')),
                     "MENU_DIS_SEQ" => trim($this->request->getPost('MENU_DIS_SEQ')),
-                    "MENU_STATUS" => trim($this->request->getPost('MENU_STATUS'))               
+                    "MENU_STATUS" => null !==($this->request->getPost('MENU_STATUS'))? 1:0               
                 ];
 
     
@@ -1214,7 +1215,7 @@ class AdditionalController extends BaseController
         public function editMenu()
         {
             $param = ['SYSID' => $this->request->getPost('sysid')];    
-            $sql = "SELECT MENU_ID, PARENT_MENU_ID, MENU_CODE, MENU_NAME,MENU_URL, MENU_DESC, MENU_DIS_SEQ, MENU_STATUS
+            $sql = "SELECT MENU_ID, PARENT_MENU_ID, MENU_CODE, MENU_NAME,MENU_URL, MENU_DESC, MENU_ICON, MENU_DIS_SEQ, MENU_STATUS
                     FROM FLXY_MENU
                     WHERE MENU_ID=:SYSID: ";
     
@@ -1313,7 +1314,7 @@ class AdditionalController extends BaseController
             }
 
             $response = $this->Db->query($sql)->getResultArray();
-
+            
             $option = '<option value="">Choose an Option</option>';
             foreach ($response as $row) {
                 $option .= '<option value="' . $row['MENU_ID'] . '">' . $row['MENU_NAME']  . '</option>';

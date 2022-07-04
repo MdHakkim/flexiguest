@@ -26,7 +26,7 @@
 				transition: all 0.6s;
   }
 
-  .active {
+  .fa-chevron-down.active {
       transform: rotate(180deg);
     }
 			
@@ -165,7 +165,7 @@
                                       <div class="d-flex">
                                         <div class="form-check me-3 me-lg-5">
                                           <label class="switch switch-md">
-                                            <input id="sub_menu_id<?php echo $row1['sub_menu_id'] ?>" name="sub_menu_id[]" type="checkbox" value="<?php echo $row1['sub_menu_id'] ?>" class="switch-input menu-perm" />
+                                            <input id="MENU_ID<?php echo $row1['sub_menu_id'] ?>" name="sub_menu_id[]" type="checkbox" value="<?php echo $row1['sub_menu_id'] ?>" class="switch-input menu-perm" />
                                             <span class="switch-toggle-slider">
                                               <span class="switch-on">
                                                 <i class="bx bx-check"></i>
@@ -184,14 +184,14 @@
                                   <?php //}
                                 } }?>
                       <?php }
-                      } ?> 
+                      } ?>
                     </tbody>
                   </table>
                 </div>
                 <!-- Permission table -->
               </div>
               <div class="col-12 text-center">
-
+                  
                 <button type="button" id="submitBtn" onClick="submitForm('submitForm')" class="btn btn-primary me-1 me-sm-3">Submit</button>
                 <button type="reset" class="btn btn-label-secondary" data-bs-dismiss="modal" aria-label="Close">
                   Cancel
@@ -470,6 +470,15 @@
 </div>
 <script>
   $(document).ready(function() {
+
+    // // Select All checkbox click
+    // const selectAll = document.querySelector('#selectAll'),
+    // checkboxList = document.querySelectorAll('[type="checkbox"]');
+    // selectAll.addEventListener('change', t => {
+    // checkboxList.forEach(e => {
+    // e.checked = t.target.checked;
+    // });
+    // });
 
     loadRoles();
     roleList();
@@ -933,6 +942,10 @@
   // Edit Role Permissions
 
   $(document).on('click', '.role-edit-modal', function() {
+    checkboxList = document.querySelectorAll('[name="MENU_ID"]');
+
+   // alert(checkboxList.length);
+
     $('[type="checkbox"]').prop('checked', false);
     $('.dtr-bs-modal').modal('hide');
     roleTitle = document.querySelector('.role-title');
@@ -957,16 +970,35 @@
           $.each(data, function(fields, datavals) {
             var field = $.trim(fields); //fields.trim();
             var dataval = $.trim(datavals); //datavals.trim();
-            // alert(field);
-            // alert($('#' + field+dataval).attr('type'));
+               $('#' + field).prop('disabled',false);
+                $('#submitBtn').prop('disabled',false);
             if ($('#' + field + dataval).attr('type') == 'checkbox') {
               $('#' + field + dataval).prop('checked', true);
-            } else
+            } else if(dataval == 'Admin'){
+                $('#' + field).val(dataval);
+                $('#' + field).prop('disabled',true);
+                $('#submitBtn').prop('disabled',true);
+                $('#selectAll').prop('checked', true);
 
+            }
+            else{
               $('#' + field).val(dataval);
+            }
+
+              
 
           });
         });
+
+            ////  Administrator Access
+            var totalMenu = $('[name="MENU_ID[]"]').length; 
+            var totalSubMenu = $('[name="sub_menu_id[]"]').length; 
+            
+                
+            if(($('[name="MENU_ID[]"]:checked').length + $('[name="sub_menu_id[]"]:checked').length) === (totalMenu + totalSubMenu))
+            $('#selectAll').prop('checked', true);
+            else
+            $('#selectAll').prop('checked', false); 
         $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
       }
     });

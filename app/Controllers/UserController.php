@@ -548,7 +548,7 @@ class UserController extends BaseController
                 $response = $this->Db->query($sql)->getResultArray();
                 $responseCount = $this->Db->query($sql)->getNumRows();
 
-                $sql = "SELECT MENU_ID,MENU_NAME,PARENT_MENU_ID FROM FLXY_MENU WHERE MENU_STATUS = 0 AND PARENT_MENU_ID = 0"; 
+                $sql = "SELECT MENU_ID,MENU_NAME,PARENT_MENU_ID FROM FLXY_MENU WHERE MENU_STATUS = 1 AND PARENT_MENU_ID = 0"; 
                 $responseMenu = $this->Db->query($sql)->getResultArray();
                 $responseMenuCount = $this->Db->query($sql)->getNumRows();
                 if($responseMenuCount >0 ){
@@ -603,20 +603,28 @@ class UserController extends BaseController
                 $data = [ "ROLE_NAME" => trim($this->request->getPost('ROLE_NAME')),
                 "ROLE_CODE" => trim($this->request->getPost('ROLE_NAME'))];
 
-
-
                 $return = !empty($sysid) ? $this->Db->table('FLXY_USER_ROLE')->where('ROLE_ID', $sysid)->update($data) : $this->Db->table('FLXY_USER_ROLE')->insert($data);
                 $ROLE_ID = !empty($sysid) ? $sysid : $this->Db->insertID(); 
 
                 // if($sysid > 0 ){
                     $deleteRolePerm = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->delete(['ROLE_ID' => $sysid]);
-
                 
                     $MENU_PERM = $this->request->getPost('MENU_ID');
                     if(!empty($MENU_PERM)){               
                         for($i = 0; $i< count($MENU_PERM); $i++){
                             $data = [ "ROLE_ID" => trim($ROLE_ID),
                                 "ROLE_MENU_ID" => $MENU_PERM[$i],
+                                "ROLE_PERM_STATUS" => 1];
+                            $return = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->insert($data);
+                        
+                        }
+                    }
+
+                    $SUB_MENU_PERM = $this->request->getPost('sub_menu_id');
+                    if(!empty($SUB_MENU_PERM)){               
+                        for($j = 0; $j< count($SUB_MENU_PERM); $j++){
+                            $data = ["ROLE_ID" => trim($ROLE_ID),
+                                "ROLE_MENU_ID" => $SUB_MENU_PERM[$j],
                                 "ROLE_PERM_STATUS" => 1];
                             $return = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->insert($data);
                         
@@ -732,8 +740,8 @@ class UserController extends BaseController
 public function editRolePermission(){
     $param = ['SYSID' => $this->request->getPost('sysid')];    
     $sql = "SELECT FLXY_USER_ROLE.ROLE_ID, ROLE_MENU_ID as MENU_ID, ROLE_NAME
-            FROM FLXY_USER_ROLE INNER JOIN FLXY_USER_ROLE_PERMISSION ON FLXY_USER_ROLE.ROLE_ID = FLXY_USER_ROLE_PERMISSION.ROLE_ID
-            WHERE FLXY_USER_ROLE_PERMISSION.ROLE_ID=:SYSID: ";
+            FROM FLXY_USER_ROLE LEFT JOIN FLXY_USER_ROLE_PERMISSION ON FLXY_USER_ROLE.ROLE_ID = FLXY_USER_ROLE_PERMISSION.ROLE_ID
+            WHERE FLXY_USER_ROLE.ROLE_ID=:SYSID: ";
 
     $response = $this->Db->query($sql, $param)->getResultArray();
     echo json_encode($response);

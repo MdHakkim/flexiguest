@@ -75,16 +75,23 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label"><b> URL *</b></label>
+                                <label class="form-label"><b> URL </b></label>
                                 <input type="text" name="MENU_URL" id="MENU_URL"
                                     class="form-control bootstrap-maxlength" maxlength="50"
                                     placeholder="reservation" required />
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label"><b> Display Sequence</b></label>
+                                <label class="form-label"><b> Icon</b></label>
+                                <input type="text" name="MENU_ICON" id="MENU_ICON" class="form-control"
+                                    placeholder="" />
+                            </div> 
+                        </div>
+                        <div class="row g-3 mt-1">
+                            <div class="col-md-4 ">
+                                <label class="form-label"><b> Display Sequence *</b></label>
                                 <input type="number" name="MENU_DIS_SEQ" id="MENU_DIS_SEQ" class="form-control"
                                     min="0" placeholder="eg: 3" />
-                            </div>      
+                            </div>     
                             <div class="col-md-4">
                             <div class="text-left mt-4">
                                 <div class="col-md-12">
