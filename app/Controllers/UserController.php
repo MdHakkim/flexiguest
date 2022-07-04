@@ -553,7 +553,7 @@ class UserController extends BaseController
                 $responseMenuCount = $this->Db->query($sql)->getNumRows();
                 if($responseMenuCount >0 ){
                     foreach($responseMenu as $menu){
-                         $sql = "SELECT MENU_ID,MENU_NAME FROM FLXY_MENU WHERE MENU_STATUS = 0 AND PARENT_MENU_ID = ".$menu['MENU_ID']." AND  PARENT_MENU_ID > 0"; 
+                         $sql = "SELECT MENU_ID,MENU_NAME FROM FLXY_MENU WHERE MENU_STATUS = 1 AND PARENT_MENU_ID = ".$menu['MENU_ID']." AND  PARENT_MENU_ID > 0"; 
                         $subMenu = $this->Db->query($sql)->getResultArray();
                         $subMenuCount = $this->Db->query($sql)->getNumRows();
                         if($subMenuCount > 0)
