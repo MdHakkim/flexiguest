@@ -15,7 +15,6 @@ class LaundryAmenitiesOrder extends Model
         'LAO_TOTAL_PAYABLE',
         'LAO_PAYMENT_METHOD',
         'LAO_PAYMENT_STATUS',
-        'LAO_DELIVERY_STATUS',
         'LAO_CREATED_BY',
         'LAO_UPDATED_BY',
     ];

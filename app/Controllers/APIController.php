@@ -798,6 +798,10 @@ class APIController extends BaseController
             ],
         ]);
 
+        $reservation_status = 'Pre Checked-In';
+        if($user['USR_ROLE'] == 'admin')
+            $reservation_status = 'Checked-In';
+
         if (!$validate) {
             $validate = $this->validator->getErrors();
             $result = responseJson(403, true, $validate);
@@ -809,7 +813,7 @@ class APIController extends BaseController
             "RESV_ETA" => $this->request->getVar("estimatedTimeOfArrival"),
             "RESV_UPDATE_UID" => $USR_ID,
             "RESV_UPDATE_DT" => date("d-M-Y"),
-            "RESV_STATUS" => 'Pre Checked-In',
+            "RESV_STATUS" => $reservation_status,
         ];
 
         // update the signature in the documents table
@@ -1157,5 +1161,19 @@ class APIController extends BaseController
         $this->DB->query('update FLXY_DOCUMENTS set DOC_IS_VERIFY = 1 where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:', $params);
         
         return $this->respond(responseJson(200, false, ['msg' => 'Documents are verified.']));
+    }
+
+    public function guestCheckedIn()
+    {
+        $reservation_id = $this->request->getVar('reservation_id');
+
+        $params = ['reservation_id' => $reservation_id];
+        $check_exist = $this->DB->query('select * from FLXY_RESERVATION where RESV_ID = :reservation_id:', $params)->getResultArray();
+        if(!count($check_exist))
+            return $this->respond(responseJson(404, true, ['msg' => 'No reservation found.']));
+
+        $this->DB->query('update FLXY_RESERVATION set RESV_STATUS = "Checked-In" where RESV_ID = :reservation_id:', $params);
+    
+        return $this->respond(responseJson(200, false, ['msg' => 'Guest checked-in successfully.']));
     }
 }

@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Controllers\APIControllers\Admin;
+
+use App\Controllers\BaseController;
+use App\Models\LaundryAmenitiesOrder;
+use App\Models\LaundryAmenitiesOrderDetail;
+use App\Models\Product;
+use CodeIgniter\API\ResponseTrait;
+
+class LaundryAmenitiesController extends BaseController
+{
+    use ResponseTrait;
+
+    private $Product;
+    private $LaundryAmenitiesOrder;
+    private $LaundryAmenitiesOrderDetail;
+
+    public function __construct()
+    {
+        $this->Product = new Product();
+        $this->LaundryAmenitiesOrder = new LaundryAmenitiesOrder();
+        $this->LaundryAmenitiesOrderDetail = new LaundryAmenitiesOrderDetail();
+    }
+
+    public function ordersList()
+    {
+        $orders = $this->LaundryAmenitiesOrderDetail
+            ->join('FLXY_LAUNDRY_AMENITIES_ORDERS as lao', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_ORDER_ID = lao.LAO_ID')
+            ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
+            ->findAll();
+
+        foreach ($orders as $index => $order) {
+            $orders[$index]['PR_IMAGE'] = base_url($order['PR_IMAGE']);
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Orders list'], $orders));
+    }
+
+    public function updateDeliveryStatus()
+    {
+        $order_detail_id = $this->request->getVar('order_detail_id');
+        $delivery_status = $this->request->getVar('delivery_status'); // status => New, Processing, Delivered, Rejected
+
+        if(empty($this->LaundryAmenitiesOrderDetail->find($order_detail_id)))
+            return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
+        
+        $this->LaundryAmenitiesOrderDetail->update($order_detail_id, ['LAOD_DELIVERY_STATUS' => $delivery_status]);
+        return $this->respond(responseJson(200, false, ['msg' => 'Status updated successfully.']));
+    }
+}
