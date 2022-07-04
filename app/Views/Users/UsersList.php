@@ -691,6 +691,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
     $('#popModalWindowlabel').html('Add New User');
     $('#popModalWindow').modal('show');
     countryList();
+    roleList()
   }
 
  
@@ -724,8 +725,9 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                 
                 var alertText = $('#USR_ID').val() == '' ? '<li>New user has been added </li>' : '<li>The user has been updated</li>';
 
-
                 showModalAlert('success', alertText);
+                $('#infoModal').delay(2500).fadeOut();
+                $('#successModal').delay(2500).fadeOut();  
                 roleList();
                 $('#popModalWindow').modal('hide');
                 $('.datatables-users').dataTable().fnDraw();
