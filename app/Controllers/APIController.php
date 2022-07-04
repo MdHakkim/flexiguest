@@ -1172,7 +1172,7 @@ class APIController extends BaseController
         if(!count($check_exist))
             return $this->respond(responseJson(404, true, ['msg' => 'No reservation found.']));
 
-        $this->DB->query('update FLXY_RESERVATION set RESV_STATUS = "Checked-In" where RESV_ID = :reservation_id:', $params);
+        $this->DB->query("update FLXY_RESERVATION set RESV_STATUS = 'Checked-In' where RESV_ID = :reservation_id:", $params);
     
         return $this->respond(responseJson(200, false, ['msg' => 'Guest checked-in successfully.']));
     }
