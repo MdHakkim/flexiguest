@@ -38,10 +38,18 @@ class LaundryAmenitiesController extends BaseController
             if (empty($pr))
                 return $this->respond(responseJson(404, true, ['msg' => 'Invalid Product']));
 
-            // $products[$index]['amount'] = $product->quanitity * $pr['PR_PRICE'];
+            if($pr['PR_QUANTITY'] == 0)
+                return $this->respond(responseJson(202, true, ['msg' => "{$pr['PR_NAME']} is out of stock."]));
+            else if ($product->quantity > $pr['PR_QUANTITY'])
+                return $this->respond(responseJson(202, true, ['msg' => "We have {$pr['PR_QUANTITY']} {$pr['PR_NAME']} left in stock. So you can order {$pr['PR_QUANTITY']} {$pr['PR_NAME']} only."]));
+
+            $pr['PR_QUANTITY'] = $pr['PR_QUANTITY'] - $product->quantity;
+            $this->Product->save($pr);
+
+            $product->expiry_date = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')) + ($pr['PR_ESCALATED_HOURS'] * 60 * 60) + ($pr['PR_ESCALATED_MINS'] * 60));
             $product->amount = $product->quantity * $pr['PR_PRICE'];
             $total_payable += ($product->quantity * $pr['PR_PRICE']);
-        }
+        }   
 
         $order_id = $this->LaundryAmenitiesOrder->insert([
             'LAO_RESERVATION_ID' => $params->reservation_id,
@@ -62,6 +70,7 @@ class LaundryAmenitiesController extends BaseController
                 'LAOD_PRODUCT_ID' => $product->id,
                 'LAOD_QUANTITY' => $product->quantity,
                 'LAOD_AMOUNT' => $product->amount,
+                'LAOD_EXPIRY_DATETIME' => $product->expiry_date,
                 'LAOD_CREATED_BY' => $user_id,
                 'LAOD_UPDATED_BY' => $user_id
             ]);
@@ -73,7 +82,7 @@ class LaundryAmenitiesController extends BaseController
     public function listOrders()
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
-        
+
         $orders = $this->LaundryAmenitiesOrder
             ->select('FLXY_LAUNDRY_AMENITIES_ORDERS.*, rm.RM_NO')
             ->join('FLXY_ROOM as rm', 'FLXY_LAUNDRY_AMENITIES_ORDERS.LAO_ROOM_ID = rm.RM_ID')
@@ -95,7 +104,7 @@ class LaundryAmenitiesController extends BaseController
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
         $order_id = $this->request->getVar('order_id');
-        
+
         $order = $this->LaundryAmenitiesOrder
             ->select('FLXY_LAUNDRY_AMENITIES_ORDERS.*, 
             fr.RESV_ARRIVAL_DT, fr.RESV_DEPARTURE,
@@ -115,9 +124,9 @@ class LaundryAmenitiesController extends BaseController
             ->where('LAO_CUSTOMER_ID', $customer_id)
             ->first();
 
-        if(empty($order))
+        if (empty($order))
             return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
-        
+
         $order['order_details'] = $this->LaundryAmenitiesOrderDetail
             ->select('FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.*, pr.PR_NAME, pr.PR_PRICE')
             ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
@@ -128,7 +137,7 @@ class LaundryAmenitiesController extends BaseController
         $dompdf->loadHtml(view('Templates/LaundryAmenitiesInvoiceTemplate', ['order' => $order]));
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-        
+
         $file_name = "assets/laundry-amenities-invoices/ORD{$order['LAO_ID']}-Invoice.pdf";
         file_put_contents($file_name, $dompdf->output());
 
