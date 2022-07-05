@@ -703,6 +703,11 @@ class ApplicatioController extends BaseController
 
         $data['rateCodeOptions'] = $this->rateCodeList();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
+        
+        $data['profileTypeOptions'] = profileTypeList();
+        $data['membershipTypes'] = getMembershipTypeList(NULL, 'edit');
+        
+
         $data['title'] = getMethodName();
         return view('Reservation/Customer', $data);
     }

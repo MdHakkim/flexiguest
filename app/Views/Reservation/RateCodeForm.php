@@ -1662,8 +1662,17 @@ $(document).ready(function() {
 
         hideModalAlerts();
         clearFormFields('.dt_adv_search');
-        $('#combined_profiles').dataTable().fnDraw();
+        //$('#combined_profiles').dataTable().fnDraw();
 
+        var filterData = [
+            /*{
+                    field: '#S_PROFILE_TYPE',
+                    value: '1',
+                    status: '0'
+                }*/
+        ];
+
+        loadProfilesTable(filterData);
     });
 
     $(document).on('click', '.edit-negotiated-rate', function() {

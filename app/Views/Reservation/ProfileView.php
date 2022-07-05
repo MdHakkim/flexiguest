@@ -24,7 +24,7 @@
             <!-- <h5 class="card-header">Responsive Datatable</h5> -->
             <div class="container-fluid p-3">
 
-            <?= $this->include('includes/CombinedProfilesTable') ?>
+                <?= $this->include('includes/CombinedProfilesTable') ?>
 
             </div>
         </div>
@@ -36,5 +36,21 @@
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
+
+<script>
+$(document).ready(function() {
+
+    var filterData = [
+        /*{
+                field: '#S_PROFILE_TYPE',
+                value: '1',
+                status: '0'
+            }*/
+    ];
+
+    loadProfilesTable(filterData);
+
+});
+</script>
 
 <?=$this->endSection()?>

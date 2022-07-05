@@ -18,9 +18,12 @@
                     <button type="button" class="btn btn-primary show-cust-memberships" data_sysid="" data_custname=""
                         data-bs-toggle="modal" data-bs-target="#customerMembershipsWindow" data_sysid=""
                         data_custname="">Memberships</button>
-                    <button type="button" title="Negotiated Rates" class="btn btn-primary show-cust-negotiated-rates" data_sysid="" data_custname=""
-                        data-bs-toggle="modal" data-bs-target="#customerNegotiatedRatesWindow" data_sysid=""
-                        data_custname="">Neg. Rates</button>
+                    <button type="button" class="btn btn-primary merge-profile" data_sysid=""
+                        data_custname="">Merge</button>
+                    <button type="button" title="Negotiated Rates" class="btn btn-primary show-cust-negotiated-rates"
+                        data_sysid="" data_custname="" data-bs-toggle="modal"
+                        data-bs-target="#customerNegotiatedRatesWindow" data_sysid="" data_custname="">Neg.
+                        Rates</button><br />
                     <button type="button" class="btn btn-primary">Preferences</button>
                 </div>
             </div>
@@ -108,7 +111,6 @@
 <!-- Changes Log window end -->
 
 <script>
-
 var custOptId = '';
 
 // Click Customer Options button
@@ -120,7 +122,9 @@ $(document).on('click', '.custOptions', function() {
     $('.modal').modal('hide');
     $('#custOptionsWindow').modal('show');
 
-    $('#custOptionsWindow').find('.data-port,.delete-record,.show-cust-activity-log,.show-cust-memberships,.show-cust-negotiated-rates')
+    $('#custOptionsWindow').find(
+            '.data-port,.delete-record,.show-cust-activity-log,.show-cust-memberships,.show-cust-negotiated-rates,.merge-profile'
+            )
         .attr({
             'data_sysid': custOptId,
             'data_custname': custName
@@ -466,14 +470,14 @@ function showCustomerMemberships(custId = 0) {
 
 // Funtion to execute after Customer Memberhsip form submit
 
-function afterMemFormClose()
-{
+function afterMemFormClose() {
     $('#customerMembershipsWindow').modal('show');
     $('#customer_memberships').dataTable().fnDraw();
 }
-
 </script>
 
 <?= $this->include('includes/CustomerMembershipPopup') ?>
 
 <?= $this->include('includes/CustomerNegRatesPopup') ?>
+
+<?= $this->include('includes/ProfileMergePopup') ?>

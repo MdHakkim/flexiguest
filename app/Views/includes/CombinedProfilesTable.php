@@ -178,7 +178,7 @@
     </div>
 </form>
 
-<div class="combined_profiles_div  table-responsive text-nowrap">
+<div class="combined_profiles_div table-responsive text-nowrap">
     <table id="combined_profiles" class="table table-hover table-bordered table-striped">
         <thead>
             <tr>
@@ -209,12 +209,11 @@
 </div>
 
 <script>
-
 var clicked_profile_ids = [];
 
 $(document).ready(function() {
 
-    <?php if(isset($rateCodeID)) { ?>
+    <?php if(isset($rateCodeID)) { ?> // If Rate Code details page
 
 
     $(document).on('click', '#combined_profiles > tbody > tr', function() {
@@ -249,16 +248,33 @@ $(document).ready(function() {
 
     <?php } ?>
 
-    // Combined Profiles (Customer, Company, Agent, Group) List for Negotiated Rates
+});
+
+// Combined Profiles (Customer, Company, Agent, Group) List for Negotiated Rates
+
+function loadProfilesTable(filterData) {
 
     $('#combined_profiles').DataTable({
         'processing': true,
         'serverSide': true,
+        async: false,
         'serverMethod': 'post',
         'ajax': {
             'url': '<?php echo base_url('/combinedProfilesView')?>',
             'type': 'POST',
             'data': function(d) {
+
+                if (filterData.length) {
+                    $.each(filterData, function(i, filterDetail) {
+                        if ($(filterDetail['field']).length) {
+                            $(filterDetail['field']).val(filterDetail['value']);
+                            $(filterDetail['field']).prop("disabled", filterDetail['status'] == 1 ?
+                                false : true);
+                            d[$(filterDetail['field']).attr('name')] = filterDetail['value'];
+                        }
+                    });
+                }
+
                 var formSerialization = $('.dt_adv_search').serializeArray();
                 $(formSerialization).each(function(i, field) {
                     d[field.name] = field.value;
@@ -326,7 +342,7 @@ $(document).ready(function() {
                 data: 'PROFILE_VIP'
             },
             {
-                "defaultContent": ""
+                data: 'RATE_CODES'
             },
             {
                 "defaultContent": ""
@@ -435,8 +451,7 @@ $(document).ready(function() {
         }
         <?php } ?>
     });
-
-});
+}
 
 (function() {
 
