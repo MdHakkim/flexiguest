@@ -25,6 +25,7 @@
           <thead>
             <tr>
               <th></th>
+              <th>ID</th>
               <th>User</th>
               <th>User Role</th>
               <th>Department</th>
@@ -353,6 +354,10 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
             data: ''
           },
           {
+            data: 'USR_ID',
+            'visible': false
+          },
+          {
             data: 'USR_NAME'
           },
           {
@@ -383,8 +388,13 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
             }
           },
           {
-            // User full name and email
             targets: 1,
+            
+            
+          },
+          {
+            // User full name and email
+            targets: 2,
             responsivePriority: 4,
             render: function(data, type, full, meta) {
               var $name = full['USR_FIRST_NAME']??'' + '' + full['USR_LAST_NAME']??'',
@@ -453,7 +463,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
           },
           {
             // User Status
-            targets: 5,
+            targets: 6,
             render: function(data, type, full, meta) {
               var $status = full['USR_STATUS'];
               return '<span class="badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';
@@ -640,7 +650,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
             });
           // Adding status filter once table initialized
           this.api()
-            .columns(5)
+            .columns(6)
             .every(function() {
               var column = this;
               var select = $(
