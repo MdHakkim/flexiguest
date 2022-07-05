@@ -362,6 +362,9 @@ $(document).on('click', '.editWindow', function() {
                     if (field == 'PARENT_MENU_ID') {                                        
                         $('#' + field).val(dataval).trigger('change');
                     } 
+                    else if ($('#' + field).attr('type') == 'checkbox') {
+                        $('#' + field).prop('checked', dataval == 1 ? true : false);
+                    } 
                     else{
                         $('#' + field).val(dataval);
                     }             

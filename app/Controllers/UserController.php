@@ -456,7 +456,7 @@ class UserController extends BaseController
                     "USR_CITY" => trim($this->request->getPost('USR_CITY')),
                     "USR_DOJ" => date('Y-m-d', strtotime($this->request->getPost('USR_DOJ'))),
                     "USR_PHONE" => trim($this->request->getPost('USR_PHONE')),                   
-                    "USR_GENDER" => trim(($this->request->getPost('USR_GENDER') == 'on') ? 1 : 0),
+                    "USR_GENDER" => trim(!($this->request->getPost('USR_GENDER'))) ? 0 :1,
                     "USR_TEL_EXT" => trim($this->request->getPost('USR_TEL_EXT')),
                     "USR_CREATED_DT" => date("Y-m-d H:i:s"),
                     "USR_STATUS" => trim(!($this->request->getPost('USR_STATUS')) ? 0 :1)

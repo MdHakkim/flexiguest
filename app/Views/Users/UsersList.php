@@ -437,7 +437,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
           },
           {
             // User Role
-            targets: 2,
+            targets: 3,
             render: function(data, type, full, meta) {
               var $role = full['ROLE_NAME'] ?? '';
               if (full['USR_ROLE_ID'] <= 3) {
@@ -455,7 +455,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
           },
           {
             // Department
-            targets: 3,
+            targets: 4,
             render: function(data, type, full, meta) {
               var $DEPT_CODE = (full['DEPT_DESC'] ?? "");
               return '<span class="fw-semibold">' + $DEPT_CODE  + '</span>';
