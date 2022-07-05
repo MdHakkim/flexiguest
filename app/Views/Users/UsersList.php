@@ -399,7 +399,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                 var stateNum = Math.floor(Math.random() * 6);
                 var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
                 var $state = states[stateNum],
-                  $name = full['USR_FIRST_NAME'] + ' ' + full['USR_LAST_NAME'],
+                //  $name = full['USR_FIRST_NAME'] + ' ' + full['USR_LAST_NAME'],
                   $initials = $name.match(/\b\w/g) || [];
                 $initials = (($initials.shift() || '') + ($initials.pop() || '')).toUpperCase();
                 $output = '<span class="avatar-initial rounded-circle bg-label-' + $state + '">' + $initials + '</span>';
@@ -447,7 +447,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
             // Department
             targets: 3,
             render: function(data, type, full, meta) {
-              var $DEPT_CODE = (full['DEPT_CODE'] + '| ' + full['DEPT_DESC']);
+              var $DEPT_CODE = (full['DEPT_DESC'] ?? "");
               return '<span class="fw-semibold">' + $DEPT_CODE  + '</span>';
             }
           },

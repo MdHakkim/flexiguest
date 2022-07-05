@@ -16,7 +16,7 @@ class Menu{
     public function display(){
 
         $url  = $_SERVER["PHP_SELF"];
-        $path = explode("/", $url); 
+        $path = explode(".com/", $url); 
         $title = end($path);
         $rolesMenuOutput = $rolesSubmenuOutput = '';
         $user_role = session()->get('USR_ROLE_ID');
@@ -70,10 +70,9 @@ class Menu{
 
                 ///END SUBMENU 
 
-
                 $menu_item_active = '';               
                 
-                $menu_item_active = (isset($title) && (in_array($title, $submenu_url_array))) ? 'active open' : '' ;        
+               $menu_item_active = (isset($title) && (in_array($title, $submenu_url_array))) ? 'active open' : '' ;        
                 $menu_icon = $menu['MENU_ICON'];
                 if($menu['MENU_NAME'] == 'Support')
                 $misc = '<!-- Misc -->
