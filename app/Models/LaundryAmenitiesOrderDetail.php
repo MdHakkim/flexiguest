@@ -15,6 +15,7 @@ class LaundryAmenitiesOrderDetail extends Model
         'LAOD_AMOUNT',
         'LAOD_DELIVERY_STATUS',
         'LAOD_EXPIRY_DATETIME',
+        'LAOD_IS_REQUEST_ESCALATED',
         'LAOD_CREATED_BY',
         'LAOD_UPDATED_BY',
     ];

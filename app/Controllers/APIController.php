@@ -1029,7 +1029,7 @@ class APIController extends BaseController
         return $this->respond($result);
     }
 
-    public function getMaintenanceRoomList()
+    public function guestApartmentList()
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
 
