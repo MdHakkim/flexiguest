@@ -572,7 +572,7 @@
                 var stateNum = Math.floor(Math.random() * 6);
                 var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
                 var $state = states[stateNum],
-                  $name = full['USR_FIRST_NAME'] + ' ' + full['USR_LAST_NAME'],
+                  //$name = full['USR_FIRST_NAME'] + ' ' + full['USR_LAST_NAME'],
                   $initials = $name.match(/\b\w/g) || [];
                 $initials = (($initials.shift() || '') + ($initials.pop() || '')).toUpperCase();
                 $output = '<span class="avatar-initial rounded-circle bg-label-' + $state + '">' + $initials + '</span>';
@@ -620,7 +620,7 @@
             // Department
             targets: 3,
             render: function(data, type, full, meta) {
-              var $DEPT_DESC = (full['DEPT_DESC']);
+              var $DEPT_DESC = (full['DEPT_DESC'] ?? "");
               return '<span class="fw-semibold">' + $DEPT_DESC + '</span>';
             }
           },
@@ -837,6 +837,8 @@
       $('#ROLE_ID').val('');
       $('[type="checkbox"]').prop('checked', false);
       $('#submitForm').not('[type="checkbox"]').prop('checked', false);
+      $('#ROLE_NAME').prop('disabled',false);
+      $('#submitBtn').prop('disabled',false);
       var roleEditList = document.querySelectorAll('.role-edit-modal'),
         roleAdd = document.querySelector('.add-new-role'),
         roleTitle = document.querySelector('.role-title');
@@ -970,14 +972,14 @@
           $.each(data, function(fields, datavals) {
             var field = $.trim(fields); //fields.trim();
             var dataval = $.trim(datavals); //datavals.trim();
-               $('#' + field).prop('disabled',false);
+                $('#' + field).prop('disabled',false);
                 $('#submitBtn').prop('disabled',false);
             if ($('#' + field + dataval).attr('type') == 'checkbox') {
               $('#' + field + dataval).prop('checked', true);
             } else if(dataval == 'Admin'){
                 $('#' + field).val(dataval);
-                $('#' + field).prop('disabled',true);
-                $('#submitBtn').prop('disabled',true);
+                //$('#' + field).prop('disabled',true);
+               //$('#submitBtn').prop('disabled',true);
                 $('#selectAll').prop('checked', true);
 
             }
