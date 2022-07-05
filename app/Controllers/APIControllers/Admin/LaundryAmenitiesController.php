@@ -40,10 +40,18 @@ class LaundryAmenitiesController extends BaseController
     public function updateDeliveryStatus()
     {
         $order_detail_id = $this->request->getVar('order_detail_id');
-        $delivery_status = $this->request->getVar('delivery_status'); // status => New, Processing, Delivered, Rejected
+        $delivery_status = $this->request->getVar('delivery_status'); // status => New, Processing, Delivered, Rejected, Acknowledged
 
-        if(empty($this->LaundryAmenitiesOrderDetail->find($order_detail_id)))
+        $order_detail = $this->LaundryAmenitiesOrderDetail->find($order_detail_id);
+        if(empty($order_detail))
             return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
+        
+        $payment_status = $this->LaundryAmenitiesOrder->find($order_detail['LAOD_ORDER_ID']);
+        if(empty($payment_status))
+            return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
+
+        if($payment_status['LAO_PAYMENT_STATUS'] == 'UnPaid')
+            return $this->respond(responseJson(202, true, ['msg' => 'Can\'t change status becasue payment is still pending for this order.']));
         
         $this->LaundryAmenitiesOrderDetail->update($order_detail_id, ['LAOD_DELIVERY_STATUS' => $delivery_status]);
         return $this->respond(responseJson(200, false, ['msg' => 'Status updated successfully.']));

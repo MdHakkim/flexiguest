@@ -90,11 +90,19 @@ class LaundryAmenitiesController extends BaseController
             ->findAll();
 
         foreach ($orders as $index => $order) {
-            $orders[$index]['order_details'] = $this->LaundryAmenitiesOrderDetail
+            $order_details = $this->LaundryAmenitiesOrderDetail
                 ->select('FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.*, pr.PR_NAME')
                 ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
                 ->where('LAOD_ORDER_ID', $order['LAO_ID'])
                 ->findAll();
+
+            $orders[$index]['LAO_DELIVERY_STATUS'] = 'Delivered';
+            foreach($order_details as $order_detail){
+                if($order_detail['LAOD_DELIVERY_STATUS'] == 'New' || $order_detail['LAOD_DELIVERY_STATUS'] == 'Processing')
+                    $orders[$index]['LAO_DELIVERY_STATUS'] = 'New';
+            }
+
+            $orders[$index]['order_details'] = $order_details;
         }
 
         return $this->respond(responseJson(200, false, ['msg' => 'order list'], $orders));
@@ -142,5 +150,21 @@ class LaundryAmenitiesController extends BaseController
         file_put_contents($file_name, $dompdf->output());
 
         return $this->respond(responseJson(200, false, ['msg' => 'Invoice'], ['invoice' => base_url($file_name)]));
+    }
+
+    public function acknowledgedDelivery()
+    {
+        $order_detail_id = $this->request->getVar('order_detail_id');
+        $delivery_status = 'Acknowledged'; // status => New, Processing, Delivered, Rejected, Acknowledged
+
+        $order_detail = $this->LaundryAmenitiesOrderDetail->find($order_detail_id);
+        if(empty($order_detail))
+            return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
+
+        if($order_detail['LAOD_DELIVERY_STATUS'] != 'Delivered' && $order_detail['LAOD_DELIVERY_STATUS'] != 'Acknowledged')
+            return $this->respond(responseJson(404, true, ['msg' => 'This item is not delivered yet.']));
+        
+        $this->LaundryAmenitiesOrderDetail->update($order_detail_id, ['LAOD_DELIVERY_STATUS' => $delivery_status]);
+        return $this->respond(responseJson(200, false, ['msg' => 'Status updated to Acknowledged successfully.']));
     }
 }

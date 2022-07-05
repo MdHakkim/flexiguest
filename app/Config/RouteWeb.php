@@ -546,3 +546,7 @@ $routes->group("webline", function ($routes) {
     $routes->match(['post'],'/confirmPrecheckinStatus', 'ApplicatioController::confirmPrecheckinStatus'); 
     $routes->match(['get'],'/reservationCheckin', 'ApplicatioController::reservationCheckin'); 
     $routes->get('autherropage', 'ApplicatioController::AuthErroPage');
+
+$routes->group('laundry-amenities', function($routes) {
+    $routes->get('check-unattended-items', 'LaundryAmenitiesController::checkUnattendedItems');
+});
