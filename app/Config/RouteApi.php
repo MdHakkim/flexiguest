@@ -126,12 +126,17 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
         $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
     });
 
+    
+    $routes->group('laundry-amenities', function($routes) {
+        $routes->get("orders-list", "LaundryAmenitiesController::ordersList");
+        $routes->post("update-delivery-status", "LaundryAmenitiesController::updateDeliveryStatus");
+    });
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  
     $routes->get("profile", "APIController::profileAPI");
-
     $routes->post('checkin/verify-documents', 'APIController::verifyDocuments');
+    $routes->post('checkin/guest-checked-in', 'APIController::guestCheckedIn');
 });
 // ADMIN ROUTES (END)
 

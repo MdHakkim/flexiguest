@@ -1149,19 +1149,23 @@ class AdditionalController extends BaseController
         ///////////// Menu ///////////
 
 
+
         public function Menu()  
         {            
             $data['title'] = getMethodName();
             $data['session'] = $this->session;  
+           // $data['menuLists'] = $this->menuLists();
             return view('Master/MenuView', $data);           
         }
     
         public function MenuView()
         {
             $mine      = new ServerSideDataTable(); 
-            $tableName = 'FLXY_MENU';
-            $columns = 'MENU_ID,MENU_CODE,MENU_NAME,MENU_URL,MENU_DESC,MENU_DIS_SEQ,MENU_STATUS';  
-            $mine->generate_DatatTable($tableName, $columns);
+            $tableName = 'FLXY_MENU LEFT JOIN (SELECT MENU_ID AS P_MENU_ID, MENU_NAME AS P_MENU_NAME FROM FLXY_MENU WHERE PARENT_MENU_ID = 0) P ON P.P_MENU_ID = FLXY_MENU.PARENT_MENU_ID';
+
+            $columns = 'MENU_ID|MENU_CODE|MENU_NAME|MENU_URL|MENU_DESC|MENU_DIS_SEQ|MENU_STATUS|P_MENU_NAME'; 
+
+            $mine->generate_DatatTable($tableName, $columns, [], '|');
             exit;
         }
     
@@ -1170,11 +1174,11 @@ class AdditionalController extends BaseController
             try {
                 $sysid = $this->request->getPost('MENU_ID');
 
-                $validate = $this->validate([
+                $validate = $this->validate([                  
                     'MENU_CODE' => ['label' => 'Menu Code', 'rules' => 'required|is_unique[FLXY_MENU.MENU_CODE,MENU_ID,' . $sysid . ']'],
                     'MENU_NAME' => ['label' => 'Menu Name', 'rules' => 'required|is_unique[FLXY_MENU.MENU_NAME,MENU_ID,' . $sysid . ']'],
                     'MENU_DESC' => ['label' => 'Description', 'rules' => 'required'],
-                    'MENU_URL' => ['label' => 'Description', 'rules' => 'required']                         
+                                      
                     
                 ]);
                 if (!$validate) {
@@ -1187,13 +1191,16 @@ class AdditionalController extends BaseController
                 }
     
                 $data = [
+                    "PARENT_MENU_ID" => trim($this->request->getPost('PARENT_MENU_ID')),
                     "MENU_CODE" => trim($this->request->getPost('MENU_CODE')),
                     "MENU_NAME" => trim($this->request->getPost('MENU_NAME')),
-                    "MENU_DESC" => trim($this->request->getPost('MENU_DESC')),
                     "MENU_URL" => trim($this->request->getPost('MENU_URL')),
+                    "MENU_DESC" => trim($this->request->getPost('MENU_DESC')),
+                    "MENU_ICON" => trim($this->request->getPost('MENU_ICON')),
                     "MENU_DIS_SEQ" => trim($this->request->getPost('MENU_DIS_SEQ')),
-                    "MENU_STATUS" => trim($this->request->getPost('MENU_STATUS'))               
+                    "MENU_STATUS" => null !==($this->request->getPost('MENU_STATUS'))? 1:0               
                 ];
+
     
                 $return = !empty($sysid) ? $this->Db->table('FLXY_MENU')->where('MENU_ID', $sysid)->update($data) : $this->Db->table('FLXY_MENU')->insert($data);
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
@@ -1202,161 +1209,15 @@ class AdditionalController extends BaseController
                 return $this->respond($e->errors());
             }
         }
+
+        
     
         public function editMenu()
         {
-            $param = ['SYSID' => $this->request->getPost('sysid')];
-    
-            $sql = "SELECT MENU_ID, MENU_CODE, MENU_NAME, MENU_URL, MENU_DESC, MENU_DIS_SEQ, MENU_STATUS
+            $param = ['SYSID' => $this->request->getPost('sysid')];    
+            $sql = "SELECT MENU_ID, PARENT_MENU_ID, MENU_CODE, MENU_NAME,MENU_URL, MENU_DESC, MENU_ICON, MENU_DIS_SEQ, MENU_STATUS
                     FROM FLXY_MENU
                     WHERE MENU_ID=:SYSID: ";
-    
-            $response = $this->Db->query($sql, $param)->getResultArray();
-            echo json_encode($response);
-        }
-    
-    
-        public function checkMenu($menuCode)
-        {
-            $sql = "SELECT MENU_ID
-                    FROM FLXY_MENU
-                    WHERE MENU_CODE = '" . $menuCode . "'";
-    
-            $response = $this->Db->query($sql)->getNumRows();
-            return $menuCode == '' || strlen($menuCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
-        }
-    
-        public function copyMenu()
-        {
-            try {
-                $param = ['SYSID' => $this->request->getPost('main_Menu_ID')];
-    
-                $sql = "SELECT MENU_ID, MENU_CODE, MENU_NAME, MENU_DESC, MENU_URL, MENU_DIS_SEQ, MENU_STATUS
-                        FROM FLXY_MENU
-                        WHERE MENU_ID=:SYSID:";
-    
-                $origGuestCode = $this->Db->query($sql, $param)->getResultArray()[0];
-                $no_of_added = 0;
-                $submitted_fields = $this->request->getPost('group-a');
-    
-                if ($submitted_fields != null) {
-                    foreach ($submitted_fields as $submitted_field) {
-                        if (!$this->checkMenu($submitted_field['MENU_CODE'])) // Check if entered Guest Type already exists
-                        {
-                            $newRateCode = [
-                                "MENU_CODE" => trim($submitted_field["MENU_CODE"]),
-                                "MENU_NAME" => $origGuestCode["MENU_NAME"],
-                                "MENU_DESC" => $origGuestCode["MENU_DESC"],
-                                "MENU_DIS_SEQ" => '',
-                                "MENU_STATUS" => $origGuestCode["MENU_STATUS"],
-                               
-                            ];
-    
-                            $this->Db->table('FLXY_MENU')->insert($newRateCode);
-    
-                            $no_of_added += $this->Db->affectedRows();
-                        }
-                    }
-                }
-    
-                echo $no_of_added;
-                exit;
-    
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
-        }
-
-
-        public function deleteMenu()
-        {
-            $sysid = $this->request->getPost('sysid');
-    
-            try {
-                //Soft Delete
-                //$data = ["CUR_DELETED" => "1"];
-                //$return =  $this->Db->table('FLXY_CURRENCY')->where('CUR_ID', $sysid)->update($data);
-                $return = $this->Db->table('FLXY_MENU')->delete(['MENU_ID' => $sysid]);
-                $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
-                echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
-        }
-    
-
-
-
-        
-        ///////////// Sub Menu ///////////
-
-
-        public function SubMenu()  
-        {            
-            $data['title'] = getMethodName();
-            $data['session'] = $this->session;  
-            $data['menuLists'] = $this->menuLists();
-            return view('Master/SubMenuView', $data);           
-        }
-    
-        public function SubMenuView()
-        {
-            $mine      = new ServerSideDataTable(); 
-            $tableName = 'FLXY_SUB_MENU INNER JOIN FLXY_MENU ON FLXY_SUB_MENU.MENU_ID = FLXY_MENU.MENU_ID';
-            $columns = 'MENU_NAME,SUB_MENU_ID,SUB_MENU_CODE,SUB_MENU_NAME,SUB_MENU_URL,SUB_MENU_DESC,SUB_MENU_DIS_SEQ,SUB_MENU_STATUS';  
-            $mine->generate_DatatTable($tableName, $columns);
-            exit;
-        }
-    
-        public function insertSubMenu()
-        {
-            try {
-                $sysid = $this->request->getPost('SUB_MENU_ID');
-
-                $validate = $this->validate([
-                    'MENU_ID' => ['label' => 'Menu', 'rules' => 'required'] ,
-                    'SUB_MENU_CODE' => ['label' => 'Sub Menu Code', 'rules' => 'required|is_unique[FLXY_SUB_MENU.SUB_MENU_CODE,SUB_MENU_ID,' . $sysid . ']'],
-                    'SUB_MENU_URL' => ['label' => 'Sub Menu URL', 'rules' => 'required|is_unique[FLXY_SUB_MENU.SUB_MENU_URL,SUB_MENU_ID,' . $sysid . ']'],
-                    'SUB_MENU_NAME' => ['label' => 'Sub Menu Name', 'rules' => 'required|is_unique[FLXY_SUB_MENU.SUB_MENU_NAME,SUB_MENU_ID,' . $sysid . ']'],
-                    'SUB_MENU_DESC' => ['label' => 'Description', 'rules' => 'required']                        
-                    
-                ]);
-                if (!$validate) {
-                    $validate = $this->validator->getErrors();
-                    $result["SUCCESS"] = "-402";
-                    $result[]["ERROR"] = $validate;
-                    $result = $this->responseJson("-402", $validate);
-                    echo json_encode($result);
-                    exit;
-                }
-    
-                $data = [
-                    "MENU_ID" => trim($this->request->getPost('MENU_ID')),
-                    "SUB_MENU_CODE" => trim($this->request->getPost('SUB_MENU_CODE')),
-                    "SUB_MENU_NAME" => trim($this->request->getPost('SUB_MENU_NAME')),
-                    "SUB_MENU_URL" => trim($this->request->getPost('SUB_MENU_URL')),
-                    "SUB_MENU_DESC" => trim($this->request->getPost('SUB_MENU_DESC')),
-                    "SUB_MENU_DIS_SEQ" => trim($this->request->getPost('SUB_MENU_DIS_SEQ')),
-                    "SUB_MENU_STATUS" => trim($this->request->getPost('SUB_MENU_STATUS'))               
-                ];
-    
-                $return = !empty($sysid) ? $this->Db->table('FLXY_SUB_MENU')->where('SUB_MENU_ID', $sysid)->update($data) : $this->Db->table('FLXY_SUB_MENU')->insert($data);
-                $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
-                echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
-        }
-
-        
-    
-        public function editSubMenu()
-        {
-            $param = ['SYSID' => $this->request->getPost('sysid')];
-    
-            $sql = "SELECT MENU_ID, SUB_MENU_ID, SUB_MENU_CODE, SUB_MENU_NAME,SUB_MENU_URL, SUB_MENU_DESC, SUB_MENU_DIS_SEQ, SUB_MENU_STATUS
-                    FROM FLXY_SUB_MENU
-                    WHERE SUB_MENU_ID=:SYSID: ";
     
             $response = $this->Db->query($sql, $param)->getResultArray();
             echo json_encode($response);
@@ -1373,7 +1234,7 @@ class AdditionalController extends BaseController
             return $subMenuCode == '' || strlen($subMenuCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
         }
     
-        public function copySubMenu()
+        public function copyMenu()
         {
             try {
                 $param = ['SYSID' => $this->request->getPost('main_SubMenu_ID')];
@@ -1402,7 +1263,7 @@ class AdditionalController extends BaseController
     
                             $this->Db->table('FLXY_SUB_MENU')->insert($newRateCode);
     
-                            $no_of_added += $this->Db->affectedRows();
+                            $no_of_added+= $this->Db->affectedRows();
                         }
                     }
                 }
@@ -1416,7 +1277,7 @@ class AdditionalController extends BaseController
         }
 
 
-        public function deleteSubMenu()
+        public function deleteMenu()
         {
             $sysid = $this->request->getPost('sysid');
     
@@ -1424,8 +1285,16 @@ class AdditionalController extends BaseController
                 //Soft Delete
                 //$data = ["CUR_DELETED" => "1"];
                 //$return =  $this->Db->table('FLXY_CURRENCY')->where('CUR_ID', $sysid)->update($data);
-                $return = $this->Db->table('FLXY_SUB_MENU')->delete(['SUB_MENU_ID' => $sysid]);
-                $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+
+                $sql = "SELECT MENU_ID, MENU_NAME
+                    FROM FLXY_MENU WHERE PARENT_MENU_ID = $sysid";
+                $parentCount = $this->Db->query($sql)->getNumRows();
+                if($parentCount > 0)
+                    $result = $this->responseJson("0", "Record cannot be deleted. Child menus exists");
+                else{
+                    $return = $this->Db->table('FLXY_MENU')->delete(['MENU_ID' => $sysid]);
+                    $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+                }               
                 echo json_encode($result);
             } catch (Exception $e) {
                 return $this->respond($e->errors());
@@ -1433,11 +1302,11 @@ class AdditionalController extends BaseController
         }
     
 
-        public function menuLists(){
+        public function menuList(){
             $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
 
             $sql = "SELECT MENU_ID, MENU_NAME
-                    FROM FLXY_MENU";
+                    FROM FLXY_MENU WHERE PARENT_MENU_ID = 0";
 
             if ($search != '') {
                 $sql .= " WHERE MENU_NAME LIKE '%$search%'
@@ -1445,7 +1314,7 @@ class AdditionalController extends BaseController
             }
 
             $response = $this->Db->query($sql)->getResultArray();
-
+            
             $option = '<option value="">Choose an Option</option>';
             foreach ($response as $row) {
                 $option .= '<option value="' . $row['MENU_ID'] . '">' . $row['MENU_NAME']  . '</option>';

@@ -407,8 +407,15 @@ class UserController extends BaseController
                     'USR_NAME' => ['label' => 'User Name', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NAME,USR_ID,' . $sysid . ']'],
                     'USR_NUMBER' => ['label' => 'User Number', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NUMBER,USR_ID,' . $sysid . ']'],
                     'USR_EMAIL' => ['label' => 'User Email', 'rules' => 'trim|required|valid_email|is_unique[FLXY_USERS.USR_EMAIL,USR_ID,' . $sysid . ']'],
-                    'USR_PASSWORD' => ['label' => 'Password', 'rules' => 'trim|required'],
-                    'USR_CONFIRM_PASSWORD' => ['label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]'],
+                    'USR_PASSWORD' => ['label' => 'Password', 'rules' => 'trim|required|min_length[8]|is_password_strong[USR_PASSWORD]',
+                    'errors' => [
+                        'is_password_strong' => 'The password field must be contains at least one letter and one digit'
+                        ]
+                    ],
+                    'USR_CONFIRM_PASSWORD' => ['label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]|min_length[8]|is_password_strong[USR_CONFIRM_PASSWORD]',
+                    'errors' => [
+                        'is_password_strong' => 'The confirm-password field must be contains at least one letter and one digit'
+                        ]],
                     'USR_FIRST_NAME' => ['label' => 'First Name', 'rules' => 'trim|required'],
                     'USR_LAST_NAME' => ['label' => 'Last Name', 'rules' => 'trim|required'],
                     'USR_ROLE_ID' => ['label' => 'Role', 'rules' => 'trim|required'],
@@ -511,9 +518,7 @@ class UserController extends BaseController
         {
             $param = ['SYSID' => $this->request->getPost('sysid')];
 
-            $sql = "SELECT USR_NAME,USR_NUMBER,USR_FIRST_NAME,USR_LAST_NAME,USR_EMAIL,USR_PASSWORD,USR_ROLE_ID,USR_DEPARTMENT,USR_JOB_TITLE,USR_DOB,USR_ADDRESS,USR_CITY,USR_STATE,USR_COUNTRY,USR_DOJ,USR_PHONE,USR_GENDER,USR_TEL_EXT,USR_STATUS
-            FROM FLXY_USERS LEFT JOIN FLXY_JOB_TITLE ON USR_ROLE = JOB_TITLE_ID LEFT JOIN COUNTRY ON FLXY_USERS.USR_COUNTRY = COUNTRY.id LEFT JOIN FLXY_DEPARTMENT ON USR_DEPARTMENT = DEPT_ID LEFT JOIN STATE ON FLXY_USERS.USR_STATE = STATE.id
-            WHERE USR_ID=:SYSID:";
+            $sql = "SELECT USR_NAME,USR_NUMBER,USR_FIRST_NAME,USR_LAST_NAME,USR_EMAIL,USR_PASSWORD,USR_ROLE_ID,USR_DEPARTMENT,USR_DOB,USR_ADDRESS,USR_CITY,USR_STATE,USR_COUNTRY,USR_DOJ,USR_PHONE,USR_GENDER,USR_TEL_EXT,USR_STATUS,ROLE_NAME FROM FLXY_USERS LEFT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID LEFT JOIN COUNTRY ON FLXY_USERS.USR_COUNTRY = COUNTRY.id LEFT JOIN FLXY_DEPARTMENT ON USR_DEPARTMENT = DEPT_ID LEFT JOIN STATE ON FLXY_USERS.USR_STATE = STATE.id WHERE USR_ID=:SYSID:";
 
             $response = $this->Db->query($sql, $param)->getResultArray();
             echo json_encode($response);
@@ -538,20 +543,36 @@ class UserController extends BaseController
             try{
                 $data['title'] = getMethodName();
                 $data['session'] = $this->session; 
+                $responseSubMenu = null;
                 $sql = "SELECT ROLE_NAME,COUNT(USR_ID) AS USR_COUNT FROM FLXY_USERS RIGHT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID GROUP BY ROLE_NAME"; 
                 $response = $this->Db->query($sql)->getResultArray();
                 $responseCount = $this->Db->query($sql)->getNumRows();
 
-                $sql = "SELECT MENU_ID,MENU_NAME FROM FLXY_MENU"; 
+                $sql = "SELECT MENU_ID,MENU_NAME,PARENT_MENU_ID FROM FLXY_MENU WHERE MENU_STATUS = 1 AND PARENT_MENU_ID = 0"; 
                 $responseMenu = $this->Db->query($sql)->getResultArray();
                 $responseMenuCount = $this->Db->query($sql)->getNumRows();
-                $data['roleList'] = $this->roleList(); 
-                $data['departmentList'] = $this->departmentList();  
+                if($responseMenuCount >0 ){
+                    foreach($responseMenu as $menu){
+                         $sql = "SELECT MENU_ID,MENU_NAME FROM FLXY_MENU WHERE MENU_STATUS = 1 AND PARENT_MENU_ID = ".$menu['MENU_ID']." AND  PARENT_MENU_ID > 0"; 
+                        $subMenu = $this->Db->query($sql)->getResultArray();
+                        $subMenuCount = $this->Db->query($sql)->getNumRows();
+                        if($subMenuCount > 0)
+                        {
+                            foreach($subMenu as $value){
+                                 $responseSubMenu[$menu['MENU_ID']][] = ['sub_menu_id'=>$value['MENU_ID'],'sub_menu_name'=>$value['MENU_NAME']];
+                            }
+                        }                        
+                    }
+                }
 
+                $data['roleList'] = $this->roleList(); 
+                $data['departmentList'] = $this->departmentList(); 
                 $data['response'] = $response; 
                 $data['responseCount'] = $responseCount; 
                 $data['responseMenu'] = $responseMenu; 
                 $data['responseMenuCount'] = $responseMenuCount;
+                $data['responseSubMenu'] = $responseSubMenu; 
+               //print_r($data['responseSubMenu']);
                 return view('Users/UserRoles', $data);
             }catch (Exception $e){
                 echo json_encode($e->errors());
@@ -582,20 +603,28 @@ class UserController extends BaseController
                 $data = [ "ROLE_NAME" => trim($this->request->getPost('ROLE_NAME')),
                 "ROLE_CODE" => trim($this->request->getPost('ROLE_NAME'))];
 
-
-
                 $return = !empty($sysid) ? $this->Db->table('FLXY_USER_ROLE')->where('ROLE_ID', $sysid)->update($data) : $this->Db->table('FLXY_USER_ROLE')->insert($data);
                 $ROLE_ID = !empty($sysid) ? $sysid : $this->Db->insertID(); 
 
                 // if($sysid > 0 ){
                     $deleteRolePerm = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->delete(['ROLE_ID' => $sysid]);
-
                 
                     $MENU_PERM = $this->request->getPost('MENU_ID');
                     if(!empty($MENU_PERM)){               
                         for($i = 0; $i< count($MENU_PERM); $i++){
                             $data = [ "ROLE_ID" => trim($ROLE_ID),
                                 "ROLE_MENU_ID" => $MENU_PERM[$i],
+                                "ROLE_PERM_STATUS" => 1];
+                            $return = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->insert($data);
+                        
+                        }
+                    }
+
+                    $SUB_MENU_PERM = $this->request->getPost('sub_menu_id');
+                    if(!empty($SUB_MENU_PERM)){               
+                        for($j = 0; $j< count($SUB_MENU_PERM); $j++){
+                            $data = ["ROLE_ID" => trim($ROLE_ID),
+                                "ROLE_MENU_ID" => $SUB_MENU_PERM[$j],
                                 "ROLE_PERM_STATUS" => 1];
                             $return = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->insert($data);
                         
@@ -711,8 +740,8 @@ class UserController extends BaseController
 public function editRolePermission(){
     $param = ['SYSID' => $this->request->getPost('sysid')];    
     $sql = "SELECT FLXY_USER_ROLE.ROLE_ID, ROLE_MENU_ID as MENU_ID, ROLE_NAME
-            FROM FLXY_USER_ROLE INNER JOIN FLXY_USER_ROLE_PERMISSION ON FLXY_USER_ROLE.ROLE_ID = FLXY_USER_ROLE_PERMISSION.ROLE_ID
-            WHERE FLXY_USER_ROLE_PERMISSION.ROLE_ID=:SYSID: ";
+            FROM FLXY_USER_ROLE LEFT JOIN FLXY_USER_ROLE_PERMISSION ON FLXY_USER_ROLE.ROLE_ID = FLXY_USER_ROLE_PERMISSION.ROLE_ID
+            WHERE FLXY_USER_ROLE.ROLE_ID=:SYSID: ";
 
     $response = $this->Db->query($sql, $param)->getResultArray();
     echo json_encode($response);
@@ -729,7 +758,8 @@ public function viewUserRoles(){
     exit;
 
 }
-        
+
+   
 
 
 }

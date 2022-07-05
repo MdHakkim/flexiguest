@@ -13,6 +13,7 @@ class LaundryAmenitiesOrderDetail extends Model
         'LAOD_PRODUCT_ID',
         'LAOD_QUANTITY',
         'LAOD_AMOUNT',
+        'LAOD_DELIVERY_STATUS',
         'LAOD_CREATED_BY',
         'LAOD_UPDATED_BY',
     ];
