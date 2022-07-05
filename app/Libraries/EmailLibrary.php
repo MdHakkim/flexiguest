@@ -40,4 +40,19 @@ class EmailLibrary{
             return $data;
         }
     }
+
+    public function commonEmail($data)
+    {
+        $this->email->setFrom($data['from_email'], $data['from_name']);
+        $this->email->setTo($data['to_email']);
+        $this->email->setSubject($data['subject']);
+        $this->email->setMessage($data['html']);
+
+        if ($this->email->send()) {
+            return true;
+        } else {
+            $data = $this->email->printDebugger(['headers']);
+            return $data;
+        }
+    }
 }
