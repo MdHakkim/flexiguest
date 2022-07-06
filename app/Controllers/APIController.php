@@ -1034,7 +1034,8 @@ class APIController extends BaseController
         $customer_id = $this->request->user['USR_CUST_ID'];
 
         $room_list = $this->DB->table('FLXY_RESERVATION')
-                            ->select('RESV_ID, RESV_ROOM')
+                            ->select('RESV_ID, RESV_ROOM, RM_ID')
+                            ->join('FLXY_ROOM', 'RESV_ROOM = RM_ID', 'left')
                             ->where('RESV_NAME', $customer_id)
                             ->where('RESV_STATUS', 'Checked-In')
                             ->where('RESV_ROOM !=', '')
