@@ -43,7 +43,7 @@ class LaundryAmenitiesController extends BaseController
             $data['to_email'] = 'abubakar.safder@farnek.com';
             $data['to_name'] = 'abubakar';
 
-            $data['subject'] = 'Alert! Request left unattended.';
+            $data['subject'] = 'Alert! Unattended Request.';
             $data['html'] = view('EmailTemplates/RequestUnattendedAlert', $data);
 
             // $data['url'] = 'https://api.github.com/user';

@@ -15,7 +15,7 @@
         </div>
 
         <div style="font-size: 20px">
-            The request of a '<?= $order_detail['PR_NAME'] ?>' is left unattended.
+            The request of a '<?= $order_detail['PR_NAME'] ?>' is not attended yet.
             <br/>
             <b>Request# <?= $order_detail['LAOD_ID'] ?></b>
         </div>

@@ -28,6 +28,7 @@ class LaundryAmenitiesController extends BaseController
         $orders = $this->LaundryAmenitiesOrderDetail
             ->join('FLXY_LAUNDRY_AMENITIES_ORDERS as lao', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_ORDER_ID = lao.LAO_ID')
             ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
+            ->orderBy('LAOD', 'desc')
             ->findAll();
 
         foreach ($orders as $index => $order) {
