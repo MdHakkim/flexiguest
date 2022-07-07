@@ -41,6 +41,8 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     // API to fetch  shuttles details by id
     $routes->get("shuttles/list/(:segment)", "APIController::listShuttles/$1");
 
+    $routes->get('guest-apartment-list', 'APIController::guestApartmentList');
+
     $routes->group('maintenance', function($routes) {
         // API to create Maintenance request
         $routes->post("addRequest", "APIController::createRequest"); 
@@ -48,7 +50,6 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
         $routes->get("listRequests/(:segment)", "APIController::listRequests/$1");
         // API to fetch all requests
         $routes->get("listRequests", "APIController::listRequests");
-        $routes->get('get-maintenance-room-list', 'APIController::getMaintenanceRoomList');    
     });
 });
 //  ------------------------------------ALEESHA CODES ENDS--------------------------------------- //
@@ -110,6 +111,8 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
         $routes->post("place-order", "LaundryAmenitiesController::placeOrder");
         $routes->get("list-orders", "LaundryAmenitiesController::listOrders");
         $routes->get("download-invoice", "LaundryAmenitiesController::downloadInvoice");
+        $routes->post("acknowledged-delivery", "LaundryAmenitiesController::acknowledgedDelivery");
+        $routes->post("cancel-order", "LaundryAmenitiesController::cancelOrder");
     });
 
 });

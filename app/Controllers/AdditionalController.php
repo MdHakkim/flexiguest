@@ -1203,6 +1203,7 @@ class AdditionalController extends BaseController
 
     
                 $return = !empty($sysid) ? $this->Db->table('FLXY_MENU')->where('MENU_ID', $sysid)->update($data) : $this->Db->table('FLXY_MENU')->insert($data);
+               
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
                 echo json_encode($result);
             } catch (Exception $e) {

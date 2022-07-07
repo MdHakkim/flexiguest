@@ -38,7 +38,15 @@ class LaundryAmenitiesController extends BaseController
             if (empty($pr))
                 return $this->respond(responseJson(404, true, ['msg' => 'Invalid Product']));
 
-            // $products[$index]['amount'] = $product->quanitity * $pr['PR_PRICE'];
+            if ($pr['PR_QUANTITY'] == 0)
+                return $this->respond(responseJson(202, true, ['msg' => "{$pr['PR_NAME']} is out of stock."]));
+            else if ($product->quantity > $pr['PR_QUANTITY'])
+                return $this->respond(responseJson(202, true, ['msg' => "We have {$pr['PR_QUANTITY']} {$pr['PR_NAME']} left in stock. So you can order {$pr['PR_QUANTITY']} {$pr['PR_NAME']} only."]));
+
+            $pr['PR_QUANTITY'] = $pr['PR_QUANTITY'] - $product->quantity;
+            $this->Product->save($pr);
+
+            $product->expiry_date = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')) + ($pr['PR_ESCALATED_HOURS'] * 60 * 60) + ($pr['PR_ESCALATED_MINS'] * 60));
             $product->amount = $product->quantity * $pr['PR_PRICE'];
             $total_payable += ($product->quantity * $pr['PR_PRICE']);
         }
@@ -62,6 +70,7 @@ class LaundryAmenitiesController extends BaseController
                 'LAOD_PRODUCT_ID' => $product->id,
                 'LAOD_QUANTITY' => $product->quantity,
                 'LAOD_AMOUNT' => $product->amount,
+                'LAOD_EXPIRY_DATETIME' => $product->expiry_date,
                 'LAOD_CREATED_BY' => $user_id,
                 'LAOD_UPDATED_BY' => $user_id
             ]);
@@ -73,19 +82,35 @@ class LaundryAmenitiesController extends BaseController
     public function listOrders()
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
-        
+
         $orders = $this->LaundryAmenitiesOrder
             ->select('FLXY_LAUNDRY_AMENITIES_ORDERS.*, rm.RM_NO')
             ->join('FLXY_ROOM as rm', 'FLXY_LAUNDRY_AMENITIES_ORDERS.LAO_ROOM_ID = rm.RM_ID')
             ->where('LAO_CUSTOMER_ID', $customer_id)
+            ->orderBy('LAO_ID', 'desc')
             ->findAll();
 
         foreach ($orders as $index => $order) {
-            $orders[$index]['order_details'] = $this->LaundryAmenitiesOrderDetail
+            $order_details = $this->LaundryAmenitiesOrderDetail
                 ->select('FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.*, pr.PR_NAME')
                 ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
                 ->where('LAOD_ORDER_ID', $order['LAO_ID'])
                 ->findAll();
+
+            $orders[$index]['LAO_DELIVERY_STATUS'] = 'Delivered';
+            foreach ($order_details as $order_detail) {
+                if ($order_detail['LAOD_DELIVERY_STATUS'] == 'New' || $order_detail['LAOD_DELIVERY_STATUS'] == 'Processing') {
+                    $orders[$index]['LAO_DELIVERY_STATUS'] = 'New';
+                    break;
+                }
+
+                if ($order_detail['LAOD_DELIVERY_STATUS'] == 'Cancelled') {
+                    $orders[$index]['LAO_DELIVERY_STATUS'] = 'Cancelled';
+                    break;
+                }
+            }
+
+            $orders[$index]['order_details'] = $order_details;
         }
 
         return $this->respond(responseJson(200, false, ['msg' => 'order list'], $orders));
@@ -95,7 +120,7 @@ class LaundryAmenitiesController extends BaseController
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
         $order_id = $this->request->getVar('order_id');
-        
+
         $order = $this->LaundryAmenitiesOrder
             ->select('FLXY_LAUNDRY_AMENITIES_ORDERS.*, 
             fr.RESV_ARRIVAL_DT, fr.RESV_DEPARTURE,
@@ -115,9 +140,9 @@ class LaundryAmenitiesController extends BaseController
             ->where('LAO_CUSTOMER_ID', $customer_id)
             ->first();
 
-        if(empty($order))
+        if (empty($order))
             return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
-        
+
         $order['order_details'] = $this->LaundryAmenitiesOrderDetail
             ->select('FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.*, pr.PR_NAME, pr.PR_PRICE')
             ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
@@ -128,10 +153,50 @@ class LaundryAmenitiesController extends BaseController
         $dompdf->loadHtml(view('Templates/LaundryAmenitiesInvoiceTemplate', ['order' => $order]));
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-        
+
         $file_name = "assets/laundry-amenities-invoices/ORD{$order['LAO_ID']}-Invoice.pdf";
         file_put_contents($file_name, $dompdf->output());
 
         return $this->respond(responseJson(200, false, ['msg' => 'Invoice'], ['invoice' => base_url($file_name)]));
+    }
+
+    public function acknowledgedDelivery()
+    {
+        $order_detail_id = $this->request->getVar('order_detail_id');
+        $delivery_status = 'Acknowledged'; // status => New, Processing, Delivered, Rejected, Acknowledged
+
+        $order_detail = $this->LaundryAmenitiesOrderDetail->find($order_detail_id);
+        if (empty($order_detail))
+            return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
+
+        if ($order_detail['LAOD_DELIVERY_STATUS'] != 'Delivered' && $order_detail['LAOD_DELIVERY_STATUS'] != 'Acknowledged')
+            return $this->respond(responseJson(404, true, ['msg' => 'This item is not delivered yet.']));
+
+        $this->LaundryAmenitiesOrderDetail->update($order_detail_id, ['LAOD_DELIVERY_STATUS' => $delivery_status]);
+        return $this->respond(responseJson(200, false, ['msg' => 'Status updated to Acknowledged successfully.']));
+    }
+
+    public function cancelOrder()
+    {
+        $order_id = $this->request->getVar('order_id');
+
+        $order = $this->LaundryAmenitiesOrder->find($order_id);
+        if (empty($order))
+            return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
+        if ($order['LAO_PAYMENT_STATUS'] == 'Paid')
+            return $this->respond(responseJson(202, true, ['msg' => 'Can\'t cancel because Payment is completed for this order.']));
+
+        $order_details = $this->LaundryAmenitiesOrderDetail->where('LAOD_ORDER_ID', $order_id)->findAll();
+        foreach ($order_details as $order_detail) {
+            if ($order_detail['LAOD_DELIVERY_STATUS'] != 'New')
+                return $this->respond(responseJson(202, true, ['msg' => 'Can\'t cancel because order is alreadt in processing or delivered.']));
+        }
+
+        foreach ($order_details as $order_detail) {
+            $order_detail['LAOD_DELIVERY_STATUS'] = 'Cancelled';
+            $this->LaundryAmenitiesOrderDetail->save($order_detail);
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Order is cancelled.']));
     }
 }

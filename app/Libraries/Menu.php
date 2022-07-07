@@ -15,9 +15,8 @@ class Menu{
     
     public function display(){
 
-        $url  = $_SERVER["PHP_SELF"];
-        $path = explode("/", $url); 
-        $title = end($path);
+        $url  = "http" . (($_SERVER['SERVER_PORT'] == 443) ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        
         $rolesMenuOutput = $rolesSubmenuOutput = '';
         $user_role = session()->get('USR_ROLE_ID');
 
@@ -48,9 +47,9 @@ class Menu{
                       
                     $rolesSubmenuOutput.='<ul class="menu-sub">';
                     foreach($subMenu as $smenu){
-                        $submenu_item_active = (isset($title) && ($title == $smenu['MENU_URL'])) ? 'active' : '' ; 
+                        $submenu_item_active = (isset($url) && ($url == base_url().'/'.$smenu['MENU_URL'])) ? 'active' : '' ; 
                         $submenu_url = ($smenu['MENU_URL'] == '')?'':base_url($smenu['MENU_URL']);
-                        $submenu_url_array[] = $smenu['MENU_URL'];
+                        $submenu_url_array[] = base_url().'/'.$smenu['MENU_URL'];
 
                             
                         $rolesSubmenuOutput.= <<<EOD
@@ -69,11 +68,11 @@ class Menu{
                 }
 
                 ///END SUBMENU 
-
+            
 
                 $menu_item_active = '';               
                 
-                $menu_item_active = (isset($title) && (in_array($title, $submenu_url_array))) ? 'active open' : '' ;        
+               $menu_item_active = (isset($url) && (in_array($url, $submenu_url_array))) ? 'active open' : '' ;        
                 $menu_icon = $menu['MENU_ICON'];
                 if($menu['MENU_NAME'] == 'Support')
                 $misc = '<!-- Misc -->

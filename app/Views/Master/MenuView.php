@@ -359,12 +359,16 @@ $(document).on('click', '.editWindow', function() {
                 $.each(data, function(fields, datavals) {
                     var field = $.trim(fields); //fields.trim();
                     var dataval = $.trim(datavals); //datavals.trim(); 
-                    if (field == 'PARENT_MENU_ID') {
-                        $('#' + field).select2("val", dataval);
+                    if (field == 'PARENT_MENU_ID') {                                        
+                        $('#' + field).val(dataval).trigger('change');
                     } 
-                    else                 
+                    else if ($('#' + field).attr('type') == 'checkbox') {
+                        $('#' + field).prop('checked', dataval == 1 ? true : false);
+                    } 
+                    else{
                         $('#' + field).val(dataval);
-                    
+                    }             
+                                         
                 });
             });
             $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');

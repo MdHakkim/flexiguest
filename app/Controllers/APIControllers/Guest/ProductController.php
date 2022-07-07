@@ -19,7 +19,14 @@ class ProductController extends BaseController
 
     public function allProducts()
     {
-        $products = $this->Product->where('PR_QUANTITY >', 0)->findAll();
+        $products = $this->Product
+            ->select('FLXY_PRODUCTS.*, pc.PC_CATEGORY')
+            ->join('FLXY_PRODUCT_CATEGORIES as pc', 'FLXY_PRODUCTS.PR_CATEGORY_ID = pc.PC_ID')
+            ->where('PR_QUANTITY >', 0)->findAll();
+            
+        foreach ($products as $index => $product) {
+            $products[$index]['PR_IMAGE'] = base_url($product['PR_IMAGE']);
+        }
 
         return $this->respond(responseJson(200, false, ['msg' => 'Product List'], $products));
     }

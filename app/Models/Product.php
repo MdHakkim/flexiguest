@@ -13,6 +13,8 @@ class Product extends Model
         'PR_IMAGE',
         'PR_NAME',
         'PR_QUANTITY',
+        'PR_ESCALATED_HOURS',
+        'PR_ESCALATED_MINS',
         'PR_CREATED_BY',
         'PR_UPDATED_BY',
     ];
