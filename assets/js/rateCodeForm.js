@@ -333,6 +333,7 @@
   // Negotiated Rate Advanced Search Functions Starts
   // --------------------------------------------------------------------
 
+  /*
   const dt_adv_filter_table = $('#combined_profiles');
 
   // Filter column wise function
@@ -349,7 +350,8 @@
   $(document).on('change', 'select.dt-select', function () {
     filterColumn($(this).attr('data-column'), $(this).val());
   });
-
+  */
+ 
   // Advanced Search Functions Ends
 
 

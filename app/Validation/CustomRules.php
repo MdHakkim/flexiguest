@@ -91,6 +91,8 @@ class CustomRules{
     $rate_code_id = isset($data['neg_RT_CD_ID']) ? $data['neg_RT_CD_ID'] : '';
     $negotiated_rate_id = isset($data['NG_RT_ID']) ? $data['NG_RT_ID'] : '';
 
+    if(empty(trim($fields))) return false;
+
     $comma_values = explode(',', $fields);    
     $date_field = array_shift($comma_values); // get first array item
 

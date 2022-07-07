@@ -447,7 +447,7 @@ class ApplicatioController extends BaseController
     public function triggerReservationEmail($sysid,$parametr){
         $param = ['SYSID'=> $sysid];
         $sql="SELECT RESV_ID,RESV_NO,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_RM_TYPE,(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC,
-        RESV_NO_F_ROOM,RESV_FEATURE,CUST_FIRST_NAME+' '+CUST_LAST_NAME FULLNAME,CUST_EMAIL FROM FLXY_RESERVATION,FLXY_CUSTOMER 
+        RESV_NO_F_ROOM,RESV_FEATURE,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) FULLNAME,CUST_EMAIL FROM FLXY_RESERVATION,FLXY_CUSTOMER 
         WHERE RESV_ID=:SYSID: AND RESV_NAME=CUST_ID";
         $reservationInfo = $this->Db->query($sql,$param)->getResultArray();
        // print_r($reservationInfo);exit;
@@ -702,7 +702,9 @@ class ApplicatioController extends BaseController
         $data['add'] = null !== $this->request->getGet("add") ? '1' : null;
 
         $data['rateCodeOptions'] = $this->rateCodeList();
+        $data['toggleButton_javascript'] = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
+        $data['blockLoader_javascript'] = blockLoader_javascript();
         
         $data['profileTypeOptions'] = profileTypeList();
         $data['membershipTypes'] = getMembershipTypeList(NULL, 'edit');
@@ -887,6 +889,7 @@ class ApplicatioController extends BaseController
         $data['profileTypeOptions'] = $profileTypes;
 
         $data['membershipTypes'] = getMembershipTypeList(NULL, 'edit');
+        $data['toggleButton_javascript'] = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['blockLoader_javascript'] = blockLoader_javascript();
 
@@ -898,20 +901,40 @@ class ApplicatioController extends BaseController
     function getProfileDetails($id = 0)
     {
         $param = ['SYSID'=> $id];
-        $sql = "SELECT  CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_LANG,CUST_TITLE,
-                        CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
+        $sql = "SELECT  CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,
+                        CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) CUST_FULL_NAME,
+                        CUST_LANG,CUST_TITLE,CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
                         CUST_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC,
                         CUST_STATE,(SELECT sname FROM STATE WHERE STATE_CODE=CUST_STATE AND COUNTRY_CODE=CUST_COUNTRY) CUST_STATE_DESC,
                         CUST_CITY,(SELECT ctname FROM CITY WHERE ID=CUST_CITY) CUST_CITY_DESC,
-                        CUST_EMAIL,CUST_MOBILE,CUST_PHONE,CUST_CLIENT_ID,CUST_POSTAL_CODE,CUST_VIP,CUST_NATIONALITY,CUST_BUS_SEGMENT,
-                        CUST_GENDER,CUST_COMMUNICATION,CUST_COMMUNICATION_DESC,CUST_ACTIVE,
-                        CUST_CREATE_DT,CUST_UPDATE_DT 
+                        CUST_EMAIL,CUST_MOBILE,CUST_PHONE,CUST_CLIENT_ID,CUST_POSTAL_CODE,
+                        CUST_VIP,(SELECT VIP_DESC FROM FLXY_VIP WHERE VIP_ID=CUST_VIP) CUST_VIP_DESC,
+                        CUST_NATIONALITY,CUST_BUS_SEGMENT,CUST_GENDER,CUST_COMMUNICATION,CUST_COMMUNICATION_DESC,CUST_ACTIVE,
+                        CUST_CREATE_DT,CUST_UPDATE_DT,RATE_CODES,LAST_STAY 
                         
-                FROM FLXY_CUSTOMER WHERE CUST_ID=:SYSID:";
+                FROM FLXY_CUSTOMER
+                LEFT JOIN ( SELECT NR.PROFILE_ID AS P_ID, NR.PROFILE_TYPE AS P_TYPE, 
+                                  STRING_AGG(RC.RT_CD_CODE, ', ') WITHIN GROUP (ORDER BY RC.RT_CD_CODE) AS RATE_CODES
+                            FROM FLXY_RATE_CODE_NEGOTIATED_RATE NR
+                            LEFT JOIN FLXY_RATE_CODE RC ON RC.RT_CD_ID = NR.RT_CD_ID
+                            GROUP BY NR.PROFILE_ID,NR.PROFILE_TYPE ) PRC ON (PRC.P_ID = FLXY_CUSTOMER.CUST_ID AND PRC.P_TYPE = 1)
+                LEFT JOIN ( SELECT RESV_NAME, MAX(RESV_ARRIVAL_DT) AS LAST_STAY
+                            FROM FLXY_RESERVATION
+                            GROUP BY RESV_NAME) RESV ON (RESV.RESV_NAME = FLXY_CUSTOMER.CUST_ID)
+                
+                WHERE CUST_ID=:SYSID:";
 
         $data = $this->Db->query($sql,$param)->getRowArray();
 
         return $data;
+    }
+
+    public function showCompareProfiles()
+    {
+        $profile_to_merge = $this->getProfileDetails(null !== $this->request->getGet('pmCustId') ? $this->request->getGet('pmCustId') : 0);
+        $orig_profile     = $this->getProfileDetails(null !== $this->request->getGet('ogCustId') ? $this->request->getGet('ogCustId') : 0);
+        
+        echo json_encode([$orig_profile,$profile_to_merge]);
     }
 
     function printProfile($id = 0)
@@ -965,7 +988,7 @@ class ApplicatioController extends BaseController
     function customerList(){
         try{
             $search = $this->request->getPost("search");
-            $sql = "SELECT CUST_FIRST_NAME+' '+CUST_LAST_NAME AS FULLNAME,CUST_ID FROM FLXY_CUSTOMER WHERE (CUST_FIRST_NAME LIKE '%$search%' OR CUST_MIDDLE_NAME LIKE '%$search%' OR CUST_LAST_NAME LIKE '%$search%')";
+            $sql = "SELECT CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME,CUST_ID FROM FLXY_CUSTOMER WHERE (CUST_FIRST_NAME LIKE '%$search%' OR CUST_MIDDLE_NAME LIKE '%$search%' OR CUST_LAST_NAME LIKE '%$search%')";
             $response = $this->Db->query($sql)->getResultArray();
             $option='<option value="">Select Guest</option>';
             foreach($response as $row){
@@ -2994,7 +3017,7 @@ class ApplicatioController extends BaseController
         $CUST_MOBILE= $this->request->getPost("CUST_MOBILE")? $this->request->getPost("CUST_MOBILE") : 'NULL';
         $CUST_COMMUNICATION_DESC= $this->request->getPost("CUST_COMMUNICATION_DESC")? $this->request->getPost("CUST_COMMUNICATION_DESC") : 'NULL';
         $CUST_PASSPORT= $this->request->getPost("CUST_PASSPORT")? $this->request->getPost("CUST_PASSPORT") : 'NULL';
-        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_FIRST_NAME+' '+CUST_FIRST_NAME NAMES,CUST_LAST_NAME,FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_NATIONALITY,CUST_VIP,CUST_ADDRESS_1,CUST_CITY,CUST_EMAIL,CUST_MOBILE FROM FLXY_CUSTOMER WHERE (CUST_FIRST_NAME like '%$CUST_FIRST_NAME%' OR CUST_LAST_NAME like '%$CUST_LAST_NAME%' OR CUST_CITY like '%$CUST_CITY%' OR CUST_EMAIL like '%$CUST_EMAIL%' OR CUST_CLIENT_ID like '%$CUST_CLIENT_ID%' OR CUST_MOBILE like '%$CUST_MOBILE%' OR CUST_COMMUNICATION_DESC like '%$CUST_COMMUNICATION_DESC%' OR CUST_PASSPORT like '%$CUST_PASSPORT%')";
+        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,CUST_LAST_NAME,FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_NATIONALITY,CUST_VIP,CUST_ADDRESS_1,CUST_CITY,CUST_EMAIL,CUST_MOBILE FROM FLXY_CUSTOMER WHERE (CUST_FIRST_NAME like '%$CUST_FIRST_NAME%' OR CUST_LAST_NAME like '%$CUST_LAST_NAME%' OR CUST_CITY like '%$CUST_CITY%' OR CUST_EMAIL like '%$CUST_EMAIL%' OR CUST_CLIENT_ID like '%$CUST_CLIENT_ID%' OR CUST_MOBILE like '%$CUST_MOBILE%' OR CUST_COMMUNICATION_DESC like '%$CUST_COMMUNICATION_DESC%' OR CUST_PASSPORT like '%$CUST_PASSPORT%')";
         $response = $this->Db->query($sql)->getResultArray();
         $table='';
         if(empty($response)){
@@ -3025,9 +3048,9 @@ class ApplicatioController extends BaseController
 
     function getExistingAppcompany(){
         $param = ['CUSTID'=> $this->request->getPost("custId"),'ACCOMP_REF_RESV_ID'=> $this->request->getPost("ressysId")];
-        $sql = "SELECT '0' ACCOPM_ID,CUST_ID,CUST_FIRST_NAME+' '+CUST_LAST_NAME NAMES,CUST_DOB,CUST_CITY FROM FLXY_CUSTOMER WHERE CUST_ID=:CUSTID:
+        $sql = "SELECT '0' ACCOPM_ID,CUST_ID,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,CUST_DOB,CUST_CITY FROM FLXY_CUSTOMER WHERE CUST_ID=:CUSTID:
         UNION 
-        SELECT ACCOPM_ID,ACCOMP_CUST_ID CUST_ID,CUST_FIRST_NAME+' '+CUST_LAST_NAME NAMES,CUST_DOB,CUST_CITY FROM FLXY_ACCOMPANY_PROFILE,FLXY_CUSTOMER WHERE ACCOMP_REF_RESV_ID=:ACCOMP_REF_RESV_ID: AND CUST_ID=ACCOMP_CUST_ID";
+        SELECT ACCOPM_ID,ACCOMP_CUST_ID CUST_ID,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,CUST_DOB,CUST_CITY FROM FLXY_ACCOMPANY_PROFILE,FLXY_CUSTOMER WHERE ACCOMP_REF_RESV_ID=:ACCOMP_REF_RESV_ID: AND CUST_ID=ACCOMP_CUST_ID";
         $response = $this->Db->query($sql,$param)->getResultArray();
         $table='';
         if(empty($response)){
@@ -3093,7 +3116,7 @@ class ApplicatioController extends BaseController
 
     public function getExistCustomer(){
         $param = ['CUSTID'=> $this->request->getPost("custId")];
-        $sql="SELECT CUST_ID, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_TITLE, CUST_FIRST_NAME+' '+CUST_LAST_NAME NAMES FROM FLXY_CUSTOMER WHERE CUST_ID=:CUSTID:";
+        $sql="SELECT CUST_ID, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_TITLE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES FROM FLXY_CUSTOMER WHERE CUST_ID=:CUSTID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
@@ -3132,7 +3155,7 @@ class ApplicatioController extends BaseController
             $param = ['RESV_ID'=> $resvid];
             $sql = "SELECT RESV_ID, RESV_NO, FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy') RESV_ARRIVAL_DT, 
                         RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy') RESV_DEPARTURE,
-                        CUST_FIRST_NAME+' '+CUST_LAST_NAME FULLNAME,
+                        CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) FULLNAME,
                         RESV_ROOM, RESV_NO_F_ROOM, RESV_NAME, RESV_RM_TYPE, RESV_STATUS, CUST_FIRST_NAME, CUST_ID, CUST_LAST_NAME, CUST_TITLE, 
                         FORMAT(CUST_DOB,'dd-MMM-yyyy') CUST_DOB, CUST_PASSPORT, CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3, 
                         CUST_COUNTRY, CUST_STATE, CUST_CITY, 

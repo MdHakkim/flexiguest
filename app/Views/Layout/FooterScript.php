@@ -74,7 +74,8 @@
     <!--  -->
     <script src="<?= base_url('assets/vendor/libs/sortablejs/sortable.js') ?>"></script>
 
-
+    <!-- Sweet Alert JS -->
+    <script src="<?= base_url('assets/vendor/libs/sweetalert2/sweetalert2.js') ?>"></script>
 
    
     <script src="<?php //echo base_url('assets/vendor/js/bootstrap.js') ?>"></script>

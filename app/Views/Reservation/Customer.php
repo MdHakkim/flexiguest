@@ -18,6 +18,7 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>First Name</th>
                             <th>Passport No</th>
                             <th>Country</th>
                             <th>Email</th>
@@ -249,7 +250,17 @@ $(document).ready(function() {
             'url': '<?php echo base_url('/customerView')?>'
         },
         'columns': [{
-                data: 'CUST_FIRST_NAME'
+                data: null,
+                render: function(data, type, row, meta) {
+                    var customer_name = getCustomerName(data['CUST_FIRST_NAME'], data[
+                        'CUST_MIDDLE_NAME'], data['CUST_LAST_NAME'], data['CUST_ID']);
+
+                    return (customer_name);
+                }
+            },
+            {
+                data: 'CUST_FIRST_NAME',
+                "visible": false,
             },
             {
                 data: 'CUST_PASSPORT'
@@ -271,6 +282,9 @@ $(document).ready(function() {
                 className: "text-center",
                 "orderable": false,
                 render: function(data, type, row, meta) {
+                    var customer_fullname = getCustomerName(data['CUST_FIRST_NAME'], data[
+                        'CUST_MIDDLE_NAME'], data['CUST_LAST_NAME'], data['CUST_ID']);
+
                     return (
                         '<div class="d-inline-block">' +
                         '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
@@ -279,8 +293,7 @@ $(document).ready(function() {
                         '" class="dropdown-item editWindow text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['CUST_ID'] +
-                        '" data_custname="' + data['CUST_FIRST_NAME'] + ' ' + data[
-                            'CUST_LAST_NAME'] +
+                        '" data_custname="' + customer_fullname +
                         '" class="dropdown-item custOptions"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['CUST_ID'] +
@@ -290,6 +303,9 @@ $(document).ready(function() {
                     );
                 }
             },
+        ],
+        "order": [
+            [1, "asc"]
         ],
         autowidth: true
 
@@ -304,12 +320,22 @@ $(document).ready(function() {
 
     <?php
     if(!empty($editId)) {  ?>
-        editCust(<?php echo $editId; ?>);
+    editCust(<?php echo $editId; ?>);
     <?php
     }
     ?>
 
 });
+
+function getCustomerName(fname, mname, lname, id) {
+
+    var customer_fullname = fname != null ? fname : '';
+    customer_fullname += mname !== null ? (customer_fullname !== '' ? ' ' : '') + mname : '';
+    customer_fullname += lname !== null ? (customer_fullname !== '' ? ' ' : '') + lname : '';
+    customer_fullname = customer_fullname !== '' ? $.trim(customer_fullname) : 'Customer ID ' + id;
+
+    return customer_fullname;
+}
 
 function addForm() {
     $(':input', '#customerForm').val('').prop('checked', false).prop('selected', false);
@@ -492,7 +518,7 @@ $(document).on('change', '#CUST_STATE', function() {
 function editCust(sysid) {
     runCountryList();
     runSupportingLov();
-    
+
     $('#reservationChild').modal('show');
     $('#reservationChildLabel').html('Edit Customer');
 
@@ -500,7 +526,8 @@ function editCust(sysid) {
     $('#custOptionsBtn').attr('data_sysid', sysid);
 
     var custArray = getCustomerDetails(sysid);
-    $('#custOptionsBtn').attr('data_custname', custArray.CUST_FIRST_NAME + ' ' + custArray.CUST_LAST_NAME);
+    $('#custOptionsBtn').attr('data_custname', getCustomerName(custArray.CUST_FIRST_NAME, custArray.CUST_MIDDLE_NAME,
+        custArray.CUST_LAST_NAME, custArray.CUST_ID));
 
     $.ajax({
         url: '<?php echo base_url('/editCustomer')?>',
@@ -553,7 +580,7 @@ $(document).on('click', '.editWindow', function() {
 });
 
 <?php if($add == 1) { ?>
-$(window).on('load', function(){
+$(window).on('load', function() {
     addForm();
 });
 <?php } ?>

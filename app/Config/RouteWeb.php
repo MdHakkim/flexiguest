@@ -64,6 +64,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/exportProfile/(:num)', 'ApplicatioController::exportProfile/$1');
     $routes->match(['post'],'/customerChangesView', 'ApplicatioController::CustomerChangesView');
 
+    $routes->get('/showCompareProfiles', 'ApplicatioController::showCompareProfiles');
+
     $routes->get('/company', 'ApplicatioController::company');
     $routes->match(['post'],'/companyView', 'ApplicatioController::companyView');
     $routes->match(['post'],'/insertCompany', 'ApplicatioController::insertCompany');

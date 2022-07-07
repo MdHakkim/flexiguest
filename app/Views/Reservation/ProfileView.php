@@ -3,12 +3,6 @@
 <?= $this->include('Layout/SuccessReport') ?>
 <?= $this->include('Layout/ErrorReport') ?>
 
-<style>
-.dataTables_empty {
-    text-align: left !important;
-    padding-left: 20% !important;
-}
-</style>
 
 <!-- Content wrapper -->
 <div class="content-wrapper">

@@ -26,6 +26,9 @@
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') ?>" />
 
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/typeahead-js/typeahead.css') ?>" />
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/animate-css/animate.css') ?>" />
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/sweetalert2/sweetalert2.css') ?>" />
+
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/apex-charts/apex-charts.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/css/flexiguest.css')?>" />
 
@@ -65,6 +68,8 @@
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/fullcalendar/fullcalendar.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/flatpickr/flatpickr.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/css/pages/app-calendar.css')?>" >
+
+
 
 <!-- Page CSS -->
 <script src="<?php echo base_url('assets/js/jquery-3.6.0.min.js')?>"></script>

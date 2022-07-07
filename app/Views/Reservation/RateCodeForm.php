@@ -1662,6 +1662,8 @@ $(document).ready(function() {
 
         hideModalAlerts();
         clearFormFields('.dt_adv_search');
+        toggleButton('.use_selected_profiles', 'btn-primary', 'btn-dark', true);
+        
         //$('#combined_profiles').dataTable().fnDraw();
 
         var filterData = [
