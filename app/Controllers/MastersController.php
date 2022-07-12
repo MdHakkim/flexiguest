@@ -2332,7 +2332,7 @@ class MastersController extends BaseController
 
         $search_keys = ['S_PROFILE_NAME', 'S_PROFILE_FIRST_NAME', 'S_PROFILE_COMMUNICATION', 'S_PROFILE_TYPE', 'S_PROFILE_CITY', 
                         'S_MEMBERSHIP_TYPE', 'S_MEMBERSHIP_NUMBER', 'S_PROFILE_PASSPORT', 'S_PROFILE_NUMBER', 
-                        'S_AGN_IATA', 'S_COM_CORP_ID'];
+                        'S_AGN_IATA', 'S_COM_CORP_ID', 'S_REMOVE_PROFILES'];
         
         $init_cond = array();
 
@@ -2348,7 +2348,18 @@ class MastersController extends BaseController
                         case 'S_PROFILE_COMMUNICATION': $init_cond["(PROFILE_NUMBER LIKE '%$value%' OR PROFILE_MOBILE LIKE '%$value%')"] = ""; break;
                         case 'S_MEMBERSHIP_TYPE': $init_cond["(SELECT COUNT(*) FROM FLXY_CUSTOMER_MEMBERSHIP WHERE CUST_ID = PROFILE_ID AND MEM_ID = '$value' AND CM_STATUS = 1) = "] = "1"; break;
                         case 'S_MEMBERSHIP_NUMBER': $init_cond["(SELECT COUNT(*) FROM FLXY_CUSTOMER_MEMBERSHIP WHERE CUST_ID = PROFILE_ID AND CM_CARD_NUMBER LIKE '%$value%' AND CM_STATUS = 1) = "] = "1"; break;
-                        
+                       
+                        case 'S_REMOVE_PROFILES' :  $remove_profiles = json_decode($value, true);
+                                                    $remove_profiles_str = '';
+
+                                                    if($remove_profiles != NULL){
+                                                        foreach($remove_profiles as $remove_profile){
+                                                            $remove_profiles_str .= "'".$remove_profile['prof_id']."_".$remove_profile['prof_type']."',";
+                                                        }
+                                                        $remove_profiles_str = rtrim($remove_profiles_str, ',');
+
+                                                        $init_cond["CONCAT_WS('_',PROFILE_ID,PROFILE_TYPE) NOT IN"] = "(".$remove_profiles_str.")";
+                                                    }   break;
                         default: $init_cond["".ltrim($search_key, "S_")." LIKE "] = "'%$value%'"; break;                        
                     }                    
                 }

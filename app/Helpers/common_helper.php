@@ -99,3 +99,35 @@ function getMembershipTypeList($custId, $mode)
 
         return $membershipTypes;
     }
+
+function mergeCustomer($pmCustId, $ogCustId)
+{
+    $Db = \Config\Database::connect();
+
+    //Update Customer Table
+
+    $param = ['pmCustId'=> $pmCustId, 'ogCustId'=> $ogCustId];
+
+    $cust_sql = "SELECT * FROM FLXY_CUSTOMER";
+    $pm_cust_sql = $cust_sql ." WHERE CUST_ID=:pmCustId:";
+    $og_cust_sql = $cust_sql ." WHERE CUST_ID=:ogCustId:";
+
+    $pm_cust_data = $Db->query($pm_cust_sql,$param)->getRowArray();
+    $og_cust_data = $Db->query($og_cust_sql,$param)->getRowArray();
+
+    $up_cust_data = [];
+    $ignore_cols = ['CUST_ID','CUST_ACTIVE'];
+
+    if($pm_cust_data != NULL)
+    {
+        foreach($pm_cust_data as $col => $value)
+        {
+            if(in_array($col, $ignore_cols)) continue;
+
+            if( isset($og_cust_data[$col]) && empty(trim($og_cust_data[$col])) && !empty(trim($value)) )
+            {
+                $up_cust_data[$col] = $value;
+            }
+        }
+    }
+}

@@ -1,3 +1,10 @@
+<style>
+#combined_profiles .dataTables_empty {
+    text-align: left !important;
+    padding-left: 20% !important;
+}
+</style>
+
 <div class="row">
     <div class="col-md-3 mt-1 mb-3">
         <div class="btn-group">
@@ -165,6 +172,7 @@
 
                 <div class="row mb-3">
                     <div class="col-md-12 text-end">
+                        <input type="hidden" name="S_REMOVE_PROFILES" id="S_REMOVE_PROFILES" value="" />
                         <button type="button" class="btn btn-primary submitAdvSearch">
                             <i class='bx bx-search'></i>&nbsp;
                             Search
@@ -213,46 +221,65 @@ var clicked_profile_ids = [];
 
 $(document).ready(function() {
 
-    <?php if(isset($rateCodeID)) { ?> // If Rate Code details page
+    <?php //if(isset($rateCodeID)) { ?> // If Rate Code details page
 
+    if ($('.use_selected_profiles').length) {
 
-    $(document).on('click', '#combined_profiles > tbody > tr', function() {
+        $(document).on('click', '#combined_profiles > tbody > tr', function() {
 
-        var profile_chk_str = 'profile_chk_' + $(this).attr('data-profile-type') + '_' + $(this).attr(
-            'data-profile-id');
+            var profile_chk_str = $(this).attr('data-profile-type') && $(this).attr('data-profile-id') ? 'profile_chk_' + $(this).attr('data-profile-type') + '_' + $(this)
+                .attr('data-profile-id') : '';
 
-        //If value in array
-        if (jQuery.inArray(profile_chk_str, clicked_profile_ids) !==
-            -1) {
-            if ($(this).hasClass("table-warning")) {
-                // Remove value from array
+            //If value in array
+            if (jQuery.inArray(profile_chk_str, clicked_profile_ids) !==
+                -1) {
+                if ($(this).hasClass("table-warning")) {
+                    // Remove value from array
+                    clicked_profile_ids = $.grep(clicked_profile_ids, function(value) {
+                        return value != profile_chk_str;
+                    });
+                }
+            } else {
+                if (!$(this).hasClass("table-warning") && profile_chk_str != '') {
+                    clicked_profile_ids.push(profile_chk_str);
+                }
+            }
+
+            if (clicked_profile_ids.length == 0) {
+                toggleButton('.use_selected_profiles', 'btn-primary', 'btn-dark', true);
+            } else {
+                toggleButton('.use_selected_profiles', 'btn-dark', 'btn-primary', false);
+            }
+
+            // If single select
+            if ($('#profileMergeSearch').length) {
                 clicked_profile_ids = $.grep(clicked_profile_ids, function(value) {
-                    return value != profile_chk_str;
+                    return value == profile_chk_str;
                 });
+                $('#combined_profiles > tbody > tr').not(this).removeClass('table-warning');
             }
-        } else {
-            if (!$(this).hasClass("table-warning")) {
-                clicked_profile_ids.push(profile_chk_str);
-            }
-        }
 
-        if (clicked_profile_ids.length == 0) {
-            toggleButton('.use_selected_profiles', 'btn-primary', 'btn-dark', true);
-        } else {
-            toggleButton('.use_selected_profiles', 'btn-dark', 'btn-primary', false);
-        }
+            //alert(clicked_profile_ids);
 
-        //alert(clicked_profile_ids);
-        $(this).toggleClass('table-warning');
-    });
+            $(this).toggleClass('table-warning', $(this).hasClass('selected'));
+        });
+    }
 
-    <?php } ?>
+    <?php //} ?>
 
 });
 
 // Combined Profiles (Customer, Company, Agent, Group) List for Negotiated Rates
 
 function loadProfilesTable(filterData) {
+
+    var selectOpts = !$('.use_selected_profiles').length ? false : ($('#newNegotiatedRate').length ? {
+        style: 'multi',
+        info: false
+    } : {
+        style: 'single',
+        info: false
+    });
 
     $('#combined_profiles').DataTable({
         'processing': true,
@@ -382,17 +409,20 @@ function loadProfilesTable(filterData) {
             $(row).attr('data-profile-type', data['PROFILE_TYPE']);
             $(row).attr('data-profile-id', data['PROFILE_ID']);
 
-            <?php if(isset($rateCodeID)) { ?>
+            <?php //if(isset($rateCodeID)) { ?>
 
-            if (jQuery.inArray(check_str, clicked_profile_ids) !== -1 && !$(row).hasClass(
-                    'table-warning')) {
-                $(row).addClass('table-warning');
-            } else if (jQuery.inArray(check_str, clicked_profile_ids) == -1 && $(row).hasClass(
-                    'table-warning')) {
-                $(row).removeClass('table-warning');
+            if ($('.use_selected_profiles').length) {
+
+                if (jQuery.inArray(check_str, clicked_profile_ids) !== -1 && !$(row).hasClass(
+                        'table-warning')) {
+                    $(row).addClass('table-warning');
+                } else if (jQuery.inArray(check_str, clicked_profile_ids) == -1 && $(row).hasClass(
+                        'table-warning')) {
+                    $(row).removeClass('table-warning');
+                }
             }
 
-            <?php } ?>
+            <?php //} ?>
         },
         columnDefs: [{
             width: "10%"
@@ -443,13 +473,9 @@ function loadProfilesTable(filterData) {
         language: {
             emptyTable: 'There are no profiles to display'
         }
-        <?php if(isset($rateCodeID)) { ?>,
-        select: {
-            // Select style
-            style: 'multi',
-            info: false
-        }
-        <?php } ?>
+        <?php //if(isset($rateCodeID)) { ?>,
+        select: selectOpts
+        <?php //} ?>
     });
 }
 
@@ -493,6 +519,9 @@ function loadProfilesTable(filterData) {
     // Advanced Search Functions Ends
 
 })();
+
+// Display function toggleButton
+<?php echo isset($toggleButton_javascript) ? $toggleButton_javascript : ''; ?>
 
 // Display function clearFormFields
 <?php echo isset($clearFormFields_javascript) ? $clearFormFields_javascript : ''; ?>
