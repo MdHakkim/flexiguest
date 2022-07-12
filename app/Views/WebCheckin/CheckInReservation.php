@@ -207,7 +207,7 @@ $folderPath = base_url('assets/Uploads/');
                             <div class="flxy_web-blockcont">
 
                                 <!-- Reservation Details -->
-                                <div class="sliderclass activeslide">
+                                <div class="sliderclass">
                                     <div class="flxy_block_card">
                                         <div class="card">
                                             <div class="row g-0">
@@ -962,6 +962,13 @@ $folderPath = base_url('assets/Uploads/');
     }
 
     $(document).ready(function() {
+        if(localStorage.getItem('customer_updated')){
+            $('.sliderclass:eq(1)').addClass('activeslide');
+            localStorage.removeItem('customer_updated');
+        }else{
+            $('.sliderclass:eq(0)').addClass('activeslide');
+        }
+
         $('#cropped_img').hide();
 
         $('.flxy_signature_block').hide();
@@ -1501,11 +1508,15 @@ $folderPath = base_url('assets/Uploads/');
                     showModalAlert('error', error);
                     // $('#formErrorMessage').html(error);
                 } else {
-                    showModalAlert('success', '<li>Guest details are updated successfully.</li>');
+                    alert('Guest details are updated successfully.');
+                    // showModalAlert('success', '<li>Guest details are updated successfully.</li>');
 
                     sliderWebWid('');
                     var object = respn['RESPONSE']['OUTPUT'];
                     updateStatuIconButton(object);
+                    
+                    localStorage.setItem('customer_updated', 1);
+                    window.location.reload();
                 }
             }
         });
