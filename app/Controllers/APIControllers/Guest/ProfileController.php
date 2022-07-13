@@ -41,7 +41,7 @@ class ProfileController extends BaseController
                     $attachment_array = explode(".", $attachment);
                     $type = getFileType(end($attachment_array));
 
-                    $attachments[$j] = [
+                    $identity_documents[] = [
                         'resv_id' => $document['DOC_RESV_ID'],
                         'name' => $name, 
                         'url' => $url, 
@@ -50,7 +50,6 @@ class ProfileController extends BaseController
                     ];
                 }
             }
-            $identity_documents[] = $attachments;
         }
 
         $vaccine_documents = [];
@@ -67,7 +66,7 @@ class ProfileController extends BaseController
                     $attachment_array = explode(".", $attachment);
                     $type = getFileType(end($attachment_array));
 
-                    $attachments[$j] = [
+                    $vaccine_documents[] = [
                         'resv_id' => $vaccine_detail['VACC_RESV_ID'],
                         'name' => $name, 
                         'url' => $url, 
@@ -76,7 +75,6 @@ class ProfileController extends BaseController
                     ];
                 }
             }
-            $vaccine_documents[] = $attachments;
         }
 
         $invoices = [];
