@@ -118,7 +118,7 @@ function mergeCustomer($pmCustId, $ogCustId)
     $up_cust_data = [];
     $ignore_cols = ['CUST_ID','CUST_ACTIVE'];
 
-    if($pm_cust_data != NULL)
+    if($pm_cust_data != NULL && $og_cust_data != NULL)
     {
         foreach($pm_cust_data as $col => $value)
         {
@@ -129,5 +129,11 @@ function mergeCustomer($pmCustId, $ogCustId)
                 $up_cust_data[$col] = $value;
             }
         }
+
+        $Db->table('FLXY_CUSTOMER')->where('CUST_ID', $ogCustId)->update($up_cust_data);
+
+
+
+        $Db->table('FLXY_CUSTOMER')->delete(['CUST_ID' => $pmCustId]);
     }
 }
