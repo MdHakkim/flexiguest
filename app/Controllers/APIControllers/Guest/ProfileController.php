@@ -26,8 +26,8 @@ class ProfileController extends BaseController
     public function allDocuments() 
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
-        $customer_id = 2046;
-
+        
+        $identity_documents = [];
         $documents = $this->Documents->where('DOC_CUST_ID', $customer_id)->where('DOC_FILE_TYPE', 'PROOF')->findAll();
         foreach($documents as $index => $document){
             $attachments = [];
@@ -41,13 +41,19 @@ class ProfileController extends BaseController
                     $attachment_array = explode(".", $attachment);
                     $type = getFileType(end($attachment_array));
 
-                    $attachments[$j] = ['NAME' => $name, 'URL' => $url, 'TYPE' => $type];
+                    $attachments[$j] = [
+                        'RESV_ID' => $document['DOC_RESV_ID'],
+                        'NAME' => $name, 
+                        'URL' => $url, 
+                        'TYPE' => $type,
+                        'CATEGORY_TYPE' => 'documents',
+                    ];
                 }
             }
-            $documents[$index]['DOC_FILE_PATH'] = $attachments;
-            $documents[$index]['CATEGORY_TYPE'] = 'documents';
+            $identity_documents[] = $attachments;
         }
 
+        $vaccine_documents = [];
         $vaccine_details = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->findAll();
         foreach($vaccine_details as $index => $vaccine_detail){
             $attachments = [];
@@ -61,11 +67,16 @@ class ProfileController extends BaseController
                     $attachment_array = explode(".", $attachment);
                     $type = getFileType(end($attachment_array));
 
-                    $attachments[$j] = ['NAME' => $name, 'URL' => $url, 'TYPE' => $type];
+                    $attachments[$j] = [
+                        'RESV_ID' => $vaccine_detail['VACC_RESV_ID'],
+                        'NAME' => $name, 
+                        'URL' => $url, 
+                        'TYPE' => $type,
+                        'CATEGORY_TYPE' => 'vaccine',
+                    ];
                 }
             }
-            $vaccine_details[$index]['VACC_FILE_PATH'] = $attachments;
-            $vaccine_details[$index]['CATEGORY_TYPE'] = 'vaccine';
+            $vaccine_documents[] = $attachments;
         }
 
         $invoices = [];
@@ -74,6 +85,7 @@ class ProfileController extends BaseController
             $folderPath = "assets/reservation-invoices/RES{$reservation['RESV_ID']}-Invoice.pdf";
             if (file_exists($folderPath)) {
                 $invoices[] = [
+                    'RESV_ID' => $reservation['RESV_ID'],
                     'NAME' => "RES{$reservation['RESV_ID']}-Invoice.pdf",
                     'URL' => base_url($folderPath),
                     'TYPE' => 'pdf',
@@ -82,7 +94,7 @@ class ProfileController extends BaseController
             }
         }
         
-        $output = array_merge($documents, $vaccine_details, $invoices);
+        $output = array_merge($identity_documents, $vaccine_documents, $invoices);
         return $this->respond(responseJson(200, false, ['msg' => 'All Documents'], $output));
     }
 }
