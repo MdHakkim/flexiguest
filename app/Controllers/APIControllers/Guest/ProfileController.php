@@ -42,11 +42,11 @@ class ProfileController extends BaseController
                     $type = getFileType(end($attachment_array));
 
                     $attachments[$j] = [
-                        'RESV_ID' => $document['DOC_RESV_ID'],
-                        'NAME' => $name, 
-                        'URL' => $url, 
-                        'TYPE' => $type,
-                        'CATEGORY_TYPE' => 'documents',
+                        'resv_id' => $document['DOC_RESV_ID'],
+                        'name' => $name, 
+                        'url' => $url, 
+                        'type' => $type,
+                        'category' => 'documents',
                     ];
                 }
             }
@@ -68,11 +68,11 @@ class ProfileController extends BaseController
                     $type = getFileType(end($attachment_array));
 
                     $attachments[$j] = [
-                        'RESV_ID' => $vaccine_detail['VACC_RESV_ID'],
-                        'NAME' => $name, 
-                        'URL' => $url, 
-                        'TYPE' => $type,
-                        'CATEGORY_TYPE' => 'vaccine',
+                        'resv_id' => $vaccine_detail['VACC_RESV_ID'],
+                        'name' => $name, 
+                        'url' => $url, 
+                        'type' => $type,
+                        'category' => 'vaccine',
                     ];
                 }
             }
@@ -85,11 +85,11 @@ class ProfileController extends BaseController
             $folderPath = "assets/reservation-invoices/RES{$reservation['RESV_ID']}-Invoice.pdf";
             if (file_exists($folderPath)) {
                 $invoices[] = [
-                    'RESV_ID' => $reservation['RESV_ID'],
-                    'NAME' => "RES{$reservation['RESV_ID']}-Invoice.pdf",
-                    'URL' => base_url($folderPath),
-                    'TYPE' => 'pdf',
-                    'CATEGORY_TYPE' => 'invoice'
+                    'resv_id' => $reservation['RESV_ID'],
+                    'name' => "RES{$reservation['RESV_ID']}-Invoice.pdf",
+                    'url' => base_url($folderPath),
+                    'type' => 'pdf',
+                    'category' => 'invoice'
                 ];
             }
         }

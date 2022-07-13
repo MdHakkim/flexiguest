@@ -621,11 +621,11 @@ class APIController extends BaseController
         if(isset($vaccine_detail['VACC_FILE_PATH']) && !empty($vaccine_detail['VACC_FILE_PATH'])){
             $docs = explode(",", $vaccine_detail['VACC_FILE_PATH']);
             foreach($docs as $index => $doc){
-                $doc_name = $doc;
+                $doc_name = getOriginalFileName($doc);
                 $doc_url = base_url("assets/Uploads/userDocuments/vaccination/$doc");
 
                 $doc_array = explode(".", $doc);
-                $doc_type = end($doc_array);
+                $doc_type = getFileType(end($doc_array));
 
                 $docs[$index] = ['name' => $doc_name, 'url' => $doc_url, 'type' => $doc_type];
             }
