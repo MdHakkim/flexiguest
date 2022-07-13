@@ -3556,7 +3556,13 @@ class ApplicatioController extends BaseController
 
     function confirmPrecheckinStatus(){
         $sysid = $this->request->getPost("DOC_RESV_ID");
-        $data = ["RESV_STATUS" => 'Pre Checked-In',
+
+        $reservation_status = 'Pre Checked-In';
+        if(isset($this->session->USR_ROLE) && $this->session->USR_ROLE == 'admin')
+            $reservation_status = 'Checked-In';
+
+        $data = [
+            "RESV_STATUS" => $reservation_status,
             "RESV_UPDATE_UID" => $this->session->name,
             "RESV_UPDATE_DT" => date("d-M-Y")
         ];
