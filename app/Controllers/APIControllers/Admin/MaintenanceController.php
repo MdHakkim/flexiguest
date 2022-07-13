@@ -42,7 +42,7 @@ class MaintenanceController extends BaseController
                     $url = base_url("assets/Uploads/Maintenance/$attachment");
 
                     $attachment_array = explode(".", $attachment);
-                    $type = end($attachment_array);
+                    $type = getFileType(end($attachment_array));
 
                     $attachments[$j] = ['name' => $name, 'url' => $url, 'type' => $type];
                 }

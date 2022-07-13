@@ -1,7 +1,4 @@
 <?php
-
-use Config\Services;
-
 function documentUpload($file, $docname, $userID, $folderPath, $micro = 0)
 {
 
@@ -35,4 +32,18 @@ function newFileName($file, $user_id)
 function getOriginalFileName($file_name)
 {
     return preg_replace("/[A-Z\d]+-\d+-/i", "", $file_name);
+}
+
+function getFileType($type)
+{
+    $type = strtolower($type);
+
+    if($type == 'jpg' || $type == 'jpeg' || $type == 'png')
+        return 'image';
+
+    else if($type == 'pdf')
+        return 'pdf';
+
+    else
+        return 'document';
 }

@@ -115,6 +115,9 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
         $routes->post("cancel-order", "LaundryAmenitiesController::cancelOrder");
     });
 
+    $routes->group('profile', function($routes) {
+        $routes->get('all-documents', 'ProfileController::allDocuments');
+    });
 });
 
 // ADMIN ROUTES (START)
@@ -128,7 +131,6 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
         $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
         $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
     });
-
     
     $routes->group('laundry-amenities', function($routes) {
         $routes->get("orders-list", "LaundryAmenitiesController::ordersList");
