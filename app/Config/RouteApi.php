@@ -118,6 +118,11 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
     $routes->group('profile', function($routes) {
         $routes->get('all-documents', 'ProfileController::allDocuments');
     });
+
+    $routes->group('transport-request', function($routes) {
+        $routes->get('lookup-api', 'TransportRequestController::lookupApi');
+        $routes->post('create-request', 'TransportRequestController::createRequest');
+    });
 });
 
 // ADMIN ROUTES (START)
