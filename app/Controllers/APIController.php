@@ -1092,7 +1092,10 @@ class APIController extends BaseController
     {
         if ($shutleID) {
             $param = ['SHUTL_ID' => $shutleID];
-            $sql = "SELECT * FROM FLXY_SHUTTLE_ROUTE WHERE SHUTL_ID=:SHUTL_ID:";
+            $sql = "SELECT *, SHUTL_STAGE_NAME FROM FLXY_SHUTTLE_ROUTE 
+                        left join FLXY_SHUTL_STAGES on FSR_STAGE_ID = SHUTL_STAGE_ID
+                        WHERE FSR_SHUTTLE_ID = :SHUTL_ID: order by FSR_ORDER_NO";
+            
             $data = $this->DB->query($sql, $param)->getResultArray();
         } else {
             $sql = "SELECT fs.*, 
