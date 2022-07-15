@@ -20,7 +20,8 @@ class CustomRules{
                           array('start' => 'NG_RT_START_DT', 'end' => 'NG_RT_END_DT'), 
                           array('start' => 'PKG_CD_START_DT', 'end' => 'PKG_CD_END_DT'),
                           array('start' => 'RSV_ITM_BEGIN_DATE', 'end' => 'RSV_ITM_END_DATE'),
-                          array('start' => 'CM_TODAY', 'end' => 'CM_EXPIRY_DATE'));
+                          array('start' => 'CM_TODAY', 'end' => 'CM_EXPIRY_DATE'),
+                          array('start' => 'FIXD_CHRG_BEGIN_DATE', 'end' => 'FIXD_CHRG_END_DATE'));
 
                        
     foreach($date_fields as $date_field)
@@ -201,6 +202,29 @@ class CustomRules{
 	}
 	//strong password end
 
-  
+
+  public function checkReservationDate(string $str, string $fields, array $data)
+  {
+    /**
+     *  Check Item QTY is less than the available QTY 
+     */
+
+    $FIXD_CHRG_BEGIN_DATE = date('Y-m-d',(strtotime($data['FIXD_CHRG_BEGIN_DATE'])));
+    $FIXD_CHRG_END_DATE   =  date('Y-m-d',(strtotime($data['FIXD_CHRG_END_DATE'])));
+
+    $sql = "SELECT * FROM FLXY_RESERVATION WHERE ('".$FIXD_CHRG_BEGIN_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE) AND ('".$FIXD_CHRG_END_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE) AND RESV_ID = ".$data['FIXD_CHRG_RESV_ID'];                 
+
+    $response = $this->Db->query($sql)->getNumRows();
+
+     if($response == 0)
+     {
+      return false;
+     }
+      else {
+          return true;
+      }  
+
+  }
+
 
 }

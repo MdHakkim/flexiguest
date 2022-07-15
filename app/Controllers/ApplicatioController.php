@@ -31,6 +31,7 @@ class ApplicatioController extends BaseController
         $data['itemLists'] = $itemLists;                 
         $data['itemAvail'] = $this->ItemCalendar();     
         $data['classList'] = $this->itemInventoryClassList();
+        $data['FrequencyList'] = $this->frequencyList();       
 
         $data['toggleButton_javascript'] = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
@@ -3662,19 +3663,17 @@ class ApplicatioController extends BaseController
 
         //Reservation ID 
         $RESV_ID = $this->request->getPost('RESV_ID');
-       // $RESV_ID = '3070';
+        // $RESV_ID = '3070';
         $session_id = session_id();
 
-            if($RESV_ID > 0)
-            $init_cond = array("RSV_ID = " => $RESV_ID); 
-            else
-            $init_cond = array("RSV_SESSION_ID LIKE " => "'".$session_id."'", "RSV_ID = " => 0); 
-
-           
-            $tableName = 'FLXY_RESERVATION_ITEM INNER JOIN FLXY_ITEM ON FLXY_RESERVATION_ITEM.RSV_ITM_ID = FLXY_ITEM.ITM_ID';
-            $columns = 'RSV_PRI_ID,ITM_CODE,ITM_NAME,RSV_ITM_ID,RSV_ITM_CL_ID,RSV_ITM_BEGIN_DATE,RSV_ITM_END_DATE,RSV_ITM_QTY';
-            $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        if($RESV_ID > 0)
+        $init_cond = array("RSV_ID = " => $RESV_ID); 
+        else
+        $init_cond = array("RSV_SESSION_ID LIKE " => "'".$session_id."'", "RSV_ID = " => 0); 
         
+        $tableName = 'FLXY_RESERVATION_ITEM INNER JOIN FLXY_ITEM ON FLXY_RESERVATION_ITEM.RSV_ITM_ID = FLXY_ITEM.ITM_ID';
+        $columns = 'RSV_PRI_ID,ITM_CODE,ITM_NAME,RSV_ITM_ID,RSV_ITM_CL_ID,RSV_ITM_BEGIN_DATE,RSV_ITM_END_DATE,RSV_ITM_QTY';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);        
         
         exit;
     }
@@ -3706,5 +3705,168 @@ class ApplicatioController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'Documents verified.']));
     }
-       
+    
+    public function transactionList()
+    {       
+        $response = NULL; 
+        $option = '';
+        $sql = "SELECT TR_CD_ID,TR_CD_CODE,TR_CD_DESC FROM FLXY_TRANSACTION_CODE WHERE TR_CD_STATUS = '1'";                 
+        $responseCount = $this->Db->query($sql)->getNumRows();
+        if($responseCount > 0) 
+        $response = $this->Db->query($sql)->getResultArray(); 
+           
+        $selected = "";
+                        
+        $option='<option value="">Select Transaction Code</option>';
+            
+        foreach($response as $row){            
+            $option.= '<option value="'.$row['TR_CD_ID'].'"'.$selected.'>'.$row['TR_CD_CODE'].' | '.$row['TR_CD_DESC'].'</option>';
+        }
+        return $option;
+        
+    }
+
+    public function frequencyList()
+    {       
+        $response = NULL;     
+        $sql = "SELECT ID,FREQ_NAME FROM FLXY_FREQUENCY";                 
+        $responseCount = $this->Db->query($sql)->getNumRows();
+        if($responseCount > 0) 
+        $response = $this->Db->query($sql)->getResultArray(); 
+        return $response;
+    }
+
+
+    public function showFixedCharge()
+    { 
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        //Reservation ID 
+        $RESV_ID = $this->request->getPost('FIXD_CHRG_RESV_ID');
+        $session_id = session_id();
+        $init_cond = '';
+
+        if($RESV_ID > 0)
+        $init_cond = array("FIXD_CHRG_RESV_ID = " => $RESV_ID, "TR_CD_STATUS = " => 1);   
+        
+        $tableName = 'FLXY_FIXED_CHARGES INNER JOIN FLXY_TRANSACTION_CODE ON FLXY_FIXED_CHARGES.FIXD_CHRG_TRNCODE = FLXY_TRANSACTION_CODE.TR_CD_ID INNER JOIN FLXY_FREQUENCY ON FLXY_FIXED_CHARGES.FIXD_CHRG_FREQUENCY = FLXY_FREQUENCY.ID';
+        $columns = 'FIXD_CHRG_ID,TR_CD_ID,TR_CD_CODE,TR_CD_DESC,FIXD_CHRG_QTY,FIXD_CHRG_AMT,FIXD_CHRG_FREQUENCY,FIXD_CHRG_BEGIN_DATE,FIXD_CHRG_END_DATE,FREQ_NAME';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);  
+        
+        exit;
+    }
+
+    public function showFixedChargeDetails()
+    {
+        $fixedChargeDetails = $this->getFixedChargeDetails($this->request->getPost('FIXD_CHRG_ID'));
+        echo json_encode($fixedChargeDetails);
+    }
+
+    public function getFixedChargeDetails($FIXD_CHRG_ID = 0)
+    {
+        $param = ['SYSID' => $FIXD_CHRG_ID];
+        $sql = "SELECT *           
+                FROM dbo.FLXY_FIXED_CHARGES
+                WHERE FIXD_CHRG_ID=:SYSID:";       
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        return $response;
+    }
+
+    public function updateFixedCharges()
+    {
+        try {
+            $FIXD_CHRG_ID           =  $this->request->getPost('FIXD_CHRG_ID');
+            $FIXD_CHRG_RESV_ID      =  $this->request->getPost('FIXD_CHRG_RESV_ID');
+            $FIXD_CHRG_TRNCODE      =  $this->request->getPost('FIXD_CHRG_TRNCODE');
+            $FIXD_CHRG_AMT          =  $this->request->getPost('FIXD_CHRG_AMT');
+            $FIXD_CHRG_QTY          =  $this->request->getPost('FIXD_CHRG_QTY');
+            $FIXD_CHRG_FREQUENCY    =  $this->request->getPost('FIXD_CHRG_FREQUENCY'); 
+
+            $data = [
+                "FIXD_CHRG_RESV_ID"       => $FIXD_CHRG_RESV_ID,
+                "FIXD_CHRG_TRNCODE"       => $FIXD_CHRG_TRNCODE,
+                "FIXD_CHRG_QTY"           => $FIXD_CHRG_QTY,
+                "FIXD_CHRG_AMT"           => $FIXD_CHRG_AMT,
+                "FIXD_CHRG_FREQUENCY"     => $FIXD_CHRG_FREQUENCY,
+                "FIXD_CHRG_BEGIN_DATE"    => date('Y-m-d',(strtotime($this->request->getPost('FIXD_CHRG_BEGIN_DATE')))),
+                "FIXD_CHRG_END_DATE"      => date('Y-m-d',(strtotime($this->request->getPost('FIXD_CHRG_END_DATE')))),
+                ];
+
+            $rules = [  'FIXD_CHRG_TRNCODE' => ['label' => 'Transaction code', 'rules' => 'required'],
+                        'FIXD_CHRG_FREQUENCY' => ['label' => 'Freequency', 'rules' => 'required'],
+                        'FIXD_CHRG_BEGIN_DATE' => ['label' => 'Start Date', 'rules' => 'required|checkReservationDate[FIXD_CHRG_BEGIN_DATE]', 'errors' => ['compareDate' => 'The End Date should be after Begin Date','checkReservationDate' => 'Start date cannot be greater than the Departure date']],                       
+                        'FIXD_CHRG_END_DATE' => ['label' => 'End Date', 'rules' => 'required|compareDate[FIXD_CHRG_BEGIN_DATE]|checkReservationDate[FIXD_CHRG_END_DATE]', 'errors' => ['checkReservationDate' => 'End date cannot be greater than the Departure date']],
+                        'FIXD_CHRG_AMT' => ['label' => 'Amount', 'rules' => 'required'],
+                        'FIXD_CHRG_QTY' => ['label' => 'Quantity', 'rules' => 'required'] 
+                     ];
+
+                   
+
+            $validate = $this->validate($rules);
+            
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+           
+            $return = !empty($FIXD_CHRG_ID) ? $this->Db->table('FLXY_FIXED_CHARGES')->where('FIXD_CHRG_ID', $FIXD_CHRG_ID)->update($data) : $this->Db->table('FLXY_FIXED_CHARGES')->insert($data);
+
+            $result = $return ? $this->responseJson("1", "0", $return, !empty($FIXD_CHRG_ID) ? $FIXD_CHRG_ID : $this->Db->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
+
+
+            if(!$return)
+                $this->session->setFlashdata('error', 'There has been an error. Please try again.');
+            else
+            {
+                if(empty($FIXD_CHRG_ID))
+                    //$this->session->setFlashdata('success', 'The Package Code has been updated.');
+                    //else
+                    $this->session->setFlashdata('success', 'The new Item  has been added.');
+            }
+            echo json_encode($result);
+
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+
+    public function deleteFixedcharge()
+    {
+        $FIXD_CHRG_ID = $this->request->getPost('FIXD_CHRG_ID');
+
+        try {
+            $return = $this->Db->table('FLXY_FIXED_CHARGES')->delete(['FIXD_CHRG_ID' => $FIXD_CHRG_ID]); 
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (\Exception $e) {
+            return $this->respond($e->errors());
+        }
+        
+    }
+
+    public function getReservDetails()
+    {
+        $reservID = $this->request->getPost('reservID');
+        try{           
+            $response = NULL; 
+            $result = NULL;   
+            $sql = "SELECT RESV_ARRIVAL_DT,RESV_NIGHT,RESV_DEPARTURE, CONCAT(CUST_FIRST_NAME,' ',CUST_MIDDLE_NAME,' ',CUST_LAST_NAME) FULL_NAME FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID WHERE RESV_ID = '".$reservID."'";                 
+            $responseCount = $this->Db->query($sql)->getNumRows();
+            if($responseCount > 0) {
+                $response = $this->Db->query($sql)->getResultArray(); 
+                foreach($response as $row){            
+                    $result = ['RESV_ARRIVAL_DT' => $row['RESV_ARRIVAL_DT'],'RESV_NIGHT' => $row['RESV_NIGHT'],'RESV_DEPARTURE' => $row['RESV_DEPARTURE'],'FULL_NAME' => $row['FULL_NAME'] ];
+                }
+            }
+          
+            echo json_encode($result);
+        } catch (\Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
 }
