@@ -759,6 +759,12 @@ public function viewUserRoles(){
 
 }
 
+public function accessDenied()
+    {
+        
+        return view('Users/notAuth');
+    }
+
    
 
 

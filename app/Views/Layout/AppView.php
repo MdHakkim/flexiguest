@@ -16,6 +16,7 @@
     />
     <?=$this->renderSection("titleRender")?>
       <?= $this->include('Layout/HeaderScript') ?>
+      <?= helper('pageaccess'); ?>
       <body>
         <!-- Layout wrapper -->
           <div id="loader_flex_bg"><div class="loader_flexi"></div></div>
@@ -32,10 +33,40 @@
 
                      <!-- Content wrapper -->
           <div class="content-wrapper">
+          <?php 
+          $access = '';
+          $access  = checkPageAccess();
+          if($access ==  0){
+          ?>
+              <!-- Not Authorized -->
+              <div class="container-xxl container-p-y">
+                <div class="misc-wrapper text-center">
+                  <h1 class="mx-2 mb-2">You are not authorized!</h1>
+                  <p class="mx-2 mb-4">You don't have permission to access this page!!</p>
                   
-                  <?=$this->renderSection("contentRender")?>
+                  <div class="mt-5">
+                    <img
+                      src='<?php echo base_url('/assets/img/illustrations/girl-hacking-site-light.png');?>'
+                      alt="page-misc-error-light"
+                      width="450"
+                    
+                    />
+                  </div>
+                </div>
+              </div>
+            <!-- /Not Authorized -->
+            
+            <?php 
+          }
+          
+          else{
+            echo $this->renderSection("contentRender");
+          }
+            
+          
+          ?>
 
-                  <div class="content-backdrop fade"></div>
+          <div class="content-backdrop fade"></div>
           </div>
           <!-- Content wrapper -->
 

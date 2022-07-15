@@ -1547,7 +1547,7 @@ $folderPath = base_url('assets/Uploads/');
                     <?php
                     if (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin') {
                     ?>
-                        text += `&nbsp<a href="#" class="text-info" onclick="verifyDocuments(${row.DOC_CUST_ID}, ${row.DOC_RESV_ID})"><u>click here to verify</u></a>`;
+                        text += `&nbsp<a href="#" class="text-info" onclick="verifyDocuments(${row.CUST_ID}, ${row.RESV_ID})"><u>click here to verify</u></a>`;
                     <?php
                     }
                     ?>
@@ -1555,7 +1555,7 @@ $folderPath = base_url('assets/Uploads/');
                     if (row.DOC_IS_VERIFY && row.VACC_IS_VERIFY)
                         text = '<i class="fa-solid fa-circle-check me-1"></i> Document verified';
 
-                    $(`.customer-card-${row.DOC_CUST_ID} .document-verified-status`).html(text);
+                    $(`.customer-card-${row.CUST_ID} .document-verified-status`).html(text);
                 });
 
                 updateStatuIconButton(response);
@@ -1607,11 +1607,11 @@ $folderPath = base_url('assets/Uploads/');
         $(`.flxy_doc_vacc`).removeClass('flxy_green').addClass('flxy_orng').text('Pending');
 
         $.each(object, (index, row) => {
-            $(`.customer-card-${row.DOC_CUST_ID} .flxy_doc_prof`).removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
+            if (row.DOC_IS_VERIFY != null)
+                $(`.customer-card-${row.CUST_ID} .flxy_doc_prof`).removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
 
-            if (row.VACC_IS_VERIFY != null) {
-                $(`.customer-card-${row.DOC_CUST_ID} .flxy_doc_vacc`).removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
-            }
+            if (row.VACC_IS_VERIFY != null)
+                $(`.customer-card-${row.CUST_ID} .flxy_doc_vacc`).removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
         });
 
         // if (object.TOTAL_PROOF > 0) {

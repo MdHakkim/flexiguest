@@ -122,6 +122,7 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
     $routes->group('transport-request', function($routes) {
         $routes->get('lookup-api', 'TransportRequestController::lookupApi');
         $routes->post('create-request', 'TransportRequestController::createRequest');
+        $routes->get('all-requests', 'TransportRequestController::allRequests');
     });
 });
 

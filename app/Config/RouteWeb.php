@@ -9,6 +9,9 @@ $routes->match(['get', 'post'], 'login', 'UserController::login', ["filter" => "
 $routes->match(['post'],'/countryList', 'ApplicatioController::countryList');
 $routes->match(['post'],'/stateList', 'ApplicatioController::stateList');
 $routes->match(['post'],'/cityList', 'ApplicatioController::cityList');
+$routes->match(['get'],'/accessDenied', 'UserController::accessDenied');
+
+
     
 // Admin routes
 $routes->get('/', 'DashboardController::index',["filter" => "auth"]);
@@ -483,13 +486,19 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/viewUserRoles', 'UserController::viewUserRoles'); 
       $routes->match(['post'],'/addRolePermission', 'UserController::addRolePermission'); 
       $routes->match(['post'],'/editRolePermission', 'UserController::editRolePermission'); 
+      $routes->get('/checkRolePermission', 'UserController::checkRolePermission');
 
+      /// Reservation - Fixed Charges 
+      $routes->match(['post'],'/transactionList', 'ApplicatioController::transactionList');
+      $routes->match(['post'],'/showFixedCharge', 'ApplicatioController::showFixedCharge');
+      $routes->match(['post'],'/updateFixedCharges', 'ApplicatioController::updateFixedCharges');
+      $routes->match(['post'],'/showFixedChargeDetails', 'ApplicatioController::showFixedChargeDetails');
+      $routes->match(['post'],'/deleteFixedcharge', 'ApplicatioController::deleteFixedcharge');
+      $routes->match(['post'],'/getReservDetails', 'ApplicatioController::getReservDetails');   
+      
      
       
-      
-     
-      
-   //Subina Code (END)  
+    //Subina Code (END)  
 
 
    
