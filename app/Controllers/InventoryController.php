@@ -91,26 +91,27 @@ class InventoryController extends BaseController
     public function updateInventoryItems()
     {
         try {
-            $RSV_PRI_ID = $this->request->getPost('RSV_PRI_ID');
-            $RESV_ID = $this->request->getPost('RESV_ID');
-            $existsCount = 0;
+            $RSV_PRI_ID    = $this->request->getPost('RSV_PRI_ID');
+            $RESV_ID       = $this->request->getPost('ITEM_RESV_ID');
+            $RSV_ITM_CL_ID = $this->request->getPost('RSV_ITM_CL_ID');
+            $RSV_ITM_ID    = $this->request->getPost('RSV_ITM_ID');
+            $existsCount   = 0;
+            if($RESV_ID == '') 
+            $RESV_ID = 0;
             if($RSV_PRI_ID == ''){
-                 $existsCount = $this->ItemExists($this->request->getPost('RSV_ITM_CL_ID'), $this->request->getPost('RSV_ITM_ID'), $this->request->getPost('RESV_ID'));
+                 
+                 $existsCount = $this->ItemExists($RSV_ITM_CL_ID, $RSV_ITM_ID, $RESV_ID);
                  if($existsCount > 0){
                     $result['SUCCESS'] = '2';
                     echo json_encode($result);
                     return;
                  }
-            }
-            $RESV_ID = $this->request->getPost('RESV_ID');
+            }         
 
-            if($RESV_ID == '') 
-            $RESV_ID = 0;
 
              // Checks item quantity
             $resvItemQty = $this->request->getPost('RSV_ITM_QTY');
-            $resvItemID  =  $this->request->getPost('RSV_ITM_ID');
-            
+            $resvItemID  =  $this->request->getPost('RSV_ITM_ID');            
              
             $ITEM_AVAIL_QTY = 0;
  
@@ -157,13 +158,13 @@ class InventoryController extends BaseController
 
             
           
-                (int)$ITEM_QTY = $ITEM_QTY-(int)$resvItemQty;
-                $this->Db->table('FLXY_ITEM')->where('ITM_ID', $resvItemID)->update(['ITEM_AVAIL_QTY' => $ITEM_QTY]);
+            (int)$ITEM_QTY = $ITEM_QTY-(int)$resvItemQty;
+            $this->Db->table('FLXY_ITEM')->where('ITM_ID', $resvItemID)->update(['ITEM_AVAIL_QTY' => $ITEM_QTY]);
 
 
-                $return = !empty($RSV_PRI_ID) ? $this->Db->table('FLXY_RESERVATION_ITEM')->where('RSV_PRI_ID', $RSV_PRI_ID)->update($data) : $this->Db->table('FLXY_RESERVATION_ITEM')->insert($data);
+            $return = !empty($RSV_PRI_ID) ? $this->Db->table('FLXY_RESERVATION_ITEM')->where('RSV_PRI_ID', $RSV_PRI_ID)->update($data) : $this->Db->table('FLXY_RESERVATION_ITEM')->insert($data);
 
-                $result = $return ? $this->responseJson("1", "0", $return, !empty($RSV_PRI_ID) ? $RSV_PRI_ID : $this->Db->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
+            $result = $return ? $this->responseJson("1", "0", $return, !empty($RSV_PRI_ID) ? $RSV_PRI_ID : $this->Db->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
 
 
            
@@ -223,9 +224,10 @@ class InventoryController extends BaseController
     public function ItemExists($itemClass, $itemID, $reserID)
     {      
                 
+
         $sql = "SELECT *           
                 FROM dbo.FLXY_RESERVATION_ITEM
-                WHERE RSV_ITM_CL_ID = '" . $itemClass . "' AND RSV_ITM_ID = '" . $itemID . "' AND RSV_ID = '" . $reserID . "'";  
+                WHERE RSV_ITM_CL_ID = '" . $itemClass . "' AND RSV_ITM_ID = '" . $itemID . "' AND RSV_ID = '" . $reserID . "' AND RSV_SESSION_ID LIKE  '" . session_id() . "'";  
 
         $response = $this->Db->query($sql)->getNumRows();
         return $response;

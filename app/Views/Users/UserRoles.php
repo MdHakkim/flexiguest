@@ -850,9 +850,7 @@
             roleTitle.innerHTML = 'Edit Role'; // reset text
           };
         });
-      }
-
-      
+      }    
 
 
     });
