@@ -222,7 +222,8 @@
                 <button type="button" class="btn btn-label-secondary close_merge_profiles" data-bs-dismiss="modal">
                     Close
                 </button>
-                <button type="button" class="btn btn-primary merge_profiles_go">Merge Profiles</button>
+                <button type="button" class="btn btn-primary merge_profiles_go" data-orig-profile=""
+                    data-merge-profile="">Merge Profiles</button>
             </div>
         </div>
     </div>
@@ -275,6 +276,12 @@ $(document).on('click', '.use_selected_profiles', function() {
     blockLoader('.compareProfiles_div');
 
     showCompareProfiles(profile_to_merge, original_profile);
+
+    $('.merge_profiles_go').attr({
+        'data-orig-profile': original_profile,
+        'data-merge-profile': profile_to_merge
+    });
+
 });
 
 // Show Package Code Detail
@@ -310,6 +317,27 @@ function showCompareProfiles(pmCustId, ogCustId) {
     });
 }
 
+function mergeProfiles(pmCustId, ogCustId) {
+
+    var url = '<?php echo base_url('/mergeProfileTables')?>';
+    $.ajax({
+        url: url,
+        type: "get",
+        async: false,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            pmCustId: pmCustId,
+            ogCustId: ogCustId
+        },
+        dataType: 'json',
+        success: function(respn) {
+            return respn;
+        }
+    });
+}
+
 confirmText = document.querySelector('.merge_profiles_go');
 
 confirmText.onclick = function() {
@@ -328,28 +356,30 @@ confirmText.onclick = function() {
     }).then(function(result) {
         if (result.value) {
 
-            var timerInterval;
+            var timerInterval, mergeResult;
             Swal.fire({
                 title: '',
                 html: '<h4 class="mt-5">Merging Profiles...</h4>',
                 timer: 2500,
+                showCloseButton: false,
+                showConfirmButton: false,
                 customClass: {
                     confirmButton: 'btn btn-primary mb-3'
                 },
                 buttonsStyling: false,
                 willOpen: function() {
                     Swal.showLoading();
-                    /*
-                    timerInterval = setInterval(function() {
-                        Swal.getHtmlContainer().querySelector('strong').textContent =
-                            Swal.getTimerLeft();
-                    }, 100);
-                    */
+
+                    var profile_to_merge = $('.merge_profiles_go').attr('data-merge-profile');
+                    var original_profile = $('.merge_profiles_go').attr('data-orig-profile');
+
+                    mergeProfiles(profile_to_merge, original_profile);
                 },
                 willClose: function() {
                     //clearInterval(timerInterval);
                 }
-            }).then(function(result2) {
+            }).then(function() {
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Merge Completed!',
@@ -364,6 +394,7 @@ confirmText.onclick = function() {
                 $('#custOptionsWindow').modal('hide');
 
                 $('#dataTable_view').dataTable().fnDraw(); // Reload customer table
+
             });
         }
     });
