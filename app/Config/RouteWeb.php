@@ -67,6 +67,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/customerChangesView', 'ApplicatioController::CustomerChangesView');
 
     $routes->get('/showCompareProfiles', 'ApplicatioController::showCompareProfiles');
+    $routes->get('/mergeProfileTables', 'ApplicatioController::mergeProfileTables');
 
     $routes->get('/company', 'ApplicatioController::company');
     $routes->match(['post'],'/companyView', 'ApplicatioController::companyView');
@@ -292,7 +293,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertCustomerMembership', 'ApplicatioController::insertCustomerMembership');
     $routes->match(['post'],'/showMembershipTypeList', 'ApplicatioController::showMembershipTypeList');
     $routes->match(['post'],'/editCustomerMembership', 'ApplicatioController::editCustomerMembership');
-
+    $routes->match(['post'],'/deleteCustomerMembership', 'ApplicatioController::deleteCustomerMembership');      
     $routes->match(['post'],'/getCustomerMembershipsList', 'ApplicatioController::getCustomerMembershipsList');
 
     // Code By ALEESHA 

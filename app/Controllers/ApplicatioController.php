@@ -763,7 +763,7 @@ class ApplicatioController extends BaseController
 
     public function showMembershipTypeList()
     {
-        $membershipTypes = getMembershipTypeList(null !== $this->request->getGet('custId') ? $this->request->getGet('custId') : 0, $this->request->getGet('mode'));
+        $membershipTypes = getMembershipTypeList(null !== $this->request->getPost('custId') ? $this->request->getPost('custId') : 0, $this->request->getPost('mode'));
         echo json_encode($membershipTypes);
     }
 
@@ -935,6 +935,17 @@ class ApplicatioController extends BaseController
         $orig_profile     = $this->getProfileDetails(null !== $this->request->getGet('ogCustId') ? $this->request->getGet('ogCustId') : 0);
         
         echo json_encode([$orig_profile,$profile_to_merge]);
+    }
+
+    public function mergeProfileTables()
+    {
+        $pmCustId = null !== $this->request->getGet('pmCustId') ? $this->request->getGet('pmCustId') : 0;
+        $ogCustId = null !== $this->request->getGet('ogCustId') ? $this->request->getGet('ogCustId') : 0;
+
+        if(mergeCustomer($pmCustId, $ogCustId))
+            echo '1';
+        else 
+            echo '0';    
     }
 
     function printProfile($id = 0)

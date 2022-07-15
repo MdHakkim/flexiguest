@@ -124,7 +124,7 @@ $(document).on('click', '.custOptions', function() {
 
     $('#custOptionsWindow').find(
             '.data-port,.delete-record,.show-cust-activity-log,.show-cust-memberships,.show-cust-negotiated-rates,.merge-profile'
-            )
+        )
         .attr({
             'data_sysid': custOptId,
             'data_custname': custName
@@ -361,6 +361,7 @@ function showCustomerMemberships(custId = 0) {
                         '" class="dropdown-item editMemWindow text-primary" data-bs-dismiss="modal"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['CM_ID'] +
+                        '" data_custid="' + data['CUST_ID'] +
                         '" class="dropdown-item text-danger delete-mem-record"><i class="fa-solid fa-ban"></i> Delete</a></li>' +
                         '</ul>' +
                         '</div>'
@@ -467,6 +468,46 @@ function showCustomerMemberships(custId = 0) {
     );
 
 }
+
+$(document).on('click', '.delete-mem-record', function() {
+    var sysid = $(this).attr('data_sysid');
+    var custid = $(this).attr('data_custid');
+    bootbox.confirm({
+        message: "Are you sure you want to delete this membership?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function(result) {
+            if (result) {
+                $.ajax({
+                    url: '<?php echo base_url('/deleteCustomerMembership') ?>',
+                    type: "post",
+                    data: {
+                        sysid: sysid
+                    },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    dataType: 'json',
+                    success: function(respn) {
+
+                        showCustomerMemberships(custid);
+                        showModalAlert('warning',
+                            '<li>The Membership has been deleted</li>');
+                    }
+                });
+            }
+        }
+    });
+
+});
 
 // Funtion to execute after Customer Memberhsip form submit
 
