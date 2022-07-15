@@ -448,7 +448,14 @@ button.close {
 }
 .activeslide{
   display: flex;
+  flex-wrap: wrap;
 }
+
+.activeslide .document-status-card{
+  margin: 10px;
+  width: 45% !important;
+}
+
 .flxy_web-ul .text-flxy{
   display: flex;
   flex-direction: row;

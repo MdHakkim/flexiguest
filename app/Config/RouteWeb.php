@@ -35,6 +35,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/rateQueryDetailOption', 'ApplicatioController::rateQueryDetailOption');
 
     $routes->match(['post'],'/reservationChangesView', 'ApplicatioController::ReservationChangesView');
+
+    $routes->post('checkin/verify-documents', 'ApplicatioController::verifyDocuments');
     
     $routes->group('reservation', function($routes) {
         $routes->post('search-reservation', 'ReservationController::searchReservation');
@@ -68,6 +70,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/customerChangesView', 'ApplicatioController::CustomerChangesView');
 
     $routes->get('/showCompareProfiles', 'ApplicatioController::showCompareProfiles');
+    $routes->get('/mergeProfileTables', 'ApplicatioController::mergeProfileTables');
 
     $routes->get('/company', 'ApplicatioController::company');
     $routes->match(['post'],'/companyView', 'ApplicatioController::companyView');
@@ -293,7 +296,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertCustomerMembership', 'ApplicatioController::insertCustomerMembership');
     $routes->match(['post'],'/showMembershipTypeList', 'ApplicatioController::showMembershipTypeList');
     $routes->match(['post'],'/editCustomerMembership', 'ApplicatioController::editCustomerMembership');
-
+    $routes->match(['post'],'/deleteCustomerMembership', 'ApplicatioController::deleteCustomerMembership');      
     $routes->match(['post'],'/getCustomerMembershipsList', 'ApplicatioController::getCustomerMembershipsList');
 
     // Code By ALEESHA 
@@ -528,9 +531,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->delete('delete-concierge-request', 'ConciergeController::deleteConciergeRequest');
     });
 
-    $routes->group('transport', function ($routes) { 
-        $routes->get('', 'TransportController::transport');
-        $routes->post('all-transports', 'TransportController::allTransports');
+    $routes->group('transport-type', function ($routes) { 
+        $routes->get('', 'TransportController::transportType');
+        $routes->post('all-transport-types', 'TransportController::allTransportTypes');
         $routes->post('store', 'TransportController::store');
         $routes->post('edit', 'TransportController::edit');
         $routes->delete('delete', 'TransportController::delete');

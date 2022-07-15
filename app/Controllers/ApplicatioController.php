@@ -764,7 +764,7 @@ class ApplicatioController extends BaseController
 
     public function showMembershipTypeList()
     {
-        $membershipTypes = getMembershipTypeList(null !== $this->request->getGet('custId') ? $this->request->getGet('custId') : 0, $this->request->getGet('mode'));
+        $membershipTypes = getMembershipTypeList(null !== $this->request->getPost('custId') ? $this->request->getPost('custId') : 0, $this->request->getPost('mode'));
         echo json_encode($membershipTypes);
     }
 
@@ -936,6 +936,17 @@ class ApplicatioController extends BaseController
         $orig_profile     = $this->getProfileDetails(null !== $this->request->getGet('ogCustId') ? $this->request->getGet('ogCustId') : 0);
         
         echo json_encode([$orig_profile,$profile_to_merge]);
+    }
+
+    public function mergeProfileTables()
+    {
+        $pmCustId = null !== $this->request->getGet('pmCustId') ? $this->request->getGet('pmCustId') : 0;
+        $ogCustId = null !== $this->request->getGet('ogCustId') ? $this->request->getGet('ogCustId') : 0;
+
+        if(mergeCustomer($pmCustId, $ogCustId))
+            echo '1';
+        else 
+            echo '0';    
     }
 
     function printProfile($id = 0)
@@ -3165,7 +3176,7 @@ class ApplicatioController extends BaseController
                         RESV_ACCP_TRM_CONDI, RESV_SINGATURE_URL, RESV_ETA,
                         RM_TY_DESC,
                         SNAME as CUST_STATE_DESC,
-                        CTNAME as CUST_CITY_DESC 
+                        CTNAME as CUST_CITY_DESC
                         FROM FLXY_RESERVATION
                         left join FLXY_CUSTOMER on FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID
                         left join FLXY_ROOM_TYPE on FLXY_RESERVATION.RESV_RM_TYPE = FLXY_ROOM_TYPE.RM_TY_CODE
@@ -3175,13 +3186,34 @@ class ApplicatioController extends BaseController
 
             $response = $this->Db->query($sql,$param)->getResultArray();
 
-            if(empty($response)){
+            if(empty($response)) {
                 echo "This link is not valid!";
                 die();
             }
 
+            $response = $response[0];
+            
+            $sql = "select ap.*,
+                fc.*,
+                concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as FULLNAME,
+                FORMAT(fc.CUST_DOB,'dd-MMM-yyyy') CUST_DOB,
+                FORMAT(fc.CUST_DOC_ISSUE,'dd-MMM-yyyy') CUST_DOC_ISSUE,
+                SNAME as CUST_STATE_DESC,
+                CTNAME as CUST_CITY_DESC
+                from FLXY_ACCOMPANY_PROFILE as ap 
+                left join FLXY_CUSTOMER as fc on ap.ACCOMP_CUST_ID = fc.CUST_ID
+                left join STATE on STATE.STATE_CODE = fc.CUST_STATE
+                left join CITY on CITY.ID = fc.CUST_CITY
+                where ap.ACCOMP_REF_RESV_ID = :RESV_ID:";
+            
+            $response['ACCOMPANY_PROFILES'] = $this->Db->query($sql, $param)->getResultArray();
+
+            // print_r($response['ACCOMPANY_PROFILES']);
+            // die();
+            
             $data['data'] = $response;
             $data['condition'] = '';
+            $data['session'] = $this->session;
 
             return view('WebCheckin/CheckInReservation', $data);
         // }catch (\Exception $e){
@@ -3229,7 +3261,7 @@ class ApplicatioController extends BaseController
                 "DOC_FILE_TYPE" => $this->request->getPost("DOC_FILE_TYPE"),
                 "DOC_FILE_DESC" => $this->request->getPost("DOC_FILE_DESC"),
                 "DOC_IS_VERIFY" => $this->request->getPost("DOC_IS_VERIFY") ?? 0,
-                "DOC_CREATE_UID" => $this->session->name,
+                "DOC_CREATE_UID" => $this->session->USR_ID,
                 "DOC_CREATE_DT" => $dateTime
             ];
 
@@ -3374,19 +3406,23 @@ class ApplicatioController extends BaseController
         }else{
             $param = ['CUST_ID'=> $this->request->getPost("custid"),'RESV_ID'=> $this->request->getPost("resrid")];
         }
-        $sql="SELECT COUNT(*)TOTAL_PROOF, (SELECT COUNT(*) FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:CUST_ID: AND VACC_RESV_ID=:RESV_ID:) TOTAL_VACC FROM FLXY_DOCUMENTS WHERE DOC_CUST_ID=:CUST_ID: AND DOC_RESV_ID=:RESV_ID:";
-        $response = $this->Db->query($sql,$param)->getResultArray();  
 
-        // $sql2 = 'select * from FLXY_CUSTOMER where CUST_ID = :CUST_ID:';
-        // $customer = $this->Db->query($sql2, $param)->getRowArray();
+        $sql = "select ACCOMP_CUST_ID from FLXY_ACCOMPANY_PROFILE where ACCOMP_REF_RESV_ID = :RESV_ID:";
+        $accompany_profiles = $this->Db->query($sql, $param)->getResultArray();  
+        
+        $cust_ids[] = $param['CUST_ID'];
+        foreach($accompany_profiles as $accompany_profile){
+            $cust_ids[] = $accompany_profile['ACCOMP_CUST_ID'];
+        }
 
-        // if($customer){
-        //     if(!$customer['CUST_EMAIL'] || !$customer['CUST_TITLE'] || !$customer['CUST_FIRST_NAME']
-        //         || !$customer['CUST_COUNTRY'] || !$customer['CUST_STATE'] || !$customer['CUST_CITY']){
-        //         $response[0]['TOTAL_PROOF'] = 0;
-        //     }
-        // }
+        $cust_ids = implode(",", $cust_ids);
 
+        $sql = "select RESV_NAME as CUST_ID, RESV_ID, DOC_IS_VERIFY, VACC_IS_VERIFY from FLXY_RESERVATION
+                    left join FLXY_VACCINE_DETAILS on VACC_CUST_ID = RESV_NAME AND VACC_RESV_ID = RESV_ID
+                    left join FLXY_DOCUMENTS on DOC_CUST_ID = RESV_NAME AND DOC_RESV_ID = RESV_ID
+                    where RESV_NAME in ($cust_ids) and RESV_ID = :RESV_ID:";
+        $response = $this->Db->query($sql, $param)->getResultArray();
+         
         if($condi){
             return $response;
         }
@@ -3395,16 +3431,22 @@ class ApplicatioController extends BaseController
 
     public function updateVaccineReport(){
         try{
-            $validate = $this->validate([
+            $rules = [
                 'VACC_DETL' => ['label' => 'vaccine detail', 'rules' => 'required'],
                 'VACC_LAST_DT' => ['label' => 'vaccine last date', 'rules' => 'required'],
                 'VACC_NAME' => ['label' => 'vaccine name', 'rules' => 'required'],
-                'files' => [
+                'VACC_ISSUED_COUNTRY' => ['label' => 'vaccine issue country', 'rules' => 'required']
+            ];
+
+            if(empty($this->request->getPost("VACC_DOC_SAVED"))){
+                $rules['files'] = [
                     'label' => 'vaccine certificate', 
                     'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg]', 'max_size[files,5000]'
-                ],
-                'VACC_ISSUED_COUNTRY' => ['label' => 'vaccine issue country', 'rules' => 'required']
-            ]);
+                ];
+            }
+
+            $validate = $this->validate($rules);
+
 
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -3452,7 +3494,8 @@ class ApplicatioController extends BaseController
                 "VACC_LAST_DT" => $this->request->getPost("VACC_LAST_DT"),
                 "VACC_NAME" => $this->request->getPost("VACC_NAME"),
                 "VACC_ISSUED_COUNTRY" => $this->request->getPost("VACC_ISSUED_COUNTRY"),
-                "VACC_IS_VERIFY" => $this->request->getPost("VACC_IS_VERIFY"),
+                // "VACC_IS_VERIFY" => $this->request->getPost("VACC_IS_VERIFY"),
+                "VACC_IS_VERIFY" => 0,
                 "VACC_FILE_PATH" => $fileNm,
                 "VACC_CREATE_UID" => $this->session->name,
                 "VACC_CREATE_DT" => date("d-M-Y")
@@ -3480,9 +3523,13 @@ class ApplicatioController extends BaseController
 
     public function getVaccinUploadImages(){
         $param = ['VACC_CUST_ID'=> $this->request->getPost("VACC_CUST_ID"),'VACC_RESV_ID'=> $this->request->getPost("VACC_RESV_ID")];
-        $sql="SELECT * FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:VACC_CUST_ID: AND VACC_RESV_ID=:VACC_RESV_ID:";
-        $response = $this->Db->query($sql,$param)->getResultArray();  
-        echo json_encode($response);
+        $sql = "SELECT * FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID = :VACC_CUST_ID: AND VACC_RESV_ID = :VACC_RESV_ID:";
+        $output['vacc_details'] = $this->Db->query($sql,$param)->getResultArray();
+
+        $sql = "SELECT CUST_ID, concat(CUST_FIRST_NAME, ' ', CUST_MIDDLE_NAME, ' ', CUST_LAST_NAME) as FULLNAME FROM FLXY_CUSTOMER where CUST_ID = :VACC_CUST_ID:";
+        $output['customer_details'] = $this->Db->query($sql, $param)->getResultArray();
+
+        echo json_encode($output);
     }
 
     function updateSignatureReserv(){
@@ -3523,7 +3570,13 @@ class ApplicatioController extends BaseController
 
     function confirmPrecheckinStatus(){
         $sysid = $this->request->getPost("DOC_RESV_ID");
-        $data = ["RESV_STATUS" => 'Pre Checked-In',
+
+        $reservation_status = 'Pre Checked-In';
+        if(isset($this->session->USR_ROLE) && $this->session->USR_ROLE == 'admin')
+            $reservation_status = 'Checked-In';
+
+        $data = [
+            "RESV_STATUS" => $reservation_status,
             "RESV_UPDATE_UID" => $this->session->name,
             "RESV_UPDATE_DT" => date("d-M-Y")
         ];
@@ -3625,7 +3678,34 @@ class ApplicatioController extends BaseController
         exit;
     }
 
+    public function verifyDocuments() {
+        $customer_id = $this->request->getVar('customer_id');
+        $reservation_id = $this->request->getVar('reservation_id');
 
+        $params = [
+            'customer_id' => $customer_id,
+            'reservation_id' => $reservation_id
+        ];
+
+        $sql = "select * from FLXY_DOCUMENTS where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:";
+        $response = $this->Db->query($sql, $params)->getResultArray();
+        if(empty($response))
+            return $this->respond(responseJson(403, true, ['msg' => 'No documents uploaded yet.']));
+
+        $sql = "select * from FLXY_VACCINE_DETAILS where VACC_CUST_ID = :customer_id: and VACC_RESV_ID = :reservation_id:";
+        $response = $this->Db->query($sql, $params)->getResultArray();
+        if(empty($response))
+            return $this->respond(responseJson(403, true, ['msg' => 'Vaccination details are not uploaded yet.']));
+        
+        $sql = "update FLXY_DOCUMENTS set DOC_IS_VERIFY = 1 where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:";
+        $this->Db->query($sql, $params);
+
+        $sql = "update FLXY_VACCINE_DETAILS set VACC_IS_VERIFY = 1 where VACC_CUST_ID = :customer_id: and VACC_RESV_ID = :reservation_id:";
+        $this->Db->query($sql, $params);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Documents verified.']));
+    }
+    
     public function transactionList()
     {       
         $response = NULL; 
@@ -3789,9 +3869,4 @@ class ApplicatioController extends BaseController
             return $this->respond($e->errors());
         }
     }
-
-
-
-
-       
 }

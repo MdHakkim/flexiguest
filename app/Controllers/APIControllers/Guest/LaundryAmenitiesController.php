@@ -29,6 +29,35 @@ class LaundryAmenitiesController extends BaseController
         $user_id = $user['USR_ID'];
         $customer_id = $user['USR_CUST_ID'];
 
+        $validate = $this->validate([
+            'room_id' => [
+                'label' => 'room',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select a room.'
+                ]
+            ],
+            'products' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please add atleast one product',
+                ]
+            ],
+            'reservation_id' => ['label' => 'reservation', 'rules' => 'required'],
+            'payment_method' => [
+                'label' => 'payment method', 
+                'rules' => 'required', 
+                'errors' => [
+                    'required' => 'Please select a payment method.'
+                ]
+            ]
+        ]);
+
+        if (!$validate) {
+            $errors = $this->validator->getErrors();
+            return $this->respond(responseJson(403, true, $errors));
+        }
+
         $params = $this->request->getVar();
         $total_payable = 0;
 

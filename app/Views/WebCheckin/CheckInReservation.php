@@ -3,16 +3,16 @@
 
 <?php
 if (empty($condition)) {
-    $data = $data[0];
+    // $data = $data[0];
 
     if ($data['RESV_STATUS'] == 'Due Pre Check-In') {
         $statusClass = 'flxy_orng';
-        $icon = "fa-circle-xmark";
-        $documentmess = "Document not verified";
+        // $icon = "fa-circle-xmark";
+        // $documentmess = "Document not verified";
     } else {
         $statusClass = 'flxy_green';
-        $icon = "fa-circle-check";
-        $documentmess = "Document verified";
+        // $icon = "fa-circle-check";
+        // $documentmess = "Document verified";
     }
 }
 
@@ -207,7 +207,7 @@ $folderPath = base_url('assets/Uploads/');
                             <div class="flxy_web-blockcont">
 
                                 <!-- Reservation Details -->
-                                <div class="sliderclass activeslide">
+                                <div class="sliderclass">
                                     <div class="flxy_block_card">
                                         <div class="card">
                                             <div class="row g-0">
@@ -320,7 +320,8 @@ $folderPath = base_url('assets/Uploads/');
 
                                 <!-- Document Status -->
                                 <div class="sliderclass">
-                                    <div class="flxy_block_card flxy_document">
+
+                                    <div class="flxy_block_card flxy_document document-status-card customer-card-<?= $data['CUST_ID'] ?>">
                                         <div class="card">
 
                                             <div class="card-body flxy_web_padd">
@@ -329,9 +330,7 @@ $folderPath = base_url('assets/Uploads/');
                                                     <?= $data['FULLNAME'] ?>
                                                 </h5>
 
-                                                <p class="card-text document-padding-done">
-                                                    <i class="fa-solid <?= $icon ?> me-1"></i>
-                                                    <?= $documentmess ?>
+                                                <p class="card-text document-verified-status">
                                                 </p>
                                             </div>
 
@@ -367,19 +366,87 @@ $folderPath = base_url('assets/Uploads/');
                                                 </li>
 
                                                 <li class="list-group-item d-grid ">
-                                                    <button class="btn btn-dark " onClick="docUploadClik('D')" type="button">
+                                                    <button class="btn btn-dark " onClick="docUploadClik('D', <?= $data['CUST_ID'] ?>)" type="button">
                                                         View & Upload Documents
                                                     </button>
                                                 </li>
 
                                                 <li class="list-group-item d-grid">
-                                                    <button class="btn btn-dark" onClick="docUploadClik('V')" type="button">
+                                                    <button class="btn btn-dark" onClick="docUploadClik('V', <?= $data['CUST_ID'] ?>)" type="button">
                                                         Vaccination Details
                                                     </button>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
+
+                                    <!-- Accompany Profiles -->
+                                    <?php
+                                    foreach ($data['ACCOMPANY_PROFILES'] as $accompany_profile) {
+                                    ?>
+                                        <div class="flxy_block_card flxy_document document-status-card customer-card-<?= $accompany_profile['CUST_ID'] ?>">
+                                            <div class="card">
+
+                                                <div class="card-body flxy_web_padd">
+
+                                                    <h5 class="card-title">
+                                                        <?= $accompany_profile['FULLNAME'] ?>
+                                                    </h5>
+
+                                                    <p class="card-text document-verified-status">
+                                                    </p>
+                                                </div>
+
+                                                <ul class="list-group list-group-flush flxy_web-ul">
+                                                    <li class="list-group-item text-flxy">
+                                                        <div class="flxy-data">
+                                                            Name
+                                                        </div>
+
+                                                        <div class="flxy-data">
+                                                            : <?= $accompany_profile['FULLNAME'] ?>
+                                                        </div>
+                                                    </li>
+
+                                                    <li class="list-group-item text-flxy">
+                                                        <div class="flxy-data">
+                                                            Document Status
+                                                        </div>
+
+                                                        <div class="flxy-data">
+                                                            : <span class="flxy_doc_prof flxy_doc_st <?= $statusClass ?>">Pending</span>
+                                                        </div>
+                                                    </li>
+
+                                                    <li class="list-group-item text-flxy">
+                                                        <div class="flxy-data">
+                                                            Vaccine Certificate
+                                                        </div>
+
+                                                        <div class="flxy-data">
+                                                            : <span class="flxy_doc_vacc flxy_doc_st <?= $statusClass ?>">Pending</span>
+                                                        </div>
+                                                    </li>
+
+                                                    <li class="list-group-item d-grid ">
+                                                        <button class="btn btn-dark " onClick="docUploadClik('D', <?= $accompany_profile['CUST_ID'] ?>)" type="button">
+                                                            View & Upload Documents
+                                                        </button>
+                                                    </li>
+
+                                                    <li class="list-group-item d-grid">
+                                                        <button class="btn btn-dark" onClick="docUploadClik('V', <?= $accompany_profile['CUST_ID'] ?>)" type="button">
+                                                            Vaccination Details
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+
+
                                 </div>
                             </div>
 
@@ -667,7 +734,7 @@ $folderPath = base_url('assets/Uploads/');
                             <?php
                             }
                             ?>
-                            <button type="button" onClick="updateCustomer()" class="btn saveContinue btn-success">Save & Continue <i class="fa-solid fa-chevron-right"></i></button>
+                            <button type="button" onClick="updateCustomer()" class="btn saveContinue btn-success hideSaveCont">Save & Continue <i class="fa-solid fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -735,45 +802,53 @@ $folderPath = base_url('assets/Uploads/');
                 <div class="modal-body flxy_padding">
                     <form id="vaccineForm">
                         <input type="hidden" value="<?php echo $data['CUST_ID']; ?>" name="VACC_CUST_ID">
-                        <input type="hidden" value="<?php echo $data['RESV_ID']; ?>" name="VACC_RESV_ID">
+
                         <div class="row ">
                             <label for="inputPassword" class="col-sm-4 col-form-label text-end">Reservation Number</label>
                             <div class="col-sm-8">
-                                <input type="text" readonly value="<?php echo $data['RESV_ID']; ?>" class="form-control form-control-sm" id="CUST_PHONE" name="CUST_PHONE" placeholder="Phone">
+                                <input type="text" readonly value="<?php echo $data['RESV_ID']; ?>" class="form-control form-control-sm" name="VACC_RESV_ID" placeholder="Phone">
                             </div>
                         </div>
+
                         <div class="row ">
                             <label for="inputPassword" class="col-sm-4 col-form-label text-end">Booking Profile</label>
                             <div class="col-sm-8">
-                                <input type="text" readonly value="<?php echo $data['FULLNAME']; ?>" class="form-control form-control-sm" id="CUST_PHONE" name="CUST_PHONE" placeholder="Phone">
+                                <input type="text" readonly value="<?php echo $data['FULLNAME']; ?>" class="form-control form-control-sm" name="FULLNAME" placeholder="Phone">
                             </div>
                         </div>
+
                         <div class="row ">
                             <label for="inputPassword" class="col-sm-4 col-form-label text-end">vaccine Detail</label>
+
                             <div class="col-sm-8">
                                 <input class="form-check-input" type="hidden" value="FULLY" name="VACC_DETAILS" id="VACC_DETAILS">
+
                                 <div class="form-check">
-                                    <input class="form-check-input radioCheck" checked type="radio" name="VACC_DETL" method="FULLY">
-                                    <label class="form-check-label" for="flexRadioDefault1">
+                                    <input class="form-check-input radioCheck" checked type="radio" id="VACC_DETL_1" name="VACC_DETL" method="FULLY">
+                                    <label class="form-check-label" for="VACC_DETL_1">
                                         I have been fully vaccinated (Please attach the Vaccination certificate)
                                     </label>
                                 </div>
+
                                 <div class="form-check">
-                                    <input class="form-check-input radioCheck" type="radio" name="VACC_DETL" method="EXMP">
-                                    <label class="form-check-label" for="flexRadioDefault1">
+                                    <input class="form-check-input radioCheck" type="radio" id="VACC_DETL_2" name="VACC_DETL" method="EXMP">
+                                    <label class="form-check-label" for="VACC_DETL_2">
                                         I am medically exempt from taking any Covid19 Vaccine and I have a certified exemption certification (Please attach Official Medical Exemption certificate)
                                     </label>
                                 </div>
+
                                 <div class="form-check">
-                                    <input class="form-check-input radioCheck" type="radio" name="VACC_DETL" method="PROCE">
-                                    <label class="form-check-label" for="VACC_DETAILS">
+                                    <input class="form-check-input radioCheck" type="radio" id="VACC_DETL_3" name="VACC_DETL" method="PROCE">
+                                    <label class="form-check-label" for="VACC_DETL_3">
                                         I will be completing my vaccine in Dubai before October 1st and will provide my vaccination certificate prior to October 1st to continue staying
                                     </label>
                                 </div>
                             </div>
                         </div>
+
                         <div class="row ">
-                            <label for="inputPassword" class="col-sm-4 col-form-label text-end">Last Vaccine Date</label>
+                            <label class="col-sm-4 col-form-label text-end">Last Vaccine Date</label>
+
                             <div class="col-sm-8">
                                 <div class="input-group mb-2">
                                     <input type="text" id="VACC_LAST_DT" name="VACC_LAST_DT" class="form-control VACC_LAST_DT form-control-sm" placeholder="DD-MM-YYYY">
@@ -785,15 +860,16 @@ $folderPath = base_url('assets/Uploads/');
                                 </div>
                             </div>
                         </div>
+
                         <div class="row ">
-                            <label for="inputPassword" class="col-sm-4 col-form-label text-end">Vaccine Name</label>
+                            <label class="col-sm-4 col-form-label text-end">Vaccine Name</label>
                             <div class="col-sm-8">
                                 <input type="text" class="form-control form-control-sm" id="VACC_NAME" name="VACC_NAME" placeholder="Vaccine Name">
                             </div>
                         </div>
                         <div class="row ">
                             <input type="hidden" class="form-control form-control-sm" id="VACC_DOC_SAVED" name="VACC_DOC_SAVED">
-                            <label for="inputPassword" class="col-sm-4 col-form-label text-end">Vaccine Certificate</label>
+                            <label class="col-sm-4 col-form-label text-end">Vaccine Certificate</label>
                             <div class="col-sm-8">
                                 <input class="form-control form-control-sm" id="fileUpload" name="files[]" multiple onChange="uploadVaccine(this)" type="file">
                             </div>
@@ -803,7 +879,7 @@ $folderPath = base_url('assets/Uploads/');
                             </div>
                         </div>
                         <div class="row ">
-                            <label for="inputPassword" class="col-sm-4 col-form-label text-end">Certificate Issue Country</label>
+                            <label class="col-sm-4 col-form-label text-end">Certificate Issue Country</label>
                             <div class="col-sm-8">
                                 <select name="VACC_ISSUED_COUNTRY" id="VACC_ISSUED_COUNTRY" data-width="100%" class="selectpicker VACC_ISSUED_COUNTRY" data-live-search="true">
                                     <option value="">Select</option>
@@ -886,6 +962,13 @@ $folderPath = base_url('assets/Uploads/');
     }
 
     $(document).ready(function() {
+        if(localStorage.getItem('customer_updated')){
+            $('.sliderclass:eq(1)').addClass('activeslide');
+            localStorage.removeItem('customer_updated');
+        }else{
+            $('.sliderclass:eq(0)').addClass('activeslide');
+        }
+
         $('#cropped_img').hide();
 
         $('.flxy_signature_block').hide();
@@ -919,18 +1002,23 @@ $folderPath = base_url('assets/Uploads/');
         if (param == 'N') {
             var length = $('.sliderclass.activeslide').next('.sliderclass').length;
             if (length == 0) {
-                if ($('.flxy_doc_prof').text() != 'Uploaded' && $('.flxy_doc_vacc').text() != 'Uploaded') {
+                if ($('.flxy_doc_prof:contains(Pending)').length && $('.flxy_doc_vacc:contains(Pending)').length) {
                     alert('Please upload required Guest details, Identity and Vaccine documents.');
                     return false;
                 }
 
-                if ($('.flxy_doc_prof').text() != 'Uploaded') {
+                if ($('.flxy_doc_prof:contains(Pending)').length) {
                     alert('Please upload required Guest details & Identity documents.');
                     return false;
                 }
 
-                if ($('.flxy_doc_vacc').text() != 'Uploaded') {
+                if ($('.flxy_doc_vacc:contains(Pending)').length) {
                     alert('Please upload required Vaccine documents.');
+                    return false;
+                }
+
+                if ($('.document-verified-status:contains(Document not verified)').length) {
+                    alert('All Documents are not verified.');
                     return false;
                 }
 
@@ -939,6 +1027,14 @@ $folderPath = base_url('assets/Uploads/');
                 continueToTaskSlide();
                 farwrdClick = 1;
             }
+
+            <?php
+            if (empty($condition) && $data['RESV_STATUS'] != 'Due Pre Check-In') {
+            ?>
+                $('.continueDefult').hide();
+            <?php
+            }
+            ?>
             $('.sliderclass.activeslide').removeClass('activeslide').next().addClass('activeslide');
         } else {
             $('.flxy_web-header,.flxy_web-blockcont').show();
@@ -966,10 +1062,24 @@ $folderPath = base_url('assets/Uploads/');
         $('.flxy_signature_block').hide();
     }
 
-    function docUploadClik(param) {
+    function docUploadClik(param, customer_id) {
         runCountryList();
-        var DOC_CUST_ID = $('[name="DOC_CUST_ID"]').val();
+        // var DOC_CUST_ID = $('[name="DOC_CUST_ID"]').val();
+        var DOC_CUST_ID = customer_id;
         var DOC_RESV_ID = $('[name="DOC_RESV_ID"]').val();
+
+        let data = <?= json_encode($data) ?>;
+        if (data['CUST_ID'] == DOC_CUST_ID)
+            customer_data = data;
+        else {
+            for (let accompany_profile of data['ACCOMPANY_PROFILES']) {
+                if (accompany_profile['CUST_ID'] == DOC_CUST_ID)
+                    customer_data = accompany_profile;
+            }
+        }
+
+        console.log(customer_data);
+
         if (param == 'D') {
             docuClick = 'PROOF';
             $('.continueDefult').hide();
@@ -977,6 +1087,34 @@ $folderPath = base_url('assets/Uploads/');
             $('.sliderclass').removeClass('activeslide');
             $('.flxy_doc_block').removeClass('flxy_none');
             $('.flxy_web-blockcont').addClass('flxy_none');
+
+            let id = '#documentDetailForm';
+            $(`${id} input[name='DOC_CUST_ID']`).val(customer_data.CUST_ID);
+            $(`${id} input[name='CUST_TITLE']`).val(customer_data.CUST_TITLE);
+            $(`${id} input[name='CUST_FIRST_NAME']`).val(customer_data.CUST_FIRST_NAME);
+            $(`${id} input[name='CUST_LAST_NAME']`).val(customer_data.CUST_LAST_NAME);
+            $(`${id} input[name='CUST_GENDER']`).val(customer_data.CUST_GENDER);
+            $(`${id} input[name='CUST_NATIONALITY']`).val(customer_data.CUST_NATIONALITY);
+            $(`${id} input[name='CUST_DOB']`).val(customer_data.CUST_DOB);
+            $(`${id} select[name='CUST_COUNTRY']`).val(customer_data.CUST_COUNTRY).selectpicker('refresh').trigger('change');
+            $(`${id} input[name='CUST_DOC_TYPE']`).val(customer_data.CUST_DOC_TYPE);
+            $(`${id} input[name='CUST_DOC_NUMBER']`).val(customer_data.CUST_DOC_NUMBER);
+            $(`${id} input[name='CUST_DOC_ISSUE']`).val(customer_data.CUST_DOC_ISSUE);
+            $(`${id} input[name='CUST_PHONE']`).val(customer_data.CUST_PHONE);
+            $(`${id} input[name='CUST_EMAIL']`).val(customer_data.CUST_EMAIL);
+
+            id = '#documentDetailForm1';
+            $(`${id} input[name='CUST_ADDRESS_1']`).val(customer_data.CUST_ADDRESS_1);
+            $(`${id} input[name='CUST_ADDRESS_2']`).val(customer_data.CUST_ADDRESS_2);
+
+            setTimeout(() => {
+                $(`${id} select[name='CUST_STATE']`).val(customer_data.CUST_STATE).selectpicker('refresh').trigger('change');
+
+                setTimeout(() => {
+                    $(`${id} select[name='CUST_CITY']`).val(customer_data.CUST_CITY).selectpicker('refresh');
+                }, 500);
+            }, 500);
+
             $.ajax({
                 url: '<?php echo base_url('/getActiveUploadImages') ?>',
                 type: "post",
@@ -1001,7 +1139,8 @@ $folderPath = base_url('assets/Uploads/');
                         }
 
                         generaListImage(listImageArr);
-                    }
+                    } else
+                        $('#listImagePresentDb').html('');
                 }
             });
         } else {
@@ -1018,11 +1157,28 @@ $folderPath = base_url('assets/Uploads/');
                 },
                 dataType: 'json',
                 success: function(respn) {
+                    let vaccForm = '#vaccineForm';
 
-                    if (respn != '') {
+                    if (respn.customer_details.length) {
+                        let customer_details = respn.customer_details[0];
+                        $(`${vaccForm} input[name="VACC_CUST_ID"]`).val(customer_details.CUST_ID);
+                        $(`${vaccForm} input[name="FULLNAME"]`).val(customer_details.FULLNAME);
+
+                    }
+
+                    // reset form
+                    $('.radioCheck:eq(0)').prop('checked', true);
+                    $('#VACC_LAST_DT').val('');
+                    $('#VACC_NAME').val('');
+                    $('#VACC_ISSUED_COUNTRY').val('').selectpicker('refresh');
+                    $('.previewClass').html('');
+                    $('#VACC_DOC_SAVED').val('');
+
+                    if (respn.vacc_details.length) {
                         $('*#vaccinePreview').remove();
-                        var jsonFrmt = respn[0];
+                        var jsonFrmt = respn.vacc_details[0];
                         var check = jsonFrmt.VACC_DETAILS;
+
                         if (check == 'FULLY') {
                             $('.radioCheck:eq(0)').prop('checked', true);
                         } else if (check == 'EXMP') {
@@ -1030,6 +1186,7 @@ $folderPath = base_url('assets/Uploads/');
                         } else if (check == 'PROCE') {
                             $('.radioCheck:eq(2)').prop('checked', true);
                         }
+
                         $('#VACC_LAST_DT').val(jsonFrmt.VACC_LAST_DT);
                         $('#VACC_NAME').val(jsonFrmt.VACC_NAME);
                         $('#VACC_ISSUED_COUNTRY').val($.trim(jsonFrmt.VACC_ISSUED_COUNTRY)).selectpicker('refresh');
@@ -1044,6 +1201,7 @@ $folderPath = base_url('assets/Uploads/');
                     }
                 }
             });
+
             $('#vaccineModal').modal('show');
         }
     }
@@ -1341,7 +1499,7 @@ $folderPath = base_url('assets/Uploads/');
             success: function(respn) {
                 if (respn.SUCCESS != '1') {
                     // $('#errorModal').show();
-                    
+
                     var ERROR = respn['RESPONSE']['ERROR'];
                     var error = '';
                     $.each(ERROR, function(ind, data) {
@@ -1350,9 +1508,15 @@ $folderPath = base_url('assets/Uploads/');
                     showModalAlert('error', error);
                     // $('#formErrorMessage').html(error);
                 } else {
+                    alert('Guest details are updated successfully.');
+                    // showModalAlert('success', '<li>Guest details are updated successfully.</li>');
+
                     sliderWebWid('');
                     var object = respn['RESPONSE']['OUTPUT'];
                     updateStatuIconButton(object);
+                    
+                    localStorage.setItem('customer_updated', 1);
+                    window.location.reload();
                 }
             }
         });
@@ -1370,14 +1534,59 @@ $folderPath = base_url('assets/Uploads/');
                 resrid: resrid
             },
             dataType: 'json',
-            success: function(respn) {
-                var jsonForm = respn[0];
-                if (jsonForm.TOTAL_PROOF > 0 && jsonForm.TOTAL_VACC > 0) {
-                    $('.document-padding-done').html('<i class="fa-solid fa-circle-check me-1"></i> Document verified');
-                }
-                updateStatuIconButton(jsonForm);
+            success: function(response) {
+                // var jsonForm = respn[0];
+                // if (jsonForm.TOTAL_PROOF > 0 && jsonForm.TOTAL_VACC > 0) {
+                //     $('.document-padding-done').html('<i class="fa-solid fa-circle-check me-1"></i> Document verified');
+                // }
+
+                // $('.document-verified-status').html('<i class="fa-solid fa-circle-xmark me-1"></i> Document not verified');
+                $.each(response, (index, row) => {
+                    let text = '<i class="fa-solid fa-circle-xmark me-1"></i> Document not verified';
+
+                    <?php
+                    if (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin') {
+                    ?>
+                        text += `&nbsp<a href="#" class="text-info" onclick="verifyDocuments(${row.CUST_ID}, ${row.RESV_ID})"><u>click here to verify</u></a>`;
+                    <?php
+                    }
+                    ?>
+
+                    if (row.DOC_IS_VERIFY && row.VACC_IS_VERIFY)
+                        text = '<i class="fa-solid fa-circle-check me-1"></i> Document verified';
+
+                    $(`.customer-card-${row.CUST_ID} .document-verified-status`).html(text);
+                });
+
+                updateStatuIconButton(response);
             }
         });
+    }
+
+    function verifyDocuments(customer_id, reservation_id) {
+        $.ajax({
+            url: "<?= base_url('checkin/verify-documents') ?>",
+            type: 'post',
+            data: {
+                customer_id,
+                reservation_id
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.SUCCESS != 200) {
+                    var ERROR = response['RESPONSE']['REPORT_RES'];
+                    var error = '';
+                    $.each(ERROR, function(ind, data) {
+                        error += '<li>' + data + '</li>';
+                    });
+                    showModalAlert('error', error);
+                } else {
+                    showModalAlert('success', response['RESPONSE']['REPORT_RES']['msg']);
+                    checkStatusUploadFiles();
+                }
+
+            }
+        })
     }
 
     function uploadVaccine(input) {
@@ -1394,16 +1603,28 @@ $folderPath = base_url('assets/Uploads/');
     }
 
     function updateStatuIconButton(object) {
-        if (object.TOTAL_PROOF > 0) {
-            $('.flxy_doc_prof').removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
-        } else {
-            $('.flxy_doc_prof').removeClass('flxy_green').addClass('flxy_orng').text('Pending');
-        }
-        if (object.TOTAL_VACC > 0) {
-            $('.flxy_doc_vacc').removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
-        } else {
-            $('.flxy_doc_vacc').removeClass('flxy_green').addClass('flxy_orng').text('Pending');
-        }
+        $(`.flxy_doc_prof`).removeClass('flxy_green').addClass('flxy_orng').text('Pending');
+        $(`.flxy_doc_vacc`).removeClass('flxy_green').addClass('flxy_orng').text('Pending');
+
+        $.each(object, (index, row) => {
+            if (row.DOC_IS_VERIFY != null)
+                $(`.customer-card-${row.CUST_ID} .flxy_doc_prof`).removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
+
+            if (row.VACC_IS_VERIFY != null)
+                $(`.customer-card-${row.CUST_ID} .flxy_doc_vacc`).removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
+        });
+
+        // if (object.TOTAL_PROOF > 0) {
+        //     $('.flxy_doc_prof').removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
+        // } else {
+        //     $('.flxy_doc_prof').removeClass('flxy_green').addClass('flxy_orng').text('Pending');
+        // }
+
+        // if (object.TOTAL_VACC > 0) {
+        //     $('.flxy_doc_vacc').removeClass('flxy_orng').addClass('flxy_green').text('Uploaded');
+        // } else {
+        //     $('.flxy_doc_vacc').removeClass('flxy_green').addClass('flxy_orng').text('Pending');
+        // }
     }
 
     function updateSignature() {

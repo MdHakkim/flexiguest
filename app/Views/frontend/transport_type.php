@@ -8,7 +8,7 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Transport</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Transport Types</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -57,37 +57,37 @@
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Transport Code *</b></label>
-                                <input type="text" name="TR_TRANSPORT_CODE" class="form-control" placeholder="Transport Code" required />
+                                <input type="text" name="TT_TRANSPORT_CODE" class="form-control" placeholder="Transport Code" required />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Label *</b></label>
-                                <input type="text" name="TR_LABEL" class="form-control" placeholder="Label" required />
+                                <input type="text" name="TT_LABEL" class="form-control" placeholder="Label" required />
                             </div>
 
                             <div class="col-md-12">
                                 <label class="form-label"><b>Description *</b></label>
-                                <textarea name="TR_DESCRIPTION" class="form-control" placeholder="Description..."></textarea>
+                                <textarea name="TT_DESCRIPTION" class="form-control" placeholder="Description..."></textarea>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Phone *</b></label>
-                                <input type="text" name="TR_PHONE" class="form-control" placeholder="Phone" required />
+                                <input type="text" name="TT_PHONE" class="form-control" placeholder="Phone" required />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Display Sequence *</b></label>
-                                <input type="number" name="TR_DISPLAY_SEQUENCE" class="form-control" placeholder="Display Sequence" required />
+                                <input type="number" name="TT_DISPLAY_SEQUENCE" class="form-control" placeholder="Display Sequence" required />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Distance *</b></label>
-                                <input type="number" name="TR_DISTANCE" class="form-control" placeholder="Distance" required />
+                                <input type="number" name="TT_DISTANCE" class="form-control" placeholder="Distance" required />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Distance Unit *</b></label>
-                                <select class="select2" name="TR_DISTANCE_UNIT">
+                                <select class="select2" name="TT_DISTANCE_UNIT">
                                     <option value="">Select Distance Unit</option>
                                     <option value="miles">Miles</option>
                                     <option value="km">KM</option>
@@ -96,17 +96,17 @@
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Min Price *</b></label>
-                                <input type="number" name="TR_MIN_PRICE" class="form-control" placeholder="Min Price" required />
+                                <input type="number" name="TT_MIN_PRICE" class="form-control" placeholder="Min Price" required />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Max Price *</b></label>
-                                <input type="number" name="TR_MAX_PRICE" class="form-control" placeholder="Max Price" required />
+                                <input type="number" name="TT_MAX_PRICE" class="form-control" placeholder="Max Price" required />
                             </div>
 
                             <div class="col-md-12">
                                 <label class="form-label"><b>Comments *</b></label>
-                                <textarea name="TR_COMMENTS" class="form-control" placeholder="Comments..."></textarea>
+                                <textarea name="TT_COMMENTS" class="form-control" placeholder="Comments..."></textarea>
                             </div>
 
                         </div>
@@ -147,43 +147,43 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('/transport/all-transports') ?>'
+                'url': '<?php echo base_url('/transport-type/all-transport-types') ?>'
             },
             'columns': [{
                     data: ''
                 },
                 {
-                    data: 'TR_TRANSPORT_CODE'
+                    data: 'TT_TRANSPORT_CODE'
                 },
                 {
-                    data: 'TR_LABEL'
+                    data: 'TT_LABEL'
                 },
                 {
-                    data: 'TR_DESCRIPTION'
+                    data: 'TT_DESCRIPTION'
                 },
                 {
-                    data: 'TR_PHONE'
+                    data: 'TT_PHONE'
                 },
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        return (`${data['TR_DISTANCE']} ${data['TR_DISTANCE_UNIT']}`);
+                        return (`${data['TT_DISTANCE']} ${data['TT_DISTANCE_UNIT']}`);
                     }
                 },
                 {
-                    data: 'TR_MIN_PRICE'
+                    data: 'TT_MIN_PRICE'
                 },
                 {
-                    data: 'TR_MAX_PRICE'
+                    data: 'TT_MAX_PRICE'
                 },
                 {
-                    data: 'TR_COMMENTS'
+                    data: 'TT_COMMENTS'
                 },
                 {
-                    data: 'TR_DISPLAY_SEQUENCE'
+                    data: 'TT_DISPLAY_SEQUENCE'
                 },
                 {
-                    data: 'TR_CREATED_AT'
+                    data: 'TT_CREATED_AT'
                 },
                 {
                     data: null,
@@ -199,7 +199,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['TR_ID']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['TT_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -207,7 +207,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['TR_ID']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['TT_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -250,7 +250,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['TR_TRANSPORT_CODE'];
+                            return 'Details of ' + data['TT_TRANSPORT_CODE'];
                         }
                     }),
                     type: 'column',
@@ -292,7 +292,7 @@
     function addForm() {
         resetForm();
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add Transport');
+        $('#popModalWindowlabel').html('Add Transport Type');
 
         $('#popModalWindow').modal('show');
     }
@@ -312,7 +312,7 @@
         var fd = new FormData($(`#${id}`)[0]);
 
         $.ajax({
-            url: '<?= base_url('/transport/store') ?>',
+            url: '<?= base_url('/transport-type/store') ?>',
             type: "post",
             data: fd,
             processData: false,
@@ -349,10 +349,10 @@
         let id = "submit-form";
         $(`#${id} input[name='id']`).val(transport_id);
 
-        $('#popModalWindowlabel').html('Edit Transport');
+        $('#popModalWindowlabel').html('Edit Transport Type');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('/transport/edit') ?>';
+        var url = '<?php echo base_url('/transport-type/edit') ?>';
         $.ajax({
             url: url,
             type: "post",
@@ -403,7 +403,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('/transport/delete') ?>',
+                        url: '<?php echo base_url('/transport-type/delete') ?>',
                         type: "post",
                         data: {
                             id: id,
