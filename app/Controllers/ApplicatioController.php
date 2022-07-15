@@ -3405,10 +3405,12 @@ class ApplicatioController extends BaseController
 
         $cust_ids = implode(",", $cust_ids);
 
-        $sql = "select DOC_CUST_ID, DOC_RESV_ID, DOC_IS_VERIFY, (select VACC_IS_VERIFY from FLXY_VACCINE_DETAILS where VACC_CUST_ID = DOC_CUST_ID and VACC_RESV_ID = DOC_RESV_ID) as VACC_IS_VERIFY 
-                from FLXY_DOCUMENTS where DOC_CUST_ID in ($cust_ids) and DOC_RESV_ID = :RESV_ID:";
+        $sql = "select RESV_NAME as CUST_ID, RESV_ID, DOC_IS_VERIFY, VACC_IS_VERIFY from FLXY_RESERVATION
+                    left join FLXY_VACCINE_DETAILS on VACC_CUST_ID = RESV_NAME AND VACC_RESV_ID = RESV_ID
+                    left join FLXY_DOCUMENTS on DOC_CUST_ID = RESV_NAME AND DOC_RESV_ID = RESV_ID
+                    where RESV_NAME in ($cust_ids) and RESV_ID = :RESV_ID:";
         $response = $this->Db->query($sql, $param)->getResultArray();
-
+         
         if($condi){
             return $response;
         }
