@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\DropoffPoint;
 use App\Models\FlightCarrier;
 use App\Models\PickupPoint;
+use App\Models\Reservation;
 use App\Models\TransportRequest;
 use App\Models\TransportType;
 use CodeIgniter\API\ResponseTrait;
@@ -23,6 +24,7 @@ class TransportRequestController extends BaseController
 
     public function __construct()
     {
+        $this->Reservation = new Reservation();
         $this->PickupPoint = new PickupPoint();
         $this->DropoffPoint = new DropoffPoint();
         $this->FlightCarrier = new FlightCarrier();
@@ -32,6 +34,16 @@ class TransportRequestController extends BaseController
 
     public function lookupApi()
     {
+        $customer_id = $this->request->user['USR_CUST_ID'];
+
+        $data['RESERVATIONS'] = $this->Reservation->select('RESV_ID, RESV_ROOM, RM_ID')
+            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
+            ->where('RESV_NAME', $customer_id)
+            ->where('RESV_STATUS !=', 'Checked-Out-Requested')
+            ->where('RESV_STATUS !=', 'Checked-Out')
+            ->where('RESV_ROOM !=', '')
+            ->findAll();
+
         $data['PICKUP_POINTS'] = $this->PickupPoint->select('PP_ID as id, PP_POINT as label')->orderBy('PP_SEQUENCE')->findAll();
         $data['DROPOFF_POINTS'] = $this->DropoffPoint->select('DP_ID as id, DP_POINT as label')->orderBy('DP_SEQUENCE')->findAll();
         $data['FLIGHT_CARRIERS'] = $this->FlightCarrier->select('FC_ID, FC_FLIGHT_CARRIER, FC_FLIGHT_CODE')->orderBy('FC_SEQUENCE')->findAll();
@@ -46,7 +58,7 @@ class TransportRequestController extends BaseController
             'estimatedTimeOfArrival' => 'required',
             'signature' =>  [
                 'uploaded[signature]',
-                
+
                 'max_size[signature,50000]',
             ],
         ]);
