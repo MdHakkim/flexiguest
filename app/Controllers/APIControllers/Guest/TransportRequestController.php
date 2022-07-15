@@ -79,12 +79,29 @@ class TransportRequestController extends BaseController
             return $this->respond($result);
         }
 
+        // $already_exist = $this->TransportRequest->where('TR_CUSTOMER_ID', $customer_id)->where("TR_STATUS = 'New' or TR_STATUS = 'In Progress'")->findAll();
+        // if($already_exist)
+        //     return $this->respond(responseJson(200, false, ['msg' => 'You have already requested a ride.']));
+
         $data = $this->request->getVar();
         $data->TR_CUSTOMER_ID = $customer_id;
         $data->TR_CREATED_BY = $user_id;
         $data->TR_UPDATED_BY = $user_id;
 
         $this->TransportRequest->insert($data);
-        return $this->respond(responseJson(200, false, ['msg' => 'Transport request submitted successfully.']));        
+        return $this->respond(responseJson(200, false, ['msg' => 'Transport request submitted successfully.']));
+    }
+
+    public function allRequests()
+    {
+        $customer_id = $this->request->user['USR_CUST_ID'];
+        $all_requests = $this->TransportRequest
+            ->select('FLXY_TRANSPORT_REQUESTS.*, pp.PP_POINT, dp.DP_POINT')
+            ->join('FLXY_PICKUP_POINTS as pp', 'FLXY_TRANSPORT_REQUESTS.TR_PICKUP_POINT_ID = pp.PP_ID', 'left')
+            ->join('FLXY_DROPOFF_POINTS as dp', 'FLXY_TRANSPORT_REQUESTS.TR_DROPOFF_POINT_ID = dp.DP_ID', 'left')
+            ->where('TR_CUSTOMER_ID', $customer_id)
+            ->findAll();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'All requests'], $all_requests));
     }
 }
