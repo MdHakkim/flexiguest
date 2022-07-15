@@ -54,13 +54,22 @@ class TransportRequestController extends BaseController
 
     public function createRequest()
     {
-        $validate = $this->validate([
-            'estimatedTimeOfArrival' => 'required',
-            'signature' =>  [
-                'uploaded[signature]',
+        $user_id = $this->request->user['USR_ID'];
+        $customer_id = $this->request->user['USR_CUST_ID'];
 
-                'max_size[signature,50000]',
-            ],
+        $validate = $this->validate([
+            'TR_RESERVATION_ID' => ['label' => 'reservation', 'rules' => 'required', 'errors' => ['required' => 'Please select a reservation.']],
+            'TR_ROOM_ID' => ['label' => 'room', 'rules' => 'required'],
+            'TR_GUEST_NAME' => ['label' => 'guest name', 'rules' => 'required'],
+            'TR_TRAVEL_TYPE' => ['label' => 'travel type', 'rules' => 'required'],
+            'TR_TRANSPORT_TYPE_ID' => ['label' => 'transport type', 'rules' => 'required', 'errors' => ['required' => 'Please select a transport type.']],
+            'TR_TRAVEL_DATE' => ['label' => 'travel date', 'rules' => 'required'],
+            'TR_TRAVEL_TIME' => ['label' => 'travel time', 'rules' => 'required'],
+            'TR_ADULTS' => ['label' => 'adult', 'rules' => 'required|greater_than[0]'],
+            'TR_TOTAL_PASSENGERS' => ['label' => 'total passenger', 'rules' => 'required|greater_than[0]'],
+            'TR_PICKUP_POINT_ID' => ['label' => 'pickup point', 'rules' => 'required', 'errors' => ['required' => 'Please select a pickup point.']],
+            'TR_DROPOFF_POINT_ID' => ['label' => 'dropoff point', 'rules' => 'required', 'errors' => ['required' => 'Please select a dropoff point.']],
+            'TR_FLIGHT_CARRIER_ID' => ['label' => 'flight carrier', 'rules' => 'required', 'errors' => ['required' => 'Please select a flight carrier.']],
         ]);
 
         if (!$validate) {
@@ -69,5 +78,13 @@ class TransportRequestController extends BaseController
 
             return $this->respond($result);
         }
+
+        $data = $this->request->getVar();
+        $data->TR_CUSTOMER_ID = $customer_id;
+        $data->TR_CREATED_BY = $user_id;
+        $data->TR_UPDATED_BY = $user_id;
+
+        $this->TransportRequest->insert($data);
+        return $this->respond(responseJson(200, false, ['msg' => 'Transport request submitted successfully.']));        
     }
 }
