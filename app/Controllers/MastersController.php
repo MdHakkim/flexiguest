@@ -2593,4 +2593,241 @@ class MastersController extends BaseController
             return $this->respond($e->errors());
         }
     }
+
+    /**************      Preference Group Functions      ***************/
+
+    public function preferenceGroup()
+    {
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+        
+        return view('Reservation/PreferenceGroupView', $data);
+    }
+
+    public function PreferenceGroupView()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_PREFERENCE_GROUP';
+        $columns = 'PF_GR_ID,PF_GR_CODE,PF_GR_DESC,PF_GR_DIS_SEQ,PF_GR_STATUS';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+    public function insertPreferenceGroup()
+    {
+        try {
+            $sysid = $this->request->getPost('PF_GR_ID');
+
+            $validate = $this->validate([
+                'PF_GR_CODE' => ['label' => 'Group Code', 'rules' => 'required|is_unique[FLXY_PREFERENCE_GROUP.PF_GR_CODE,PF_GR_ID,' . $sysid . ']'],
+                'PF_GR_DESC' => ['label' => 'Group Description', 'rules' => 'required'],
+                'PF_GR_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            //echo json_encode(print_r($_POST)); exit;
+
+            $data = [
+                "PF_GR_CODE" => trim($this->request->getPost('PF_GR_CODE')),
+                "PF_GR_DESC" => trim($this->request->getPost('PF_GR_DESC')),
+                "PF_GR_DIS_SEQ" => trim($this->request->getPost('PF_GR_DIS_SEQ')) != '' ? trim($this->request->getPost('PF_GR_DIS_SEQ')) : '',
+                "PF_GR_STATUS" => trim($this->request->getPost('PF_GR_STATUS')),
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_PREFERENCE_GROUP')->where('PF_GR_ID', $sysid)->update($data) : $this->Db->table('FLXY_PREFERENCE_GROUP')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function checkPreferenceGroup($rcCode)
+    {
+        $sql = "SELECT PF_GR_ID
+                FROM FLXY_PREFERENCE_GROUP
+                WHERE PF_GR_CODE = '" . $rcCode . "'";
+
+        $response = $this->Db->query($sql)->getNumRows();
+        return $rcCode == '' || strlen($rcCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
+    }
+
+    public function preferenceGroupList()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT PF_GR_ID, PF_GR_CODE, PF_GR_DESC
+                FROM FLXY_PREFERENCE_GROUP WHERE PF_GR_STATUS = 1 ";
+
+        if ($search != '') {
+            $sql .= " AND PF_GR_CODE LIKE '%$search%'
+                      OR PF_GR_DESC LIKE '%$search%'";
+        }
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['PF_GR_ID'] . '">' . $row['PF_GR_CODE'] . ' | ' . $row['PF_GR_DESC'] . '</option>';
+        }
+
+        return $option;
+    }
+
+    public function editPreferenceGroup()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT PF_GR_ID, PF_GR_CODE, PF_GR_DESC, PF_GR_DIS_SEQ, PF_GR_STATUS
+                FROM FLXY_PREFERENCE_GROUP
+                WHERE PF_GR_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deletePreferenceGroup()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_PREFERENCE_GROUP')->delete(['PF_GR_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    /**************      Preference Code Functions      ***************/
+
+    public function preferenceCode()
+    {
+        $preferenceGroups = $this->preferenceGroupList();
+
+        $data = [
+            'preferenceGroupOptions' => $preferenceGroups,
+        ];
+
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+        
+        return view('Reservation/PreferenceCodeView', $data);
+    }
+
+    public function PreferenceCodeView()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_PREFERENCE_CODE
+        LEFT JOIN FLXY_PREFERENCE_GROUP FMG ON FMG.PF_GR_ID = FLXY_PREFERENCE_CODE.PF_GR_ID';
+
+        $columns = 'PF_CD_ID,PF_CD_CODE,PF_CD_DESC,PF_GR_CODE,PF_CD_DIS_SEQ,PF_CD_STATUS';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+    public function insertPreferenceCode()
+    {
+        try {
+            $sysid = $this->request->getPost('PF_CD_ID');
+
+            $validate = $this->validate([
+                'PF_CD_CODE' => ['label' => 'Preference Code', 'rules' => 'required|is_unique[FLXY_PREFERENCE_CODE.PF_CD_CODE,PF_CD_ID,' . $sysid . ']'],
+                'PF_CD_DESC' => ['label' => 'Description', 'rules' => 'required'],
+                'PF_GR_ID' => ['label' => 'Preference Group', 'rules' => 'required'],
+                'PF_CD_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            //echo json_encode(print_r($_POST)); exit;
+
+            $data = [
+                "PF_CD_CODE" => trim($this->request->getPost('PF_CD_CODE')),
+                "PF_CD_DESC" => trim($this->request->getPost('PF_CD_DESC')),
+                "PF_GR_ID" => trim($this->request->getPost('PF_GR_ID')),
+                "PF_CD_DIS_SEQ" => trim($this->request->getPost('PF_CD_DIS_SEQ')),
+                "PF_CD_STATUS" => trim($this->request->getPost('PF_CD_STATUS')),
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_PREFERENCE_CODE')->where('PF_CD_ID', $sysid)->update($data) : $this->Db->table('FLXY_PREFERENCE_CODE')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function checkPreferenceCode($rcCode)
+    {
+        $sql = "SELECT PF_CD_ID
+                FROM FLXY_PREFERENCE_CODE
+                WHERE PF_CD_CODE = '" . $rcCode . "'";
+
+        $response = $this->Db->query($sql)->getNumRows();
+        return $rcCode == '' || strlen($rcCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
+    }
+
+    public function preferenceCodeList()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT PF_CD_ID, PF_CD_CODE, PF_CD_DESC
+                FROM FLXY_PREFERENCE_CODE WHERE PF_CD_STATUS = 1";
+
+        if ($search != '') {
+            $sql .= " AND (PF_CD_CODE LIKE '%$search%'
+                      OR PF_CD_DESC LIKE '%$search%') ";
+        }
+
+        $sql .= " ORDER BY PF_CD_DIS_SEQ ASC";
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['PF_CD_ID'] . '">' . $row['PF_CD_CODE'] . ' | ' . $row['PF_CD_DESC'] . '</option>';
+        }
+
+        return $option;
+    }
+
+    public function editPreferenceCode()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT FTC.*, FMG.PF_GR_CODE
+                FROM dbo.FLXY_PREFERENCE_CODE AS FTC
+                LEFT JOIN FLXY_PREFERENCE_GROUP FMG ON FMG.PF_GR_ID = FTC.PF_GR_ID
+                WHERE PF_CD_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deletePreferenceCode()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_PREFERENCE_CODE')->delete(['PF_CD_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
 }

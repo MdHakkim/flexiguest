@@ -296,6 +296,19 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/deleteCustomerMembership', 'ApplicatioController::deleteCustomerMembership');      
     $routes->match(['post'],'/getCustomerMembershipsList', 'ApplicatioController::getCustomerMembershipsList');
 
+    $routes->get('/preferenceGroup', 'MastersController::preferenceGroup');
+    $routes->match(['post'],'/preferenceGroupView', 'MastersController::PreferenceGroupView');
+    $routes->match(['post'],'/insertPreferenceGroup', 'MastersController::insertPreferenceGroup');
+    $routes->match(['post'],'/editPreferenceGroup', 'MastersController::editPreferenceGroup');
+    $routes->match(['post'],'/deletePreferenceGroup', 'MastersController::deletePreferenceGroup'); 
+    
+    $routes->get('/preferenceCode', 'MastersController::preferenceCode');
+    $routes->match(['post'],'/preferenceCodeView', 'MastersController::PreferenceCodeView');
+    $routes->match(['post'],'/insertPreferenceCode', 'MastersController::insertPreferenceCode');
+    $routes->match(['post'],'/editPreferenceCode', 'MastersController::editPreferenceCode');
+    $routes->match(['post'],'/deletePreferenceCode', 'MastersController::deletePreferenceCode');
+    
+
     // Code By ALEESHA 
     // Maintenance Request 
     $routes->get('/maintenance', 'FacilityController::maintenanceRequest');
