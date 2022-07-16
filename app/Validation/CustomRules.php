@@ -21,7 +21,7 @@ class CustomRules{
                           array('start' => 'PKG_CD_START_DT', 'end' => 'PKG_CD_END_DT'),
                           array('start' => 'RSV_ITM_BEGIN_DATE', 'end' => 'RSV_ITM_END_DATE'),
                           array('start' => 'CM_TODAY', 'end' => 'CM_EXPIRY_DATE'),
-                          array('start' => 'FIXD_CHRG_BEGIN_DATE', 'end' => 'FIXD_CHRG_END_DATE'));
+                          array('start' => 'FIXD_CHRG_BEGIN_DATE', 'end' => 'FIXD_DEPARTURE_UP'));
 
                        
     foreach($date_fields as $date_field)
@@ -203,28 +203,80 @@ class CustomRules{
 	//strong password end
 
 
-  public function checkReservationDate(string $str, string $fields, array $data)
+  public function checkReservationEndDate(string $str, string $fields, array $data)
   {
     /**
-     *  Check Item QTY is less than the available QTY 
+     *  Check End date cannot be greater than the Departure date 
      */
 
-    $FIXD_CHRG_BEGIN_DATE = date('Y-m-d',(strtotime($data['FIXD_CHRG_BEGIN_DATE'])));
-    $FIXD_CHRG_END_DATE   =  date('Y-m-d',(strtotime($data['FIXD_CHRG_END_DATE'])));
+     if($data['FIXD_CHRG_FREQUENCY'] != 1 ){
+        $FIXD_CHRG_END_DATE   =  date('Y-m-d',(strtotime($data['FIXD_CHRG_END_DATE'])));
 
-    $sql = "SELECT * FROM FLXY_RESERVATION WHERE ('".$FIXD_CHRG_BEGIN_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE) AND ('".$FIXD_CHRG_END_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE) AND RESV_ID = ".$data['FIXD_CHRG_RESV_ID'];                 
+        $sql = "SELECT * FROM FLXY_RESERVATION WHERE  ('".$FIXD_CHRG_END_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE) AND RESV_ID = ".$data['FIXD_CHRG_RESV_ID'];                 
 
-    $response = $this->Db->query($sql)->getNumRows();
+        $response = $this->Db->query($sql)->getNumRows();
 
-     if($response == 0)
-     {
-      return false;
-     }
-      else {
-          return true;
-      }  
+        if($response == 0)
+        {
+          return false;
+        }
+        else {
+            return true;
+        }  
+      }
 
   }
+
+  public function checkReservationStartDate(string $str, string $fields, array $data)
+  {
+    /**
+     *  Check start date cannot be greater than the Departure date
+     */
+
+    //if($data['FIXD_CHRG_FREQUENCY'] != 1 ){
+      $FIXD_CHRG_BEGIN_DATE = date('Y-m-d',(strtotime($data['FIXD_CHRG_BEGIN_DATE'])));     
+
+      $sql = "SELECT * FROM FLXY_RESERVATION WHERE ('".$FIXD_CHRG_BEGIN_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE)  AND RESV_ID = ".$data['FIXD_CHRG_RESV_ID'];                 
+
+      $response = $this->Db->query($sql)->getNumRows();
+
+        if($response == 0)
+        {
+          return false;
+        }
+        else {
+            return true;
+        }  
+    //}
+
+  }
+
+
+  public function compareFixedChargeDate(string $str, string $fields, array $data){
+    
+    $date_fields = array(array('start' => 'FIXD_CHRG_BEGIN_DATE', 'end' => 'FIXD_DEPARTURE_UP'));
+
+    if($data['FIXD_CHRG_FREQUENCY'] != 1 ){
+                       
+    foreach($date_fields as $date_field)
+    {
+        if(isset($_POST[$date_field['start']]) && isset($_POST[$date_field['end']]))
+        {
+          $startDate = strtotime($_POST[$date_field['start']]);
+          $endDate   = strtotime($_POST[$date_field['end']]);
+
+          if ($endDate >= $startDate || $endDate == '')
+              return true;
+          else {
+              return false;
+          }  
+        }
+    }
+    
+    return false;
+  }
+}
+
 
 
 }

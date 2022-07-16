@@ -3775,12 +3775,39 @@ class ApplicatioController extends BaseController
     public function updateFixedCharges()
     {
         try {
+            $FIXD_CHRG_WEEKLY    = '';
+            $FIXD_CHRG_MONTHLY   = '';
+            $FIXD_CHRG_QUARTERLY = '';
+            $FIXD_CHRG_YEARLY   = '';
             $FIXD_CHRG_ID           =  $this->request->getPost('FIXD_CHRG_ID');
             $FIXD_CHRG_RESV_ID      =  $this->request->getPost('FIXD_CHRG_RESV_ID');
             $FIXD_CHRG_TRNCODE      =  $this->request->getPost('FIXD_CHRG_TRNCODE');
             $FIXD_CHRG_AMT          =  $this->request->getPost('FIXD_CHRG_AMT');
             $FIXD_CHRG_QTY          =  $this->request->getPost('FIXD_CHRG_QTY');
             $FIXD_CHRG_FREQUENCY    =  $this->request->getPost('FIXD_CHRG_FREQUENCY'); 
+            $FIXD_CHRG_BEGIN_DATE   =  $this->request->getPost('FIXD_CHRG_BEGIN_DATE');
+            $FIXD_CHRG_END_DATE     =  $this->request->getPost('FIXD_CHRG_END_DATE');
+
+            $FIXD_CHRG_BEGIN_DATE   =  ($FIXD_CHRG_BEGIN_DATE !='') ? date('Y-m-d',(strtotime($FIXD_CHRG_BEGIN_DATE))):'';
+            if($FIXD_CHRG_FREQUENCY > 1)
+                $FIXD_CHRG_END_DATE     =  ($FIXD_CHRG_END_DATE !='') ? date('Y-m-d',(strtotime($FIXD_CHRG_END_DATE))):'';
+            else
+                $FIXD_CHRG_END_DATE     =  date('Y-m-d',(strtotime($FIXD_CHRG_BEGIN_DATE)));
+                
+            $FIXD_DEPARTURE_UP      =  date('Y-m-d',(strtotime($this->request->getPost('FIXD_DEPARTURE_UP')))); 
+
+            if($FIXD_CHRG_FREQUENCY == 3){
+                $FIXD_CHRG_WEEKLY = $this->request->getPost('FIXD_CHRG_WEEKLY');
+
+            } else if($FIXD_CHRG_FREQUENCY == 4){
+                $FIXD_CHRG_MONTHLY = $this->request->getPost('FIXD_CHRG_MONTHLY');
+            
+            } else if($FIXD_CHRG_FREQUENCY == 5){
+                $FIXD_CHRG_QUARTERLY = $this->request->getPost('FIXD_CHRG_QUARTERLY');
+            } 
+            else if($FIXD_CHRG_FREQUENCY == 6){
+                $FIXD_CHRG_YEARLY = date('Y-m-d',(strtotime($this->request->getPost('FIXD_CHRG_YEARLY')))); 
+            }            
 
             $data = [
                 "FIXD_CHRG_RESV_ID"       => $FIXD_CHRG_RESV_ID,
@@ -3788,16 +3815,21 @@ class ApplicatioController extends BaseController
                 "FIXD_CHRG_QTY"           => $FIXD_CHRG_QTY,
                 "FIXD_CHRG_AMT"           => $FIXD_CHRG_AMT,
                 "FIXD_CHRG_FREQUENCY"     => $FIXD_CHRG_FREQUENCY,
-                "FIXD_CHRG_BEGIN_DATE"    => date('Y-m-d',(strtotime($this->request->getPost('FIXD_CHRG_BEGIN_DATE')))),
-                "FIXD_CHRG_END_DATE"      => date('Y-m-d',(strtotime($this->request->getPost('FIXD_CHRG_END_DATE')))),
+                "FIXD_CHRG_BEGIN_DATE"    => $FIXD_CHRG_BEGIN_DATE,
+                "FIXD_CHRG_END_DATE"      => $FIXD_CHRG_END_DATE,
+                "FIXD_CHRG_WEEKLY"        => $FIXD_CHRG_WEEKLY,
+                "FIXD_CHRG_MONTHLY"       => $FIXD_CHRG_MONTHLY,
+                "FIXD_CHRG_QUARTERLY"     => $FIXD_CHRG_QUARTERLY,
+                "FIXD_CHRG_YEARLY"        => $FIXD_CHRG_YEARLY                
                 ];
 
             $rules = [  'FIXD_CHRG_TRNCODE' => ['label' => 'Transaction code', 'rules' => 'required'],
                         'FIXD_CHRG_FREQUENCY' => ['label' => 'Freequency', 'rules' => 'required'],
-                        'FIXD_CHRG_BEGIN_DATE' => ['label' => 'Start Date', 'rules' => 'required|checkReservationDate[FIXD_CHRG_BEGIN_DATE]', 'errors' => ['compareDate' => 'The End Date should be after Begin Date','checkReservationDate' => 'Start date cannot be greater than the Departure date']],                       
-                        'FIXD_CHRG_END_DATE' => ['label' => 'End Date', 'rules' => 'required|compareDate[FIXD_CHRG_BEGIN_DATE]|checkReservationDate[FIXD_CHRG_END_DATE]', 'errors' => ['checkReservationDate' => 'End date cannot be greater than the Departure date']],
+                        'FIXD_CHRG_BEGIN_DATE' => ['label' => 'Start Date', 'rules' => 'required|checkReservationStartDate[FIXD_CHRG_BEGIN_DATE]', 'errors' => ['checkReservationStartDate' => 'Start date cannot be greater than the Departure date']],                       
+                        'FIXD_CHRG_END_DATE' => ['label' => 'End Date', 'rules' => 'compareFixedChargeDate[FIXD_CHRG_BEGIN_DATE]|checkReservationEndDate[FIXD_CHRG_END_DATE]', 'errors' => ['checkReservationEndDate' => 'End date cannot be greater than the Departure date','compareFixedChargeDate' => 'The End Date should be after Begin Date']],
                         'FIXD_CHRG_AMT' => ['label' => 'Amount', 'rules' => 'required'],
-                        'FIXD_CHRG_QTY' => ['label' => 'Quantity', 'rules' => 'required'] 
+                        'FIXD_CHRG_QTY' => ['label' => 'Quantity', 'rules' => 'required'],
+                        
                      ];
 
                    

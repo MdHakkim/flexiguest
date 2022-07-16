@@ -47,12 +47,10 @@
                 <div class="row">
                     <div class="col-md-3 mt-1 mb-3"><button type="button" class="btn btn-primary" onClick="addResvation()"><i class="fa-solid fa-plus fa-lg"></i> Add New</button></div>
                 </div>
-
-                <form class="dt_adv_search mb-2" method="POST">
+                    <form class="dt_adv_search mb-2" method="POST">
                     <div class="border rounded p-3">
                         <div class="row g-3">
                             <div class="col-4 col-sm-6 col-lg-4">
-
                                 <div class="row mb-3">
                                     <label class="col-form-label col-md-4" style="text-align: right;"><b>Name:</b></label>
                                     <div class="col-md-8">
@@ -1854,6 +1852,7 @@
                                         <div class="col-md-3 mb-3">
                                             <label for="FIXD_DEPARTURE" class="col-form-label col-md-4"><b> Departure</b></label>
                                             <input type="text" name="FIXD_DEPARTURE" id="FIXD_DEPARTURE" disabled class="form-control" />
+                                            <input type="hidden" name="FIXD_DEPARTURE_UP" id="FIXD_DEPARTURE_UP"  class="form-control" />
 
                                         </div>
                                     </div>
@@ -1870,32 +1869,52 @@
                                             ?>
                                                 <div class="col-md-2">
                                                     <div class="form-check">
-                                                        <input id="FIXD_CHRG_FREQUENCY<?php echo $Freequency['ID'];?>" value="<?php echo $Freequency['ID'];?>" name="FIXD_CHRG_FREQUENCY" class="form-check-input" type="radio" <?php if($Freequency['ID'] == 2){?> checked="checked" <?php } ?>>
+                                                        <input id="FIXD_CHRG_FREQUENCY<?php echo $Freequency['ID'];?>" value="<?php echo $Freequency['ID'];?>" name="FIXD_CHRG_FREQUENCY" class="form-check-input" type="radio" <?php if($Freequency['ID'] == 2){?> checked="checked" <?php } ?> onclick= frequency(<?php echo $Freequency['ID'];?>)>
                                                         <label class="form-check-label" for="FIXD_CHRG_FREQUENCY"> <?php echo $Freequency['FREQ_NAME'];?> </label>
                                                     </div>                                                   
                                                 </div>
                                             <?php 
                                             }
                                         } ?>                                     
-
-
-                                    
                                     </div>
                                     <div class="row g-3 ">
                                         <div class="col-md-4 mb-3">
-                                            <label for="FIXD_CHRG_BEGIN_DATE" class="col-form-label col-md-4"><b>Start
-                                                    Date *</b></label>
-                                            
-                                                <input class="form-control dateFieldItem" type="text" placeholder="d-Mon-yyyy" id="FIXD_CHRG_BEGIN_DATE" name="FIXD_CHRG_BEGIN_DATE" />
-                                           
+                                        <label for="FIXD_CHRG_BEGIN_DATE" class="col-form-label col-md-4"><b>Start
+                                                Date *</b></label>                                        
+                                            <input class="form-control" type="text" placeholder="d-Mon-yyyy" id="FIXD_CHRG_BEGIN_DATE" name="FIXD_CHRG_BEGIN_DATE" />                                           
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-4 END_DATE" >
                                             <label for="FIXD_CHRG_END_DATE" class="col-form-label col-md-4"><b>End
-                                                    Date *</b></label>
-                                           
-                                                <input class="form-control dateFieldItem" type="text" placeholder="d-Mon-yyyy" id="FIXD_CHRG_END_DATE" name="FIXD_CHRG_END_DATE" />
+                                                    Date *</b></label>                                           
+                                                <input class="form-control" type="text" placeholder="d-Mon-yyyy" id="FIXD_CHRG_END_DATE" name="FIXD_CHRG_END_DATE" />
                                             
                                         </div>
+                                            <div class="col-md-4 WEEKLY_EXCECUTE"  style="display: none">
+                                            <label for="FIXD_CHRG_WEEKLY" class="col-form-label col-md-4"><b>Day to Execute</b></label>
+                                                <select name="FIXD_CHRG_WEEKLY" id="FIXD_CHRG_WEEKLY"  class="select2 form-select form-select-lg">
+                                                    <option value="1" selected>Sunday</option>
+                                                    <option value="2">Monday</option>
+                                                    <option value="3">Tuesday</option>
+                                                    <option value="4">Wednesday</option>
+                                                    <option value="5">Thursday</option>
+                                                    <option value="6">Friday</option>
+                                                    <option value="7">Saturday</option>
+                                                </select>                                                
+                                            </div>
+                                            <div class="col-md-4 MONTHLY_EXCECUTE" style="display: none">
+                                            <label for="FIXD_CHRG_MONTHLY" class="col-form-label col-md-5"><b>Day to Execute ( 1-31 )</b></label>
+                                            <input type="text" name="FIXD_CHRG_MONTHLY" id="FIXD_CHRG_MONTHLY" class="form-control"  placeholder="eg: 1" value='1' />
+                                            </div>
+
+                                            <div class="col-md-4 QUARTERLY_EXCECUTE" style="display: none">
+                                            <label for="FIXD_CHRG_QUARTERLY" class="col-form-label col-md-5"><b>Day to Execute ( 1-31 )</b></label>
+                                            <input type="text" name="FIXD_CHRG_QUARTERLY" id="FIXD_CHRG_QUARTERLY" class="form-control"  placeholder="eg: 1" value='1'/>
+                                            </div>
+
+                                            <div class="col-md-4 YEARLY_EXCECUTE" style="display: none">
+                                            <label for="FIXD_CHRG_YEARLY" class="col-form-label col-md-5"><b>Day to Execute</b></label>
+                                            <input class="form-control dateFIXD_CHRG" type="text" placeholder="yyyy-mm-dd" id="FIXD_CHRG_YEARLY" name="FIXD_CHRG_YEARLY" />
+                                            </div>
                                     </div>
                                     <div class="row g-3 mb-3">
                                         <div class="col-md-4">
@@ -1905,8 +1924,7 @@
                                         </div>
                                         <div class="col-md-4 ">
                                             <label for="FIXD_CHRG_AMT" class="col-form-label col-md-4"><b>AMOUNT
-                                                    *</b></label>
-                                             
+                                                    *</b></label>                                             
                                                 <input type="number" name="FIXD_CHRG_AMT" id="FIXD_CHRG_AMT" class="form-control" min="1" step="1" placeholder="eg: 12" />
                                             
                                         </div>
@@ -2109,6 +2127,18 @@
                 $(this).change();
             }
         });
+        $('#FIXD_CHRG_BEGIN_DATE').datepicker({
+            format: 'yyyy-mm-d',
+            autoclose: true,
+            startDate: '-0m'
+        });
+        $('#FIXD_CHRG_END_DATE').datepicker({
+            format: 'yyyy-mm-d',
+            autoclose: true,
+            startDate: '-0m'
+        });
+
+        
 
     });
 
@@ -2695,9 +2725,7 @@
         var formSerialization = $('#' + id).serializeArray();
 
         if (mode == 'R') {
-
             var url = '<?php echo base_url('/insertReservation') ?>';
-
             // Change membership type and id
             var formType = $('.window-2').is(':visible') ? 'edit' : 'add';
             var cust_membership = $('[name="RESV_MEMBER_TY"]').val();
@@ -3505,6 +3533,13 @@
                 $(this).change();
             }
         });
+
+        $('#FIXD_CHRG_YEARLY').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+           
+        });
+        
     });
 
     function reservationCheckout() {
@@ -3800,7 +3835,6 @@
     // Show Inventory Detail
 
     function loadInventoryDetails(itemID) {
-
         var url = '<?php echo base_url('/showInventoryDetails') ?>';
         $.ajax({
             url: url,
@@ -3824,7 +3858,6 @@
                             class_val = dataval;
                         } else if (field == 'RSV_ITM_CL_ID') {
                             $('#' + field).val(dataval).trigger('change', class_val);
-
                         } else {
                             $('#' + field).val(dataval);
                         }
@@ -3967,15 +4000,22 @@
                 $('#FIXD_ARRIVAL').val(respn.RESV_ARRIVAL_DT);
                 $('#FIXD_NIGHTS').val(respn.RESV_NIGHT);
                 $('#FIXD_DEPARTURE').val(respn.RESV_DEPARTURE);
+                $('#FIXD_DEPARTURE_UP').val(respn.RESV_DEPARTURE);
+                
                 $('#FIXD_CHRG_BEGIN_DATE').val(respn.RESV_ARRIVAL_DT);
                 $('#FIXD_CHRG_END_DATE').val(respn.RESV_DEPARTURE); 
-                alert(respn.RESV_NIGHT)
-                if(respn.RESV_NIGHT < 7){
-                    $('#FIXD_CHRG_FREQUENCY4').prop('disabled',true);
-                    $('#FIXD_CHRG_FREQUENCY5').prop('disabled',true);
-                    $('#FIXD_CHRG_FREQUENCY6').prop('disabled',true);
+                //alert(respn.RESV_NIGHT)
+                // if(respn.RESV_NIGHT < 7){
+                //     $('#FIXD_CHRG_FREQUENCY4').prop('disabled',true);
+                //     $('#FIXD_CHRG_FREQUENCY5').prop('disabled',true);
+                //     $('#FIXD_CHRG_FREQUENCY6').prop('disabled',true);
 
-                }
+                // }
+                // else{
+                    $('#FIXD_CHRG_FREQUENCY4').prop('disabled',false);
+                    $('#FIXD_CHRG_FREQUENCY5').prop('disabled',false);
+                    $('#FIXD_CHRG_FREQUENCY6').prop('disabled',false);
+                //}
             }
         });
 
@@ -4007,8 +4047,10 @@
         $('#FIXD_CHRG_AMT').val('');
         $('#FIXD_CHRG_QTY').val('');
         $('#FIXD_CHRG_ID').val('');
-        
-        
+        $('.WEEKLY_EXCECUTE').hide();
+        $('.MONTHLY_EXCECUTE').hide(); 
+        $('.YEARLY_EXCECUTE').hide(); 
+        $('.QUARTERLY_EXCECUTE').hide();        
         
         bootbox.dialog({
             message: "Do you want to add a new fixed charges?",
@@ -4043,6 +4085,8 @@
 
       $(document).on('click', '.save-fixedcharge-detail', function () {         
         var RESV_ID = $('#FIXD_CHRG_RESV_ID').val();
+
+        
         hideModalAlerts();
         var formSerialization = $('#fixedcharge-submit-form').serializeArray();
         var url = '<?php echo base_url('/updateFixedCharges') ?>';
@@ -4180,6 +4224,7 @@
             dataType: 'json',
             success: function(respn) {
                 //Enable Repeat and Delete buttons
+                FIXD_CHRG_FREQUENCY = 0;
                 toggleButton('.delete-fixedcharge-detail', 'btn-dark', 'btn-danger', false);
                 $(respn).each(function(inx, data) {
                     $.each(data, function(fields, datavals) {
@@ -4187,10 +4232,65 @@
                        // alert(datavals)
                         var field = $.trim(fields);
                         var dataval = $.trim(datavals);
-                         if (field == 'FIXD_CHRG_TRNCODE') {
+                       
+                        if (field == 'FIXD_CHRG_FREQUENCY'){
+                            if (dataval == 1){
+                                FIXD_CHRG_FREQUENCY = 1;  
+                            }
+                            else if (dataval == 2){
+                                FIXD_CHRG_FREQUENCY = 2;  
+                                $('.WEEKLY_EXCECUTE').hide(); 
+                                $('.MONTHLY_EXCECUTE').hide(); 
+                                $('.YEARLY_EXCECUTE').hide(); 
+                                $('.QUARTERLY_EXCECUTE').hide();
+                            }
+                            else if (dataval == 3){
+                                FIXD_CHRG_FREQUENCY = 3;  
+                                $('.WEEKLY_EXCECUTE').show();
+                                $('.MONTHLY_EXCECUTE').hide(); 
+                                $('.YEARLY_EXCECUTE').hide(); 
+                                $('.QUARTERLY_EXCECUTE').hide();
+                            }
+                            else if (dataval == 4){
+                                FIXD_CHRG_FREQUENCY = 4;  
+                                $('.WEEKLY_EXCECUTE').hide();
+                                $('.MONTHLY_EXCECUTE').show(); 
+                                $('.YEARLY_EXCECUTE').hide(); 
+                                $('.QUARTERLY_EXCECUTE').hide();
+                            }
+                            else if (dataval == 5){
+                                FIXD_CHRG_FREQUENCY = 5;  
+                                $('.WEEKLY_EXCECUTE').hide();
+                                $('.MONTHLY_EXCECUTE').hide(); 
+                                $('.YEARLY_EXCECUTE').hide(); 
+                                $('.QUARTERLY_EXCECUTE').show();
+                            }
+                            else if (dataval == 6){
+                                FIXD_CHRG_FREQUENCY = 6;  
+                                $('.WEEKLY_EXCECUTE').hide();
+                                $('.MONTHLY_EXCECUTE').hide(); 
+                                $('.YEARLY_EXCECUTE').show(); 
+                                $('.QUARTERLY_EXCECUTE').hide();
+                            }
+                            $('#' + field + dataval).prop('checked', true);
+                        }
+                        else
+                        $('.END_DATE').show();
+
+                        if (field == 'FIXD_CHRG_TRNCODE' ) {
                             $('#' + field).val(dataval).trigger('change');
-                        } else {
+                        } 
+                        else if (field == 'FIXD_CHRG_END_DATE' && FIXD_CHRG_FREQUENCY == 1){
+                            $('.END_DATE').hide();
+                            $('.WEEKLY_EXCECUTE').hide(); 
+                            $('.MONTHLY_EXCECUTE').hide(); 
+                            $('.YEARLY_EXCECUTE').hide(); 
+                            $('.QUARTERLY_EXCECUTE').hide();  
+                            
+                        }
+                        else {
                             $('#' + field).val(dataval);
+                            
                         }
                     });
                 });
@@ -4243,9 +4343,19 @@
                                     '<li>The fixed charges has been deleted</li>');
                                 $('#warningModal').delay(2500).fadeOut();
                                // clearFormFields('#fixedCharges');
-                               $('#FIXD_CHRG_TRNCODE').val('');
-                               $('#FIXD_CHRG_AMT').val('');
-                               $('#FIXD_CHRG_QTY').val('');
+                                $('#FIXD_CHRG_TRNCODE').val('');
+                                $('#FIXD_CHRG_AMT').val('');
+                                $('#FIXD_CHRG_QTY').val('');
+                                $('#FIXD_CHRG_BEGIN_DATE').val($('#FIXD_ARRIVAL').val());
+                                $('#FIXD_CHRG_END_DATE').val($('#FIXD_DEPARTURE').val());
+                                $('#FIXD_CHRG_TRNCODE').val('');
+                                $('#FIXD_CHRG_AMT').val('');
+                                $('#FIXD_CHRG_QTY').val('');
+                                $('#FIXD_CHRG_ID').val('');
+                                $('.WEEKLY_EXCECUTE').hide();
+                                $('.MONTHLY_EXCECUTE').hide(); 
+                                $('.YEARLY_EXCECUTE').hide(); 
+                                $('.QUARTERLY_EXCECUTE').hide();   
                                
                                 showFixedCharges(resvID);
                             }
@@ -4274,6 +4384,50 @@
     });
 
 
+    $(document).on('click', '#FIXD_CHRG_FREQUENCY1', function() { 
+        $('.END_DATE').hide();        
+    });
+
+    function frequency(value){
+        $('.WEEKLY_EXCECUTE').hide(); 
+        $('.MONTHLY_EXCECUTE').hide(); 
+        $('.YEARLY_EXCECUTE').hide(); 
+        $('.QUARTERLY_EXCECUTE').hide();  
+        $('.END_DATE').hide();
+
+        if(value == 1){
+            $('.END_DATE').hide(); 
+            $('#FIXD_CHRG_END_DATE').val(''); 
+        }
+        else if(value == 3){
+            $('.END_DATE').show();
+            $('#FIXD_CHRG_WEEKLY').val('1');
+            $('.WEEKLY_EXCECUTE').show();  
+        }
+        else if(value == 4){
+            $('.END_DATE').show();
+            $('#FIXD_CHRG_MONTHLY').val('1');
+            $('.MONTHLY_EXCECUTE').show(); 
+
+        }
+        else if(value == 5){
+            $('.END_DATE').show();            
+            $('#FIXD_CHRG_QUARTERLY').val('1');
+            $('.QUARTERLY_EXCECUTE').show(); 
+             
+        }
+        else if(value == 6){
+            $('.END_DATE').show();
+            $('#FIXD_CHRG_YEARLY').val($('#FIXD_ARRIVAL').val());
+            $('.YEARLY_EXCECUTE').show();  
+
+
+        }
+        else{
+            $('.END_DATE').show();
+            $('#FIXD_CHRG_END_DATE').val($('#FIXD_DEPARTURE').val());
+        }
+    }
 
 
     ////////////////////

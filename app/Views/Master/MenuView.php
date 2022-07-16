@@ -95,6 +95,29 @@
                             <div class="col-md-4">
                             <div class="text-left mt-4">
                                 <div class="col-md-12">
+                                    <label class="switch switch-md">
+                                        <input id="SHOW_IN_MENU" name="SHOW_IN_MENU" type="checkbox" value="1"
+                                            class="switch-input" />
+                                        <span class="switch-toggle-slider">
+                                            <span class="switch-on">
+                                                <i class="bx bx-check"></i>
+                                            </span>
+                                            <span class="switch-off">
+                                                <i class="bx bx-x"></i>
+                                            </span>
+                                        </span>
+                                        <span class="switch-label"><b>Show in Menu </b></span>
+                                    </label>
+                                </div>
+                            </div>
+                            </div>
+                         </div>
+
+                         <div class="row g-3 mt-1">
+                                
+                            <div class="col-md-4">
+                            <div class="text-left mt-4">
+                                <div class="col-md-12">
                                     <label class="switch switch-lg">
                                         <input id="MENU_STATUS" name="MENU_STATUS" type="checkbox" value="1"
                                             class="switch-input" />
@@ -112,6 +135,7 @@
                             </div>
                             </div>
                          </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">
