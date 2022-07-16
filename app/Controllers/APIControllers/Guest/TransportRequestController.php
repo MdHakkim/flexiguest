@@ -62,7 +62,7 @@ class TransportRequestController extends BaseController
             'TR_ROOM_ID' => ['label' => 'room', 'rules' => 'required'],
             'TR_GUEST_NAME' => ['label' => 'guest name', 'rules' => 'required'],
             'TR_TRAVEL_TYPE' => ['label' => 'travel type', 'rules' => 'required'],
-            'TR_TRAVEL_PURPOSE' => ['label' => 'travel purpose', 'rules' => 'Please select a travel purpose.'],
+            'TR_TRAVEL_PURPOSE' => ['label' => 'travel purpose', 'rules' => 'required', 'errors' => ['required' => 'Please select a travel purpose.']],
             'TR_TRANSPORT_TYPE_ID' => ['label' => 'transport type', 'rules' => 'required', 'errors' => ['required' => 'Please select a transport type.']],
             'TR_TRAVEL_DATE' => ['label' => 'travel date', 'rules' => 'required'],
             'TR_TRAVEL_TIME' => ['label' => 'travel time', 'rules' => 'required'],
