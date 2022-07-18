@@ -1092,11 +1092,19 @@ class APIController extends BaseController
     {
         if ($shutleID) {
             $param = ['SHUTL_ID' => $shutleID];
-            $sql = "SELECT *, SHUTL_STAGE_NAME FROM FLXY_SHUTTLE_ROUTE 
+            $sql = "SELECT FLXY_SHUTTLE_ROUTE.*, SHUTL_START_AT, SHUTL_STAGE_NAME FROM FLXY_SHUTTLE_ROUTE 
+                        left join FLXY_SHUTTLE on FSR_SHUTTLE_ID = SHUTL_ID
                         left join FLXY_SHUTL_STAGES on FSR_STAGE_ID = SHUTL_STAGE_ID
                         WHERE FSR_SHUTTLE_ID = :SHUTL_ID: order by FSR_ORDER_NO";
             
             $data = $this->DB->query($sql, $param)->getResultArray();
+
+            foreach($data as $index => $stage) {
+                $shuttle_start_at = $stage['SHUTL_START_AT'];
+                $duration_mins = $stage['FSR_DURATION_MINS'];
+
+                $data[$index]['FSR_START_TIME'] = date('Y-m-d H:i:s', strtotime($shuttle_start_at) + ($duration_mins * 60));
+            }
         } else {
             $sql = "SELECT fs.*, 
                         (select SHUTL_STAGE_NAME from FLXY_SHUTL_STAGES where SHUTL_STAGE_ID = fs.SHUTL_FROM) as FROM_STAGE,
