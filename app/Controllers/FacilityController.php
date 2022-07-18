@@ -578,8 +578,8 @@ class FacilityController extends BaseController
                 // INSERT
                 if ($doc_file) {
                     $doc_name = $doc_file->getName();
-                    $folderPath = "assets/Uploads/Shuttle";
-                    $doc_up = documentUpload($doc_file, $doc_name, $this->session->name, $folderPath);
+                    $folderPath = "assets/Uploads/Shuttle/";
+                    $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
                     if ($doc_up['SUCCESS'] == 200) {
                         $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
                     }
