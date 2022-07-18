@@ -110,7 +110,7 @@ class APIController extends BaseController
             $result = responseJson(403, true, $this->validator->getErrors());
             return $this->respond($result);
         } else {
-            $sql = "SELECT * FROM FLXY_USERS WHERE USR_EMAIL=:email:";
+            $sql = "SELECT u.*, fc.*  FROM FLXY_USERS as u LEFT JOIN FLXY_CUSTOMER fc ON fc.CUST_ID = u.USR_CUST_ID WHERE u.USR_EMAIL = :email:";
             $param = ['email' => $this->request->getVar("email")];
             $userdata = $this->DB->query($sql, $param)->getRowArray();
 
