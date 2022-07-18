@@ -552,7 +552,7 @@ class FacilityController extends BaseController
                 'SHUTL_DESCRIPTION' => ['label' => 'Description', 'rules' => 'required'],
                 'SHUTL_ROUTE_IMG' => [
                     'uploaded[SHUTL_ROUTE_IMG]',
-                    'mime_in[SHUTL_ROUTE_IMG,image/png, image/jpeg]',
+                    'mime_in[SHUTL_ROUTE_IMG,image/png,image/jpeg,image/jpg]',
                     'max_size[SHUTL_ROUTE_IMG,500]',
                 ]
 
