@@ -277,6 +277,30 @@ class CustomRules{
   }
 }
 
+public function checkReservationYearlyDate(string $str, string $fields, array $data)
+  {
+    /**
+     *  Check start date cannot be greater than the Departure date
+     */
+
+    if($data['FIXD_CHRG_FREQUENCY'] == 6 ){
+      $FIXD_CHRG_YEARLY = date('Y-m-d',(strtotime($data['FIXD_CHRG_YEARLY'])));     
+
+      $sql = "SELECT * FROM FLXY_RESERVATION WHERE ('".$FIXD_CHRG_YEARLY."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE)  AND RESV_ID = ".$data['FIXD_CHRG_RESV_ID'];                 
+
+      $response = $this->Db->query($sql)->getNumRows();
+
+        if($response == 0)
+        {
+          return false;
+        }
+        else {
+            return true;
+        }  
+    }
+
+  }
+
 
 
 }

@@ -3829,8 +3829,13 @@ class ApplicatioController extends BaseController
                         'FIXD_CHRG_END_DATE' => ['label' => 'End Date', 'rules' => 'compareFixedChargeDate[FIXD_CHRG_BEGIN_DATE]|checkReservationEndDate[FIXD_CHRG_END_DATE]', 'errors' => ['checkReservationEndDate' => 'End date cannot be greater than the Departure date','compareFixedChargeDate' => 'The End Date should be after Begin Date']],
                         'FIXD_CHRG_AMT' => ['label' => 'Amount', 'rules' => 'required'],
                         'FIXD_CHRG_QTY' => ['label' => 'Quantity', 'rules' => 'required'],
+                        'FIXD_CHRG_YEARLY' => ['label' => 'Fixed Charge Yearly', 'rules' => 'checkReservationYearlyDate[FIXD_CHRG_YEARLY]', 'errors' => ['checkReservationYearlyDate' => 'Yearly Date cannot be greater than the Departure date']]
                         
                      ];
+
+            // if($FIXD_CHRG_FREQUENCY == 6){
+            //     $rules = ['FIXD_CHRG_YEARLY' => ['label' => 'Fixed Charge Yearly', 'rules' => 'checkReservationYearlyDate', 'errors' => ['checkReservationYearlyDate' => 'Date cannot be greater than the Departure date']]];
+            // }
 
                    
 
