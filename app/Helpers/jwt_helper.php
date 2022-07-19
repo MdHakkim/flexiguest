@@ -39,7 +39,7 @@ function validateJWTFromRequest(string $encodedToken)
         
     $sql = "SELECT u.USR_NAME, u.USR_ID, u.USR_EMAIL, u.USR_PHONE, u.USR_ROLE, u.USR_CUST_ID, 
                     b.*,
-                    CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_MIDDLE_NAME, b.CUST_LAST_NAME) as NAME,
+                    CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_MIDDLE_NAME, b.CUST_LAST_NAME) as NAME
                     FROM FLXY_USERS u
                         LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = u.USR_CUST_ID WHERE USR_EMAIL=:USR_EMAIL:";
 
