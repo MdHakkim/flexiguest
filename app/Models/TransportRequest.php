@@ -15,7 +15,7 @@ class TransportRequest extends Model
         'TR_GUEST_NAME',
         'TR_TRAVEL_TYPE',
         'TR_TRANSPORT_TYPE_ID',
-        'TR_PURPOSE',
+        'TR_TRAVEL_PURPOSE',
         'TR_TRAVEL_DATE',
         'TR_TRAVEL_TIME',
         'TR_ADULTS',
@@ -36,6 +36,7 @@ class TransportRequest extends Model
         'TR_REMARKS',
         'TR_REMINDER_REQUIRED',
         'TR_STATUS',
+        'TR_PAYMENT_METHOD',
         'TR_CREATED_BY',
         'TR_UPDATED_BY',
     ];

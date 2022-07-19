@@ -110,7 +110,7 @@ class APIController extends BaseController
             $result = responseJson(403, true, $this->validator->getErrors());
             return $this->respond($result);
         } else {
-            $sql = "SELECT * FROM FLXY_USERS WHERE USR_EMAIL=:email:";
+            $sql = "SELECT u.*, fc.*  FROM FLXY_USERS as u LEFT JOIN FLXY_CUSTOMER fc ON fc.CUST_ID = u.USR_CUST_ID WHERE u.USR_EMAIL = :email:";
             $param = ['email' => $this->request->getVar("email")];
             $userdata = $this->DB->query($sql, $param)->getRowArray();
 
@@ -1092,8 +1092,19 @@ class APIController extends BaseController
     {
         if ($shutleID) {
             $param = ['SHUTL_ID' => $shutleID];
-            $sql = "SELECT * FROM FLXY_SHUTTLE_ROUTE WHERE SHUTL_ID=:SHUTL_ID:";
+            $sql = "SELECT FLXY_SHUTTLE_ROUTE.*, SHUTL_START_AT, SHUTL_STAGE_NAME FROM FLXY_SHUTTLE_ROUTE 
+                        left join FLXY_SHUTTLE on FSR_SHUTTLE_ID = SHUTL_ID
+                        left join FLXY_SHUTL_STAGES on FSR_STAGE_ID = SHUTL_STAGE_ID
+                        WHERE FSR_SHUTTLE_ID = :SHUTL_ID: order by FSR_ORDER_NO";
+            
             $data = $this->DB->query($sql, $param)->getResultArray();
+
+            foreach($data as $index => $stage) {
+                $shuttle_start_at = $stage['SHUTL_START_AT'];
+                $duration_mins = $stage['FSR_DURATION_MINS'];
+
+                $data[$index]['FSR_START_TIME'] = date('Y-m-d H:i:s', strtotime($shuttle_start_at) + ($duration_mins * 60));
+            }
         } else {
             $sql = "SELECT fs.*, 
                         (select SHUTL_STAGE_NAME from FLXY_SHUTL_STAGES where SHUTL_STAGE_ID = fs.SHUTL_FROM) as FROM_STAGE,

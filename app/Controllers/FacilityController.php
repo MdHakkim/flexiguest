@@ -552,7 +552,7 @@ class FacilityController extends BaseController
                 'SHUTL_DESCRIPTION' => ['label' => 'Description', 'rules' => 'required'],
                 'SHUTL_ROUTE_IMG' => [
                     'uploaded[SHUTL_ROUTE_IMG]',
-                    'mime_in[SHUTL_ROUTE_IMG,image/png, image/jpeg]',
+                    'mime_in[SHUTL_ROUTE_IMG,image/png,image/jpeg,image/jpg]',
                     'max_size[SHUTL_ROUTE_IMG,500]',
                 ]
 
@@ -578,8 +578,8 @@ class FacilityController extends BaseController
                 // INSERT
                 if ($doc_file) {
                     $doc_name = $doc_file->getName();
-                    $folderPath = "assets/Uploads/Shuttle";
-                    $doc_up = documentUpload($doc_file, $doc_name, $this->session->name, $folderPath);
+                    $folderPath = "assets/Uploads/Shuttle/";
+                    $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
                     if ($doc_up['SUCCESS'] == 200) {
                         $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
                     }
@@ -616,9 +616,9 @@ class FacilityController extends BaseController
                         if (unlink($folderPath)) {
                             if ($doc_file) {
                                 $doc_name = $doc_file->getName();
-                                $folderPath = "assets/Uploads/Shuttle";
+                                $folderPath = "assets/Uploads/Shuttle/";
                                 // 
-                                $doc_up = documentUpload($doc_file, $doc_name, $this->session->name, $folderPath);
+                                $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
                                 if ($doc_up['SUCCESS'] == 200) {
                                     $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
                                 }
@@ -628,9 +628,9 @@ class FacilityController extends BaseController
                 } else {
                     if ($doc_file) {
                         $doc_name = $doc_file->getName();
-                        $folderPath = "assets/Uploads/Shuttle";
+                        $folderPath = "assets/Uploads/Shuttle/";
                         // 
-                        $doc_up = documentUpload($doc_file, $doc_name, $this->session->name, $folderPath);
+                        $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
                         if ($doc_up['SUCCESS'] == 200) {
                             $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
                         }

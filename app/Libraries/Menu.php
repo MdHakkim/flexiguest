@@ -10,9 +10,7 @@ class Menu{
         $this->Db = \Config\Database::connect();
         helper([ 'common']);
     }
-    
-
-    
+        
     public function display(){
 
         $url  = "http" . (($_SERVER['SERVER_PORT'] == 443) ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -20,7 +18,7 @@ class Menu{
         $rolesMenuOutput = $rolesSubmenuOutput = '';
         $user_role = session()->get('USR_ROLE_ID');
 
-        $sql = "SELECT ROLE_ID, MENU_ID, MENU_NAME, MENU_URL, MENU_ICON, ROLE_MENU_ID, ROLE_PERM_STATUS FROM FLXY_MENU LEFT JOIN FLXY_USER_ROLE_PERMISSION ON MENU_ID = ROLE_MENU_ID WHERE PARENT_MENU_ID = 0 AND ROLE_ID = ".$user_role." ORDER BY MENU_DIS_SEQ ASC";
+        $sql = "SELECT ROLE_ID, MENU_ID, MENU_NAME, MENU_URL, MENU_ICON, ROLE_MENU_ID, ROLE_PERM_STATUS FROM FLXY_MENU LEFT JOIN FLXY_USER_ROLE_PERMISSION ON MENU_ID = ROLE_MENU_ID WHERE PARENT_MENU_ID = 0 AND SHOW_IN_MENU = 1 AND ROLE_ID = ".$user_role." ORDER BY MENU_DIS_SEQ ASC";
         $responseMenu = $this->Db->query($sql)->getResultArray();       
         
 
@@ -32,7 +30,7 @@ class Menu{
 
                 //SUBMENU
 
-                $sql = "SELECT MENU_ID,MENU_NAME, MENU_URL FROM FLXY_MENU WHERE MENU_STATUS = 1 AND PARENT_MENU_ID = ".$menu['MENU_ID']." AND  PARENT_MENU_ID > 0"; 
+                $sql = "SELECT MENU_ID,MENU_NAME, MENU_URL FROM FLXY_MENU WHERE MENU_STATUS = 1 AND SHOW_IN_MENU = 1 AND PARENT_MENU_ID = ".$menu['MENU_ID']." AND  PARENT_MENU_ID > 0"; 
                 $subMenu = $this->Db->query($sql)->getResultArray();
                 $subMenuCount = $this->Db->query($sql)->getNumRows();
                 $menu_url = $menu['MENU_URL'];

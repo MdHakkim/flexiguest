@@ -142,6 +142,10 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
         $routes->get("orders-list", "LaundryAmenitiesController::ordersList");
         $routes->post("update-delivery-status", "LaundryAmenitiesController::updateDeliveryStatus");
     });
+
+    $routes->group('housekeeping', function($routes) {
+        $routes->get("all-tasks", "HouseKeepingController::allTasks");
+    });
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  

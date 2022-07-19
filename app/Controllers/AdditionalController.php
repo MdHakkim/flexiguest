@@ -1162,7 +1162,6 @@ class AdditionalController extends BaseController
         {
             $mine      = new ServerSideDataTable(); 
             $tableName = 'FLXY_MENU LEFT JOIN (SELECT MENU_ID AS P_MENU_ID, MENU_NAME AS P_MENU_NAME FROM FLXY_MENU WHERE PARENT_MENU_ID = 0) P ON P.P_MENU_ID = FLXY_MENU.PARENT_MENU_ID';
-
             $columns = 'MENU_ID|MENU_CODE|MENU_NAME|MENU_URL|MENU_DESC|MENU_DIS_SEQ|MENU_STATUS|P_MENU_NAME'; 
 
             $mine->generate_DatatTable($tableName, $columns, [], '|');
@@ -1198,6 +1197,7 @@ class AdditionalController extends BaseController
                     "MENU_DESC" => trim($this->request->getPost('MENU_DESC')),
                     "MENU_ICON" => trim($this->request->getPost('MENU_ICON')),
                     "MENU_DIS_SEQ" => trim($this->request->getPost('MENU_DIS_SEQ')),
+                    "SHOW_IN_MENU" => null !==($this->request->getPost('SHOW_IN_MENU'))? 1:0, 
                     "MENU_STATUS" => null !==($this->request->getPost('MENU_STATUS'))? 1:0               
                 ];
 
@@ -1216,7 +1216,7 @@ class AdditionalController extends BaseController
         public function editMenu()
         {
             $param = ['SYSID' => $this->request->getPost('sysid')];    
-            $sql = "SELECT MENU_ID, PARENT_MENU_ID, MENU_CODE, MENU_NAME,MENU_URL, MENU_DESC, MENU_ICON, MENU_DIS_SEQ, MENU_STATUS
+            $sql = "SELECT MENU_ID, PARENT_MENU_ID, MENU_CODE, MENU_NAME,MENU_URL, MENU_DESC, MENU_ICON, MENU_DIS_SEQ, MENU_STATUS, SHOW_IN_MENU
                     FROM FLXY_MENU
                     WHERE MENU_ID=:SYSID: ";
     
