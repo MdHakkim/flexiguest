@@ -1670,6 +1670,8 @@ class MastersController extends BaseController
             'transactionCodeOptions' => $transactionCodes,
             'pkgTransactionCodeOptions' => $pkgTransactionCodes,
             'toggleButton_javascript' => toggleButton_javascript(),
+            'profileTypeOptions' => profileTypeList(), 
+            'membershipTypes' => getMembershipTypeList(NULL, 'edit'), 
             'clearFormFields_javascript' => clearFormFields_javascript(),
             'blockLoader_javascript' => blockLoader_javascript()
         ];
@@ -1844,11 +1846,16 @@ class MastersController extends BaseController
 
     public function editRateCode($id = 0)
     {
+        $id = (int)$id;
+
+        if(!$id)
+            return redirect()->to(base_url('rateCode'));  
+
         $rateCodeDetails = $this->getRateCodeInfo($id);
 
         if (!$rateCodeDetails) {
             $this->session->setFlashdata('error', 'Rate Code does not exist. Please try again.');
-            return redirect()->route("rateCode");
+            return redirect()->to(base_url('rateCode'));  
         }
 
         // Rate Code Info
@@ -2621,6 +2628,7 @@ class MastersController extends BaseController
             $validate = $this->validate([
                 'PF_GR_CODE' => ['label' => 'Group Code', 'rules' => 'required|is_unique[FLXY_PREFERENCE_GROUP.PF_GR_CODE,PF_GR_ID,' . $sysid . ']'],
                 'PF_GR_DESC' => ['label' => 'Group Description', 'rules' => 'required'],
+                'PF_GR_MAX_QTY' => ['label' => 'Maximum Quantity', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
                 'PF_GR_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
             ]);
             if (!$validate) {
@@ -2638,6 +2646,8 @@ class MastersController extends BaseController
                 "PF_GR_CODE" => trim($this->request->getPost('PF_GR_CODE')),
                 "PF_GR_DESC" => trim($this->request->getPost('PF_GR_DESC')),
                 "PF_GR_DIS_SEQ" => trim($this->request->getPost('PF_GR_DIS_SEQ')) != '' ? trim($this->request->getPost('PF_GR_DIS_SEQ')) : '',
+                "PF_GR_MAX_QTY" => trim($this->request->getPost('PF_GR_MAX_QTY')),
+                "PF_GR_RESV_PREF" => trim($this->request->getPost('PF_GR_RESV_PREF')),
                 "PF_GR_STATUS" => trim($this->request->getPost('PF_GR_STATUS')),
             ];
 
@@ -2685,7 +2695,7 @@ class MastersController extends BaseController
     {
         $param = ['SYSID' => $this->request->getPost('sysid')];
 
-        $sql = "SELECT PF_GR_ID, PF_GR_CODE, PF_GR_DESC, PF_GR_DIS_SEQ, PF_GR_STATUS
+        $sql = "SELECT *
                 FROM FLXY_PREFERENCE_GROUP
                 WHERE PF_GR_ID=:SYSID:";
 

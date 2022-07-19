@@ -305,7 +305,7 @@ class ApplicatioController extends BaseController
                 foreach($currentReservation as $rkey => $rvalue)
                 {
                     // Save changes in log description if data is updated/changed
-                    if( isset($data[$rkey]) && 
+                    if( array_key_exists($rkey, $data) && 
                         (!empty(trim($data[$rkey])) || !empty(trim($rvalue))) && 
                         trim($data[$rkey]) != trim($rvalue))
                     {
@@ -471,7 +471,7 @@ class ApplicatioController extends BaseController
         foreach($currentCustomer as $ckey => $cvalue)
         {
             // Save changes in log description if data is updated/changed
-            if( isset($data[$ckey]) && 
+            if( array_key_exists($ckey, $data) && 
                 (!empty(trim($data[$ckey])) || !empty(trim($cvalue))) && 
                 trim($data[$ckey]) != trim($cvalue))
             {
@@ -580,7 +580,7 @@ class ApplicatioController extends BaseController
                 foreach($currentCustomer as $ckey => $cvalue)
                 {
                     // Save changes in log description if data is updated/changed
-                    if( isset($data[$ckey]) && 
+                    if( array_key_exists($ckey, $data) && 
                         (!empty(trim($data[$ckey])) || !empty(trim($cvalue))) && 
                         trim($data[$ckey]) != trim($cvalue))
                     {
@@ -710,6 +710,8 @@ class ApplicatioController extends BaseController
         $data['profileTypeOptions'] = profileTypeList();
         $data['membershipTypes'] = getMembershipTypeList(NULL, 'edit');
         
+        $data['prefGroupOptions'] = getPreferenceGroupList();
+        $data['prefCodeOptions'] = getPreferenceCodeList(null, 0);
 
         $data['title'] = getMethodName();
         return view('Reservation/Customer', $data);
@@ -979,6 +981,92 @@ class ApplicatioController extends BaseController
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
         $dompdf->stream('Profile_Data_Export_'.$id.'_'.date('Y-m-d-H-i-s').'.pdf');
+    }
+
+    public function CustomerPreferencesView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array(); // Add condition for Customer
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = '  (SELECT FCPF.CUSTOMER_ID, FCPF.GROUP_ID, FPG.PF_GR_CODE, FPG.PF_GR_DESC, PF_CODES.PREFS FROM
+                            (SELECT CUST_ID AS CUSTOMER_ID, PF_GR_ID AS GROUP_ID, PF_CD_ID AS PREFERENCE_ID FROM FLXY_CUSTOMER_PREFERENCE) FCPF
+                            LEFT JOIN FLXY_PREFERENCE_GROUP FPG ON FPG.PF_GR_ID = FCPF.GROUP_ID
+                            LEFT JOIN FLXY_PREFERENCE_CODE FPC ON FPC.PF_CD_ID = FCPF.PREFERENCE_ID
+                            LEFT JOIN ( SELECT FLXY_CUSTOMER_PREFERENCE.PF_GR_ID, STRING_AGG(CONCAT_WS(\' -> \', FLXY_PREFERENCE_CODE.PF_CD_CODE, FLXY_PREFERENCE_CODE.PF_CD_DESC), \', \') AS PREFS
+                                        FROM FLXY_CUSTOMER_PREFERENCE
+                                        LEFT JOIN FLXY_PREFERENCE_GROUP ON FLXY_PREFERENCE_GROUP.PF_GR_ID = FLXY_CUSTOMER_PREFERENCE.PF_GR_ID
+                                        LEFT JOIN FLXY_PREFERENCE_CODE ON FLXY_PREFERENCE_CODE.PF_CD_ID = FLXY_CUSTOMER_PREFERENCE.PF_CD_ID
+                                        WHERE FLXY_CUSTOMER_PREFERENCE.CUST_ID = '.$sysid.'
+                                        GROUP BY FLXY_CUSTOMER_PREFERENCE.PF_GR_ID ) PF_CODES ON PF_CODES.PF_GR_ID = FCPF.GROUP_ID
+                            GROUP BY FCPF.CUSTOMER_ID, FCPF.GROUP_ID, FPG.PF_GR_CODE, FPG.PF_GR_DESC, PF_CODES.PREFS HAVING CUSTOMER_ID = '.$sysid.'
+                        ) PREF_COMB';
+
+        $columns = 'CUSTOMER_ID,GROUP_ID,PF_GR_CODE,PF_GR_DESC,PREFS';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    } 
+
+    public function showPreferenceCodeList()
+    {
+        $response = getPreferenceCodeList($this->request->getGet('codes'), $this->request->getGet('pf_group'));
+        echo json_encode($response);
+    }
+
+    public function insertCustomerPreference()
+    {
+        try {
+            $sysid = $this->request->getPost('CM_ID');
+
+            $validation_rules = [
+                'pref_CUSTOMER_ID' => ['label' => 'Customer', 'rules' => 'required'],
+                'pref_PF_GR_ID' => ['label' => 'Preference Group', 'rules' => 'required'],
+                'pref_PREFS' => ['label' => 'Preferences', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one preference']]
+            ];
+
+            // Check if EXPIRY DATE required for selected Membership Type
+            
+            $validate = $this->validate($validation_rules);
+
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $RT_CD_DT_ROOM_TYPE_IDS = $this->request->getPost('RT_CD_DT_ROOM_TYPES[]');
+
+            if($RT_CD_DT_ROOM_TYPE_IDS != NULL)
+            {
+                foreach($RT_CD_DT_ROOM_TYPE_IDS as $RT_CD_DT_ROOM_TYPE_ID){
+                    $rtKey = array_search($RT_CD_DT_ROOM_TYPE_ID, array_column($allRoomTypes, 'value')); // Find pos of ID in main array                    
+                    $data["RT_CD_DT_ROOM_TYPES"] .= $allRoomTypes[$rtKey]['name'].',';                   // Get corresponding Room Type Code
+                }
+                $data["RT_CD_DT_ROOM_TYPES"] = rtrim($data["RT_CD_DT_ROOM_TYPES"], ',');
+            }
+            
+            $data = [
+                "CUST_ID" => trim($this->request->getPost('CM_CUST_ID')),
+                "MEM_ID" => trim($this->request->getPost('MEM_ID')),
+                "CM_NAME_CARD" => trim($this->request->getPost('CM_NAME_CARD')),
+                "CM_CARD_NUMBER" => trim($this->request->getPost('CM_CARD_NUMBER')),
+                "CM_EXPIRY_DATE" => trim($this->request->getPost('CM_EXPIRY_DATE')),
+                "CM_MEMBER_SINCE" => trim($this->request->getPost('CM_MEMBER_SINCE')),
+                "CM_DIS_SEQ" => !empty($this->request->getPost('CM_DIS_SEQ')) ? trim($this->request->getPost('CM_DIS_SEQ')) : $seqresponse['NEW_DIS_SEQ'],
+                "CM_COMMENTS" => trim($this->request->getPost('CM_COMMENTS')),
+                "CM_STATUS" => null !== $this->request->getPost('CM_STATUS') ? '1' : '0',
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_CUSTOMER_MEMBERSHIP')->where('CM_ID', $sysid)->update($data) : $this->Db->table('FLXY_CUSTOMER_MEMBERSHIP')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
     }
 
     function getSupportingLov(){
