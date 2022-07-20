@@ -1324,6 +1324,21 @@ class AdditionalController extends BaseController
             return $option;
         }
 
+        public function printpdf(){
+            $dompdf = new \Dompdf\Dompdf(); 
+            $data['logo'] = base_url().'/assets/img/farnek.png';
+            $data['base_url'] = '';
+
+            $dompdf->setBasePath('/FlexiGuest/assets');
+            $dompdf->loadHtml(view('Master/printpdf1',$data));
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+            $dompdf->stream('Profile_Data_Export_'.date('Y-m-d-H-i-s').'.pdf');
+            //return view('Master/printpdf');
+        }
+
+
+        
 
     
 
