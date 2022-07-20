@@ -297,7 +297,7 @@ function getPreferenceGroupList()
     return $options;
 }
 
-function getPreferenceCodeList($codes = null, $pfGrp = 0)
+function getPreferenceCodeList($custId = 0, $pfGrp = 0)
 {
     $Db = \Config\Database::connect();
     $request = \Config\Services::request();
@@ -311,14 +311,14 @@ function getPreferenceCodeList($codes = null, $pfGrp = 0)
                 FROM FLXY_PREFERENCE_CODE
                 WHERE PF_CD_STATUS = 1";
 
-        if (trim($pfGrp) != '0') {
+        if (!empty($pfGrp)) {
             $sql .= " AND PF_GR_ID = '$pfGrp'";
         }
         if (trim($search) != '') {
             $sql .= " AND (PF_CD_CODE LIKE '%$search%' OR PF_CD_DESC LIKE '%$search%')";
         }
-        if ($codes != null) {
-            $sql .= " AND PF_CD_CODE IN ('" . str_replace(",", "','", $codes) . "')";
+        if (!empty($custId)) {
+            $sql .= " AND PF_CD_ID IN (SELECT PF_CD_ID FROM FLXY_CUSTOMER_PREFERENCE WHERE CUST_ID = $custId)";
         }
 
         $sql .= " ORDER BY PF_CD_DIS_SEQ ASC";
@@ -331,5 +331,5 @@ function getPreferenceCodeList($codes = null, $pfGrp = 0)
             $options[] = array("id" => $row['PF_CD_ID'], "code" => $row['PF_CD_CODE'], "text" => $row['PF_CD_DESC']);
         }
 
-        return $options;
+        return !empty($pfGrp) ? $options : [];
     }

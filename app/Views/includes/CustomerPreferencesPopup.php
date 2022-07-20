@@ -45,6 +45,7 @@
             <div class="modal-body">
                 <form id="preferenceForm" class="needs-validation" novalidate>
                     <div class="row g-3">
+                        <input type="hidden" name="PF_ID" id="PF_ID" value="" />
                         <input type="hidden" name="pref_CUSTOMER_ID" id="pref_CUSTOMER_ID" />
 
                         <div class="col-md-12">
@@ -105,7 +106,7 @@ $(document).on('click', '.show-cust-preferences', function() {
 
 });
 
-//Show Customer Memberships table in modal
+//Show Customer Preferences table in modal
 
 function showCustomerPreferences(custId = 0) {
 
@@ -182,7 +183,7 @@ function showCustomerPreferences(custId = 0) {
 
 const prefGroupList = <?php echo json_encode($prefGroupOptions); ?>;
 
-function getPreferenceCodes(codes, pf_group) {
+function getPreferenceCodes(custId, pf_group) {
 
     var url = '<?php echo base_url('/showPreferenceCodeList')?>';
     $.ajax({
@@ -192,33 +193,74 @@ function getPreferenceCodes(codes, pf_group) {
             'X-Requested-With': 'XMLHttpRequest'
         },
         data: {
-            codes: codes,
+            custId: custId,
             pf_group: pf_group
         },
         dataType: 'json',
         success: function(respn) {
 
             var prefCodeSelect = $('#pref_PREFS');
+
             prefCodeSelect.empty().trigger("change");
 
             if (respn.length == 0)
                 $("#pref_checkAllSpan").hide();
             else {
                 $("#pref_checkAllSpan").show();
-                $("#pref_checkAll").prop( "checked", false );
+                $("#pref_checkAll").prop("checked", false);
             }
             $(respn).each(function(inx, data) {
-                var newOption = new Option(data.code + ' | ' + data.text, data.id, false, false);
+                var newOption = new Option(data.code + ' | ' + data.text, data.id, false,
+                    false);
                 prefCodeSelect.append(newOption);
             });
             prefCodeSelect.val(null).trigger('change');
+
+            if (mode = 'add') {
+
+            } else if (mode = 'edit') {
+                var selPreferenceCodes = [];
+                $(respn).each(function(inx, data) {
+                    selPreferenceCodes.push(data['id']);
+                });
+
+                prefCodeSelect.val(selPreferenceCodes).trigger('change');
+            }
+        }
+    });
+}
+
+function setPreferenceCodeOptions(custId, pf_group) {
+
+    var url = '<?php echo base_url('/showPreferenceCodeList')?>';
+    $.ajax({
+        url: url,
+        type: "get",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            custId: custId,
+            pf_group: pf_group
+        },
+        dataType: 'json',
+        success: function(respn) {
+
+            var prefCodeSelect = $('#pref_PREFS');
+
+            var selPreferenceCodes = [];
+            $(respn).each(function(inx, data) {
+                selPreferenceCodes.push(data['id']);
+            });
+
+            prefCodeSelect.val(selPreferenceCodes).trigger('change');
         }
     });
 }
 
 $('#pref_PF_GR_ID').on('change.select2', function() {
 
-    getPreferenceCodes('', $(this).val());
+    getPreferenceCodes('0', $(this).val());
 });
 
 $("#pref_checkAll").click(function() {
@@ -237,18 +279,20 @@ $(document).on('click', '.edit-preference', function() {
 
     $('#PF_ID').val('1');
     $('#pref_PF_GR_ID').val($(this).attr('data-group-id')).trigger('change');
-    
+
     $('#addPreferencelabel').html('Edit Preference');
 
     $('#customerPreferencesWindow').modal('hide');
     $('#addPreference').modal('show');
+
+    setPreferenceCodeOptions($(this).attr('data-customer-id'), $(this).attr('data-group-id'));
 });
 
 function addPreferenceForm() {
 
     $("#PF_ID").val("");
     $('#pref_PF_GR_ID').val(null).trigger('change');
-    
+
     $('#addPreferencelabel').html('Add New Preference');
 
     $('#customerPreferencesWindow').modal('hide');
@@ -294,10 +338,60 @@ function submitPreferenceForm(id) {
 
                 $('#addPreference').modal('hide');
                 showCustomerPreferences($('#pref_CUSTOMER_ID').val());
-                $('#customer_preferences').dataTable().fnDraw();
+
                 $('#customerPreferencesWindow').modal('show');
             }
         }
     });
 }
+
+$(document).on('click', '.delete-preference', function() {
+    hideModalAlerts();
+
+    var custId = $(this).attr('data-customer-id');
+    var pf_group = $(this).attr('data-group-id');
+
+    bootbox.confirm({
+        message: "Are you sure you want to delete this preference?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function(result) {
+            if (result) {
+                $.ajax({
+                    url: '<?php echo base_url('/deletePreference')?>',
+                    type: "post",
+                    data: {
+                        custId: custId,
+                        pf_group: pf_group
+                    },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    dataType: 'json',
+                    success: function(respn) {
+                        showModalAlert('warning',
+                            '<li>The Preference has been deleted</li>'
+                        );
+                        showCustomerPreferences(custId);
+                    }
+                });
+            }
+        }
+    });
+});
+
+$(document).on('hide.bs.modal', '#addPreference', function() {
+
+    showCustomerPreferences($('#pref_CUSTOMER_ID').val());
+    $('#customerPreferencesWindow').modal('show');
+
+});
 </script>
