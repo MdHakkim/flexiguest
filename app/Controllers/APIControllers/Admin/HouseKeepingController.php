@@ -51,9 +51,9 @@ class HouseKeepingController extends BaseController
                 (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS = 'Rejected') as REJECTED_COUNT,
                 "
             )
-            ->join('FLXY_HK_TASKS', 'HKAT_TASK_ID = HKT_ID')
-            ->join('FLXY_ROOM', 'HKAT_ROOM_ID = RM_ID')
-            ->join('FLXY_USERS', 'HKAT_ATTENDANT_ID = USR_ID')
+            ->join('FLXY_HK_TASKS', 'HKAT_TASK_ID = HKT_ID', 'left')
+            ->join('FLXY_ROOM', 'HKAT_ROOM_ID = RM_ID', 'left')
+            ->join('FLXY_USERS', 'HKAT_ATTENDANT_ID = USR_ID', 'left')
             ->findAll();
 
         return $this->respond(responseJson(200, false, ['msg' => 'All Tasks'], $all_tasks));
@@ -63,10 +63,15 @@ class HouseKeepingController extends BaseController
     {
         $data = $this->HKAssignedTask
             ->select('FLXY_HK_ASSIGNED_TASKS.*, RM_NO')
-            ->join('FLXY_ROOM', 'HKAT_ROOM_ID = RM_ID')
+            ->join('FLXY_ROOM', 'HKAT_ROOM_ID = RM_ID', 'left')
             ->find($task_id);
 
-        $notes = $this->HKAssignedTaskNote->where('ATN_ASSIGNED_TASK_ID', $task_id)->findAll();
+        $notes = $this->HKAssignedTaskNote
+            ->select('FLXY_HK_ASSIGNED_TASK_NOTES.*, USR_NAME')
+            ->join('FlXY_USERS', 'ATN_USER_ID = USR_ID', 'left')
+            ->where('ATN_ASSIGNED_TASK_ID', $task_id)
+            ->findAll();
+
         foreach ($notes as $index => $note) {
             $attachments = $this->HKAssignedTaskNoteAttachment
                 ->where('ATNA_NOTE_ID', $note['ATN_ID'])
@@ -88,15 +93,18 @@ class HouseKeepingController extends BaseController
         $data['NOTES'] = $notes;
 
         $task_details = $this->HKAssignedTaskDetail
-            ->select('FLXY_HK_ASSIGNED_TASK_DETAILS.*, 
-                HKST_DESCRIPTION')
-            ->join('FLXY_HK_SUBTASKS', 'HKATD_SUBTASK_ID = HKST_ID')
+            ->select('FLXY_HK_ASSIGNED_TASK_DETAILS.*, HKST_DESCRIPTION')
+            ->join('FLXY_HK_SUBTASKS', 'HKATD_SUBTASK_ID = HKST_ID', 'left')
             ->where('HKATD_ASSIGNED_TASK_ID', $task_id)
             ->findAll();
 
-        foreach($task_details as $index => $task_detail)
-            $task_details[$index]['NOTES'] = $this->HKAssignedTaskDetailNote->where('ATDN_ASSIGNED_TASK_DETAIL_ID', $task_detail['HKATD_ID'])->findAll();
-        
+        foreach ($task_details as $index => $task_detail)
+            $task_details[$index]['NOTES'] = $this->HKAssignedTaskDetailNote
+                ->select('FLXY_HK_ASSIGNED_TASK_DETAIL_NOTES.*, USR_NAME')
+                ->join('FlXY_USERS', 'ATDN_USER_ID = USR_ID', 'left')
+                ->where('ATDN_ASSIGNED_TASK_DETAIL_ID', $task_detail['HKATD_ID'])
+                ->findAll();
+
         $data['TASK_DETAILS'] = $task_details;
 
         return $this->respond(responseJson(200, false, ['msg' => 'Task Details'], $data));
