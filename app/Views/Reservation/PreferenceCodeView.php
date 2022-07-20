@@ -19,7 +19,6 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th></th>
                             <th>Preference Code</th>
                             <th>Description</th>
                             <th>Preference Group</th>
@@ -59,7 +58,7 @@
                                                 *</b></label>
                                         <div class="col-md-3">
                                             <input type="text" name="PF_CD_CODE" id="PF_CD_CODE"
-                                                class="form-control bootstrap-maxlength" maxlength="10"
+                                                class="form-control bootstrap-maxlength" maxlength="30"
                                                 placeholder="eg: 1001" required />
                                         </div>
                                     </div>
@@ -265,7 +264,7 @@ $(document).ready(function() {
             width: "10%"
         }],
         "order": [
-            [4, "asc"]
+            [1, "asc"]
         ],
         destroy: true,
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',

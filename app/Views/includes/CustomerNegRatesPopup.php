@@ -118,6 +118,8 @@ $(document).on('click', '.show-cust-negotiated-rates', function() {
     var custOptId = $(this).attr('data_sysid');
     var custName = $(this).attr('data_custname');
 
+    $('#customerNegotiatedRatesWindow').modal('show');
+
     showCustomerNegotiatedRates(custOptId);
 
     $('#customerNegotiatedRatesWindowLabel').html('Negotiated Rates of Profile: ' + custName);

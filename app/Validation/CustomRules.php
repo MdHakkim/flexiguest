@@ -127,6 +127,11 @@ class CustomRules{
     return ($response==0 ? true : false);
   }
 
+  public function checkMaxItems(string $str, string $fields, array $data)
+  {    
+    return count($_POST['pref_PREFS']) > $fields ? false : true;
+  }  
+
   public function checkAvailableItemQty(string $str, string $fields, array $data)
   {
     /**

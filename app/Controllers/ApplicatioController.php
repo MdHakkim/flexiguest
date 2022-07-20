@@ -305,7 +305,7 @@ class ApplicatioController extends BaseController
                 foreach($currentReservation as $rkey => $rvalue)
                 {
                     // Save changes in log description if data is updated/changed
-                    if( isset($data[$rkey]) && 
+                    if( array_key_exists($rkey, $data) && 
                         (!empty(trim($data[$rkey])) || !empty(trim($rvalue))) && 
                         trim($data[$rkey]) != trim($rvalue))
                     {
@@ -471,7 +471,7 @@ class ApplicatioController extends BaseController
         foreach($currentCustomer as $ckey => $cvalue)
         {
             // Save changes in log description if data is updated/changed
-            if( isset($data[$ckey]) && 
+            if( array_key_exists($ckey, $data) && 
                 (!empty(trim($data[$ckey])) || !empty(trim($cvalue))) && 
                 trim($data[$ckey]) != trim($cvalue))
             {
@@ -580,7 +580,7 @@ class ApplicatioController extends BaseController
                 foreach($currentCustomer as $ckey => $cvalue)
                 {
                     // Save changes in log description if data is updated/changed
-                    if( isset($data[$ckey]) && 
+                    if( array_key_exists($ckey, $data) && 
                         (!empty(trim($data[$ckey])) || !empty(trim($cvalue))) && 
                         trim($data[$ckey]) != trim($cvalue))
                     {
@@ -710,6 +710,7 @@ class ApplicatioController extends BaseController
         $data['profileTypeOptions'] = profileTypeList();
         $data['membershipTypes'] = getMembershipTypeList(NULL, 'edit');
         
+        $data['prefGroupOptions'] = getPreferenceGroupList();
 
         $data['title'] = getMethodName();
         return view('Reservation/Customer', $data);
@@ -979,6 +980,143 @@ class ApplicatioController extends BaseController
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
         $dompdf->stream('Profile_Data_Export_'.$id.'_'.date('Y-m-d-H-i-s').'.pdf');
+    }
+
+    public function CustomerPreferencesView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array(); // Add condition for Customer
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = '  (SELECT FCPF.CUSTOMER_ID, FCPF.GROUP_ID, FPG.PF_GR_CODE, FPG.PF_GR_DESC, PF_CODES.PREFS FROM
+                            (SELECT CUST_ID AS CUSTOMER_ID, PF_GR_ID AS GROUP_ID, PF_CD_ID AS PREFERENCE_ID FROM FLXY_CUSTOMER_PREFERENCE) FCPF
+                            LEFT JOIN FLXY_PREFERENCE_GROUP FPG ON FPG.PF_GR_ID = FCPF.GROUP_ID
+                            LEFT JOIN FLXY_PREFERENCE_CODE FPC ON FPC.PF_CD_ID = FCPF.PREFERENCE_ID
+                            LEFT JOIN ( SELECT FLXY_CUSTOMER_PREFERENCE.PF_GR_ID, STRING_AGG(CONCAT_WS(\' -> \', FLXY_PREFERENCE_CODE.PF_CD_CODE, FLXY_PREFERENCE_CODE.PF_CD_DESC), \'<br/>\') AS PREFS
+                                        FROM FLXY_CUSTOMER_PREFERENCE
+                                        LEFT JOIN FLXY_PREFERENCE_GROUP ON FLXY_PREFERENCE_GROUP.PF_GR_ID = FLXY_CUSTOMER_PREFERENCE.PF_GR_ID
+                                        LEFT JOIN FLXY_PREFERENCE_CODE ON FLXY_PREFERENCE_CODE.PF_CD_ID = FLXY_CUSTOMER_PREFERENCE.PF_CD_ID
+                                        WHERE FLXY_CUSTOMER_PREFERENCE.CUST_ID = '.$sysid.'
+                                        GROUP BY FLXY_CUSTOMER_PREFERENCE.PF_GR_ID ) PF_CODES ON PF_CODES.PF_GR_ID = FCPF.GROUP_ID
+                            GROUP BY FCPF.CUSTOMER_ID, FCPF.GROUP_ID, FPG.PF_GR_CODE, FPG.PF_GR_DESC, PF_CODES.PREFS HAVING CUSTOMER_ID = '.$sysid.'
+                        ) PREF_COMB';
+
+        $columns = 'CUSTOMER_ID,GROUP_ID,PF_GR_CODE,PF_GR_DESC,PREFS';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    } 
+
+    public function showPreferenceCodeList()
+    {
+        $response = getPreferenceCodeList($this->request->getGet('custId'), $this->request->getGet('pf_group'));
+        echo json_encode($response);
+    }
+
+    public function insertCustomerPreference()
+    {
+        $custId = trim($this->request->getPost('pref_CUSTOMER_ID'));
+        $pfGrp  = trim($this->request->getPost('pref_PF_GR_ID'));
+        
+        try {
+
+            $validation_rules = [
+                'pref_CUSTOMER_ID' => ['label' => 'Customer', 'rules' => 'required'],
+                'pref_PF_GR_ID' => ['label' => 'Preference Group', 'rules' => 'required'],
+                'pref_PREFS.*' => ['label' => 'Preferences', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one preference']]
+            ];
+
+            // Check if EXPIRY DATE required for selected Membership Type
+            if(null !== $this->request->getPost('pref_PF_GR_ID'))
+            {
+                $param = ['SYSID' => $this->request->getPost('pref_PF_GR_ID')];
+
+                $sql = "SELECT PFG.PF_GR_MAX_QTY
+                        FROM dbo.FLXY_PREFERENCE_GROUP AS PFG
+                        WHERE PF_GR_ID=:SYSID:";
+
+                $response = $this->Db->query($sql, $param)->getRowArray();
+
+                if(!empty($response['PF_GR_MAX_QTY'])){
+                    $validation_rules['pref_PREFS.*']['rules'] = 'required|checkMaxItems['.$response['PF_GR_MAX_QTY'].']';
+                    $validation_rules['pref_PREFS.*']['errors']['checkMaxItems'] = 'You can only select '.$response['PF_GR_MAX_QTY'].' preference(s)';
+                }
+            }
+            
+            $validate = $this->validate($validation_rules);
+
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+            
+            //Delete all Customer Preferences
+            $this->deleteCustomerPreference($custId, $pfGrp);
+
+            $PREFERENCE_CODE_IDS = $this->request->getPost('pref_PREFS[]');
+
+            $no_of_added = 0;
+            if($PREFERENCE_CODE_IDS != NULL)
+            {
+                foreach($PREFERENCE_CODE_IDS as $PREFERENCE_CODE_ID){
+                    $data = [
+                        "CUST_ID"  => trim($this->request->getPost('pref_CUSTOMER_ID')),
+                        "PF_GR_ID" => trim($this->request->getPost('pref_PF_GR_ID')),
+                        "PF_CD_ID" => $PREFERENCE_CODE_ID,
+                        "CPF_ADDED_ON" => date('Y-m-d H:i:s')
+                    ];
+
+                    if($this->Db->table('FLXY_CUSTOMER_PREFERENCE')->insert($data))
+                        $no_of_added++;
+                }
+            }
+            
+            $result = $no_of_added > 0 ? $this->responseJson("1", "0", "1", $no_of_added) : $this->responseJson("-444", "db insert not successful", "0");
+            echo json_encode($result);
+            
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function deleteCustomerPreference($custId, $pfGrp)
+    {
+        $sql = "SELECT CPF_ID
+                FROM FLXY_CUSTOMER_PREFERENCE
+                WHERE CUST_ID = $custId";
+
+        if(!empty($pfGrp))
+            $sql .= " AND PF_GR_ID = '" . $pfGrp . "'";
+
+        $response = $this->Db->query($sql)->getNumRows();
+
+        if($response < 1) // Check if Preference can be deleted
+           return false;
+        else
+        {
+            try {
+                $delCond = ['CUST_ID' => $custId];
+                if(!empty($pfGrp)) $delCond['PF_GR_ID'] = $pfGrp;
+                
+                $return = $this->Db->query("DELETE FROM FLXY_CUSTOMER_PREFERENCE WHERE CUST_ID = $custId AND PF_GR_ID = $pfGrp"); 
+                return $return;
+            } catch (Exception $e) {
+                return false;
+            }
+        }
+    }
+
+    public function deletePreference()
+    {
+        $return = $this->deleteCustomerPreference(trim($this->request->getPost('custId')), trim($this->request->getPost('pf_group')));
+
+        $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+        
+        echo json_encode($result);
     }
 
     function getSupportingLov(){

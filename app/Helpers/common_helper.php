@@ -154,10 +154,12 @@ function mergeCustomer($pmCustId, $ogCustId)
         {
             if(in_array($col, $ignore_cols)) continue;
 
-            if( isset($og_cust_data[$col]) && empty(trim($og_cust_data[$col])) && !empty(trim($value)) ){
+            if( array_key_exists($col, $og_cust_data) && empty(trim($og_cust_data[$col])) && !empty(trim($value)) ){
                 $up_cust_data[$col] = $value;
             }
         }
+
+        //echo "<pre>"; print_r($up_cust_data); echo "</pre>"; echo "<pre>"; exit;
 
         //Update Customer Table
         if($up_cust_data != NULL)
@@ -273,3 +275,61 @@ function mergeCustomer($pmCustId, $ogCustId)
         return true;
     }
 }
+
+function getPreferenceGroupList()
+{
+    $Db = \Config\Database::connect();
+
+    $sql = "SELECT  PF_GR_ID, RTRIM(LTRIM(REPLACE(REPLACE(REPLACE(PF_GR_CODE, CHAR(9), ' '), CHAR(10), ' '), CHAR(13), ' '))) AS PF_GR_CODE,
+                    PF_GR_DESC
+
+            FROM FLXY_PREFERENCE_GROUP
+            WHERE PF_GR_STATUS = 1";
+            
+    $response = $Db->query($sql)->getResultArray();
+
+    $options = array();
+
+    foreach ($response as $row) {
+        $options[] = array( "id" => $row['PF_GR_ID'], "value" => $row['PF_GR_CODE']. ' | ' .$row['PF_GR_DESC']);
+    }
+
+    return $options;
+}
+
+function getPreferenceCodeList($custId = 0, $pfGrp = 0)
+{
+    $Db = \Config\Database::connect();
+    $request = \Config\Services::request();
+
+    
+    $search = $request->getPost('search');
+
+        $sql = "SELECT  PF_CD_ID, RTRIM(LTRIM(REPLACE(REPLACE(REPLACE(PF_CD_CODE, CHAR(9), ' '), CHAR(10), ' '), CHAR(13), ' '))) AS PF_CD_CODE,
+                        PF_CD_DESC
+
+                FROM FLXY_PREFERENCE_CODE
+                WHERE PF_CD_STATUS = 1";
+
+        if (!empty($pfGrp)) {
+            $sql .= " AND PF_GR_ID = '$pfGrp'";
+        }
+        if (trim($search) != '') {
+            $sql .= " AND (PF_CD_CODE LIKE '%$search%' OR PF_CD_DESC LIKE '%$search%')";
+        }
+        if (!empty($custId)) {
+            $sql .= " AND PF_CD_ID IN (SELECT PF_CD_ID FROM FLXY_CUSTOMER_PREFERENCE WHERE CUST_ID = $custId)";
+        }
+
+        $sql .= " ORDER BY PF_CD_DIS_SEQ ASC";
+
+        $response = $Db->query($sql)->getResultArray();
+
+        $options = array();
+
+        foreach ($response as $row) {
+            $options[] = array("id" => $row['PF_CD_ID'], "code" => $row['PF_CD_CODE'], "text" => $row['PF_CD_DESC']);
+        }
+
+        return !empty($pfGrp) ? $options : [];
+    }

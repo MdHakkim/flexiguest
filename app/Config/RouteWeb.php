@@ -310,7 +310,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertPreferenceCode', 'MastersController::insertPreferenceCode');
     $routes->match(['post'],'/editPreferenceCode', 'MastersController::editPreferenceCode');
     $routes->match(['post'],'/deletePreferenceCode', 'MastersController::deletePreferenceCode');
-    
+
+    $routes->match(['post'],'/customerPreferenceView', 'ApplicatioController::CustomerPreferencesView');
+    $routes->get('/showPreferenceCodeList', 'ApplicatioController::showPreferenceCodeList');
+    $routes->match(['post'],'/insertCustomerPreference', 'ApplicatioController::insertCustomerPreference');
+    $routes->match(['post'],'/deletePreference', 'ApplicatioController::deletePreference');  
+
 
     // Code By ALEESHA 
     // Maintenance Request 

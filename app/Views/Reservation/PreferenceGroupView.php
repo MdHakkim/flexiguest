@@ -51,21 +51,46 @@
 
                             <div class="col-md-7">
                                 <label class="form-label"><b>Group Code *</b></label>
-                                <input type="text" name="PF_GR_CODE" id="PF_GR_CODE" class="form-control bootstrap-maxlength"
-                                    maxlength="10" placeholder="eg: OTA" required />
+                                <input type="text" name="PF_GR_CODE" id="PF_GR_CODE"
+                                    class="form-control bootstrap-maxlength" maxlength="10" placeholder="eg: OTA"
+                                    required />
                             </div>
                             <div class="col-md-8">
                                 <label class="form-label"><b>Group Description *</b></label>
-                                <input type="text" name="PF_GR_DESC" id="PF_GR_DESC" class="form-control bootstrap-maxlength"
-                                    maxlength="50" placeholder="eg: Online Travel Agent" required />
+                                <input type="text" name="PF_GR_DESC" id="PF_GR_DESC"
+                                    class="form-control bootstrap-maxlength" maxlength="50"
+                                    placeholder="eg: Online Travel Agent" required />
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Display Sequence</label>
-                                <input type="number" name="PF_GR_DIS_SEQ" id="PF_GR_DIS_SEQ" class="form-control" min="0"
-                                    placeholder="eg: 3" />
+                                <input type="number" name="PF_GR_DIS_SEQ" id="PF_GR_DIS_SEQ" class="form-control"
+                                    min="0" placeholder="eg: 3" />
                             </div>
 
-                            <div class="col-md-6">
+                            
+                            <div class="col-md-4">
+                                <label class="form-label">Maximum Quantity</label>
+                                <input type="number" name="PF_GR_MAX_QTY" id="PF_GR_MAX_QTY" class="form-control"
+                                    min="0" placeholder="eg: 3" />
+                            </div>
+
+                            <div class="col-md-9">
+                                <label class="switch">
+                                    <input id="PF_GR_RESV_PREF" name="PF_GR_RESV_PREF" type="checkbox" value="1"
+                                        class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="bx bx-check"></i>
+                                        </span>
+                                        <span class="switch-off">
+                                            <i class="bx bx-x"></i>
+                                        </span>
+                                    </span>
+                                    <span class="switch-label">Reservation Preference</span>
+                                </label>
+                            </div>
+
+                            <div class="col-md-3">
                                 <label class="switch">
                                     <input id="PF_GR_STATUS" name="PF_GR_STATUS" type="checkbox" value="1"
                                         class="switch-input" />
@@ -148,47 +173,54 @@ $(document).ready(function() {
             },
         ],
         columnDefs: [{
-            width: "7%",
-            className: 'control',
-            responsivePriority: 1,
-            orderable: false,
-            targets: 0,
-            searchable: false,
-            render: function(data, type, full, meta) {
-                return '';
+                width: "7%",
+                className: 'control',
+                responsivePriority: 1,
+                orderable: false,
+                targets: 0,
+                searchable: false,
+                render: function(data, type, full, meta) {
+                    return '';
+                }
+            }, {
+                width: "15%"
+            }, {
+                width: "18%"
+            }, {
+                width: "16%"
+            },
+            {
+                // Label
+                targets: -2,
+                width: "15%",
+                render: function(data, type, full, meta) {
+                    var $status_number = full['PF_GR_STATUS'];
+                    var $status = {
+                        0: {
+                            title: 'Inactive',
+                            class: 'bg-label-danger'
+                        },
+                        1: {
+                            title: 'Active',
+                            class: 'bg-label-success'
+                        }
+                    };
+                    if (typeof $status[$status_number] === 'undefined') {
+                        return data;
+                    }
+                    return (
+                        '<span class="badge rounded-pill ' +
+                        $status[$status_number].class +
+                        '">' +
+                        $status[$status_number].title +
+                        '</span>'
+                    );
+                }
+            },
+            {
+                width: "10%"
             }
-        }, {
-            width: "15%"
-        }, {
-            width: "18%"
-        }, {
-            width: "16%"
-        }, 
-        {
-          // Label
-          targets: -2,
-          width: "15%",
-          render: function (data, type, full, meta) {
-            var $status_number = full['PF_GR_STATUS'];
-            var $status = {
-              0: { title: 'Inactive', class: 'bg-label-danger' },
-              1: { title: 'Active', class: 'bg-label-success' }
-            };
-            if (typeof $status[$status_number] === 'undefined') {
-              return data;
-            }
-            return (
-              '<span class="badge rounded-pill ' +
-              $status[$status_number].class +
-              '">' +
-              $status[$status_number].title +
-              '</span>'
-            );
-          }
-        },
-        {
-            width: "10%"
-        }],
+        ],
         "order": [
             [3, "asc"]
         ],
@@ -248,6 +280,7 @@ function addForm() {
     $("#PF_GR_CODE").prop("readonly", false);
 
     $('#popModalWindow').modal('show');
+    $("#PF_GR_STATUS,#PF_GR_RESV_PREF").prop('checked', 'checked');
 }
 
 // Delete Preference Group
@@ -359,12 +392,12 @@ function submitForm(id) {
         },
         dataType: 'json',
         success: function(respn) {
-            
+
             var response = respn['SUCCESS'];
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
-                $.each(ERROR, function(ind, data) {                    
+                $.each(ERROR, function(ind, data) {
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);

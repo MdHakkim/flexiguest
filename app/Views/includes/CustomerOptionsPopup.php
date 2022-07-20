@@ -9,22 +9,21 @@
             </div>
             <div class="modal-body">
                 <div class="flxy_opt_btn text-center">
-                    <button type="button" class="btn btn-primary show-cust-activity-log" data_sysid="" data_custname=""
-                        data-bs-toggle="modal" data-bs-target="#customerChangesWindow">Changes</button>
+                    <button type="button" class="btn btn-primary show-cust-activity-log" data_sysid=""
+                        data_custname="">Changes</button>
                     <button type="button" class="btn btn-primary data-port" data_sysid="" data_custname="">Data
                         Porting</button>
                     <button type="button" class="btn btn-primary delete-record" data_sysid=""
                         data_custname="">Delete</button><br />
-                    <button type="button" class="btn btn-primary show-cust-memberships" data_sysid="" data_custname=""
-                        data-bs-toggle="modal" data-bs-target="#customerMembershipsWindow" data_sysid=""
+                    <button type="button" class="btn btn-primary show-cust-memberships" data_sysid=""
                         data_custname="">Memberships</button>
                     <button type="button" class="btn btn-primary merge-profile" data_sysid=""
                         data_custname="">Merge</button>
                     <button type="button" title="Negotiated Rates" class="btn btn-primary show-cust-negotiated-rates"
-                        data_sysid="" data_custname="" data-bs-toggle="modal"
-                        data-bs-target="#customerNegotiatedRatesWindow" data_sysid="" data_custname="">Neg.
+                        data_sysid="" data_custname="">Neg.
                         Rates</button><br />
-                    <button type="button" class="btn btn-primary">Preferences</button>
+                    <button type="button" class="btn btn-primary show-cust-preferences" data_sysid=""
+                        data_custname="">Preferences</button>
                 </div>
             </div>
         </div>
@@ -122,8 +121,10 @@ $(document).on('click', '.custOptions', function() {
     $('.modal').modal('hide');
     $('#custOptionsWindow').modal('show');
 
+    $('#custOptionsWindowLabel').html('Profile Options of : ' + custName);
+
     $('#custOptionsWindow').find(
-            '.data-port,.delete-record,.show-cust-activity-log,.show-cust-memberships,.show-cust-negotiated-rates,.merge-profile'
+            '.data-port,.delete-record,.show-cust-activity-log,.show-cust-memberships,.show-cust-negotiated-rates,.merge-profile,.show-cust-preferences'
         )
         .attr({
             'data_sysid': custOptId,
@@ -177,6 +178,8 @@ $(document).on('click', '.show-cust-activity-log', function() {
 
     var custOptId = $(this).attr('data_sysid');
     var custName = $(this).attr('data_custname');
+
+    $('#customerChangesWindow').modal('show');
 
     showCustomerChanges(custOptId);
 
@@ -297,6 +300,8 @@ $(document).on('click', '.show-cust-memberships', function() {
 
     var custOptId = $(this).attr('data_sysid');
     var custName = $(this).attr('data_custname');
+
+    $('#customerMembershipsWindow').modal('show');
 
     showCustomerMemberships(custOptId);
 
@@ -522,3 +527,5 @@ function afterMemFormClose() {
 <?= $this->include('includes/CustomerNegRatesPopup') ?>
 
 <?= $this->include('includes/ProfileMergePopup') ?>
+
+<?= $this->include('includes/CustomerPreferencesPopup') ?>
