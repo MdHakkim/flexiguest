@@ -100,21 +100,33 @@ class HouseKeepingController extends BaseController
         return $this->respond(responseJson(200, false, ['msg' => 'Task Details'], $data));
     }
 
-    public function markSubtaskCompletedInspected($subtask_id)
+    public function markSubtaskCompletedInspected()
     {
         $user = $this->request->user;
-        $sub_task = $this->HKAssignedTaskDetail->find($subtask_id);
-        if (empty($sub_task))
-            return $this->respond(responseJson(404, true, ['msg' => 'No Task found.']));
+        $subtask_ids = $this->request->getVar('subtask_ids');
+
+        foreach ($subtask_ids as $subtask_id) {
+            $sub_task = $this->HKAssignedTaskDetail->find($subtask_id);
+            if (empty($sub_task))
+                return $this->respond(responseJson(404, true, ['msg' => 'No Task found.']));
+            
+            if($sub_task['HKATD_STATUS'] == 'In Progress')
+                return $this->respond(responseJson(202, true, ['msg' => 'Not All tasks are completed.']));
+        }
 
         if ($user['USR_ROLE'] == 'attendee') {
-            $sub_task['HKATD_STATUS'] = 'Completed';
-            $sub_task['HKATD_COMPLETION_TIME'] = date('Y-m-d H:i:s');
-        }else{
-            $sub_task['HKATD_INSPECTED_STATUS'] = 'Inspected';
-            $sub_task['HKATD_INSPECTED_DATETIME'] = date('Y-m-d H:i:s');
+            $data = [
+                'HKATD_STATUS' => 'Completed',
+                'HKATD_COMPLETION_TIME' => date('Y-m-d H:i:s')
+            ];
+        } else {
+            $data = [
+                'HKATD_INSPECTED_STATUS' => 'Inspected',
+                'HKATD_INSPECTED_DATETIME' => date('Y-m-d H:i:s')
+            ];
         }
-        $this->HKAssignedTaskDetail->save($sub_task);
+
+        $this->HKAssignedTaskDetail->whereIn('HKATD_ID', $subtask_ids)->set($data)->update();
 
         return $this->respond(responseJson(200, false, ['msg' => 'Completed successfully.']));
     }
@@ -195,7 +207,7 @@ class HouseKeepingController extends BaseController
             $subtask['HKATD_STATUS'] = $status;
         else {
             if ($status == 'Inspected') {
-                if($subtask['HKATD_STATUS'] != 'Completed')
+                if ($subtask['HKATD_STATUS'] == 'In Progress')
                     return $this->respond(responseJson(202, true, ['msg' => 'This task is not completed yet.']));
 
                 $subtask['HKATD_INSPECTED_STATUS'] = 'Inspected';
