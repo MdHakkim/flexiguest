@@ -552,12 +552,22 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     });
 
     $routes->group('transport-type', function ($routes) { 
-        $routes->get('', 'TransportController::transportType');
-        $routes->post('all-transport-types', 'TransportController::allTransportTypes');
-        $routes->post('store', 'TransportController::store');
-        $routes->post('edit', 'TransportController::edit');
-        $routes->delete('delete', 'TransportController::delete');
+        $routes->get('', 'TransportTypeController::transportType');
+        $routes->post('all-transport-types', 'TransportTypeController::allTransportTypes');
+        $routes->post('store', 'TransportTypeController::store');
+        $routes->post('edit', 'TransportTypeController::edit');
+        $routes->delete('delete', 'TransportTypeController::delete');
     });
+
+    $routes->group('transport/pickup-point', function ($routes) { 
+        $routes->get('', 'PickupPointController::pickupPoint');
+        $routes->post('all-pickup-points', 'PickupPointController::allPickupPoints');
+        $routes->post('store', 'PickupPointController::store');
+        $routes->post('edit', 'PickupPointController::edit');
+        $routes->delete('delete', 'PickupPointController::delete');
+    });
+
+
 
     // ABUBAKAR CODE (END)
 });
