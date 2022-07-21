@@ -499,7 +499,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/updateFixedCharges', 'ApplicatioController::updateFixedCharges');
       $routes->match(['post'],'/showFixedChargeDetails', 'ApplicatioController::showFixedChargeDetails');
       $routes->match(['post'],'/deleteFixedcharge', 'ApplicatioController::deleteFixedcharge');
-      $routes->match(['post'],'/getReservDetails', 'ApplicatioController::getReservDetails');   
+      $routes->match(['post'],'/getReservDetails', 'ApplicatioController::getReservDetails');
+      
+      $routes->get('/printpdf', 'AdditionalController::printpdf');
       
      
       

@@ -2380,7 +2380,7 @@
 
     $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
         ////Item Inventory
-        showInventoryItems();
+       // showInventoryItems();
         itemClassList();
 
         $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
