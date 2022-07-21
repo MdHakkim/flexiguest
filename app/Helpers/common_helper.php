@@ -332,4 +332,17 @@ function getPreferenceCodeList($custId = 0, $pfGrp = 0)
         }
 
         return !empty($pfGrp) ? $options : [];
-    }
+}
+
+    
+function geUsersList()
+{
+        $Db = \Config\Database::connect();
+
+        $sql = "SELECT USR_ID, USR_NAME, USR_EMAIL, USR_ROLE_ID
+                FROM FlXY_USERS WHERE USR_CUST_ID IS NULL AND USR_STATUS = 1";
+
+        $response = $Db->query($sql)->getResultArray();
+
+        return $response;
+}

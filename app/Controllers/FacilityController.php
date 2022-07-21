@@ -390,9 +390,9 @@ class FacilityController extends BaseController
                         "MAINT_CAT_ID" => $this->request->getPost("MAINT_CATEGORY"),
                         "MAINT_SUBCATEGORY" => $this->request->getPost("MAINT_SUBCATEGORY"),
                         "MAINT_SUBCAT_CREATE_DT" => date("d-M-Y"),
-                        "MAINT_SUBCAT_CREATE_UID" => $this->session->name,
+                        "MAINT_SUBCAT_CREATE_UID" => session()->get('USR_ID'),
                         "MAINT_SUBCAT_UPDATE_DT" => date("d-M-Y"),
-                        "MAINT_SUBCAT_UPDATE_UID" => $this->session->name,
+                        "MAINT_SUBCAT_UPDATE_UID" => session()->get('USR_ID'),
                     ];
                 $ins = $this->Db->table('FLXY_MAINTENANCE_SUBCATEGORY')->insert($data);
             } else {
@@ -401,9 +401,9 @@ class FacilityController extends BaseController
                         "MAINT_CAT_ID" => $this->request->getPost("MAINT_CATEGORY"),
                         "MAINT_SUBCATEGORY" => $this->request->getPost("MAINT_SUBCATEGORY"),
                         "MAINT_SUBCAT_CREATE_DT" => date("d-M-Y"),
-                        "MAINT_SUBCAT_CREATE_UID" => $this->session->name,
+                        "MAINT_SUBCAT_CREATE_UID" => session()->get('USR_ID'),
                         "MAINT_SUBCAT_UPDATE_DT" => date("d-M-Y"),
-                        "MAINT_SUBCAT_UPDATE_UID" => $this->session->name,
+                        "MAINT_SUBCAT_UPDATE_UID" => session()->get('USR_ID'),
                     ];
                 $ins = $this->Db->table('FLXY_MAINTENANCE_SUBCATEGORY')->where('MAINT_SUBCAT_ID', $sysid)->update($data);
             }
@@ -596,9 +596,9 @@ class FacilityController extends BaseController
                         "SHUTL_ROUTE_IMG" => $attached_path,
                         "SHUTL_DESCRIPTION" => $this->request->getPost("SHUTL_DESCRIPTION"),
                         "SHUTL_CREATE_DT" => date("d-M-Y"),
-                        "SHUTL_CREATE_UID" => $this->session->name,
+                        "SHUTL_CREATE_UID" => session()->get('USR_ID'),
                         "SHUTL_UPDATE_DT" => date("d-M-Y"),
-                        "SHUTL_UPDATE_UID" => $this->session->name,
+                        "SHUTL_UPDATE_UID" => session()->get('USR_ID'),
                     ];
                 $ins = $this->Db->table('FLXY_SHUTTLE')->insert($data);
             } else {
@@ -648,9 +648,9 @@ class FacilityController extends BaseController
                         "SHUTL_ROUTE_IMG" => $attached_path,
                         "SHUTL_DESCRIPTION" => $this->request->getPost("SHUTL_DESCRIPTION"),
                         "SHUTL_CREATE_DT" => date("d-M-Y"),
-                        "SHUTL_CREATE_UID" => $this->session->name,
+                        "SHUTL_CREATE_UID" => session()->get('USR_ID'),
                         "SHUTL_UPDATE_DT" => date("d-M-Y"),
-                        "SHUTL_UPDATE_UID" => $this->session->name,
+                        "SHUTL_UPDATE_UID" => session()->get('USR_ID'),
                     ];
                 $ins = $this->Db->table('FLXY_SHUTTLE')->where('SHUTL_ID', $sysid)->update($data);
             }
@@ -724,9 +724,9 @@ class FacilityController extends BaseController
                     [
                         "SHUTL_STAGE_NAME" => $this->request->getPost("SHUTL_STAGE_NAME"),
                         "SHUTL_CREATE_DT" => date("d-M-Y"),
-                        "SHUTL_CREATE_UID" => $this->session->name,
+                        "SHUTL_CREATE_UID" => session()->get('USR_ID'),
                         "SHUTL_UPDATE_DT" => date("d-M-Y"),
-                        "SHUTL_UPDATE_UID" => $this->session->name,
+                        "SHUTL_UPDATE_UID" => session()->get('USR_ID'),
                     ];
                 $ins = $this->Db->table('FLXY_SHUTL_STAGES')->insert($data);
             } else {
@@ -734,9 +734,9 @@ class FacilityController extends BaseController
                     [
                         "SHUTL_STAGE_NAME" => $this->request->getPost("SHUTL_STAGE_NAME"),
                         "SHUTL_CREATE_DT" => date("d-M-Y"),
-                        "SHUTL_CREATE_UID" => $this->session->name,
+                        "SHUTL_CREATE_UID" => session()->get('USR_ID'),
                         "SHUTL_UPDATE_DT" => date("d-M-Y"),
-                        "SHUTL_UPDATE_UID" => $this->session->name,
+                        "SHUTL_UPDATE_UID" => session()->get('USR_ID'),
                     ];
                 $ins = $this->Db->table('FLXY_SHUTL_STAGES')->where('SHUTL_STAGE_ID', $sysid)->update($data);
             }

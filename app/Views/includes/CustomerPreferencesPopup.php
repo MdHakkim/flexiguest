@@ -117,6 +117,7 @@ function showCustomerPreferences(custId = 0) {
         async: false,
         'serverSide': true,
         'serverMethod': 'post',
+        'searching': true,
         'ajax': {
             'url': '<?php echo base_url('/customerPreferenceView')?>',
             'data': {
@@ -168,7 +169,7 @@ function showCustomerPreferences(custId = 0) {
         ],
         responsive: true,
         destroy: true,
-        dom: "<'row'<'col-sm-12'tr>><'row'<'col-sm-12 col-md-6'i><'col-sm-12 col-md-6 dataTables_pager'p>>",
+        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
         language: {
             emptyTable: 'There are no preferences added'
         }
