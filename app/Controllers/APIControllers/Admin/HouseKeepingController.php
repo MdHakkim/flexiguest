@@ -99,4 +99,115 @@ class HouseKeepingController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'Task Details'], $data));
     }
+
+    public function markSubtaskCompletedInspected($subtask_id)
+    {
+        $user = $this->request->user;
+        $sub_task = $this->HKAssignedTaskDetail->find($subtask_id);
+        if (empty($sub_task))
+            return $this->respond(responseJson(404, true, ['msg' => 'No Task found.']));
+
+        if ($user['USR_ROLE'] == 'attendee') {
+            $sub_task['HKATD_STATUS'] = 'Completed';
+            $sub_task['HKATD_COMPLETION_TIME'] = date('Y-m-d H:i:s');
+        }else{
+            $sub_task['HKATD_INSPECTED_STATUS'] = 'Inspected';
+            $sub_task['HKATD_INSPECTED_DATETIME'] = date('Y-m-d H:i:s');
+        }
+        $this->HKAssignedTaskDetail->save($sub_task);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Completed successfully.']));
+    }
+
+    public function submitTaskNote()
+    {
+        $rules = [
+            'task_id' => ['label' => 'task', 'rules' => 'required'],
+            'note' => ['label' => 'note', 'rules' => 'required'],
+        ];
+
+        if ($this->request->getFileMultiple('attachments'))
+            $rules = array_merge($rules, [
+                'attachments.*' => [
+                    'label' => 'attachments',
+                    'rules' => ['mime_in[attachments,image/png,image/jpg,image/jpeg]', 'max_size[attachments, 2048]']
+                ],
+            ]);
+
+        if (!$this->validate($rules))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
+        $data['ATN_USER_ID'] = $user_id = $this->request->user['USR_ID'];
+        $data['ATN_ASSIGNED_TASK_ID'] = $this->request->getVar('task_id');
+        $data['ATN_NOTE'] = $this->request->getVar('note');
+
+        if (empty($this->HKAssignedTask->find($data['ATN_ASSIGNED_TASK_ID'])))
+            return $this->respond(responseJson(404, true, ['msg' => 'No Task found.']));
+
+        $task_note_id = $this->HKAssignedTaskNote->insert($data);
+
+        if ($this->request->getFileMultiple('attachments')) {
+            foreach ($this->request->getFileMultiple('attachments') as $file) {
+                $file_name = $file->getName();
+                $directory = "assets/Uploads/HouseKeepingTasks/";
+
+                $response = documentUpload($file, $file_name, $user_id, $directory);
+
+                if ($response['SUCCESS'] != 200)
+                    return $this->respond(responseJson(500, true, ['msg' => "Unable to upload file."]));
+
+                $attachment['ATNA_NOTE_ID'] = $task_note_id;
+                $attachment['ATNA_NAME'] = $file_name;
+                $attachment['ATNA_TYPE'] = $file->getClientMimeType();
+                $attachment['ATNA_URL'] = $directory . $response['RESPONSE']['OUTPUT'];
+
+                $this->HKAssignedTaskNoteAttachment->insert($attachment);
+            }
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Note submitted successfully.']));
+    }
+
+    public function submitSubtaskNote()
+    {
+        $rules = [
+            'subtask_id' => ['label' => 'task', 'rules' => 'required'],
+            'note' => ['label' => 'note', 'rules' => 'required'],
+            'status' => ['label' => 'status', 'rules' => 'required'],
+        ];
+
+        if (!$this->validate($rules))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
+        $user = $this->request->user;
+        $data['ATDN_USER_ID'] = $user['USR_ID'];
+        $data['ATDN_ASSIGNED_TASK_DETAIL_ID'] = $this->request->getVar('subtask_id');
+        $data['ATDN_NOTE'] = $this->request->getVar('note');
+
+        $subtask = $this->HKAssignedTaskDetail->find($data['ATDN_ASSIGNED_TASK_DETAIL_ID']);
+        if (empty($subtask))
+            return $this->respond(responseJson(404, true, ['msg' => 'No Subtask found.']));
+
+        $this->HKAssignedTaskDetailNote->insert($data);
+
+        $status = $this->request->getVar('status');
+        if ($user['USR_ROLE'] == 'attendee')
+            $subtask['HKATD_STATUS'] = $status;
+        else {
+            if ($status == 'Inspected') {
+                if($subtask['HKATD_STATUS'] != 'Completed')
+                    return $this->respond(responseJson(202, true, ['msg' => 'This task is not completed yet.']));
+
+                $subtask['HKATD_INSPECTED_STATUS'] = 'Inspected';
+                $subtask['HKATD_INSPECTED_DATETIME'] = date('Y-m-d H:i:s');
+            } else {
+                $subtask['HKATD_INSPECTED_STATUS'] = 'Not Inspected';
+                $subtask['HKATD_STATUS'] = 'In Progress';
+                $subtask['HKATD_COMPLETION_TIME'] = null;
+            }
+        }
+        $this->HKAssignedTaskDetail->save($subtask);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Note submitted successfully.']));
+    }
 }
