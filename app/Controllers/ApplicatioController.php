@@ -36,7 +36,11 @@ class ApplicatioController extends BaseController
         $data['toggleButton_javascript'] = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['blockLoader_javascript'] = blockLoader_javascript();
+
+        $data['userList'] = geUsersList(); 
+
         $data['js_to_load'] = array("inventoryFormWizardNumbered.js","reservation-calendar.js");
+
         return view('Reservation/Reservation', $data);
     }
 
@@ -78,8 +82,10 @@ class ApplicatioController extends BaseController
 
         $postValues = $this->request->getPost('columns');
 
-        $search_keys = ['S_GUEST_NAME', 'S_GUEST_FIRST_NAME', 'S_COMPNAME', 'S_RESV_ROOM', 'S_RESV_NO', 
-                        'S_ARRIVAL_FROM', 'S_ARRIVAL_TO', 'S_ROOM_NO', 'S_SEARCH_TYPE'];
+        $search_keys = ['S_GUEST_NAME', 'S_CUST_FIRST_NAME', 'S_GUEST_PHONE', 'S_CUST_EMAIL', 
+                        'S_COMPNAME', 'S_AGENTNAME', 'S_RESV_ROOM', 'S_RESV_RM_TYPE', 'S_RESV_NO', 
+                        'S_ARRIVAL_FROM', 'S_ARRIVAL_TO', 'S_DEPARTURE_FROM', 'S_DEPARTURE_TO', 'S_ROOM_NO', 
+                        'S_SEARCH_TYPE', 'S_RESV_CREATE_DT', 'S_RESV_CREATE_UID'];
 
         $init_cond = array();
 
@@ -92,16 +98,21 @@ class ApplicatioController extends BaseController
 
                     switch($search_key)
                     {
-                        case 'S_GUEST_NAME': $init_cond["FULLNAME LIKE "] = "'%$value%'"; break;
-                        case 'S_GUEST_FIRST_NAME': $init_cond["SUBSTRING(FULLNAME,1,(CHARINDEX(' ',FULLNAME + ' ')-1)) LIKE "] = "'%$value%'"; break;
+                        case 'S_GUEST_NAME': $init_cond["CUST_FIRST_NAME + ' ' + CUST_LAST_NAME LIKE "] = "'%$value%'"; break;
+                        //case 'S_GUEST_FIRST_NAME': $init_cond["SUBSTRING(FULLNAME,1,(CHARINDEX(' ',FULLNAME + ' ')-1)) LIKE "] = "'%$value%'"; break;
+                        case 'S_GUEST_PHONE': $init_cond["(CUST_MOBILE LIKE '%$value%' OR CUST_PHONE LIKE '%$value%')"] = ""; break;
                         case 'S_ARRIVAL_FROM': $init_cond["RESV_ARRIVAL_DT >= "] = "'$value'"; break;
                         case 'S_ARRIVAL_TO': $init_cond["RESV_ARRIVAL_DT <= "] = "'$value'"; break;
+                        case 'S_DEPARTURE_FROM': $init_cond["RESV_DEPARTURE >= "] = "'$value'"; break;
+                        case 'S_DEPARTURE_TO': $init_cond["RESV_DEPARTURE <= "] = "'$value'"; break;
+                        case 'S_RESV_CREATE_DT': $init_cond["RESV_CREATE_DT = "] = "'$value'"; break;
                         
                         case 'S_SEARCH_TYPE': { switch($value)
                                                 {
                                                     case '1': $init_cond["RESV_ARRIVAL_DT = "] = "'".date('Y-m-d')."'"; break;
                                                     case '2': $init_cond["RESV_DEPARTURE = "]  = "'".date('Y-m-d')."'"; break;
                                                     case '3': $init_cond["RESV_ARRIVAL_DT = "] = "RESV_DEPARTURE"; break;
+                                                    case '4': $init_cond["RESV_STATUS = "] = "'Checked-In'"; break;
                                                     case '5': $init_cond["RESV_STATUS = "] = "'Checked-Out'"; break;
                                                     default: break;
                                                 }
@@ -116,8 +127,8 @@ class ApplicatioController extends BaseController
         }
         
         $mine = new ServerSideDataTable(); // loads and creates instance
-        $tableName = 'FLXY_RESERVATION_VIEW';
-        $columns = 'RESV_ID|RESV_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_STATUS|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|FULLNAME|RESV_FEATURE|RESV_PURPOSE_STAY';
+        $tableName = 'FLXY_RESERVATION_VIEW LEFT JOIN FLXY_CUSTOMER C ON C.CUST_ID = FLXY_RESERVATION_VIEW.RESV_NAME';
+        $columns = 'RESV_ID|RESV_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_STATUS|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|RESV_ROOM|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME|CUST_EMAIL|CUST_MOBILE|CUST_PHONE|RESV_FEATURE|FORMAT(RESV_CREATE_DT,\'dd-MMM-yyyy\')RESV_CREATE_DT|RESV_PURPOSE_STAY';
         $mine->generate_DatatTable($tableName,$columns,$init_cond,'|');
         exit;
         // return view('Dashboard');
@@ -298,7 +309,7 @@ class ApplicatioController extends BaseController
                 "RESV_PROFILE" => $this->request->getPost("RESV_PROFILE"),
                 "RESV_NAME_ON_CARD" => $this->request->getPost("RESV_NAME_ON_CARD"),
                 "RESV_EXT_PRINT_RT" => $this->request->getPost("RESV_EXT_PRINT_RT"),
-                "RESV_UPDATE_UID" => $this->session->name,
+                "RESV_UPDATE_UID" => session()->get('USR_ID'),
                 "RESV_UPDATE_DT" => date("d-M-Y")
                 ];
                 $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data); 
@@ -392,7 +403,7 @@ class ApplicatioController extends BaseController
                     "RESV_PROFILE" => $this->request->getPost("RESV_PROFILE"),
                     "RESV_NAME_ON_CARD" => $this->request->getPost("RESV_NAME_ON_CARD"),
                     "RESV_EXT_PRINT_RT" => $this->request->getPost("RESV_EXT_PRINT_RT"),
-                    "RESV_CREATE_UID" => $this->session->name,
+                    "RESV_CREATE_UID" => session()->get('USR_ID'),
                     "RESV_CREATE_DT" => date("d-M-Y")
                 ];
                 $return = $this->Db->table('FLXY_RESERVATION')->insert($data); 
@@ -463,7 +474,7 @@ class ApplicatioController extends BaseController
                     "CUST_COUNTRY" => $this->request->getPost("CUST_COUNTRY"),
                     "CUST_VIP" => $this->request->getPost("CUST_VIP"),
                     "CUST_PHONE" => $this->request->getPost("CUST_PHONE"),
-                    "CUST_UPDATE_UID" => $this->session->name,
+                    "CUST_UPDATE_UID" => session()->get('USR_ID'),
                     "CUST_UPDATE_DT" => date("Y-m-d")
                 ];
 
@@ -1285,7 +1296,7 @@ class ApplicatioController extends BaseController
                     "COM_ACTIVE" => $this->request->getPost("COM_ACTIVE"),
                     "COM_COMMUNI_CODE" => $this->request->getPost("COM_COMMUNI_CODE"),
                     "COM_COMMUNI_DESC" => $this->request->getPost("COM_COMMUNI_DESC"),
-                    "COM_UPDATE_UID" => $this->session->name,
+                    "COM_UPDATE_UID" => session()->get('USR_ID'),
                     "COM_UPDATE_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_COMPANY_PROFILE')->where('COM_ID', $sysid)->update($data); 
@@ -1366,7 +1377,7 @@ class ApplicatioController extends BaseController
                     "AGN_ACTIVE" => $this->request->getPost("COM_ACTIVE"),
                     "AGN_COMMUNI_CODE" => $this->request->getPost("COM_COMMUNI_CODE"),
                     "AGN_COMMUNI_DESC" => $this->request->getPost("COM_COMMUNI_DESC"),
-                    "AGN_UPDATE_UID" => $this->session->name,
+                    "AGN_UPDATE_UID" => session()->get('USR_ID'),
                     "AGN_UPDATE_DT" => date("d-M-Y")
                  ];
                 //  print_r($_POST);exit;
@@ -1577,7 +1588,7 @@ class ApplicatioController extends BaseController
                     "GRP_COMMUNI_DESC" => $this->request->getPost("GRP_COMMUNI_DESC"),
                     "GRP_NOTES" => $this->request->getPost("GRP_NOTES"),
                     "GRP_ACTIVE" => $this->request->getPost("GRP_ACTIVE"),
-                    "GRP_UPDATE_UID" => $this->session->name,
+                    "GRP_UPDATE_UID" => session()->get('USR_ID'),
                     "GRP_UPDATE_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_GROUP')->where('GRP_ID', $sysid)->update($data); 
@@ -1599,7 +1610,7 @@ class ApplicatioController extends BaseController
                     "GRP_COMMUNI_DESC" => $this->request->getPost("GRP_COMMUNI_DESC"),
                     "GRP_NOTES" => $this->request->getPost("GRP_NOTES"),
                     "GRP_ACTIVE" => $this->request->getPost("GRP_ACTIVE"),
-                    "GRP_CREATE_UID" => $this->session->name,
+                    "GRP_CREATE_UID" => session()->get('USR_ID'),
                     "GRP_CREATE_DT" => date("d-M-Y")
                  ];
                 $return = $this->Db->table('FLXY_GROUP')->insert($data); 
@@ -1737,7 +1748,7 @@ class ApplicatioController extends BaseController
                     "BLK_RESER_METHOD" => $this->request->getPost("BLK_RESER_METHOD"),
                     "BLK_RATE_CODE" => $this->request->getPost("BLK_RATE_CODE"),
                     "BLK_PACKAGE" => $this->request->getPost("BLK_PACKAGE"),
-                    "BLK_UPDATE_UID" => $this->session->name,
+                    "BLK_UPDATE_UID" => session()->get('USR_ID'),
                     "BLK_UPDATE_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_BLOCK')->where('BLK_ID', $sysid)->update($data); 
@@ -1760,7 +1771,7 @@ class ApplicatioController extends BaseController
                     "BLK_RESER_METHOD" => $this->request->getPost("BLK_RESER_METHOD"),
                     "BLK_RATE_CODE" => $this->request->getPost("BLK_RATE_CODE"),
                     "BLK_PACKAGE" => $this->request->getPost("BLK_PACKAGE"),
-                    "BLK_CREATE_UID" => $this->session->name,
+                    "BLK_CREATE_UID" => session()->get('USR_ID'),
                     "BLK_CREATE_DT" => date("d-M-Y")
                  ];
                 $return = $this->Db->table('FLXY_BLOCK')->insert($data); 
@@ -1859,7 +1870,7 @@ class ApplicatioController extends BaseController
                     "RM_HOUSKP_EV_SECTION" => $this->request->getPost("RM_HOUSKP_EV_SECTION"),
                     "RM_STAYOVER_CR" => $this->request->getPost("RM_STAYOVER_CR"),
                     "RM_DEPARTURE_CR" => $this->request->getPost("RM_DEPARTURE_CR"),
-                    "RM_UPDATED_UID" => $this->session->name,
+                    "RM_UPDATED_UID" => session()->get('USR_ID'),
                     "RM_UPDATED_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_ROOM')->where('RM_ID', $sysid)->update($data); 
@@ -1882,7 +1893,7 @@ class ApplicatioController extends BaseController
                     "RM_HOUSKP_EV_SECTION" => $this->request->getPost("RM_HOUSKP_EV_SECTION"),
                     "RM_STAYOVER_CR" => $this->request->getPost("RM_STAYOVER_CR"),
                     "RM_DEPARTURE_CR" => $this->request->getPost("RM_DEPARTURE_CR"),
-                    "RM_CREATED_UID" => $this->session->name,
+                    "RM_CREATED_UID" => session()->get('USR_ID'),
                     "RM_CREATED_DT" => date("d-M-Y")
                  ];
                 $return = $this->Db->table('FLXY_ROOM')->insert($data); 
@@ -2063,7 +2074,7 @@ class ApplicatioController extends BaseController
                     "RM_TY_PUBLIC_RATE_AMT" => $this->request->getPost("RM_TY_PUBLIC_RATE_AMT"),
                     "RM_TY_ACTIVE_DT" => null,
                     "RM_TY_UPDATED_DT" => date("d-M-Y"),
-                    "RM_TY_UPDATED_UID" => $this->session->name,
+                    "RM_TY_UPDATED_UID" => session()->get('USR_ID'),
                  ];
             $return = $this->Db->table('FLXY_ROOM_TYPE')->where('RM_TY_ID', $sysid)->update($data); 
             }else{
@@ -2085,7 +2096,7 @@ class ApplicatioController extends BaseController
                     "RM_TY_PUBLIC_RATE_AMT" => $this->request->getPost("RM_TY_PUBLIC_RATE_AMT"),
                     "RM_TY_ACTIVE_DT" => null,
                     "RM_TY_CREATE_DT" => date("d-M-Y"),
-                    "RM_TY_CREATE_UID" => $this->session->name,
+                    "RM_TY_CREATE_UID" => session()->get('USR_ID'),
                  ];
                 $return = $this->Db->table('FLXY_ROOM_TYPE')->insert($data); 
             }
@@ -3281,7 +3292,7 @@ class ApplicatioController extends BaseController
                 $data = ["ACCOMP_CUST_ID" => $this->request->getPost("ACCOMP_CUST_ID"),
                     "ACCOMP_REF_RESV_ID" => $this->request->getPost("ACCOMP_REF_RESV_ID"),
                     "ACCOMP_CREATE_DT" => $dateTime,
-                    "ACCOMP_CREATE_UID" => $this->session->name,
+                    "ACCOMP_CREATE_UID" => session()->get('USR_ID'),
                  ];
                 $return = $this->Db->table('FLXY_ACCOMPANY_PROFILE')->insert($data); 
                 $message='Record not inserted !';
@@ -3521,7 +3532,7 @@ class ApplicatioController extends BaseController
                 "CUST_ADDRESS_2" => $this->request->getPost("CUST_ADDRESS_2"),
                 "CUST_STATE" => $this->request->getPost("CUST_STATE"),
                 "CUST_CITY" => $this->request->getPost("CUST_CITY"),
-                "CUST_UPDATE_UID" => $this->session->name,
+                "CUST_UPDATE_UID" => session()->get('USR_ID'),
                 "CUST_UPDATE_DT" => date("Y-m-d")
             ];
             $return = $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $custId)->update($data); 
@@ -3636,7 +3647,7 @@ class ApplicatioController extends BaseController
                 // "VACC_IS_VERIFY" => $this->request->getPost("VACC_IS_VERIFY"),
                 "VACC_IS_VERIFY" => 0,
                 "VACC_FILE_PATH" => $fileNm,
-                "VACC_CREATE_UID" => $this->session->name,
+                "VACC_CREATE_UID" => session()->get('USR_ID'),
                 "VACC_CREATE_DT" => date("d-M-Y")
             ];
             $return = $this->Db->table('FLXY_VACCINE_DETAILS')->insert($data); 
@@ -3691,7 +3702,7 @@ class ApplicatioController extends BaseController
             $data = ["RESV_ETA" => $this->request->getPost("RESV_ETA"),
                 "RESV_ACCP_TRM_CONDI" => $this->request->getPost("RESV_ACCP_TRM_CONDI"),
                 "RESV_SINGATURE_URL" => $fileNameExt,
-                "RESV_UPDATE_UID" => $this->session->name,
+                "RESV_UPDATE_UID" => session()->get('USR_ID'),
                 "RESV_UPDATE_DT" => date("d-M-Y")
             ];
             $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
@@ -3716,7 +3727,7 @@ class ApplicatioController extends BaseController
 
         $data = [
             "RESV_STATUS" => $reservation_status,
-            "RESV_UPDATE_UID" => $this->session->name,
+            "RESV_UPDATE_UID" => session()->get('USR_ID'),
             "RESV_UPDATE_DT" => date("d-M-Y")
         ];
         $this->triggerReservationEmail($sysid,'QR');
