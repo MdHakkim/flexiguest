@@ -102,6 +102,7 @@ class ApplicatioController extends BaseController
                                                     case '1': $init_cond["RESV_ARRIVAL_DT = "] = "'".date('Y-m-d')."'"; break;
                                                     case '2': $init_cond["RESV_DEPARTURE = "]  = "'".date('Y-m-d')."'"; break;
                                                     case '3': $init_cond["RESV_ARRIVAL_DT = "] = "RESV_DEPARTURE"; break;
+                                                    case '5': $init_cond["RESV_STATUS = "] = "'Checked-Out'"; break;
                                                     default: break;
                                                 }
                                               } break;

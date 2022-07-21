@@ -680,9 +680,7 @@
                                                         <div class="invalid-feedback">Adults required can't empty.</div>
                                                     </div>
                                                     <div class="flxy_join">
-                                                        <input type="number" name="RESV_CHILDREN" id="RESV_CHILDREN" class="form-control" placeholder="children" min="0" required />
-                                                        <div class="invalid-feedback"> Children required can't empty.
-                                                        </div>
+                                                        <input type="number" name="RESV_CHILDREN" id="RESV_CHILDREN" class="form-control" placeholder="children" value="0" min="0" />                                                        
                                                     </div>
                                                 </div>
 
