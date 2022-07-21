@@ -77,16 +77,6 @@ class HouseKeepingController extends BaseController
                 ->where('ATNA_NOTE_ID', $note['ATN_ID'])
                 ->findAll();
 
-            foreach ($attachments as $j => $attachment) {
-                $name = getOriginalFileName($attachment);
-                $url = base_url("assets/Uploads/HouseKeepingTasks/$attachment");
-
-                $attachment_array = explode(".", $attachment);
-                $type = getFileType(end($attachment_array));
-
-                $attachments[$j] = ['name' => $name, 'url' => $url, 'type' => $type];
-            }
-
             $notes[$index]['ATTACHMENTS'] = $attachments;
         }
 
