@@ -424,7 +424,7 @@ class APIController extends BaseController
             return $this->respond($result);
         }
 
-        if ($this->request->getVar("expiryDate") < $this->request->getVar("issueDate") && $this->request->getVar("expiryDate") <  date("d-M-Y")) {
+        if (strtotime($this->request->getVar("expiryDate")) < strtotime($this->request->getVar("issueDate")) || strtotime($this->request->getVar("expiryDate")) <= strtotime(date("Y-m-d"))) {
             $validate = "Your Document is expired";
             $result = responseJson("403", true, $validate);
             return $this->respond($result);
