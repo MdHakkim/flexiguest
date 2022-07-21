@@ -6,7 +6,7 @@ use App\Libraries\ServerSideDataTable;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\TransportType;
 
-class TransportController extends BaseController
+class TransportTypeController extends BaseController
 {
 
     use ResponseTrait;
@@ -23,7 +23,7 @@ class TransportController extends BaseController
         $data['title'] = getMethodName();
         $data['session'] = session();
 
-        return view('frontend/transport_type', $data);
+        return view('frontend/transport/transport_type', $data);
     }
 
     public function allTransportTypes()
