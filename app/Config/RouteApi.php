@@ -142,7 +142,16 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
         $routes->get("orders-list", "LaundryAmenitiesController::ordersList");
         $routes->post("update-delivery-status", "LaundryAmenitiesController::updateDeliveryStatus");
     });
+});
 
+$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  
+    $routes->get("profile", "APIController::profileAPI");
+    $routes->post('checkin/verify-documents', 'APIController::verifyDocuments');
+    $routes->post('checkin/guest-checked-in', 'APIController::guestCheckedIn');
+});
+// ADMIN ROUTES (END)
+
+$routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
     $routes->group('housekeeping', function($routes) {
         $routes->get("all-tasks", "HouseKeepingController::allTasks");
         $routes->get("task-details/(:segment)", "HouseKeepingController::taskDetails/$1");
@@ -152,12 +161,6 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
     });
 });
 
-$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  
-    $routes->get("profile", "APIController::profileAPI");
-    $routes->post('checkin/verify-documents', 'APIController::verifyDocuments');
-    $routes->post('checkin/guest-checked-in', 'APIController::guestCheckedIn');
-});
-// ADMIN ROUTES (END)
 
 //  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
 
