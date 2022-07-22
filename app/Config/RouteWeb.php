@@ -559,12 +559,15 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->delete('delete', 'TransportTypeController::delete');
     });
 
-    $routes->group('transport/pickup-point', function ($routes) { 
-        $routes->get('', 'PickupPointController::pickupPoint');
-        $routes->post('all-pickup-points', 'PickupPointController::allPickupPoints');
-        $routes->post('store', 'PickupPointController::store');
-        $routes->post('edit', 'PickupPointController::edit');
-        $routes->delete('delete', 'PickupPointController::delete');
+    $routes->group('transport', function ($routes) { 
+        
+        $routes->group('pickup-point', function ($routes) { 
+            $routes->get('', 'PickupPointController::pickupPoint');
+            $routes->post('all-pickup-points', 'PickupPointController::allPickupPoints');
+            $routes->post('store', 'PickupPointController::store');
+            $routes->post('edit', 'PickupPointController::edit');
+            $routes->delete('delete', 'PickupPointController::delete');
+        });
     });
 
 
