@@ -214,7 +214,7 @@
                                     <div class="col-md-8">
                                         <select id="S_RESV_RM_TYPE" name="S_RESV_RM_TYPE"
                                             class="form-select select2 dt-input" data-allow-clear="true">
-                                            <option value=""></option>                                            
+                                            <option value=""></option>
                                         </select>
                                     </div>
                                 </div>
@@ -308,21 +308,21 @@
                 <div class="modal-body">
                     <div id="Accompany">
                         <div class="flxy_opt_btn text-center">
-                            <button type="button" class="btn btn-primary"
-                                onclick="reservationCheckout()">Checkout</button>
-                            <button type="button" class="btn btn-primary web-link-btn">Docs</button>
-                            <button type="button" class="btn btn-primary shares-btn">Shares</button>
                             <button type="button" onClick="reservExtraOption('ACP')"
                                 class="btn btn-primary">Accompanying</button>
                             <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add
                                 On</button>
                             <button type="button" class="btn btn-primary show-activity-log" data-bs-toggle="modal"
-                                data-bs-target="#changesWindow">Changes</button>
-                            <button type="button" class="btn btn-primary mt-2" id="registerCardButton" data_sysid=""
-                                style="width: 135px;">Registration Card</button>
-                            <button type="button" class="btn btn-primary mt-2" id="fixedChargeButton" data_sysid=""
-                                style="width: 135px;">Fixed Charges</button>
-                            <!-- <button type="button" onClick="reservExtraOption('CHG')" class="btn btn-primary">Changes</button> -->
+                                data-bs-target="#changesWindow">Changes</button><br />
+                            <button type="button" class="btn btn-primary"
+                                onclick="reservationCheckout()">Checkout</button>
+                            <button type="button" class="btn btn-primary web-link-btn">Docs</button>
+                            <button type="button" class="btn btn-primary" id="fixedChargeButton" data_sysid="">Fixed
+                                Charges</button>
+                            <button type="button" class="btn btn-primary shares-btn">Shares</button>
+                            <button type="button" class="btn btn-primary" id="registerCardButton" data_sysid=""
+                                style="width: 155px;">Registration Card</button>
+
                         </div>
                     </div>
                 </div>
@@ -348,15 +348,17 @@
                     <div id="">
                         <div id="flxy_add_content">
                             <p>Which of these reservation attributes do you want to copy?</p>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-lable col-md-12">Room Type</label>
+                                    <select name="COPY_RM_TYPE" id="COPY_RM_TYPE" data-width="100%"
+                                        class="selectpicker COPY_RM_TYPE" data-live-search="true">
+                                        <option value="">Select</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="col-md-12">
-                                        <lable class="form-lable col-md-12">Room Type</label>
-                                            <select name="COPY_RM_TYPE" id="COPY_RM_TYPE" data-width="100%"
-                                                class="selectpicker COPY_RM_TYPE" data-live-search="true">
-                                                <option value="">Select</option>
-                                            </select>
-                                    </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
                                             <input type="checkbox" class="switch-input copyReser" checked
@@ -400,7 +402,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Custome Referance</label>
+                                        <lable class="form-check-lable flxy_lab_left"> Custom Reference</label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -415,7 +417,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Window/Room Routing instr.
+                                        <lable class="form-check-lable flxy_lab_left"> Window/Room Routing Instr.
                                             </label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
@@ -435,7 +437,6 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="col-md-6 mb-5"></div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
                                             <input type="checkbox" class="switch-input copyReser" checked
@@ -2800,7 +2801,9 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     $('.flxyFooter').removeClass('flxy_space');
     $('#submitResrBtn').removeClass('submitResr');
     $('#reservationW').modal('show');
+
     $('#reservationWlable').html('Edit Reservation');
+
     var sysid = $(this).attr('data_sysid');
     $('#ITEM_RESV_ID').val(sysid);
     $('#FIXCHRG_RESV_ID').val(sysid);
@@ -2808,14 +2811,17 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 
     clearFormFields('#select_items');
     showInventoryItems(sysid);
+
     var mode = '';
     if (param) {
         sysid = param;
         mode = 'CPY';
+        $('#reservationWlable').html('Add New Reservation');
         $('#submitResrBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     } else {
         $('#submitResrBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
     }
+
     $.ajax({
         url: '<?php echo base_url('/editReservation') ?>',
         type: "post",
@@ -2868,6 +2874,18 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                     }
                 });
             });
+
+            if (mode == 'CPY') {
+
+                var nights = parseInt($('#RESV_NIGHT').val());
+                nights = nights != 0 ? nights : 1;
+                
+                var today = moment().format('DD-MM-YYYY');
+                var end = moment().add(nights, 'days').format('DD-MM-YYYY');
+                $('.RESV_ARRIVAL_DT').datepicker().datepicker("setDate", today);
+                $('.RESV_DEPARTURE').datepicker().datepicker("setDate", end);
+            }
+            
             checkArrivalDate();
         }
     });
