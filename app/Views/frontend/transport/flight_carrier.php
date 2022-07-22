@@ -61,7 +61,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Display Sequence</b></label>
-                                <input type="text" name="FC_SEQUENCE" class="form-control" placeholder="Label" required />
+                                <input type="number" name="FC_SEQUENCE" class="form-control" placeholder="Label" required />
                             </div>
                         </div>
                     </form>
