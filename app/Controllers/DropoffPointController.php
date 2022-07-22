@@ -79,7 +79,7 @@ class DropoffPointController extends BaseController
         if ($dropoff_point)
             return $this->respond($dropoff_point);
 
-        return $this->respond(responseJson(404, true, ['msg' => "Transport not found"]));
+        return $this->respond(responseJson(404, true, ['msg' => "Dropoff point not found"]));
     }
 
     public function delete()

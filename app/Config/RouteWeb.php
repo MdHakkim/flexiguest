@@ -576,6 +576,14 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('edit', 'DropoffPointController::edit');
             $routes->delete('delete', 'DropoffPointController::delete');
         });
+
+        $routes->group('flight-carrier', function ($routes) { 
+            $routes->get('', 'FlightCarrierController::flightCarrier');
+            $routes->post('all-flight-carriers', 'FlightCarrierController::allFlightCarriers');
+            $routes->post('store', 'FlightCarrierController::store');
+            $routes->post('edit', 'FlightCarrierController::edit');
+            $routes->delete('delete', 'FlightCarrierController::delete');
+        });
     });
 
 

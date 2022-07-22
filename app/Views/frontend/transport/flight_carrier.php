@@ -8,7 +8,7 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Dropoff Points</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Flight Carriers</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -18,7 +18,8 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Point</th>
+                            <th>Flight Carrier</th>
+                            <th>Carrier Code</th>
                             <th>Display Sequence</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
@@ -39,7 +40,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h4 class="modal-title" id="popModalWindowlabel">Dropoff Point</h4>
+                    <h4 class="modal-title" id="popModalWindowlabel">Flight Carrier</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
 
@@ -49,13 +50,18 @@
                             <input type="hidden" name="id" class="form-control" />
 
                             <div class="col-md-6">
-                                <label class="form-label"><b>Point Name *</b></label>
-                                <input type="text" name="DP_POINT" class="form-control" placeholder="Point" required />
+                                <label class="form-label"><b>Flight Carrier Name *</b></label>
+                                <input type="text" name="FC_FLIGHT_CARRIER" class="form-control" placeholder="Flight Carrier Name" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Carrier Code *</b></label>
+                                <input type="text" name="FC_FLIGHT_CODE" class="form-control" placeholder="Carrier Code" required />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Display Sequence</b></label>
-                                <input type="text" name="DP_SEQUENCE" class="form-control" placeholder="Label" required />
+                                <input type="text" name="FC_SEQUENCE" class="form-control" placeholder="Label" required />
                             </div>
                         </div>
                     </form>
@@ -95,19 +101,22 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('transport/dropoff-point/all-dropoff-points') ?>'
+                'url': '<?php echo base_url('transport/flight-carrier/all-flight-carriers') ?>'
             },
             'columns': [{
                     data: ''
                 },
                 {
-                    data: 'DP_POINT'
+                    data: 'FC_FLIGHT_CARRIER'
                 },
                 {
-                    data: 'DP_SEQUENCE'
+                    data: 'FC_FLIGHT_CODE'
                 },
                 {
-                    data: 'DP_CREATED_AT'
+                    data: 'FC_SEQUENCE'
+                },
+                {
+                    data: 'FC_CREATED_AT'
                 },
                 {
                     data: null,
@@ -123,7 +132,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['DP_ID']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['FC_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -131,7 +140,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['DP_ID']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['FC_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -165,7 +174,7 @@
                 // }
             ],
             "order": [
-                [2, "asc"]
+                [3, "asc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -174,7 +183,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['DP_POINT'];
+                            return 'Details of ' + data['FC_POINT'];
                         }
                     }),
                     type: 'column',
@@ -216,7 +225,7 @@
     function addForm() {
         resetForm();
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add Dropoff Point');
+        $('#popModalWindowlabel').html('Add Flight Carrier');
 
         $('#popModalWindow').modal('show');
     }
@@ -235,7 +244,7 @@
         var fd = new FormData($(`#${id}`)[0]);
 
         $.ajax({
-            url: '<?= base_url('transport/dropoff-point/store') ?>',
+            url: '<?= base_url('transport/flight-carrier/store') ?>',
             type: "post",
             data: fd,
             processData: false,
@@ -266,21 +275,21 @@
     $(document).on('click', '.editWindow', function() {
         resetForm();
 
-        let dropoff_point_id = $(this).attr('data_id');
+        let flight_carrier_id = $(this).attr('data_id');
         $('.dtr-bs-modal').modal('hide');
 
         let id = "submit-form";
-        $(`#${id} input[name='id']`).val(dropoff_point_id);
+        $(`#${id} input[name='id']`).val(flight_carrier_id);
 
-        $('#popModalWindowlabel').html('Edit Dropoff Point');
+        $('#popModalWindowlabel').html('Edit Flight Carrier');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('transport/dropoff-point/edit') ?>';
+        var url = '<?php echo base_url('transport/flight-carrier/edit') ?>';
         $.ajax({
             url: url,
             type: "post",
             data: {
-                id: dropoff_point_id
+                id: flight_carrier_id
             },
             dataType: 'json',
             success: function(respn) {
@@ -318,7 +327,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('transport/dropoff-point/delete') ?>',
+                        url: '<?php echo base_url('transport/flight-carrier/delete') ?>',
                         type: "post",
                         data: {
                             id: id,

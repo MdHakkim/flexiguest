@@ -79,7 +79,7 @@ class PickupPointController extends BaseController
         if ($pickup_point)
             return $this->respond($pickup_point);
 
-        return $this->respond(responseJson(404, true, ['msg' => "Transport not found"]));
+        return $this->respond(responseJson(404, true, ['msg' => "Pickup Point not found"]));
     }
 
     public function delete()

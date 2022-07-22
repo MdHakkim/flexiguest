@@ -216,7 +216,7 @@
     function addForm() {
         resetForm();
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add Transport Type');
+        $('#popModalWindowlabel').html('Add Pickup Point');
 
         $('#popModalWindow').modal('show');
     }
