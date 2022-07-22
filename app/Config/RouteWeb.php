@@ -568,6 +568,14 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('edit', 'PickupPointController::edit');
             $routes->delete('delete', 'PickupPointController::delete');
         });
+
+        $routes->group('dropoff-point', function ($routes) { 
+            $routes->get('', 'DropoffPointController::dropoffPoint');
+            $routes->post('all-dropoff-points', 'DropoffPointController::allDropoffPoints');
+            $routes->post('store', 'DropoffPointController::store');
+            $routes->post('edit', 'DropoffPointController::edit');
+            $routes->delete('delete', 'DropoffPointController::delete');
+        });
     });
 
 
