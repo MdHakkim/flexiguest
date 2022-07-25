@@ -40,6 +40,14 @@ class HouseKeepingController extends BaseController
 
     public function allTasks()
     {
+        $user = $this->request->user;
+        $user_id = $user['USR_ID'];
+        $user_role = $user['USR_ROLE'];
+        
+        $where_condition = '1 = 1';
+        if($user_role == 'attendee')
+            $where_condition = "HKAT_ATTENDANT_ID = $user_id";
+
         $all_tasks = $this->HKAssignedTask
             ->select(
                 "FLXY_HK_ASSIGNED_TASKS.*, 
@@ -49,11 +57,17 @@ class HouseKeepingController extends BaseController
                 (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS = 'Not Inspected') as NOT_INSPECTED_COUNT,
                 (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS = 'Inspected') as INSPECTED_COUNT,
                 (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS = 'Rejected') as REJECTED_COUNT,
+
+                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS = 'Completed') as COMPLETED_COUNT,
+                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS = 'In Progress') as IN_PROGRESS_COUNT,
+                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS = 'Partially Completed') as PARTIALLY_COMPLETED_COUNT,
+                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS = 'Skipped') as SKIPPED_COUNT
                 "
             )
             ->join('FLXY_HK_TASKS', 'HKAT_TASK_ID = HKT_ID', 'left')
             ->join('FLXY_ROOM', 'HKAT_ROOM_ID = RM_ID', 'left')
             ->join('FLXY_USERS', 'HKAT_ATTENDANT_ID = USR_ID', 'left')
+            ->where($where_condition)
             ->findAll();
 
         return $this->respond(responseJson(200, false, ['msg' => 'All Tasks'], $all_tasks));
