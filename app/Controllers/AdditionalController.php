@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Libraries\ServerSideDataTable;
+use App\ThirdParty\FPDF;
 
 class AdditionalController extends BaseController
 {
@@ -1324,22 +1325,1332 @@ class AdditionalController extends BaseController
             return $option;
         }
 
-        public function printpdf(){
-            $dompdf = new \Dompdf\Dompdf(); 
-            $data['logo'] = base_url().'/assets/img/farnek.png';
-            $data['base_url'] = '';
-
-            $dompdf->setBasePath('/FlexiGuest/assets');
-            $dompdf->loadHtml(view('Master/printpdf1',$data));
-            $dompdf->setPaper('A4', 'portrait');
-            $dompdf->render();
-            $dompdf->stream('Profile_Data_Export_'.date('Y-m-d-H-i-s').'.pdf');
-            //return view('Master/printpdf');
+        public function proformaFolio(){
+          
+            $_SESSION['PROFORMA_RESV_ID']  = $this->request->getPost('PROFORMA_RESV_ID');
+            $_SESSION['FOLIO_TXT_ONE']     = $this->request->getPost('FOLIO_TXT_ONE');           
+            $_SESSION['FOLIO_TXT_TWO']     = $this->request->getPost('FOLIO_TXT_TWO');
+            $_SESSION['PRINT_PHONE']       = $this->request->getPost('PRINT_PHONE');
+            $_SESSION['PRINT_CHECK']       = $this->request->getPost('PRINT_CHECK');
+            $_SESSION['PRINT_EMAIL']       = $this->request->getPost('PRINT_EMAIL');
+            echo '1';
+           
+           
         }
+        public function previewProFormaFolio(){          
+            $dompdf = new \Dompdf\Dompdf(); 
+            $options = new \Dompdf\Options();
+            $options->setIsRemoteEnabled(true);
+            $options->setDefaultFont('Courier');
+            $dompdf = new \Dompdf\Dompdf($options);
 
+            $sql = "SELECT CUST_FIRST_NAME+' '+CUST_MIDDLE_NAME+' '+ CUST_LAST_NAME AS FULLNAME, CUST_EMAIL, cname, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO, RESV_RATE FROM FLXY_RESERVATION LEFT JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID LEFT JOIN COUNTRY ON iso2 = CUST_COUNTRY WHERE RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
+            $response = $this->Db->query($sql)->getResultArray();
+
+            if(!empty($response)){
+                foreach ($response as $row) {
+                    $data = ['CUST_NAME'=> $row['FULLNAME'], 'CUST_COUNTRY'=> $row['cname'], 'RESV_ARRIVAL_DT'=> $row['RESV_ARRIVAL_DT'], 'RESV_DEPARTURE'=> $row['RESV_DEPARTURE'], 'RESV_NO'=> $row['RESV_NO'], 'RESV_RATE'=> $row['RESV_RATE']];
+                    $RESV_ARRIVAL_DT = $row['RESV_ARRIVAL_DT'];
+                    $RESV_DEPARTURE = $row['RESV_DEPARTURE'];
+                    $RESV_RATE = $row['RESV_RATE'];
+                    $CUST_EMAIL = $row['CUST_EMAIL'];
+                } 
+            }
+
+            $sql = "SELECT * FROM FLXY_FIXED_CHARGES INNER JOIN FLXY_TRANSACTION_CODE ON TR_CD_ID = FIXD_CHRG_TRNCODE WHERE FIXD_CHRG_RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
+            $fixedChargesResponse = $this->Db->query($sql)->getResultArray();
+
+            $RESV_ARRIVAL_DATE    = strtotime($RESV_ARRIVAL_DT);
+            $RESV_DEPARTURE_DATE  = strtotime($RESV_DEPARTURE); 
+            $datediff = $RESV_DEPARTURE_DATE - $RESV_ARRIVAL_DATE;
+            $RESERV_DAYS = round($datediff / (60 * 60 * 24));
+            $VAT = 0.05;
+            $TABLE_CONTENTS = '';
+            $FIXED_CONTENTS = '';             
+            $fixed_rows = 0;
+            $DEFAULT_MODE = 20;
+            $DEFAULT_ROWS = 0;
+            $ROOM_CHARGE_TOTAL = 0;
+            $VAT_TOTAL = 0;
+            $j = 0;
+            $fixedChargesAMOUNT = $fixedChargesVAT = $fixedChargesTotal = $fixedChargesVATTotal = $TOTAL = $TOTALVAT = 0;
+            
+            for($i = 1; $i <= $RESERV_DAYS; $i++ ){
+                $ROOM_CHARGE_TOTAL += $RESV_RATE;
+                $VAT_TOTAL += ($RESV_RATE * $VAT);
+                $DEFAULT_VAT = $RESV_RATE * $VAT;
+                $DEFAULT_PAGE_BREAK = '<tr></tr><div style="margin-top:370px;margin-bottom:5px; page-break-after:always"></div></tr>';
+                $sCurrentDate = gmdate("d-m-Y", strtotime("+$i day", $RESV_ARRIVAL_DATE)); 
+                $CurrentDate = strtotime($sCurrentDate); 
+                $sCurrentDay = gmdate("w", strtotime("+{$i} day", $RESV_ARRIVAL_DATE));
+                $sCurrentD = gmdate("d", strtotime("+{$i} day", $RESV_ARRIVAL_DATE)); 
+                $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+                        <td class="text-center" >'.$sCurrentDate.'</td>
+                        <td class="text-center">Room Charge </td>
+                        <td class="text-center"></td>
+                        <td class="text-left" >'.round($RESV_RATE,2).' </td>
+                        <td class="text-left">0.00</td>
+                    </tr>';
+                $DEFAULT_ROWS++;
+                if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                    $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                }   
+
+                $TABLE_CONTENTS.= '
+                <tr class="mt-5 mb-5">
+                    <td class="text-center">'.$sCurrentDate.'</td>
+                    <td class="text-center">VAT 5%</td>
+                    <td class="text-center"></td>
+                    <td class="text-left">'.round($DEFAULT_VAT).' </td>
+                    <td class="text-left">0.00</td>
+                </tr>';
+                $DEFAULT_ROWS++;
+
+                if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                    $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                } 
+
+                ////////// Fixed Charges //////////////               
+                if(!empty($fixedChargesResponse)){
+                    foreach($fixedChargesResponse as $fixedCharges) {
+                         
+                        $FIXD_CHRG_BEGIN_DATE =gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_BEGIN_DATE'])) );
+                        $FIXD_CHRG_END_DATE = gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_END_DATE'])));
+                        $FIXD_CHRG_FREQUENCY = $fixedCharges['FIXD_CHRG_FREQUENCY'];
+
+
+                        $FIXD_CHRG_BEGIN_DATE = strtotime($FIXD_CHRG_BEGIN_DATE);
+                        $FIXD_CHRG_END_DATE = strtotime($FIXD_CHRG_END_DATE);
+
+                        if($FIXD_CHRG_FREQUENCY == 1 && $CurrentDate == $FIXD_CHRG_BEGIN_DATE){
+                            $ONCE = 1;
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }
+
+                       
+                         if($FIXD_CHRG_FREQUENCY == 2 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE)){
+                           
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        } 
+                        
+                        
+                        else if($FIXD_CHRG_FREQUENCY == 3 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentDay == $fixedCharges['FIXD_CHRG_WEEKLY'])){
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }   
+
+                        else if($FIXD_CHRG_FREQUENCY == 4 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentD == $fixedCharges['FIXD_CHRG_MONTHLY'])){
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }  
+
+                        // else if($FIXD_CHRG_FREQUENCY == 5 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentDate == $fixedCharges['FIXD_CHRG_YEARLY'])){
+                        //     $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                        //     $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                        //     $fixedChargesTotal += $fixedChargesAMOUNT; 
+                        //     $fixedChargesVATTotal += $fixedChargesVAT;
+
+                        //     $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                        //     <td class="text-center">'.$sCurrentDate.'</td>
+                        //     <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                        //     <td class="text-center"></td>
+                        //     <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                        //     <td width="10%;" class="text-left">0.00</td>
+                        //     </tr>';
+
+                        //     $DEFAULT_ROWS++;
+                        //     if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                        //         $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                        //     }   
+
+                        //     $TABLE_CONTENTS.= '
+                        //     <tr class="mt-5 mb-5">
+                        //         <td class="text-center">'.$sCurrentDate.'</td>
+                        //         <td class="text-center">VAT 5%</td>
+                        //         <td class="text-center"></td>
+                                
+                        //         <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                        //         <td width="10%;" class="text-left">0.00</td>
+                        //     </tr>';
+                        //     $DEFAULT_ROWS++;
+
+                        //     if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                        //         $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                        //     } 
+                        // }  
+
+                        else if($FIXD_CHRG_FREQUENCY == 6 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && (date('d-m',$sCurrentDate) == date('d-m',$fixedCharges['FIXD_CHRG_YEARLY']))){
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }  
+
+
+                    }
+                   //exit;
+                }
+                     
+            }
+
+
+            $TOTAL = $ROOM_CHARGE_TOTAL + $fixedChargesTotal;
+            $TOTALVAT = $VAT_TOTAL + $fixedChargesVATTotal;
+
+            ////////////// Footer //////////////////
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"><hr></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>Total</td>
+            <td width="10%;" class="text-center">'.round($TOTAL,2).' </td>
+            <td width="10%;" class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            } 
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"><hr></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>Balance</td>
+            <td class="text-center">'.round($TOTAL,2).' </td>
+            <td class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }  
+            
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>VAT Incl. Amount</td>
+            <td class="text-center">'.round($TOTAL,2).' </td>
+            <td class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }  
+            
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>5 % VAT</td>
+            <td class="text-center">'.round($TOTALVAT,2).' </td>
+            <td class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }  
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"><hr></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+            
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td class="pt-20">Guest Signature</td>
+            <td class="text-center"></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+            $TABLE_CONTENTS.= '<tr class="mt-20 mb-5" >
+            <td class="text-center"></td>
+            <td></td>
+            <td class="mt-20 mb-5 pt-20">Guest Email : '.$CUST_EMAIL.'</td>
+            <td class="text-center"></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            } 
+            $TABLE_CONTENTS.= '<div class="mt-5 mb-5 pl-20" ><p>'.$_SESSION['FOLIO_TXT_ONE'].'
+           </p></div>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            } 
+
+            $TABLE_CONTENTS.= '<div class="mt-5 mb-5 pl-20"><p>'.$_SESSION['FOLIO_TXT_TWO'].'</p></div>';
+             $DEFAULT_ROWS++;
+             if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                 $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+             } 
+            
+            
+
+
+          
+            $data['CHARGES'] = $TABLE_CONTENTS; 
+            $dompdf->loadHtml(view('Master/preview_proforma',$data));
+            $dompdf->render();           
+            $canvas = $dompdf->getCanvas();
+            $canvas->page_text(18, 780, "{PAGE_NUM} / {PAGE_COUNT}", '', 6, array(0,0,0));
+            $dompdf->stream("my_pdf.pdf", array("Attachment" => 0));
+           
+        }
 
         
 
+        public function printProFormaFolio(){          
+                    
+            $dompdf = new \Dompdf\Dompdf(); 
+            $options = new \Dompdf\Options();
+            $options->setIsRemoteEnabled(true);
+            $options->setDefaultFont('Courier');
+            $dompdf = new \Dompdf\Dompdf($options);
+
+            $sql = "SELECT CUST_FIRST_NAME+' '+CUST_MIDDLE_NAME+' '+ CUST_LAST_NAME AS FULLNAME, CUST_EMAIL, cname, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO, RESV_RATE FROM FLXY_RESERVATION LEFT JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID LEFT JOIN COUNTRY ON iso2 = CUST_COUNTRY WHERE RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
+            $response = $this->Db->query($sql)->getResultArray();
+
+            if(!empty($response)){
+                foreach ($response as $row) {
+                    $data = ['CUST_NAME'=> $row['FULLNAME'], 'CUST_COUNTRY'=> $row['cname'], 'RESV_ARRIVAL_DT'=> $row['RESV_ARRIVAL_DT'], 'RESV_DEPARTURE'=> $row['RESV_DEPARTURE'], 'RESV_NO'=> $row['RESV_NO'], 'RESV_RATE'=> $row['RESV_RATE']];
+                    $RESV_ARRIVAL_DT = $row['RESV_ARRIVAL_DT'];
+                    $RESV_DEPARTURE = $row['RESV_DEPARTURE'];
+                    $RESV_RATE = $row['RESV_RATE'];
+                    $CUST_EMAIL = $row['CUST_EMAIL'];
+                } 
+            }
+
+            $sql = "SELECT * FROM FLXY_FIXED_CHARGES INNER JOIN FLXY_TRANSACTION_CODE ON TR_CD_ID = FIXD_CHRG_TRNCODE WHERE FIXD_CHRG_RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
+            $fixedChargesResponse = $this->Db->query($sql)->getResultArray();
+
+            $RESV_ARRIVAL_DATE    = strtotime($RESV_ARRIVAL_DT);
+            $RESV_DEPARTURE_DATE  = strtotime($RESV_DEPARTURE); 
+            $datediff = $RESV_DEPARTURE_DATE - $RESV_ARRIVAL_DATE;
+            $RESERV_DAYS = round($datediff / (60 * 60 * 24));
+            $VAT = 0.05;
+            $TABLE_CONTENTS = '';
+            $FIXED_CONTENTS = '';             
+            $fixed_rows = 0;
+            $DEFAULT_MODE = 20;
+            $DEFAULT_ROWS = 0;
+            $ROOM_CHARGE_TOTAL = 0;
+            $VAT_TOTAL = 0;
+            $j = 0;
+            $fixedChargesAMOUNT = $fixedChargesVAT = $fixedChargesTotal = $fixedChargesVATTotal = $TOTAL = $TOTALVAT = 0;
+            
+            for($i = 1; $i <= $RESERV_DAYS; $i++ ){
+                $ROOM_CHARGE_TOTAL += $RESV_RATE;
+                $VAT_TOTAL += ($RESV_RATE * $VAT);
+                $DEFAULT_VAT = $RESV_RATE * $VAT;
+                $DEFAULT_PAGE_BREAK = '<tr></tr><div style="margin-top:370px;margin-bottom:5px; page-break-after:always"></div></tr>';
+                $sCurrentDate = gmdate("d-m-Y", strtotime("+$i day", $RESV_ARRIVAL_DATE)); 
+                $CurrentDate = strtotime($sCurrentDate); 
+                $sCurrentDay = gmdate("w", strtotime("+{$i} day", $RESV_ARRIVAL_DATE));
+                $sCurrentD = gmdate("d", strtotime("+{$i} day", $RESV_ARRIVAL_DATE)); 
+                $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+                        <td class="text-center" >'.$sCurrentDate.'</td>
+                        <td class="text-center">Room Charge </td>
+                        <td class="text-center"></td>
+                        <td class="text-left" >'.round($RESV_RATE,2).' </td>
+                        <td class="text-left">0.00</td>
+                    </tr>';
+                $DEFAULT_ROWS++;
+                if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                    $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                }   
+
+                $TABLE_CONTENTS.= '
+                <tr class="mt-5 mb-5">
+                    <td class="text-center">'.$sCurrentDate.'</td>
+                    <td class="text-center">VAT 5%</td>
+                    <td class="text-center"></td>
+                    <td class="text-left">'.round($DEFAULT_VAT).' </td>
+                    <td class="text-left">0.00</td>
+                </tr>';
+                $DEFAULT_ROWS++;
+
+                if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                    $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                } 
+
+                ////////// Fixed Charges //////////////               
+                if(!empty($fixedChargesResponse)){
+                    foreach($fixedChargesResponse as $fixedCharges) {
+                         
+                        $FIXD_CHRG_BEGIN_DATE =gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_BEGIN_DATE'])) );
+                        $FIXD_CHRG_END_DATE = gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_END_DATE'])));
+                        $FIXD_CHRG_FREQUENCY = $fixedCharges['FIXD_CHRG_FREQUENCY'];
+
+
+                        $FIXD_CHRG_BEGIN_DATE = strtotime($FIXD_CHRG_BEGIN_DATE);
+                        $FIXD_CHRG_END_DATE = strtotime($FIXD_CHRG_END_DATE);
+
+                        if($FIXD_CHRG_FREQUENCY == 1 && $CurrentDate == $FIXD_CHRG_BEGIN_DATE){
+                            $ONCE = 1;
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }
+
+                       
+                         if($FIXD_CHRG_FREQUENCY == 2 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE)){
+                           
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        } 
+                        
+                        
+                        else if($FIXD_CHRG_FREQUENCY == 3 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentDay == $fixedCharges['FIXD_CHRG_WEEKLY'])){
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }   
+
+                        else if($FIXD_CHRG_FREQUENCY == 4 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentD == $fixedCharges['FIXD_CHRG_MONTHLY'])){
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }  
+
+                        // else if($FIXD_CHRG_FREQUENCY == 5 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentDate == $fixedCharges['FIXD_CHRG_YEARLY'])){
+                        //     $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                        //     $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                        //     $fixedChargesTotal += $fixedChargesAMOUNT; 
+                        //     $fixedChargesVATTotal += $fixedChargesVAT;
+
+                        //     $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                        //     <td class="text-center">'.$sCurrentDate.'</td>
+                        //     <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                        //     <td class="text-center"></td>
+                        //     <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                        //     <td width="10%;" class="text-left">0.00</td>
+                        //     </tr>';
+
+                        //     $DEFAULT_ROWS++;
+                        //     if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                        //         $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                        //     }   
+
+                        //     $TABLE_CONTENTS.= '
+                        //     <tr class="mt-5 mb-5">
+                        //         <td class="text-center">'.$sCurrentDate.'</td>
+                        //         <td class="text-center">VAT 5%</td>
+                        //         <td class="text-center"></td>
+                                
+                        //         <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                        //         <td width="10%;" class="text-left">0.00</td>
+                        //     </tr>';
+                        //     $DEFAULT_ROWS++;
+
+                        //     if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                        //         $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                        //     } 
+                        // }  
+
+                        else if($FIXD_CHRG_FREQUENCY == 6 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && (date('d-m',$sCurrentDate) == date('d-m',$fixedCharges['FIXD_CHRG_YEARLY']))){
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }  
+
+
+                    }
+                   //exit;
+                }
+                     
+            }
+
+
+            $TOTAL = $ROOM_CHARGE_TOTAL + $fixedChargesTotal;
+            $TOTALVAT = $VAT_TOTAL + $fixedChargesVATTotal;
+
+            ////////////// Footer //////////////////
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"><hr></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>Total</td>
+            <td width="10%;" class="text-center">'.round($TOTAL,2).' </td>
+            <td width="10%;" class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            } 
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"><hr></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>Balance</td>
+            <td class="text-center">'.round($TOTAL,2).' </td>
+            <td class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }  
+            
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>VAT Incl. Amount</td>
+            <td class="text-center">'.round($TOTAL,2).' </td>
+            <td class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }  
+            
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>5 % VAT</td>
+            <td class="text-center">'.round($TOTALVAT,2).' </td>
+            <td class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }  
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"><hr></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+            
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td class="pt-20">Guest Signature</td>
+            <td class="text-center"></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+            $TABLE_CONTENTS.= '<tr class="mt-20 mb-5" >
+            <td class="text-center"></td>
+            <td></td>
+            <td class="mt-20 mb-5 pt-20">Guest Email : '.$CUST_EMAIL.'</td>
+            <td class="text-center"></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            } 
+            $TABLE_CONTENTS.= '<div class="mt-5 mb-5 pl-20" ><p>'.$_SESSION['FOLIO_TXT_ONE'].'
+           </p></div>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            } 
+
+            $TABLE_CONTENTS.= '<div class="mt-5 mb-5 pl-20"><p>'.$_SESSION['FOLIO_TXT_TWO'].'</p></div>';
+             $DEFAULT_ROWS++;
+             if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                 $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+             } 
+            
+            
+
+
+          
+            $data['CHARGES'] = $TABLE_CONTENTS; 
+            $dompdf->loadHtml(view('Master/preview_proforma',$data));
+            $dompdf->render();           
+            $canvas = $dompdf->getCanvas();
+            $canvas->page_text(18, 780, "{PAGE_NUM} / {PAGE_COUNT}", '', 6, array(0,0,0));
+            $dompdf->stream("my_pdf.pdf", array("Attachment" => 0));
+           
+        }
+
+        public function pdfProFormaFolio(){          
+                    
+            $dompdf = new \Dompdf\Dompdf(); 
+            $options = new \Dompdf\Options();
+            $options->setIsRemoteEnabled(true);
+            $options->setDefaultFont('Courier');
+            $dompdf = new \Dompdf\Dompdf($options);
+
+            $sql = "SELECT CUST_FIRST_NAME+' '+CUST_MIDDLE_NAME+' '+ CUST_LAST_NAME AS FULLNAME, CUST_EMAIL, cname, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO, RESV_RATE FROM FLXY_RESERVATION LEFT JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID LEFT JOIN COUNTRY ON iso2 = CUST_COUNTRY WHERE RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
+            $response = $this->Db->query($sql)->getResultArray();
+
+            if(!empty($response)){
+                foreach ($response as $row) {
+                    $data = ['CUST_NAME'=> $row['FULLNAME'], 'CUST_COUNTRY'=> $row['cname'], 'RESV_ARRIVAL_DT'=> $row['RESV_ARRIVAL_DT'], 'RESV_DEPARTURE'=> $row['RESV_DEPARTURE'], 'RESV_NO'=> $row['RESV_NO'], 'RESV_RATE'=> $row['RESV_RATE']];
+                    $RESV_ARRIVAL_DT = $row['RESV_ARRIVAL_DT'];
+                    $RESV_DEPARTURE = $row['RESV_DEPARTURE'];
+                    $RESV_RATE = $row['RESV_RATE'];
+                    $CUST_EMAIL = $row['CUST_EMAIL'];
+                } 
+            }
+
+            $sql = "SELECT * FROM FLXY_FIXED_CHARGES INNER JOIN FLXY_TRANSACTION_CODE ON TR_CD_ID = FIXD_CHRG_TRNCODE WHERE FIXD_CHRG_RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
+            $fixedChargesResponse = $this->Db->query($sql)->getResultArray();
+
+            $RESV_ARRIVAL_DATE    = strtotime($RESV_ARRIVAL_DT);
+            $RESV_DEPARTURE_DATE  = strtotime($RESV_DEPARTURE); 
+            $datediff = $RESV_DEPARTURE_DATE - $RESV_ARRIVAL_DATE;
+            $RESERV_DAYS = round($datediff / (60 * 60 * 24));
+            $VAT = 0.05;
+            $TABLE_CONTENTS = '';
+            $FIXED_CONTENTS = '';             
+            $fixed_rows = 0;
+            $DEFAULT_MODE = 20;
+            $DEFAULT_ROWS = 0;
+            $ROOM_CHARGE_TOTAL = 0;
+            $VAT_TOTAL = 0;
+            $j = 0;
+            $fixedChargesAMOUNT = $fixedChargesVAT = $fixedChargesTotal = $fixedChargesVATTotal = $TOTAL = $TOTALVAT = 0;
+            
+            for($i = 1; $i <= $RESERV_DAYS; $i++ ){
+                $ROOM_CHARGE_TOTAL += $RESV_RATE;
+                $VAT_TOTAL += ($RESV_RATE * $VAT);
+                $DEFAULT_VAT = $RESV_RATE * $VAT;
+                $DEFAULT_PAGE_BREAK = '<tr></tr><div style="margin-top:370px;margin-bottom:5px; page-break-after:always"></div></tr>';
+                $sCurrentDate = gmdate("d-m-Y", strtotime("+$i day", $RESV_ARRIVAL_DATE)); 
+                $CurrentDate = strtotime($sCurrentDate); 
+                $sCurrentDay = gmdate("w", strtotime("+{$i} day", $RESV_ARRIVAL_DATE));
+                $sCurrentD = gmdate("d", strtotime("+{$i} day", $RESV_ARRIVAL_DATE)); 
+                $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+                        <td class="text-center" >'.$sCurrentDate.'</td>
+                        <td class="text-center">Room Charge </td>
+                        <td class="text-center"></td>
+                        <td class="text-left" >'.round($RESV_RATE,2).' </td>
+                        <td class="text-left">0.00</td>
+                    </tr>';
+                $DEFAULT_ROWS++;
+                if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                    $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                }   
+
+                $TABLE_CONTENTS.= '
+                <tr class="mt-5 mb-5">
+                    <td class="text-center">'.$sCurrentDate.'</td>
+                    <td class="text-center">VAT 5%</td>
+                    <td class="text-center"></td>
+                    <td class="text-left">'.round($DEFAULT_VAT).' </td>
+                    <td class="text-left">0.00</td>
+                </tr>';
+                $DEFAULT_ROWS++;
+
+                if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                    $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                } 
+
+                ////////// Fixed Charges //////////////               
+                if(!empty($fixedChargesResponse)){
+                    foreach($fixedChargesResponse as $fixedCharges) {
+                         
+                        $FIXD_CHRG_BEGIN_DATE =gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_BEGIN_DATE'])) );
+                        $FIXD_CHRG_END_DATE = gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_END_DATE'])));
+                        $FIXD_CHRG_FREQUENCY = $fixedCharges['FIXD_CHRG_FREQUENCY'];
+
+
+                        $FIXD_CHRG_BEGIN_DATE = strtotime($FIXD_CHRG_BEGIN_DATE);
+                        $FIXD_CHRG_END_DATE = strtotime($FIXD_CHRG_END_DATE);
+
+                        if($FIXD_CHRG_FREQUENCY == 1 && $CurrentDate == $FIXD_CHRG_BEGIN_DATE){
+                            $ONCE = 1;
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }
+
+                       
+                         if($FIXD_CHRG_FREQUENCY == 2 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE)){
+                           
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        } 
+                        
+                        
+                        else if($FIXD_CHRG_FREQUENCY == 3 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentDay == $fixedCharges['FIXD_CHRG_WEEKLY'])){
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }   
+
+                        else if($FIXD_CHRG_FREQUENCY == 4 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentD == $fixedCharges['FIXD_CHRG_MONTHLY'])){
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }  
+
+                        // else if($FIXD_CHRG_FREQUENCY == 5 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentDate == $fixedCharges['FIXD_CHRG_YEARLY'])){
+                        //     $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                        //     $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                        //     $fixedChargesTotal += $fixedChargesAMOUNT; 
+                        //     $fixedChargesVATTotal += $fixedChargesVAT;
+
+                        //     $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                        //     <td class="text-center">'.$sCurrentDate.'</td>
+                        //     <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                        //     <td class="text-center"></td>
+                        //     <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                        //     <td width="10%;" class="text-left">0.00</td>
+                        //     </tr>';
+
+                        //     $DEFAULT_ROWS++;
+                        //     if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                        //         $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                        //     }   
+
+                        //     $TABLE_CONTENTS.= '
+                        //     <tr class="mt-5 mb-5">
+                        //         <td class="text-center">'.$sCurrentDate.'</td>
+                        //         <td class="text-center">VAT 5%</td>
+                        //         <td class="text-center"></td>
+                                
+                        //         <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                        //         <td width="10%;" class="text-left">0.00</td>
+                        //     </tr>';
+                        //     $DEFAULT_ROWS++;
+
+                        //     if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                        //         $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                        //     } 
+                        // }  
+
+                        else if($FIXD_CHRG_FREQUENCY == 6 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && (date('d-m',$sCurrentDate) == date('d-m',$fixedCharges['FIXD_CHRG_YEARLY']))){
+                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                            $fixedChargesTotal += $fixedChargesAMOUNT; 
+                            $fixedChargesVATTotal += $fixedChargesVAT;
+
+                            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                            <td class="text-center"></td>
+                            <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+
+                            $DEFAULT_ROWS++;
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                            }   
+
+                            $TABLE_CONTENTS.= '
+                            <tr class="mt-5 mb-5">
+                                <td class="text-center">'.$sCurrentDate.'</td>
+                                <td class="text-center">VAT 5%</td>
+                                <td class="text-center"></td>
+                                
+                                <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                                <td width="10%;" class="text-left">0.00</td>
+                            </tr>';
+                            $DEFAULT_ROWS++;
+
+                            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                            } 
+                        }  
+
+
+                    }
+                   //exit;
+                }
+                     
+            }
+
+
+            $TOTAL = $ROOM_CHARGE_TOTAL + $fixedChargesTotal;
+            $TOTALVAT = $VAT_TOTAL + $fixedChargesVATTotal;
+
+            ////////////// Footer //////////////////
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"><hr></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>Total</td>
+            <td width="10%;" class="text-center">'.round($TOTAL,2).' </td>
+            <td width="10%;" class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            } 
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"><hr></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>Balance</td>
+            <td class="text-center">'.round($TOTAL,2).' </td>
+            <td class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }  
+            
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>VAT Incl. Amount</td>
+            <td class="text-center">'.round($TOTAL,2).' </td>
+            <td class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }  
+            
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td>5 % VAT</td>
+            <td class="text-center">'.round($TOTALVAT,2).' </td>
+            <td class="text-center">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }  
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"><hr></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+            
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td class="text-center"></td>
+            <td></td>
+            <td class="pt-20">Guest Signature</td>
+            <td class="text-center"></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+            <td colspan="5"></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+            $TABLE_CONTENTS.= '<tr class="mt-20 mb-5" >
+            <td class="text-center"></td>
+            <td></td>
+            <td class="mt-20 mb-5 pt-20">Guest Email : '.$CUST_EMAIL.'</td>
+            <td class="text-center"></td>
+            </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            } 
+            $TABLE_CONTENTS.= '<div class="mt-5 mb-5 pl-20" ><p>'.$_SESSION['FOLIO_TXT_ONE'].'
+           </p></div>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            } 
+
+            $TABLE_CONTENTS.= '<div class="mt-5 mb-5 pl-20"><p>'.$_SESSION['FOLIO_TXT_TWO'].'</p></div>';
+             $DEFAULT_ROWS++;
+             if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                 $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+             } 
+            
+            
+
+
+          
+            $data['CHARGES'] = $TABLE_CONTENTS; 
+            $dompdf->loadHtml(view('Master/preview_proforma',$data));
+            $dompdf->render();           
+            $canvas = $dompdf->getCanvas();
+            $canvas->page_text(18, 780, "{PAGE_NUM} / {PAGE_COUNT}", '', 6, array(0,0,0));
+            $dompdf->stream("my_pdf.pdf", array("Attachment" => 1));     
+        }
+    
     
 
 }

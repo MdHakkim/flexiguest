@@ -501,7 +501,14 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/deleteFixedcharge', 'ApplicatioController::deleteFixedcharge');
       $routes->match(['post'],'/getReservDetails', 'ApplicatioController::getReservDetails');
       
-      $routes->get('/printpdf', 'AdditionalController::printpdf');
+      $routes->match(['post'],'/proformaFolio', 'AdditionalController::proformaFolio');
+      $routes->get('/printProFormaFolio', 'AdditionalController::printProFormaFolio');
+      $routes->get('/previewProFormaFolio', 'AdditionalController::previewProFormaFolio');
+      $routes->get('/pdfProFormaFolio', 'AdditionalController::pdfProFormaFolio');
+      
+      
+
+      
       
      
       
