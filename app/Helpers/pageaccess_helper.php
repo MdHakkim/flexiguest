@@ -17,7 +17,8 @@ function checkPageAccess()
     
     $url = ltrim(str_replace($base_url,'',$current_url), '/');
    
-    $url = explode("/",$url);
+    //$url = explode("/",$url);
+    $url = explode("/", parse_url($url, PHP_URL_PATH));
 
     $ROLE_ID = session()->get('USR_ROLE_ID');
 
