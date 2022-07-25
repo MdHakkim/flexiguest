@@ -168,7 +168,7 @@
                                             <div class="col-md-9">
                                                 <input id="RT_CD_PACKAGES" name="RT_CD_PACKAGES"
                                                     class="form-control TagifyPackageCodeList" />
-                                                <small><?php echo isset($rateCodeID) ? 'Click each tag to edit Packgage Rates' : ''; ?></small>
+                                                <small><?php echo isset($rateCodeID) ? 'Click each tag to save Packgage Rates' : ''; ?></small>
                                             </div>
                                         </div>
                                         <div class="row mb-3">
