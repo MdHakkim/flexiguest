@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\API\ResponseTrait;
 use  App\Libraries\EmailLibrary;
+use App\Models\City;
+use App\Models\State;
 use App\Models\VaccineDetail;
 
 class APIController extends BaseController
@@ -13,11 +15,15 @@ class APIController extends BaseController
 
     private $DB;
     private $VaccineDetail;
+    private $State;
+    private $City;
 
     public function __construct()
     {
         $this->DB = \Config\Database::connect();
         $this->VaccineDetail = new VaccineDetail();
+        $this->State = new State();
+        $this->City = new City();
     }
 
     // ----------- START API FOR FLEXI GUEST --------------//
@@ -1187,5 +1193,21 @@ class APIController extends BaseController
         $this->DB->query("update FLXY_RESERVATION set RESV_STATUS = 'Checked-In' where RESV_ID = :reservation_id:", $params);
     
         return $this->respond(responseJson(200, false, ['msg' => 'Guest checked-in successfully.']));
+    }
+
+    public function getState()
+    {
+        $country_id = $this->request->getVar('country_id');
+        $states = $this->State->where('country_id', $country_id)->findAll();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'State List'], $states));
+    }
+
+    public function getCity()
+    {
+        $state_id = $this->request->getVar('state_id');
+        $cities = $this->City->where('state_id', $state_id)->findAll();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Cities List'], $cities));
     }
 }

@@ -16,6 +16,8 @@ $routes->group("api", function ($routes) {
 
     $routes->get('lookup-api', 'APIController::lookupApi');
 
+    $routes->get('get-state', 'APIController::getState');
+    $routes->get('get-city', 'APIController::getCity');
 });
 
 $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
