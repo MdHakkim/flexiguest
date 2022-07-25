@@ -206,14 +206,15 @@ class HouseKeepingController extends BaseController
         if ($user['USR_ROLE'] == 'attendee')
             $subtask['HKATD_STATUS'] = $status;
         else {
-            if ($status == 'Inspected') {
-                if ($subtask['HKATD_STATUS'] == 'In Progress')
+            if ($subtask['HKATD_STATUS'] == 'In Progress')
                     return $this->respond(responseJson(202, true, ['msg' => 'This task is not completed yet.']));
+
+            if ($status == 'Inspected') {
 
                 $subtask['HKATD_INSPECTED_STATUS'] = 'Inspected';
                 $subtask['HKATD_INSPECTED_DATETIME'] = date('Y-m-d H:i:s');
             } else {
-                $subtask['HKATD_INSPECTED_STATUS'] = 'Not Inspected';
+                $subtask['HKATD_INSPECTED_STATUS'] = 'Rejected';
                 $subtask['HKATD_STATUS'] = 'In Progress';
                 $subtask['HKATD_COMPLETION_TIME'] = null;
             }
