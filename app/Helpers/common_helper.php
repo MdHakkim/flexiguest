@@ -41,6 +41,16 @@ function setNullOnEmpty($val)
         return NULL;    
 }
 
+function setZeroOnEmpty($val)
+{
+    $val = trim($val);
+
+    if(!empty($val))
+        return $val;
+    else
+        return '0.00';    
+}
+
 function checkValueinTable($column, $value, $table)
 {
     $Db = \Config\Database::connect();

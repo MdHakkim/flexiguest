@@ -365,9 +365,9 @@ function submitFormComp(id, event) {
                     var option = '<option value="' + response['ID'] + '">' + response['FULLNAME'] +
                         '</option>';
                     if (compAgntMode == 'COMPANY') {
-                        $('#RESV_COMPANY').html(option).selectpicker('refresh');
+                        $('#RESV_COMPANY').val(response['ID']).trigger('change');
                     } else {
-                        $('#RESV_AGENT').html(option).selectpicker('refresh');
+                        $('#RESV_AGENT').val(response['ID']).trigger('change');
                     }
                 } else {
                     $('#dataTable_view').dataTable().fnDraw();

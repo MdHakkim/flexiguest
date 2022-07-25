@@ -22,7 +22,7 @@
     margin-top: 0;
 }
 
-.memtypeContainer .select2-container {
+.sel2Container .select2-container {
     width: 87% !important;
     float: left;
 }
@@ -213,7 +213,7 @@
                                             Type:</b></label>
                                     <div class="col-md-8">
                                         <select id="S_RESV_RM_TYPE" name="S_RESV_RM_TYPE"
-                                            class="form-select select2 dt-input" data-allow-clear="true">
+                                            class="select2 form-select dt-input" data-allow-clear="true">
                                             <option value=""></option>
                                         </select>
                                     </div>
@@ -245,7 +245,7 @@
                                             By:</b></label>
                                     <div class="col-md-8">
                                         <select id="S_RESV_CREATE_UID" name="S_RESV_CREATE_UID"
-                                            class="form-select select2 dt-input" data-allow-clear="true">
+                                            class="select2 form-select dt-input" data-allow-clear="true">
                                             <option value=""></option>
                                             <?php
                                                 if($userList != NULL) {
@@ -552,7 +552,7 @@
                                         <input type="number" id="RESV_ADULTS" class="form-control RESV_ADULTS" min="1"
                                             placeholder="adults" />
                                         <input type="number" id="RESV_CHILDREN" class="form-control RESV_CHILDREN"
-                                            min="0" placeholder="children" />
+                                            min="0" value="0" placeholder="children" />
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
@@ -568,7 +568,7 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <lable class="form-lable">Member Type</lable>
-                                    <div class="memtypeContainer mb-3">
+                                    <div class="sel2Container mb-3">
                                         <select id="RESV_MEMBER_TY_ADD" class="select2 form-select"
                                             data-allow-clear="true">
                                         </select>
@@ -579,10 +579,9 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Company</label>
-                                    <div class="input-group mb-3">
-                                        <select id="RESV_COMPANY" class="selectpicker RESV_COMPANY"
-                                            data-live-search="true">
-                                            <option value="">Select</option>
+                                    <div class="sel2Container mb-3">
+                                        <select id="RESV_COMPANY_ADD" class="select2 form-select RESV_COMPANY"
+                                            data-allow-clear="true">
                                         </select>
                                         <button type="button" onClick="companyAgentClick('COMPANY')"
                                             class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus"
@@ -591,9 +590,9 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Agent</label>
-                                    <div class="input-group mb-3">
-                                        <select id="RESV_AGENT" class="selectpicker RESV_AGENT" data-live-search="true">
-                                            <option value="">Select</option>
+                                    <div class="sel2Container mb-3">
+                                        <select id="RESV_AGENT_ADD" class="select2 form-select RESV_AGENT"
+                                            data-allow-clear="true">
                                         </select>
                                         <button type="button" onClick="companyAgentClick('AGENT')"
                                             class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus"
@@ -746,7 +745,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">VIP</label>
-                                    <select name="CUST_VIP" id="CUST_VIP" class="select2 form-select"
+                                    <select name="CUST_VIP_ADD" id="CUST_VIP_ADD" class="select2 form-select CUST_VIP"
                                         data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
@@ -758,7 +757,7 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <lable class="form-lable">Member Type</lable>
-                                    <div class="memtypeContainer mb-3">
+                                    <div class="sel2Container mb-3">
                                         <select name="RESV_MEMBER_TY" id="RESV_MEMBER_TY" class="select2 form-select"
                                             data-allow-clear="true">
                                         </select>
@@ -775,10 +774,9 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Company</label>
-                                    <div class="input-group mb-3">
-                                        <select name="RESV_COMPANY" id="RESV_COMPANY" class="selectpicker RESV_COMPANY"
-                                            data-live-search="true">
-                                            <option value="">Select</option>
+                                    <div class="sel2Container mb-3">
+                                        <select name="RESV_COMPANY" id="RESV_COMPANY"
+                                            class="select2 form-select RESV_COMPANY" data-allow-clear="true">
                                         </select>
                                         <button type="button" onClick="companyAgentClick('COMPANY')"
                                             class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus"
@@ -787,10 +785,9 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Agent</label>
-                                    <div class="input-group mb-3">
-                                        <select name="RESV_AGENT" id="RESV_AGENT" class="selectpicker RESV_AGENT"
-                                            data-live-search="true">
-                                            <option value="">Select</option>
+                                    <div class="sel2Container mb-3">
+                                        <select name="RESV_AGENT" id="RESV_AGENT" class="select2 form-select RESV_AGENT"
+                                            data-allow-clear="true">
                                         </select>
                                         <button type="button" onClick="companyAgentClick('AGENT')"
                                             class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus"
@@ -900,7 +897,7 @@
                                             <div class="col-md-3">
                                                 <label class="form-label">Room Type</label>
                                                 <select name="RESV_RM_TYPE" id="RESV_RM_TYPE" data-width="100%"
-                                                    class="selectpicker RESV_RM_TYPE" data-live-search="true">
+                                                    class="select2 form-select RESV_RM_TYPE" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
@@ -1521,7 +1518,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">VIP</label>
-                                <select name="CUST_VIP" id="CUST_VIP" class="select2 form-select"
+                                <select name="CUST_VIP" id="CUST_VIP" class="select2 form-select CUST_VIP"
                                     data-allow-clear="true">
                                     <option value="">Select VIP</option>
                                 </select>
@@ -2540,6 +2537,32 @@ $(document).ready(function() {
         // dataType:'json',
         success: function(respn) {
             $('#S_RESV_RM_TYPE').html(respn);
+            $('.RESV_RM_TYPE').html(respn);
+        }
+    });
+
+
+    $.ajax({
+        url: '<?php echo base_url('/companyList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        // dataType:'json',
+        success: function(respn) {
+            $('.RESV_COMPANY').html(respn);
+        }
+    });
+
+    $.ajax({
+        url: '<?php echo base_url('/agentList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        // dataType:'json',
+        success: function(respn) {
+            $('.RESV_AGENT').html(respn);
         }
     });
 
@@ -2653,6 +2676,9 @@ function selectRate() {
     fillCustomerMemberships($('#CM_CUST_ID').val(), 'edit', '[name="RESV_MEMBER_TY"]');
     $('[name="RESV_MEMBER_TY"]').val($('#RESV_MEMBER_TY_ADD').val()).trigger('change').trigger('select2:select');
 
+    $('[name="RESV_COMPANY"]').val($('#RESV_COMPANY_ADD').val()).trigger('change').trigger('select2:select');
+    $('[name="RESV_AGENT"]').val($('#RESV_AGENT_ADD').val()).trigger('change').trigger('select2:select');
+
     $('#submitResrBtn').removeClass('submitResr');
     runInitializeConfig();
 
@@ -2701,7 +2727,8 @@ function selectRate() {
                     .trim(dataSet['RM_TY_DESC']) + '" data-rmclass="' + $.trim(dataSet[
                         'RM_TY_ROOM_CLASS']) +
                     '" value="' + dataSet['RM_TY_CODE'] + '">' + dataSet['RM_TY_DESC'] + '</option>';
-                $('#RESV_RM_TYPE,#RESV_RTC').html(option).selectpicker('refresh');
+                $('#RESV_RTC').html(option).selectpicker('refresh');
+                $('#RESV_RM_TYPE').val(dataSet['RM_TY_CODE']).trigger('change');
             }
         });
     }
@@ -2791,9 +2818,8 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     itemClassList();
 
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
-    $('#RESV_NAME,#RESV_COMPANY,#RESV_AGENT,#RESV_BLOCK').html(
-        '<option value="">Select</option>').selectpicker(
-        'refresh');
+    $('#RESV_NAME,#RESV_BLOCK').html(
+        '<option value="">Select</option>').selectpicker('refresh');
     runSupportingResevationLov();
     runInitializeConfig();
     $('.window-1,#nextbtn,#previousbtn').hide();
@@ -2844,9 +2870,8 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                         field == 'RESV_AGENT_DESC' || field == 'RESV_BLOCK_DESC') {
                         return true;
                     };
-                    if (field == 'RESV_NAME' || field == 'RESV_COMPANY' || field ==
-                        'RESV_AGENT' || field == 'RESV_BLOCK' || field ==
-                        'CUST_COUNTRY' || field == 'RESV_RM_TYPE' || field ==
+                    if (field == 'RESV_NAME' || field == 'RESV_BLOCK' || field ==
+                        'CUST_COUNTRY' || field ==
                         'RESV_ROOM' || field == 'RESV_RTC') {
                         var option = '<option value="' + dataval + '">' + data[
                             field + '_DESC'] + '</option>';
@@ -2879,13 +2904,13 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 
                 var nights = parseInt($('#RESV_NIGHT').val());
                 nights = nights != 0 ? nights : 1;
-                
+
                 var today = moment().format('DD-MM-YYYY');
                 var end = moment().add(nights, 'days').format('DD-MM-YYYY');
                 $('.RESV_ARRIVAL_DT').datepicker().datepicker("setDate", today);
                 $('.RESV_DEPARTURE').datepicker().datepicker("setDate", end);
             }
-            
+
             checkArrivalDate();
         }
     });
@@ -2963,7 +2988,7 @@ function addResvation() {
 
     clearFormFields('#select_items');
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
-    $('#RESV_NAME,#RESV_COMPANY,#RESV_AGENT,#RESV_BLOCK').html('<option value="">Select</option>').selectpicker(
+    $('#RESV_NAME,#RESV_BLOCK').html('<option value="">Select</option>').selectpicker(
         'refresh');
     $('#reservationW').modal('show');
     $('#reservationForm').removeClass('was-validated');
@@ -3021,7 +3046,7 @@ $(document).on('change', '*#RESV_NAME', function() {
                 $('#CUST_FIRST_NAME').val($.trim(json.CUST_FIRST_NAME))
                 $('#CUST_TITLE').val($.trim(json.CUST_TITLE));
                 $('#CUST_COUNTRY').val($.trim(json.CUST_COUNTRY)).selectpicker('refresh');
-                $('#CUST_VIP').val($.trim(json.CUST_VIP));
+                $('.CUST_VIP').val($.trim(json.CUST_VIP));
                 $('#CUST_PHONE').val($.trim(json.CUST_PHONE));
 
                 fillCustomerMemberships(custId, 'edit', $('.window-2').is(':visible') ?
@@ -3029,7 +3054,7 @@ $(document).on('change', '*#RESV_NAME', function() {
                 $('#CM_CUST_ID').val(custId);
 
             } else {
-                $('#CUST_FIRST_NAME,#CUST_TITLE,#CUST_COUNTRY,#CUST_VIP,#CUST_PHONE').val('');
+                $('#CUST_FIRST_NAME,#CUST_TITLE,#CUST_COUNTRY,.CUST_VIP,#CUST_PHONE').val('');
             }
         }
     });
@@ -3198,7 +3223,7 @@ function submitForm(id, mode, event) {
                     $('*#RESV_NAME').html(option).selectpicker('refresh');
                     $('*#CUST_TITLE').val(response['CUST_TITLE']);
                     $('*#CUST_FIRST_NAME').val(response['CUST_FIRST_NAME']);
-                    $('*#CUST_VIP').val(response['CUST_VIP']);
+                    $('.CUST_VIP').val(response['CUST_VIP']);
                     $('*#CUST_PHONE').val(response['CUST_PHONE']);
                     $('*#CUST_COUNTRY').val(response['CUST_COUNTRY']).selectpicker('refresh');
                     var joinVaribl = windowmode + customPop;
@@ -3261,7 +3286,7 @@ function runSupportingLov() {
                 option2 += '<option value="' + data['BUS_SEG_CODE'] + '">' + data['BUS_SEG_DESC'] +
                     '</option>';
             });
-            $('*#CUST_VIP').html(option);
+            $('.CUST_VIP').html(option);
             $('#CUST_BUS_SEGMENT').html(option2);
         }
     });
@@ -3285,7 +3310,7 @@ $(document).on('keyup', '.COPY_RM_TYPE .form-control', function() {
     });
 });
 
-$(document).on('keyup', '.RESV_RM_TYPE,.RESV_RTC .form-control', function() {
+$(document).on('keyup', '.RESV_RTC .form-control', function() {
     var search = $(this).val();
     $.ajax({
         url: '<?php echo base_url('/roomTypeList') ?>',
@@ -3299,7 +3324,7 @@ $(document).on('keyup', '.RESV_RM_TYPE,.RESV_RTC .form-control', function() {
         // dataType:'json',
         success: function(respn) {
 
-            $('#RESV_RM_TYPE,#RESV_RTC').html(respn).selectpicker('refresh');
+            $('#RESV_RTC').html(respn).selectpicker('refresh');
         }
     });
 });
@@ -3328,6 +3353,7 @@ $(document).on('keyup', '.RESV_BLOCK .form-control', function() {
     });
 });
 
+/*
 $(document).on('keyup', '.RESV_COMPANY .form-control', function() {
     var search = $(this).val();
     $.ajax({
@@ -3365,6 +3391,7 @@ $(document).on('keyup', '.RESV_AGENT .form-control', function() {
         }
     });
 });
+*/
 
 
 $(document).on('keyup', '.RESV_NAME .form-control', function() {
@@ -3471,6 +3498,8 @@ function runSupportingResevationLov() {
 
                 if (idArray[ind] == 'RESV_RATE_CLASS') {
                     $('#RESV_RATE_CATEGORY').html(option);
+                } else if (idArray[ind] == 'CUST_VIP') {
+                    $('.CUST_VIP').html(option);
                 } else if (idArray[ind] != 'RESV_MEMBER_TY') {
                     $('#' + idArray[ind]).html(option);
                     if (idArray[ind] == 'RESV_TRANSPORT_TYP') {
@@ -3648,6 +3677,10 @@ $(document).on('click', '.getExistCust .select', function() {
                 $(`#combine-popup input[name='CUST_FIRST_NAME']`).val(jsonForm['CUST_FIRST_NAME']);
                 $(`#combine-popup input[name='CUST_LAST_NAME']`).val(jsonForm['CUST_LAST_NAME']);
             }
+
+            fillCustomerMemberships(custId, 'add', $('.window-2').is(':visible') ?
+                '[name="RESV_MEMBER_TY"]' : '#RESV_MEMBER_TY_ADD');
+            $('#CM_CUST_ID').val(custId);
         }
     });
 });
