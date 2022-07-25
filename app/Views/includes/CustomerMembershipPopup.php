@@ -256,17 +256,18 @@ function checkAddMem(secId) {
     if ($('.' + secId).find('#RESV_NAME').val() == '') {
         showModalAlert('error', '<li>Please select a Customer first</li>');
     } else
-        addMemForm();
+        addMemForm('.' + secId);
 }
 
 // Show Add Customer Membership Form
 
-function addMemForm() {
+function addMemForm(secId) {
     $(':input', '#submitMemForm').not('[type="radio"],[type="hidden"]').val('').prop('checked', false).prop('selected',
         false);
     //clearFormFields('#submitMemForm');
 
-    var custOptId = $('#RESV_NAME').val();
+    var custOptId = $(secId).find('#RESV_NAME').val();
+
     var custArray = getCustomerDetails(custOptId);
     $('#CUST_NAME,#CM_NAME_CARD').val(custArray.CUST_FIRST_NAME + ' ' + custArray.CUST_LAST_NAME);
 

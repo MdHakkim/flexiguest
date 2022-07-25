@@ -169,8 +169,8 @@ button.close {
 }
 .flxy_opt_btn .btn{
   padding:8px;
-  width:120px;
-  margin:1px;
+  min-width:135px;
+  margin:5px;
 }
 .flxy_table_resp{
   display: block;

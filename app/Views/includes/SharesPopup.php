@@ -102,13 +102,15 @@
                         <div class="card-header border-bottom">
                             <ul class="nav nav-tabs card-header-tabs" role="tablist">
                                 <li class="nav-item">
-                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-tab" role="tab" aria-selected="true">
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-tab"
+                                        role="tab" aria-selected="true">
                                         Profile
                                     </button>
                                 </li>
 
                                 <li class="nav-item">
-                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reservation-tab" role="tab" aria-selected="false">
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#reservation-tab"
+                                        role="tab" aria-selected="false">
                                         Reservation
                                     </button>
                                 </li>
@@ -126,7 +128,8 @@
                                         <div class="col-md-6">
                                             <lable class="form-lable">Title / First Name</lable>
                                             <div class="input-group">
-                                                <select name="CUST_TITLE" class="form-select" data-allow-clear="true" disabled>
+                                                <select name="CUST_TITLE" class="form-select" data-allow-clear="true"
+                                                    disabled>
                                                     <option value="">Select</option>
                                                     <option value="Mr.">Mr.</option>
                                                     <option value="Ms.">Ms.</option>
@@ -145,13 +148,16 @@
                                                     <option value="Consul.">Consul.</option>
                                                 </select>
 
-                                                <input type="text" name="CUST_FIRST_NAME" class="form-control" placeholder="First Name" style="flex-basis: fit-content;" readonly />
+                                                <input type="text" name="CUST_FIRST_NAME" class="form-control"
+                                                    placeholder="First Name" style="flex-basis: fit-content;"
+                                                    readonly />
 
                                                 <div class="invalid-feedback">
                                                     Title required can't empty.
                                                 </div>
 
-                                                <button type="button" onClick="childReservation('C')" class="btn flxi_btn btn-sm btn-primary">
+                                                <button type="button" onClick="childReservation('C')"
+                                                    class="btn flxi_btn btn-sm btn-primary">
                                                     <i class="fa fa-search" aria-hidden="true"></i>
                                                 </button>
                                             </div>
@@ -159,7 +165,8 @@
 
                                         <div class="col-md-6">
                                             <label class="form-label">Last Name</label>
-                                            <input type="text" name="CUST_LAST_NAME" class="form-control" placeholder="Last Name" readonly />
+                                            <input type="text" name="CUST_LAST_NAME" class="form-control"
+                                                placeholder="Last Name" readonly />
                                         </div>
 
                                         <div class="col-md-6">
@@ -175,19 +182,22 @@
 
                                         <div class="col-md-6">
                                             <label class="form-label">Reservation Type</label>
-                                            <select name="RESV_RESRV_TYPE" class="select2 form-select" data-allow-clear="true">
+                                            <select name="RESV_RESRV_TYPE" class="select2 form-select"
+                                                data-allow-clear="true">
                                             </select>
                                         </div>
 
                                         <div class="col-md-6">
                                             <label class="form-label">Payment Type</label>
-                                            <select name="RESV_PAYMENT_TYPE" class="select2 form-select" data-allow-clear="true">
+                                            <select name="RESV_PAYMENT_TYPE" class="select2 form-select"
+                                                data-allow-clear="true">
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="pt-4 text-right">
-                                        <button class="btn btn-primary me-1 me-sm-3" onclick="submitShareByProfileForm()">Submit</button>
+                                        <button class="btn btn-primary me-1 me-sm-3"
+                                            onclick="submitShareByProfileForm()">Submit</button>
                                         <button class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
                                     </div>
                                 </form>
@@ -202,7 +212,8 @@
                                         <div class="col-md-6">
                                             <lable class="form-lable">Title / First Name</lable>
                                             <div class="input-group">
-                                                <select name="CUST_TITLE" class="form-select" data-allow-clear="true" disabled>
+                                                <select name="CUST_TITLE" class="form-select" data-allow-clear="true"
+                                                    disabled>
                                                     <option value="">Select</option>
                                                     <option value="Mr.">Mr.</option>
                                                     <option value="Ms.">Ms.</option>
@@ -221,13 +232,16 @@
                                                     <option value="Consul.">Consul.</option>
                                                 </select>
 
-                                                <input type="text" name="CUST_FIRST_NAME" class="form-control" placeholder="First Name" style="flex-basis: fit-content;" readonly />
+                                                <input type="text" name="CUST_FIRST_NAME" class="form-control"
+                                                    placeholder="First Name" style="flex-basis: fit-content;"
+                                                    readonly />
 
                                                 <div class="invalid-feedback">
                                                     Title required can't empty.
                                                 </div>
 
-                                                <button type="button" onClick="showSearchReservationPopup()" class="btn flxi_btn btn-sm btn-primary">
+                                                <button type="button" onClick="showSearchReservationPopup()"
+                                                    class="btn flxi_btn btn-sm btn-primary">
                                                     <i class="fa fa-search" aria-hidden="true"></i>
                                                 </button>
                                             </div>
@@ -235,7 +249,8 @@
 
                                         <div class="col-md-6">
                                             <label class="form-label">Last Name</label>
-                                            <input type="text" name="CUST_LAST_NAME" class="form-control" placeholder="Last Name" readonly />
+                                            <input type="text" name="CUST_LAST_NAME" class="form-control"
+                                                placeholder="Last Name" readonly />
                                         </div>
 
                                         <div class="col-md-6">
@@ -251,13 +266,15 @@
 
                                         <div class="col-md-6">
                                             <label class="form-label">Payment Type</label>
-                                            <select name="RESV_PAYMENT_TYPE" class="select2 form-select" data-allow-clear="true">
+                                            <select name="RESV_PAYMENT_TYPE" class="select2 form-select"
+                                                data-allow-clear="true">
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="pt-4 text-right">
-                                        <button class="btn btn-primary me-1 me-sm-3" onclick="submitShareByReservationForm()">Submit</button>
+                                        <button class="btn btn-primary me-1 me-sm-3"
+                                            onclick="submitShareByReservationForm()">Submit</button>
                                         <button class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
                                     </div>
                                 </form>
@@ -277,241 +294,244 @@
 
 
 <script>
-    let share_popup_id = "#shares-popup";
-    var share_by_profile_form_id = "#share-by-profile-form";
-    var share_by_reservation_form_id = "#share-by-reservation-form";
-    var share_reservation = false;
-    var newly_added_reservation_ids = [];
+let share_popup_id = "#shares-popup";
+var share_by_profile_form_id = "#share-by-profile-form";
+var share_by_reservation_form_id = "#share-by-reservation-form";
+var share_reservation = false;
+var newly_added_reservation_ids = [];
 
-    // disable button if reservation is not shared
-    function enableDisableButtons() {
-        let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
-            return $(this).val();
-        }).get();
+// disable button if reservation is not shared
+function enableDisableButtons() {
+    let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
+        return $(this).val();
+    }).get();
 
-        $('.entire-btn').prop('disabled', false);
-        $('.split-btn').prop('disabled', false);
-        $('.full-btn').prop('disabled', false);
-        $('.break-share-btn').prop('disabled', false);
+    $('.entire-btn').prop('disabled', false);
+    $('.split-btn').prop('disabled', false);
+    $('.full-btn').prop('disabled', false);
+    $('.break-share-btn').prop('disabled', false);
 
-        if (reservation_ids.length == 1) {
-            $('.entire-btn').prop('disabled', true);
-            $('.split-btn').prop('disabled', true);
-            $('.full-btn').prop('disabled', true);
-            $('.break-share-btn').prop('disabled', true);
+    if (reservation_ids.length == 1) {
+        $('.entire-btn').prop('disabled', true);
+        $('.split-btn').prop('disabled', true);
+        $('.full-btn').prop('disabled', true);
+        $('.break-share-btn').prop('disabled', true);
+    }
+}
+
+function displaySharePopup() {
+    setBtnsAttr(ressysId);
+    getReservationDetails();
+    $("#shares-popup").modal('show');
+}
+
+function hideSharePopup() {
+    $("#shares-popup").modal('hide');
+}
+
+function getReservationDetails() {
+    // ressysId, roomType, roomTypedesc;
+    let data = {
+        'reservation_id': ressysId
+    };
+
+    $.ajax({
+        url: '<?= base_url('reservation/shares/get-reservation-details') ?>',
+        type: "get",
+        data: data,
+        dataType: 'json',
+        success: function(response) {
+            if (response['SUCCESS'] == 200) {
+                let output = response['RESPONSE']['OUTPUT'];
+
+                $('.room-details').html(output.room_details);
+                $('.nightly-rate-details').html(output.nightly_rate_details);
+                $('.reservation-arrival-details').html(output.reservation_arrival_details);
+
+                enableDisableButtons();
+                setBtnsAttr(ressysId);
+            }
         }
-    }
+    });
+}
 
-    function displaySharePopup() {
-        setBtnsAttr(ressysId);
-        getReservationDetails();
-        $("#shares-popup").modal('show');
-    }
+function changeReservationId(e, reservation_id) {
+    $('.active-tr').removeClass('active-tr');
+    $(e).addClass('active-tr');
+    // ressysId = reservation_id;
+    setBtnsAttr(reservation_id);
+}
 
-    function hideSharePopup() {
-        $("#shares-popup").modal('hide');
-    }
+function setBtnsAttr(reservation_id) {
+    $('#shares-popup .reservation-btn').attr('data_sysid', reservation_id);
+    $('#shares-popup .break-share-btn').attr('data_sysid', reservation_id);
+    $('#shares-popup .entire-btn').attr('data_sysid', reservation_id);
+    $('#shares-popup .split-btn').attr('data_sysid', reservation_id);
+    $('#shares-popup .full-btn').attr('data_sysid', reservation_id);
+}
 
-    function getReservationDetails() {
-        // ressysId, roomType, roomTypedesc;
-        let data = {
-            'reservation_id': ressysId
-        };
+function displayCombinePopup() {
+    runInitializeConfig();
+    $("#combine-popup").modal('show');
+}
 
-        $.ajax({
-            url: '<?= base_url('reservation/shares/get-reservation-details') ?>',
-            type: "get",
-            data: data,
-            dataType: 'json',
-            success: function(response) {
-                if (response['SUCCESS'] == 200) {
-                    let output = response['RESPONSE']['OUTPUT'];
+function hideCombinePopup() {
+    $("#combine-popup").modal('hide');
+}
 
-                    $('.room-details').html(output.room_details);
-                    $('.nightly-rate-details').html(output.nightly_rate_details);
-                    $('.reservation-arrival-details').html(output.reservation_arrival_details);
+function submitShareByProfileForm() {
+    hideCombinePopup();
 
-                    enableDisableButtons();
-                    setBtnsAttr(ressysId);
-                }
+    let form_data = new FormData($(share_by_profile_form_id)[0]);
+    form_data.append('other_reservation_id', ressysId);
+
+    $.ajax({
+        url: '<?= base_url('reservation/shares/create-reservation') ?>',
+        type: "post",
+        data: form_data,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            if (response['SUCCESS'] != 200) {
+                let errors = '';
+                $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                    errors += '<li>' + data + '</li>';
+                });
+
+                showModalAlert('error', errors);
+            } else {
+                let reservation_id = response['RESPONSE']['OUTPUT'];
+                newly_added_reservation_ids.push(reservation_id);
+                saveShareReservations();
             }
-        });
-    }
-
-    function changeReservationId(e, reservation_id) {
-        $('.active-tr').removeClass('active-tr');
-        $(e).addClass('active-tr');
-        // ressysId = reservation_id;
-        setBtnsAttr(reservation_id);        
-    }
-
-    function setBtnsAttr(reservation_id) {
-        $('#shares-popup .reservation-btn').attr('data_sysid', reservation_id);
-        $('#shares-popup .break-share-btn').attr('data_sysid', reservation_id);
-        $('#shares-popup .entire-btn').attr('data_sysid', reservation_id);
-        $('#shares-popup .split-btn').attr('data_sysid', reservation_id);
-        $('#shares-popup .full-btn').attr('data_sysid', reservation_id);
-    }
-
-    function displayCombinePopup() {
-        runInitializeConfig();
-        $("#combine-popup").modal('show');
-    }
-
-    function hideCombinePopup() {
-        $("#combine-popup").modal('hide');
-    }
-
-    function submitShareByProfileForm() {
-        hideCombinePopup();
-
-        let form_data = new FormData($(share_by_profile_form_id)[0]);
-        form_data.append('other_reservation_id', ressysId);
-
-        $.ajax({
-            url: '<?= base_url('reservation/shares/create-reservation') ?>',
-            type: "post",
-            data: form_data,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                if (response['SUCCESS'] != 200) {
-                    let errors = '';
-                    $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
-                        errors += '<li>' + data + '</li>';
-                    });
-
-                    showModalAlert('error', errors);
-                } else {
-                    let reservation_id = response['RESPONSE']['OUTPUT'];
-                    newly_added_reservation_ids.push(reservation_id);
-                    saveShareReservations();
-                }
-            }
-        });
-    }
-
-    function submitShareByReservationForm() {
-        hideCombinePopup();
-
-        if (share_reservation) {
-            newly_added_reservation_ids.push(share_reservation['RESV_ID']);
-            saveShareReservations();
         }
+    });
+}
+
+function submitShareByReservationForm() {
+    hideCombinePopup();
+
+    if (share_reservation) {
+        newly_added_reservation_ids.push(share_reservation['RESV_ID']);
+        saveShareReservations();
     }
+}
 
-    function saveShareReservations() {
-        let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
-            return $(this).val();
-        }).get();
+function saveShareReservations() {
+    let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
+        return $(this).val();
+    }).get();
 
-        reservation_ids = reservation_ids.concat(newly_added_reservation_ids);
+    reservation_ids = reservation_ids.concat(newly_added_reservation_ids);
 
-        $.ajax({
-            url: '<?= base_url('reservation/shares/add-share-reservations') ?>',
-            type: 'post',
-            data: {
-                reservation_ids
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response['SUCCESS'] == 200) {
-                    newly_added_reservation_ids = [];
-                    getReservationDetails();
-                    showModalAlert('success', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
-                } else {
-                    showModalAlert('error', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
-                }
+    $.ajax({
+        url: '<?= base_url('reservation/shares/add-share-reservations') ?>',
+        type: 'post',
+        data: {
+            reservation_ids
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response['SUCCESS'] == 200) {
+                newly_added_reservation_ids = [];
+                getReservationDetails();
+                showModalAlert('success', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
+            } else {
+                showModalAlert('error', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
             }
-        });
-    }
+        }
+    });
+}
 
-    $(document).on('click', '.break-share-btn', function() {
-        let selected_reservation_id = $(this).attr('data_sysid');
-        let main_reservation_id = ressysId;
-        
-        let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
-            return $(this).val();
-        }).get();
+$(document).on('click', '.break-share-btn', function() {
+    let selected_reservation_id = $(this).attr('data_sysid');
+    let main_reservation_id = ressysId;
 
-        $.ajax({
-            url: '<?= base_url('reservation/shares/break-share-reservation') ?>',
-            type: 'post',
-            data: {
-                selected_reservation_id,
-                main_reservation_id,
-                reservation_ids,
-                share_rate: 'full',
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response['SUCCESS'] == 200) {
-                    showModalAlert('success', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
-                    getReservationDetails();
-                }else{
-                    showModalAlert('error', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
-                }
+    let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
+        return $(this).val();
+    }).get();
+
+    $.ajax({
+        url: '<?= base_url('reservation/shares/break-share-reservation') ?>',
+        type: 'post',
+        data: {
+            selected_reservation_id,
+            main_reservation_id,
+            reservation_ids,
+            share_rate: 'full',
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response['SUCCESS'] == 200) {
+                showModalAlert('success', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
+                getReservationDetails();
+            } else {
+                showModalAlert('error', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
             }
-        });
+        }
+    });
+});
+
+function changeShareRate(selected_reservation_id, share_rate) {
+    let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
+        return $(this).val();
+    }).get();
+
+    $.ajax({
+        url: '<?= base_url('reservation/shares/change-share-rate') ?>',
+        type: 'post',
+        data: {
+            selected_reservation_id,
+            reservation_ids,
+            share_rate,
+        },
+        dataType: 'json',
+        success: function(response) {
+            if (response['SUCCESS'] == 200) {
+                showModalAlert('success', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
+                getReservationDetails();
+            }
+        }
+    });
+}
+
+$(document).ready(function() {
+    enableDisableButtons();
+
+    $(".shares-btn").click(displaySharePopup);
+    $(".combine-btn").click(displayCombinePopup);
+
+    $(".entire-btn").click(function() {
+        changeShareRate($(this).attr('data_sysid'), 'entire');
     });
 
-    function changeShareRate(selected_reservation_id, share_rate) {
-        let reservation_ids = $(`${share_popup_id} input[name='share_reservations[]']`).map(function() {
-            return $(this).val();
-        }).get();
-
-        $.ajax({
-            url: '<?= base_url('reservation/shares/change-share-rate') ?>',
-            type: 'post',
-            data: {
-                selected_reservation_id,
-                reservation_ids,
-                share_rate,
-            },
-            dataType: 'json',
-            success: function(response) {
-                if (response['SUCCESS'] == 200) {
-                    showModalAlert('success', `<li>${response.RESPONSE.REPORT_RES.msg}</li>`);
-                    getReservationDetails();
-                }
-            }
-        });
-    }
-
-    $(document).ready(function() {
-        enableDisableButtons();
-
-        $(".shares-btn").click(displaySharePopup);
-        $(".combine-btn").click(displayCombinePopup);
-
-        $(".entire-btn").click(function() {
-            changeShareRate($(this).attr('data_sysid'), 'entire');
-        });
-
-        $(".split-btn").click(function() {
-            changeShareRate($(this).attr('data_sysid'), 'split');
-        });
-
-        $(".full-btn").click(function() {
-            changeShareRate($(this).attr('data_sysid'), 'full');
-        });
-
-
-        $('#combine-popup li.nav-item').click(function(e) {
-            e.preventDefault();
-        });
-
-        $(`${share_by_profile_form_id}, ${share_by_reservation_form_id}`).submit(function(e) {
-            e.preventDefault();
-        });
-
-        // for overlapping modals
-        $(document).on('show.bs.modal', '.modal', function(event) {
-            var zIndex = 1090 + (10 * $('.modal:visible').length);
-            $(this).css('z-index', zIndex);
-            setTimeout(function() {
-                $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-            }, 0);
-        });
+    $(".split-btn").click(function() {
+        changeShareRate($(this).attr('data_sysid'), 'split');
     });
+
+    $(".full-btn").click(function() {
+        changeShareRate($(this).attr('data_sysid'), 'full');
+    });
+
+
+    $('#combine-popup li.nav-item').click(function(e) {
+        e.preventDefault();
+    });
+
+    $(`${share_by_profile_form_id}, ${share_by_reservation_form_id}`).submit(function(e) {
+        e.preventDefault();
+    });
+
+    // for overlapping modals
+    $(document).on('show.bs.modal', '.modal', function(event) {
+        var zIndex = 1090 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', zIndex);
+
+        /*
+        setTimeout(function() {
+            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        }, 0);
+        */
+    });
+});
 </script>

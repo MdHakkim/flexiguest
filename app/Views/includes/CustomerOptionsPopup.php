@@ -469,7 +469,7 @@ function showCustomerMemberships(custId = 0) {
         }
     });
     $("#customer_memberships_wrapper .row:first").before(
-        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick="addMemForm()"><i class="fa-solid fa-plus fa-lg"></i> Add New</button></div></div>'
+        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick="addMemForm(\'#customerMembershipsWindow\')"><i class="fa-solid fa-plus fa-lg"></i> Add New</button></div></div>'
     );
 
 }
