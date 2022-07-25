@@ -250,13 +250,7 @@ $(document).ready(function() {
             'url': '<?php echo base_url('/customerView')?>'
         },
         'columns': [{
-                data: null,
-                render: function(data, type, row, meta) {
-                    var customer_name = getCustomerName(data['CUST_FIRST_NAME'], data[
-                        'CUST_MIDDLE_NAME'], data['CUST_LAST_NAME'], data['CUST_ID']);
-
-                    return (customer_name);
-                }
+                data: 'CUST_FULL_NAME'
             },
             {
                 data: 'CUST_FIRST_NAME',
@@ -305,7 +299,7 @@ $(document).ready(function() {
             },
         ],
         "order": [
-            [1, "asc"]
+            [0, "asc"]
         ],
         autowidth: true
 

@@ -22,9 +22,17 @@
     margin-top: 0;
 }
 
+.sel2Container {
+    display: inline-block !important;
+}
+
 .sel2Container .select2-container {
     width: 87% !important;
     float: left;
+}
+
+.form-label {
+    font-weight: bold;
 }
 
 .fc a[data-navlink] {
@@ -319,12 +327,12 @@
                             <button type="button" class="btn btn-primary mt-2" id="fixedChargeButton" data_sysid=""
                                 style="width: 135px;">Fixed Charges</button>
                             <button type="button" class="btn btn-primary mt-2" id="proformaButton" data_sysid=""
-                                style="width: 135px;">Pro-Forma Folio</button>  
+                                style="width: 135px;">Pro-Forma Folio</button>
                             <button type="button" class="btn btn-primary"
                                 onclick="reservationCheckout()">Checkout</button>
-                            <button type="button" class="btn btn-primary web-link-btn">Docs</button>                            
+                            <button type="button" class="btn btn-primary web-link-btn">Docs</button>
                             <button type="button" class="btn btn-primary shares-btn">Shares</button>
-                            
+
 
                         </div>
                     </div>
@@ -570,8 +578,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Member Type</lable>
-                                    <div class="sel2Container mb-3">
+                                    <label class="form-label">Member Type</label>
+                                    <div class="input-group sel2Container mb-3">
                                         <select id="RESV_MEMBER_TY_ADD" class="select2 form-select"
                                             data-allow-clear="true">
                                         </select>
@@ -582,7 +590,7 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Company</label>
-                                    <div class="sel2Container mb-3">
+                                    <div class="input-group sel2Container mb-3">
                                         <select id="RESV_COMPANY_ADD" class="select2 form-select RESV_COMPANY"
                                             data-allow-clear="true">
                                         </select>
@@ -593,7 +601,7 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Agent</label>
-                                    <div class="sel2Container mb-3">
+                                    <div class="input-group sel2Container mb-3">
                                         <select id="RESV_AGENT_ADD" class="select2 form-select RESV_AGENT"
                                             data-allow-clear="true">
                                         </select>
@@ -732,7 +740,7 @@
                                             <option value="Consul.">Consul.</option>
                                         </select>
                                         <input type="text" name="CUST_FIRST_NAME" id="CUST_FIRST_NAME"
-                                            class="form-control" placeholder="first name" />
+                                            class="form-control" placeholder="first name" readonly />
                                         <div class="invalid-feedback">
                                             Title required can't empty.
                                         </div>
@@ -759,8 +767,8 @@
                                         placeholder="phone" />
                                 </div>
                                 <div class="col-md-3 mt-0">
-                                    <lable class="form-lable">Member Type</lable>
-                                    <div class="sel2Container mb-3">
+                                    <label class="form-label">Member Type</label>
+                                    <div class="input-group sel2Container mb-3">
                                         <select name="RESV_MEMBER_TY" id="RESV_MEMBER_TY" class="select2 form-select"
                                             data-allow-clear="true">
                                         </select>
@@ -777,7 +785,7 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Company</label>
-                                    <div class="sel2Container mb-3">
+                                    <div class="input-group sel2Container mb-3">
                                         <select name="RESV_COMPANY" id="RESV_COMPANY"
                                             class="select2 form-select RESV_COMPANY" data-allow-clear="true">
                                         </select>
@@ -788,7 +796,7 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Agent</label>
-                                    <div class="sel2Container mb-3">
+                                    <div class="input-group sel2Container mb-3">
                                         <select name="RESV_AGENT" id="RESV_AGENT" class="select2 form-select RESV_AGENT"
                                             data-allow-clear="true">
                                         </select>
@@ -2361,8 +2369,8 @@
 
     <!-- /Modal Fixed charges window -->
 
-        <!-- Pro-Forma Folio Modal window -->
-        <div class="modal fade" id="proforma-folio" data-backdrop="static" data-keyboard="false"
+    <!-- Pro-Forma Folio Modal window -->
+    <div class="modal fade" id="proforma-folio" data-backdrop="static" data-keyboard="false"
         aria-labelledby="popModalWindowlabel">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
@@ -2390,80 +2398,84 @@
                                         </div>
                                         <div class="col-md-12 mb-3">
                                             <label for="FOLIO_TXT_TWO" class="col-form-label col-md-4"><b>
-                                            Folio Text2</b></label>
+                                                    Folio Text2</b></label>
                                             <input type="text" name="FOLIO_TXT_TWO" id="FOLIO_TXT_TWO"
                                                 class="form-control" />
 
                                         </div>
-                                     
-                                        
-                                    </div>                                   
-                                    
+
+
+                                    </div>
+
                                     <div class="row g-3 ">
-                                    <div class="form-check mt-3 p-0">
-                                        <label class="switch">
-                                            <input type="checkbox" class="switch-input" checked
-                                                id="PRINT_PHONE"  name="PRINT_PHONE"  method="PM" />
-                                            <span class="switch-toggle-slider">
-                                                <span class="switch-on">
-                                                    <i class="bx bx-check"></i>
+                                        <div class="form-check mt-3 p-0">
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input" checked id="PRINT_PHONE"
+                                                    name="PRINT_PHONE" method="PM" />
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on">
+                                                        <i class="bx bx-check"></i>
+                                                    </span>
+                                                    <span class="switch-off">
+                                                        <i class="bx bx-x"></i>
+                                                    </span>
                                                 </span>
-                                                <span class="switch-off">
-                                                    <i class="bx bx-x"></i>
+                                            </label>
+                                            <lable class="form-check-lable flxy_lab_left"> Print Phone Details</label>
+                                        </div>
+                                        <div class="form-check mt-3 p-0">
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input " checked id="PRINT_CHECK"
+                                                    method="PM" name="PRINT_CHECK" />
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on">
+                                                        <i class="bx bx-check"></i>
+                                                    </span>
+                                                    <span class="switch-off">
+                                                        <i class="bx bx-x"></i>
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Print Phone Details</label>
+                                            </label>
+                                            <lable class="form-check-lable flxy_lab_left"> Print Check Number</label>
+                                        </div>
+
+                                        <div class="form-check mt-3 p-0 mb-3">
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input " checked id="PRINT_EMAIL"
+                                                    method="PM" name="PRINT_EMAIL" />
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on">
+                                                        <i class="bx bx-check"></i>
+                                                    </span>
+                                                    <span class="switch-off">
+                                                        <i class="bx bx-x"></i>
+                                                    </span>
+                                                </span>
+                                            </label>
+                                            <lable class="form-check-lable flxy_lab_left"> Email List </label>
+                                        </div>
                                     </div>
-                                    <div class="form-check mt-3 p-0">
-                                        <label class="switch">
-                                            <input type="checkbox" class="switch-input " checked
-                                                id="PRINT_CHECK" method="PM"  name="PRINT_CHECK"/>
-                                            <span class="switch-toggle-slider">
-                                                <span class="switch-on">
-                                                    <i class="bx bx-check"></i>
-                                                </span>
-                                                <span class="switch-off">
-                                                    <i class="bx bx-x"></i>
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Print Check Number</label>
-                                    </div>
-                                        
-                                    <div class="form-check mt-3 p-0 mb-3">
-                                        <label class="switch">
-                                            <input type="checkbox" class="switch-input " checked
-                                                id="PRINT_EMAIL" method="PM" name="PRINT_EMAIL"/>
-                                            <span class="switch-toggle-slider">
-                                                <span class="switch-on">
-                                                    <i class="bx bx-check"></i>
-                                                </span>
-                                                <span class="switch-off">
-                                                    <i class="bx bx-x"></i>
-                                                </span>
-                                            </span>
-                                        </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Email List </label>
-                                    </div>                                        
-                                    </div>                                
 
                                     <div class="row g-3 ">
                                         <div class="col-md-12 mb-3 mt-3">
                                             <div class="col-md-12 float-right">
-                                                <input type="hidden" name="proforma_action_value" id="proforma_action_value"> 
-                                                <button type="button" class="btn btn-success proformafolio-action mr-1" rel="1"> PREVIEW</button>
-                                                <button type="button" class="btn btn-success proformafolio-action mr-1" rel="2">
+                                                <input type="hidden" name="proforma_action_value"
+                                                    id="proforma_action_value">
+                                                <button type="button" class="btn btn-success proformafolio-action mr-1"
+                                                    rel="1"> PREVIEW</button>
+                                                <button type="button" class="btn btn-success proformafolio-action mr-1"
+                                                    rel="2">
                                                     PRINT
                                                 </button>
-                                                <button type="button" class="btn btn-success proformafolio-action mr-1" rel="3">
+                                                <button type="button" class="btn btn-success proformafolio-action mr-1"
+                                                    rel="3">
                                                     PDF
                                                 </button>
                                             </div>
-                                        </div> 
-                                    </div>                                    
+                                        </div>
+                                    </div>
                                 </div>
-                               
+
                                 <div class="d-flex col-12 justify-content-between">
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close</button>
@@ -2795,7 +2807,6 @@ function getRoomRateDetails(rateCodeInfo, roomTypeInfo) {
 
 function selectRate() {
 
-
     //Update membership select 
     fillCustomerMemberships($('#CM_CUST_ID').val(), 'edit', '[name="RESV_MEMBER_TY"]');
     $('[name="RESV_MEMBER_TY"]').val($('#RESV_MEMBER_TY_ADD').val()).trigger('change').trigger('select2:select');
@@ -2815,6 +2826,7 @@ function selectRate() {
     $('[name="RESV_RATE_CODE"]').val(rateCode);
     $('#RESV_RATE').val(rmprice);
     localStorage.setItem('activerate', rmprice);
+
     if (rmtype == '' || rmtype == undefined) {
         $('#errorModal').show();
         var error = '<ul>';
@@ -3134,6 +3146,7 @@ function addResvation() {
     var end = moment().add(1, 'days').format('DD-MM-YYYY');
     $('.RESV_ARRIVAL_DT').datepicker().datepicker("setDate", today);
     $('.RESV_DEPARTURE').datepicker().datepicker("setDate", end);
+
     $('#RESV_NIGHT,#RESV_NO_F_ROOM,#RESV_ADULTS').val('1');
     $('#RESV_CONFIRM_YN,#RESV_PICKUP_YN,#RESV_DROPOFF_YN,#RESV_EXT_PRINT_RT,#RESV_FIXED_RATE').val('N');
 }
@@ -3795,6 +3808,7 @@ $(document).on('click', '.getExistCust .select', function() {
             var option = '<option value="' + jsonForm['CUST_ID'] + '">' + jsonForm['NAMES'] +
                 '</option>';
             $('*#RESV_NAME').html(option).selectpicker('refresh');
+            $('*#RESV_NAME').trigger('change');
 
             if ($(`#combine-popup`).is(':visible')) {
                 $(`#combine-popup input[name='CUST_ID']`).val(jsonForm['CUST_ID']);
@@ -4871,14 +4885,9 @@ function loadFixedchargeDetails(fixedChargeID) {
                         $('.YEARLY_EXCECUTE').hide();
                         $('.QUARTERLY_EXCECUTE').hide();
 
-                    }
-                    
-                    else if (FIXD_CHRG_FREQUENCY == 3 && field == 'FIXD_CHRG_WEEKLY'){
+                    } else if (FIXD_CHRG_FREQUENCY == 3 && field == 'FIXD_CHRG_WEEKLY') {
                         $('#' + field).val(dataval).trigger('change');
-                    }
-                        
-                        
-                        else {
+                    } else {
                         $('#' + field).val(dataval);
 
                     }
@@ -5024,9 +5033,9 @@ $(document).on('click', '#proformaButton', function() {
 });
 
 $(document).on('click', '.proformafolio-action', function() {
-    
+
     var formSerialization = $('#proforma-submit-form').serializeArray();
-    var proforma = $(this).attr('rel'); 
+    var proforma = $(this).attr('rel');
     $("#proforma_action_value").val(proforma);
     $.ajax({
         url: '<?php echo base_url('/proformaFolio') ?>',
@@ -5037,21 +5046,21 @@ $(document).on('click', '.proformafolio-action', function() {
         },
         async: false,
         success: function(respn) {
-                if (respn > 0) {
-                   if(proforma == 1)                   
+            if (respn > 0) {
+                if (proforma == 1)
                     window.open('<?= base_url('/previewProFormaFolio') ?>', '_blank');
-                   else if(proforma == 2)
+                else if (proforma == 2)
                     window.open('<?= base_url('/printProFormaFolio') ?>', '_blank');
-                   else if(proforma == 3)
+                else if (proforma == 3)
                     window.open('<?= base_url('/pdfProFormaFolio') ?>');
-                    
-                }
-                
-                }
-            
-        });
+
+            }
+
+        }
 
     });
+
+});
 ////////////////////
 
 
