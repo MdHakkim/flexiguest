@@ -313,15 +313,18 @@
                             <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add
                                 On</button>
                             <button type="button" class="btn btn-primary show-activity-log" data-bs-toggle="modal"
-                                data-bs-target="#changesWindow">Changes</button><br />
+                                data-bs-target="#changesWindow">Changes</button>
+                            <button type="button" class="btn btn-primary mt-2" id="registerCardButton" data_sysid=""
+                                style="width: 135px;">Registration Card</button>
+                            <button type="button" class="btn btn-primary mt-2" id="fixedChargeButton" data_sysid=""
+                                style="width: 135px;">Fixed Charges</button>
+                            <button type="button" class="btn btn-primary mt-2" id="proformaButton" data_sysid=""
+                                style="width: 135px;">Pro-Forma Folio</button>  
                             <button type="button" class="btn btn-primary"
                                 onclick="reservationCheckout()">Checkout</button>
-                            <button type="button" class="btn btn-primary web-link-btn">Docs</button>
-                            <button type="button" class="btn btn-primary" id="fixedChargeButton" data_sysid="">Fixed
-                                Charges</button>
+                            <button type="button" class="btn btn-primary web-link-btn">Docs</button>                            
                             <button type="button" class="btn btn-primary shares-btn">Shares</button>
-                            <button type="button" class="btn btn-primary" id="registerCardButton" data_sysid=""
-                                style="width: 155px;">Registration Card</button>
+                            
 
                         </div>
                     </div>
@@ -2243,13 +2246,13 @@
                                                     Execute</b></label>
                                             <select name="FIXD_CHRG_WEEKLY" id="FIXD_CHRG_WEEKLY"
                                                 class="select2 form-select form-select-lg">
-                                                <option value="1" selected>Sunday</option>
-                                                <option value="2">Monday</option>
-                                                <option value="3">Tuesday</option>
-                                                <option value="4">Wednesday</option>
-                                                <option value="5">Thursday</option>
-                                                <option value="6">Friday</option>
-                                                <option value="7">Saturday</option>
+                                                <option value="0" selected>Sunday</option>
+                                                <option value="1">Monday</option>
+                                                <option value="2">Tuesday</option>
+                                                <option value="3">Wednesday</option>
+                                                <option value="4">Thursday</option>
+                                                <option value="5">Friday</option>
+                                                <option value="6">Saturday</option>
                                             </select>
                                         </div>
                                         <div class="col-md-4 MONTHLY_EXCECUTE" style="display: none">
@@ -2340,6 +2343,127 @@
                                         <br />
                                     </div>
                                 </div>
+                                <div class="d-flex col-12 justify-content-between">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /Modal Fixed charges window -->
+
+        <!-- Pro-Forma Folio Modal window -->
+        <div class="modal fade" id="proforma-folio" data-backdrop="static" data-keyboard="false"
+        aria-labelledby="popModalWindowlabel">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="popModalWindowlabel">Pro-Forma Folio</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form id="proforma-submit-form" onSubmit="return false">
+                        <input type="hidden" name="PROFORMA_RESV_ID" id="PROFORMA_RESV_ID" class="form-control" />
+
+                        <div id="fixedTransactionCharges" class="content">
+
+                            <input type="hidden" name="PROFORMA_ID" id="PROFORMA_ID" class="form-control" />
+                            <div class="row g-3">
+                                <div class="border rounded p-4 mb-3">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-3">
+                                            <label for="FOLIO_TXT_ONE" class="col-form-label col-md-4"><b>
+                                                    Folio Text1</b></label>
+                                            <input type="text" name="FOLIO_TXT_ONE" id="FOLIO_TXT_ONE"
+                                                class="form-control" />
+
+                                        </div>
+                                        <div class="col-md-12 mb-3">
+                                            <label for="FOLIO_TXT_TWO" class="col-form-label col-md-4"><b>
+                                            Folio Text2</b></label>
+                                            <input type="text" name="FOLIO_TXT_TWO" id="FOLIO_TXT_TWO"
+                                                class="form-control" />
+
+                                        </div>
+                                     
+                                        
+                                    </div>                                   
+                                    
+                                    <div class="row g-3 ">
+                                    <div class="form-check mt-3 p-0">
+                                        <label class="switch">
+                                            <input type="checkbox" class="switch-input" checked
+                                                id="PRINT_PHONE"  name="PRINT_PHONE"  method="PM" />
+                                            <span class="switch-toggle-slider">
+                                                <span class="switch-on">
+                                                    <i class="bx bx-check"></i>
+                                                </span>
+                                                <span class="switch-off">
+                                                    <i class="bx bx-x"></i>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <lable class="form-check-lable flxy_lab_left"> Print Phone Details</label>
+                                    </div>
+                                    <div class="form-check mt-3 p-0">
+                                        <label class="switch">
+                                            <input type="checkbox" class="switch-input " checked
+                                                id="PRINT_CHECK" method="PM"  name="PRINT_CHECK"/>
+                                            <span class="switch-toggle-slider">
+                                                <span class="switch-on">
+                                                    <i class="bx bx-check"></i>
+                                                </span>
+                                                <span class="switch-off">
+                                                    <i class="bx bx-x"></i>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <lable class="form-check-lable flxy_lab_left"> Print Check Number</label>
+                                    </div>
+                                        
+                                    <div class="form-check mt-3 p-0 mb-3">
+                                        <label class="switch">
+                                            <input type="checkbox" class="switch-input " checked
+                                                id="PRINT_EMAIL" method="PM" name="PRINT_EMAIL"/>
+                                            <span class="switch-toggle-slider">
+                                                <span class="switch-on">
+                                                    <i class="bx bx-check"></i>
+                                                </span>
+                                                <span class="switch-off">
+                                                    <i class="bx bx-x"></i>
+                                                </span>
+                                            </span>
+                                        </label>
+                                        <lable class="form-check-lable flxy_lab_left"> Email List </label>
+                                    </div>                                        
+                                    </div>                                
+
+                                    <div class="row g-3 ">
+                                        <div class="col-md-12 mb-3 mt-3">
+                                            <div class="col-md-12 float-right">
+                                                <input type="hidden" name="proforma_action_value" id="proforma_action_value"> 
+                                                <button type="button" class="btn btn-success proformafolio-action mr-1" rel="1"> PREVIEW</button>
+                                                <button type="button" class="btn btn-success proformafolio-action mr-1" rel="2">
+                                                    PRINT
+                                                </button>
+                                                <button type="button" class="btn btn-success proformafolio-action mr-1" rel="3">
+                                                    PDF
+                                                </button>
+                                            </div>
+                                        </div> 
+                                    </div>                                    
+                                </div>
+                               
                                 <div class="d-flex col-12 justify-content-between">
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close</button>
@@ -2810,6 +2934,7 @@ $(document).on('click', '.reserOption', function() {
 
     $('#registerCardButton').attr('data_sysid', ressysId);
     $('#fixedChargeButton').attr('data_sysid', ressysId);
+    $('#proformaButton').attr('data_sysid', ressysId);
 });
 
 $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
@@ -4600,10 +4725,6 @@ $(document).on('click', '.save-fixedcharge-detail', function() {
 });
 
 
-
-
-
-
 function showFixedCharges(resvID) {
     if (resvID == '')
         resvID = $('#FIXD_CHRG_RESV_ID').val();
@@ -4750,7 +4871,14 @@ function loadFixedchargeDetails(fixedChargeID) {
                         $('.YEARLY_EXCECUTE').hide();
                         $('.QUARTERLY_EXCECUTE').hide();
 
-                    } else {
+                    }
+                    
+                    else if (FIXD_CHRG_FREQUENCY == 3 && field == 'FIXD_CHRG_WEEKLY'){
+                        $('#' + field).val(dataval).trigger('change');
+                    }
+                        
+                        
+                        else {
                         $('#' + field).val(dataval);
 
                     }
@@ -4861,7 +4989,7 @@ function frequency(value) {
         $('#FIXD_CHRG_END_DATE').val('');
     } else if (value == 3) {
         $('.END_DATE').show();
-        $('#FIXD_CHRG_WEEKLY').val('1');
+        $('#FIXD_CHRG_WEEKLY').val('0');
         $('.WEEKLY_EXCECUTE').show();
     } else if (value == 4) {
         $('.END_DATE').show();
@@ -4886,6 +5014,44 @@ function frequency(value) {
 }
 
 
+
+////////  Functions
+
+$(document).on('click', '#proformaButton', function() {
+    $('#proforma-folio').modal('show');
+    var reservID = $(this).attr('data_sysid');
+    $("#PROFORMA_RESV_ID").val(reservID);
+});
+
+$(document).on('click', '.proformafolio-action', function() {
+    
+    var formSerialization = $('#proforma-submit-form').serializeArray();
+    var proforma = $(this).attr('rel'); 
+    $("#proforma_action_value").val(proforma);
+    $.ajax({
+        url: '<?php echo base_url('/proformaFolio') ?>',
+        type: "post",
+        data: formSerialization,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        async: false,
+        success: function(respn) {
+                if (respn > 0) {
+                   if(proforma == 1)                   
+                    window.open('<?= base_url('/previewProFormaFolio') ?>', '_blank');
+                   else if(proforma == 2)
+                    window.open('<?= base_url('/printProFormaFolio') ?>', '_blank');
+                   else if(proforma == 3)
+                    window.open('<?= base_url('/pdfProFormaFolio') ?>');
+                    
+                }
+                
+                }
+            
+        });
+
+    });
 ////////////////////
 
 

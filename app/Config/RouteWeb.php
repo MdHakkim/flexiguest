@@ -501,7 +501,14 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/deleteFixedcharge', 'ApplicatioController::deleteFixedcharge');
       $routes->match(['post'],'/getReservDetails', 'ApplicatioController::getReservDetails');
       
-      $routes->get('/printpdf', 'AdditionalController::printpdf');
+      $routes->match(['post'],'/proformaFolio', 'AdditionalController::proformaFolio');
+      $routes->get('/printProFormaFolio', 'AdditionalController::printProFormaFolio');
+      $routes->get('/previewProFormaFolio', 'AdditionalController::previewProFormaFolio');
+      $routes->get('/pdfProFormaFolio', 'AdditionalController::pdfProFormaFolio');
+      
+      
+
+      
       
      
       
@@ -559,12 +566,31 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->delete('delete', 'TransportTypeController::delete');
     });
 
-    $routes->group('transport/pickup-point', function ($routes) { 
-        $routes->get('', 'PickupPointController::pickupPoint');
-        $routes->post('all-pickup-points', 'PickupPointController::allPickupPoints');
-        $routes->post('store', 'PickupPointController::store');
-        $routes->post('edit', 'PickupPointController::edit');
-        $routes->delete('delete', 'PickupPointController::delete');
+    $routes->group('transport', function ($routes) { 
+        
+        $routes->group('pickup-point', function ($routes) { 
+            $routes->get('', 'PickupPointController::pickupPoint');
+            $routes->post('all-pickup-points', 'PickupPointController::allPickupPoints');
+            $routes->post('store', 'PickupPointController::store');
+            $routes->post('edit', 'PickupPointController::edit');
+            $routes->delete('delete', 'PickupPointController::delete');
+        });
+
+        $routes->group('dropoff-point', function ($routes) { 
+            $routes->get('', 'DropoffPointController::dropoffPoint');
+            $routes->post('all-dropoff-points', 'DropoffPointController::allDropoffPoints');
+            $routes->post('store', 'DropoffPointController::store');
+            $routes->post('edit', 'DropoffPointController::edit');
+            $routes->delete('delete', 'DropoffPointController::delete');
+        });
+
+        $routes->group('flight-carrier', function ($routes) { 
+            $routes->get('', 'FlightCarrierController::flightCarrier');
+            $routes->post('all-flight-carriers', 'FlightCarrierController::allFlightCarriers');
+            $routes->post('store', 'FlightCarrierController::store');
+            $routes->post('edit', 'FlightCarrierController::edit');
+            $routes->delete('delete', 'FlightCarrierController::delete');
+        });
     });
 
 

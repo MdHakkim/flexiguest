@@ -3,34 +3,34 @@
 namespace App\Controllers;
 
 use App\Libraries\ServerSideDataTable;
+use App\Models\DropoffPoint;
 use CodeIgniter\API\ResponseTrait;
-use App\Models\PickupPoint;
 
-class PickupPointController extends BaseController
+class DropoffPointController extends BaseController
 {
 
     use ResponseTrait;
 
-    private $PickupPoint;
+    private $DropoffPoint;
 
     public function __construct()
     {
-        $this->PickupPoint = new PickupPoint();
+        $this->DropoffPoint = new DropoffPoint();
     }
 
-    public function pickupPoint()
+    public function dropoffPoint()
     {
         $data['title'] = getMethodName();
         $data['session'] = session();
 
-        return view('frontend/transport/pickup_point', $data);
+        return view('frontend/transport/dropoff_point', $data);
     }
 
-    public function allPickupPoints()
+    public function allDropoffPoints()
     {
         $mine = new ServerSideDataTable();
-        $tableName = 'FLXY_PICKUP_POINTS';
-        $columns = 'PP_ID,PP_POINT,PP_SEQUENCE,PP_CREATED_AT';
+        $tableName = 'FLXY_DROPOFF_POINTS';
+        $columns = 'DP_ID,DP_POINT,DP_SEQUENCE,DP_CREATED_AT';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -42,7 +42,7 @@ class PickupPointController extends BaseController
         $id = $this->request->getPost('id');
 
         $rules = [
-            'PP_POINT' => ['label' => 'point name', 'rules' => 'required'],
+            'DP_POINT' => ['label' => 'point name', 'rules' => 'required'],
         ];
 
         if (!$this->validate($rules)) {
@@ -53,14 +53,14 @@ class PickupPointController extends BaseController
         $data = $this->request->getPost();
 
         if(!empty($id)){
-            $data['PP_UPDATED_BY'] = $user_id;
-            $response = $this->PickupPoint->update($id, $data);
-            $msg = "Pickup point updated successfully";
+            $data['DP_UPDATED_BY'] = $user_id;
+            $response = $this->DropoffPoint->update($id, $data);
+            $msg = "Dropoff point updated successfully";
         }
         else{
-            $data['PP_UPDATED_BY'] = $data['PP_CREATED_BY'] = $user_id;
-            $response = $this->PickupPoint->insert($data);
-            $msg = "Pickup Point added successfully";
+            $data['DP_UPDATED_BY'] = $data['DP_CREATED_BY'] = $user_id;
+            $response = $this->DropoffPoint->insert($data);
+            $msg = "Dropoff Point added successfully";
         }
 
         $result = $response
@@ -74,21 +74,21 @@ class PickupPointController extends BaseController
     {
         $id = $this->request->getPost('id');
 
-        $pickup_point = $this->PickupPoint->where('PP_ID', $id)->first();
+        $dropoff_point = $this->DropoffPoint->where('DP_ID', $id)->first();
 
-        if ($pickup_point)
-            return $this->respond($pickup_point);
+        if ($dropoff_point)
+            return $this->respond($dropoff_point);
 
-        return $this->respond(responseJson(404, true, ['msg' => "Pickup Point not found"]));
+        return $this->respond(responseJson(404, true, ['msg' => "Dropoff point not found"]));
     }
 
     public function delete()
     {
         $id = $this->request->getPost('id');
 
-        $return = $this->PickupPoint->delete($id);
+        $return = $this->DropoffPoint->delete($id);
         $result = $return
-            ? responseJson(200, false, ['msg' => 'Pickup Point deleted successfully'], $return)
+            ? responseJson(200, false, ['msg' => 'Dropoff Point deleted successfully'], $return)
             : responseJson(500, true, "record not deleted");
 
         return $this->respond($result);
