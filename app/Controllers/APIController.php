@@ -1197,8 +1197,8 @@ class APIController extends BaseController
 
     public function getState()
     {
-        $country_id = $this->request->getVar('country_id');
-        $states = $this->State->where('country_id', $country_id)->findAll();
+        $country_code = $this->request->getVar('country_code');
+        $states = $this->State->where('country_code', $country_code)->findAll();
 
         return $this->respond(responseJson(200, false, ['msg' => 'State List'], $states));
     }
