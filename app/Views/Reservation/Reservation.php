@@ -361,7 +361,7 @@
                             <p>Which of these reservation attributes do you want to copy?</p>
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label class="form-lable col-md-12">Room Type</label>
+                                    <label class="form-label col-md-12">Room Type</label>
                                     <select name="COPY_RM_TYPE" id="COPY_RM_TYPE" data-width="100%"
                                         class="selectpicker COPY_RM_TYPE" data-live-search="true">
                                         <option value="">Select</option>
@@ -383,7 +383,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Payment Method</label>
+                                        <label class="form-check-lable flxy_lab_left"> Payment Method</label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -398,7 +398,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Specials</label>
+                                        <label class="form-check-lable flxy_lab_left"> Specials</label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -413,7 +413,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Custom Reference</label>
+                                        <label class="form-check-lable flxy_lab_left"> Custom Reference</label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -428,8 +428,8 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Window/Room Routing Instr.
-                                            </label>
+                                        <label class="form-check-lable flxy_lab_left"> Window/Room Routing Instr.
+                                        </label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -444,7 +444,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Comments</label>
+                                        <label class="form-check-lable flxy_lab_left"> Comments</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -461,7 +461,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Packages</label>
+                                        <label class="form-check-lable flxy_lab_left"> Packages</label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -476,7 +476,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Item Inventory</label>
+                                        <label class="form-check-lable flxy_lab_left"> Item Inventory</label>
                                     </div>
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
@@ -491,7 +491,7 @@
                                                 </span>
                                             </span>
                                         </label>
-                                        <lable class="form-check-lable flxy_lab_left"> Guest Name</label>
+                                        <label class="form-check-lable flxy_lab_left"> Guest Name</label>
                                     </div>
                                 </div>
                             </div>
@@ -612,9 +612,8 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Block</label>
-                                    <select id="RESV_BLOCK" data-width="100%" class="selectpicker RESV_BLOCK"
-                                        data-live-search="true">
-                                        <option value="">Select</option>
+                                    <select id="RESV_BLOCK" data-width="100%" class="select2 form-select RESV_BLOCK"
+                                        data-allow-clear="true">
                                     </select>
                                 </div>
                                 <div class="col-md-3 mt-0">
@@ -636,19 +635,19 @@
                                     <div class="form-check mt-3 me-1">
                                         <input class="form-check-input flxCheckBox" type="checkbox"
                                             id="RESV_CLOSED_CHK">
-                                        <lable class="form-check-lable" for="defaultCheck1"> Closed </label>
+                                        <label class="form-check-lable" for="defaultCheck1"> Closed </label>
                                     </div>
                                     <div class="form-check mt-3 me-1">
                                         <input class="form-check-input flxCheckBox" type="checkbox" value="N"
                                             id="RESV_DAY_USE_CHK">
                                         <!-- <input type="hidden" name="RESV_DAY_USE" id="RESV_DAY_USE" value="N" class="form-control" /> -->
-                                        <lable class="form-check-lable" for="defaultCheck1"> Day Use </label>
+                                        <label class="form-check-lable" for="defaultCheck1"> Day Use </label>
                                     </div>
                                     <div class="form-check mt-3">
                                         <input class="form-check-input flxCheckBox" type="checkbox" value="N"
                                             id="RESV_PSEUDO_CHK">
                                         <!-- <input type="hidden" name="RESV_PSEUDO" id="RESV_PSEUDO" value="N" class="form-control" /> -->
-                                        <lable class="form-check-lable" for="defaultCheck1"> Pseudo </label>
+                                        <label class="form-check-lable" for="defaultCheck1"> Pseudo </label>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -756,9 +755,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label">VIP</label>
-                                    <select name="CUST_VIP_ADD" id="CUST_VIP_ADD" class="select2 form-select CUST_VIP"
+                                    <select name="CUST_VIP" id="CUST_VIP_ADD" class="select2 form-select CUST_VIP"
                                         data-allow-clear="true">
-                                        <option value="">Select</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 mt-0">
@@ -808,8 +806,7 @@
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Block</label>
                                     <select name="RESV_BLOCK" id="RESV_BLOCK" data-width="100%"
-                                        class="selectpicker RESV_BLOCK" data-live-search="true">
-                                        <option value="">Select</option>
+                                        class="select2 form-select RESV_BLOCK" data-allow-clear="true">
                                     </select>
                                 </div>
                                 <div class="col-md-3 mt-0">
@@ -938,21 +935,21 @@
                                                 <div class="invalid-feedback"> Rate required can't empty.</div>
                                             </div>
                                             <div class="col-md-3 mt-4">
-                                                <lable class="form-check-lable"> Fixed Rate</label>
-                                                    <label class="switch">
-                                                        <input type="checkbox" class="switch-input"
-                                                            id="RESV_FIXED_RATE_CHK" />
-                                                        <input type="hidden" name="RESV_FIXED_RATE" value="N"
-                                                            id="RESV_FIXED_RATE" class="form-control" />
-                                                        <span class="switch-toggle-slider">
-                                                            <span class="switch-on">
-                                                                <i class="bx bx-check"></i>
-                                                            </span>
-                                                            <span class="switch-off">
-                                                                <i class="bx bx-x"></i>
-                                                            </span>
+                                                <label class="form-check-lable"> Fixed Rate</label>
+                                                <label class="switch">
+                                                    <input type="checkbox" class="switch-input"
+                                                        id="RESV_FIXED_RATE_CHK" />
+                                                    <input type="hidden" name="RESV_FIXED_RATE" value="N"
+                                                        id="RESV_FIXED_RATE" class="form-control" />
+                                                    <span class="switch-toggle-slider">
+                                                        <span class="switch-on">
+                                                            <i class="bx bx-check"></i>
                                                         </span>
-                                                    </label>
+                                                        <span class="switch-off">
+                                                            <i class="bx bx-x"></i>
+                                                        </span>
+                                                    </span>
+                                                </label>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Package</label>
@@ -1078,21 +1075,21 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-3 mt-4">
-                                                <lable class="form-check-lable" for="defaultCheck1"> Confimation</label>
-                                                    <label class="switch">
-                                                        <input type="checkbox" class="switch-input"
-                                                            id="RESV_CONFIRM_YN_CHK" />
-                                                        <input type="hidden" name="RESV_CONFIRM_YN" value="N"
-                                                            id="RESV_CONFIRM_YN" class="form-control" />
-                                                        <span class="switch-toggle-slider">
-                                                            <span class="switch-on">
-                                                                <i class="bx bx-check"></i>
-                                                            </span>
-                                                            <span class="switch-off">
-                                                                <i class="bx bx-x"></i>
-                                                            </span>
+                                                <label class="form-check-lable" for="defaultCheck1"> Confimation</label>
+                                                <label class="switch">
+                                                    <input type="checkbox" class="switch-input"
+                                                        id="RESV_CONFIRM_YN_CHK" />
+                                                    <input type="hidden" name="RESV_CONFIRM_YN" value="N"
+                                                        id="RESV_CONFIRM_YN" class="form-control" />
+                                                    <span class="switch-toggle-slider">
+                                                        <span class="switch-on">
+                                                            <i class="bx bx-check"></i>
                                                         </span>
-                                                    </label>
+                                                        <span class="switch-off">
+                                                            <i class="bx bx-x"></i>
+                                                        </span>
+                                                    </span>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -1473,28 +1470,28 @@
                                     placeholder="address 3" />
                             </div>
                             <div class="col-md-3 mt-0">
-                                <lable class="form-lable col-md-12">Country</label>
-                                    <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%"
-                                        class="selectpicker CUST_COUNTRY" data-live-search="true" required>
-                                        <option value="">Select</option>
-                                    </select>
-                                    <div class="invalid-feedback">
-                                        country is required can't empty.
-                                    </div>
+                                <label class="form-label col-md-12">Country</label>
+                                <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%"
+                                    class="selectpicker CUST_COUNTRY" data-live-search="true" required>
+                                    <option value="">Select</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    country is required can't empty.
+                                </div>
                             </div>
                             <div class="col-md-3 mt-0">
-                                <lable class="form-lable col-md-12">State</label>
-                                    <select name="CUST_STATE" id="CUST_STATE" data-width="100%"
-                                        class="selectpicker CUST_STATE" data-live-search="true">
-                                        <option value="">Select</option>
-                                    </select>
+                                <label class="form-label col-md-12">State</label>
+                                <select name="CUST_STATE" id="CUST_STATE" data-width="100%"
+                                    class="selectpicker CUST_STATE" data-live-search="true">
+                                    <option value="">Select</option>
+                                </select>
                             </div>
                             <div class="col-md-3 mt-0">
-                                <lable class="form-lable col-md-12">City</label>
-                                    <select name="CUST_CITY" id="CUST_CITY" data-width="100%"
-                                        class="selectpicker CUST_CITY" data-live-search="true">
-                                        <option value="">Select</option>
-                                    </select>
+                                <label class="form-label col-md-12">City</label>
+                                <select name="CUST_CITY" id="CUST_CITY" data-width="100%" class="selectpicker CUST_CITY"
+                                    data-live-search="true">
+                                    <option value="">Select</option>
+                                </select>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Email</label>
@@ -1531,7 +1528,6 @@
                                 <label class="form-label">VIP</label>
                                 <select name="CUST_VIP" id="CUST_VIP" class="select2 form-select CUST_VIP"
                                     data-allow-clear="true">
-                                    <option value="">Select VIP</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -1569,7 +1565,7 @@
                                     <input class="form-check-input flxCheckBox" type="checkbox" id="CUST_ACTIVE_CHK">
                                     <input type="hidden" name="CUST_ACTIVE" id="CUST_ACTIVE" value="N"
                                         class="form-control" />
-                                    <lable class="form-check-lable" for="defaultCheck1"> Active </label>
+                                    <label class="form-check-lable" for="defaultCheck1"> Active </label>
                                 </div>
 
                             </div>
@@ -2421,7 +2417,7 @@
                                                     </span>
                                                 </span>
                                             </label>
-                                            <lable class="form-check-lable flxy_lab_left"> Print Phone Details</label>
+                                            <label class="form-check-lable flxy_lab_left"> Print Phone Details</label>
                                         </div>
                                         <div class="form-check mt-3 p-0">
                                             <label class="switch">
@@ -2436,7 +2432,7 @@
                                                     </span>
                                                 </span>
                                             </label>
-                                            <lable class="form-check-lable flxy_lab_left"> Print Check Number</label>
+                                            <label class="form-check-lable flxy_lab_left"> Print Check Number</label>
                                         </div>
 
                                         <div class="form-check mt-3 p-0 mb-3">
@@ -2452,7 +2448,7 @@
                                                     </span>
                                                 </span>
                                             </label>
-                                            <lable class="form-check-lable flxy_lab_left"> Email List </label>
+                                            <label class="form-check-lable flxy_lab_left"> Email List </label>
                                         </div>
                                     </div>
 
@@ -2678,8 +2674,24 @@ $(document).ready(function() {
     });
 
 
+    loadCompanyList();
+
+    loadAgentList();
+
+    loadBlockList();
+
+});
+
+$(document).on('hide.bs.modal', '#compnayAgentWindow', function() {
+
+    loadCompanyList();
+    loadAgentList();
+});
+
+function loadCompanyList() {
     $.ajax({
         url: '<?php echo base_url('/companyList') ?>',
+        async: false,
         type: "post",
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -2689,9 +2701,12 @@ $(document).ready(function() {
             $('.RESV_COMPANY').html(respn);
         }
     });
+}
 
+function loadAgentList() {
     $.ajax({
         url: '<?php echo base_url('/agentList') ?>',
+        async: false,
         type: "post",
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -2701,10 +2716,22 @@ $(document).ready(function() {
             $('.RESV_AGENT').html(respn);
         }
     });
+}
 
-
-
-});
+function loadBlockList() {
+    $.ajax({
+        url: '<?php echo base_url('/blockList') ?>',
+        async: false,
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        // dataType:'json',
+        success: function(respn) {
+            $('.RESV_BLOCK').html(respn);
+        }
+    });
+}
 
 function generateRateQuery(mode = 'AVG') {
     var formData = {};
@@ -2749,8 +2776,11 @@ function generateRateQuery(mode = 'AVG') {
 }
 
 function avaiableDatePeriod() {
-    var arrival = $('#RESV_ARRIVAL_DT').val();
-    var departure = $('#RESV_DEPARTURE').val();
+    var arrival = $('.window-2').is(':visible') ? $('.window-2').find('.RESV_ARRIVAL_DT').val() : $('.window-1')
+        .find('.RESV_ARRIVAL_DT').val();
+    var departure = $('.window-2').is(':visible') ? $('.window-2').find('.RESV_DEPARTURE').val() : $('.window-1')
+        .find('.RESV_DEPARTURE').val();
+
     var night = $('#RESV_NIGHT').val();
     var nofroom = $('#RESV_NO_F_ROOM').val();
     var adult = $('#RESV_ADULTS').val();
@@ -2813,6 +2843,13 @@ function selectRate() {
 
     $('[name="RESV_COMPANY"]').val($('#RESV_COMPANY_ADD').val()).trigger('change').trigger('select2:select');
     $('[name="RESV_AGENT"]').val($('#RESV_AGENT_ADD').val()).trigger('change').trigger('select2:select');
+
+    if ($('.window-1').is(':visible')) {
+        $('.window-2').find('.RESV_ARRIVAL_DT').datepicker().datepicker("setDate", $('.window-1').find(
+            '.RESV_ARRIVAL_DT').val());
+        $('.window-2').find('.RESV_DEPARTURE').datepicker().datepicker("setDate", $('.window-1').find(
+            '.RESV_DEPARTURE').val());
+    }
 
     $('#submitResrBtn').removeClass('submitResr');
     runInitializeConfig();
@@ -2918,9 +2955,12 @@ function setNights(element, val) {
         var no_of_nights = parseInt(endDtFmt.diff(startDtFmt, 'days'));
         //alert(no_of_nights);
 
+
         var endField = element.hasClass('RESV_DEPARTURE') ? element : element.closest('.input-group').find(
             '.RESV_DEPARTURE');
         endField.closest('.col-md-6').next('.col-md-3').find('.RESV_NIGHT').val(no_of_nights);
+
+        //$('.RESV_NIGHT').val(no_of_nights);
     }
 }
 
@@ -2955,10 +2995,12 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     itemClassList();
 
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
-    $('#RESV_NAME,#RESV_BLOCK').html(
-        '<option value="">Select</option>').selectpicker('refresh');
+    $('#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
+
     runSupportingResevationLov();
     runInitializeConfig();
+    runCountryList();
+
     $('.window-1,#nextbtn,#previousbtn').hide();
     $('.window-2').show();
     $('.flxyFooter').removeClass('flxy_space');
@@ -3007,8 +3049,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                         field == 'RESV_AGENT_DESC' || field == 'RESV_BLOCK_DESC') {
                         return true;
                     };
-                    if (field == 'RESV_NAME' || field == 'RESV_BLOCK' || field ==
-                        'CUST_COUNTRY' || field ==
+                    if (field == 'RESV_NAME' || field ==
                         'RESV_ROOM' || field == 'RESV_RTC') {
                         var option = '<option value="' + dataval + '">' + data[
                             field + '_DESC'] + '</option>';
@@ -3031,8 +3072,17 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                             $('#' + field + '_CHK').prop('checked', false)
                         }
                         $('#' + field).val(dataval);
+                    } else if (field == 'RESV_ARRIVAL_DT' || field ==
+                        'RESV_DEPARTURE') {
+                        $('.' + field).datepicker().datepicker(
+                            "setDate", dataval);
+                    } else if (field == 'CUST_VIP' || field == 'RESV_BLOCK') {
+                        $('.' + field).select2("val", dataval);
                     } else {
                         $('*#' + field).val(dataval).trigger('change');
+                        if (field == 'CUST_COUNTRY') {
+                            $('*#' + field).selectpicker('refresh');
+                        }
                     }
                 });
             });
@@ -3125,8 +3175,9 @@ function addResvation() {
 
     clearFormFields('#select_items');
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
-    $('#RESV_NAME,#RESV_BLOCK').html('<option value="">Select</option>').selectpicker(
-        'refresh');
+    $('#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
+    $('.select2').val(null).trigger('change');
+
     $('#reservationW').modal('show');
     $('#reservationForm').removeClass('was-validated');
     $('#ITEM_RESV_ID', '#RSV_ID').val('');
@@ -3184,7 +3235,7 @@ $(document).on('change', '*#RESV_NAME', function() {
                 $('#CUST_FIRST_NAME').val($.trim(json.CUST_FIRST_NAME))
                 $('#CUST_TITLE').val($.trim(json.CUST_TITLE));
                 $('#CUST_COUNTRY').val($.trim(json.CUST_COUNTRY)).selectpicker('refresh');
-                $('.CUST_VIP').val($.trim(json.CUST_VIP));
+                $('.CUST_VIP').select2("val", $.trim(json.CUST_VIP));
                 $('#CUST_PHONE').val($.trim(json.CUST_PHONE));
 
                 fillCustomerMemberships(custId, 'edit', $('.window-2').is(':visible') ?
@@ -3192,7 +3243,8 @@ $(document).on('change', '*#RESV_NAME', function() {
                 $('#CM_CUST_ID').val(custId);
 
             } else {
-                $('#CUST_FIRST_NAME,#CUST_TITLE,#CUST_COUNTRY,.CUST_VIP,#CUST_PHONE').val('');
+                $('#CUST_FIRST_NAME,#CUST_TITLE,#CUST_COUNTRY,#CUST_PHONE').val('');
+                $('.CUST_VIP').val(null).trigger('change');
             }
         }
     });
@@ -3361,7 +3413,7 @@ function submitForm(id, mode, event) {
                     $('*#RESV_NAME').html(option).selectpicker('refresh');
                     $('*#CUST_TITLE').val(response['CUST_TITLE']);
                     $('*#CUST_FIRST_NAME').val(response['CUST_FIRST_NAME']);
-                    $('.CUST_VIP').val(response['CUST_VIP']);
+                    $('.CUST_VIP').val(response['CUST_VIP']).trigger('change');
                     $('*#CUST_PHONE').val(response['CUST_PHONE']);
                     $('*#CUST_COUNTRY').val(response['CUST_COUNTRY']).selectpicker('refresh');
                     var joinVaribl = windowmode + customPop;
@@ -3472,6 +3524,7 @@ $(document).on('change', '#RESV_RM_TYPE,#RESV_RTC', function() {
     $('[name="RESV_FEATURE"]').val(feature);
 });
 
+/*
 $(document).on('keyup', '.RESV_BLOCK .form-control', function() {
     var search = $(this).val();
     $.ajax({
@@ -3490,6 +3543,7 @@ $(document).on('keyup', '.RESV_BLOCK .form-control', function() {
         }
     });
 });
+*/
 
 /*
 $(document).on('keyup', '.RESV_COMPANY .form-control', function() {
@@ -3527,7 +3581,7 @@ $(document).on('keyup', '.RESV_AGENT .form-control', function() {
 
             $('*#RESV_AGENT').html(respn).selectpicker('refresh');
         }
-    });
+     });
 });
 */
 
