@@ -1212,8 +1212,8 @@ class APIController extends BaseController
 
     public function getCity()
     {
-        $state_id = $this->request->getVar('state_id');
-        $cities = $this->City->where('state_id', $state_id)->findAll();
+        $state_code = $this->request->getVar('state_code');
+        $cities = $this->City->where('state_code', $state_code)->findAll();
 
         return $this->respond(responseJson(200, false, ['msg' => 'Cities List'], $cities));
     }
