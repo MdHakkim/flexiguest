@@ -401,7 +401,7 @@ class APIController extends BaseController
         METHOD: POST , 
         INPUT : Header Authorization- Token
         OUTPUT : UPDATED STATUS.     */
-    public function saveDocDetails()
+    public function saveGuestDetails()
     {
         $user_id = $this->request->user['USR_ID'];
         // for admin => will get customerId from parameters
