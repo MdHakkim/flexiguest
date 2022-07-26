@@ -486,9 +486,11 @@ class APIController extends BaseController
 
         $param = ['CUST_ID' => $CUST_ID,'RESV_ID' => $RESV_ID];
         //$sql = "SELECT  b.* ,a.DOC_FILE_PATH FROM FLXY_CUSTOMER b LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID: OR a.DOC_FILE_TYPE ='PROOF'";
-        $sql ="SELECT fc.*, fd.DOC_FILE_PATH 
+        $sql ="SELECT fc.*, fd.DOC_FILE_PATH, st.sname, ci.ctname
                 FROM FLXY_CUSTOMER fc 
                 left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID AND fd.DOC_RESV_ID = :RESV_ID: AND fd.DOC_FILE_TYPE = 'PROOF'
+                left join STATE as st on fc.CUST_STATE = st.state_code
+                left join CITY as ci on fc.CUST_CITY = ci.id
                 WHERE fc.CUST_ID = :CUST_ID:";
         $data = $this->DB->query($sql, $param)->getRowArray();
 
