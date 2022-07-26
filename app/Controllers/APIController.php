@@ -451,6 +451,7 @@ class APIController extends BaseController
             "CUST_COR" => $this->request->getVar("countryOfResidence"),
             "CUST_COUNTRY" => $this->request->getVar("countryOfResidence"),
             "CUST_STATE" => $this->request->getVar("state"),
+            "CUST_STATE_ID" => $this->request->getVar("state_id"),
             "CUST_CITY" => $this->request->getVar("city"),
             "CUST_DOB" => date("d-M-Y", strtotime($this->request->getVar("DOB"))),
             "CUST_DOC_EXPIRY" => date("d-M-Y", strtotime($this->request->getVar("expiryDate"))),
@@ -489,7 +490,7 @@ class APIController extends BaseController
         $sql ="SELECT fc.*, fd.DOC_FILE_PATH, st.sname, ci.ctname
                 FROM FLXY_CUSTOMER fc 
                 left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID AND fd.DOC_RESV_ID = :RESV_ID: AND fd.DOC_FILE_TYPE = 'PROOF'
-                left join STATE as st on fc.CUST_STATE = st.state_code
+                left join STATE as st on fc.CUST_STATE_ID = st.id
                 left join CITY as ci on fc.CUST_CITY = ci.id
                 WHERE fc.CUST_ID = :CUST_ID:";
         $data = $this->DB->query($sql, $param)->getRowArray();
@@ -1212,8 +1213,8 @@ class APIController extends BaseController
 
     public function getCity()
     {
-        $state_code = $this->request->getVar('state_code');
-        $cities = $this->City->where('state_code', $state_code)->findAll();
+        $state_id = $this->request->getVar('state_id');
+        $cities = $this->City->where('state_id', $state_id)->findAll();
 
         return $this->respond(responseJson(200, false, ['msg' => 'Cities List'], $cities));
     }
