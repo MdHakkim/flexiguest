@@ -401,7 +401,7 @@ class APIController extends BaseController
         METHOD: POST , 
         INPUT : Header Authorization- Token
         OUTPUT : UPDATED STATUS.     */
-    public function saveDocDetails()
+    public function saveGuestDetails()
     {
         $user_id = $this->request->user['USR_ID'];
         // for admin => will get customerId from parameters
@@ -412,6 +412,8 @@ class APIController extends BaseController
             'firstName' => 'required',
             //'email' => 'required|valid_email',
             'countryOfResidence' => 'required',
+            'state' => 'required',
+            'city' => 'required',
             'DOB' => 'required',
             'mobile' => 'required',
             'gender' => 'required',
@@ -447,6 +449,10 @@ class APIController extends BaseController
             "CUST_MOBILE" => $this->request->getVar("mobile"),
             "CUST_NATIONALITY" => $this->request->getVar("nationality"),
             "CUST_COR" => $this->request->getVar("countryOfResidence"),
+            "CUST_COUNTRY" => $this->request->getVar("countryOfResidence"),
+            "CUST_STATE" => $this->request->getVar("state"),
+            "CUST_STATE_ID" => $this->request->getVar("state_id"),
+            "CUST_CITY" => $this->request->getVar("city"),
             "CUST_DOB" => date("d-M-Y", strtotime($this->request->getVar("DOB"))),
             "CUST_DOC_EXPIRY" => date("d-M-Y", strtotime($this->request->getVar("expiryDate"))),
             "CUST_DOC_ISSUE" => date("d-M-Y", strtotime($this->request->getVar("issueDate"))),
@@ -481,9 +487,11 @@ class APIController extends BaseController
 
         $param = ['CUST_ID' => $CUST_ID,'RESV_ID' => $RESV_ID];
         //$sql = "SELECT  b.* ,a.DOC_FILE_PATH FROM FLXY_CUSTOMER b LEFT JOIN FLXY_DOCUMENTS a ON a.DOC_CUST_ID = b.CUST_ID WHERE b.CUST_ID=:CUST_ID: OR a.DOC_FILE_TYPE ='PROOF'";
-        $sql ="SELECT fc.*, fd.DOC_FILE_PATH 
+        $sql ="SELECT fc.*, fd.DOC_FILE_PATH, st.sname, ci.ctname
                 FROM FLXY_CUSTOMER fc 
                 left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID AND fd.DOC_RESV_ID = :RESV_ID: AND fd.DOC_FILE_TYPE = 'PROOF'
+                left join STATE as st on fc.CUST_STATE_ID = st.id
+                left join CITY as ci on fc.CUST_CITY = ci.id
                 WHERE fc.CUST_ID = :CUST_ID:";
         $data = $this->DB->query($sql, $param)->getRowArray();
 
@@ -1197,8 +1205,8 @@ class APIController extends BaseController
 
     public function getState()
     {
-        $country_id = $this->request->getVar('country_id');
-        $states = $this->State->where('country_id', $country_id)->findAll();
+        $country_code = $this->request->getVar('country_code');
+        $states = $this->State->where('country_code', $country_code)->findAll();
 
         return $this->respond(responseJson(200, false, ['msg' => 'State List'], $states));
     }
