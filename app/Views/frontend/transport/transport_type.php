@@ -147,7 +147,7 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('/transport-type/all-transport-types') ?>'
+                'url': '<?php echo base_url('transport/transport-type/all-transport-types') ?>'
             },
             'columns': [{
                     data: ''
@@ -312,7 +312,7 @@
         var fd = new FormData($(`#${id}`)[0]);
 
         $.ajax({
-            url: '<?= base_url('/transport-type/store') ?>',
+            url: '<?= base_url('transport/transport-type/store') ?>',
             type: "post",
             data: fd,
             processData: false,
@@ -352,7 +352,7 @@
         $('#popModalWindowlabel').html('Edit Transport Type');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('/transport-type/edit') ?>';
+        var url = '<?php echo base_url('transport/transport-type/edit') ?>';
         $.ajax({
             url: url,
             type: "post",
@@ -403,7 +403,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('/transport-type/delete') ?>',
+                        url: '<?php echo base_url('transport/transport-type/delete') ?>',
                         type: "post",
                         data: {
                             id: id,

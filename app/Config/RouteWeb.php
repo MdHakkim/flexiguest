@@ -580,16 +580,15 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->delete('delete-concierge-request', 'ConciergeController::deleteConciergeRequest');
     });
 
-    $routes->group('transport-type', function ($routes) { 
-        $routes->get('', 'TransportTypeController::transportType');
-        $routes->post('all-transport-types', 'TransportTypeController::allTransportTypes');
-        $routes->post('store', 'TransportTypeController::store');
-        $routes->post('edit', 'TransportTypeController::edit');
-        $routes->delete('delete', 'TransportTypeController::delete');
-    });
-
     $routes->group('transport', function ($routes) { 
-        
+        $routes->group('transport-type', function ($routes) { 
+            $routes->get('', 'TransportTypeController::transportType');
+            $routes->post('all-transport-types', 'TransportTypeController::allTransportTypes');
+            $routes->post('store', 'TransportTypeController::store');
+            $routes->post('edit', 'TransportTypeController::edit');
+            $routes->delete('delete', 'TransportTypeController::delete');
+        });
+                
         $routes->group('pickup-point', function ($routes) { 
             $routes->get('', 'PickupPointController::pickupPoint');
             $routes->post('all-pickup-points', 'PickupPointController::allPickupPoints');
@@ -612,6 +611,14 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('store', 'FlightCarrierController::store');
             $routes->post('edit', 'FlightCarrierController::edit');
             $routes->delete('delete', 'FlightCarrierController::delete');
+        });
+
+        $routes->group('transport-request', function ($routes) { 
+            $routes->get('', 'TransportRequestController::transportRequest');
+            $routes->post('all-transport-requests', 'TransportRequestController::allTransportRequests');
+            $routes->post('store', 'TransportRequestController::store');
+            $routes->post('edit', 'TransportRequestController::edit');
+            $routes->delete('delete', 'TransportRequestController::delete');
         });
     });
 
