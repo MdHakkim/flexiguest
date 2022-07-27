@@ -460,7 +460,6 @@ class APIController extends BaseController
             "CUST_EMAIL" => $this->request->getVar("email"),
             "CUST_ADDRESS_1" => $this->request->getVar("address1"),
             "CUST_ADDRESS_2" => $this->request->getVar("address2"),
-            "CUST_CITY" => $this->request->getVar("city"),
             "CUST_UPDATE_UID" => $user_id,
             "CUST_UPDATE_DT" => date("d-M-Y")
         ];
