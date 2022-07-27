@@ -612,7 +612,7 @@
                                 </div>
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Block</label>
-                                    <select id="RESV_BLOCK" data-width="100%" class="select2 form-select RESV_BLOCK"
+                                    <select id="RESV_BLOCK_ADD" data-width="100%" class="select2 form-select RESV_BLOCK"
                                         data-allow-clear="true">
                                     </select>
                                 </div>
