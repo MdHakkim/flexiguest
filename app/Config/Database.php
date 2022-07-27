@@ -52,10 +52,16 @@ class Database extends Config
 
     public $default = [
         'DSN'      => '',
-        'hostname' => 'FARNEK-LT-884\SQLEXPRESS',
-        'username' => 'newdb_user',
-        'password' => 'newpassword',
-        'database' => 'Flexiguest',
+        
+        'hostname' => 'FARNEK-LT-902\SQLEXPRESS',
+        'username' => 'testDbUser',
+        'password' => 'test@123',
+        
+        /*'hostname' => '172.19.1.13\MSSQLSERVER2019,1488', //live
+        'username' => 'FLEXIGUEST_MS',
+        'password' => 'farnek@2828',
+        */
+        'database' => 'Flexiguest',        
         'DBDriver' => 'sqlsrv',
         'DBPrefix' => '',
         'pConnect' => false,

@@ -21,7 +21,8 @@ class CustomRules{
                           array('start' => 'PKG_CD_START_DT', 'end' => 'PKG_CD_END_DT'),
                           array('start' => 'RSV_ITM_BEGIN_DATE', 'end' => 'RSV_ITM_END_DATE'),
                           array('start' => 'CM_TODAY', 'end' => 'CM_EXPIRY_DATE'),
-                          array('start' => 'FIXD_CHRG_BEGIN_DATE', 'end' => 'FIXD_DEPARTURE_UP'));
+                          array('start' => 'FIXD_CHRG_BEGIN_DATE', 'end' => 'FIXD_DEPARTURE_UP'),
+                          array('start' => 'RSV_PCKG_BEGIN_DATE', 'end' => 'RSV_PCKG_END_DATE'));
 
                        
     foreach($date_fields as $date_field)
@@ -305,6 +306,34 @@ public function checkReservationYearlyDate(string $str, string $fields, array $d
     }
 
   }
+
+  public function checkReservationDate(string $str, string $fields, array $data)
+  {
+    /**
+     *  Check dates are between the reservation dates
+     */
+          $response = 0;
+          $PACKAGE_BEGIN_DATE = date('Y-m-d',(strtotime($data['RSV_PCKG_BEGIN_DATE']))); 
+          $PACKAGE_END_DATE = date('Y-m-d',(strtotime($data['RSV_PCKG_END_DATE']))); 
+          $RESVSTART_DATE = date('Y-m-d',(strtotime($data['RESVSTART_DATE']))); 
+          $RESVEND_DATE = date('Y-m-d',(strtotime($data['RESVEND_DATE'])));  
+          
+          if(($PACKAGE_BEGIN_DATE >= $RESVSTART_DATE  && $PACKAGE_BEGIN_DATE <= $RESVSTART_DATE ) && ($PACKAGE_END_DATE >= $RESVSTART_DATE && $PACKAGE_END_DATE <= $RESVEND_DATE)){
+            $response = 1;
+          }
+
+          if($response == 0)
+          {
+            return false;
+          }
+          else {
+              return true;
+          }  
+    }
+    
+
+  
+
 
 
 

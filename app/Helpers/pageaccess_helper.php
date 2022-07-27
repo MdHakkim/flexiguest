@@ -19,7 +19,7 @@ function checkPageAccess()
    
     //$url = explode("/",$url);
     $url = explode("/", parse_url($url, PHP_URL_PATH));
-
+   
     $ROLE_ID = session()->get('USR_ROLE_ID');
 
     if(isset($url[1]) && $url[1] > 0){

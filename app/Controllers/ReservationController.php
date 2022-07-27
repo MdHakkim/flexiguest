@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\Reservation;
 use App\Models\ShareReservations;
+use App\Libraries\ServerSideDataTable;
 
 class ReservationController extends BaseController
 {
@@ -20,6 +21,7 @@ class ReservationController extends BaseController
         $this->DB = \Config\Database::connect();
         $this->Reservation = new Reservation();
         $this->ShareReservations = new ShareReservations();
+        $this->session = \Config\Services::session();
         
     }
 
@@ -535,6 +537,226 @@ class ReservationController extends BaseController
         $data['count'] = $this->DB->query($sql)->getNumRows();
         return $data;
     }
+
+
+    
+    public function RateClassList(){ 
+        $option = '';
+
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT RT_CL_ID, RT_CL_CODE, RT_CL_DESC
+                FROM FLXY_RATE_CLASS";
+
+        if ($search != '') {
+            $sql .= " WHERE RT_CL_CODE LIKE '%$search%'
+                    OR RT_CL_DESC LIKE '%$search%'";
+        }
+
+        $response = $this->DB->query($sql)->getResultArray();
+
+        $option = '<option value="">Select</option>';
+        if(!empty($response)){
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['RT_CL_ID'] . '">' . $row['RT_CL_CODE'] . ' | ' . $row['RT_CL_DESC'] . '</option>';
+            }
+        }
+        return $option;
+    }
+
+
+    public function RateCategory(){ 
+        $option = '';
+      
+        $rate_class_id = $this->request->getPost('rate_class_id');
+
+        $sql = "SELECT RT_CT_ID, RT_CT_CODE, RT_CT_DESC
+                FROM FLXY_RATE_CATEGORY WHERE RT_CL_ID = ".$rate_class_id;           
+
+        $response = $this->DB->query($sql)->getResultArray();
+
+        $option = '<option value="">Select</option>';
+        if(!empty($response)){
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['RT_CT_ID'] . '">' . $row['RT_CT_CODE'] . ' | ' . $row['RT_CT_DESC'] . '</option>';
+            }
+        }
+        return $option;
+    }
+
+    public function RateCodes(){ 
+        $option = '';          
+        $rate_category_id = $this->request->getPost('rate_category_id');
+
+        $sql = "SELECT RT_CD_ID, RT_CD_CODE, RT_CD_DESC
+                FROM FLXY_RATE_CODE WHERE RT_CT_ID = ".$rate_category_id;           
+
+        $response = $this->DB->query($sql)->getResultArray();
+
+        $option = '<option value="">Select</option>';
+        if(!empty($response)){
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['RT_CD_ID'] . '">' . $row['RT_CD_CODE'] . ' | ' . $row['RT_CD_DESC'] . '</option>';
+            }
+        }
+        return $option;
+    }
+
+    public function getPackageList(){ 
+        $option = '';                    
+
+        $sql = "SELECT PKG_CD_ID, PKG_CD_CODE, PKG_CD_DESC
+                FROM FLXY_PACKAGE_CODE";           
+
+        $response = $this->DB->query($sql)->getResultArray();
+
+        $option = '<option value="">Select</option>';
+        if(!empty($response)){
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['PKG_CD_ID'] . '">' . $row['PKG_CD_CODE'] . ' | ' . $row['PKG_CD_DESC'] . '</option>';
+            }
+        }
+        return $option;
+    }
+
+    public function getPackageDetails(){ 
+        $option = '';  
+        $package_id = $this->request->getPost('package_id');                 
+
+        $sql = "SELECT PKG_CD_ID, PO_RH_DESC, CLC_RL_DESC
+                FROM FLXY_PACKAGE_CODE INNER JOIN FLXY_POSTING_RHYTHM ON FLXY_POSTING_RHYTHM.PO_RH_ID =  FLXY_PACKAGE_CODE.PO_RH_ID INNER JOIN FLXY_CALCULATION_RULE ON FLXY_PACKAGE_CODE.CLC_RL_ID=FLXY_CALCULATION_RULE.CLC_RL_ID WHERE PKG_CD_ID = ".$package_id;           
+
+        $response = $this->DB->query($sql)->getResultArray();
+       
+        if(!empty($response)){
+            foreach ($response as $row) {
+                $option = ['PO_RH_DESC' => $row['PO_RH_DESC'], 'CLC_RL_DESC' => $row['CLC_RL_DESC']];
+            }
+        }
+        echo json_encode($option);
+    }
+
+            
+public function updatePackageDetails()
+{
+    try {
+        $PCKG_ID              = $this->request->getPost('PCKG_ID');
+        $RSV_PCKG_ID          = $this->request->getPost('RSV_PCKG_ID');
+        $PCKG_RESV_ID         = $this->request->getPost('PCKG_RESV_ID');
+        $RSV_PCKG_BEGIN_DATE  = $this->request->getPost('RSV_PCKG_BEGIN_DATE');
+        $RSV_PCKG_END_DATE    = $this->request->getPost('RSV_PCKG_END_DATE');
+        $RESVSTART_DATE       = $this->request->getPost('RESVSTART_DATE');
+        $RESVEND_DATE         = $this->request->getPost('RESVEND_DATE');
+        $POSTING_RHYTHM       = $this->request->getPost('RSV_PCKG_POST_RYTHM');
+        $CALCULATION_RULE     = $this->request->getPost('RSV_PCKG_CALC_RULE');        
+        $RSV_PCKG_QTY         = $this->request->getPost('RSV_PCKG_QTY');
+
+        if($PCKG_RESV_ID == '') 
+            $PCKG_RESV_ID = 0;
+       
+        $data = [
+            "RSV_ID" => $PCKG_RESV_ID,
+            "PCKG_ID" => trim($PCKG_ID),
+            "RSV_PCKG_QTY" => trim($RSV_PCKG_QTY),
+            "RSV_PCKG_BEGIN_DATE" => date('Y-m-d',(strtotime($RSV_PCKG_BEGIN_DATE))),
+            "RSV_PCKG_END_DATE" => date('Y-m-d',(strtotime($RSV_PCKG_END_DATE))),
+            "RSV_PCKG_STATUS" => 1,
+            "RSV_PCKG_POST_RYTHM" => $POSTING_RHYTHM,
+            "RSV_PCKG_CALC_RULE" => $CALCULATION_RULE,
+            "RSV_PCKG_SESSION_ID" => session_id()
+        ];
+
+        $rules = [  'PCKG_ID' => ['label' => 'Package', 'rules' => 'required'],
+                    'RSV_PCKG_QTY' => ['label' => 'Quantity', 'rules' => 'required'],
+                    'RSV_PCKG_BEGIN_DATE' => ['label' => 'Start Date', 'rules' => 'required|checkReservationDate[RSV_PCKG_BEGIN_DATE]', 'errors' => ['checkReservationDate' => 'Date range should be between the reservation dates ','packageDateOverlapCheck' => 'The Date range of package overlaps with an existing package. Change the date']],                       
+                    'RSV_PCKG_END_DATE' => ['label' => 'End Date', 'rules' => 'required|checkReservationDate[RSV_PCKG_END_DATE]', 'errors' => ['checkReservationDate' => 'Date range should be between the reservation dates ','packageDateOverlapCheck' => 'The Date range of package overlaps with an existing package. Change the date']]                  
+                    
+                 ];                  
+
+        $validate = $this->validate($rules);
+        
+        if (!$validate) {
+            $validate = $this->validator->getErrors();
+            $result["SUCCESS"] = "-402";
+            $result[]["ERROR"] = $validate;
+            $result = $this->responseJson("-402", $validate);
+            echo json_encode($result);
+            exit;
+        }           
+
+        $return = !empty($RSV_PCKG_ID) ? $this->DB->table('FLXY_RESERVATION_PACKAGES')->where('RSV_PCKG_ID', $RSV_PCKG_ID)->update($data) : $this->DB->table('FLXY_RESERVATION_PACKAGES')->insert($data);
+
+        $result = $return ? $this->responseJson("1", "0", $return, !empty($RSV_PCKG_ID) ? $RSV_PCKG_ID : $this->DB->insertID()) : $this->responseJson("-444", "DB insert not successful", $return);
+       
+        if(!$return)
+            $this->session->setFlashdata('error', 'There has been an error. Please try again.');
+        else
+        {
+            //if(empty($PCKG_ID))
+                //$this->session->setFlashdata('success', 'The new package has been added.');
+        }
+        echo json_encode($result);
+
+    } catch (\Exception $e) {
+        return $e->getMessage();
+    }
+}
+
+
+public function showPackages()
+    { 
+        $mine = new ServerSideDataTable(); // loads and creates instance
+
+        //Reservation ID 
+        $RESV_ID = $this->request->getPost('PCKG_RESV_ID');
+        $session_id = session_id();
+
+        if($RESV_ID > 0)
+        $init_cond = array("RSV_ID = " => $RESV_ID); 
+        else
+        $init_cond = array("RSV_PCKG_SESSION_ID LIKE " => "'".$session_id."'", "RSV_ID = " => 0); 
+        
+        $tableName = 'FLXY_RESERVATION_PACKAGES INNER JOIN FLXY_PACKAGE_CODE ON FLXY_RESERVATION_PACKAGES.PCKG_ID = FLXY_PACKAGE_CODE.PKG_CD_ID ';
+        $columns = 'RSV_PCKG_ID,PKG_CD_CODE,PKG_CD_DESC,PKG_CD_SHORT_DESC,RSV_PCKG_QTY,RSV_PCKG_POST_RYTHM,RSV_PCKG_CALC_RULE,RSV_PCKG_BEGIN_DATE,RSV_PCKG_END_DATE';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);        
+        
+        exit;
+    }
+
+    public function showPackageDetails()
+    {
+        $packageDetailsList = $this->getSinglePackageDetails($this->request->getPost('packageID'));
+        echo json_encode($packageDetailsList);
+    }
+
+    public function getSinglePackageDetails($packageID = 0)
+    {
+        $param = ['SYSID' => $packageID];
+
+        $sql = "SELECT *           
+                FROM dbo.FLXY_RESERVATION_PACKAGES
+                WHERE RSV_PCKG_ID=:SYSID:";       
+
+        $response = $this->DB->query($sql, $param)->getResultArray();
+        return $response;
+    }
+
+
+    public function deletePackageDetail()
+    {
+        $RSV_PCKG_ID = $this->request->getPost('RSV_PCKG_ID');
+
+        try {
+            $return = $this->DB->table('FLXY_RESERVATION_PACKAGES')->delete(['RSV_PCKG_ID' => $RSV_PCKG_ID]); 
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+        
+    }
+
+
 
 
 

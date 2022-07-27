@@ -505,6 +505,28 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->get('/printProFormaFolio', 'AdditionalController::printProFormaFolio');
       $routes->get('/previewProFormaFolio', 'AdditionalController::previewProFormaFolio');
       $routes->get('/pdfProFormaFolio', 'AdditionalController::pdfProFormaFolio');
+
+
+      ///////Reservation - Packages////
+      $routes->match(['post'],'/RateClassList', 'ReservationController::RateClassList'); 
+      $routes->match(['post'],'/RateCategory', 'ReservationController::RateCategory'); 
+      $routes->match(['post'],'/RateCodes', 'ReservationController::RateCodes'); 
+      $routes->match(['post'],'/getPackageList', 'ReservationController::getPackageList'); 
+      $routes->match(['post'],'/getPackageDetails', 'ReservationController::getPackageDetails');
+      $routes->match(['post'],'/updatePackageDetails', 'ReservationController::updatePackageDetails');
+
+      $routes->match(['post'],'/showPackages', 'ReservationController::showPackages');
+      $routes->match(['post'],'/showPackageDetails', 'ReservationController::showPackageDetails'); 
+      $routes->match(['post'],'/deletePackageDetail', 'ReservationController::deletePackageDetail');   
+      
+      
+      
+
+      
+      
+      
+        
+      
       
       
 

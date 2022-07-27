@@ -2637,19 +2637,22 @@ class AdditionalController extends BaseController
              $DEFAULT_ROWS++;
              if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
                  $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
-             } 
-            
-            
+             }   
 
-
-          
             $data['CHARGES'] = $TABLE_CONTENTS; 
+            $data['TITLE'] = "FlexiGuest_FOLIO_".$_SESSION['PROFORMA_RESV_ID']; 
             $dompdf->loadHtml(view('Master/preview_proforma',$data));
             $dompdf->render();           
             $canvas = $dompdf->getCanvas();
             $canvas->page_text(18, 780, "{PAGE_NUM} / {PAGE_COUNT}", '', 6, array(0,0,0));
             $dompdf->stream("my_pdf.pdf", array("Attachment" => 1));     
         }
+
+
+        
+
+
+        
     
     
 

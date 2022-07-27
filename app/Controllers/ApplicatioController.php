@@ -331,7 +331,13 @@ class ApplicatioController extends BaseController
                 $sql="UPDATE FLXY_RESERVATION_ITEM SET RSV_ID = ".$sysid." WHERE RSV_ID = 0 AND RSV_SESSION_ID LIKE '%$sessionID%'";
                 $resvItemUpdate = $this->Db->query($sql);
 
-                 /////// Update Inventory with reservation ID
+                
+                 /////// Update Packages with reservation ID
+
+                $sql="UPDATE FLXY_RESERVATION_PACKAGES SET RSV_ID = ".$sysid." WHERE RSV_ID = 0 AND RSV_PCKG_SESSION_ID LIKE '%$sessionID%'";
+                $resvItemUpdate = $this->Db->query($sql);
+
+                 
 
             }else{ // Add New Reservation
                 $data = ["RESV_ARRIVAL_DT" => $this->request->getPost("RESV_ARRIVAL_DT"),
@@ -415,7 +421,11 @@ class ApplicatioController extends BaseController
                 $sql="UPDATE FLXY_RESERVATION_ITEM SET RSV_ID = ".$sysid." WHERE RSV_ID = 0 AND RSV_SESSION_ID LIKE '%$sessionID%'";
                 $resvItemUpdate = $this->Db->query($sql);
 
-                 /////// Update Inventory with reservation ID
+                 /////// Update Packages with reservation ID
+
+                $sql="UPDATE FLXY_RESERVATION_PACKAGES SET RSV_ID = ".$sysid." WHERE RSV_ID = 0 AND RSV_PCKG_SESSION_ID LIKE '%$sessionID%'";
+                $resvItemUpdate = $this->Db->query($sql);
+
                 
 
                 $emailProc='S';
