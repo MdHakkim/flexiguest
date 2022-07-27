@@ -16,6 +16,8 @@ $routes->group("api", function ($routes) {
 
     $routes->get('lookup-api', 'APIController::lookupApi');
 
+    $routes->get('get-state', 'APIController::getState');
+    $routes->get('get-city', 'APIController::getCity');
 });
 
 $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
@@ -66,9 +68,9 @@ $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Co
     });
 
     // API to upload the  documnets proof for checkin 
-    $routes->post("checkin/docUplaod", "APIController::docUploadAPI"); 
+    $routes->post("checkin/docUpload", "APIController::docUploadAPI"); 
     // API to update the guest details from the doc uploaded.
-    $routes->post("checkin/saveDoc", "APIController::saveDocDetails");
+    $routes->post("checkin/saveGuestDetails", "APIController::saveGuestDetails");
     // API to upload the  documnets proof for checkin
     $routes->get("checkin/checkPrevDocs", "APIController::checkDocDetails");
     // API to update the guest details from the doc uploaded.

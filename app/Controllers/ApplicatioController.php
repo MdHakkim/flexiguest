@@ -740,8 +740,11 @@ class ApplicatioController extends BaseController
 
     public function customerView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
-        $tableName = 'FLXY_CUSTOMER';
-        $columns = 'CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_PASSPORT,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID';
+        $tableName = ' (SELECT  CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,
+                        TRIM(CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME)) CUST_FULL_NAME,
+                        CUST_PASSPORT,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID 
+                        FROM FLXY_CUSTOMER) CUSTOMER_LIST';
+        $columns = 'CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_FULL_NAME,CUST_PASSPORT,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID';
         $mine->generate_DatatTable($tableName,$columns);
         exit;
         // return view('Dashboard');

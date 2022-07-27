@@ -340,6 +340,7 @@ function submitFormComp(id, event) {
     $.ajax({
         url: url,
         type: "post",
+        async:false,
         data: formSerialization,
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
