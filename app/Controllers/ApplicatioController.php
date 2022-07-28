@@ -3327,6 +3327,8 @@ class ApplicatioController extends BaseController
     }
     public function webLineReservation($resvid){
         // try{
+            $data['title'] = 'Reservation Detail';
+
             $param = ['RESV_ID'=> $resvid];
             $sql = "SELECT RESV_ID, RESV_NO, FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy') RESV_ARRIVAL_DT, 
                         RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy') RESV_DEPARTURE,
@@ -3377,6 +3379,7 @@ class ApplicatioController extends BaseController
             $data['data'] = $response;
             $data['condition'] = '';
             $data['session'] = $this->session;
+            $data['doc_types'] = $this->Db->query("select DT_ID as id, DT_NAME as label from FLXY_DOC_TYPES")->getResultArray();
 
             return view('WebCheckin/CheckInReservation', $data);
         // }catch (\Exception $e){
