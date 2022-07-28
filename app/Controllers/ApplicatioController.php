@@ -3380,6 +3380,7 @@ class ApplicatioController extends BaseController
             $data['condition'] = '';
             $data['session'] = $this->session;
             $data['doc_types'] = $this->Db->query("select DT_ID as id, DT_NAME as label from FLXY_DOC_TYPES")->getResultArray();
+            $data['vacc_types'] = $this->Db->query("select VT_ID as id, VT_NAME as label from FLXY_VACCINE_TYPES")->getResultArray();
 
             return view('WebCheckin/CheckInReservation', $data);
         // }catch (\Exception $e){
@@ -3598,10 +3599,10 @@ class ApplicatioController extends BaseController
     public function updateVaccineReport(){
         try{
             $rules = [
-                'VACC_DETL' => ['label' => 'vaccine detail', 'rules' => 'required'],
-                'VACC_LAST_DT' => ['label' => 'vaccine last date', 'rules' => 'required'],
-                'VACC_NAME' => ['label' => 'vaccine name', 'rules' => 'required'],
-                'VACC_ISSUED_COUNTRY' => ['label' => 'vaccine issue country', 'rules' => 'required']
+                'VACC_DETL' => ['label' => 'Vaccine Detail', 'rules' => 'required'],
+                'VACC_LAST_DT' => ['label' => 'Vaccine Last Date', 'rules' => 'required'],
+                'VACC_TYPE' => ['label' => 'Vaccine Name', 'rules' => 'required'],
+                'VACC_ISSUED_COUNTRY' => ['label' => 'Vaccine issue country', 'rules' => 'required']
             ];
 
             if(empty($this->request->getPost("VACC_DOC_SAVED"))){
@@ -3658,7 +3659,7 @@ class ApplicatioController extends BaseController
                 "VACC_RESV_ID" => $this->request->getPost("VACC_RESV_ID"),
                 "VACC_DETAILS" => $this->request->getPost("VACC_DETAILS"),
                 "VACC_LAST_DT" => $this->request->getPost("VACC_LAST_DT"),
-                "VACC_NAME" => $this->request->getPost("VACC_NAME"),
+                "VACC_TYPE" => $this->request->getPost("VACC_TYPE"),
                 "VACC_ISSUED_COUNTRY" => $this->request->getPost("VACC_ISSUED_COUNTRY"),
                 // "VACC_IS_VERIFY" => $this->request->getPost("VACC_IS_VERIFY"),
                 "VACC_IS_VERIFY" => 0,

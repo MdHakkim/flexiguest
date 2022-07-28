@@ -614,21 +614,8 @@ class APIController extends BaseController
         $reservation_id = $this->request->getVar('reservationId');
         $customer_id = $this->request->getVar('customerId');
 
-        $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();
-    
-        $vaccine_detail['vaccines'] = [
-            "Ipsar",
-            "BBIBP-CorV",
-            "Convidecia",
-            "CoronaVac",
-            "Covaxin",
-            "Johnson & John",
-            "Moderna",
-            "Oxford-AstraZeneca",
-            "Pfizer-BioNTech",
-            "Sputnik Light",
-            "Sputnik V"
-        ];
+        $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();    
+        $vaccine_detail['vaccines'] = $this->Db->query("select VT_ID as id, VT_NAME as label from FLXY_VACCINE_TYPES")->getResultArray();
         
         $docs = [];
         if(isset($vaccine_detail['VACC_FILE_PATH']) && !empty($vaccine_detail['VACC_FILE_PATH'])){
@@ -702,7 +689,7 @@ class APIController extends BaseController
                 "VACC_CUST_ID" => $customer_id,
                 "VACC_DETAILS" => '', // values will be -- vaccinated, medicallyExempt, vaccinationLater 
                 "VACC_LAST_DT" => '',
-                "VACC_NAME" => '',
+                "VACC_TYPE" => '',
                 "VACC_ISSUED_COUNTRY" => '',
                 "VACC_IS_VERIFY" => 0,
                 "VACC_FILE_PATH" => $file_names,
@@ -745,7 +732,7 @@ class APIController extends BaseController
         $validate = $this->validate([
             'VACC_DETAILS' => 'required',
             'VACC_LAST_DT' => 'required',
-            'VACC_NAME' => 'required',
+            'VACC_TYPE' => 'required',
             'VACC_ISSUED_COUNTRY' => 'required',
         ]);
 
@@ -760,7 +747,7 @@ class APIController extends BaseController
             "VACC_CUST_ID" => $customer_id,
             "VACC_DETAILS" => $this->request->getVar("VACC_DETAILS"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
             "VACC_LAST_DT" => $this->request->getVar("VACC_LAST_DT"),
-            "VACC_NAME" => $this->request->getVar("VACC_NAME"),
+            "VACC_TYPE" => $this->request->getVar("VACC_TYPE"),
             "VACC_ISSUED_COUNTRY" => $this->request->getVar("VACC_ISSUED_COUNTRY"),
             "VACC_IS_VERIFY" => 0,
             "VACC_FILE_PATH" => '',

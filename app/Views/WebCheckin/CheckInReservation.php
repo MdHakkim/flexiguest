@@ -668,7 +668,8 @@
                                                                         if($doc_types != NULL)
                                                                         {
                                                                             foreach($doc_types as $doc_type){
-                                                                    ?>      <option value="<?=$doc_type['label']?>"><?=$doc_type['label']?></option>
+                                                                    ?> <option value="<?=$doc_type['label']?>">
+                                                                        <?=$doc_type['label']?></option>
                                                                     <?php
                                                                             }
                                                                         }
@@ -1076,11 +1077,22 @@
                         </div>
                     </div>
 
-                    <div class="row ">
+                    <div class="row mb-2">
                         <label class="col-sm-4 col-form-label text-end">Vaccine Name</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control form-control-sm" id="VACC_NAME" name="VACC_NAME"
-                                placeholder="Vaccine Name">
+                            <!--<input type="text" class="form-control form-control-sm" id="VACC_NAME" name="VACC_NAME"
+                                placeholder="Vaccine Name">-->
+                            <select name="VACC_TYPE" id="VACC_TYPE" data-width="100%"
+                                class="selectpicker VACC_TYPE" data-live-search="true">
+                                <option value="">Select</option>
+                                <?php if($vacc_types != NULL)
+                                      {
+                                        foreach($vacc_types as $vacc_type){
+                                        ?> <option value="<?=$vacc_type['id']?>"><?=$vacc_type['label']?></option>
+                                <?php   }
+                                      }
+                                ?>
+                            </select>
                         </div>
                     </div>
                     <div class="row ">
@@ -1396,7 +1408,7 @@ function docUploadClik(param, customer_id) {
                 // reset form
                 $('.radioCheck:eq(0)').prop('checked', true);
                 $('#VACC_LAST_DT').val('');
-                $('#VACC_NAME').val('');
+                $('#VACC_TYPE').val('').selectpicker('refresh');
                 $('#VACC_ISSUED_COUNTRY').val('').selectpicker('refresh');
                 $('.previewClass').html('');
                 $('#VACC_DOC_SAVED').val('');
@@ -1415,7 +1427,8 @@ function docUploadClik(param, customer_id) {
                     }
 
                     $('#VACC_LAST_DT').val(jsonFrmt.VACC_LAST_DT);
-                    $('#VACC_NAME').val(jsonFrmt.VACC_NAME);
+                    $('#VACC_TYPE').val(jsonFrmt.VACC_TYPE).selectpicker(
+                        'refresh');
                     $('#VACC_ISSUED_COUNTRY').val($.trim(jsonFrmt.VACC_ISSUED_COUNTRY)).selectpicker(
                         'refresh');
                     var filePath = jsonFrmt.VACC_FILE_PATH;

@@ -12,6 +12,7 @@ class VaccineDetail extends Model
         'VACC_CUST_ID',
         'VACC_DETAILS',
         'VACC_LAST_DT',
+        'VACC_TYPE',
         'VACC_NAME',
         'VACC_ISSUED_COUNTRY',
         'VACC_IS_VERIFY',
