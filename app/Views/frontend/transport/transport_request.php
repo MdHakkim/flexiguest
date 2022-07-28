@@ -31,6 +31,10 @@
     .text-right {
         text-align: right !important;
     }
+
+    .bs-stepper .bs-stepper-header {
+        flex-wrap: wrap !important;
+    }
 </style>
 
 <!-- Content wrapper -->
@@ -48,11 +52,11 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>Status</th>
                             <th>Reservation</th>
                             <th>Room</th>
                             <th>Guest Name</th>
                             <th>Transport Type</th>
-                            <th>Status</th>
                             <th>Payment Status</th>
                             <th>Travel Date & Time</th>
                             <th>Created At</th>
@@ -123,6 +127,8 @@
                                     </button>
                                 </div>
 
+                                <div class="line"></div>
+
                                 <div class="step" data-target="#flight-information">
                                     <button type="button" class="step-trigger">
                                         <span class="bs-stepper-label mt-1">
@@ -130,6 +136,8 @@
                                         </span>
                                     </button>
                                 </div>
+
+                                <div class="line"></div>
 
                                 <div class="step" data-target="#status-remarks-reminder">
                                     <button type="button" class="step-trigger">
@@ -143,6 +151,7 @@
                             <div class="bs-stepper-content">
                                 <form id="submit-form" class="needs-validation" novalidate onSubmit="return false">
                                     <input type="hidden" name="id" class="form-control" />
+                                    <input type="hidden" name="TR_CUSTOMER_ID" class="form-control" />
                                     <input type="hidden" name="TR_ROOM_ID" class="form-control" />
 
                                     <!-- in-house-information -->
@@ -152,14 +161,24 @@
 
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Reservation *</b></label>
-                                                <select class="select2" name="TR_RESERVATION_ID">
+                                                <select class="select2" name="TR_RESERVATION_ID" onchange="onChangeReservation()">
                                                     <option value="">Select Reservation</option>
+                                                    <?php foreach ($reservations as $reservation) : ?>
+                                                        <option value="<?= $reservation['RESV_ID'] ?>" data-customer_id="<?= $reservation['CUST_ID'] ?>" data-customer_name="<?= $reservation['CUST_FIRST_NAME'] . ' ' . $reservation['CUST_MIDDLE_NAME'] . ' ' . $reservation['CUST_LAST_NAME'] ?>" data-room_no="<?= $reservation['RESV_ROOM'] ?>" data-room_id="<?= $reservation['RM_ID'] ?>">
+
+                                                            RES<?= $reservation['RESV_ID'] ?>
+                                                            -
+                                                            <?= $reservation['CUST_FIRST_NAME'] . ' ' . $reservation['CUST_MIDDLE_NAME'] . ' ' . $reservation['CUST_LAST_NAME'] ?>
+                                                            -
+                                                            <?= $reservation['CUST_ID'] ?>
+                                                        </option>
+                                                    <?php endforeach ?>
                                                 </select>
                                             </div>
 
                                             <div class="col-md-6">
-                                                <label class="form-label"><b>Apartment No. *</b></label>
-                                                <input type="text" name="APARTMENT_NO" class="form-control" placeholder="Apartment No" readonly/>
+                                                <label class="form-label"><b>Apartment No.</b></label>
+                                                <input type="text" name="APARTMENT_NO" class="form-control" placeholder="Apartment No" readonly />
                                             </div>
 
                                             <div class="col-12 d-flex justify-content-between">
@@ -191,8 +210,11 @@
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Transport Type *</b></label>
                                                 <select class="select2" name="TR_TRANSPORT_TYPE_ID">
-                                                    <option selected>Type 1</option>
-                                                    <option>Type 2</option>
+                                                    <?php foreach ($transport_types as $transport_type) : ?>
+                                                        <option value="<?= $transport_type['TT_ID'] ?>">
+                                                            <?= $transport_type['TT_LABEL'] ?>
+                                                        </option>
+                                                    <?php endforeach ?>
                                                 </select>
                                             </div>
 
@@ -229,17 +251,17 @@
 
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Adults *</b></label>
-                                                <input type="number" name="TR_ADULTS" class="form-control" value="1" />
+                                                <input type="number" name="TR_ADULTS" class="form-control" value=1 oninput="updateTotalPassengers()" />
                                             </div>
 
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Children</b></label>
-                                                <input type="number" name="TR_CHILDREN" class="form-control" />
+                                                <input type="number" name="TR_CHILDREN" class="form-control" oninput="updateTotalPassengers()" />
                                             </div>
 
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Total Passengers *</b></label>
-                                                <input type="number" name="TR_TOTAL_PASSENGERS" class="form-control" value="0" readonly/>
+                                                <input type="number" name="TR_TOTAL_PASSENGERS" class="form-control" value="0" readonly />
                                             </div>
 
                                             <!-- <div class="col-md-6">
@@ -271,8 +293,11 @@
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Pickup Point *</b></label>
                                                 <select class="select2" name="TR_PICKUP_POINT_ID">
-                                                    <option value="">Select Pickup Point</option>
-                                                    <option>Airport</option>
+                                                    <?php foreach ($pickup_points as $pickup_point) : ?>
+                                                        <option value="<?= $pickup_point['PP_ID'] ?>">
+                                                            <?= $pickup_point['PP_POINT'] ?>
+                                                        </option>
+                                                    <?php endforeach ?>
                                                 </select>
                                             </div>
 
@@ -307,8 +332,11 @@
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Dropoff Point *</b></label>
                                                 <select class="select2" name="TR_DROPOFF_POINT_ID">
-                                                    <option value="">Select Dropoff Point</option>
-                                                    <option>Airport</option>
+                                                    <?php foreach ($dropoff_points as $dropoff_point) : ?>
+                                                        <option value="<?= $dropoff_point['DP_ID'] ?>">
+                                                            <?= $dropoff_point['DP_POINT'] ?>
+                                                        </option>
+                                                    <?php endforeach ?>
                                                 </select>
                                             </div>
 
@@ -352,15 +380,19 @@
 
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Flight Carrier *</b></label>
-                                                <select class="select2" name="TR_FLIGHT_CARRIER_ID">
+                                                <select class="select2" name="TR_FLIGHT_CARRIER_ID" onchange="onChangeFlightCarrier()">
                                                     <option value="">Select Flight Carrier</option>
-                                                    <option>Airport</option>
+                                                    <?php foreach ($flight_carriers as $flight_carrier) : ?>
+                                                        <option value="<?= $flight_carrier['FC_ID'] ?>" data-flight_code="<?= $flight_carrier['FC_FLIGHT_CODE'] ?>">
+                                                            <?= $flight_carrier['FC_FLIGHT_CARRIER'] ?>
+                                                        </option>
+                                                    <?php endforeach ?>
                                                 </select>
                                             </div>
 
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Flight Code</b></label>
-                                                <input type="text" class="form-control" placeholder="Flight code" readonly />
+                                                <input type="text" name="FLIGHT_CODE" class="form-control" placeholder="Flight code" readonly />
                                             </div>
 
                                             <div class="col-md-6">
@@ -399,7 +431,7 @@
                                     <div id="status-remarks-reminder" class="content">
                                         <div class="row g-3">
 
-                                        <div class="col-md-6">
+                                            <div class="col-md-6">
                                                 <label class="form-label"><b>Status</b></label>
                                                 <select class="select2" name="TR_STATUS">
                                                     <option>New</option>
@@ -426,13 +458,14 @@
                                                 </select>
                                             </div>
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-6"></div>
+                                            <!-- <div class="col-md-6">
                                                 <label class="form-label"><b>Reminder Required</b></label>
                                                 <select class="select2" name="TR_REMINDER_REQUIRED">
                                                     <option value="0">No</option>
                                                     <option value="1">Yes</option>
                                                 </select>
-                                            </div>
+                                            </div> -->
 
                                             <div class="col-md-12">
                                                 <label class="form-label"><b>Remarks</b></label>
@@ -445,13 +478,10 @@
                                                     <span class="align-middle d-sm-inline-block d-none">Previous</span>
                                                 </button>
 
-                                                <button class="btn btn-primary btn-next">
-                                                    <span class="align-middle d-sm-inline-block d-none me-sm-1 me-0">Next</span>
-                                                    <i class="bx bx-chevron-right bx-sm me-sm-n2"></i>
-                                                </button>
+                                                <button id="submitBtn" class="btn btn-success btn-submit" onClick="submitForm()">Save</button>
                                             </div>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -480,6 +510,8 @@
 
     <?= $this->section("script") ?>
     <script>
+        var form_id = '#submit-form';
+
         $(document).ready(function() {
             $('input[name="TR_TRAVEL_DATE"]').datepicker({
                 format: 'yyyy-mm-dd',
@@ -515,6 +547,30 @@
             }
         });
 
+        function onChangeReservation() {
+            let customer_id = $(`${form_id} select[name="TR_RESERVATION_ID"]`).find(":selected").data('customer_id');
+            let customer_name = $(`${form_id} select[name="TR_RESERVATION_ID"]`).find(":selected").data('customer_name');
+            let room_id = $(`${form_id} select[name="TR_RESERVATION_ID"]`).find(":selected").data('room_id');
+            let room_no = $(`${form_id} select[name="TR_RESERVATION_ID"]`).find(":selected").data('room_no');
+
+            $(`${form_id} input[name="TR_CUSTOMER_ID"]`).val(customer_id);
+            $(`${form_id} input[name="TR_GUEST_NAME"]`).val(customer_name);
+            $(`${form_id} input[name="TR_ROOM_ID"]`).val(room_id);
+            $(`${form_id} input[name="APARTMENT_NO"]`).val(room_no);
+        }
+
+        function onChangeFlightCarrier() {
+            let flight_code = $(`${form_id} select[name="TR_FLIGHT_CARRIER_ID"]`).find(":selected").data('flight_code');
+            $(`${form_id} input[name="FLIGHT_CODE"]`).val(flight_code);
+        }
+
+        function updateTotalPassengers() {
+            let adults = $(`${form_id} input[name="TR_ADULTS"]`).val();
+            let children = $(`${form_id} input[name="TR_CHILDREN"]`).val();
+
+            $(`${form_id} input[name="TR_TOTAL_PASSENGERS"]`).val(adults + children);
+        }
+
         var compAgntMode = '';
         var linkMode = '';
 
@@ -532,6 +588,27 @@
                         data: ''
                     },
                     {
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            let class_name = 'badge rounded-pill';
+
+                            if (data['TR_STATUS'] == 'Closed')
+                                class_name += ' bg-label-success';
+
+                            else if (data['TR_STATUS'] == 'Rejected')
+                                class_name += ' bg-label-danger';
+
+                            else if (data['TR_STATUS'] == 'In Progress')
+                                class_name += ' bg-label-info';
+                            else
+                                class_name += ' bg-label-warning';
+
+                            return (`
+                            <span class="${class_name}">${data['TR_STATUS']}</span>
+                        `);
+                        }
+                    },
+                    {
                         data: 'TR_RESERVATION_ID'
                     },
                     {
@@ -542,9 +619,6 @@
                     },
                     {
                         data: 'TT_LABEL'
-                    },
-                    {
-                        data: 'TR_STATUS'
                     },
                     {
                         data: 'TR_PAYMENT_STATUS'
@@ -664,7 +738,7 @@
         // Show Add Rate Class Form
         function addForm() {
             resetForm();
-            $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
+            // $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
             $('#popModalWindowlabel').html('Add Transport Request');
 
             $('#popModalWindow').modal('show');
@@ -675,6 +749,10 @@
 
             $(`#${id} input`).val('');
             $(`#${id} textarea`).val('');
+
+            $(`#${id} input[name='TR_ADULTS']`).val(1);
+            $(`#${id} input[name='TR_CHILDREN']`).val(0);
+            $(`#${id} input[name='TR_TOTAL_PASSENGERS']`).val(1);
         }
 
         // Add New or Edit Rate Class submit Function
@@ -738,6 +816,8 @@
 
 
                         $.each(data, function(field, val) {
+                            if (field == 'TR_TRAVEL_TIME')
+                                val = val.replace('.0000000', '');
 
                             if ($(`#${id} input[name='${field}'][type!='file']`).length)
                                 $(`#${id} input[name='${field}']`).val(val);

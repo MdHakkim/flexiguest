@@ -37,6 +37,7 @@ class TransportRequest extends Model
         'TR_REMINDER_REQUIRED',
         'TR_STATUS',
         'TR_PAYMENT_METHOD',
+        'TR_PAYMENT_STATUS',
         'TR_CREATED_BY',
         'TR_UPDATED_BY',
     ];

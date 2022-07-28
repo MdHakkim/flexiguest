@@ -96,8 +96,8 @@ class TransportTypeController extends BaseController
         $return = $this->TransportType->delete($id);
         $result = $return
             ? responseJson(200, false, ['msg' => 'Transport deleted successfully'], $return)
-            : responseJson(500, true, "record not deleted");
-
+            : responseJson(500, true, ['msg' => "record not deleted"]);
+        
         return $this->respond($result);
     }
 }
