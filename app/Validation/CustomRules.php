@@ -7,6 +7,7 @@ class CustomRules{
  
   public function __construct(){
     $this->Db = \Config\Database::connect();
+    $this->session = \Config\Services::session();
   }
 
   // Rule is to validate mobile number digits
@@ -307,18 +308,17 @@ public function checkReservationYearlyDate(string $str, string $fields, array $d
 
   }
 
-  public function checkReservationDate(string $str, string $fields, array $data)
+  public function checkPackageStartDate(string $str, string $fields, array $data)
   {
     /**
      *  Check dates are between the reservation dates
      */
           $response = 0;
-          $PACKAGE_BEGIN_DATE = date('Y-m-d',(strtotime($data['RSV_PCKG_BEGIN_DATE']))); 
-          $PACKAGE_END_DATE = date('Y-m-d',(strtotime($data['RSV_PCKG_END_DATE']))); 
+          $PACKAGE_BEGIN_DATE = date('Y-m-d',(strtotime($data['RSV_PCKG_BEGIN_DATE'])));           ; 
           $RESVSTART_DATE = date('Y-m-d',(strtotime($data['RESVSTART_DATE']))); 
           $RESVEND_DATE = date('Y-m-d',(strtotime($data['RESVEND_DATE'])));  
           
-          if(($PACKAGE_BEGIN_DATE >= $RESVSTART_DATE  && $PACKAGE_BEGIN_DATE <= $RESVSTART_DATE ) && ($PACKAGE_END_DATE >= $RESVSTART_DATE && $PACKAGE_END_DATE <= $RESVEND_DATE)){
+          if($PACKAGE_BEGIN_DATE >= $RESVSTART_DATE  && $PACKAGE_BEGIN_DATE <= $RESVEND_DATE ){
             $response = 1;
           }
 
@@ -330,6 +330,75 @@ public function checkReservationYearlyDate(string $str, string $fields, array $d
               return true;
           }  
     }
+
+    public function checkPackageEndDate(string $str, string $fields, array $data)
+    {
+      /**
+       *  Check dates are between the reservation dates
+       */
+            $response = 0;
+             
+            $PACKAGE_END_DATE = date('Y-m-d',(strtotime($data['RSV_PCKG_END_DATE']))); 
+            $RESVSTART_DATE = date('Y-m-d',(strtotime($data['RESVSTART_DATE']))); 
+            $RESVEND_DATE = date('Y-m-d',(strtotime($data['RESVEND_DATE'])));  
+            
+            if($PACKAGE_END_DATE >= $RESVSTART_DATE && $PACKAGE_END_DATE <= $RESVEND_DATE){
+              $response = 1;
+            }
+  
+            if($response == 0)
+            {
+              return false;
+            }
+            else {
+                return true;
+            }  
+      }
+  
+
+
+    public function packageAvailableCheck(string $str, string $fields, array $data)
+    {
+    /**
+     *  Check dates are between the package dates
+     */
+          $response = 0;
+          $PACKAGE_BEGIN_DATE = date('Y-m-d',(strtotime($data['RSV_PCKG_BEGIN_DATE']))); 
+          $PACKAGE_END_DATE = date('Y-m-d',(strtotime($data['RSV_PCKG_END_DATE'])));
+          
+          $sql = "SELECT PKG_CD_ID FROM FLXY_PACKAGE_CODE_DETAIL WHERE ('".$PACKAGE_BEGIN_DATE."' BETWEEN PKG_CD_START_DT AND PKG_CD_END_DT) AND ('".$PACKAGE_END_DATE."' BETWEEN PKG_CD_START_DT AND PKG_CD_END_DT) AND PKG_CD_ID = ".$data['PCKG_ID']." AND PKG_CD_DT_STATUS = '1'"; 
+          $response = $this->Db->query($sql)->getNumRows();
+          if($response == 0)
+          {
+            return false;
+          }
+          else {
+              return true;
+          }  
+    }
+
+    public function packageDateOverlapCheck(string $str, string $fields, array $data)
+    {
+      /**
+       *  Check Item dates are overlapped or not */
+  
+      $RSV_PCKG_BEGIN_DATE = date('Y-m-d',(strtotime($data['RSV_PCKG_BEGIN_DATE'])));
+      $RSV_PCKG_END_DATE   =  date('Y-m-d',(strtotime($data['RSV_PCKG_END_DATE'])));
+      $session_id = session_id();
+  
+      if($data['RSV_PCKG_ID'] == '' &&  $data['PCKG_RESV_ID'] == '')
+       $sql = "SELECT * FROM FLXY_RESERVATION_PACKAGES WHERE PCKG_ID = '".$data['PCKG_ID']."' AND ('".$RSV_PCKG_BEGIN_DATE."' BETWEEN RSV_PCKG_BEGIN_DATE AND RSV_PCKG_END_DATE) AND ('".$RSV_PCKG_END_DATE."' BETWEEN RSV_PCKG_BEGIN_DATE AND RSV_PCKG_END_DATE) AND RSV_ID = 0 AND RSV_PCKG_SESSION_ID LIKE '".$session_id."'"; 
+      else
+       $sql = "SELECT * FROM FLXY_RESERVATION_PACKAGES WHERE RSV_ID = '".$data['PCKG_RESV_ID']."' AND PCKG_ID = '".$data['PCKG_ID']."' AND ('".$RSV_PCKG_BEGIN_DATE."' BETWEEN RSV_PCKG_BEGIN_DATE AND RSV_PCKG_END_DATE) AND ('".$RSV_PCKG_END_DATE."' BETWEEN RSV_PCKG_BEGIN_DATE AND RSV_PCKG_END_DATE) AND RSV_PCKG_ID != ".$data['RSV_PCKG_ID']; 
+     
+      $response = $this->Db->query($sql)->getNumRows();
+      return ($response==0 ? true : false);
+      
+  
+  
+    }
+
+    
     
 
   
