@@ -615,7 +615,7 @@ class APIController extends BaseController
         $customer_id = $this->request->getVar('customerId');
 
         $vaccine_detail = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->first();    
-        $vaccine_detail['vaccines'] = $this->Db->query("select VT_ID as id, VT_NAME as label from FLXY_VACCINE_TYPES")->getResultArray();
+        $vaccine_detail['vaccines'] = $this->DB->query("select VT_ID as id, VT_NAME as label from FLXY_VACCINE_TYPES")->getResultArray();
         
         $docs = [];
         if(isset($vaccine_detail['VACC_FILE_PATH']) && !empty($vaccine_detail['VACC_FILE_PATH'])){
