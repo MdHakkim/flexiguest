@@ -666,10 +666,11 @@ public function updatePackageDetails()
             "RSV_PCKG_SESSION_ID" => session_id()
         ];
 
-        $rules = [  'PCKG_ID' => ['label' => 'Package', 'rules' => 'required'],
+        $rules = [  'PCKG_ID' => ['label' => 'Package', 'rules' => 'required|packageAvailableCheck[RSV_PCKG_BEGIN_DATE]',
+                    'errors' =>['packageAvailableCheck' => 'Package is not availbale in this time period']],
                     'RSV_PCKG_QTY' => ['label' => 'Quantity', 'rules' => 'required'],
-                    'RSV_PCKG_BEGIN_DATE' => ['label' => 'Start Date', 'rules' => 'required|checkReservationDate[RSV_PCKG_BEGIN_DATE]', 'errors' => ['checkReservationDate' => 'Date range should be between the reservation dates ','packageDateOverlapCheck' => 'The Date range of package overlaps with an existing package. Change the date']],                       
-                    'RSV_PCKG_END_DATE' => ['label' => 'End Date', 'rules' => 'required|checkReservationDate[RSV_PCKG_END_DATE]', 'errors' => ['checkReservationDate' => 'Date range should be between the reservation dates ','packageDateOverlapCheck' => 'The Date range of package overlaps with an existing package. Change the date']]                  
+                    'RSV_PCKG_BEGIN_DATE' => ['label' => 'Start Date', 'rules' => 'required|checkPackageStartDate[RSV_PCKG_BEGIN_DATE]|packageDateOverlapCheck[RSV_PCKG_BEGIN_DATE]', 'errors' => ['checkPackageStartDate' => 'Start Date should be between the reservation dates ','packageDateOverlapCheck' => 'Start Date of package overlaps with an existing package. Change the date']],                       
+                    'RSV_PCKG_END_DATE' => ['label' => 'End Date', 'rules' => 'required|checkPackageEndDate[RSV_PCKG_END_DATE]|packageDateOverlapCheck[RSV_PCKG_END_DATE]', 'errors' => ['checkPackageEndDate' => 'End Date should be between the reservation dates ','packageDateOverlapCheck' => 'End Date of package overlaps with an existing package. Change the date']]                  
                     
                  ];                  
 
@@ -708,7 +709,7 @@ public function showPackages()
         $mine = new ServerSideDataTable(); // loads and creates instance
 
         //Reservation ID 
-        $RESV_ID = $this->request->getPost('PCKG_RESV_ID');
+        $RESV_ID = $this->request->getPost('RESV_ID');
         $session_id = session_id();
 
         if($RESV_ID > 0)
@@ -756,11 +757,83 @@ public function showPackages()
         
     }
 
+    public function showSinglePackageDetails()
+    {
 
+        $output    = '';
+        $flag = $out = 0;
+        $packageID = $this->request->getPost('packageID');
 
+        $sql = "SELECT RSV_PCKG_BEGIN_DATE, RSV_PCKG_END_DATE, PCKG_ID, RSV_PCKG_QTY       
+                FROM FLXY_RESERVATION_PACKAGES 
+                WHERE RSV_PCKG_ID=".$packageID;  
 
+        $response = $this->DB->query($sql)->getResultArray();
+        foreach ($response as $row) {
+            $RSV_PCKG_BEGIN_DATE    = $row['RSV_PCKG_BEGIN_DATE'];
+            $RSV_PCKG_END_DATE      = $row['RSV_PCKG_END_DATE'];
+            $PCKG_ID                = $row['PCKG_ID'];
+            $RSV_PCKG_QTY           = $row['RSV_PCKG_QTY'];
+        }
 
-    
+       
+        $RSV_PCKG_BEGIN_DATE1    = strtotime($RSV_PCKG_BEGIN_DATE);
+        $RSV_PCKG_END_DATE1  = strtotime($RSV_PCKG_END_DATE); 
+        $datediff = $RSV_PCKG_END_DATE1 - $RSV_PCKG_BEGIN_DATE1;
+        $RESERV_DAYS = round($datediff / (60 * 60 * 24));
+
+        $ACTUAL_RSV_PCKG_END_DATE  = date("Y-m-d", strtotime("-1 day", strtotime($RSV_PCKG_END_DATE)));  
+
+        $Posting_Rhythm = 0;
+        $Posting_Rhythm = $this->DB->query("SELECT PO_RH_ID       
+        FROM FLXY_PACKAGE_CODE 
+        WHERE PKG_CD_ID =".$PCKG_ID)->getRow()->PO_RH_ID;
+   
+        for($i = 1; $i <= $RESERV_DAYS; $i++ ){
+           
+            $sql = "SELECT  PKG_CD_DT_PRICE       
+                FROM FLXY_PACKAGE_CODE_DETAIL 
+                WHERE ('$RSV_PCKG_BEGIN_DATE' BETWEEN PKG_CD_START_DT AND PKG_CD_END_DT) AND ('$RSV_PCKG_END_DATE' BETWEEN PKG_CD_START_DT AND PKG_CD_END_DT) AND PKG_CD_ID=".$PCKG_ID;                  
+              
+            $response = $this->DB->query($sql)->getResultArray();
+
+            foreach ($response as $row) {
+                $PKG_CD_DT_PRICE    = $row['PKG_CD_DT_PRICE'];
+            }
+            $PKG_CD_DT_PRICE =  number_format($PKG_CD_DT_PRICE,2, '.', '');
+            $RSV_PCKG_TOTAL = number_format(($RSV_PCKG_QTY * $PKG_CD_DT_PRICE),2, '.', '');
+           
+
+            /////////// Posting_Rhythm /////////////
+            if( ($Posting_Rhythm == 5 && ($RSV_PCKG_BEGIN_DATE == $ACTUAL_RSV_PCKG_END_DATE)) || $Posting_Rhythm == 1 || $Posting_Rhythm == 2) 
+            {   
+                $out = 1;   
+                 
+            }            
+            /////////// else /////////////
+            else{
+                $out = 0; 
+
+            }  
+
+                if($out == 1){
+                    $output.= '<tr>                   
+                    <td class="select">'.$RSV_PCKG_BEGIN_DATE.'</td>
+                    <td class="select">'.$PKG_CD_DT_PRICE.'</td>
+                    <td class="select">'.$RSV_PCKG_TOTAL.'</td>                    
+                     </tr>';
+                }
+
+                $RSV_PCKG_BEGIN_DATE  = date("Y-m-d", strtotime("+$i day", strtotime($RSV_PCKG_BEGIN_DATE))); 
+
+                if( $Posting_Rhythm == 2)
+                break;
+                
+        }
+
+        echo $output;
+    }
+
 
 
 

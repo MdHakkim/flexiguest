@@ -2646,14 +2646,7 @@ class AdditionalController extends BaseController
             $canvas = $dompdf->getCanvas();
             $canvas->page_text(18, 780, "{PAGE_NUM} / {PAGE_COUNT}", '', 6, array(0,0,0));
             $dompdf->stream("my_pdf.pdf", array("Attachment" => 1));     
-        }
-
-
-        
-
-
-        
-    
+        }    
     
 
 }

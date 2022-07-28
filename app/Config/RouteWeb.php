@@ -517,7 +517,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
       $routes->match(['post'],'/showPackages', 'ReservationController::showPackages');
       $routes->match(['post'],'/showPackageDetails', 'ReservationController::showPackageDetails'); 
-      $routes->match(['post'],'/deletePackageDetail', 'ReservationController::deletePackageDetail');   
+      $routes->match(['post'],'/deletePackageDetail', 'ReservationController::deletePackageDetail'); 
+      $routes->match(['post'],'/showSinglePackageDetails', 'ReservationController::showSinglePackageDetails');  
+       
       
       
       

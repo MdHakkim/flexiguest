@@ -2667,6 +2667,13 @@ var windowmode = '';
 
 $(document).ready(function() {
 
+$('#Each_Package_Details').DataTable({
+    "ordering": true,
+    "searching": false,
+    autowidth: true,
+    responsive: true
+});
+
     linkMode = 'EX';
     $('#loader_flex_bg').show();
 
@@ -5301,38 +5308,42 @@ function RateClassList() {
 
 $("#RESV_RATE_CLASS").change(function(e, param = 0) {
     var rate_class_id = $(this).val();
-    $.ajax({
-        url: '<?php echo base_url('/RateCategory') ?>',
-        type: "post",
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        data: {
-            rate_class_id: rate_class_id
-        },
-        success: function(respn) {
-            $('#RESV_RATE_CATEGORY').html('<option value="">Select</option>');
-            $('#RESV_RATE_CATEGORY').html(respn);
-        }
-    });
+    if(rate_class_id > 0){
+        $.ajax({
+            url: '<?php echo base_url('/RateCategory') ?>',
+            type: "post",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                rate_class_id: rate_class_id
+            },
+            success: function(respn) {
+                $('#RESV_RATE_CATEGORY').html('<option value="">Select</option>');
+                $('#RESV_RATE_CATEGORY').html(respn);
+            }
+        });
+    }
 });
 
 $("#RESV_RATE_CATEGORY").change(function(e, param = 0) {
     var rate_category_id = $(this).val();
-    $.ajax({
-        url: '<?php echo base_url('/RateCodes') ?>',
-        type: "post",
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        data: {
-            rate_category_id: rate_category_id
-        },
-        success: function(respn) {
-            $('#RESV_RATE_CODE').html('<option value="">Select</option>');
-            $('#RESV_RATE_CODE').html(respn);
-        }
-    });
+    if(rate_category_id > 0){
+        $.ajax({
+            url: '<?php echo base_url('/RateCodes') ?>',
+            type: "post",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                rate_category_id: rate_category_id
+            },
+            success: function(respn) {
+                $('#RESV_RATE_CODE').html('<option value="">Select</option>');
+                $('#RESV_RATE_CODE').html(respn);
+            }
+        });
+    }
 });
 
 
@@ -5359,7 +5370,8 @@ function getPackages() {
     $('#RSV_PCKG_BEGIN_DATE').val($('#RESV_ARRIVAL_DT').val());
     $('#RSV_PCKG_END_DATE').val($('#RESV_DEPARTURE').val())
     $('#packagesModal').modal('show');
-    showPackages();
+    resvID = $('#PCKG_RESV_ID').val();
+    showPackages(resvID);
     //alert($('#RESV_RATE_CODE').val());        
     var rateCode = $('.clickPrice.active').parent('.ratePrice').find('#RT_DESCRIPTION').val();
     // alert(rateCode)
@@ -5389,6 +5401,7 @@ $("#PCKG_ID").change(function(e, param = 0) {
 // Add / Edit Package Detail
 
 $(document).on('click', '.save-package-detail', function() {
+   
     var RESV_ID = $('#PCKG_RESV_ID').val();
     hideModalAlerts();
     $("#RESVSTART_DATE").val($("#RESV_ARRIVAL_DT").val());
@@ -5542,7 +5555,7 @@ $(document).on('click', '.delete-package-detail', function() {
 
 function showPackages(resvID) {
     if (resvID == '')
-        resvID = $('#PACKAGE_RESV_ID').val();
+        resvID = $('#PCKG_RESV_ID').val();
     var rateCode = $('.clickPrice.active').parent('.ratePrice').find('#RT_DESCRIPTION').val();
 
     $('#Package_Details').find('tr.table-warning').removeClass('table-warning');
@@ -5627,13 +5640,34 @@ function showPackages(resvID) {
 
 $(document).on('click', '#Package_Details > tbody > tr', function() {
 
+    var packageID = $(this).data('packageid');
+
     $('#Package_Details').find('tr.table-warning').removeClass('table-warning');
     $(this).addClass('table-warning');
-    $.when(loadPackageDetails($(this).data('packageid')))
+    $.when(loadPackageDetails(packageID))
         .done(function() {})
         .done(function() {
             blockLoader('#package-submit-form');
         });
+
+
+  
+    
+    $.ajax({
+        url: '<?php echo base_url('/showSinglePackageDetails') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            packageID: packageID
+        },
+        async: false,
+        success: function(respn) {
+            $('#Each_Package_Details > tbody').html(respn);
+        }
+    });   
+    
 });
 
 // Show Package Detail
@@ -5667,6 +5701,24 @@ function loadPackageDetails(packageID) {
             });
         }
     });
+
+    $.ajax({
+        url: '<?php echo base_url('/showSinglePackageDetails') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            packageID: packageID
+        },
+        async: false,
+        success: function(respn) {
+            $('#Each_Package_Details > tbody').html(respn);
+        }
+    });   
+
+
+    
 }
 
 
