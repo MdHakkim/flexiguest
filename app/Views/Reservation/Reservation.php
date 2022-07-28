@@ -3054,11 +3054,6 @@ function selectRate() {
         $('#formErrorMessage').html(error);
         return;
     } else {
-        $('#rateQueryWindow').modal('hide');
-        $('.window-1,#nextbtn').hide();
-        $('.window-2').show();
-
-
         $('#errorModal').hide();
         $('#rateQueryWindow').modal('hide');
         $('.window-1,#nextbtn').hide();
@@ -3106,6 +3101,10 @@ $(document).on('change', '.RESV_ARRIVAL_DT,.RESV_DEPARTURE', function() {
     var name = $(this).attr('id');
     $('[name="' + name + '"]').val(value);
     setNights($(this), $(this).val());
+
+    if ($(this).hasClass('RESV_ARRIVAL_DT')) {
+        $('#RESV_ARRIVAL_DT_PK,#RESV_ARRIVAL_DT_DO').datepicker().datepicker("setDate", $(this).val());
+    }
 });
 
 $(document).on('blur', '.RESV_NIGHT', function() {

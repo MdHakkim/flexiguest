@@ -430,6 +430,10 @@ button.close {
 .flxy_web-blockcont .flxy_block_card .card-body{
   text-align: left;
 }
+.flxy_web-blockcont .flxy_block_card .card-body .card-title{
+  color: #002b44 !important;
+}
+
 .flxy_web_status{
   background: #199c5e;
   width: 198px;
