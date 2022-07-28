@@ -3660,6 +3660,7 @@ class ApplicatioController extends BaseController
                 "VACC_DETAILS" => $this->request->getPost("VACC_DETAILS"),
                 "VACC_LAST_DT" => $this->request->getPost("VACC_LAST_DT"),
                 "VACC_TYPE" => $this->request->getPost("VACC_TYPE"),
+                "VACC_NAME" => $this->request->getPost("VACC_NAME"),
                 "VACC_ISSUED_COUNTRY" => $this->request->getPost("VACC_ISSUED_COUNTRY"),
                 // "VACC_IS_VERIFY" => $this->request->getPost("VACC_IS_VERIFY"),
                 "VACC_IS_VERIFY" => 0,
@@ -3683,9 +3684,12 @@ class ApplicatioController extends BaseController
 
     public function deleteSpecificVaccine(){
         $param = ['VACC_CUST_ID'=> $this->request->getPost("VACC_CUST_ID"),'VACC_RESV_ID'=> $this->request->getPost("VACC_RESV_ID")];
-        $sql="DELETE FROM FLXY_VACCINE_DETAILS WHERE EXISTS
-        (SELECT VACC_ID FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:VACC_CUST_ID: AND VACC_RESV_ID=:VACC_RESV_ID:)";
-        $response = $this->Db->query($sql,$param); 
+
+        if(null !== $this->request->getPost("VACC_CUST_ID") && null !== $this->request->getPost("VACC_RESV_ID"))
+        {
+            $sql="DELETE FROM FLXY_VACCINE_DETAILS WHERE VACC_CUST_ID=:VACC_CUST_ID: AND VACC_RESV_ID=:VACC_RESV_ID:";
+            $response = $this->Db->query($sql,$param); 
+        }
     }
 
     public function getVaccinUploadImages(){

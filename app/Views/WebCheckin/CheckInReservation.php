@@ -1695,6 +1695,7 @@ $(document).on('click', '#updateVaccine', function() {
     var formData = new FormData($('#vaccineForm')[0]);
 
     formData.append('DELETEIMAGE', formImageDeletArr);
+    formData.append('VACC_NAME', $("#VACC_TYPE option:selected").text());
 
     formData.delete('files[]');
 
