@@ -2840,4 +2840,119 @@ class MastersController extends BaseController
             return $this->respond($e->errors());
         }
     }
+
+    /**************      Vaccine Type Functions      ***************/
+
+    public function vaccineType()
+    {
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+        
+        return view('Master/VaccineTypeView', $data);
+    }
+
+    public function VaccineTypeView()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_VACCINE_TYPES';
+        $columns = 'VT_ID,VT_NAME,VT_POP_NAME,VT_COMPANY,VT_AB_FORM_DAYS,VT_AB_DUR_DAYS';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+    public function insertVaccineType()
+    {
+        try {
+            $sysid = $this->request->getPost('VT_ID');
+
+            $validate = $this->validate([
+                'VT_NAME' => ['label' => 'Vaccine Name', 'rules' => 'required|is_unique[FLXY_VACCINE_TYPES.VT_NAME,VT_ID,' . $sysid . ']'],
+                'VT_POP_NAME' => ['label' => 'Popular Name', 'rules' => 'required'],
+                'VT_COMPANY' => ['label' => 'Vaccine Company', 'rules' => 'required'],
+                'VT_AB_FORM_DAYS' => ['label' => 'Ab Formation Days', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
+                'VT_AB_DUR_DAYS' => ['label' => 'Ab Duration Days', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            //echo json_encode(print_r($_POST)); exit;
+
+            $data = [
+                "VT_NAME" => trim($this->request->getPost('VT_NAME')),
+                "VT_POP_NAME" => trim($this->request->getPost('VT_POP_NAME')),
+                "VT_COMPANY" => trim($this->request->getPost('VT_COMPANY')) != '' ? trim($this->request->getPost('VT_COMPANY')) : '',
+                "VT_AB_FORM_DAYS" => trim($this->request->getPost('VT_AB_FORM_DAYS')),
+                "VT_AB_DUR_DAYS" => trim($this->request->getPost('VT_AB_DUR_DAYS')),
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_VACCINE_TYPES')->where('VT_ID', $sysid)->update($data) : $this->Db->table('FLXY_VACCINE_TYPES')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function checkVaccineType($rcCode)
+    {
+        $sql = "SELECT VT_ID
+                FROM FLXY_VACCINE_TYPES
+                WHERE VT_NAME = '" . $rcCode . "'";
+
+        $response = $this->Db->query($sql)->getNumRows();
+        return $rcCode == '' || strlen($rcCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
+    }
+
+    public function vaccineTypeList()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT VT_ID, VT_NAME, VT_POP_NAME
+                FROM FLXY_VACCINE_TYPES WHERE VT_STATUS = 1 ";
+
+        if ($search != '') {
+            $sql .= " AND VT_NAME LIKE '%$search%'
+                      OR VT_POP_NAME LIKE '%$search%'";
+        }
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['VT_ID'] . '">' . $row['VT_POP_NAME'] . '</option>';
+        }
+
+        return $option;
+    }
+
+    public function editVaccineType()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT *
+                FROM FLXY_VACCINE_TYPES
+                WHERE VT_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteVaccineType()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_VACCINE_TYPES')->delete(['VT_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
 }

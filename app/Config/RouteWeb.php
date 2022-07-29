@@ -316,6 +316,14 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertCustomerPreference', 'ApplicatioController::insertCustomerPreference');
     $routes->match(['post'],'/deletePreference', 'ApplicatioController::deletePreference');  
 
+    $routes->get('/vaccineType', 'MastersController::vaccineType');
+    $routes->match(['post'],'/vaccineTypeView', 'MastersController::VaccineTypeView');
+    $routes->match(['post'],'/insertVaccineType', 'MastersController::insertVaccineType');
+    $routes->match(['post'],'/editVaccineType', 'MastersController::editVaccineType');
+    $routes->match(['post'],'/deleteVaccineType', 'MastersController::deleteVaccineType'); 
+    
+    
+
 
     // Code By ALEESHA 
     // Maintenance Request 
