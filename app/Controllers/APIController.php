@@ -498,24 +498,6 @@ class APIController extends BaseController
         $CUST_ID = $this->request->getVar('customerId');
         $RESV_ID = $this->request->getVar('reservationId');
 
-        $rules = [
-            'customerId' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Error: Invalid Guest.'
-                ]
-            ],
-            'reservationId' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Error: Invalid Reservation.'
-                ]
-            ]
-        ];
-
-        if(!$this->validate($rules))
-            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-
         $filePath = base_url('assets/Uploads/userDocuments/proof');
 
         $param = ['CUST_ID' => $CUST_ID, 'RESV_ID' => $RESV_ID];
