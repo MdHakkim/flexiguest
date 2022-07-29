@@ -730,6 +730,8 @@ class APIController extends BaseController
         $reservation_id = $this->request->getVar('VACC_RESV_ID');
 
         $validate = $this->validate([
+            'VACC_CUST_ID' => 'required',
+            'VACC_RESV_ID' => 'required',
             'VACC_DETAILS' => 'required',
             'VACC_LAST_DT' => 'required',
             'VACC_TYPE' => 'required',
