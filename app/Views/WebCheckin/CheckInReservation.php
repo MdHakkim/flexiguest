@@ -1253,10 +1253,16 @@ function sliderWebWid(param) {
                 return false;
             }
 
-            if ($('.document-verified-status:contains(Document not verified)').length) {
-                alert('All Documents are not verified.');
-                return false;
-            }
+            <?php
+                if (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin') {
+            ?>
+                if ($('.document-verified-status:contains(Document not verified)').length) {
+                    alert('All Documents are not verified.');
+                    return false;
+                }
+            <?php
+                }
+            ?>
 
             $('.updateSignature').removeClass('signHideClass');
             $('.continueDefult').hide();
