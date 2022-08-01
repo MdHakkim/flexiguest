@@ -10,7 +10,7 @@
 //-----------  FLEXI GUEST API ROUTES -----------------//
 // ---------------------------------------------------------------LOGIN/REGISTARTION -------------------------------------------------------------------------//
 $routes->group("api", function ($routes) {
-    
+
     $routes->post("register", "APIController::registerAPI");
     $routes->post("login", "APIController::loginAPI");
 
@@ -23,21 +23,21 @@ $routes->group("api", function ($routes) {
 $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 
     $routes->get("profile", "APIController::profileAPI"); // user profile 
-//----------------------------------------------------------------------------- CHECK-IN --------------------------------------------------------------------//
+    //----------------------------------------------------------------------------- CHECK-IN --------------------------------------------------------------------//
     // API to list ALL reservations of the loggined user
-    $routes->get("checkin/listReservations", "APIController::listReservationsAPI"); 
+    $routes->get("checkin/listReservations", "APIController::listReservationsAPI");
     // API to get the reservation details from reservation number
-    $routes->get("checkin/listReservations/(:segment)", "APIController::listReservationsAPI/$1"); 
+    $routes->get("checkin/listReservations/(:segment)", "APIController::listReservationsAPI/$1");
 
     // API to send mail to accompany person to uplaod the docs self
-    $routes->post("checkin/requestSelfUpload", "APIController::requestSelfUpload"); 
-    
-// ---------------------------------------------------------------------------- Feedback --------------------------------------------------------------------------------//
+    $routes->post("checkin/requestSelfUpload", "APIController::requestSelfUpload");
+
+    // ---------------------------------------------------------------------------- Feedback --------------------------------------------------------------------------------//
     // API to fetch all requests
-    $routes->post("addFeedback", "APIController::addFeedBack"); 
-// API to fetch Handbook
-    $routes->get("handbook", "APIController::getHandBookURL"); 
-// ---------------------------------------------------------------------------- Shuttle --------------------------------------------------------------------------------//
+    $routes->post("addFeedback", "APIController::addFeedBack");
+    // API to fetch Handbook
+    $routes->get("handbook", "APIController::getHandBookURL");
+    // ---------------------------------------------------------------------------- Shuttle --------------------------------------------------------------------------------//
     // API to fetch all shuttles
     $routes->get("shuttles/list", "APIController::listShuttles");
     // API to fetch  shuttles details by id
@@ -45,9 +45,9 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 
     $routes->get('guest-apartment-list', 'APIController::guestApartmentList');
 
-    $routes->group('maintenance', function($routes) {
+    $routes->group('maintenance', function ($routes) {
         // API to create Maintenance request
-        $routes->post("addRequest", "APIController::createRequest"); 
+        $routes->post("addRequest", "APIController::createRequest");
         // API to get details of single request
         $routes->get("listRequests/(:segment)", "APIController::listRequests/$1");
         // API to fetch all requests
@@ -58,23 +58,23 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 
 
 //  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
-$routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Controllers'], function ($routes) {    
+$routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Controllers'], function ($routes) {
 
-    $routes->group('maintenance', function($routes) {
+    $routes->group('maintenance', function ($routes) {
         // API to get category list of maintenance
-        $routes->get('getCategory', 'APIController::maintenanceCategoryList');  
+        $routes->get('getCategory', 'APIController::maintenanceCategoryList');
         // API to get Subcategory list of maintenance by categoryID
-        $routes->post('getSubCategory', 'APIController::maintenanceSubCatByCategoryID'); 
+        $routes->post('getSubCategory', 'APIController::maintenanceSubCatByCategoryID');
     });
 
     // API to upload the  documnets proof for checkin 
-    $routes->post("checkin/docUpload", "APIController::docUploadAPI"); 
+    $routes->post("checkin/docUpload", "APIController::docUploadAPI");
     // API to update the guest details from the doc uploaded.
     $routes->post("checkin/saveGuestDetails", "APIController::saveGuestDetails");
     // API to upload the  documnets proof for checkin
     $routes->get("checkin/checkPrevDocs", "APIController::checkDocDetails");
     // API to update the guest details from the doc uploaded.
-    $routes->get("checkin/getUserDetails", "APIController::FetchSavedDocDetails"); 
+    $routes->get("checkin/getUserDetails", "APIController::FetchSavedDocDetails");
     // API to Delete doc uploaded.
     $routes->delete("checkin/deleteDoc", "APIController::deleteUploadedDOC");
     // API to fetch guest profile including the guest accomonaying persons
@@ -91,9 +91,16 @@ $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Co
     $routes->post("checkin/signatureUpload", "APIController::acceptAndSignatureUpload");
 });
 
+$routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Controllers\APIControllers'], function ($routes) {
+    $routes->group('asset-handover', function ($routes) {
+        $routes->get('', 'ReceivingFormController::assetHandover');
+        $routes->get('get-assets-list', 'ReceivingFormController::getAssetsList');
+    });
+});
+
 $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
 
-    $routes->group('concierge', function($routes) {
+    $routes->group('concierge', function ($routes) {
         $routes->get("concierge-offers", "ConciergeController::conciergeOffers");
         $routes->post("make-concierge-request", "ConciergeController::makeConciergeRequest");
         $routes->get("list-concierge-requests", "ConciergeController::listConciergeRequests");
@@ -103,11 +110,11 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
     $routes->get("guideline", "GuidelineController::guideline");
     $routes->get("app-update", "AppUpdateController::appUpdate");
 
-    $routes->group('reservation', function($routes) {
+    $routes->group('reservation', function ($routes) {
         $routes->get("make-checkout-request/(:segment)", "ReservationController::makeCheckoutRequest/$1");
     });
 
-    $routes->group('laundry-amenities', function($routes) {
+    $routes->group('laundry-amenities', function ($routes) {
         $routes->get("all-categories", "ProductCategoryController::allCategories");
         $routes->get("all-products", "ProductController::allProducts");
         $routes->post("place-order", "LaundryAmenitiesController::placeOrder");
@@ -117,11 +124,11 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
         $routes->post("cancel-order", "LaundryAmenitiesController::cancelOrder");
     });
 
-    $routes->group('profile', function($routes) {
+    $routes->group('profile', function ($routes) {
         $routes->get('all-documents', 'ProfileController::allDocuments');
     });
 
-    $routes->group('transport-request', function($routes) {
+    $routes->group('transport-request', function ($routes) {
         $routes->get('lookup-api', 'TransportRequestController::lookupApi');
         $routes->post('create-request', 'TransportRequestController::createRequest');
         $routes->get('all-requests', 'TransportRequestController::allRequests');
@@ -133,20 +140,20 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
 
     $routes->get("reservation/get-reservations-list", "ReservationController::getReservationsList");
 
-    $routes->group('maintenance', function($routes) {
+    $routes->group('maintenance', function ($routes) {
         $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
         $routes->get("get-room-list", "MaintenanceController::getRoomList");
         $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
         $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
     });
-    
-    $routes->group('laundry-amenities', function($routes) {
+
+    $routes->group('laundry-amenities', function ($routes) {
         $routes->get("orders-list", "LaundryAmenitiesController::ordersList");
         $routes->post("update-delivery-status", "LaundryAmenitiesController::updateDeliveryStatus");
     });
 });
 
-$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function($routes){  
+$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->get("profile", "APIController::profileAPI");
     $routes->post('checkin/verify-documents', 'APIController::verifyDocuments');
     $routes->post('checkin/guest-checked-in', 'APIController::guestCheckedIn');
@@ -154,7 +161,7 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
 // ADMIN ROUTES (END)
 
 $routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
-    $routes->group('housekeeping', function($routes) {
+    $routes->group('housekeeping', function ($routes) {
         $routes->get("all-tasks", "HouseKeepingController::allTasks");
         $routes->get("task-details/(:segment)", "HouseKeepingController::taskDetails/$1");
         $routes->post("mark-subtask-completed-inspected", "HouseKeepingController::markSubtaskCompletedInspected");
@@ -165,4 +172,3 @@ $routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' =
 
 
 //  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
-
