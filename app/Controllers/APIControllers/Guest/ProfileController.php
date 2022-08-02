@@ -78,6 +78,7 @@ class ProfileController extends BaseController
         }
 
         $invoices = [];
+        $registation_cards = [];
         $reservations = $this->Reservation->where('RESV_NAME', $customer_id)->where('RESV_STATUS', 'Checked-Out')->findAll();
         foreach($reservations as $reservation) {
             $folderPath = "assets/reservation-invoices/RES{$reservation['RESV_ID']}-Invoice.pdf";
@@ -90,9 +91,20 @@ class ProfileController extends BaseController
                     'category' => 'invoice'
                 ];
             }
+
+            $folderPath = "assets/reservation-registration-cards/RES{$reservation['RESV_ID']}-RC.pdf";
+            if (file_exists($folderPath)) {
+                $registation_cards[] = [
+                    'resv_id' => $reservation['RESV_ID'],
+                    'name' => "RES{$reservation['RESV_ID']}-RC.pdf",
+                    'url' => base_url($folderPath),
+                    'type' => 'pdf',
+                    'category' => 'registrationCard'
+                ];
+            }
         }
         
-        $output = array_merge($identity_documents, $vaccine_documents, $invoices);
+        $output = array_merge($identity_documents, $vaccine_documents, $invoices, $registation_cards);
         return $this->respond(responseJson(200, false, ['msg' => 'All Documents'], $output));
     }
 }
