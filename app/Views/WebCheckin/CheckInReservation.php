@@ -550,10 +550,14 @@
                                                                     <input type="text" value="<?php echo $data['CUST_GENDER']; ?>" class="form-control form-control-sm" id="CUST_GENDER" name="CUST_GENDER" name="CUST_GENDER" placeholder="Gender">
                                                                 </div>
                                                             </div>
-                                                            <div class="row ">
+                                                            <div class="row mb-2">
                                                                 <label for="CUST_NATIONALITY" class="col-sm-3 col-form-label text-start">Nationality</label>
                                                                 <div class="col-sm-9">
-                                                                    <input type="text" value="<?php echo $data['CUST_NATIONALITY']; ?>" class="form-control form-control-sm" id="CUST_NATIONALITY" name="CUST_NATIONALITY" placeholder="Nationality">
+                                                                    <!-- <input type="text" value="<?php echo $data['CUST_NATIONALITY']; ?>" class="form-control form-control-sm" id="CUST_NATIONALITY" name="CUST_NATIONALITY" placeholder="Nationality"> -->
+
+                                                                    <select name="CUST_NATIONALITY" id="CUST_NATIONALITY" data-width="100%" class="selectpicker CUST_NATIONALITY" data-live-search="true">
+                                                                        <option value="">Select</option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                             <div class="row ">
@@ -1075,6 +1079,7 @@
     if (condi == '') {
         var resrid = '<?php echo $data['RESV_ID']; ?>';
         var custid = '<?php echo $data['CUST_ID']; ?>';
+        var nationalityCode = '<?php echo $data['CUST_NATIONALITY']; ?>';
         var countryCode = '<?php echo $data['CUST_COUNTRY']; ?>';
         var statecode = '<?php echo $data['CUST_STATE']; ?>';
     }
@@ -1218,7 +1223,7 @@
             $(`${id} input[name='CUST_FIRST_NAME']`).val(customer_data.CUST_FIRST_NAME);
             $(`${id} input[name='CUST_LAST_NAME']`).val(customer_data.CUST_LAST_NAME);
             $(`${id} input[name='CUST_GENDER']`).val(customer_data.CUST_GENDER);
-            $(`${id} input[name='CUST_NATIONALITY']`).val(customer_data.CUST_NATIONALITY);
+            $(`${id} input[name='CUST_NATIONALITY']`).val(customer_data.CUST_NATIONALITY).trigger('change');
             $(`${id} input[name='CUST_DOB']`).val(customer_data.CUST_DOB);
             $(`${id} select[name='CUST_COUNTRY']`).val(customer_data.CUST_COUNTRY).selectpicker('refresh').trigger(
                 'change');
@@ -1539,6 +1544,9 @@
             // dataType:'json',
             async: false,
             success: function(respn) {
+                $('#CUST_NATIONALITY').html(respn);
+                $('#CUST_NATIONALITY').val(nationalityCode).selectpicker('refresh');
+
                 $('#CUST_COUNTRY,#VACC_ISSUED_COUNTRY').html(respn).selectpicker('refresh');
                 $('#CUST_COUNTRY').val(countryCode).selectpicker('refresh');
             }
