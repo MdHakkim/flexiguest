@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use  App\Libraries\ServerSideDataTable;
 use  App\Libraries\EmailLibrary;
+use App\Models\Documents;
 use CodeIgniter\API\ResponseTrait;
 use DateTime;
 use DateTimeZone;
@@ -15,12 +16,15 @@ class ApplicatioController extends BaseController
     public $session;
     public $request;
     public $todayDate;
+    private $Documents;
+
     public function __construct(){
         $this->Db = \Config\Database::connect();
         $this->session = \Config\Services::session();
         helper(['form', 'common', 'custom']);
         $this->request = \Config\Services::request();
         $this->todayDate = new DateTime("now", new DateTimeZone('Asia/Dubai'));
+        $this->Documents = new Documents();
     }
 
     public function Reservation(){   
@@ -3350,12 +3354,14 @@ class ApplicatioController extends BaseController
                         RESV_ACCP_TRM_CONDI, RESV_SINGATURE_URL, RESV_ETA,
                         RM_TY_DESC,
                         SNAME as CUST_STATE_DESC,
-                        CTNAME as CUST_CITY_DESC
+                        CTNAME as CUST_CITY_DESC,
+                        fd.DOC_FILE_PATH
                         FROM FLXY_RESERVATION
                         left join FLXY_CUSTOMER on FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID
                         left join FLXY_ROOM_TYPE on FLXY_RESERVATION.RESV_RM_TYPE = FLXY_ROOM_TYPE.RM_TY_CODE
                         left join STATE on STATE.STATE_CODE = FLXY_CUSTOMER.CUST_STATE
                         left join CITY on CITY.ID = FLXY_CUSTOMER.CUST_CITY
+                        left join FLXY_DOCUMENTS as fd on RESV_ID = fd.DOC_RESV_ID and fd.DOC_FILE_TYPE = 'SIGN'
                         WHERE RESV_ID = :RESV_ID:";
 
             $response = $this->Db->query($sql,$param)->getResultArray();
@@ -3714,6 +3720,8 @@ class ApplicatioController extends BaseController
 
     function updateSignatureReserv(){
         $sysid = $this->request->getPost("DOC_RESV_ID");
+        $customer_id = $this->request->getPost("customer_id");
+
         try{
             $signature = $this->request->getPost("signature");
             $modesignature = $this->request->getPost("modesignature");
@@ -3731,11 +3739,36 @@ class ApplicatioController extends BaseController
             }
             $data = ["RESV_ETA" => $this->request->getPost("RESV_ETA"),
                 "RESV_ACCP_TRM_CONDI" => $this->request->getPost("RESV_ACCP_TRM_CONDI"),
-                "RESV_SINGATURE_URL" => $fileNameExt,
+                // "RESV_SINGATURE_URL" => $fileNameExt,
                 "RESV_UPDATE_UID" => session()->get('USR_ID'),
                 "RESV_UPDATE_DT" => date("d-M-Y")
             ];
             $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
+
+            $document = $this->Documents->where('RESV_ID', $sysid)->first();            
+            if(!empty($document)) {
+                $document['DOC_FILE_PATH'] = $fileNameExt;
+                $document['DOC_UPDATE_UID'] = session()->get('USR_ID');
+                $document['DOC_UPDATE_DT'] = date('Y-m-d');
+
+                $this->Documents->save($document);
+            }else{
+                $data = [
+                    'DOC_CUST_ID' => $customer_id,
+                    'DOC_FILE_PATH' => $fileNameExt,
+                    'DOC_FILE_TYPE' => 'SIGN',
+                    'DOC_IS_VERIFY' => 0,
+                    'DOC_CREATE_UID' => session()->get('USR_ID'),
+                    'DOC_UPDATE_UID' => session()->get('USR_ID'),
+                    'DOC_CREATE_DT' => date('Y-m-d'),
+                    'DOC_UPDATE_DT' => date('Y-m-d'),
+                    'DOC_RESV_ID' => $sysid,
+                ];
+                
+                $this->Documents->insert($data);
+            }
+
+
             if($return){
                 $result = $this->responseJson("1","0",$return,$response='');
                 echo json_encode($result);
