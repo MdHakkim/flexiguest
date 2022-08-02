@@ -92,7 +92,8 @@
             <!-- Logo -->
             <div class="app-brand mb-4">
               <a href="index.html" class="app-brand-link gap-2 mb-2">
-                <span class="app-brand-logo demo">
+              <?php /* ?>  
+              <span class="app-brand-logo demo">
                 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 187.6 228.8" style="enable-background:new 0 0 187.6 228.8;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#18371C;}
@@ -187,6 +188,8 @@
 </svg>
                 </span>
                 <span class="app-brand-text demo h3 fw-bold mb-0">FlexiGuest</span>
+                <?php */ ?>
+                <img src="<?php echo base_url('/assets/img/new-logo.webp'); ?>" />
               </a>
             </div>
             <!-- /Logo -->

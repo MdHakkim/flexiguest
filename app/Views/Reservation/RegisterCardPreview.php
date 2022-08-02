@@ -12,6 +12,7 @@
         <div class="mb-4">
           <div class="svg-illustration gap-2 d-flex mb-3">
             <a href="http://localhost/FlexiGuest" class="app-brand-link">
+                  <?php /* ?>
                     <span class="app-brand-logo demo">
 
                         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 187.6 228.8" style="enable-background:new 0 0 187.6 228.8;" xml:space="preserve">
@@ -159,6 +160,9 @@
 
                     </span>
                     <span class="app-brand-text demo menu-text fw-bold ms-2" style="color:#5a8dee !important">FlexiGuest</span>
+                    <?php */ ?>
+                    <img src="<?php echo base_url('/assets/img/new-logo.webp'); ?>" width="190px;" />
+
                 </a>            
           </div>
         

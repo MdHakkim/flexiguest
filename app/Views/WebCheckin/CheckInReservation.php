@@ -16,7 +16,9 @@
         <div class="container-fluid">
             <div class="app-brand demo flexy_web_logo">
                 <a href="<?php echo base_url('/') ?>" class="app-brand-link">
+                    <?php /* ?>
                     <span class="app-brand-logo demo">
+                        
                         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 187.6 228.8" style="enable-background:new 0 0 187.6 228.8;" xml:space="preserve">
                             <style type="text/css">
                                 .st0 {
@@ -162,6 +164,9 @@
 
                     </span>
                     <span class="app-brand-text demo menu-text fw-bold ms-2">FlexiGuest</span>
+                    <?php */ ?>
+                    <img src="<?php echo base_url('/assets/img/new-logo.webp'); ?>" width="190px;" />
+
                 </a>
                 <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
                     <i class="bx menu-toggle-icon fs-4 d-none d-xl-block align-middle"></i>
