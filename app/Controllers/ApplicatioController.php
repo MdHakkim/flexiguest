@@ -564,6 +564,11 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
+
+            if (strtotime($this->request->getVar("CUST_DOC_EXPIRY")) < strtotime($this->request->getVar("CUST_DOC_ISSUE")) || strtotime($this->request->getVar("CUST_DOC_EXPIRY")) <= strtotime(date("Y-m-d"))) {
+                return $this->respond(responseJson("-402", ['msg' => "Your Document is expired"]));
+            }
+
             $sysid = $this->request->getPost("CUST_ID");
             $log_action_desc = '';
 
@@ -578,6 +583,8 @@ class ApplicatioController extends BaseController
                     "CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
                     "CUST_DOB" => $this->request->getPost("CUST_DOB"),
                     "CUST_PASSPORT" => $this->request->getPost("CUST_PASSPORT"),
+                    "CUST_DOC_ISSUE" => $this->request->getPost("CUST_DOC_ISSUE"),
+                    "CUST_DOC_EXPIRY" => $this->request->getPost("CUST_DOC_EXPIRY"),
                     "CUST_ADDRESS_1" => $this->request->getPost("CUST_ADDRESS_1"),
                     "CUST_ADDRESS_2" => $this->request->getPost("CUST_ADDRESS_2"),
                     "CUST_ADDRESS_3" => $this->request->getPost("CUST_ADDRESS_3"),
@@ -618,6 +625,8 @@ class ApplicatioController extends BaseController
                     "CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
                     "CUST_DOB" => $this->request->getPost("CUST_DOB"),
                     "CUST_PASSPORT" => $this->request->getPost("CUST_PASSPORT"),
+                    "CUST_DOC_ISSUE" => $this->request->getPost("CUST_DOC_ISSUE"),
+                    "CUST_DOC_EXPIRY" => $this->request->getPost("CUST_DOC_EXPIRY"),
                     "CUST_ADDRESS_1" => $this->request->getPost("CUST_ADDRESS_1"),
                     "CUST_ADDRESS_2" => $this->request->getPost("CUST_ADDRESS_2"),
                     "CUST_ADDRESS_3" => $this->request->getPost("CUST_ADDRESS_3"),
@@ -752,7 +761,7 @@ class ApplicatioController extends BaseController
 
     public function editCustomer(){
         $param = ['SYSID'=> $this->request->getPost("sysid")];
-        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_LANG,CUST_TITLE,CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
+        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_LANG,CUST_TITLE,CUST_DOB,CUST_PASSPORT,CUST_DOC_ISSUE,CUST_DOC_EXPIRY,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
         CUST_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC
         ,CUST_STATE,(SELECT sname FROM STATE WHERE STATE_CODE=CUST_STATE AND COUNTRY_CODE=CUST_COUNTRY) CUST_STATE_DESC
         ,CUST_CITY,(SELECT ctname FROM CITY WHERE ID=CUST_CITY) CUST_CITY_DESC

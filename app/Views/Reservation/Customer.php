@@ -107,11 +107,23 @@
                                     </span>
                                 </div>
                             </div>
+                            
                             <div class="col-md-3">
                                 <label class="form-label">Passport</label>
                                 <input type="text" name="CUST_PASSPORT" id="CUST_PASSPORT" class="form-control"
                                     placeholder="passport" />
                             </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Doc Issue Date</label>
+                                <input type="text" name="CUST_DOC_ISSUE" id="CUST_DOC_ISSUE" class="form-control" placeholder="YYYY-MM-DD" />
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Doc Expiry Date</label>
+                                <input type="text" name="CUST_DOC_EXPIRY" id="CUST_DOC_EXPIRY" class="form-control" placeholder="YYYY-MM-DD" />
+                            </div>
+
                             <div class="col-md-3">
                                 <label class="form-label">Address</label>
                                 <input type="text" name="CUST_ADDRESS_1" id="CUST_ADDRESS_1" class="form-control"
@@ -127,6 +139,8 @@
                                 <input type="text" name="CUST_ADDRESS_3" id="CUST_ADDRESS_3" class="form-control"
                                     placeholder="address 3" />
                             </div>
+                            <div class="col-md-3"></div>
+
                             <div class="col-md-3 ">
                                 <label class="form-label col-md-12">Country</label>
                                 <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%"
@@ -308,6 +322,16 @@ $(document).ready(function() {
         '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i>Add</button></div></div>'
     );
     $('#CUST_DOB').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
+    });
+
+    $('#CUST_DOC_ISSUE').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
+    });
+
+    $('#CUST_DOC_EXPIRY').datepicker({
         format: 'd-M-yyyy',
         autoclose: true
     });
@@ -557,9 +581,11 @@ function editCust(sysid) {
                         }
                     } else {
                         $('#' + field).val(dataval);
-                        if (field == 'CUST_COUNTRY') {
+
+                        if (field == 'CUST_COUNTRY')
                             $('#' + field).selectpicker('refresh');
-                        }
+                        else
+                            $('#' + field).trigger('change');
                     }
                 });
             });
