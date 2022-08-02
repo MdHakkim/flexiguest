@@ -564,6 +564,11 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
+
+            if (strtotime($this->request->getVar("CUST_DOC_EXPIRY")) < strtotime($this->request->getVar("CUST_DOC_ISSUE")) || strtotime($this->request->getVar("CUST_DOC_EXPIRY")) <= strtotime(date("Y-m-d"))) {
+                return $this->respond(responseJson("-402", ['msg' => "Your Document is expired"]));
+            }
+
             $sysid = $this->request->getPost("CUST_ID");
             $log_action_desc = '';
 
@@ -577,7 +582,9 @@ class ApplicatioController extends BaseController
                     "CUST_LANG" => $this->request->getPost("CUST_LANG"),
                     "CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
                     "CUST_DOB" => $this->request->getPost("CUST_DOB"),
-                    "CUST_PASSPORT" => $this->request->getPost("CUST_PASSPORT"),
+                    "CUST_DOC_NUMBER" => $this->request->getPost("CUST_DOC_NUMBER"),
+                    "CUST_DOC_ISSUE" => $this->request->getPost("CUST_DOC_ISSUE"),
+                    "CUST_DOC_EXPIRY" => $this->request->getPost("CUST_DOC_EXPIRY"),
                     "CUST_ADDRESS_1" => $this->request->getPost("CUST_ADDRESS_1"),
                     "CUST_ADDRESS_2" => $this->request->getPost("CUST_ADDRESS_2"),
                     "CUST_ADDRESS_3" => $this->request->getPost("CUST_ADDRESS_3"),
@@ -617,7 +624,9 @@ class ApplicatioController extends BaseController
                     "CUST_LANG" => $this->request->getPost("CUST_LANG"),
                     "CUST_TITLE" => $this->request->getPost("CUST_TITLE"),
                     "CUST_DOB" => $this->request->getPost("CUST_DOB"),
-                    "CUST_PASSPORT" => $this->request->getPost("CUST_PASSPORT"),
+                    "CUST_DOC_NUMBER" => $this->request->getPost("CUST_DOC_NUMBER"),
+                    "CUST_DOC_ISSUE" => $this->request->getPost("CUST_DOC_ISSUE"),
+                    "CUST_DOC_EXPIRY" => $this->request->getPost("CUST_DOC_EXPIRY"),
                     "CUST_ADDRESS_1" => $this->request->getPost("CUST_ADDRESS_1"),
                     "CUST_ADDRESS_2" => $this->request->getPost("CUST_ADDRESS_2"),
                     "CUST_ADDRESS_3" => $this->request->getPost("CUST_ADDRESS_3"),
@@ -744,7 +753,7 @@ class ApplicatioController extends BaseController
                         TRIM(CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME)) CUST_FULL_NAME,
                         CUST_PASSPORT,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID 
                         FROM FLXY_CUSTOMER) CUSTOMER_LIST';
-        $columns = 'CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_FULL_NAME,CUST_PASSPORT,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID';
+        $columns = 'CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_FULL_NAME,CUST_DOC_NUMBER,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID';
         $mine->generate_DatatTable($tableName,$columns);
         exit;
         // return view('Dashboard');
@@ -752,7 +761,7 @@ class ApplicatioController extends BaseController
 
     public function editCustomer(){
         $param = ['SYSID'=> $this->request->getPost("sysid")];
-        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_LANG,CUST_TITLE,CUST_DOB,CUST_PASSPORT,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
+        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_LANG,CUST_TITLE,CUST_DOB,CUST_PASSPORT,CUST_DOC_NUMBER,CUST_DOC_ISSUE,CUST_DOC_EXPIRY,CUST_ADDRESS_1,CUST_ADDRESS_2,CUST_ADDRESS_3,
         CUST_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC
         ,CUST_STATE,(SELECT sname FROM STATE WHERE STATE_CODE=CUST_STATE AND COUNTRY_CODE=CUST_COUNTRY) CUST_STATE_DESC
         ,CUST_CITY,(SELECT ctname FROM CITY WHERE ID=CUST_CITY) CUST_CITY_DESC
@@ -3754,12 +3763,38 @@ class ApplicatioController extends BaseController
         $this->triggerReservationEmail($sysid,'QR');
         $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
         $result = $this->responseJson("1","0",$return,$response='');
+
+        $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, 
+                    RESV_RATE, RESV_RM_TYPE, RESV_NAME, 
+                    CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER,
+                    CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, 
+                    fd.DOC_FILE_PATH as SIGNATURE,
+                    (SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY) RESV_COMPANY_DESC, 
+                    (SELECT ctname FROM CITY WHERE id=CUST_CITY) CUST_CITY_DESC, 
+                    (SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC, 
+                    (SELECT cname FROM COUNTRY WHERE ISO2=CUST_NATIONALITY) CUST_NATIONALITY_DESC
+                    FROM FLXY_RESERVATION 
+                        INNER JOIN FLXY_CUSTOMER ON FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID 
+                        left join FLXY_DOCUMENTS as fd on FLXY_RESERVATION.RESV_ID = fd.DOC_RESV_ID and fd.DOC_FILE_TYPE = 'SIGN'
+                        WHERE RESV_ID = ".$_SESSION['RESV_ID'];
+        $data['response'] = $this->Db->query($sql)->getResultArray();
+
+        $dompdf = new \Dompdf\Dompdf();
+        $dompdf->loadHtml(view('Reservation/RegisterCard', $data));
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        
+        $file_name = "assets/reservation-registration-cards/RES{$sysid}-RC.pdf";
+        file_put_contents($file_name, $dompdf->output());
+
         echo json_encode($result);
     }   
 
     function reservationCheckin(){
-        $data['data']=array('RESV_ID'=>'','CUST_ID'=>'','CUST_COUNTRY'=>'','CUST_STATE'=>'','RESV_ACCP_TRM_CONDI'=>'','RESV_ACCP_TRM_CONDI'=>'');
+        $data['data']=array('RESV_ID'=>'','CUST_ID'=>'','CUST_COUNTRY'=>'','CUST_STATE'=>'','RESV_ACCP_TRM_CONDI'=>'','RESV_ACCP_TRM_CONDI'=>'', 'CUST_NATIONALITY' => '', 'RESV_STATUS' => '');
         $data['condition']='SUCC';
+        $data['session'] = $this->session;
+
         return view('WebCheckin/CheckInReservation',$data);
     }
 

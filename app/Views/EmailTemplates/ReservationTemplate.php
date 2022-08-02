@@ -89,7 +89,7 @@
                                         </tr>
                                         <?php }else{ ?>
                                           <tr style="padding-bottom:6px;">
-                                            <td><div id="output"><img src="https://chart.googleapis.com/chart?cht=qr&chl=<?php echo $data['RESV_NO'];?>&chs=160x160&chld=L|0"/></div></td>
+                                            <td><div id="output"><img src="https://chart.googleapis.com/chart?cht=qr&chl=<?php echo $data['RESV_ID'];?>&chs=160x160&chld=L|0"/></div></td>
                                           </tr>
                                           <tr>
                                             <td><p>Have a safe journey ahead!</p></td>

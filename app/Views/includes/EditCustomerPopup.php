@@ -62,9 +62,20 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Passport</label>
-                            <input type="text" name="CUST_PASSPORT" class="form-control" placeholder="passport" />
+                            <label class="form-label">Document Number</label>
+                            <input type="text" name="CUST_DOC_NUMBER" class="form-control" placeholder="Document number" />
                         </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Doc Issue Date</label>
+                            <input type="text" name="CUST_DOC_ISSUE" id="CUST_DOC_ISSUE" class="form-control" placeholder="YYYY-MM-DD" />
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Doc Expiry Date</label>
+                            <input type="text" name="CUST_DOC_EXPIRY" id="CUST_DOC_EXPIRY" class="form-control" placeholder="YYYY-MM-DD" />
+                        </div>
+
                         <div class="col-md-3">
                             <label class="form-label">Address</label>
                             <input type="text" name="CUST_ADDRESS_1" class="form-control" placeholder="addresss 1" />
@@ -77,6 +88,9 @@
                             <label class="form-label"></label>
                             <input type="text" name="CUST_ADDRESS_3" class="form-control" placeholder="address 3" />
                         </div>
+
+                        <div class="col-md-3"></div>
+
                         <div class="col-md-3 ">
                             <label class="form-label col-md-12">Country</label>
                             <select name="CUST_COUNTRY" data-width="100%" class="selectpicker CUST_COUNTRY" data-live-search="true">
@@ -176,6 +190,16 @@
 
     $(document).ready(function() {
         $(`${form_id} input[name='CUST_DOB']`).datepicker({
+            format: 'd-M-yyyy',
+            autoclose: true
+        });
+
+        $(`${form_id} input[name='CUST_DOC_ISSUE']`).datepicker({
+            format: 'd-M-yyyy',
+            autoclose: true
+        });
+
+        $(`${form_id} input[name='CUST_DOC_EXPIRY']`).datepicker({
             format: 'd-M-yyyy',
             autoclose: true
         });
