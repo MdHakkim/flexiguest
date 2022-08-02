@@ -109,8 +109,8 @@
                             </div>
                             
                             <div class="col-md-3">
-                                <label class="form-label">Passport</label>
-                                <input type="text" name="CUST_PASSPORT" id="CUST_PASSPORT" class="form-control"
+                                <label class="form-label">Document Number</label>
+                                <input type="text" name="CUST_DOC_NUMBER" id="CUST_DOC_NUMBER" class="form-control"
                                     placeholder="passport" />
                             </div>
 
@@ -271,7 +271,7 @@ $(document).ready(function() {
                 "visible": false,
             },
             {
-                data: 'CUST_PASSPORT'
+                data: 'CUST_DOC_NUMBER'
             },
             {
                 data: 'CUST_COUNTRY'
