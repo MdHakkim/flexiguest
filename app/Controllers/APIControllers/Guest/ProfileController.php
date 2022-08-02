@@ -79,7 +79,7 @@ class ProfileController extends BaseController
 
         $invoices = [];
         $registation_cards = [];
-        $reservations = $this->Reservation->where('RESV_NAME', $customer_id)->where('RESV_STATUS', 'Checked-Out')->findAll();
+        $reservations = $this->Reservation->where('RESV_NAME', $customer_id)->findAll();
         foreach($reservations as $reservation) {
             $folderPath = "assets/reservation-invoices/RES{$reservation['RESV_ID']}-Invoice.pdf";
             if (file_exists($folderPath)) {
