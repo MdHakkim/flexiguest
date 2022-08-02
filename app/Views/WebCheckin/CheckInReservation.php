@@ -1906,7 +1906,8 @@
             },
             dataType: 'json',
             success: function(respn) {
-                window.location.href = '<?= base_url('/reservationCheckin') ?>';
+                if(respn.SUCCESS == '1')
+                    window.location.href = '<?= base_url('/reservationCheckin') ?>';
             }
         });
     }
