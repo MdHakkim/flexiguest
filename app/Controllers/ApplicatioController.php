@@ -3745,7 +3745,7 @@ class ApplicatioController extends BaseController
             ];
             $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
 
-            $document = $this->Documents->where('RESV_ID', $sysid)->first();            
+            $document = $this->Documents->where('DOC_RESV_ID', $sysid)->first();            
             if(!empty($document)) {
                 $document['DOC_FILE_PATH'] = $fileNameExt;
                 $document['DOC_UPDATE_UID'] = session()->get('USR_ID');
