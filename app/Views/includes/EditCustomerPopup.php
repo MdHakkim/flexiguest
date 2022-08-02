@@ -63,7 +63,7 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Document Number</label>
-                            <input type="text" name="CUST_DOC_NUMBER" class="form-control" placeholder="passport" />
+                            <input type="text" name="CUST_DOC_NUMBER" class="form-control" placeholder="Document number" />
                         </div>
 
                         <div class="col-md-3">

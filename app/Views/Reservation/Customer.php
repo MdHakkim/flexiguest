@@ -19,7 +19,7 @@
                         <tr>
                             <th>Name</th>
                             <th>First Name</th>
-                            <th>Passport No</th>
+                            <th>Document Number</th>
                             <th>Country</th>
                             <th>Email</th>
                             <th>Mobile</th>
@@ -111,7 +111,7 @@
                             <div class="col-md-3">
                                 <label class="form-label">Document Number</label>
                                 <input type="text" name="CUST_DOC_NUMBER" id="CUST_DOC_NUMBER" class="form-control"
-                                    placeholder="passport" />
+                                    placeholder="Document number" />
                             </div>
 
                             <div class="col-md-3">
