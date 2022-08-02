@@ -3763,12 +3763,26 @@ class ApplicatioController extends BaseController
         $this->triggerReservationEmail($sysid,'QR');
         $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
         $result = $this->responseJson("1","0",$return,$response='');
+
+        $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, RESV_RATE, RESV_RM_TYPE, RESV_NAME, (SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY) RESV_COMPANY_DESC, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, (SELECT ctname FROM CITY WHERE id=CUST_CITY) CUST_CITY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_NATIONALITY) CUST_NATIONALITY_DESC, CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID WHERE RESV_ID = ".$sysid;       
+        $data['response'] = $this->Db->query($sql)->getResultArray();
+
+        $dompdf = new \Dompdf\Dompdf();
+        $dompdf->loadHtml(view('Reservation/RegisterCard', $data));
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        
+        $file_name = "assets/reservation-registration-cards/RES{$sysid}-RC.pdf";
+        file_put_contents($file_name, $dompdf->output());
+
         echo json_encode($result);
     }   
 
     function reservationCheckin(){
-        $data['data']=array('RESV_ID'=>'','CUST_ID'=>'','CUST_COUNTRY'=>'','CUST_STATE'=>'','RESV_ACCP_TRM_CONDI'=>'','RESV_ACCP_TRM_CONDI'=>'');
+        $data['data']=array('RESV_ID'=>'','CUST_ID'=>'','CUST_COUNTRY'=>'','CUST_STATE'=>'','RESV_ACCP_TRM_CONDI'=>'','RESV_ACCP_TRM_CONDI'=>'', 'CUST_NATIONALITY' => '', 'RESV_STATUS' => '');
         $data['condition']='SUCC';
+        $data['session'] = $this->session;
+
         return view('WebCheckin/CheckInReservation',$data);
     }
 
