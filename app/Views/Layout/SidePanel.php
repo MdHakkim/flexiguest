@@ -3,8 +3,8 @@
         <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
             <div class="app-brand demo">
                 <a href="<?php echo base_url('/') ?>" class="app-brand-link">
+                    <?php /* ?>
                     <span class="app-brand-logo demo">
-
                         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                             xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 187.6 228.8"
                             style="enable-background:new 0 0 187.6 228.8;" xml:space="preserve">
@@ -180,9 +180,12 @@
 	c-4.2,0-8.5,0.2-12.7,0.8l0,0l-2.1,0.3c-16.9,2.7-32.9,8.2-45.3,17.5c-8.6,6.3-15.2,14.8-19.2,24.7v-0.2c-0.7,2.4-1.4,5-2.1,7.6
 	v14.8C5,178.5,15.2,164.2,28,154.9z" />
                         </svg>
-
                     </span>
                     <span class="app-brand-text demo menu-text fw-bold ms-2">FlexiGuest</span>
+                    <?php */ ?>
+
+                    <img src="<?php echo base_url('/assets/img/new-logo.webp'); ?>" width="190px;" />
+
                 </a>
 
                 <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
@@ -194,12 +197,12 @@
             <div class="menu-divider mt-0"></div>
 
             <div class="menu-inner-shadow"></div>
-            
+
 
             <ul class="menu-inner py-1">
-            <?= view_cell('\App\Libraries\Menu::display') ?>
+                <?= view_cell('\App\Libraries\Menu::display') ?>
                 <!-- Dashboards -->
-                
+
             </ul>
         </aside>
         <!-- / Menu -->
