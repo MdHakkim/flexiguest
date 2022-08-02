@@ -28,14 +28,6 @@ class ReceivingFormController extends BaseController
 
     public function assetHandover()
     {
-        $rules = [
-            'reservation_id' => ['label' => 'reservation', 'rules' => 'required'],
-            'room_id' => ['label' => 'room', 'rules' => 'required'],
-        ];
-
-        if (!$this->validate($rules))
-            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-
         $reservation_id = $this->request->getVar('reservation_id');
         $room_id = $this->request->getVar('room_id');
 
@@ -51,15 +43,6 @@ class ReceivingFormController extends BaseController
 
     public function getAssetsList()
     {
-
-        $rules = [
-            'reservation_id' => ['label' => 'reservation', 'rules' => 'required'],
-            'room_id' => ['label' => 'room', 'rules' => 'required'],
-        ];
-
-        if (!$this->validate($rules))
-            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-
         $reservation_id = $this->request->getVar('reservation_id');
         $room_id = $this->request->getVar('room_id');
 
