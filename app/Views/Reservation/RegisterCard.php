@@ -354,7 +354,16 @@ situation, which may cause you to vacate the premises</span
       <hr>
       <div class="row row p-3">
         <div class="col-12">
-          <span><b>Guest Signature: </b></span>
+          <span>
+            <b>Guest Signature: </b>
+            <?php
+              if($guestDetails['SIGNATURE']) {
+            ?>
+              <img src="<?= base_url('assets/Uploads/UserDocuments/signature/'.$guestDetails['SIGNATURE']) ?>" />
+            <?php
+            }
+            ?>
+          </span>
         </div></div>
     </div>
 
