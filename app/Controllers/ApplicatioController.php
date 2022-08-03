@@ -3601,7 +3601,7 @@ class ApplicatioController extends BaseController
 
         $sql = "select RESV_NAME as CUST_ID, RESV_ID, DOC_IS_VERIFY, VACC_IS_VERIFY from FLXY_RESERVATION
                     left join FLXY_VACCINE_DETAILS on VACC_CUST_ID = RESV_NAME AND VACC_RESV_ID = RESV_ID
-                    left join FLXY_DOCUMENTS on DOC_CUST_ID = RESV_NAME AND DOC_RESV_ID = RESV_ID
+                    left join FLXY_DOCUMENTS on DOC_CUST_ID = RESV_NAME AND DOC_RESV_ID = RESV_ID AND DOC_FILE_TYPE = 'PROOF'
                     where RESV_NAME in ($cust_ids) and RESV_ID = :RESV_ID:";
         $response = $this->Db->query($sql, $param)->getResultArray();
          
@@ -3745,7 +3745,7 @@ class ApplicatioController extends BaseController
             ];
             $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
 
-            $document = $this->Documents->where('DOC_RESV_ID', $sysid)->first();            
+            $document = $this->Documents->where('DOC_RESV_ID', $sysid)->where('DOC_FILE_TYPE', 'SIGN')->first();            
             if(!empty($document)) {
                 $document['DOC_FILE_PATH'] = $fileNameExt;
                 $document['DOC_UPDATE_UID'] = session()->get('USR_ID');
