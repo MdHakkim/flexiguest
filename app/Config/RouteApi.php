@@ -95,6 +95,7 @@ $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Co
     $routes->group('asset-handover', function ($routes) {
         $routes->get('', 'ReceivingFormController::assetHandover');
         $routes->get('get-assets-list', 'ReceivingFormController::getAssetsList');
+        $routes->post('submit-asset-handover-form', 'ReceivingFormController::submitAssetHandoverForm');
     });
 });
 
