@@ -2706,7 +2706,7 @@ $('#Each_Package_Details').DataTable({
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
                         '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
-                            'RM_TY_DESC'] +
+                            'RM_TY_DESC'] + '" data-reservation_customer_id = "' + data['CUST_ID'] +
                         '"  class="dropdown-item reserOption text-success"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
                         // '<div class="dropdown-divider"></div>' +
                         '<div class="dropdown-divider"></div>' +
@@ -3152,11 +3152,14 @@ $(document).on('blur', '#RESV_RATE', function() {
 var ressysId = '';
 var roomType = '';
 var roomTypedesc = '';
+var reservation_customer_id = '';
 
 $(document).on('click', '.reserOption', function() {
     ressysId = $(this).attr('data_sysid');
     roomType = $(this).attr('rmtype');
     roomTypedesc = $(this).attr('rmtypedesc');
+    reservation_customer_id = $(this).data('reservation_customer_id');
+
     $('#Accompany').show();
     //$('#Addon').hide();
     $('#Addon').modal('hide');
@@ -3974,6 +3977,9 @@ function searchData(form, mode, event) {
             var values = $(this).val();
             formData[field] = values;
         });
+
+        formData['reservation_customer_id'] = reservation_customer_id;
+
         formData['windowmode'] = windowmode;
         $.ajax({
             url: '<?php echo base_url('/searchProfile') ?>',

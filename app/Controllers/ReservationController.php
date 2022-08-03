@@ -146,6 +146,8 @@ class ReservationController extends BaseController
         if (!$reservation_id)
             return $this->respond(responseJson(500, false, ['msg' => 'Something went wrong!']));
 
+        $this->Reservation->update($reservation_id, ['RESV_NO' => "RES$reservation_id"]);
+
         $result = responseJson(200, false, ['msg' => 'reservation created'], $reservation_id);
         return $this->respond($result);
     }

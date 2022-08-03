@@ -132,7 +132,7 @@ class ApplicatioController extends BaseController
         
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_RESERVATION_VIEW LEFT JOIN FLXY_CUSTOMER C ON C.CUST_ID = FLXY_RESERVATION_VIEW.RESV_NAME';
-        $columns = 'RESV_ID|RESV_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_STATUS|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|RESV_ROOM|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME|CUST_EMAIL|CUST_MOBILE|CUST_PHONE|RESV_FEATURE|FORMAT(RESV_CREATE_DT,\'dd-MMM-yyyy\')RESV_CREATE_DT|RESV_PURPOSE_STAY';
+        $columns = 'RESV_ID|RESV_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_STATUS|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|RESV_ROOM|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|CUST_ID|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME|CUST_EMAIL|CUST_MOBILE|CUST_PHONE|RESV_FEATURE|FORMAT(RESV_CREATE_DT,\'dd-MMM-yyyy\')RESV_CREATE_DT|RESV_PURPOSE_STAY';
         $mine->generate_DatatTable($tableName,$columns,$init_cond,'|');
         exit;
         // return view('Dashboard');
@@ -3197,6 +3197,8 @@ class ApplicatioController extends BaseController
     }
 
     function searchProfile(){
+        $reservation_customer_id = $this->request->getPost("reservation_customer_id");
+
         $CUST_LAST_NAME= $this->request->getPost("CUST_LAST_NAME") ? $this->request->getPost("CUST_LAST_NAME") : 'NULL';
         $CUST_FIRST_NAME= $this->request->getPost("CUST_FIRST_NAME")? $this->request->getPost("CUST_FIRST_NAME") : 'NULL';
         $CUST_CITY= $this->request->getPost("CUST_CITY")? $this->request->getPost("CUST_CITY") : 'NULL';
@@ -3205,7 +3207,15 @@ class ApplicatioController extends BaseController
         $CUST_MOBILE= $this->request->getPost("CUST_MOBILE")? $this->request->getPost("CUST_MOBILE") : 'NULL';
         $CUST_COMMUNICATION_DESC= $this->request->getPost("CUST_COMMUNICATION_DESC")? $this->request->getPost("CUST_COMMUNICATION_DESC") : 'NULL';
         $CUST_PASSPORT= $this->request->getPost("CUST_PASSPORT")? $this->request->getPost("CUST_PASSPORT") : 'NULL';
-        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,CUST_LAST_NAME,FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_NATIONALITY,CUST_VIP,CUST_ADDRESS_1,CUST_CITY,CUST_EMAIL,CUST_MOBILE FROM FLXY_CUSTOMER WHERE (CUST_FIRST_NAME like '%$CUST_FIRST_NAME%' OR CUST_LAST_NAME like '%$CUST_LAST_NAME%' OR CUST_CITY like '%$CUST_CITY%' OR CUST_EMAIL like '%$CUST_EMAIL%' OR CUST_CLIENT_ID like '%$CUST_CLIENT_ID%' OR CUST_MOBILE like '%$CUST_MOBILE%' OR CUST_COMMUNICATION_DESC like '%$CUST_COMMUNICATION_DESC%' OR CUST_PASSPORT like '%$CUST_PASSPORT%')";
+        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,
+                        CUST_LAST_NAME,FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,
+                        CUST_NATIONALITY,CUST_VIP,CUST_ADDRESS_1,CUST_CITY,CUST_EMAIL,CUST_MOBILE 
+                        FROM FLXY_CUSTOMER 
+                        WHERE (CUST_FIRST_NAME like '%$CUST_FIRST_NAME%' OR CUST_LAST_NAME like '%$CUST_LAST_NAME%' 
+                                OR CUST_CITY like '%$CUST_CITY%' OR CUST_EMAIL like '%$CUST_EMAIL%' 
+                                OR CUST_CLIENT_ID like '%$CUST_CLIENT_ID%' OR CUST_MOBILE like '%$CUST_MOBILE%'     
+                                OR CUST_COMMUNICATION_DESC like '%$CUST_COMMUNICATION_DESC%' OR CUST_PASSPORT like '%$CUST_PASSPORT%')
+                                AND CUST_ID != $reservation_customer_id";
         $response = $this->Db->query($sql)->getResultArray();
         $table='';
         if(empty($response)){
