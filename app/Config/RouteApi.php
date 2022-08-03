@@ -43,8 +43,6 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     // API to fetch  shuttles details by id
     $routes->get("shuttles/list/(:segment)", "APIController::listShuttles/$1");
 
-    $routes->get('guest-apartment-list', 'APIController::guestApartmentList');
-
     $routes->group('maintenance', function ($routes) {
         // API to create Maintenance request
         $routes->post("addRequest", "APIController::createRequest");
@@ -89,6 +87,8 @@ $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Co
 
     // API to upload the signature and accept terms and conditions.
     $routes->post("checkin/signatureUpload", "APIController::acceptAndSignatureUpload");
+
+    $routes->get('apartment-list', 'APIController::apartmentList');
 });
 
 $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Controllers\APIControllers'], function ($routes) {
