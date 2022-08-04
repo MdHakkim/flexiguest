@@ -282,10 +282,10 @@
                                 <th>Action</th>
                                 <th>Reservation No</th>
                                 <th>Guest Name</th>
+                                <th>Room No.</th>
                                 <th>Arrival Date</th>
                                 <th>Departure Date</th>
                                 <th>Status</th>
-                                <th>Room No.</th>
                                 <th>Nights</th>
                                 <th>No of Rooms</th>
                                 <th>Room Type</th>
@@ -320,8 +320,7 @@
                                 class="btn btn-primary">Accompanying</button>
                             <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add
                                 On</button>
-                            <button type="button" class="btn btn-primary show-activity-log" data-bs-toggle="modal"
-                                data-bs-target="#changesWindow">Changes</button>
+                            <button type="button" class="btn btn-primary show-activity-log">Changes</button>
                             <button type="button" class="btn btn-primary mt-2" id="registerCardButton" data_sysid=""
                                 style="width: 135px;">Registration Card</button>
                             <button type="button" class="btn btn-primary mt-2" id="fixedChargeButton" data_sysid=""
@@ -1293,11 +1292,13 @@
                         <div class="flxyFooter flxy_space">
                             <button type="button" id="previousbtn" onClick="previous()" class="btn btn-primary"><i
                                     class="fa-solid fa-angle-left"></i> Previous</button>
+                            <button type="button" id="optionsResrBtn" data_sysid=""
+                                class="btn btn-info reserOption me-1">Options</button>
                             <button type="button" id="submitResrBtn" onClick="submitForm('reservationForm','R',event)"
                                 class="btn btn-primary submitResr">Save</button>
                             <!--  -->
-                            <button type="button" id="nextbtn" onClick="next()" class="btn btn-primary"> Next <i
-                                    class="fa-solid fa-angle-right"></i></button>
+                            <button type="button" id="nextbtn" onClick="next()" class="btn btn-primary"
+                                style="margin-left: auto;"> Next <i class="fa-solid fa-angle-right"></i></button>
                         </div>
                     </form>
                 </div>
@@ -2667,12 +2668,12 @@ var windowmode = '';
 
 $(document).ready(function() {
 
-$('#Each_Package_Details').DataTable({
-    "ordering": true,
-    "searching": false,
-    autowidth: true,
-    responsive: true
-});
+    $('#Each_Package_Details').DataTable({
+        "ordering": true,
+        "searching": false,
+        autowidth: true,
+        responsive: true
+    });
 
     linkMode = 'EX';
     $('#loader_flex_bg').show();
@@ -2702,6 +2703,8 @@ $('#Each_Package_Details').DataTable({
                         '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                         '<ul class="dropdown-menu dropdown-menu-end">' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
+                        '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
+                            'RM_TY_DESC'] +
                         '" class="dropdown-item editReserWindow text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
@@ -2730,6 +2733,10 @@ $('#Each_Package_Details').DataTable({
                 }
             },
             {
+                data: 'RESV_ROOM',
+                className: "text-center"
+            },
+            {
                 data: 'RESV_ARRIVAL_DT',
                 className: "text-center"
             },
@@ -2745,10 +2752,6 @@ $('#Each_Package_Details').DataTable({
                         '<div class="flxy_status_cls">' + data + '</div>'
                     );
                 }
-            },
-            {
-                data: 'RESV_ROOM',
-                className: "text-center"
             },
             {
                 data: 'RESV_NIGHT',
@@ -3057,7 +3060,7 @@ function selectRate() {
         $('#errorModal').hide();
         $('#rateQueryWindow').modal('hide');
         $('.window-1,#nextbtn').hide();
-        $('.window-2').show();
+        $('.window-2,#previousbtn').show();
         $('#submitResrBtn').removeClass('submitResr');
         runInitializeConfig();
         $.ajax({
@@ -3086,7 +3089,7 @@ function selectRate() {
 
 function previous() {
     $('.window-1,#nextbtn').show();
-    $('.window-2').hide();
+    $('.window-2,#previousbtn').hide();
     $('#submitResrBtn').addClass('submitResr');
 }
 
@@ -3159,7 +3162,7 @@ $(document).on('click', '.reserOption', function() {
     roomTypedesc = $(this).attr('rmtypedesc');
     $('#Accompany').show();
     //$('#Addon').hide();
-    $('#Addon').modal('hide');
+    $('#Addon,#reservationW').modal('hide');
     $('#optionWindow').modal('show');
     $('.profileSearch').find('input,select').val('');
     windowmode = 'AC';
@@ -3206,8 +3209,15 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
         mode = 'CPY';
         $('#reservationWlable').html('Add New Reservation');
         $('#submitResrBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
+        $('#optionsResrBtn').hide();
     } else {
         $('#submitResrBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
+        $('#optionsResrBtn').show();
+        $('#optionsResrBtn').attr({
+            'data_sysid': sysid,
+            'rmtype': $(this).attr('rmtype'),
+            'rmtypedesc': $(this).attr('rmtypedesc')
+        })
     }
 
     $.ajax({
@@ -3341,6 +3351,10 @@ function childReservation(param) {
         $('#customerForm').find('input,select').val('');
         windowmode = 'C';
         customPop = '';
+
+        showCustomerRow($('.window-2').is(':visible') ? $('.window-2').find('#RESV_NAME')
+            .val() : $('.window-1')
+            .find('#RESV_NAME').val());
     }
     $('.profileCreate').hide();
     $('.profileSearch').show();
@@ -3368,11 +3382,12 @@ function addResvation() {
 
     $('#reservationWlable').html('Add New Reservation');
     runSupportingResevationLov();
-    $('.window-1,#nextbtn,#previousbtn').show();
+    $('.window-1,#nextbtn').show();
     $('.flxyFooter').addClass('flxy_space');
     $('#submitResrBtn').addClass('submitResr');
     $('#submitResrBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-    $('.window-2').hide();
+    $('.window-2,#previousbtn,#optionsResrBtn').hide();
+
     runCountryList();
 
     fillMembershipTypes('', 'add', '#RESV_MEMBER_TY_ADD');
@@ -3416,7 +3431,7 @@ $(document).on('change', '*#RESV_NAME', function() {
             if (respn != '') {
                 var json = respn[0];
 
-                $('#CUST_FIRST_NAME').val($.trim(json.CUST_FIRST_NAME))
+                $('#CUST_FIRST_NAME').val($.trim(json.CUST_FIRST_NAME));
                 $('#CUST_TITLE').val($.trim(json.CUST_TITLE));
                 $('#CUST_COUNTRY').val($.trim(json.CUST_COUNTRY)).selectpicker('refresh');
                 $('.CUST_VIP').select2("val", $.trim(json.CUST_VIP));
@@ -3996,6 +4011,29 @@ function searchData(form, mode, event) {
         customPop = '-N';
     }
 }
+
+function showCustomerRow(custId) {
+
+    $('.profileSearch').find('input,select').val('');
+
+    $.ajax({
+        url: '<?php echo base_url('/searchProfile') ?>',
+        async: false,
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            'CUST_ID': custId
+        },
+        dataType: 'json',
+        success: function(respn1) {
+            var respone = respn1['table'];
+            $('#searchRecord').html(respone);
+        }
+    });
+}
+
 var custId = '';
 $(document).on('click', '.activeRow,#customeTrigger', function() {
     var joinVaribl = windowmode + customPop;
@@ -4004,7 +4042,9 @@ $(document).on('click', '.activeRow,#customeTrigger', function() {
         $(this).addClass('activeTr');
         custId = $(this).attr('data_sysid');
     }
+
     $('#appcompanyWindow').modal('show');
+
     $.ajax({
         url: '<?php echo base_url('/getExistingAppcompany') ?>',
         type: "post",
@@ -4013,7 +4053,7 @@ $(document).on('click', '.activeRow,#customeTrigger', function() {
         },
         data: {
             custId: custId,
-            ressysId: ressysId
+            ressysId: ressysId                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
         },
         dataType: 'json',
         success: function(respn) {
@@ -4312,6 +4352,7 @@ function showReservationChanges(rsrvId = 0) {
 }
 
 $(document).on('click', '.show-activity-log', function() {
+    $('#changesWindow').modal('show');
     showReservationChanges(ressysId);
 });
 
@@ -5308,7 +5349,7 @@ function RateClassList() {
 
 $("#RESV_RATE_CLASS").change(function(e, param = 0) {
     var rate_class_id = $(this).val();
-    if(rate_class_id > 0){
+    if (rate_class_id > 0) {
         $.ajax({
             url: '<?php echo base_url('/RateCategory') ?>',
             type: "post",
@@ -5328,7 +5369,7 @@ $("#RESV_RATE_CLASS").change(function(e, param = 0) {
 
 $("#RESV_RATE_CATEGORY").change(function(e, param = 0) {
     var rate_category_id = $(this).val();
-    if(rate_category_id > 0){
+    if (rate_category_id > 0) {
         $.ajax({
             url: '<?php echo base_url('/RateCodes') ?>',
             type: "post",
@@ -5401,7 +5442,7 @@ $("#PCKG_ID").change(function(e, param = 0) {
 // Add / Edit Package Detail
 
 $(document).on('click', '.save-package-detail', function() {
-   
+
     var RESV_ID = $('#PCKG_RESV_ID').val();
     hideModalAlerts();
     $("#RESVSTART_DATE").val($("#RESV_ARRIVAL_DT").val());
@@ -5651,8 +5692,8 @@ $(document).on('click', '#Package_Details > tbody > tr', function() {
         });
 
 
-  
-    
+
+
     $.ajax({
         url: '<?php echo base_url('/showSinglePackageDetails') ?>',
         type: "post",
@@ -5666,8 +5707,8 @@ $(document).on('click', '#Package_Details > tbody > tr', function() {
         success: function(respn) {
             $('#Each_Package_Details > tbody').html(respn);
         }
-    });   
-    
+    });
+
 });
 
 // Show Package Detail
@@ -5715,10 +5756,10 @@ function loadPackageDetails(packageID) {
         success: function(respn) {
             $('#Each_Package_Details > tbody').html(respn);
         }
-    });   
+    });
 
 
-    
+
 }
 
 

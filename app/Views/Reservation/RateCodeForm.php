@@ -1477,6 +1477,9 @@ var rateCodeDetailID =
 <?php echo (isset($selectedRoomTypes) && $selectedRoomTypes != NULL) ? 'const selectedRoomTypes = '.json_encode($selectedRoomTypes).';' : '' ?>
 <?php echo (isset($selectedPackageCodes) && $selectedPackageCodes != NULL) ? 'const selectedPackageCodes = '.json_encode($selectedPackageCodes).';' : '' ?>
 
+var showTab = <?php echo isset($showTab) ? $showTab : 0; ?>;
+
+
 $(document).ready(function() {
 
     $('.dateField').datepicker({

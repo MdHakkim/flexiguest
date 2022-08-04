@@ -175,6 +175,8 @@ function showCustomerNegotiatedRates(custId = 0) {
                         '" data-display-seq="' + data['NG_RT_DIS_SEQ'] +
                         '" class="dropdown-item edit-negotiated-rate text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
+                        '<li><a href="<?php echo base_url('/editRateCode')?>/' + data['RT_CD_ID'] + '?showTab=3" target="_blank" class="dropdown-item text-info"><i class="fa-solid fa-eye"></i> View Rate Code</a></li>' +
+                        '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['NG_RT_ID'] +
                         '" class="dropdown-item text-danger delete-negotiated-rate"><i class="fa-solid fa-ban"></i> Delete</a></li>' +
                         '</ul>' +

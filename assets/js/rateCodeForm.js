@@ -328,6 +328,14 @@
         }
       });
     });
+
+    if (rateCodeID != 0 && parseInt(showTab) != 0) {
+      showTab = parseInt(showTab);
+      showTab = showTab >= 3 ? 3 : showTab;
+
+      for (var tabStep = showTab; tabStep > 1; tabStep--)
+        validationStepper.next();
+    }
   }
 
   // Negotiated Rate Advanced Search Functions Starts
@@ -351,7 +359,7 @@
     filterColumn($(this).attr('data-column'), $(this).val());
   });
   */
- 
+
   // Advanced Search Functions Ends
 
 

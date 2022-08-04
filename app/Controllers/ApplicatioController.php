@@ -751,7 +751,7 @@ class ApplicatioController extends BaseController
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = ' (SELECT  CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,
                         TRIM(CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME)) CUST_FULL_NAME,
-                        CUST_PASSPORT,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID 
+                        CUST_PASSPORT,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID,CUST_DOC_NUMBER 
                         FROM FLXY_CUSTOMER) CUSTOMER_LIST';
         $columns = 'CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_FULL_NAME,CUST_DOC_NUMBER,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID';
         $mine->generate_DatatTable($tableName,$columns);
@@ -3193,15 +3193,29 @@ class ApplicatioController extends BaseController
     }
 
     function searchProfile(){
-        $CUST_LAST_NAME= $this->request->getPost("CUST_LAST_NAME") ? $this->request->getPost("CUST_LAST_NAME") : 'NULL';
-        $CUST_FIRST_NAME= $this->request->getPost("CUST_FIRST_NAME")? $this->request->getPost("CUST_FIRST_NAME") : 'NULL';
-        $CUST_CITY= $this->request->getPost("CUST_CITY")? $this->request->getPost("CUST_CITY") : 'NULL';
-        $CUST_EMAIL= $this->request->getPost("CUST_EMAIL")? $this->request->getPost("CUST_EMAIL") : 'NULL';
-        $CUST_CLIENT_ID= $this->request->getPost("CUST_CLIENT_ID")? $this->request->getPost("CUST_CLIENT_ID") : 'NULL';
-        $CUST_MOBILE= $this->request->getPost("CUST_MOBILE")? $this->request->getPost("CUST_MOBILE") : 'NULL';
-        $CUST_COMMUNICATION_DESC= $this->request->getPost("CUST_COMMUNICATION_DESC")? $this->request->getPost("CUST_COMMUNICATION_DESC") : 'NULL';
-        $CUST_PASSPORT= $this->request->getPost("CUST_PASSPORT")? $this->request->getPost("CUST_PASSPORT") : 'NULL';
-        $sql = "SELECT CUST_ID,CUST_FIRST_NAME,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,CUST_LAST_NAME,FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_NATIONALITY,CUST_VIP,CUST_ADDRESS_1,CUST_CITY,CUST_EMAIL,CUST_MOBILE FROM FLXY_CUSTOMER WHERE (CUST_FIRST_NAME like '%$CUST_FIRST_NAME%' OR CUST_LAST_NAME like '%$CUST_LAST_NAME%' OR CUST_CITY like '%$CUST_CITY%' OR CUST_EMAIL like '%$CUST_EMAIL%' OR CUST_CLIENT_ID like '%$CUST_CLIENT_ID%' OR CUST_MOBILE like '%$CUST_MOBILE%' OR CUST_COMMUNICATION_DESC like '%$CUST_COMMUNICATION_DESC%' OR CUST_PASSPORT like '%$CUST_PASSPORT%')";
+        $CUST_LAST_NAME = $this->request->getPost("CUST_LAST_NAME") ? $this->request->getPost("CUST_LAST_NAME") : 'NULL';
+        $CUST_FIRST_NAME = $this->request->getPost("CUST_FIRST_NAME")? $this->request->getPost("CUST_FIRST_NAME") : 'NULL';
+        $CUST_CITY = $this->request->getPost("CUST_CITY")? $this->request->getPost("CUST_CITY") : 'NULL';
+        $CUST_EMAIL = $this->request->getPost("CUST_EMAIL")? $this->request->getPost("CUST_EMAIL") : 'NULL';
+        $CUST_CLIENT_ID = $this->request->getPost("CUST_CLIENT_ID")? $this->request->getPost("CUST_CLIENT_ID") : 'NULL';
+        $CUST_MOBILE = $this->request->getPost("CUST_MOBILE")? $this->request->getPost("CUST_MOBILE") : 'NULL';
+        $CUST_COMMUNICATION_DESC = $this->request->getPost("CUST_COMMUNICATION_DESC")? $this->request->getPost("CUST_COMMUNICATION_DESC") : 'NULL';
+        $CUST_PASSPORT = $this->request->getPost("CUST_PASSPORT")? $this->request->getPost("CUST_PASSPORT") : 'NULL';
+        $CUST_ID = $this->request->getPost("CUST_ID") ? $this->request->getPost("CUST_ID") : 0;
+        
+        $sql = "SELECT  CUST_ID,CUST_FIRST_NAME,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,CUST_LAST_NAME,
+                        FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_NATIONALITY,CUST_VIP,CUST_ADDRESS_1,CUST_CITY,
+                        CUST_EMAIL,CUST_MOBILE 
+                FROM FLXY_CUSTOMER WHERE 1 = 1 ";
+
+        if(!empty($CUST_ID))
+            $sql .= " AND CUST_ID = $CUST_ID";
+        else        
+            $sql .= " AND ( CUST_FIRST_NAME like '%$CUST_FIRST_NAME%' OR CUST_LAST_NAME like '%$CUST_LAST_NAME%' OR 
+                        CUST_CITY like '%$CUST_CITY%' OR CUST_EMAIL like '%$CUST_EMAIL%' OR CUST_CLIENT_ID like '%$CUST_CLIENT_ID%' OR 
+                        CUST_MOBILE like '%$CUST_MOBILE%' OR CUST_COMMUNICATION_DESC like '%$CUST_COMMUNICATION_DESC%' OR 
+                        CUST_PASSPORT like '%$CUST_PASSPORT%')";
+                
         $response = $this->Db->query($sql)->getResultArray();
         $table='';
         if(empty($response)){

@@ -1926,6 +1926,8 @@ class MastersController extends BaseController
             'blockLoader_javascript' => blockLoader_javascript()
         ];
 
+        $data['showTab'] = null !== $this->request->getGet("showTab") ? $this->request->getGet("showTab") : null;
+
         $data['session'] = $this->session;
         $data['title'] = getMethodName();
         $data['js_to_load'] = array("rateCodeForm.js", "rateCategory.js", "roomType.js", "packageList.js");
