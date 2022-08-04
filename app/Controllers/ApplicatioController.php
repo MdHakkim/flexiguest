@@ -569,7 +569,11 @@ class ApplicatioController extends BaseController
                 exit;
             }
 
-            if (strtotime($this->request->getVar("CUST_DOC_EXPIRY")) < strtotime($this->request->getVar("CUST_DOC_ISSUE")) || strtotime($this->request->getVar("CUST_DOC_EXPIRY")) <= strtotime(date("Y-m-d"))) {
+            $CUST_DOC_EXPIRY = $this->request->getVar("CUST_DOC_EXPIRY");
+            $CUST_DOC_ISSUE = $this->request->getVar("CUST_DOC_ISSUE");
+
+            if ((!empty($CUST_DOC_EXPIRY) && !empty($CUST_DOC_ISSUE)) && 
+                (strtotime($CUST_DOC_EXPIRY) < strtotime($CUST_DOC_ISSUE) || strtotime($CUST_DOC_EXPIRY) <= strtotime(date("Y-m-d")))) {
                 return $this->respond(responseJson("-402", ['msg' => "Your Document is expired"]));
             }
 
@@ -755,7 +759,7 @@ class ApplicatioController extends BaseController
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = ' (SELECT  CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,
                         TRIM(CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME)) CUST_FULL_NAME,
-                        CUST_PASSPORT,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID 
+                        CUST_PASSPORT,CUST_DOC_NUMBER,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID 
                         FROM FLXY_CUSTOMER) CUSTOMER_LIST';
         $columns = 'CUST_ID,CUST_FIRST_NAME,CUST_MIDDLE_NAME,CUST_LAST_NAME,CUST_FULL_NAME,CUST_DOC_NUMBER,CUST_COUNTRY,CUST_EMAIL,CUST_MOBILE,CUST_CLIENT_ID';
         $mine->generate_DatatTable($tableName,$columns);
@@ -3215,7 +3219,7 @@ class ApplicatioController extends BaseController
                                 OR CUST_CITY like '%$CUST_CITY%' OR CUST_EMAIL like '%$CUST_EMAIL%' 
                                 OR CUST_CLIENT_ID like '%$CUST_CLIENT_ID%' OR CUST_MOBILE like '%$CUST_MOBILE%'     
                                 OR CUST_COMMUNICATION_DESC like '%$CUST_COMMUNICATION_DESC%' OR CUST_PASSPORT like '%$CUST_PASSPORT%')
-                                AND CUST_ID != $reservation_customer_id";
+                                AND CUST_ID != '$reservation_customer_id'";
         $response = $this->Db->query($sql)->getResultArray();
         $table='';
         if(empty($response)){

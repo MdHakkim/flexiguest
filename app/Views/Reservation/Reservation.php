@@ -1454,11 +1454,28 @@
                                     </span>
                                 </div>
                             </div>
+                        
                             <div class="col-md-3">
+                                <label class="form-label">Document Number</label>
+                                <input type="text" name="CUST_DOC_NUMBER" class="form-control" placeholder="Document number" />
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Doc Issue Date</label>
+                                <input type="text" name="CUST_DOC_ISSUE" class="form-control CUST_DOC_ISSUE" placeholder="YYYY-MM-DD" />
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label">Doc Expiry Date</label>
+                                <input type="text" name="CUST_DOC_EXPIRY" class="form-control CUST_DOC_EXPIRY" placeholder="YYYY-MM-DD" />
+                            </div>
+
+                            <!-- <div class="col-md-3">
                                 <label class="form-label">Passport</label>
                                 <input type="text" name="CUST_PASSPORT" id="CUST_PASSPORT" class="form-control"
                                     placeholder="passport" />
-                            </div>
+                            </div> -->
+                            
                             <div class="col-md-3">
                                 <label class="form-label">Address</label>
                                 <input type="text" name="CUST_ADDRESS_1" id="CUST_ADDRESS_1" class="form-control"
@@ -1467,16 +1484,24 @@
                                     address is required can't empty.
                                 </div>
                             </div>
-                            <div class="col-md-3 flxy_mgtop">
+                            
+                            <!-- <div class="col-md-3 flxy_mgtop"> -->
+                            <div class="col-md-3">
                                 <label class="form-label"></label>
                                 <input type="text" name="CUST_ADDRESS_2" id="CUST_ADDRESS_2" class="form-control"
                                     placeholder="address 2" />
                             </div>
-                            <div class="col-md-3" style="margin-top: 23px !important;">
+                            
+                            <!-- <div class="col-md-3" style="margin-top: 23px !important;"> -->
+                            <div class="col-md-3">
                                 <label class="form-label"></label>
                                 <input type="text" name="CUST_ADDRESS_3" id="CUST_ADDRESS_3" class="form-control"
                                     placeholder="address 3" />
                             </div>
+
+                            <div class="col-md-3"></div>
+
+
                             <div class="col-md-3 mt-0">
                                 <label class="form-label col-md-12">Country</label>
                                 <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%"
@@ -2701,7 +2726,7 @@ $('#Each_Package_Details').DataTable({
                         '<div class="d-inline-block flxy_option_view dropend">' +
                         '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                         '<ul class="dropdown-menu dropdown-menu-end">' +
-                        '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
+                        '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] + '" data-reservation_customer_id = "' + data['CUST_ID'] +
                         '" class="dropdown-item editReserWindow text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
@@ -2795,6 +2820,16 @@ $('#Each_Package_Details').DataTable({
     });
 
     $('.CUST_DOB').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
+    });
+
+    $('.CUST_DOC_ISSUE').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
+    });
+
+    $('.CUST_DOC_EXPIRY').datepicker({
         format: 'd-M-yyyy',
         autoclose: true
     });
@@ -3174,6 +3209,8 @@ $(document).on('click', '.reserOption', function() {
 });
 
 $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
+    reservation_customer_id = $(this).data('reservation_customer_id');
+
     ////Item Inventory
     // showInventoryItems();
     itemClassList();
