@@ -354,7 +354,7 @@ function loadProfilesTable(filterData) {
                 data: 'PROFILE_ADDRESS'
             },
             {
-                data: 'PROFILE_CITY'
+                data: 'CITY_NAME'
             },
             {
                 data: 'PROFILE_POSTAL_CODE'
@@ -387,7 +387,7 @@ function loadProfilesTable(filterData) {
                 data: 'PROFILE_TITLE'
             },
             {
-                data: 'PROFILE_COUNTRY'
+                data: 'COUNTRY_NAME'
             },
             {
                 data: 'PROFILE_NUMBER'
