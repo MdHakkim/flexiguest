@@ -56,7 +56,7 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 
 
 //  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
-$routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Controllers'], function ($routes) {
+$routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Controllers'], function ($routes) {
 
     $routes->group('maintenance', function ($routes) {
         // API to get category list of maintenance
@@ -91,7 +91,7 @@ $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Co
     $routes->get('apartment-list', 'APIController::apartmentList');
 });
 
-$routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Controllers\APIControllers'], function ($routes) {
+$routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Controllers\APIControllers'], function ($routes) {
     $routes->group('asset-handover', function ($routes) {
         $routes->get('', 'ReceivingFormController::assetHandover');
         $routes->get('get-assets-list', 'ReceivingFormController::getAssetsList');
@@ -152,6 +152,9 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
         $routes->get("orders-list", "LaundryAmenitiesController::ordersList");
         $routes->post("update-delivery-status", "LaundryAmenitiesController::updateDeliveryStatus");
     });
+
+    $routes->get("user-departments", "UserController::userDepartments");
+    
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function ($routes) {
