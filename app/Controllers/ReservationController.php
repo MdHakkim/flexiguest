@@ -162,23 +162,34 @@ class ReservationController extends BaseController
         $last_name = $this->request->getVar('CUST_LAST_NAME');
         $room_no = $this->request->getVar('RESV_ROOM');
 
-        $params = [
-            'room_no' => $room_no, 'first_name' => "%$first_name%", 'last_name' => "%$last_name%",
-            'reservation_id' => $reservation_id, 'current_reservation_id' => $current_reservation_id
-        ];
+        $params = [];
+        $params['current_reservation_id'] = $current_reservation_id;
+        $where_condition = '';
 
-        $where_condition = "(fr.RESV_ROOM = :room_no: 
-                            or fr.RESV_ID = :reservation_id:
-                            or fr.RESV_NAME in (select CUST_ID from FLXY_CUSTOMER where CUST_FIRST_NAME like :first_name: or CUST_LAST_NAME like :last_name:))";
-        
-        if(!empty($reservation_id))
-            $where_condition = "fr.RESV_ID = :reservation_id:";
+        if(!empty($room_no)) {
+            $where_condition .= " and fr.RESV_ROOM = :room_no:";
+            $params['room_no'] = $room_no;
+        }
+
+        if(!empty($reservation_id)) {
+            $where_condition .= " and fr.RESV_ID = :reservation_id:";
+            $params['reservation_id'] = $reservation_id;
+        }
+
+        if(!empty($first_name)) {
+            $where_condition .= " and fr.RESV_NAME in (select CUST_ID from FLXY_CUSTOMER where CUST_FIRST_NAME like :first_name:)";
+            $params['first_name'] = "%$first_name%";
+        }
+
+        if(!empty($last_name)) {
+            $where_condition .= " and fr.RESV_NAME in (select CUST_ID from FLXY_CUSTOMER where CUST_LAST_NAME like :last_name:)";
+            $params['last_name'] = "%$last_name%";
+        }
 
         $reservations = $this->DB->query(
             "select fr.*, fc.CUST_TITLE, fc.CUST_FIRST_NAME, fc.CUST_LAST_NAME from FLXY_RESERVATION fr
                 left join FLXY_CUSTOMER fc on fr.RESV_NAME = fc.CUST_ID 
-                where fr.RESV_ID != :current_reservation_id:
-                    and $where_condition",
+                where fr.RESV_ID != :current_reservation_id:$where_condition",
             $params
         )->getResultArray();
 

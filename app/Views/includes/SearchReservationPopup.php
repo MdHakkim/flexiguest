@@ -12,6 +12,11 @@
                     <div class="row">
 
                         <div class="col-md-3 mb-2">
+                            <label class="form-label">Reservation ID</label>
+                            <input type="text" name="RESV_ID" class="form-control" placeholder="Reservation ID" />
+                        </div>
+
+                        <div class="col-md-3 mb-2">
                             <label class="form-label">First Name</label>
                             <input type="text" name="CUST_FIRST_NAME" class="form-control" placeholder="First Name" />
                         </div>
