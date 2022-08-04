@@ -43,8 +43,6 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     // API to fetch  shuttles details by id
     $routes->get("shuttles/list/(:segment)", "APIController::listShuttles/$1");
 
-    $routes->get('guest-apartment-list', 'APIController::guestApartmentList');
-
     $routes->group('maintenance', function ($routes) {
         // API to create Maintenance request
         $routes->post("addRequest", "APIController::createRequest");
@@ -58,7 +56,7 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 
 
 //  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
-$routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Controllers'], function ($routes) {
+$routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Controllers'], function ($routes) {
 
     $routes->group('maintenance', function ($routes) {
         // API to get category list of maintenance
@@ -89,12 +87,15 @@ $routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Co
 
     // API to upload the signature and accept terms and conditions.
     $routes->post("checkin/signatureUpload", "APIController::acceptAndSignatureUpload");
+
+    $routes->get('apartment-list', 'APIController::apartmentList');
 });
 
-$routes->group("api", ["filter" => "authapi:admin_guest", 'namespace' => 'App\Controllers\APIControllers'], function ($routes) {
+$routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Controllers\APIControllers'], function ($routes) {
     $routes->group('asset-handover', function ($routes) {
         $routes->get('', 'ReceivingFormController::assetHandover');
         $routes->get('get-assets-list', 'ReceivingFormController::getAssetsList');
+        $routes->post('submit-asset-handover-form', 'ReceivingFormController::submitAssetHandoverForm');
     });
 });
 
@@ -151,6 +152,9 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
         $routes->get("orders-list", "LaundryAmenitiesController::ordersList");
         $routes->post("update-delivery-status", "LaundryAmenitiesController::updateDeliveryStatus");
     });
+
+    $routes->get("user-departments", "UserController::userDepartments");
+    
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function ($routes) {

@@ -804,9 +804,9 @@
 
                                 <div class="row" style="justify-content: right;padding: 48px;">
                                     <div class="col-md-3">
-                                        <button type="button" <?php echo $data['RESV_SINGATURE_URL'] != '' ? 'style="display:none;"' : ''; ?> id="clickSignature" class="btn btn-secondary">Click to sign here</button>
+                                        <button type="button" <?php echo $data['DOC_FILE_PATH'] != '' ? 'style="display:none;"' : ''; ?> id="clickSignature" class="btn btn-secondary">Click to sign here</button>
 
-                                        <img id="captureSignature" class="<?= $data['RESV_SINGATURE_URL'] ? '' : 'd-none' ?>" style="width:100%;" src="<?= $data['RESV_SINGATURE_URL'] ? base_url('assets/Uploads/UserDocuments/signature/' . $data['RESV_SINGATURE_URL']) : '' ?>" />
+                                        <img id="captureSignature" class="<?= $data['DOC_FILE_PATH'] ? '' : 'd-none' ?>" style="width:100%;" src="<?= $data['DOC_FILE_PATH'] ? base_url('assets/Uploads/UserDocuments/signature/' . $data['DOC_FILE_PATH']) : '' ?>" />
                                     </div>
                                 </div>
                             </div>
@@ -1826,7 +1826,8 @@
                 RESV_ACCP_TRM_CONDI: AGREE_TERMS,
                 signature: signature,
                 DOC_RESV_ID: DOC_RESV_ID,
-                modesignature: newImageSignature
+                modesignature: newImageSignature,
+                customer_id: <?= $data['CUST_ID'] ?>
             },
             dataType: 'json',
             // processData: false,

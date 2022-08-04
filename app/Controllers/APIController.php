@@ -1053,18 +1053,28 @@ class APIController extends BaseController
         return $this->respond($result);
     }
 
-    public function guestApartmentList()
+    public function apartmentList()
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
 
-        $room_list = $this->DB->table('FLXY_RESERVATION')
-            ->select('RESV_ID, RESV_ROOM, RM_ID')
-            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
-            ->where('RESV_NAME', $customer_id)
-            ->where('RESV_STATUS', 'Checked-In')
-            ->where('RESV_ROOM !=', '')
-            ->get()
-            ->getResult();
+        if ($this->request->user['USR_ROLE'] == 'admin') {
+            $room_list = $this->DB->table('FLXY_ROOM')
+                ->select("RM_NO as RESV_ROOM, RM_ID, RESV_ID, (CASE WHEN RESV_ID is not null THEN concat(RESV_ID, '-', CUST_FIRST_NAME, ' ', CUST_MIDDLE_NAME, ' ', CUST_LAST_NAME) ELSE NULL END) as ID_NAME")
+                ->join('FLXY_RESERVATION', "RM_NO = RESV_ROOM and RESV_STATUS = 'Checked-In'", 'left')
+                ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
+                ->get()
+                ->getResult();
+        } else {
+            $room_list = $this->DB->table('FLXY_RESERVATION')
+                ->select("RESV_ID, RESV_ROOM, RM_ID, concat(RESV_ID, '-', CUST_FIRST_NAME, ' ', CUST_MIDDLE_NAME, ' ', CUST_LAST_NAME) as ID_NAME")
+                ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
+                ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
+                ->where('RESV_NAME', $customer_id)
+                ->where('RESV_STATUS', 'Checked-In')
+                ->where('RESV_ROOM !=', '')
+                ->get()
+                ->getResult();
+        }
 
         return $this->respond(responseJson(200, false, ['msg' => 'Room list'], $room_list));
     }

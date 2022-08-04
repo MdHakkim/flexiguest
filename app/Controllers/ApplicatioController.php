@@ -3,6 +3,7 @@ namespace App\Controllers;
 
 use  App\Libraries\ServerSideDataTable;
 use  App\Libraries\EmailLibrary;
+use App\Models\Documents;
 use CodeIgniter\API\ResponseTrait;
 use DateTime;
 use DateTimeZone;
@@ -15,12 +16,15 @@ class ApplicatioController extends BaseController
     public $session;
     public $request;
     public $todayDate;
+    private $Documents;
+
     public function __construct(){
         $this->Db = \Config\Database::connect();
         $this->session = \Config\Services::session();
         helper(['form', 'common', 'custom']);
         $this->request = \Config\Services::request();
         $this->todayDate = new DateTime("now", new DateTimeZone('Asia/Dubai'));
+        $this->Documents = new Documents();
     }
 
     public function Reservation(){   
@@ -128,7 +132,7 @@ class ApplicatioController extends BaseController
         
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_RESERVATION_VIEW LEFT JOIN FLXY_CUSTOMER C ON C.CUST_ID = FLXY_RESERVATION_VIEW.RESV_NAME';
-        $columns = 'RESV_ID|RESV_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_STATUS|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|RESV_ROOM|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME|CUST_EMAIL|CUST_MOBILE|CUST_PHONE|RESV_FEATURE|FORMAT(RESV_CREATE_DT,\'dd-MMM-yyyy\')RESV_CREATE_DT|RESV_PURPOSE_STAY';
+        $columns = 'RESV_ID|RESV_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_STATUS|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|RESV_ROOM|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|CUST_ID|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME|CUST_EMAIL|CUST_MOBILE|CUST_PHONE|RESV_FEATURE|FORMAT(RESV_CREATE_DT,\'dd-MMM-yyyy\')RESV_CREATE_DT|RESV_PURPOSE_STAY';
         $mine->generate_DatatTable($tableName,$columns,$init_cond,'|');
         exit;
         // return view('Dashboard');
@@ -565,7 +569,11 @@ class ApplicatioController extends BaseController
                 exit;
             }
 
-            if (strtotime($this->request->getVar("CUST_DOC_EXPIRY")) < strtotime($this->request->getVar("CUST_DOC_ISSUE")) || strtotime($this->request->getVar("CUST_DOC_EXPIRY")) <= strtotime(date("Y-m-d"))) {
+            $CUST_DOC_EXPIRY = $this->request->getVar("CUST_DOC_EXPIRY");
+            $CUST_DOC_ISSUE = $this->request->getVar("CUST_DOC_ISSUE");
+
+            if ((!empty($CUST_DOC_EXPIRY) && !empty($CUST_DOC_ISSUE)) && 
+                (strtotime($CUST_DOC_EXPIRY) < strtotime($CUST_DOC_ISSUE) || strtotime($CUST_DOC_EXPIRY) <= strtotime(date("Y-m-d")))) {
                 return $this->respond(responseJson("-402", ['msg' => "Your Document is expired"]));
             }
 
@@ -3202,7 +3210,9 @@ class ApplicatioController extends BaseController
         $CUST_COMMUNICATION_DESC = $this->request->getPost("CUST_COMMUNICATION_DESC")? $this->request->getPost("CUST_COMMUNICATION_DESC") : 'NULL';
         $CUST_PASSPORT = $this->request->getPost("CUST_PASSPORT")? $this->request->getPost("CUST_PASSPORT") : 'NULL';
         $CUST_ID = $this->request->getPost("CUST_ID") ? $this->request->getPost("CUST_ID") : 0;
-        
+
+        $reservation_customer_id = $this->request->getPost("reservation_customer_id") ? $this->request->getPost("reservation_customer_id") : 0;
+
         $sql = "SELECT  CUST_ID,CUST_FIRST_NAME,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,CUST_LAST_NAME,
                         FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_NATIONALITY,CUST_VIP,CUST_ADDRESS_1,CUST_CITY,
                         CUST_EMAIL,CUST_MOBILE 
@@ -3215,7 +3225,10 @@ class ApplicatioController extends BaseController
                         CUST_CITY like '%$CUST_CITY%' OR CUST_EMAIL like '%$CUST_EMAIL%' OR CUST_CLIENT_ID like '%$CUST_CLIENT_ID%' OR 
                         CUST_MOBILE like '%$CUST_MOBILE%' OR CUST_COMMUNICATION_DESC like '%$CUST_COMMUNICATION_DESC%' OR 
                         CUST_PASSPORT like '%$CUST_PASSPORT%')";
-                
+        
+        if(!empty($reservation_customer_id))
+            $sql .= " AND CUST_ID != $reservation_customer_id";
+
         $response = $this->Db->query($sql)->getResultArray();
         $table='';
         if(empty($response)){
@@ -3364,12 +3377,14 @@ class ApplicatioController extends BaseController
                         RESV_ACCP_TRM_CONDI, RESV_SINGATURE_URL, RESV_ETA,
                         RM_TY_DESC,
                         SNAME as CUST_STATE_DESC,
-                        CTNAME as CUST_CITY_DESC
+                        CTNAME as CUST_CITY_DESC,
+                        fd.DOC_FILE_PATH
                         FROM FLXY_RESERVATION
                         left join FLXY_CUSTOMER on FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID
                         left join FLXY_ROOM_TYPE on FLXY_RESERVATION.RESV_RM_TYPE = FLXY_ROOM_TYPE.RM_TY_CODE
                         left join STATE on STATE.STATE_CODE = FLXY_CUSTOMER.CUST_STATE
                         left join CITY on CITY.ID = FLXY_CUSTOMER.CUST_CITY
+                        left join FLXY_DOCUMENTS as fd on RESV_ID = fd.DOC_RESV_ID and fd.DOC_FILE_TYPE = 'SIGN'
                         WHERE RESV_ID = :RESV_ID:";
 
             $response = $this->Db->query($sql,$param)->getResultArray();
@@ -3609,7 +3624,7 @@ class ApplicatioController extends BaseController
 
         $sql = "select RESV_NAME as CUST_ID, RESV_ID, DOC_IS_VERIFY, VACC_IS_VERIFY from FLXY_RESERVATION
                     left join FLXY_VACCINE_DETAILS on VACC_CUST_ID = RESV_NAME AND VACC_RESV_ID = RESV_ID
-                    left join FLXY_DOCUMENTS on DOC_CUST_ID = RESV_NAME AND DOC_RESV_ID = RESV_ID
+                    left join FLXY_DOCUMENTS on DOC_CUST_ID = RESV_NAME AND DOC_RESV_ID = RESV_ID AND DOC_FILE_TYPE = 'PROOF'
                     where RESV_NAME in ($cust_ids) and RESV_ID = :RESV_ID:";
         $response = $this->Db->query($sql, $param)->getResultArray();
          
@@ -3728,6 +3743,8 @@ class ApplicatioController extends BaseController
 
     function updateSignatureReserv(){
         $sysid = $this->request->getPost("DOC_RESV_ID");
+        $customer_id = $this->request->getPost("customer_id");
+
         try{
             $signature = $this->request->getPost("signature");
             $modesignature = $this->request->getPost("modesignature");
@@ -3745,11 +3762,36 @@ class ApplicatioController extends BaseController
             }
             $data = ["RESV_ETA" => $this->request->getPost("RESV_ETA"),
                 "RESV_ACCP_TRM_CONDI" => $this->request->getPost("RESV_ACCP_TRM_CONDI"),
-                "RESV_SINGATURE_URL" => $fileNameExt,
+                // "RESV_SINGATURE_URL" => $fileNameExt,
                 "RESV_UPDATE_UID" => session()->get('USR_ID'),
                 "RESV_UPDATE_DT" => date("d-M-Y")
             ];
             $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
+
+            $document = $this->Documents->where('DOC_RESV_ID', $sysid)->where('DOC_FILE_TYPE', 'SIGN')->first();            
+            if(!empty($document)) {
+                $document['DOC_FILE_PATH'] = $fileNameExt;
+                $document['DOC_UPDATE_UID'] = session()->get('USR_ID');
+                $document['DOC_UPDATE_DT'] = date('Y-m-d');
+
+                $this->Documents->save($document);
+            }else{
+                $data = [
+                    'DOC_CUST_ID' => $customer_id,
+                    'DOC_FILE_PATH' => $fileNameExt,
+                    'DOC_FILE_TYPE' => 'SIGN',
+                    'DOC_IS_VERIFY' => 0,
+                    'DOC_CREATE_UID' => session()->get('USR_ID'),
+                    'DOC_UPDATE_UID' => session()->get('USR_ID'),
+                    'DOC_CREATE_DT' => date('Y-m-d'),
+                    'DOC_UPDATE_DT' => date('Y-m-d'),
+                    'DOC_RESV_ID' => $sysid,
+                ];
+                
+                $this->Documents->insert($data);
+            }
+
+
             if($return){
                 $result = $this->responseJson("1","0",$return,$response='');
                 echo json_encode($result);

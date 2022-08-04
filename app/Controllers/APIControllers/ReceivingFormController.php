@@ -47,7 +47,7 @@ class ReceivingFormController extends BaseController
         $room_id = $this->request->getVar('room_id');
 
         $room_assets = $this->ReservationRoomAsset
-            ->select('AS_ASSET, RA_QUANTITY, RRA_REMARKS')
+            ->select('RRA_ID, AS_ASSET, RA_QUANTITY, RRA_REMARKS')
             ->where('RRA_RESERVATION_ID', $reservation_id)
             ->where('RRA_ROOM_ID', $room_id)
             ->join('FLXY_ROOM_ASSETS', 'RRA_ROOM_ASSET_ID = RA_ID', 'left')
@@ -61,6 +61,18 @@ class ReceivingFormController extends BaseController
 
     public function submitAssetHandoverForm()
     {
-        $this->request->getVar();
+        $assets = $this->request->getVar('assets');
+
+        foreach($assets as $asset) {
+            $data = [
+                'RRA_ID' => $asset->RRA_ID,
+                'RRA_REMARKS' => $asset->RRA_REMARKS,
+                'RRA_STATUS' => 'Completed',
+            ];
+
+            $this->ReservationRoomAsset->save($data);
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Form Submitted']));
     }
 }
