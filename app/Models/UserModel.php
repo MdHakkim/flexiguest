@@ -8,7 +8,7 @@ class UserModel extends Model
 {
 	protected $DBGroup              = 'default';
 	protected $table                = 'FLXY_USERS';
-	protected $primaryKey           = 'id';
+	protected $primaryKey           = 'USR_ID';
 	protected $useAutoIncrement     = true;
 	protected $insertID             = 0;
 	protected $returnType           = 'array';
