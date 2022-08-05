@@ -154,6 +154,7 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
     });
 
     $routes->get("user-departments", "UserController::userDepartments");
+    $routes->get("get-user-by-department", "UserController::getUserByDepartment");
     
 });
 
