@@ -695,7 +695,7 @@ public function updatePackageDetails()
                     'errors' =>['packageAvailableCheck' => 'Package is not availbale in this time period']],
                     'RSV_PCKG_QTY' => ['label' => 'Quantity', 'rules' => 'required'],
                     'RSV_PCKG_BEGIN_DATE' => ['label' => 'Start Date', 'rules' => 'required|checkPackageStartDate[RSV_PCKG_BEGIN_DATE]|packageDateOverlapCheck[RSV_PCKG_BEGIN_DATE]', 'errors' => ['checkPackageStartDate' => 'Start Date should be between the reservation dates ','packageDateOverlapCheck' => 'Start Date of package overlaps with an existing package. Change the date']],                       
-                    'RSV_PCKG_END_DATE' => ['label' => 'End Date', 'rules' => 'required|checkPackageEndDate[RSV_PCKG_END_DATE]|packageDateOverlapCheck[RSV_PCKG_END_DATE]|compareDate[RSV_PCKG_END_DATE]', 'errors' => ['checkPackageEndDate' => 'End Date should be between the reservation dates ','packageDateOverlapCheck' => 'End Date of package overlaps with an existing package. Change the date','compareDate' => 'The End Date should be after Begin Date']]                  
+                    'RSV_PCKG_END_DATE' => ['label' => 'End Date', 'rules' => 'required|checkPackageEndDate[RSV_PCKG_END_DATE]|packageDateOverlapCheck[RSV_PCKG_END_DATE]', 'errors' => ['checkPackageEndDate' => 'End Date should be between the reservation dates ','packageDateOverlapCheck' => 'End Date of package overlaps with an existing package. Change the date']]                  
                     
                  ];                  
 
@@ -710,12 +710,9 @@ public function updatePackageDetails()
             exit;
         }           
 
-       $return = !empty($RSV_PCKG_ID) ? $this->DB->table('FLXY_RESERVATION_PACKAGES')->where('RSV_PCKG_ID', $RSV_PCKG_ID)->update($data) : $this->DB->table('FLXY_RESERVATION_PACKAGES')->insert($data);
-        
+        $return = !empty($RSV_PCKG_ID) ? $this->DB->table('FLXY_RESERVATION_PACKAGES')->where('RSV_PCKG_ID', $RSV_PCKG_ID)->update($data) : $this->DB->table('FLXY_RESERVATION_PACKAGES')->insert($data);
 
         $result = $return ? $this->responseJson("1", "0", $return, !empty($RSV_PCKG_ID) ? $RSV_PCKG_ID : $this->DB->insertID()) : $this->responseJson("-444", "DB insert not successful", $return);
-
-       
        
         if(!$return)
             $this->session->setFlashdata('error', 'There has been an error. Please try again.');
@@ -806,11 +803,8 @@ public function showPackages()
 
        
         $RSV_PCKG_BEGIN_DATE1    = strtotime($RSV_PCKG_BEGIN_DATE);
-        $RSV_PCKG_END_DATE1      = strtotime($RSV_PCKG_END_DATE); 
+        $RSV_PCKG_END_DATE1  = strtotime($RSV_PCKG_END_DATE); 
         $datediff = $RSV_PCKG_END_DATE1 - $RSV_PCKG_BEGIN_DATE1;
-        if($RSV_PCKG_END_DATE1 == $RSV_PCKG_BEGIN_DATE1)
-        $RESERV_DAYS = 1;
-        else
         $RESERV_DAYS = round($datediff / (60 * 60 * 24));
 
         $ACTUAL_RSV_PCKG_END_DATE  = date("Y-m-d", strtotime("-1 day", strtotime($RSV_PCKG_END_DATE)));  
@@ -836,9 +830,9 @@ public function showPackages()
            
 
             /////////// Posting_Rhythm /////////////
-            if( ($Posting_Rhythm == 5 && ($RSV_PCKG_BEGIN_DATE == $RSV_PCKG_END_DATE)) || $Posting_Rhythm == 1 || $Posting_Rhythm == 2) 
+            if( ($Posting_Rhythm == 5 && ($RSV_PCKG_BEGIN_DATE == $ACTUAL_RSV_PCKG_END_DATE)) || $Posting_Rhythm == 1 || $Posting_Rhythm == 2) 
             {   
-                 $out = 1;   
+                $out = 1;   
                  
             }            
             /////////// else /////////////
@@ -846,18 +840,19 @@ public function showPackages()
                 $out = 0; 
 
             }  
-            if($out == 1){
-                $output.= '<tr>                   
-                <td class="select">'.$RSV_PCKG_BEGIN_DATE.'</td>
-                <td class="select">'.$PKG_CD_DT_PRICE.'</td>
-                <td class="select">'.$RSV_PCKG_TOTAL.'</td>                    
-                    </tr>';
-            }
 
-            $RSV_PCKG_BEGIN_DATE  = date("Y-m-d", strtotime("+$i day", strtotime($RSV_PCKG_BEGIN_DATE))); 
+                if($out == 1){
+                    $output.= '<tr>                   
+                    <td class="select">'.$RSV_PCKG_BEGIN_DATE.'</td>
+                    <td class="select">'.$PKG_CD_DT_PRICE.'</td>
+                    <td class="select">'.$RSV_PCKG_TOTAL.'</td>                    
+                     </tr>';
+                }
 
-            if( $Posting_Rhythm == 2)
-            break;
+                $RSV_PCKG_BEGIN_DATE  = date("Y-m-d", strtotime("+$i day", strtotime($RSV_PCKG_BEGIN_DATE))); 
+
+                if( $Posting_Rhythm == 2)
+                break;
                 
         }
 
@@ -865,305 +860,7 @@ public function showPackages()
     }
 
 
-    public function rateInfoDetails()
-    {
 
-        $output    = '';
-        $RESV_RATE_TOTAL = $STAY_TOTAL = $DEPOSIT =  $FIXED_CHARGES = 0 ;
-        $resvID = $this->request->getPost('resvID');
-
-        $sql = "SELECT RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_RATE, RESV_RATE_CODE     
-                FROM FLXY_RESERVATION 
-                WHERE RESV_ID=".$resvID;  
-        $response = $this->DB->query($sql)->getResultArray();
-        foreach ($response as $row) {
-            $RESV_ARRIVAL_DT    = $row['RESV_ARRIVAL_DT'];
-            $RESV_DEPARTURE     = $row['RESV_DEPARTURE'];
-            $RESV_RATE_CODE     = $row['RESV_RATE_CODE'];            
-            $RESV_RATE          = $row['RESV_RATE'];
-        }
-
-        $RESV_ARRIVAL_DT1    = strtotime($RESV_ARRIVAL_DT);
-        $RESV_DEPARTURE1     = strtotime($RESV_DEPARTURE); 
-        $datediff            = $RESV_DEPARTURE1 - $RESV_ARRIVAL_DT1;
-        if($RESV_DEPARTURE1 == $RESV_ARRIVAL_DT1)
-        $RESERV_DAYS = 1;
-        else
-        $RESERV_DAYS = round($datediff / (60 * 60 * 24)); 
-        $VAT = 0.05;   
-        //echo $RESERV_DAYS;
-
-       
-   
-        for($i = 1; $i <= $RESERV_DAYS; $i++ ){              
-                
-                
-                /////Packages ////////////////
-                $PCK_RATE = $this->getPackageRate($resvID,$RESV_ARRIVAL_DT,$i,$RESERV_DAYS);
-                $generates = ($RESV_RATE+$PCK_RATE) * $VAT;
-                $total = ($RESV_RATE + $PCK_RATE) + $generates;
-
-                $RESV_RATE_TOTAL += $RESV_RATE;
-                $STAY_TOTAL += $total;
-
-                /////Fixed Charges //////////////
-                $FIXED_CHARGES += $this->getFixedCharges($resvID,$RESV_ARRIVAL_DT,$i);
-
-
-                $output.= '<tr>                   
-                <td class="select">'.$RESV_ARRIVAL_DT.'</td>
-                <td class="select">'.$RESV_RATE_CODE.'</td>
-                <td class="select">'.number_format(($RESV_RATE),2, '.', '').'</td> 
-                <td class="select">'.number_format(($PCK_RATE),2, '.', '').'</td>
-                <td class="select">'.number_format(($RESV_RATE+$PCK_RATE),2, '.', '').'</td> 
-                <td class="select">'.number_format(($generates),2, '.', '').'</td> 
-                <td class="select">'.number_format(($total),2, '.', '').'</td>                   
-                </tr>';            
-
-                $RESV_ARRIVAL_DT  = date("Y-m-d", strtotime("+{$i} day", $RESV_ARRIVAL_DT1)); 
-
-        }
-
-        $TOTAL_COST_OF_STAY = ($STAY_TOTAL + $FIXED_CHARGES);
-
-        $total_output = '<tr><td></td><td>Stay Total</td><td>AED '.number_format(($STAY_TOTAL),2, '.', '').'</td></tr>
-       
-        <tr><td></td><td>Fixed Charges</td><td>AED '.number_format(($FIXED_CHARGES),2, '.', '').'</td></tr>
-        <tr><td></td><td>Total Cost of Stay</td><td>AED '.number_format(($TOTAL_COST_OF_STAY),2, '.', '').'</td></tr>
-        <tr><td></td><td>Deposit</td><td>AED '.number_format(($DEPOSIT),2, '.', '').'</td></tr>
-        <tr><td></td><td>Outstanding Stay Total</td><td>AED '.number_format((($TOTAL_COST_OF_STAY - $DEPOSIT)),2, '.', '').'</td></tr>';
-        $data = ['output' => $output, 'total_output' => $total_output];
-
-        echo json_encode($data);
-    }
-
-
-    function getPackageRate($resvID,$date,$day, $RESERV_DAYS){
-        // package id and quantity, reserv start date end date,
-
-        $PCK_TOTAL = $flag  = 0;
-        $sql = "SELECT PO_RH_ID,PKG_CD_DT_PRICE,RSV_PCKG_QTY    
-        FROM FLXY_RESERVATION_PACKAGES INNER JOIN FLXY_PACKAGE_CODE ON  PKG_CD_ID = PCKG_ID INNER JOIN FLXY_PACKAGE_CODE_DETAIL ON FLXY_PACKAGE_CODE_DETAIL.PKG_CD_ID = FLXY_RESERVATION_PACKAGES.PCKG_ID
-        WHERE PKG_CD_DT_STATUS = '1' AND ('$date' BETWEEN PKG_CD_START_DT AND PKG_CD_END_DT) AND RSV_ID = ".$resvID; 
-        $response = $this->DB->query($sql)->getResultArray();
-        if(!empty($response)){
-            foreach ($response as $row) {
-                if($row['PO_RH_ID'] == 1){
-                    $PCK_TOTAL += ($row['RSV_PCKG_QTY'] * $row['PKG_CD_DT_PRICE']);
-                }  
-                else if($row['PO_RH_ID'] == 2 && $day == 1) {
-                    $PCK_TOTAL += ($row['RSV_PCKG_QTY'] * $row['PKG_CD_DT_PRICE']);
-                   
-                }  
-                
-                else if($row['PO_RH_ID'] == 5 && $day == $RESERV_DAYS) {
-                    $PCK_TOTAL += ($row['RSV_PCKG_QTY'] * $row['PKG_CD_DT_PRICE']);
-                    
-                }  
-            }
-        }
-       
-        return number_format(($PCK_TOTAL),2, '.', '');       
-
-    }
-
-
-    function getFixedCharges($resvID,$RESV_ARRIVAL_DT,$day){
-        $VAT = 0.05; $fixedChargesTotal = $fixedChargesVATTotal = 0;
-        $RESV_ARRIVAL_DATE = strtotime($RESV_ARRIVAL_DT);
-        $sCurrentDate = gmdate("d-m-Y", strtotime("+$day day", $RESV_ARRIVAL_DATE)); 
-        $CurrentDate  = strtotime($sCurrentDate); 
-        $sCurrentDay  = gmdate("w", strtotime("+{$day} day", $RESV_ARRIVAL_DATE));
-        $sCurrentD    = gmdate("d", strtotime("+{$day} day", $RESV_ARRIVAL_DATE)); 
-
-        $sql = "SELECT * FROM FLXY_FIXED_CHARGES WHERE FIXD_CHRG_RESV_ID = ".$resvID;  
-        $fixedChargesResponse = $this->DB->query($sql)->getResultArray();
-        if(!empty($fixedChargesResponse)){
-            foreach($fixedChargesResponse as $fixedCharges) {
-                $FIXD_CHRG_BEGIN_DATE =gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_BEGIN_DATE'])));
-                        $FIXD_CHRG_END_DATE = gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_END_DATE'])));
-                        $FIXD_CHRG_FREQUENCY = $fixedCharges['FIXD_CHRG_FREQUENCY'];
-
-                        $FIXD_CHRG_BEGIN_DATE = strtotime($FIXD_CHRG_BEGIN_DATE);
-                        $FIXD_CHRG_END_DATE = strtotime($FIXD_CHRG_END_DATE);
-
-                        if($FIXD_CHRG_FREQUENCY == 1 && $CurrentDate == $FIXD_CHRG_BEGIN_DATE){
-                            $ONCE = 1;
-                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
-                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
-                            $fixedChargesTotal += $fixedChargesAMOUNT; 
-                            $fixedChargesVATTotal += $fixedChargesVAT;
-                        }
-                        else if($FIXD_CHRG_FREQUENCY == 2 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE)){
-                           
-                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
-                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
-                            $fixedChargesTotal += $fixedChargesAMOUNT; 
-                            $fixedChargesVATTotal += $fixedChargesVAT;
-                        }
-                        else if($FIXD_CHRG_FREQUENCY == 3 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentDay == $fixedCharges['FIXD_CHRG_WEEKLY'])){
-                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
-                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
-                            $fixedChargesTotal += $fixedChargesAMOUNT; 
-                            $fixedChargesVATTotal += $fixedChargesVAT;
-                        }
-                        else if($FIXD_CHRG_FREQUENCY == 4 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentD == $fixedCharges['FIXD_CHRG_MONTHLY'])){
-                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
-                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
-                            $fixedChargesTotal += $fixedChargesAMOUNT; 
-                            $fixedChargesVATTotal += $fixedChargesVAT;
-                        }
-                        else if($FIXD_CHRG_FREQUENCY == 6 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && (date('d-m',$sCurrentDate) == date('d-m',$fixedCharges['FIXD_CHRG_YEARLY']))){
-                            $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
-                            $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
-                            $fixedChargesTotal += $fixedChargesAMOUNT; 
-                            $fixedChargesVATTotal += $fixedChargesVAT;
-                        }
-            }
-
-            return ($fixedChargesTotal + $fixedChargesVATTotal);
-        }
-                 
-    }
-
-
-    //////////////////// TRACES ///////////////
-
-
-    public function showTraces()
-    { 
-        $mine = new ServerSideDataTable(); // loads and creates instance
-        //Reservation ID 
-        $RESV_ID = $this->request->getPost('TRACE_RESV_ID');
-        $session_id = session_id();
-        $init_cond = '';
-
-        if($RESV_ID > 0)
-        $init_cond = array("RSV_ID = " => $RESV_ID, "RSV_TRACE_STATUS = " => 1);   
-        
-        $tableName = '( SELECT  RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_TIME,
-                                DEPT_CODE,DEPT_DESC,
-                                UE.USR_FIRST_NAME AS UE_FIRST_NAME,UE.USR_LAST_NAME AS UE_LAST_NAME, 
-                                UR.USR_FIRST_NAME AS UR_FIRST_NAME,UR.USR_LAST_NAME AS UR_LAST_NAME, RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_STATUS FROM
-                        FLXY_RESERVATION_TRACES INNER JOIN FLXY_DEPARTMENT ON RSV_TRACE_DEPARTMENT = DEPT_ID INNER JOIN FLXY_USERS UE ON UE.USR_ID = RSV_TRACE_ENTERED_BY LEFT JOIN FLXY_USERS UR ON UR.USR_ID = RSV_TRACE_RESOLVED_BY) TRACE_LIST';
-
-        $columns = 'RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_TIME,UE_FIRST_NAME,UE_LAST_NAME,UR_FIRST_NAME,UR_LAST_NAME,DEPT_CODE,DEPT_DESC,RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_STATUS';
-        
-        $mine->generate_DatatTable($tableName, $columns, $init_cond);  
-        
-        exit;
-    }
-
-    public function showTraceDetails()
-    {
-        $traceDetails = $this->getTraceDetails($this->request->getPost('RSV_TRACE_ID'));
-        echo json_encode($traceDetails);
-    }
-
-    public function getTraceDetails($RSV_TRACE_ID = 0)
-    {
-        $param = ['SYSID' => $RSV_TRACE_ID];
-        $sql = "SELECT *           
-                FROM dbo.FLXY_RESERVATION_TRACES
-                WHERE RSV_TRACE_ID=:SYSID:";       
-
-        $response = $this->DB->query($sql, $param)->getResultArray();
-        return $response;
-    }
-
-    public function updateTraces()
-    {
-        try {
-            $RSV_TRACE_ID           =  $this->request->getPost('RSV_TRACE_ID');
-            $RSV_ID                 =  $this->request->getPost('TRACE_RESV_ID');
-            $RSV_TRACE_DATE         =  $this->request->getPost('RSV_TRACE_DATE');
-            $RSV_TRACE_TIME         =  $this->request->getPost('RSV_TRACE_TIME');
-            $RSV_TRACE_DEPARTMENT   =  $this->request->getPost('RSV_TRACE_DEPARTMENT'); 
-            $RSV_TRACE_TEXT         =  $this->request->getPost('RSV_TRACE_TEXT');
-                
-
-            $data = [
-                "RSV_ID"                  => $RSV_ID,
-                "RSV_TRACE_DEPARTMENT"    => $RSV_TRACE_DEPARTMENT,
-                "RSV_TRACE_DATE"          => $RSV_TRACE_DATE,
-                "RSV_TRACE_TIME"          => $RSV_TRACE_TIME,
-                "RSV_TRACE_ENTERED_BY"    => session()->get('USR_ID'),
-                "RSV_TRACE_RESOLVED_BY"   => 0,
-                "RSV_TRACE_TEXT"          => $RSV_TRACE_TEXT,
-                "RSV_TRACE_STATUS"        => '1'
-                              
-                ];
-
-            $rules = [  'RSV_TRACE_DEPARTMENT' => ['label' => 'Department code', 'rules' => 'required'],
-                        'RSV_TRACE_DATE' => ['label' => 'Date', 'rules' => 'required|checkReservationTraceDate[RSV_TRACE_DATE]', 'errors' => ['checkReservationTraceDate' => 'Trace Date should be between the Reservation dates']],
-                        'RSV_TRACE_TIME' => ['label' => 'Time', 'rules' => 'required'],
-                        'RSV_TRACE_TEXT' => ['label' => 'Trace Text', 'rules' => 'required']                             
-                     ];          
-
-                   
-
-            $validate = $this->validate($rules);
-            
-            if (!$validate) {
-                $validate = $this->validator->getErrors();
-                $result["SUCCESS"] = "-402";
-                $result[]["ERROR"] = $validate;
-                $result = $this->responseJson("-402", $validate);
-                echo json_encode($result);
-                exit;
-            }
-           
-            $return = !empty($RSV_TRACE_ID) ? $this->DB->table('FLXY_RESERVATION_TRACES')->where('RSV_TRACE_ID', $RSV_TRACE_ID)->update($data) : $this->DB->table('FLXY_RESERVATION_TRACES')->insert($data);
-
-            $result = $return ? $this->responseJson("1", "0", $return, !empty($RSV_TRACE_ID) ? $RSV_TRACE_ID : $this->DB->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
-
-
-            if(!$return)
-                $this->session->setFlashdata('error', 'There has been an error. Please try again.');
-            else
-            {
-               
-                  
-            }
-            echo json_encode($result);
-
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-    }
-
-
-    public function deleteTraces()
-    {
-        $RSV_TRACE_ID = $this->request->getPost('TRACE_ID');
-
-        try {
-            $return = $this->DB->table('FLXY_RESERVATION_TRACES')->delete(['RSV_TRACE_ID' => $RSV_TRACE_ID]); 
-            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
-            echo json_encode($result);
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-        
-    }
-
-    public function resolveTraces()
-    {
-        $RSV_TRACE_ID = $this->request->getPost('TRACE_ID');
-        $RESOLVE = $this->request->getPost('resolve');
-        $user_id = session()->get('USR_ID');
-        if($RESOLVE == 2)
-        $data = ['RSV_TRACE_RESOLVED_BY'=> '', 'RSV_TRACE_RESOLVED_ON' => '' ];
-        else
-        $data = ['RSV_TRACE_RESOLVED_BY'=> $user_id, 'RSV_TRACE_RESOLVED_ON' => date('Y-m-d') ];
-        try {
-            $return = $this->DB->table('FLXY_RESERVATION_TRACES')->where('RSV_TRACE_ID', $RSV_TRACE_ID)->update($data);            
-            echo json_encode($return);
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-        
-    }
 
 
 }

@@ -5793,7 +5793,7 @@ $(document).on('click', '.save-package-detail', function() {
     });
 });
 
-// Add new package Detail
+// Add new item Detail
 
 $(document).on('click', '.add-package-detail', function() {
     hideModalAlerts();

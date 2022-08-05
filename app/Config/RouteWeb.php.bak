@@ -526,26 +526,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/showPackages', 'ReservationController::showPackages');
       $routes->match(['post'],'/showPackageDetails', 'ReservationController::showPackageDetails'); 
       $routes->match(['post'],'/deletePackageDetail', 'ReservationController::deletePackageDetail'); 
-      $routes->match(['post'],'/showSinglePackageDetails', 'ReservationController::showSinglePackageDetails'); 
-      $routes->match(['post'],'/rateInfoDetails', 'ReservationController::rateInfoDetails'); 
-
-      $routes->match(['post'],'/rateInfoDetails', 'ReservationController::rateInfoDetails'); 
-      $routes->match(['post'],'/departmentList', 'UserController::departmentList'); 
-
-      $routes->match(['post'],'/updateTraces', 'ReservationController::updateTraces'); 
-      $routes->match(['post'],'/showTraces', 'ReservationController::showTraces'); 
-      $routes->match(['post'],'/deleteTraces', 'ReservationController::deleteTraces');
-      $routes->match(['post'],'/showTraceDetails', 'ReservationController::showTraceDetails');
-      $routes->match(['post'],'/resolveTraces', 'ReservationController::resolveTraces');
-      
-
-      
-
-      
-
-      
-      
-      
+      $routes->match(['post'],'/showSinglePackageDetails', 'ReservationController::showSinglePackageDetails');  
        
       
       
