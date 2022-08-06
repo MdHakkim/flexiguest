@@ -43,33 +43,37 @@
     text-align: left !important;
     padding-left: 30% !important;
 }
-#Rate_info_length, #Rate_info_info, #Rate_info_paginate{
+
+#Rate_info_length,
+#Rate_info_info,
+#Rate_info_paginate {
     display: none;
 }
 
 .Rate_Info_Div thead th {
-      position: sticky;
-      top: 0;
-    }
+    position: sticky;
+    top: 0;
+}
 
-    .Rate_Info_Div {
-      overflow-y: auto;
-      height: 110px;
-    }
-    .Rate_Info_Div thead th {
-      position: sticky;
-      top: 0;
-    }
-    .Rate_Info_Div table {
-      border-collapse: collapse;        
-      width: 100%;
-    }
-    .Rate_Info_Div th
-     {
-      padding: 10px 15px;
-      border: 2px solid #529432;
-    }
-    
+.Rate_Info_Div {
+    overflow-y: auto;
+    height: 110px;
+}
+
+.Rate_Info_Div thead th {
+    position: sticky;
+    top: 0;
+}
+
+.Rate_Info_Div table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.Rate_Info_Div th {
+    padding: 10px 15px;
+    border: 2px solid #529432;
+}
 </style>
 
 <!-- Content wrapper -->
@@ -343,8 +347,7 @@
                 <div class="modal-body">
                     <div id="Accompany">
                         <div class="flxy_opt_btn text-center">
-                            <button type="button" onClick="reservExtraOption('ACP')"
-                                class="btn btn-primary">Accompanying</button>
+                            <button type="button" class="btn btn-primary accompany-guests">Accompanying</button>
                             <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add
                                 On</button>
                             <button type="button" class="btn btn-primary show-activity-log">Changes</button>
@@ -358,8 +361,9 @@
                                 onclick="reservationCheckout()">Checkout</button>
                             <button type="button" class="btn btn-primary web-link-btn">Docs</button>
                             <button type="button" class="btn btn-primary shares-btn">Shares</button>
-                            <button type="button" class="btn btn-primary" onclick="getRateInfo()" id="rateInfoButton" data_sysid="">Rate Info.</button>
-                            <button type="button" class="btn btn-primary"  id="traceButton" data_sysid="">Traces</button>
+                            <button type="button" class="btn btn-primary" onclick="getRateInfo()" id="rateInfoButton"
+                                data_sysid="">Rate Info.</button>
+                            <button type="button" class="btn btn-primary" id="traceButton" data_sysid="">Traces</button>
 
 
                         </div>
@@ -1322,7 +1326,7 @@
                             <button type="button" id="previousbtn" onClick="previous()" class="btn btn-primary"><i
                                     class="fa-solid fa-angle-left"></i> Previous</button>
                             <button type="button" id="optionsResrBtn" data_sysid=""
-                                class="btn btn-info reserOption me-1">Options</button>
+                                class="btn btn-info reserOption me-1" style="margin-left: auto;">Options</button>
                             <button type="button" id="submitResrBtn" onClick="submitForm('reservationForm','R',event)"
                                 class="btn btn-primary submitResr">Save</button>
                             <!--  -->
@@ -1484,20 +1488,23 @@
                                     </span>
                                 </div>
                             </div>
-                        
+
                             <div class="col-md-3">
                                 <label class="form-label">Document Number</label>
-                                <input type="text" name="CUST_DOC_NUMBER" class="form-control" placeholder="Document number" />
+                                <input type="text" name="CUST_DOC_NUMBER" class="form-control"
+                                    placeholder="Document number" />
                             </div>
 
                             <div class="col-md-3">
                                 <label class="form-label">Doc Issue Date</label>
-                                <input type="text" name="CUST_DOC_ISSUE" class="form-control CUST_DOC_ISSUE" placeholder="YYYY-MM-DD" />
+                                <input type="text" name="CUST_DOC_ISSUE" class="form-control CUST_DOC_ISSUE"
+                                    placeholder="YYYY-MM-DD" />
                             </div>
 
                             <div class="col-md-3">
                                 <label class="form-label">Doc Expiry Date</label>
-                                <input type="text" name="CUST_DOC_EXPIRY" class="form-control CUST_DOC_EXPIRY" placeholder="YYYY-MM-DD" />
+                                <input type="text" name="CUST_DOC_EXPIRY" class="form-control CUST_DOC_EXPIRY"
+                                    placeholder="YYYY-MM-DD" />
                             </div>
 
                             <!-- <div class="col-md-3">
@@ -1505,7 +1512,7 @@
                                 <input type="text" name="CUST_PASSPORT" id="CUST_PASSPORT" class="form-control"
                                     placeholder="passport" />
                             </div> -->
-                            
+
                             <div class="col-md-3">
                                 <label class="form-label">Address</label>
                                 <input type="text" name="CUST_ADDRESS_1" id="CUST_ADDRESS_1" class="form-control"
@@ -1514,14 +1521,14 @@
                                     address is required can't empty.
                                 </div>
                             </div>
-                            
+
                             <!-- <div class="col-md-3 flxy_mgtop"> -->
                             <div class="col-md-3">
                                 <label class="form-label"></label>
                                 <input type="text" name="CUST_ADDRESS_2" id="CUST_ADDRESS_2" class="form-control"
                                     placeholder="address 2" />
                             </div>
-                            
+
                             <!-- <div class="col-md-3" style="margin-top: 23px !important;"> -->
                             <div class="col-md-3">
                                 <label class="form-label"></label>
@@ -2715,62 +2722,63 @@
                     <h4 class="modal-title" id="popModalWindowlabel">Rate Info</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">                    
-                        <div id="rate_info" class="content">
-                            <div class="row g-3">                               
-                                <div class="col-md-12">
-                                    <div class="border rounded p-4 mb-3"> 
-                                        <div class="table-responsive text-nowrap Rate_Info_Div" style="height: 350px; overflow: auto">
-                                            <table id="Rate_info" class="table table-bordered table-hover" style="height: 350px;">
-                                                <thead class="table-dark">
-                                                    <tr>
-                                                        <th class="all" >Date</th>
-                                                        <th class="all">Rate Code</th>
-                                                        <th class="all">Room Revenue</th>
-                                                        <th class="all">Packages</th>
-                                                        <th class="all">Sub Total</th>
-                                                        <th class="all">Generates</th>
-                                                        <th class="all">Total</th>
-                                                      
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                            
-                                        </div>
+                <div class="modal-body">
+                    <div id="rate_info" class="content">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <div class="border rounded p-4 mb-3">
+                                    <div class="table-responsive text-nowrap Rate_Info_Div"
+                                        style="height: 350px; overflow: auto">
+                                        <table id="Rate_info" class="table table-bordered table-hover"
+                                            style="height: 350px;">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th class="all">Date</th>
+                                                    <th class="all">Rate Code</th>
+                                                    <th class="all">Room Revenue</th>
+                                                    <th class="all">Packages</th>
+                                                    <th class="all">Sub Total</th>
+                                                    <th class="all">Generates</th>
+                                                    <th class="all">Total</th>
+
+                                                </tr>
+                                            </thead>
+                                        </table>
+
                                     </div>
                                 </div>
-                                
                             </div>
 
-                            <div class="row g-3">                               
-                                <div class="col-md-12">
-                                    <div class="p-4 mb-3" style="float: right"> 
-                                        <div class="table-responsive text-nowrap" >
-                                            <table id="Rate_info_total" class="table table-hover" style="float:right" >
-                                                <tbody>
-                                                   
-                                                </tbody>
-                                            </table>
-                                        </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <div class="p-4 mb-3" style="float: right">
+                                    <div class="table-responsive text-nowrap">
+                                        <table id="Rate_info_total" class="table table-hover" style="float:right">
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-
-                                <div class="d-flex col-12 justify-content-between">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
-                                </div>
-                              
                             </div>
-                        </div> 
+
+                            <div class="d-flex col-12 justify-content-between">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+
+                        </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
     <!-- End Rate Info  -->
 
 
-        <!-- Traces Modal window -->
-        <div class="modal fade" id="tracesModal" data-backdrop="static" data-keyboard="false"
+    <!-- Traces Modal window -->
+    <div class="modal fade" id="tracesModal" data-backdrop="static" data-keyboard="false"
         aria-labelledby="popModalWindowlabel">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -2817,11 +2825,11 @@
                                         <div class="col-md-3 mb-3">
                                             <label for="RESERVATION_STATUS" class="col-form-label col-md-4"><b>
                                                     Status</b></label>
-                                            <input type="text" name="RESERVATION_STATUS" id="RESERVATION_STATUS" class="form-control"
-                                                disabled />
-                                        </div>                                        
+                                            <input type="text" name="RESERVATION_STATUS" id="RESERVATION_STATUS"
+                                                class="form-control" disabled />
+                                        </div>
                                     </div>
-                               
+
                                     <div class="row g-3 ">
                                         <div class="col-md-4 mb-3">
                                             <label for="RSV_TRACE_DATE" class="col-form-label col-md-4"><b>Trace
@@ -2829,9 +2837,10 @@
                                             <input class="form-control" type="text" placeholder="d-Mon-yyyy"
                                                 id="RSV_TRACE_DATE" name="RSV_TRACE_DATE" />
                                         </div>
-                                       
+
                                         <div class="col-md-4 ">
-                                            <label for="RSV_TRACE_TIME" class="col-form-label col-md-4"><b>Time *</b></label>
+                                            <label for="RSV_TRACE_TIME" class="col-form-label col-md-4"><b>Time
+                                                    *</b></label>
                                             <input class="form-control" type="time" placeholder="12:00"
                                                 id="RSV_TRACE_TIME" name="RSV_TRACE_TIME" />
                                         </div>
@@ -2841,18 +2850,19 @@
                                             <select id="RSV_TRACE_DEPARTMENT" name="RSV_TRACE_DEPARTMENT"
                                                 class="select2 form-select form-select-lg"></select>
                                         </div>
-                                        
+
                                     </div>
                                     <div class="row g-3 mb-3">
-                                        
+
                                         <div class="col-md-12 ">
                                             <label for="RSV_TRACE_TEXT" class="col-form-label col-md-4"><b>TRACE TEXT
                                                     *</b></label>
-                                            <textarea name="RSV_TRACE_TEXT" id="RSV_TRACE_TEXT" rows="5" class="form-control"></textarea>
+                                            <textarea name="RSV_TRACE_TEXT" id="RSV_TRACE_TEXT" rows="5"
+                                                class="form-control"></textarea>
 
                                         </div>
 
-                                        
+
                                     </div>
 
                                     <div class="row g-3 ">
@@ -2872,8 +2882,9 @@
                                             <button type="button" class="btn btn-primary add-trace-detail">
                                                 <i class="fa-solid fa-circle-plus"></i>&nbsp; Add New
                                             </button>&nbsp;
-                                            <button type="button" class="btn btn-primary resolve-trace-detail" data-rel="1">
-                                            <i class="fa-solid fa-check"></i>&nbsp; Resolve
+                                            <button type="button" class="btn btn-primary resolve-trace-detail"
+                                                data-rel="1">
+                                                <i class="fa-solid fa-check"></i>&nbsp; Resolve
                                             </button>&nbsp;
 
                                             <button type="button" class="btn btn-danger delete-trace-detail">
@@ -2932,19 +2943,19 @@ var linkMode = '';
 var windowmode = '';
 
 $(document).ready(function() {
-$('#Rate_info').DataTable({
-    "ordering": false,
-    "searching": false,
-    autowidth: true,
-    responsive: true
-});
+    $('#Rate_info').DataTable({
+        "ordering": false,
+        "searching": false,
+        autowidth: true,
+        responsive: true
+    });
 
-$('#Each_Package_Details').DataTable({
-    "ordering": true,
-    "searching": false,
-    autowidth: true,
-    responsive: true
-});
+    $('#Each_Package_Details').DataTable({
+        "ordering": true,
+        "searching": false,
+        autowidth: true,
+        responsive: true
+    });
 
     linkMode = 'EX';
     $('#loader_flex_bg').show();
@@ -2980,7 +2991,8 @@ $('#Each_Package_Details').DataTable({
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
                         '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
-                            'RM_TY_DESC'] + '" data-reservation_customer_id = "' + data['CUST_ID'] +
+                            'RM_TY_DESC'] + '" data-reservation_customer_id = "' + data[
+                            'CUST_ID'] +
                         '"  class="dropdown-item reserOption text-success"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
                         // '<div class="dropdown-divider"></div>' +
                         '<div class="dropdown-divider"></div>' +
@@ -3130,7 +3142,7 @@ $('#Each_Package_Details').DataTable({
         startDate: '-0m',
         validateOnBlur: false
     });
-    
+
     //$('#RSV_TRACE_TIME').timepicker();
 
     $.ajax({
@@ -3482,7 +3494,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 
     $('.window-1,#nextbtn,#previousbtn').hide();
     $('.window-2').show();
-    $('.flxyFooter').removeClass('flxy_space');
+    //$('.flxyFooter').removeClass('flxy_space');
     $('#submitResrBtn').removeClass('submitResr');
     $('#reservationW').modal('show');
 
@@ -3678,7 +3690,7 @@ function addResvation() {
     $('#reservationWlable').html('Add New Reservation');
     runSupportingResevationLov();
     $('.window-1,#nextbtn').show();
-    $('.flxyFooter').addClass('flxy_space');
+    //$('.flxyFooter').addClass('flxy_space');
     $('#submitResrBtn').addClass('submitResr');
     $('#submitResrBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('.window-2,#previousbtn,#optionsResrBtn').hide();
@@ -4339,26 +4351,7 @@ $(document).on('click', '.activeRow,#customeTrigger', function() {
         $('.activeRow').removeClass('activeTr');
         $(this).addClass('activeTr');
         custId = $(this).attr('data_sysid');
-    }
-
-    $('#appcompanyWindow').modal('show');
-
-    $.ajax({
-        url: '<?php echo base_url('/getExistingAppcompany') ?>',
-        type: "post",
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        data: {
-            custId: custId,
-            ressysId: ressysId                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-        },
-        dataType: 'json',
-        success: function(respn) {
-            var respone = respn['table'];
-            $('#accompanyTd').html(respone);
-        }
-    });
+    }    
 });
 
 $(document).on('click', '.getExistCust .select', function() {
@@ -4435,7 +4428,7 @@ var copyresr = [];
 
 function reservExtraOption(param) {
     if (param == 'ACP') {
-        childReservation();
+        //childReservation();
         //$('#Addon').hide();
         $('#Addon').modal('hide');
         //$('#Accompany').show();
@@ -4449,6 +4442,32 @@ function reservExtraOption(param) {
             'refresh');
     }
 }
+
+$(document).on('click', '.accompany-guests', function() {
+    
+    //alert(ressysId);
+
+    $('#appcompanyWindow').modal('show');
+
+    $.ajax({
+        url: '<?php echo base_url('/getExistingAppcompany') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            custId: custId,
+            ressysId: ressysId
+        },
+        dataType: 'json',
+        success: function(respn) {
+            var respone = respn['table'];
+            $('#accompanyTd').html(respone);
+        }
+    });
+    
+});
+
 
 
 $(document).on('change', '.copyReser', function() {
@@ -6054,11 +6073,11 @@ function loadPackageDetails(packageID) {
         success: function(respn) {
             $('#Each_Package_Details > tbody').html(respn);
         }
-    });     
+    });
 }
 
-function getRateInfo() {  
-    resvID = $('#rateInfoButton').attr('data_sysid');   
+function getRateInfo() {
+    resvID = $('#rateInfoButton').attr('data_sysid');
     $('#RateInfoModal').modal('show');
     $.ajax({
         url: '<?php echo base_url('/rateInfoDetails') ?>',
@@ -6078,7 +6097,7 @@ function getRateInfo() {
         }
 
 
-    });   
+    });
 }
 
 
@@ -6088,7 +6107,7 @@ function getRateInfo() {
 ///////////////Traces/////////////
 
 $(document).on('click', '#traceButton', function() {
-    
+
     $('#tracesModal').modal('show');
     var reservID = $(this).attr('data_sysid');
     $("#TRACE_RESV_ID").val(reservID);
@@ -6111,7 +6130,7 @@ $(document).on('click', '#traceButton', function() {
             $('#TRACE_ARRIVAL').val(respn.RESV_ARRIVAL_DT);
             $('#TRACE_DEPARTURE').val(respn.RESV_DEPARTURE);
             $('#TRACE_ARRIVAL_DT').val(respn.RESV_ARRIVAL_DT);
-            $('#TRACE_DEPARTURE_DT').val(respn.RESV_DEPARTURE);           
+            $('#TRACE_DEPARTURE_DT').val(respn.RESV_DEPARTURE);
             $('#RSV_TRACE_DATE').val(respn.RESV_ARRIVAL_DT);
         }
     });
@@ -6143,8 +6162,8 @@ $(document).on('click', '.add-trace-detail', function() {
     $('#RSV_TRACE_TIME').val('');
     $('#RSV_TRACE_TEXT').val('');
     $('#RSV_TRACE_ID').val('');
-    
-    
+
+
 
     bootbox.dialog({
         message: "Do you want to add a new fixed charges?",
@@ -6154,7 +6173,7 @@ $(document).on('click', '.add-trace-detail', function() {
                 className: 'btn-success',
                 callback: function(result) {
                     if (result) {
-                        
+
                         $('#tracesDiv').find('tr.table-warning').removeClass(
                             'table-warning');
 
@@ -6291,7 +6310,7 @@ function showTraces(resvID) {
                         return '';
                 }
             },
-           
+
 
         ],
         "order": [
@@ -6339,20 +6358,21 @@ function loadTraceDetails(TRACE_ID) {
                 $.each(data, function(fields, datavals) {
 
                     var field = $.trim(fields);
-                    var dataval = $.trim(datavals); 
+                    var dataval = $.trim(datavals);
                     // alert(field);
                     // alert(dataval);
-                    
+
                     if (field == 'RSV_TRACE_RESOLVED_BY' && (dataval != 0)) {
-                       $(".resolve-trace-detail").attr('data-rel',2);
-                       $(".resolve-trace-detail").html('<i class="fa-solid fa-check"></i> Unresolve');
-                    }else if(field == 'RSV_TRACE_RESOLVED_BY' && (dataval == 0)){
-                        $(".resolve-trace-detail").html('<i class="fa-solid fa-check"></i> Resolve');
-                        $(".resolve-trace-detail").attr('data-rel',1);
-                    }
-                    else if (field == 'RSV_TRACE_DEPARTMENT') {
+                        $(".resolve-trace-detail").attr('data-rel', 2);
+                        $(".resolve-trace-detail").html(
+                            '<i class="fa-solid fa-check"></i> Unresolve');
+                    } else if (field == 'RSV_TRACE_RESOLVED_BY' && (dataval == 0)) {
+                        $(".resolve-trace-detail").html(
+                            '<i class="fa-solid fa-check"></i> Resolve');
+                        $(".resolve-trace-detail").attr('data-rel', 1);
+                    } else if (field == 'RSV_TRACE_DEPARTMENT') {
                         $('#' + field).val(dataval).trigger('change');
-                    
+
                     } else {
                         $('#' + field).val(dataval);
 
@@ -6425,7 +6445,7 @@ $(document).on('click', '.delete-trace-detail', function() {
 
 
 $(document).on('click', '#Trace_Details > tbody > tr', function() {
-   
+
     $('#Trace_Details').find('tr.table-warning').removeClass('table-warning');
     $(this).addClass('table-warning');
     $.when(loadTraceDetails($(this).data('trace_id')))
@@ -6445,8 +6465,8 @@ $(document).on('click', '.resolve-trace-detail', function() {
         url: '<?php echo base_url('/resolveTraces') ?>',
         type: "post",
         data: {
-            TRACE_ID:TRACE_ID,
-            resolve:resolve
+            TRACE_ID: TRACE_ID,
+            resolve: resolve
         },
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -6454,7 +6474,7 @@ $(document).on('click', '.resolve-trace-detail', function() {
         dataType: 'json',
         success: function(respn) {
             var response = respn['SUCCESS'];
-            if (response == '0') {               
+            if (response == '0') {
                 showModalAlert('error',
                     '<li>The trace cannot be resolved</li>');
                 $('#warningModal').delay(2500).fadeOut();
@@ -6462,9 +6482,9 @@ $(document).on('click', '.resolve-trace-detail', function() {
                 blockLoader('#tracesDiv');
                 showModalAlert('info',
                     '<li>The trace has been resolved</li>');
-                $('#warningModal').delay(2500).fadeOut(); 
+                $('#warningModal').delay(2500).fadeOut();
                 showTraces(resvID);
-                
+
             }
         }
     });
