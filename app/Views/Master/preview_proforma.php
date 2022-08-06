@@ -150,6 +150,8 @@
       padding-top: 20px;
     }
   </style>
+  <title>Pro-Forma Folio - <?php echo $RESV_NO;?></title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicon/favicon.ico" />
 </head>
 
 <body>

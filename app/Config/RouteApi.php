@@ -155,7 +155,13 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
 
     $routes->get("user-departments", "UserController::userDepartments");
     $routes->get("get-user-by-department", "UserController::getUserByDepartment");
-    
+
+    $routes->group('maintenance', function ($routes) {
+        $routes->post("assign-task", "MaintenanceController::assignTask");
+        $routes->post("update-status", "MaintenanceController::updateStatus");
+        $routes->post("add-comment", "MaintenanceController::addComment");
+        $routes->get("get-comments", "MaintenanceController::getComments");
+    });
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function ($routes) {

@@ -1344,7 +1344,7 @@ class AdditionalController extends BaseController
             $options->setDefaultFont('Courier');
             $dompdf = new \Dompdf\Dompdf($options);
 
-            $sql = "SELECT CUST_FIRST_NAME+' '+CUST_MIDDLE_NAME+' '+ CUST_LAST_NAME AS FULLNAME, CUST_EMAIL, cname, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO, RESV_RATE FROM FLXY_RESERVATION LEFT JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID LEFT JOIN COUNTRY ON iso2 = CUST_COUNTRY WHERE RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
+            $sql = "SELECT CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, CUST_EMAIL, cname, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO, RESV_RATE FROM FLXY_RESERVATION LEFT JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID LEFT JOIN COUNTRY ON iso2 = CUST_COUNTRY WHERE RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
             $response = $this->Db->query($sql)->getResultArray();
 
             if(!empty($response)){
@@ -1770,7 +1770,7 @@ class AdditionalController extends BaseController
             $dompdf->render();           
             $canvas = $dompdf->getCanvas();
             $canvas->page_text(18, 780, "{PAGE_NUM} / {PAGE_COUNT}", '', 6, array(0,0,0));
-            $dompdf->stream("my_pdf.pdf", array("Attachment" => 0));
+            $dompdf->stream("RESERVATON_".$_SESSION['PROFORMA_RESV_ID'].".pdf", array("Attachment" => 0));
            
         }
 
@@ -1784,7 +1784,7 @@ class AdditionalController extends BaseController
             $options->setDefaultFont('Courier');
             $dompdf = new \Dompdf\Dompdf($options);
 
-            $sql = "SELECT CUST_FIRST_NAME+' '+CUST_MIDDLE_NAME+' '+ CUST_LAST_NAME AS FULLNAME, CUST_EMAIL, cname, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO, RESV_RATE FROM FLXY_RESERVATION LEFT JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID LEFT JOIN COUNTRY ON iso2 = CUST_COUNTRY WHERE RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
+            $sql = "SELECT CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, CUST_EMAIL, cname, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO, RESV_RATE FROM FLXY_RESERVATION LEFT JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID LEFT JOIN COUNTRY ON iso2 = CUST_COUNTRY WHERE RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
             $response = $this->Db->query($sql)->getResultArray();
 
             if(!empty($response)){
@@ -2210,7 +2210,7 @@ class AdditionalController extends BaseController
             $dompdf->render();           
             $canvas = $dompdf->getCanvas();
             $canvas->page_text(18, 780, "{PAGE_NUM} / {PAGE_COUNT}", '', 6, array(0,0,0));
-            $dompdf->stream("my_pdf.pdf", array("Attachment" => 0));
+            $dompdf->stream("RESERVATON_".$_SESSION['PROFORMA_RESV_ID'].".pdf", array("Attachment" => 0));
            
         }
 
@@ -2222,7 +2222,7 @@ class AdditionalController extends BaseController
             $options->setDefaultFont('Courier');
             $dompdf = new \Dompdf\Dompdf($options);
 
-            $sql = "SELECT CUST_FIRST_NAME+' '+CUST_MIDDLE_NAME+' '+ CUST_LAST_NAME AS FULLNAME, CUST_EMAIL, cname, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO, RESV_RATE FROM FLXY_RESERVATION LEFT JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID LEFT JOIN COUNTRY ON iso2 = CUST_COUNTRY WHERE RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
+            $sql = "SELECT CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, CUST_EMAIL, cname, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO, RESV_RATE FROM FLXY_RESERVATION LEFT JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID LEFT JOIN COUNTRY ON iso2 = CUST_COUNTRY WHERE RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
             $response = $this->Db->query($sql)->getResultArray();
 
             if(!empty($response)){
@@ -2645,7 +2645,7 @@ class AdditionalController extends BaseController
             $dompdf->render();           
             $canvas = $dompdf->getCanvas();
             $canvas->page_text(18, 780, "{PAGE_NUM} / {PAGE_COUNT}", '', 6, array(0,0,0));
-            $dompdf->stream("my_pdf.pdf", array("Attachment" => 1));     
+            $dompdf->stream("RESERVATON_".$_SESSION['PROFORMA_RESV_ID'].".pdf", array("Attachment" => 1));     
         }    
     
 
