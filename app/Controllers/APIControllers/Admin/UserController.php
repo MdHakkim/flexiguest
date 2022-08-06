@@ -32,7 +32,7 @@ class UserController extends BaseController
         $department_id = $this->request->getVar('department_id');
         $users = $this->User->where('USR_DEPARTMENT', $department_id)->findAll();
 
-        return $this->respond(responseJson(2000, false, ['msg' => 'Users list'], $users));
+        return $this->respond(responseJson(200, false, ['msg' => 'Users list'], $users));
     }
 
     
