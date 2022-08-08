@@ -2050,69 +2050,16 @@
 
                                                 <hr class="container-m-nx my-4" />
 
-                                                <!-- Filter -->
-                                                <!-- <div class="mb-4">
-                        <small class="text-small text-muted text-uppercase align-middle">Filter</small>
-                      </div> -->
-
-                                                <!-- <div class="form-check mb-2">
-                        <input
-                          class="form-check-input select-all"
-                          type="checkbox"
-                          id="selectAll"
-                          data-value="all"
-                          checked
-                        />
-                        <label class="form-check-label" for="selectAll">View All</label>
-                      </div>  -->
 
                                                 <div class="app-calendar-events-filter">
-                                                    <!-- <div class="form-check form-check-danger mb-2">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-personal"
-                            data-value="personal"
-                            checked
-                          />
-                          <label class="form-check-label" for="select-personal">Personal</label>
-                        </div> -->
+                                                 
                                                     <div class="form-check mb-2" style="display: none">
                                                         <input class="form-check-input input-filter" type="checkbox"
                                                             id="select-business" data-value="business" checked />
                                                         <label class="form-check-label" for="select-business">View
                                                             All</label>
                                                     </div>
-                                                    <!-- <div class="form-check form-check-warning mb-2">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-family"
-                            data-value="family"
-                            checked
-                          />
-                          <label class="form-check-label" for="select-family">Family</label>
-                        </div> -->
-                                                    <!-- <div class="form-check form-check-success mb-2">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-holiday"
-                            data-value="holiday"
-                            checked
-                          />
-                          <label class="form-check-label" for="select-holiday">Holiday</label>
-                        </div> -->
-                                                    <!-- <div class="form-check form-check-info">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-etc"
-                            data-value="etc"
-                            checked
-                          />
-                          <label class="form-check-label" for="select-etc">ETC</label>
-                        </div> -->
+                                                   
                                                 </div>
                                             </div>
                                         </div>
@@ -2144,16 +2091,7 @@
                                                             <input type="text" class="form-control" id="eventTitle"
                                                                 name="eventTitle" placeholder="Event Title" />
                                                         </div>
-                                                        <!-- <div class="mb-3">
-                            <label class="form-label" for="eventLabel">Item Class</label>
-                            <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
-                              <option data-label="primary" value="Business" selected>Business</option>
-                              <option data-label="danger" value="Personal">Personal</option>
-                              <option data-label="warning" value="Family">Family</option>
-                              <option data-label="success" value="Holiday">Holiday</option>
-                              <option data-label="info" value="ETC">ETC</option>
-                            </select>
-                          </div> -->
+                                                        
                                                         <div class="mb-3">
                                                             <label class="form-label" for="eventStartDate">Start
                                                                 Date</label>
@@ -2178,14 +2116,12 @@
                                                             </label>
                                                         </div>
 
-
                                                         <div class="mb-3">
                                                             <label class="form-label"
                                                                 for="eventDescription">Description</label>
                                                             <textarea class="form-control" name="eventDescription"
                                                                 id="eventDescription"></textarea>
                                                         </div>
-
 
                                                         <div class="d-flex justify-content-start justify-content-sm-between my-4 mb-3"
                                                             style="display:none !important">
@@ -2202,8 +2138,6 @@
                                                                     class="btn btn-label-danger btn-delete-event d-none">Delete</button>
                                                             </div>
                                                         </div>
-
-
                                                     </form>
                                                 </div>
                                             </div>
@@ -2212,8 +2146,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>

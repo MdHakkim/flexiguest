@@ -109,7 +109,7 @@
                             <div class="col-md-3">
                                 <label class="switch">
                                     <input id="ITM_DLY_SUN"  value="1" name="ITM_DLY_SUN" type="checkbox"
-                                        class="switch-input" />
+                                        class="switch-input" checked />
                                     <span class="switch-toggle-slider">
                                         <span class="switch-on">
                                             <i class="bx bx-check"></i>
@@ -125,7 +125,7 @@
                             <div class="col-md-3">
                                 <label class="switch">
                                     <input id="ITM_DLY_MON"  value="1" name="ITM_DLY_MON" type="checkbox"
-                                        class="switch-input" />
+                                        class="switch-input" checked />
                                     <span class="switch-toggle-slider">
                                         <span class="switch-on">
                                             <i class="bx bx-check"></i>
@@ -141,7 +141,7 @@
                             <div class="col-md-3">
                                 <label class="switch">
                                     <input id="ITM_DLY_TUE"  value="1" name="ITM_DLY_TUE" type="checkbox"
-                                        class="switch-input" />
+                                        class="switch-input" checked />
                                     <span class="switch-toggle-slider">
                                         <span class="switch-on">
                                             <i class="bx bx-check"></i>
@@ -156,7 +156,7 @@
                             <div class="col-md-3">
                                 <label class="switch">
                                     <input id="ITM_DLY_WED"  value="1" name="ITM_DLY_WED" type="checkbox"
-                                        class="switch-input" />
+                                        class="switch-input" checked />
                                     <span class="switch-toggle-slider">
                                         <span class="switch-on">
                                             <i class="bx bx-check"></i>
@@ -171,8 +171,8 @@
                             <div class="col-md-3">
                                 <label class="switch">
                                     <input id="ITM_DLY_THU"  value="1" name="ITM_DLY_THU" type="checkbox"
-                                        class="switch-input" />
-                                    <span class="switch-toggle-slider">
+                                        class="switch-input" checked /> 
+                                        <span class="switch-toggle-slider">
                                         <span class="switch-on">
                                             <i class="bx bx-check"></i>
                                         </span>
@@ -186,7 +186,7 @@
                             <div class="col-md-3">
                                 <label class="switch">
                                     <input id="ITM_DLY_FRI"  value="1" name="ITM_DLY_FRI" type="checkbox"
-                                        class="switch-input" />
+                                        class="switch-input" checked />
                                     <span class="switch-toggle-slider">
                                         <span class="switch-on">
                                             <i class="bx bx-check"></i>
@@ -201,7 +201,7 @@
                             <div class="col-md-3">
                                 <label class="switch">
                                     <input id="ITM_DLY_SAT"  value="1" name="ITM_DLY_SAT" type="checkbox"
-                                        class="switch-input" />
+                                        class="switch-input" checked />
                                     <span class="switch-toggle-slider">
                                         <span class="switch-on">
                                             <i class="bx bx-check"></i>
@@ -218,7 +218,7 @@
                                 <div class="col-md-12">
                                     <label class="switch switch-lg">
                                         <input id="ITM_DLY_STATUS" name="ITM_DLY_STATUS" type="checkbox" value="1"
-                                            class="switch-input" />
+                                            class="switch-input" checked />
                                         <span class="switch-toggle-slider">
                                             <span class="switch-on">
                                                 <i class="bx bx-check"></i>

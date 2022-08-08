@@ -24,7 +24,7 @@
                             <th>Item Code</th>
                             <th class="all">Description</th>
                             <th>Department</th>
-                            <th>Class</th>
+                            <!-- <th>Class</th> -->
                             <th>QTY in Stock</th>
                             <th>Default Quantity</th>
                             <th>Available From Time</th>
@@ -99,11 +99,11 @@
                             </div>
 
                             <div class="col-md-3">
-                                <lable class="form-lable"><b>Item Available From *</b></lable>
+                                <lable class="form-lable"><b>Item Available From </b></lable>
                                 <input type="time" name="ITM_AVAIL_FROM_TIME" id="ITM_AVAIL_FROM_TIME" class="form-control" required />                                
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable"><b>Item Available To *</b></lable>
+                                <lable class="form-lable"><b>Item Available To </b></lable>
                                 <input type="time" name="ITM_AVAIL_TO_TIME" id="ITM_AVAIL_TO_TIME" class="form-control" required />                                
                             </div>                            
 
@@ -160,7 +160,7 @@
                                 <div class="col-md-12">
                                     <label class="switch switch-lg">
                                         <input id="ITM_STATUS" name="ITM_STATUS" type="checkbox" value="1"
-                                            class="switch-input" />
+                                            class="switch-input" checked />
                                         <span class="switch-toggle-slider">
                                             <span class="switch-on">
                                                 <i class="bx bx-check"></i>
@@ -266,14 +266,14 @@
                          return '';
                     }
                 },
-                {
+                // {
                     
-                    data: 'IT_CL_CODE',
-                     render: function(data, type, full, meta) {
-                        return full['IT_CL_CODE']+' | '+full['IT_CL_DESC'];
-                    }
+                //     data: 'IT_CL_CODE',
+                //      render: function(data, type, full, meta) {
+                //         return full['IT_CL_CODE']+' | '+full['IT_CL_DESC'];
+                //     }
                     
-                },
+                // },
                 {
                     data: 'ITM_QTY_IN_STOCK',
                     
