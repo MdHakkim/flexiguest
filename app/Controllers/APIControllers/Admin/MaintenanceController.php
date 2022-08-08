@@ -219,7 +219,7 @@ class MaintenanceController extends BaseController
     public function addComment()
     {
         $user_id = $this->request->user['USR_ID'];
-        $maintenance_request_id = $this->request->getVar('maintenace_request_id');
+        $maintenance_request_id = $this->request->getVar('maintenance_request_id');
         $comment = $this->request->getVar('comment');
 
         $maintenance_request = $this->Maintenance->find($maintenance_request_id);
@@ -240,7 +240,7 @@ class MaintenanceController extends BaseController
 
     public function getComments()
     {
-        $maintenance_request_id = $this->request->getVar('maintenace_request_id');
+        $maintenance_request_id = $this->request->getVar('maintenance_request_id');
 
         $comments = $this->MaintenanceRequestComment
             ->select('FLXY_MAINTENANCE_REQUEST_COMMENTS.*, USR_NAME')
