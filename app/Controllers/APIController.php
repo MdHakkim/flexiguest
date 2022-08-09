@@ -170,14 +170,14 @@ class APIController extends BaseController
         if ($resID) {
             $param = ['RESV_ID' => $resID];
 
-            $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_MIDDLE_NAME, b.CUST_LAST_NAME) as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
+            $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_LAST_NAME) as NAME ,d.RM_NO,d.RM_DESC FROM FLXY_RESERVATION a 
                             LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
                             LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM  WHERE a.RESV_ID = :RESV_ID: order by a.RESV_ID desc";
 
             $data = $this->DB->query($sql, $param)->getRowArray();
         } else {
             $param = ['RESV_NAME' => $cust_id];
-            $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_MIDDLE_NAME, b.CUST_LAST_NAME) as NAME ,d.RM_NO,d.RM_DESC,b.CUST_EMAIL,b.CUST_MOBILE FROM FLXY_RESERVATION a 
+            $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_LAST_NAME) as NAME ,d.RM_NO,d.RM_DESC,b.CUST_EMAIL,b.CUST_MOBILE FROM FLXY_RESERVATION a 
                             LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
                             LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM 
                             WHERE a.RESV_NAME = :RESV_NAME: order by a.RESV_ID desc";
@@ -202,7 +202,7 @@ class APIController extends BaseController
         $CUST_ID = $this->request->getVar('customerId') ?? $this->request->user['USR_CUST_ID'];
 
         // an indicator to inform Docs are uploaded and verified.
-        $sql = "SELECT concat(a.CUST_FIRST_NAME,' ',a.CUST_MIDDLE_NAME,' ',a.CUST_LAST_NAME)NAME,c.*,b.VACCINE_IS_VERIFY,c.DOC_IS_VERIFY FROM FLXY_CUSTOMER a
+        $sql = "SELECT concat(a.CUST_FIRST_NAME,' ',a.CUST_LAST_NAME)NAME,c.*,b.VACCINE_IS_VERIFY,c.DOC_IS_VERIFY FROM FLXY_CUSTOMER a
                     LEFT JOIN FLXY_VACCINE_DETAILS b ON b.CUST_ID = a.CUST_ID 
                     LEFT JOIN FLXY_DOCUMENTS c ON c.DOC_CUST_ID = a.CUST_ID WHERE DOC_FILE_TYPE='PROOF' AND a.CUST_ID = :CUST_ID:";
         $param = ['CUST_ID' => $CUST_ID];
@@ -226,14 +226,14 @@ class APIController extends BaseController
         $reservation_id = $this->request->getVar('reservation_id');
 
         // an indicator to inform this is accompanying person
-        $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name, 
+        $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_LAST_NAME) as name, 
                         fc.CUST_ID, 
                         case when count(fd.DOC_ID) >= 1 then 1 else 0 end as is_document_uploaded,
                         case when fd.DOC_IS_VERIFY = 1 then 1 else 0 end as DOC_IS_VERIFY
                         FROM FLXY_CUSTOMER as fc
                         left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID AND fd.DOC_FILE_TYPE = 'PROOF' AND fd.DOC_RESV_ID = :reservation_id:
                         where CUST_ID = :customer_id:
-                        group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID, fd.DOC_IS_VERIFY";
+                        group by fc.CUST_FIRST_NAME, fc.CUST_LAST_NAME, fc.CUST_ID, fd.DOC_IS_VERIFY";
 
         $param = ['customer_id' => $customer_id, 'reservation_id' => $reservation_id];
         $data = $this->DB->query($sql, $param)->getResultArray();
@@ -249,7 +249,7 @@ class APIController extends BaseController
         if (count($data)) // when user is not main guest
             return $this->respond(responseJson(200, false, ["msg" => "Accompany person"], $guest));
 
-        $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_MIDDLE_NAME, ' ', fc.CUST_LAST_NAME) as name, 
+        $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_LAST_NAME) as name, 
                         fc.CUST_ID, 
                         case when count(fd.DOC_ID) >= 1 then 1 else 0 end as is_document_uploaded,
                         case when fd.DOC_IS_VERIFY = 1 then 1 else 0 end as DOC_IS_VERIFY
@@ -257,7 +257,7 @@ class APIController extends BaseController
                         inner join FLXY_ACCOMPANY_PROFILE as fap on fc.CUST_ID = fap.ACCOMP_CUST_ID 
                         left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID 
                         where fap.ACCOMP_REF_RESV_ID = :reservation_id:
-                        group by fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ID, fd.DOC_IS_VERIFY";
+                        group by fc.CUST_FIRST_NAME, fc.CUST_LAST_NAME, fc.CUST_ID, fd.DOC_IS_VERIFY";
 
         $param = ['reservation_id' => $reservation_id];
         $guest['accompany_profiles'] = $this->DB->query($sql, $param)->getResultArray();
@@ -981,7 +981,7 @@ class APIController extends BaseController
 
         if ($reqID) {
             $param = ['MAINT_ID' => $reqID];
-            $sql = "SELECT a.*, CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_MIDDLE_NAME, b.CUST_LAST_NAME) as NAME,c.MAINT_CATEGORY_TYPE,c.MAINT_CATEGORY as MAINT_CATEGORY_TEXT,d.MAINT_SUBCATEGORY FROM FLXY_MAINTENANCE a 
+            $sql = "SELECT a.*, CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_LAST_NAME) as NAME,c.MAINT_CATEGORY_TYPE,c.MAINT_CATEGORY as MAINT_CATEGORY_TEXT,d.MAINT_SUBCATEGORY FROM FLXY_MAINTENANCE a 
                         LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.CUST_NAME
                         LEFT JOIN FLXY_MAINTENANCE_CATEGORY c ON c.MAINT_CAT_ID = a.MAINT_CATEGORY
 			            LEFT JOIN FLXY_MAINTENANCE_SUBCATEGORY d ON d.MAINT_SUBCAT_ID = a.MAINT_SUB_CATEGORY
@@ -1059,14 +1059,14 @@ class APIController extends BaseController
 
         if ($this->request->user['USR_ROLE'] == 'admin') {
             $room_list = $this->DB->table('FLXY_ROOM')
-                ->select("RM_NO as RESV_ROOM, RM_ID, RESV_ID, (CASE WHEN RESV_ID is not null THEN concat(RESV_ID, '-', CUST_FIRST_NAME, ' ', CUST_MIDDLE_NAME, ' ', CUST_LAST_NAME) ELSE NULL END) as ID_NAME")
+                ->select("RM_NO as RESV_ROOM, RM_ID, RESV_ID, (CASE WHEN RESV_ID is not null THEN concat(RESV_ID, '-', CUST_FIRST_NAME, ' ', CUST_LAST_NAME) ELSE NULL END) as ID_NAME")
                 ->join('FLXY_RESERVATION', "RM_NO = RESV_ROOM and RESV_STATUS = 'Checked-In'", 'left')
                 ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
                 ->get()
                 ->getResult();
         } else {
             $room_list = $this->DB->table('FLXY_RESERVATION')
-                ->select("RESV_ID, RESV_ROOM, RM_ID, concat(RESV_ID, '-', CUST_FIRST_NAME, ' ', CUST_MIDDLE_NAME, ' ', CUST_LAST_NAME) as ID_NAME")
+                ->select("RESV_ID, RESV_ROOM, RM_ID, concat(RESV_ID, '-', CUST_FIRST_NAME, ' ', CUST_LAST_NAME) as ID_NAME")
                 ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
                 ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
                 ->where('RESV_NAME', $customer_id)
