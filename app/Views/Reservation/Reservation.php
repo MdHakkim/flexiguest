@@ -9,6 +9,12 @@
     --bs-table-striped-bg: none;
 }
 
+#accompanyTd .activeTr td {
+    background-color: #f0e0cc;
+     !important;
+    color: #000 !important;
+}
+
 #combine-popup .text-right {
     text-align: right !important;
 }
@@ -1326,7 +1332,7 @@
                             <button type="button" id="previousbtn" onClick="previous()" class="btn btn-primary"><i
                                     class="fa-solid fa-angle-left"></i> Previous</button>
                             <button type="button" id="optionsResrBtn" data_sysid=""
-                                class="btn btn-info reserOption me-1" style="margin-left: auto;">Options</button>
+                                class="btn btn-info reserOption me-2" style="margin-left: auto;">Options</button>
                             <button type="button" id="submitResrBtn" onClick="submitForm('reservationForm','R',event)"
                                 class="btn btn-primary submitResr">Save</button>
                             <!--  -->
@@ -1411,8 +1417,8 @@
                             <table class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
-                                        <th scope="col" style="width:50px">Edit</th>
-                                        <th scope="col" style="width:50px">Sr.No</th>
+                                        <th scope="col" style="width:70px">Edit</th>
+                                        <th scope="col" style="width:70px">Sr.No</th>
                                         <th scope="col" style="width:250px">First Name</th>
                                         <th scope="col" style="width:250px">Last Name</th>
                                         <th scope="col" style="width:150px">DOB</th>
@@ -1427,7 +1433,8 @@
                                 </thead>
                                 <tbody id="searchRecord">
                                     <tr>
-                                        <td class="text-center" colspan="11">No Record Found</td>
+                                        <td class="text-left" colspan="11" style="padding-left: 20% !important;">No
+                                            Record Found</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1808,7 +1815,7 @@
     <!-- Option window -->
     <div class="modal fade" id="appcompanyWindow" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="rateQueryWindowLable">Accompanying Guest</h5>
@@ -1817,25 +1824,38 @@
                 <div class="modal-body">
                     <div id="customeTrigger"></div>
                     <div class="row">
-                        <table class="table table-striped">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>City</th>
-                                    <th>DOB</th>
-                                </tr>
-                            </thead>
-                            <tbody id="accompanyTd">
-                                <tr>
-                                    <td class="text-center" colspan="3">No data</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="flxy_table_resp">
+                            <table class="table table-striped table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col" style="width:70px">Edit</th>
+                                        <th scope="col" style="width:70px">Sr.No</th>
+                                        <th scope="col" style="width:250px">First Name</th>
+                                        <th scope="col" style="width:250px">Last Name</th>
+                                        <th scope="col" style="width:150px">DOB</th>
+                                        <th scope="col" style="width:250px">Passport</th>
+                                        <th scope="col" style="width:150px">Address</th>
+                                        <th scope="col" style="width:250px">City</th>
+                                        <th scope="col" style="width:250px">Email</th>
+                                        <th scope="col" style="width:250px">Mobile</th>
+                                        <th scope="col" style="width:250px">Nationality</th>
+                                        <th scope="col" style="width:150px">VIP</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="accompanyTd">
+                                    <tr>
+                                        <td class="text-left" colspan="11" style="padding-left: 20% !important;">No
+                                            Accompanying Guests</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" onClick="accompanySet('A',event)" class="btn btn-primary">Attach</button>
-                    <button type="button" onClick="accompanySet('D',event)" class="btn btn-warning">Detach</button>
+                    <button type="button" onClick="accompanySet('D',event)"
+                        class="btn btn-warning detach-accompany-guest" disabled>Detach</button>
                 </div>
             </div>
         </div>
@@ -3662,7 +3682,13 @@ function childReservation(param) {
         showCustomerRow($('.window-2').is(':visible') ? $('.window-2').find('#RESV_NAME')
             .val() : $('.window-1')
             .find('#RESV_NAME').val());
+    } else if (param == 'AC') {
+        $('.profileSearch').find('input,select').val('');
+        $('#searchRecord').html(
+            '<tr><td class="text-left" colspan="11" style="padding-left: 20% !important;">No Record Found</td></tr>'
+        );
     }
+
     $('.profileCreate').hide();
     $('.profileSearch').show();
     $('#reservationChildlable').html('Search Customer');
@@ -4286,9 +4312,12 @@ $(document).on('change', '.rateFilter', function() {
 var customPop = '';
 
 function searchData(form, mode, event) {
+
     if (mode == 'C') {
         $('.' + form).find('input,select').val('');
-        $('#searchRecord').html('<tr><td class="text-center" colspan="11">No Record Found</td></tr>');
+        $('#searchRecord').html(
+            '<tr><td class="text-left" colspan="11" style="padding-left: 20% !important;">No Record Found</td></tr>'
+        );
     } else if (mode == 'S') {
         var formData = {};
         $('.' + form).find('input,select').each(function(i, data) {
@@ -4297,9 +4326,14 @@ function searchData(form, mode, event) {
             formData[field] = values;
         });
 
-        formData['reservation_customer_id'] = reservation_customer_id;
+        if ($("#appcompanyWindow").hasClass('show')) { // If Accompany Guest popup is displayed
+            formData['RESV_ID'] = ressysId;
+            formData['reservation_customer_id'] = reservation_customer_id;
+            formData['get_not_accomp'] = 1; // Show not accompanied in search list            
+        }
 
         formData['windowmode'] = windowmode;
+
         $.ajax({
             url: '<?php echo base_url('/searchProfile') ?>',
             type: "post",
@@ -4313,12 +4347,16 @@ function searchData(form, mode, event) {
                 $('#searchRecord').html(respone);
             }
         });
+
     } else if (mode == 'N') {
         $('#customerForm').find('input,select').val('');
         $('.profileCreate').show();
         $('.profileSearch').hide();
         $('#reservationChildlable').html('Add Customer');
         customPop = '-N';
+    } else if (mode == 'PR' && $("#appcompanyWindow").hasClass('show')) {
+        custId = $('#searchRecord > tr.activeTr').attr('data_sysid');
+        updateAccompanyGuest('A');
     }
 }
 
@@ -4345,13 +4383,18 @@ function showCustomerRow(custId) {
 }
 
 var custId = '';
+
 $(document).on('click', '.activeRow,#customeTrigger', function() {
     var joinVaribl = windowmode + customPop;
     if (joinVaribl != 'AC-N') {
         $('.activeRow').removeClass('activeTr');
         $(this).addClass('activeTr');
         custId = $(this).attr('data_sysid');
-    }    
+    }
+
+    if (joinVaribl == 'AC') {
+        toggleButton('.detach-accompany-guest', 'btn-dark', 'btn-warning', false);
+    }
 });
 
 $(document).on('click', '.getExistCust .select', function() {
@@ -4396,10 +4439,33 @@ $(document).on('click', '.getExistCust .select', function() {
 
 function accompanySet(mode, event) {
     if (mode == 'D') {
-        $('.activeTrDetch').remove();
-    }
+        bootbox.confirm({
+            message: "Are you sure you want to remove this accompanied guest?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function(result) {
+                if (result) {
+                    updateAccompanyGuest(mode);
+                }
+            }
+        });
+    } else
+        childReservation('AC');
+    //updateAccompanyGuest(mode);
+}
+
+function updateAccompanyGuest(mode) {
     $.ajax({
         url: '<?php echo base_url('/appcompanyProfileSetup') ?>',
+        async: false,
         type: "post",
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -4408,16 +4474,35 @@ function accompanySet(mode, event) {
             mode: mode,
             ACCOMP_CUST_ID: custId,
             ACCOMP_REF_RESV_ID: ressysId,
-            ACCOPM_ID: ACCOPM_SYSID
         },
         dataType: 'json',
         success: function(respn) {
-            var respone = respn['table'];
-            $('#accompanyTd').html(respone);
+
+            var response = respn['SUCCESS'];
+            if (response != '1') {
+                var ERROR = respn['RESPONSE']['ERROR'];
+                var mcontent = '';
+                $.each(ERROR, function(ind, data) {
+                    mcontent += '<li>' + data + '</li>';
+                });
+                showModalAlert('error', mcontent);
+            } else {
+                var alertText = mode == 'D' ?
+                    '<li>The Guest is no longer accompanying this reservation</li>' :
+                    '<li>The Guest is now accompanying this reservation</li>';
+                showModalAlert(mode == 'D' ? 'warning' : 'success', alertText);
+
+                if ($('#reservationChild').hasClass('show'))
+                    $('#reservationChild').modal('hide');
+
+                $('.accompany-guests').trigger('click');
+            }
         }
     });
 }
+
 var ACCOPM_SYSID = '';
+
 $(document).on('click', '.activeDetach', function() {
     $('.activeDetach').removeClass('activeTrDetch');
     $(this).addClass('activeTrDetch');
@@ -4443,12 +4528,34 @@ function reservExtraOption(param) {
     }
 }
 
+
 $(document).on('click', '.accompany-guests', function() {
-    
+
     //alert(ressysId);
 
     $('#appcompanyWindow').modal('show');
 
+    $.ajax({
+        url: '<?php echo base_url('/searchProfile') ?>',
+        async: false,
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            'RESV_ID': ressysId,
+            'get_accomp': 1
+        },
+        dataType: 'json',
+        success: function(respn1) {
+            var respone = respn1['table'];
+            $('#accompanyTd').html(respone);
+        }
+    });
+
+    toggleButton('.detach-accompany-guest', 'btn-warning', 'btn-dark', true);
+
+    /*
     $.ajax({
         url: '<?php echo base_url('/getExistingAppcompany') ?>',
         type: "post",
@@ -4464,8 +4571,8 @@ $(document).on('click', '.accompany-guests', function() {
             var respone = respn['table'];
             $('#accompanyTd').html(respone);
         }
-    });
-    
+    });*/
+
 });
 
 
@@ -4550,7 +4657,8 @@ function submitItemForm(id) {
                 });
                 showModalAlert('error', mcontent);
             } else {
-                var alertText = $('#RSV_ITM_ID').val() == '' ? '<li>The item has been added</li>' : '<li>';
+                var alertText = $('#RSV_ITM_ID').val() == '' ? '<li>The item has been added</li>' :
+                    '<li>';
                 showModalAlert('success', alertText);
 
 
@@ -4844,7 +4952,8 @@ function submitDetailsForm(id) {
 
                     var newOption = new Option(data.text, data.id, false, false);
                     $('#itemsArray').append(newOption).trigger('change');
-                    $('#itemsArray').select2('destroy').find('option').prop('selected', 'selected').end()
+                    $('#itemsArray').select2('destroy').find('option').prop('selected', 'selected')
+                        .end()
                         .select2();
 
                 }
@@ -4950,7 +5059,8 @@ $(document).on('click', '.delete-item-detail', function() {
                         if (response == '0') {
                             clearFormFields('#select_items');
                             showModalAlert('error',
-                                '<li>The Inventory Items cannot be deleted</li>');
+                                '<li>The Inventory Items cannot be deleted</li>'
+                            );
                             $('#warningModal').delay(2500).fadeOut();
                         } else {
                             blockLoader('#select_items');
@@ -5261,7 +5371,8 @@ $(document).on('click', '.add-fixedcharge-detail', function() {
                             'table-warning');
 
                         //Disable Delete button
-                        toggleButton('.delete-fixedcharge-detail', 'btn-danger', 'btn-dark', true);
+                        toggleButton('.delete-fixedcharge-detail', 'btn-danger', 'btn-dark',
+                            true);
 
                         showModalAlert('info',
                             'Fill in the form and click the \'Save\' button to add the new fixed charge'
@@ -5465,14 +5576,16 @@ function loadFixedchargeDetails(fixedChargeID) {
 
                     if (field == 'FIXD_CHRG_TRNCODE') {
                         $('#' + field).val(dataval).trigger('change');
-                    } else if (field == 'FIXD_CHRG_END_DATE' && FIXD_CHRG_FREQUENCY == 1) {
+                    } else if (field == 'FIXD_CHRG_END_DATE' && FIXD_CHRG_FREQUENCY ==
+                        1) {
                         $('.END_DATE').hide();
                         $('.WEEKLY_EXCECUTE').hide();
                         $('.MONTHLY_EXCECUTE').hide();
                         $('.YEARLY_EXCECUTE').hide();
                         $('.QUARTERLY_EXCECUTE').hide();
 
-                    } else if (FIXD_CHRG_FREQUENCY == 3 && field == 'FIXD_CHRG_WEEKLY') {
+                    } else if (FIXD_CHRG_FREQUENCY == 3 && field ==
+                        'FIXD_CHRG_WEEKLY') {
                         $('#' + field).val(dataval).trigger('change');
                     } else {
                         $('#' + field).val(dataval);
@@ -5532,8 +5645,10 @@ $(document).on('click', '.delete-fixedcharge-detail', function() {
                             $('#FIXD_CHRG_TRNCODE').val('');
                             $('#FIXD_CHRG_AMT').val('');
                             $('#FIXD_CHRG_QTY').val('');
-                            $('#FIXD_CHRG_BEGIN_DATE').val($('#FIXD_ARRIVAL').val());
-                            $('#FIXD_CHRG_END_DATE').val($('#FIXD_DEPARTURE').val());
+                            $('#FIXD_CHRG_BEGIN_DATE').val($('#FIXD_ARRIVAL')
+                                .val());
+                            $('#FIXD_CHRG_END_DATE').val($('#FIXD_DEPARTURE')
+                                .val());
                             $('#FIXD_CHRG_TRNCODE').val('');
                             $('#FIXD_CHRG_AMT').val('');
                             $('#FIXD_CHRG_QTY').val('');
@@ -6491,7 +6606,13 @@ $(document).on('click', '.resolve-trace-detail', function() {
 });
 
 
+$(document).on('hide.bs.modal', '#edit-customer', function() {
+    // put your default event here
 
+    if ($("#appcompanyWindow").hasClass('show')) { // If Accompany Guest popup is displayed
+        $('.accompany-guests').trigger('click');
+    }
+});
 
 
 
