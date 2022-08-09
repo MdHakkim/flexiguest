@@ -1120,22 +1120,39 @@
                                                         class="form-control" placeholder="phone" />
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 mt-4">
-                                                <lable class="form-check-lable" for="defaultCheck1"> Confimation</label>
-                                                    <label class="switch">
-                                                        <input type="checkbox" class="switch-input"
-                                                            id="RESV_CONFIRM_YN_CHK" />
-                                                        <input type="hidden" name="RESV_CONFIRM_YN" value="N"
-                                                            id="RESV_CONFIRM_YN" class="form-control" />
-                                                        <span class="switch-toggle-slider">
-                                                            <span class="switch-on">
-                                                                <i class="bx bx-check"></i>
-                                                            </span>
-                                                            <span class="switch-off">
-                                                                <i class="bx bx-x"></i>
-                                                            </span>
+                                            <div class="col-md-2 mt-4">
+                                                <label class="form-label" for="RESV_CONFIRM_YN_CHK">
+                                                    Confirmation </label>
+                                                <label class="switch">
+                                                    <input type="checkbox" class="switch-input"
+                                                        id="RESV_CONFIRM_YN_CHK" />
+                                                    <input type="hidden" name="RESV_CONFIRM_YN" value="N"
+                                                        id="RESV_CONFIRM_YN" class="form-control" />
+                                                    <span class="switch-toggle-slider">
+                                                        <span class="switch-on">
+                                                            <i class="bx bx-check"></i>
                                                         </span>
-                                                    </label>
+                                                        <span class="switch-off">
+                                                            <i class="bx bx-x"></i>
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-2 mt-4">
+                                                <label class="form-label" for="RESV_NO_POST_CHK"> No Post </label>
+                                                <label class="switch switch-danger">
+                                                    <input type="checkbox" class="switch-input" id="RESV_NO_POST_CHK"
+                                                        value="1" />
+                                                    <input type="hidden" name="RESV_NO_POST" value="N"
+                                                        id="RESV_NO_POST" class="form-control" />
+                                                    <span class="switch-toggle-slider">
+                                                        <span class="switch-on">
+                                                            <i class="bx bx-x"></i>
+                                                        </span>
+                                                        <span class="switch-off">
+                                                        </span>
+                                                    </span>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -3435,6 +3452,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     // showInventoryItems();
     itemClassList();
 
+    $('#reservationForm').removeClass('was-validated');
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
     $('#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
 
@@ -3516,7 +3534,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 
                     } else if (field == 'RESV_CONFIRM_YN' || field ==
                         'RESV_PICKUP_YN' || field == 'RESV_DROPOFF_YN' || field ==
-                        'RESV_EXT_PRINT_RT' || field == 'RESV_FIXED_RATE') {
+                        'RESV_EXT_PRINT_RT' || field == 'RESV_FIXED_RATE' || field == 'RESV_NO_POST') {
                         if (dataval == 'Y') {
                             $('#' + field + '_CHK').prop('checked', true);
                         } else {
@@ -3662,7 +3680,7 @@ function addResvation() {
     $('.RESV_DEPARTURE').datepicker().datepicker("setDate", end);
 
     $('#RESV_NIGHT,#RESV_NO_F_ROOM,#RESV_ADULTS').val('1');
-    $('#RESV_CONFIRM_YN,#RESV_PICKUP_YN,#RESV_DROPOFF_YN,#RESV_EXT_PRINT_RT,#RESV_FIXED_RATE').val('N');
+    $('#RESV_CONFIRM_YN,#RESV_NO_POST,#RESV_PICKUP_YN,#RESV_DROPOFF_YN,#RESV_EXT_PRINT_RT,#RESV_FIXED_RATE').val('N');
 }
 
 $(document).on('click', '.flxCheckBox', function() {
@@ -3888,7 +3906,7 @@ function submitForm(id, mode, event) {
                     var response = respn['RESPONSE']['REPORT_RES'][0];
                     var confirmationNo = response['RESV_NO'];
                     bootbox.alert({
-                        message: '<b>Confimation Number : </b>' + confirmationNo + '',
+                        message: '<b>Confirmation Number : </b>' + confirmationNo + '',
                         size: 'small'
                     });
                     $('#reservationW').modal('hide');
