@@ -628,7 +628,7 @@ class AdditionalController extends BaseController
                 $return = !empty($sysid) ? $this->Db->table('FLXY_ITEM')->where('ITM_ID', $sysid)->update($data) : $this->Db->table('FLXY_ITEM')->insert($data);
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
                 echo json_encode($result);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 return $this->respond($e->errors());
             }
         }    
@@ -801,7 +801,6 @@ class AdditionalController extends BaseController
                 return $this->respond($e->errors());
             }
         }
-
         
 
         public function itemList()

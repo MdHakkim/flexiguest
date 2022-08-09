@@ -182,18 +182,19 @@ class MaintenanceController extends BaseController
         $attendant_id = $this->request->getVar('attendant_id');
 
         $maintenance_request = $this->Maintenance->find($maintenance_request_id);
-        if(empty($maintenance_request))
+        if (empty($maintenance_request))
             return $this->respond(responseJson(404, true, ['msg' => 'Invalid maintenance request.']));
 
         $attendant = $this->User->find($attendant_id);
-        if(empty($attendant))
+        if (empty($attendant))
             return $this->respond(responseJson(404, true, ['msg' => 'Invalid member.']));
 
         $maintenance_request['MAINT_ATTENDANT_ID'] = $attendant_id;
         $maintenance_request['MAINT_ASSIGNED_AT'] = date('Y-m-d H:i:s');
+        $maintenance_request['MAINT_STATUS'] = 'Assigned';
         $maintenance_request['MAINT_UPDATE_UID'] = $user_id;
         $this->Maintenance->save($maintenance_request);
-        
+
         return $this->respond(responseJson(200, false, ['msg' => 'Task is assigned successfully.']));
     }
 
@@ -204,10 +205,10 @@ class MaintenanceController extends BaseController
         $status = $this->request->getVar('status');
 
         $maintenance_request = $this->Maintenance->find($maintenance_request_id);
-        if(empty($maintenance_request))
+        if (empty($maintenance_request))
             return $this->respond(responseJson(404, true, ['msg' => 'Invalid maintenance request.']));
 
-        
+
         $maintenance_request['MAINT_STATUS'] = $status;
         $maintenance_request['MAINT_UPDATE_UID'] = $user_id;
         $this->Maintenance->save($maintenance_request);
@@ -218,11 +219,11 @@ class MaintenanceController extends BaseController
     public function addComment()
     {
         $user_id = $this->request->user['USR_ID'];
-        $maintenance_request_id = $this->request->getVar('maintenace_request_id');
+        $maintenance_request_id = $this->request->getVar('maintenance_request_id');
         $comment = $this->request->getVar('comment');
 
         $maintenance_request = $this->Maintenance->find($maintenance_request_id);
-        if(empty($maintenance_request))
+        if (empty($maintenance_request))
             return $this->respond(responseJson(404, true, ['msg' => 'Invalid maintenance request.']));
 
         $data = [
@@ -239,9 +240,13 @@ class MaintenanceController extends BaseController
 
     public function getComments()
     {
-        $maintenance_request_id = $this->request->getVar('maintenace_request_id');
+        $maintenance_request_id = $this->request->getVar('maintenance_request_id');
 
-        $comments = $this->MaintenanceRequestComment->where('MRC_MAINTENANCE_REQUEST_ID', $maintenance_request_id)->findAll();
+        $comments = $this->MaintenanceRequestComment
+            ->select('FLXY_MAINTENANCE_REQUEST_COMMENTS.*, USR_NAME')
+            ->join('FLXY_USERS', 'MRC_USER_ID = USR_ID', 'left')
+            ->where('MRC_MAINTENANCE_REQUEST_ID', $maintenance_request_id)
+            ->findAll();
 
         return $this->respond(responseJson(200, false, ['msg' => 'comments'], $comments));
     }
