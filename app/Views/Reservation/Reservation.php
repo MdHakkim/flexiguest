@@ -1331,7 +1331,7 @@
                         <div class="flxyFooter flxy_space">
                             <button type="button" id="previousbtn" onClick="previous()" class="btn btn-primary"><i
                                     class="fa-solid fa-angle-left"></i> Previous</button>
-                            <button type="button" id="optionsResrBtn" data_sysid=""
+                            <button type="button" id="optionsResrBtn" data_sysid="" data-reservation_customer_id=""
                                 class="btn btn-info reserOption me-2" style="margin-left: auto;">Options</button>
                             <button type="button" id="submitResrBtn" onClick="submitForm('reservationForm','R',event)"
                                 class="btn btn-primary submitResr">Save</button>
@@ -2072,14 +2072,14 @@
 
 
                                                 <div class="app-calendar-events-filter">
-                                                 
+
                                                     <div class="form-check mb-2" style="display: none">
                                                         <input class="form-check-input input-filter" type="checkbox"
                                                             id="select-business" data-value="business" checked />
                                                         <label class="form-check-label" for="select-business">View
                                                             All</label>
                                                     </div>
-                                                   
+
                                                 </div>
                                             </div>
                                         </div>
@@ -2111,7 +2111,7 @@
                                                             <input type="text" class="form-control" id="eventTitle"
                                                                 name="eventTitle" placeholder="Event Title" />
                                                         </div>
-                                                        
+
                                                         <div class="mb-3">
                                                             <label class="form-label" for="eventStartDate">Start
                                                                 Date</label>
@@ -2938,8 +2938,9 @@ $(document).ready(function() {
                         '<ul class="dropdown-menu dropdown-menu-end">' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
                         '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
-                            'RM_TY_DESC'] +
-                        '" class="dropdown-item editReserWindow text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
+                            'RM_TY_DESC'] + '" data-reservation_customer_id = "' + data[
+                            'CUST_ID'] +
+                        '"  class="dropdown-item editReserWindow text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
                         '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
@@ -2960,12 +2961,7 @@ $(document).ready(function() {
                 className: "text-center"
             },
             {
-                data: 'CUST_FIRST_NAME',
-                render: function(data, type, row, meta) {
-                    return (
-                        row['CUST_FIRST_NAME'] + ' ' + row['CUST_LAST_NAME']
-                    );
-                }
+                data: 'CUST_FIRST_NAME'
             },
             {
                 data: 'RESV_ROOM',
@@ -3414,6 +3410,9 @@ $(document).on('click', '.reserOption', function() {
     roomType = $(this).attr('rmtype');
     roomTypedesc = $(this).attr('rmtypedesc');
     reservation_customer_id = $(this).data('reservation_customer_id');
+    $('#optionsResrBtn').attr({
+        'data-reservation_customer_id': reservation_customer_id
+    });
 
     $('#Accompany').show();
     //$('#Addon').hide();
@@ -3432,7 +3431,6 @@ $(document).on('click', '.reserOption', function() {
 
 $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
     reservation_customer_id = $(this).data('reservation_customer_id');
-
     ////Item Inventory
     // showInventoryItems();
     itemClassList();
@@ -3475,7 +3473,8 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
         $('#optionsResrBtn').attr({
             'data_sysid': sysid,
             'rmtype': $(this).attr('rmtype'),
-            'rmtypedesc': $(this).attr('rmtypedesc')
+            'rmtypedesc': $(this).attr('rmtypedesc'),
+            'data-reservation_customer_id': reservation_customer_id
         })
     }
 
@@ -4260,7 +4259,7 @@ function searchData(form, mode, event) {
 
         if ($("#appcompanyWindow").hasClass('show')) { // If Accompany Guest popup is displayed
             formData['RESV_ID'] = ressysId;
-            formData['reservation_customer_id'] = reservation_customer_id;
+            formData['reservation_customer_id'] = $('#optionsResrBtn').data("reservation_customer_id");
             formData['get_not_accomp'] = 1; // Show not accompanied in search list            
         }
 
