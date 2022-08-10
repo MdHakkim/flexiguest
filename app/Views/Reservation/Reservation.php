@@ -4,12 +4,15 @@
 <?= $this->include('Layout/ErrorReport') ?>
 
 <style>
-.fc-license-message{
-    display: none !important;
-}
 .active-tr {
     background-color: #d1e7ff !important;
     --bs-table-striped-bg: none;
+}
+
+#accompanyTd .activeTr td {
+    background-color: #f0e0cc;
+     !important;
+    color: #000 !important;
 }
 
 #combine-popup .text-right {
@@ -46,33 +49,37 @@
     text-align: left !important;
     padding-left: 30% !important;
 }
-#Rate_info_length, #Rate_info_info, #Rate_info_paginate{
+
+#Rate_info_length,
+#Rate_info_info,
+#Rate_info_paginate {
     display: none;
 }
 
 .Rate_Info_Div thead th {
-      position: sticky;
-      top: 0;
-    }
+    position: sticky;
+    top: 0;
+}
 
-    .Rate_Info_Div {
-      overflow-y: auto;
-      height: 110px;
-    }
-    .Rate_Info_Div thead th {
-      position: sticky;
-      top: 0;
-    }
-    .Rate_Info_Div table {
-      border-collapse: collapse;        
-      width: 100%;
-    }
-    .Rate_Info_Div th
-     {
-      padding: 10px 15px;
-      border: 2px solid #529432;
-    }
-    
+.Rate_Info_Div {
+    overflow-y: auto;
+    height: 110px;
+}
+
+.Rate_Info_Div thead th {
+    position: sticky;
+    top: 0;
+}
+
+.Rate_Info_Div table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.Rate_Info_Div th {
+    padding: 10px 15px;
+    border: 2px solid #529432;
+}
 </style>
 
 <!-- Content wrapper -->
@@ -346,8 +353,7 @@
                 <div class="modal-body">
                     <div id="Accompany">
                         <div class="flxy_opt_btn text-center">
-                            <button type="button" onClick="reservExtraOption('ACP')"
-                                class="btn btn-primary">Accompanying</button>
+                            <button type="button" class="btn btn-primary accompany-guests">Accompanying</button>
                             <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add
                                 On</button>
                             <button type="button" class="btn btn-primary show-activity-log">Changes</button>
@@ -361,8 +367,9 @@
                                 onclick="reservationCheckout()">Checkout</button>
                             <button type="button" class="btn btn-primary web-link-btn">Docs</button>
                             <button type="button" class="btn btn-primary shares-btn">Shares</button>
-                            <button type="button" class="btn btn-primary" onclick="getRateInfo()" id="rateInfoButton" data_sysid="">Rate Info.</button>
-                            <button type="button" class="btn btn-primary"  id="traceButton" data_sysid="">Traces</button>
+                            <button type="button" class="btn btn-primary" onclick="getRateInfo()" id="rateInfoButton"
+                                data_sysid="">Rate Info.</button>
+                            <button type="button" class="btn btn-primary" id="traceButton" data_sysid="">Traces</button>
 
 
                         </div>
@@ -1113,22 +1120,39 @@
                                                         class="form-control" placeholder="phone" />
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 mt-4">
-                                                <lable class="form-check-lable" for="defaultCheck1"> Confimation</label>
-                                                    <label class="switch">
-                                                        <input type="checkbox" class="switch-input"
-                                                            id="RESV_CONFIRM_YN_CHK" />
-                                                        <input type="hidden" name="RESV_CONFIRM_YN" value="N"
-                                                            id="RESV_CONFIRM_YN" class="form-control" />
-                                                        <span class="switch-toggle-slider">
-                                                            <span class="switch-on">
-                                                                <i class="bx bx-check"></i>
-                                                            </span>
-                                                            <span class="switch-off">
-                                                                <i class="bx bx-x"></i>
-                                                            </span>
+                                            <div class="col-md-2 mt-4">
+                                                <label class="form-label" for="RESV_CONFIRM_YN_CHK">
+                                                    Confirmation </label>
+                                                <label class="switch">
+                                                    <input type="checkbox" class="switch-input"
+                                                        id="RESV_CONFIRM_YN_CHK" />
+                                                    <input type="hidden" name="RESV_CONFIRM_YN" value="N"
+                                                        id="RESV_CONFIRM_YN" class="form-control" />
+                                                    <span class="switch-toggle-slider">
+                                                        <span class="switch-on">
+                                                            <i class="bx bx-check"></i>
                                                         </span>
-                                                    </label>
+                                                        <span class="switch-off">
+                                                            <i class="bx bx-x"></i>
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div class="col-md-2 mt-4">
+                                                <label class="form-label" for="RESV_NO_POST_CHK"> No Post </label>
+                                                <label class="switch switch-danger">
+                                                    <input type="checkbox" class="switch-input" id="RESV_NO_POST_CHK"
+                                                        value="1" />
+                                                    <input type="hidden" name="RESV_NO_POST" value="N"
+                                                        id="RESV_NO_POST" class="form-control" />
+                                                    <span class="switch-toggle-slider">
+                                                        <span class="switch-on">
+                                                            <i class="bx bx-x"></i>
+                                                        </span>
+                                                        <span class="switch-off">
+                                                        </span>
+                                                    </span>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
@@ -1324,8 +1348,8 @@
                         <div class="flxyFooter flxy_space">
                             <button type="button" id="previousbtn" onClick="previous()" class="btn btn-primary"><i
                                     class="fa-solid fa-angle-left"></i> Previous</button>
-                            <button type="button" id="optionsResrBtn" data_sysid=""
-                                class="btn btn-info reserOption me-1">Options</button>
+                            <button type="button" id="optionsResrBtn" data_sysid="" data-reservation_customer_id=""
+                                class="btn btn-info reserOption me-2" style="margin-left: auto;">Options</button>
                             <button type="button" id="submitResrBtn" onClick="submitForm('reservationForm','R',event)"
                                 class="btn btn-primary submitResr">Save</button>
                             <!--  -->
@@ -1410,8 +1434,8 @@
                             <table class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
-                                        <th scope="col" style="width:50px">Edit</th>
-                                        <th scope="col" style="width:50px">Sr.No</th>
+                                        <th scope="col" style="width:70px">Edit</th>
+                                        <th scope="col" style="width:70px">Sr.No</th>
                                         <th scope="col" style="width:250px">First Name</th>
                                         <th scope="col" style="width:250px">Last Name</th>
                                         <th scope="col" style="width:150px">DOB</th>
@@ -1426,7 +1450,8 @@
                                 </thead>
                                 <tbody id="searchRecord">
                                     <tr>
-                                        <td class="text-center" colspan="11">No Record Found</td>
+                                        <td class="text-left" colspan="11" style="padding-left: 20% !important;">No
+                                            Record Found</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1487,20 +1512,23 @@
                                     </span>
                                 </div>
                             </div>
-                        
+
                             <div class="col-md-3">
                                 <label class="form-label">Document Number</label>
-                                <input type="text" name="CUST_DOC_NUMBER" class="form-control" placeholder="Document number" />
+                                <input type="text" name="CUST_DOC_NUMBER" class="form-control"
+                                    placeholder="Document number" />
                             </div>
 
                             <div class="col-md-3">
                                 <label class="form-label">Doc Issue Date</label>
-                                <input type="text" name="CUST_DOC_ISSUE" class="form-control CUST_DOC_ISSUE" placeholder="YYYY-MM-DD" />
+                                <input type="text" name="CUST_DOC_ISSUE" class="form-control CUST_DOC_ISSUE"
+                                    placeholder="YYYY-MM-DD" />
                             </div>
 
                             <div class="col-md-3">
                                 <label class="form-label">Doc Expiry Date</label>
-                                <input type="text" name="CUST_DOC_EXPIRY" class="form-control CUST_DOC_EXPIRY" placeholder="YYYY-MM-DD" />
+                                <input type="text" name="CUST_DOC_EXPIRY" class="form-control CUST_DOC_EXPIRY"
+                                    placeholder="YYYY-MM-DD" />
                             </div>
 
                             <!-- <div class="col-md-3">
@@ -1508,7 +1536,7 @@
                                 <input type="text" name="CUST_PASSPORT" id="CUST_PASSPORT" class="form-control"
                                     placeholder="passport" />
                             </div> -->
-                            
+
                             <div class="col-md-3">
                                 <label class="form-label">Address</label>
                                 <input type="text" name="CUST_ADDRESS_1" id="CUST_ADDRESS_1" class="form-control"
@@ -1517,14 +1545,14 @@
                                     address is required can't empty.
                                 </div>
                             </div>
-                            
+
                             <!-- <div class="col-md-3 flxy_mgtop"> -->
                             <div class="col-md-3">
                                 <label class="form-label"></label>
                                 <input type="text" name="CUST_ADDRESS_2" id="CUST_ADDRESS_2" class="form-control"
                                     placeholder="address 2" />
                             </div>
-                            
+
                             <!-- <div class="col-md-3" style="margin-top: 23px !important;"> -->
                             <div class="col-md-3">
                                 <label class="form-label"></label>
@@ -1804,7 +1832,7 @@
     <!-- Option window -->
     <div class="modal fade" id="appcompanyWindow" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="rateQueryWindowLable">Accompanying Guest</h5>
@@ -1813,25 +1841,38 @@
                 <div class="modal-body">
                     <div id="customeTrigger"></div>
                     <div class="row">
-                        <table class="table table-striped">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Name</th>
-                                    <th>City</th>
-                                    <th>DOB</th>
-                                </tr>
-                            </thead>
-                            <tbody id="accompanyTd">
-                                <tr>
-                                    <td class="text-center" colspan="3">No data</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="flxy_table_resp">
+                            <table class="table table-striped table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col" style="width:70px">Edit</th>
+                                        <th scope="col" style="width:70px">Sr.No</th>
+                                        <th scope="col" style="width:250px">First Name</th>
+                                        <th scope="col" style="width:250px">Last Name</th>
+                                        <th scope="col" style="width:150px">DOB</th>
+                                        <th scope="col" style="width:250px">Passport</th>
+                                        <th scope="col" style="width:150px">Address</th>
+                                        <th scope="col" style="width:250px">City</th>
+                                        <th scope="col" style="width:250px">Email</th>
+                                        <th scope="col" style="width:250px">Mobile</th>
+                                        <th scope="col" style="width:250px">Nationality</th>
+                                        <th scope="col" style="width:150px">VIP</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="accompanyTd">
+                                    <tr>
+                                        <td class="text-left" colspan="11" style="padding-left: 20% !important;">No
+                                            Accompanying Guests</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" onClick="accompanySet('A',event)" class="btn btn-primary">Attach</button>
-                    <button type="button" onClick="accompanySet('D',event)" class="btn btn-warning">Detach</button>
+                    <button type="button" onClick="accompanySet('D',event)"
+                        class="btn btn-warning detach-accompany-guest" disabled>Detach</button>
                 </div>
             </div>
         </div>
@@ -2029,7 +2070,7 @@
                                     <div class="row g-0">
 
                                         <!-- Calendar Sidebar -->
-                                        <div class="app-calendar-sidebar col" id="app-calendar-sidebar" style="display: none">
+                                        <div class="app-calendar-sidebar col" id="app-calendar-sidebar">
                                             <div class="border-bottom p-4 my-sm-0 mb-3">
                                                 <div class="d-grid">
                                                     <button class="btn btn-primary btn-toggle-sidebar">
@@ -2046,69 +2087,16 @@
 
                                                 <hr class="container-m-nx my-4" />
 
-                                                <!-- Filter -->
-                                                <!-- <div class="mb-4">
-                        <small class="text-small text-muted text-uppercase align-middle">Filter</small>
-                      </div> -->
-
-                                                <!-- <div class="form-check mb-2">
-                        <input
-                          class="form-check-input select-all"
-                          type="checkbox"
-                          id="selectAll"
-                          data-value="all"
-                          checked
-                        />
-                        <label class="form-check-label" for="selectAll">View All</label>
-                      </div>  -->
 
                                                 <div class="app-calendar-events-filter">
-                                                    <!-- <div class="form-check form-check-danger mb-2">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-personal"
-                            data-value="personal"
-                            checked
-                          />
-                          <label class="form-check-label" for="select-personal">Personal</label>
-                        </div> -->
+
                                                     <div class="form-check mb-2" style="display: none">
                                                         <input class="form-check-input input-filter" type="checkbox"
                                                             id="select-business" data-value="business" checked />
                                                         <label class="form-check-label" for="select-business">View
                                                             All</label>
                                                     </div>
-                                                    <!-- <div class="form-check form-check-warning mb-2">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-family"
-                            data-value="family"
-                            checked
-                          />
-                          <label class="form-check-label" for="select-family">Family</label>
-                        </div> -->
-                                                    <!-- <div class="form-check form-check-success mb-2">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-holiday"
-                            data-value="holiday"
-                            checked
-                          />
-                          <label class="form-check-label" for="select-holiday">Holiday</label>
-                        </div> -->
-                                                    <!-- <div class="form-check form-check-info">
-                          <input
-                            class="form-check-input input-filter"
-                            type="checkbox"
-                            id="select-etc"
-                            data-value="etc"
-                            checked
-                          />
-                          <label class="form-check-label" for="select-etc">ETC</label>
-                        </div> -->
+
                                                 </div>
                                             </div>
                                         </div>
@@ -2140,16 +2128,7 @@
                                                             <input type="text" class="form-control" id="eventTitle"
                                                                 name="eventTitle" placeholder="Event Title" />
                                                         </div>
-                                                        <!-- <div class="mb-3">
-                            <label class="form-label" for="eventLabel">Item Class</label>
-                            <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
-                              <option data-label="primary" value="Business" selected>Business</option>
-                              <option data-label="danger" value="Personal">Personal</option>
-                              <option data-label="warning" value="Family">Family</option>
-                              <option data-label="success" value="Holiday">Holiday</option>
-                              <option data-label="info" value="ETC">ETC</option>
-                            </select>
-                          </div> -->
+
                                                         <div class="mb-3">
                                                             <label class="form-label" for="eventStartDate">Start
                                                                 Date</label>
@@ -2174,14 +2153,12 @@
                                                             </label>
                                                         </div>
 
-
                                                         <div class="mb-3">
                                                             <label class="form-label"
                                                                 for="eventDescription">Description</label>
                                                             <textarea class="form-control" name="eventDescription"
                                                                 id="eventDescription"></textarea>
                                                         </div>
-
 
                                                         <div class="d-flex justify-content-start justify-content-sm-between my-4 mb-3"
                                                             style="display:none !important">
@@ -2198,8 +2175,6 @@
                                                                     class="btn btn-label-danger btn-delete-event d-none">Delete</button>
                                                             </div>
                                                         </div>
-
-
                                                     </form>
                                                 </div>
                                             </div>
@@ -2208,8 +2183,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -2718,62 +2691,63 @@
                     <h4 class="modal-title" id="popModalWindowlabel">Rate Info</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">                    
-                        <div id="rate_info" class="content">
-                            <div class="row g-3">                               
-                                <div class="col-md-12">
-                                    <div class="border rounded p-4 mb-3"> 
-                                        <div class="table-responsive text-nowrap Rate_Info_Div" style="height: 350px; overflow: auto">
-                                            <table id="Rate_info" class="table table-bordered table-hover" style="height: 350px;">
-                                                <thead class="table-dark">
-                                                    <tr>
-                                                        <th class="all" >Date</th>
-                                                        <th class="all">Rate Code</th>
-                                                        <th class="all">Room Revenue</th>
-                                                        <th class="all">Packages</th>
-                                                        <th class="all">Sub Total</th>
-                                                        <th class="all">Generates</th>
-                                                        <th class="all">Total</th>
-                                                      
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                            
-                                        </div>
+                <div class="modal-body">
+                    <div id="rate_info" class="content">
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <div class="border rounded p-4 mb-3">
+                                    <div class="table-responsive text-nowrap Rate_Info_Div"
+                                        style="height: 350px; overflow: auto">
+                                        <table id="Rate_info" class="table table-bordered table-hover"
+                                            style="height: 350px;">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th class="all">Date</th>
+                                                    <th class="all">Rate Code</th>
+                                                    <th class="all">Room Revenue</th>
+                                                    <th class="all">Packages</th>
+                                                    <th class="all">Sub Total</th>
+                                                    <th class="all">Generates</th>
+                                                    <th class="all">Total</th>
+
+                                                </tr>
+                                            </thead>
+                                        </table>
+
                                     </div>
                                 </div>
-                                
                             </div>
 
-                            <div class="row g-3">                               
-                                <div class="col-md-12">
-                                    <div class="p-4 mb-3" style="float: right"> 
-                                        <div class="table-responsive text-nowrap" >
-                                            <table id="Rate_info_total" class="table table-hover" style="float:right" >
-                                                <tbody>
-                                                   
-                                                </tbody>
-                                            </table>
-                                        </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <div class="p-4 mb-3" style="float: right">
+                                    <div class="table-responsive text-nowrap">
+                                        <table id="Rate_info_total" class="table table-hover" style="float:right">
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-
-                                <div class="d-flex col-12 justify-content-between">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
-                                </div>
-                              
                             </div>
-                        </div> 
+
+                            <div class="d-flex col-12 justify-content-between">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+
+                        </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
     <!-- End Rate Info  -->
 
 
-        <!-- Traces Modal window -->
-        <div class="modal fade" id="tracesModal" data-backdrop="static" data-keyboard="false"
+    <!-- Traces Modal window -->
+    <div class="modal fade" id="tracesModal" data-backdrop="static" data-keyboard="false"
         aria-labelledby="popModalWindowlabel">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -2820,11 +2794,11 @@
                                         <div class="col-md-3 mb-3">
                                             <label for="RESERVATION_STATUS" class="col-form-label col-md-4"><b>
                                                     Status</b></label>
-                                            <input type="text" name="RESERVATION_STATUS" id="RESERVATION_STATUS" class="form-control"
-                                                disabled />
-                                        </div>                                        
+                                            <input type="text" name="RESERVATION_STATUS" id="RESERVATION_STATUS"
+                                                class="form-control" disabled />
+                                        </div>
                                     </div>
-                               
+
                                     <div class="row g-3 ">
                                         <div class="col-md-4 mb-3">
                                             <label for="RSV_TRACE_DATE" class="col-form-label col-md-4"><b>Trace
@@ -2832,9 +2806,10 @@
                                             <input class="form-control" type="text" placeholder="d-Mon-yyyy"
                                                 id="RSV_TRACE_DATE" name="RSV_TRACE_DATE" />
                                         </div>
-                                       
+
                                         <div class="col-md-4 ">
-                                            <label for="RSV_TRACE_TIME" class="col-form-label col-md-4"><b>Time *</b></label>
+                                            <label for="RSV_TRACE_TIME" class="col-form-label col-md-4"><b>Time
+                                                    *</b></label>
                                             <input class="form-control" type="time" placeholder="12:00"
                                                 id="RSV_TRACE_TIME" name="RSV_TRACE_TIME" />
                                         </div>
@@ -2844,18 +2819,19 @@
                                             <select id="RSV_TRACE_DEPARTMENT" name="RSV_TRACE_DEPARTMENT"
                                                 class="select2 form-select form-select-lg"></select>
                                         </div>
-                                        
+
                                     </div>
                                     <div class="row g-3 mb-3">
-                                        
+
                                         <div class="col-md-12 ">
                                             <label for="RSV_TRACE_TEXT" class="col-form-label col-md-4"><b>TRACE TEXT
                                                     *</b></label>
-                                            <textarea name="RSV_TRACE_TEXT" id="RSV_TRACE_TEXT" rows="5" class="form-control"></textarea>
+                                            <textarea name="RSV_TRACE_TEXT" id="RSV_TRACE_TEXT" rows="5"
+                                                class="form-control"></textarea>
 
                                         </div>
 
-                                        
+
                                     </div>
 
                                     <div class="row g-3 ">
@@ -2875,8 +2851,9 @@
                                             <button type="button" class="btn btn-primary add-trace-detail">
                                                 <i class="fa-solid fa-circle-plus"></i>&nbsp; Add New
                                             </button>&nbsp;
-                                            <button type="button" class="btn btn-primary resolve-trace-detail" data-rel="1">
-                                            <i class="fa-solid fa-check"></i>&nbsp; Resolve
+                                            <button type="button" class="btn btn-primary resolve-trace-detail"
+                                                data-rel="1">
+                                                <i class="fa-solid fa-check"></i>&nbsp; Resolve
                                             </button>&nbsp;
 
                                             <button type="button" class="btn btn-danger delete-trace-detail">
@@ -2935,19 +2912,19 @@ var linkMode = '';
 var windowmode = '';
 
 $(document).ready(function() {
-$('#Rate_info').DataTable({
-    "ordering": false,
-    "searching": false,
-    autowidth: true,
-    responsive: true
-});
+    $('#Rate_info').DataTable({
+        "ordering": false,
+        "searching": false,
+        autowidth: true,
+        responsive: true
+    });
 
-$('#Each_Package_Details').DataTable({
-    "ordering": true,
-    "searching": false,
-    autowidth: true,
-    responsive: true
-});
+    $('#Each_Package_Details').DataTable({
+        "ordering": true,
+        "searching": false,
+        autowidth: true,
+        responsive: true
+    });
 
     linkMode = 'EX';
     $('#loader_flex_bg').show();
@@ -2978,12 +2955,14 @@ $('#Each_Package_Details').DataTable({
                         '<ul class="dropdown-menu dropdown-menu-end">' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
                         '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
-                            'RM_TY_DESC'] +
-                        '" class="dropdown-item editReserWindow text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
+                            'RM_TY_DESC'] + '" data-reservation_customer_id = "' + data[
+                            'CUST_ID'] +
+                        '"  class="dropdown-item editReserWindow text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
                         '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
-                            'RM_TY_DESC'] + '" data-reservation_customer_id = "' + data['CUST_ID'] +
+                            'RM_TY_DESC'] + '" data-reservation_customer_id = "' + data[
+                            'CUST_ID'] +
                         '"  class="dropdown-item reserOption text-success"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
                         // '<div class="dropdown-divider"></div>' +
                         '<div class="dropdown-divider"></div>' +
@@ -2999,12 +2978,7 @@ $('#Each_Package_Details').DataTable({
                 className: "text-center"
             },
             {
-                data: 'CUST_FIRST_NAME',
-                render: function(data, type, row, meta) {
-                    return (
-                        row['CUST_FIRST_NAME'] + ' ' + row['CUST_LAST_NAME']
-                    );
-                }
+                data: 'CUST_FIRST_NAME'
             },
             {
                 data: 'RESV_ROOM',
@@ -3133,7 +3107,7 @@ $('#Each_Package_Details').DataTable({
         startDate: '-0m',
         validateOnBlur: false
     });
-    
+
     //$('#RSV_TRACE_TIME').timepicker();
 
     $.ajax({
@@ -3453,6 +3427,9 @@ $(document).on('click', '.reserOption', function() {
     roomType = $(this).attr('rmtype');
     roomTypedesc = $(this).attr('rmtypedesc');
     reservation_customer_id = $(this).data('reservation_customer_id');
+    $('#optionsResrBtn').attr({
+        'data-reservation_customer_id': reservation_customer_id
+    });
 
     $('#Accompany').show();
     //$('#Addon').hide();
@@ -3471,11 +3448,11 @@ $(document).on('click', '.reserOption', function() {
 
 $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
     reservation_customer_id = $(this).data('reservation_customer_id');
-
     ////Item Inventory
     // showInventoryItems();
     itemClassList();
 
+    $('#reservationForm').removeClass('was-validated');
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
     $('#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
 
@@ -3485,7 +3462,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 
     $('.window-1,#nextbtn,#previousbtn').hide();
     $('.window-2').show();
-    $('.flxyFooter').removeClass('flxy_space');
+    //$('.flxyFooter').removeClass('flxy_space');
     $('#submitResrBtn').removeClass('submitResr');
     $('#reservationW').modal('show');
 
@@ -3514,7 +3491,8 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
         $('#optionsResrBtn').attr({
             'data_sysid': sysid,
             'rmtype': $(this).attr('rmtype'),
-            'rmtypedesc': $(this).attr('rmtypedesc')
+            'rmtypedesc': $(this).attr('rmtypedesc'),
+            'data-reservation_customer_id': reservation_customer_id
         })
     }
 
@@ -3556,7 +3534,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 
                     } else if (field == 'RESV_CONFIRM_YN' || field ==
                         'RESV_PICKUP_YN' || field == 'RESV_DROPOFF_YN' || field ==
-                        'RESV_EXT_PRINT_RT' || field == 'RESV_FIXED_RATE') {
+                        'RESV_EXT_PRINT_RT' || field == 'RESV_FIXED_RATE' || field == 'RESV_NO_POST') {
                         if (dataval == 'Y') {
                             $('#' + field + '_CHK').prop('checked', true);
                         } else {
@@ -3653,7 +3631,13 @@ function childReservation(param) {
         showCustomerRow($('.window-2').is(':visible') ? $('.window-2').find('#RESV_NAME')
             .val() : $('.window-1')
             .find('#RESV_NAME').val());
+    } else if (param == 'AC') {
+        $('.profileSearch').find('input,select').val('');
+        $('#searchRecord').html(
+            '<tr><td class="text-left" colspan="11" style="padding-left: 20% !important;">No Record Found</td></tr>'
+        );
     }
+
     $('.profileCreate').hide();
     $('.profileSearch').show();
     $('#reservationChildlable').html('Search Customer');
@@ -3681,7 +3665,7 @@ function addResvation() {
     $('#reservationWlable').html('Add New Reservation');
     runSupportingResevationLov();
     $('.window-1,#nextbtn').show();
-    $('.flxyFooter').addClass('flxy_space');
+    //$('.flxyFooter').addClass('flxy_space');
     $('#submitResrBtn').addClass('submitResr');
     $('#submitResrBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('.window-2,#previousbtn,#optionsResrBtn').hide();
@@ -3696,7 +3680,7 @@ function addResvation() {
     $('.RESV_DEPARTURE').datepicker().datepicker("setDate", end);
 
     $('#RESV_NIGHT,#RESV_NO_F_ROOM,#RESV_ADULTS').val('1');
-    $('#RESV_CONFIRM_YN,#RESV_PICKUP_YN,#RESV_DROPOFF_YN,#RESV_EXT_PRINT_RT,#RESV_FIXED_RATE').val('N');
+    $('#RESV_CONFIRM_YN,#RESV_NO_POST,#RESV_PICKUP_YN,#RESV_DROPOFF_YN,#RESV_EXT_PRINT_RT,#RESV_FIXED_RATE').val('N');
 }
 
 $(document).on('click', '.flxCheckBox', function() {
@@ -3922,7 +3906,7 @@ function submitForm(id, mode, event) {
                     var response = respn['RESPONSE']['REPORT_RES'][0];
                     var confirmationNo = response['RESV_NO'];
                     bootbox.alert({
-                        message: '<b>Confimation Number : </b>' + confirmationNo + '',
+                        message: '<b>Confirmation Number : </b>' + confirmationNo + '',
                         size: 'small'
                     });
                     $('#reservationW').modal('hide');
@@ -4277,9 +4261,12 @@ $(document).on('change', '.rateFilter', function() {
 var customPop = '';
 
 function searchData(form, mode, event) {
+
     if (mode == 'C') {
         $('.' + form).find('input,select').val('');
-        $('#searchRecord').html('<tr><td class="text-center" colspan="11">No Record Found</td></tr>');
+        $('#searchRecord').html(
+            '<tr><td class="text-left" colspan="11" style="padding-left: 20% !important;">No Record Found</td></tr>'
+        );
     } else if (mode == 'S') {
         var formData = {};
         $('.' + form).find('input,select').each(function(i, data) {
@@ -4288,9 +4275,14 @@ function searchData(form, mode, event) {
             formData[field] = values;
         });
 
-        formData['reservation_customer_id'] = reservation_customer_id;
+        if ($("#appcompanyWindow").hasClass('show')) { // If Accompany Guest popup is displayed
+            formData['RESV_ID'] = ressysId;
+            formData['reservation_customer_id'] = $('#optionsResrBtn').data("reservation_customer_id");
+            formData['get_not_accomp'] = 1; // Show not accompanied in search list            
+        }
 
         formData['windowmode'] = windowmode;
+
         $.ajax({
             url: '<?php echo base_url('/searchProfile') ?>',
             type: "post",
@@ -4304,12 +4296,16 @@ function searchData(form, mode, event) {
                 $('#searchRecord').html(respone);
             }
         });
+
     } else if (mode == 'N') {
         $('#customerForm').find('input,select').val('');
         $('.profileCreate').show();
         $('.profileSearch').hide();
         $('#reservationChildlable').html('Add Customer');
         customPop = '-N';
+    } else if (mode == 'PR' && $("#appcompanyWindow").hasClass('show')) {
+        custId = $('#searchRecord > tr.activeTr').attr('data_sysid');
+        updateAccompanyGuest('A');
     }
 }
 
@@ -4336,6 +4332,7 @@ function showCustomerRow(custId) {
 }
 
 var custId = '';
+
 $(document).on('click', '.activeRow,#customeTrigger', function() {
     var joinVaribl = windowmode + customPop;
     if (joinVaribl != 'AC-N') {
@@ -4344,24 +4341,9 @@ $(document).on('click', '.activeRow,#customeTrigger', function() {
         custId = $(this).attr('data_sysid');
     }
 
-    $('#appcompanyWindow').modal('show');
-
-    $.ajax({
-        url: '<?php echo base_url('/getExistingAppcompany') ?>',
-        type: "post",
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        data: {
-            custId: custId,
-            ressysId: ressysId                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-        },
-        dataType: 'json',
-        success: function(respn) {
-            var respone = respn['table'];
-            $('#accompanyTd').html(respone);
-        }
-    });
+    if (joinVaribl == 'AC') {
+        toggleButton('.detach-accompany-guest', 'btn-dark', 'btn-warning', false);
+    }
 });
 
 $(document).on('click', '.getExistCust .select', function() {
@@ -4406,10 +4388,33 @@ $(document).on('click', '.getExistCust .select', function() {
 
 function accompanySet(mode, event) {
     if (mode == 'D') {
-        $('.activeTrDetch').remove();
-    }
+        bootbox.confirm({
+            message: "Are you sure you want to remove this accompanied guest?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function(result) {
+                if (result) {
+                    updateAccompanyGuest(mode);
+                }
+            }
+        });
+    } else
+        childReservation('AC');
+    //updateAccompanyGuest(mode);
+}
+
+function updateAccompanyGuest(mode) {
     $.ajax({
         url: '<?php echo base_url('/appcompanyProfileSetup') ?>',
+        async: false,
         type: "post",
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -4418,16 +4423,35 @@ function accompanySet(mode, event) {
             mode: mode,
             ACCOMP_CUST_ID: custId,
             ACCOMP_REF_RESV_ID: ressysId,
-            ACCOPM_ID: ACCOPM_SYSID
         },
         dataType: 'json',
         success: function(respn) {
-            var respone = respn['table'];
-            $('#accompanyTd').html(respone);
+
+            var response = respn['SUCCESS'];
+            if (response != '1') {
+                var ERROR = respn['RESPONSE']['ERROR'];
+                var mcontent = '';
+                $.each(ERROR, function(ind, data) {
+                    mcontent += '<li>' + data + '</li>';
+                });
+                showModalAlert('error', mcontent);
+            } else {
+                var alertText = mode == 'D' ?
+                    '<li>The Guest is no longer accompanying this reservation</li>' :
+                    '<li>The Guest is now accompanying this reservation</li>';
+                showModalAlert(mode == 'D' ? 'warning' : 'success', alertText);
+
+                if ($('#reservationChild').hasClass('show'))
+                    $('#reservationChild').modal('hide');
+
+                $('.accompany-guests').trigger('click');
+            }
         }
     });
 }
+
 var ACCOPM_SYSID = '';
+
 $(document).on('click', '.activeDetach', function() {
     $('.activeDetach').removeClass('activeTrDetch');
     $(this).addClass('activeTrDetch');
@@ -4438,7 +4462,7 @@ var copyresr = [];
 
 function reservExtraOption(param) {
     if (param == 'ACP') {
-        childReservation();
+        //childReservation();
         //$('#Addon').hide();
         $('#Addon').modal('hide');
         //$('#Accompany').show();
@@ -4452,6 +4476,54 @@ function reservExtraOption(param) {
             'refresh');
     }
 }
+
+
+$(document).on('click', '.accompany-guests', function() {
+
+    //alert(ressysId);
+
+    $('#appcompanyWindow').modal('show');
+
+    $.ajax({
+        url: '<?php echo base_url('/searchProfile') ?>',
+        async: false,
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            'RESV_ID': ressysId,
+            'get_accomp': 1
+        },
+        dataType: 'json',
+        success: function(respn1) {
+            var respone = respn1['table'];
+            $('#accompanyTd').html(respone);
+        }
+    });
+
+    toggleButton('.detach-accompany-guest', 'btn-warning', 'btn-dark', true);
+
+    /*
+    $.ajax({
+        url: '<?php echo base_url('/getExistingAppcompany') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            custId: custId,
+            ressysId: ressysId
+        },
+        dataType: 'json',
+        success: function(respn) {
+            var respone = respn['table'];
+            $('#accompanyTd').html(respone);
+        }
+    });*/
+
+});
+
 
 
 $(document).on('change', '.copyReser', function() {
@@ -4534,7 +4606,8 @@ function submitItemForm(id) {
                 });
                 showModalAlert('error', mcontent);
             } else {
-                var alertText = $('#RSV_ITM_ID').val() == '' ? '<li>The item has been added</li>' : '<li>';
+                var alertText = $('#RSV_ITM_ID').val() == '' ? '<li>The item has been added</li>' :
+                    '<li>';
                 showModalAlert('success', alertText);
 
 
@@ -4828,7 +4901,8 @@ function submitDetailsForm(id) {
 
                     var newOption = new Option(data.text, data.id, false, false);
                     $('#itemsArray').append(newOption).trigger('change');
-                    $('#itemsArray').select2('destroy').find('option').prop('selected', 'selected').end()
+                    $('#itemsArray').select2('destroy').find('option').prop('selected', 'selected')
+                        .end()
                         .select2();
 
                 }
@@ -4934,7 +5008,8 @@ $(document).on('click', '.delete-item-detail', function() {
                         if (response == '0') {
                             clearFormFields('#select_items');
                             showModalAlert('error',
-                                '<li>The Inventory Items cannot be deleted</li>');
+                                '<li>The Inventory Items cannot be deleted</li>'
+                            );
                             $('#warningModal').delay(2500).fadeOut();
                         } else {
                             blockLoader('#select_items');
@@ -5245,7 +5320,8 @@ $(document).on('click', '.add-fixedcharge-detail', function() {
                             'table-warning');
 
                         //Disable Delete button
-                        toggleButton('.delete-fixedcharge-detail', 'btn-danger', 'btn-dark', true);
+                        toggleButton('.delete-fixedcharge-detail', 'btn-danger', 'btn-dark',
+                            true);
 
                         showModalAlert('info',
                             'Fill in the form and click the \'Save\' button to add the new fixed charge'
@@ -5449,14 +5525,16 @@ function loadFixedchargeDetails(fixedChargeID) {
 
                     if (field == 'FIXD_CHRG_TRNCODE') {
                         $('#' + field).val(dataval).trigger('change');
-                    } else if (field == 'FIXD_CHRG_END_DATE' && FIXD_CHRG_FREQUENCY == 1) {
+                    } else if (field == 'FIXD_CHRG_END_DATE' && FIXD_CHRG_FREQUENCY ==
+                        1) {
                         $('.END_DATE').hide();
                         $('.WEEKLY_EXCECUTE').hide();
                         $('.MONTHLY_EXCECUTE').hide();
                         $('.YEARLY_EXCECUTE').hide();
                         $('.QUARTERLY_EXCECUTE').hide();
 
-                    } else if (FIXD_CHRG_FREQUENCY == 3 && field == 'FIXD_CHRG_WEEKLY') {
+                    } else if (FIXD_CHRG_FREQUENCY == 3 && field ==
+                        'FIXD_CHRG_WEEKLY') {
                         $('#' + field).val(dataval).trigger('change');
                     } else {
                         $('#' + field).val(dataval);
@@ -5516,8 +5594,10 @@ $(document).on('click', '.delete-fixedcharge-detail', function() {
                             $('#FIXD_CHRG_TRNCODE').val('');
                             $('#FIXD_CHRG_AMT').val('');
                             $('#FIXD_CHRG_QTY').val('');
-                            $('#FIXD_CHRG_BEGIN_DATE').val($('#FIXD_ARRIVAL').val());
-                            $('#FIXD_CHRG_END_DATE').val($('#FIXD_DEPARTURE').val());
+                            $('#FIXD_CHRG_BEGIN_DATE').val($('#FIXD_ARRIVAL')
+                                .val());
+                            $('#FIXD_CHRG_END_DATE').val($('#FIXD_DEPARTURE')
+                                .val());
                             $('#FIXD_CHRG_TRNCODE').val('');
                             $('#FIXD_CHRG_AMT').val('');
                             $('#FIXD_CHRG_QTY').val('');
@@ -6057,11 +6137,11 @@ function loadPackageDetails(packageID) {
         success: function(respn) {
             $('#Each_Package_Details > tbody').html(respn);
         }
-    });     
+    });
 }
 
-function getRateInfo() {  
-    resvID = $('#rateInfoButton').attr('data_sysid');   
+function getRateInfo() {
+    resvID = $('#rateInfoButton').attr('data_sysid');
     $('#RateInfoModal').modal('show');
     $.ajax({
         url: '<?php echo base_url('/rateInfoDetails') ?>',
@@ -6081,7 +6161,7 @@ function getRateInfo() {
         }
 
 
-    });   
+    });
 }
 
 
@@ -6091,7 +6171,7 @@ function getRateInfo() {
 ///////////////Traces/////////////
 
 $(document).on('click', '#traceButton', function() {
-    
+
     $('#tracesModal').modal('show');
     var reservID = $(this).attr('data_sysid');
     $("#TRACE_RESV_ID").val(reservID);
@@ -6114,8 +6194,7 @@ $(document).on('click', '#traceButton', function() {
             $('#TRACE_ARRIVAL').val(respn.RESV_ARRIVAL_DT);
             $('#TRACE_DEPARTURE').val(respn.RESV_DEPARTURE);
             $('#TRACE_ARRIVAL_DT').val(respn.RESV_ARRIVAL_DT);
-            $('#TRACE_DEPARTURE_DT').val(respn.RESV_DEPARTURE);           
-            $('#RESERVATION_STATUS').val(respn.RESV_STATUS);
+            $('#TRACE_DEPARTURE_DT').val(respn.RESV_DEPARTURE);
             $('#RSV_TRACE_DATE').val(respn.RESV_ARRIVAL_DT);
         }
     });
@@ -6147,8 +6226,8 @@ $(document).on('click', '.add-trace-detail', function() {
     $('#RSV_TRACE_TIME').val('');
     $('#RSV_TRACE_TEXT').val('');
     $('#RSV_TRACE_ID').val('');
-    
-    
+
+
 
     bootbox.dialog({
         message: "Do you want to add a new fixed charges?",
@@ -6158,7 +6237,7 @@ $(document).on('click', '.add-trace-detail', function() {
                 className: 'btn-success',
                 callback: function(result) {
                     if (result) {
-                        
+
                         $('#tracesDiv').find('tr.table-warning').removeClass(
                             'table-warning');
 
@@ -6271,10 +6350,8 @@ function showTraces(resvID) {
             {
                 data: 'UE_FIRST_NAME',
                 render: function(data, type, full, meta) {
-                    if(full['UE_LAST_NAME'] == '')
-                    UE_LAST_NAME = ''; else UE_LAST_NAME = full['UE_LAST_NAME'];
-                    if (full['UE_FIRST_NAME'] != null )
-                        return full['UE_FIRST_NAME'] + ' ' + UE_LAST_NAME;
+                    if (full['UE_FIRST_NAME'] != null)
+                        return full['UE_FIRST_NAME'] + ' | ' + full['UE_LAST_NAME'];
                     else
                         return '';
                 }
@@ -6282,8 +6359,6 @@ function showTraces(resvID) {
             {
                 data: 'UR_FIRST_NAME',
                 render: function(data, type, full, meta) {
-                    if(full['UR_LAST_NAME'] == '')
-                    UR_LAST_NAME = ''; else UR_LAST_NAME = full['UR_LAST_NAME'];
                     if (full['UR_FIRST_NAME'] != null)
                         return full['UR_FIRST_NAME'] + ' | ' + full['UR_LAST_NAME'];
                     else
@@ -6299,7 +6374,7 @@ function showTraces(resvID) {
                         return '';
                 }
             },
-           
+
 
         ],
         "order": [
@@ -6347,20 +6422,21 @@ function loadTraceDetails(TRACE_ID) {
                 $.each(data, function(fields, datavals) {
 
                     var field = $.trim(fields);
-                    var dataval = $.trim(datavals); 
+                    var dataval = $.trim(datavals);
                     // alert(field);
                     // alert(dataval);
-                    
+
                     if (field == 'RSV_TRACE_RESOLVED_BY' && (dataval != 0)) {
-                       $(".resolve-trace-detail").attr('data-rel',2);
-                       $(".resolve-trace-detail").html('<i class="fa-solid fa-check"></i> Unresolve');
-                    }else if(field == 'RSV_TRACE_RESOLVED_BY' && (dataval == 0)){
-                        $(".resolve-trace-detail").html('<i class="fa-solid fa-check"></i> Resolve');
-                        $(".resolve-trace-detail").attr('data-rel',1);
-                    }
-                    else if (field == 'RSV_TRACE_DEPARTMENT') {
+                        $(".resolve-trace-detail").attr('data-rel', 2);
+                        $(".resolve-trace-detail").html(
+                            '<i class="fa-solid fa-check"></i> Unresolve');
+                    } else if (field == 'RSV_TRACE_RESOLVED_BY' && (dataval == 0)) {
+                        $(".resolve-trace-detail").html(
+                            '<i class="fa-solid fa-check"></i> Resolve');
+                        $(".resolve-trace-detail").attr('data-rel', 1);
+                    } else if (field == 'RSV_TRACE_DEPARTMENT') {
                         $('#' + field).val(dataval).trigger('change');
-                    
+
                     } else {
                         $('#' + field).val(dataval);
 
@@ -6433,7 +6509,7 @@ $(document).on('click', '.delete-trace-detail', function() {
 
 
 $(document).on('click', '#Trace_Details > tbody > tr', function() {
-   
+
     $('#Trace_Details').find('tr.table-warning').removeClass('table-warning');
     $(this).addClass('table-warning');
     $.when(loadTraceDetails($(this).data('trace_id')))
@@ -6453,8 +6529,8 @@ $(document).on('click', '.resolve-trace-detail', function() {
         url: '<?php echo base_url('/resolveTraces') ?>',
         type: "post",
         data: {
-            TRACE_ID:TRACE_ID,
-            resolve:resolve
+            TRACE_ID: TRACE_ID,
+            resolve: resolve
         },
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -6462,7 +6538,7 @@ $(document).on('click', '.resolve-trace-detail', function() {
         dataType: 'json',
         success: function(respn) {
             var response = respn['SUCCESS'];
-            if (response == '0') {               
+            if (response == '0') {
                 showModalAlert('error',
                     '<li>The trace cannot be resolved</li>');
                 $('#warningModal').delay(2500).fadeOut();
@@ -6470,16 +6546,22 @@ $(document).on('click', '.resolve-trace-detail', function() {
                 blockLoader('#tracesDiv');
                 showModalAlert('info',
                     '<li>The trace has been resolved</li>');
-                $('#warningModal').delay(2500).fadeOut(); 
+                $('#warningModal').delay(2500).fadeOut();
                 showTraces(resvID);
-                
+
             }
         }
     });
 });
 
 
+$(document).on('hide.bs.modal', '#edit-customer', function() {
+    // put your default event here
 
+    if ($("#appcompanyWindow").hasClass('show')) { // If Accompany Guest popup is displayed
+        $('.accompany-guests').trigger('click');
+    }
+});
 
 
 
