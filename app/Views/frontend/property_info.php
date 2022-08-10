@@ -20,7 +20,6 @@
                             <th></th>
                             <th>File</th>
                             <th>Updated At</th>
-                            <!-- <th class="all">Action</th> -->
                         </tr>
                     </thead>
                 </table>
@@ -78,14 +77,6 @@
 
 <?= $this->section("script") ?>
 <script>
-    $(document).ready(function() {
-        const snowEditor = new Quill('#snow-editor', {
-            bounds: '#snow-editor',
-            theme: 'snow',
-            placeholder: 'Content...',
-        });
-    });
-
     var compAgntMode = '';
     var linkMode = '';
 
@@ -113,37 +104,6 @@
                 {
                     data: 'PI_UPDATED_AT'
                 },
-                // {
-                //     data: null,
-                //     className: "text-center",
-                //     "orderable": false,
-                //     render: function(data, type, row, meta) {
-                //         return (
-                //             `
-                //         <div class="d-inline-block">
-                //             <a href="javascript:;" title="Edit or Delete" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                //                 <i class="bx bx-dots-vertical-rounded"></i>
-                //             </a>
-
-                //             <ul class="dropdown-menu dropdown-menu-end">
-                //                 <li>
-                //                     <a href="javascript:;" data_id="${data['NS_ID']}" class="dropdown-item editWindow text-primary">
-                //                         <i class="fa-solid fa-pen-to-square"></i> Edit
-                //                     </a>
-                //                 </li>
-
-                //                 <div class="dropdown-divider"></div>
-                                
-                //                 <li>
-                //                     <a href="javascript:;" data_id="${data['NS_ID']}" class="dropdown-item text-danger delete-record">
-                //                         <i class="fa-solid fa-ban"></i> Delete
-                //                     </a>
-                //                 </li>
-                //             </ul>
-                //         </div>
-                //     `);
-                //     }
-                // },
             ],
             columnDefs: [{
                 width: "7%",
@@ -258,91 +218,6 @@
             }
         });
     }
-
-    // Show Edit Rate Class Form
-    $(document).on('click', '.editWindow', function() {
-        resetForm();
-        
-        $('.dtr-bs-modal').modal('hide');
-        var news_id = $(this).attr('data_id');
-
-        let id = "submit-form";
-        $(`#${id} input[name='id']`).val(news_id);
-
-        $('#popModalWindowlabel').html('Edit News');
-        $('#popModalWindow').modal('show');
-
-        var url = '<?php echo base_url('/news/edit') ?>';
-        $.ajax({
-            url: url,
-            type: "post",
-            data: {
-                id: news_id
-            },
-            dataType: 'json',
-            success: function(respn) {
-                $(respn).each(function(inx, data) {
-                    
-
-                    $.each(data, function(field, val) {
-
-                        if ($(`#${id} input[name='${field}'][type!='file']`).length)
-                            $(`#${id} input[name='${field}']`).val(val);
-
-                        else if ($(`#${id} textarea[name='${field}']`).length)
-                            $(`#${id} textarea[name='${field}']`).val(val);
-
-                        if(field == 'NS_BODY')
-                            $("#snow-editor .ql-editor").html(val);
-
-                    });
-                });
-
-                $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
-            }
-        });
-    });
-
-    // Delete Rate Class
-    $(document).on('click', '.delete-record', function() {
-        hideModalAlerts();
-        $('.dtr-bs-modal').modal('hide');
-
-        var id = $(this).attr('data_id');
-        bootbox.confirm({
-            message: "Are you sure you want to delete this record?",
-            buttons: {
-                confirm: {
-                    label: 'Yes',
-                    className: 'btn-success'
-                },
-                cancel: {
-                    label: 'No',
-                    className: 'btn-danger'
-                }
-            },
-            callback: function(result) {
-                if (result) {
-                    $.ajax({
-                        url: '<?php echo base_url('/news/delete') ?>',
-                        type: "post",
-                        data: {
-                            id: id,
-                            '_method': 'delete'
-                        },
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        dataType: 'json',
-                        success: function(respn) {
-                            showModalAlert('success', '<li>The News has been deleted</li>');
-                            $('#dataTable_view').dataTable().fnDraw();
-                        }
-                    });
-                }
-            }
-        });
-    });
 
     // bootstrap-maxlength & repeater (jquery)
     $(function() {

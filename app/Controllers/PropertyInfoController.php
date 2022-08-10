@@ -81,28 +81,4 @@ class PropertyInfoController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'Property Info updated.'], $response = ''));
     }
-
-    public function edit()
-    {
-        $id = $this->request->getPost('id');
-
-        $flight_carrier = $this->FlightCarrier->where('FC_ID', $id)->first();
-
-        if ($flight_carrier)
-            return $this->respond($flight_carrier);
-
-        return $this->respond(responseJson(404, true, ['msg' => "Flight Carrier not found"]));
-    }
-
-    public function delete()
-    {
-        $id = $this->request->getPost('id');
-
-        $return = $this->FlightCarrier->delete($id);
-        $result = $return
-            ? responseJson(200, false, ['msg' => 'Flight Carrier deleted successfully'], $return)
-            : responseJson(500, true, "record not deleted");
-
-        return $this->respond($result);
-    }
 }
