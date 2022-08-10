@@ -181,7 +181,7 @@
                     </span>
                     <span class="app-brand-text demo menu-text fw-bold ms-2" style="color:#5a8dee !important">FlexiGuest</span>
                                     <?php */ ?>
-                    <img src="<?php echo base_url('/assets/img/new-logo.webp'); ?>" width="190px;" />
+                    <img src="<?= brandingLogo() ?>" width="190px;" />
                 </a>            
           </div>
         

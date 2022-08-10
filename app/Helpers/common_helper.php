@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\BrandingLogo;
 use Config\Services;
 
 function getMethodName()
@@ -355,4 +356,15 @@ function geUsersList()
         $response = $Db->query($sql)->getResultArray();
 
         return $response;
+}
+
+function brandingLogo()
+{
+    $BrandingLogo = new BrandingLogo();
+    $logo = $BrandingLogo->first();
+
+    if(!empty($logo))
+        return base_url($logo['BL_URL']);
+
+    return "";
 }
