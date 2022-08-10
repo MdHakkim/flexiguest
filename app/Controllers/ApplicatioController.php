@@ -132,7 +132,7 @@ class ApplicatioController extends BaseController
         
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_RESERVATION_VIEW LEFT JOIN FLXY_CUSTOMER C ON C.CUST_ID = FLXY_RESERVATION_VIEW.RESV_NAME';
-        $columns = 'RESV_ID|RESV_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_STATUS|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|RESV_ROOM|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|CUST_ID|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME|CUST_EMAIL|CUST_MOBILE|CUST_PHONE|RESV_FEATURE|FORMAT(RESV_CREATE_DT,\'dd-MMM-yyyy\')RESV_CREATE_DT|RESV_PURPOSE_STAY';
+        $columns = 'RESV_ID|RESV_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_STATUS|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|RESV_ROOM|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|CUST_ID|CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME)CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME|CUST_EMAIL|CUST_MOBILE|CUST_PHONE|RESV_FEATURE|FORMAT(RESV_CREATE_DT,\'dd-MMM-yyyy\')RESV_CREATE_DT|RESV_PURPOSE_STAY';
         $mine->generate_DatatTable($tableName,$columns,$init_cond,'|');
         exit;
         // return view('Dashboard');
@@ -142,7 +142,7 @@ class ApplicatioController extends BaseController
     {
         $param = ['SYSID' => $id];
 
-        $addColumnCopty='RESV_ID,RESV_PAYMENT_TYPE,RESV_SPECIALS,RESV_COMMENTS,RESV_PACKAGES,RESV_ITEM_INVT,RESV_NAME,(CUST_FIRST_NAME+\' \'+CUST_LAST_NAME)RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
+        $addColumnCopty='RESV_ID,RESV_PAYMENT_TYPE,RESV_SPECIALS,RESV_COMMENTS,RESV_PACKAGES,RESV_ITEM_INVT,RESV_NAME,(CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME))RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
                         (SELECT CNAME FROM COUNTRY WHERE ISO2=CUST_COUNTRY)CUST_COUNTRY_DESC,CUST_VIP,CUST_PHONE';
 
         $sql = "SELECT $addColumnCopty,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_MEMBER_TY,RESV_CUST_MEMBERSHIP,
@@ -152,7 +152,7 @@ class ApplicatioController extends BaseController
         RESV_PSEUDO,RESV_RATE_CLASS,RESV_RATE_CATEGORY,RESV_RATE_CODE,RESV_ROOM_CLASS,RESV_FEATURE,RESV_PURPOSE_STAY,RESV_STATUS,RESV_RM_TYPE,RESV_C_O_TIME,RESV_TAX_TYPE,RESV_EXEMPT_NO,RESV_PICKUP_YN,RESV_TRANSPORT_TYP,RESV_STATION_CD,RESV_CARRIER_CD,RESV_TRANSPORT_NO,FORMAT(RESV_ARRIVAL_DT_PK,'dd-MMM-yyyy')RESV_ARRIVAL_DT_PK,RESV_PICKUP_TIME,RESV_DROPOFF_YN,RESV_TRANSPORT_TYP_DO,RESV_STATION_CD_DO,RESV_CARRIER_CD_DO,RESV_TRANSPORT_NO_DO,FORMAT(RESV_ARRIVAL_DT_DO,'dd-MMM-yyyy')RESV_ARRIVAL_DT_DO,RESV_DROPOFF_TIME,RESV_GUST_TY,RESV_EXT_PURP_STAY,RESV_ENTRY_PONT,RESV_PROFILE,RESV_NAME_ON_CARD,RESV_EXT_PRINT_RT,
         (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RESV_RM_TYPE_DESC,
         (SELECT RM_DESC FROM FLXY_ROOM WHERE RM_NO=RESV_ROOM)RESV_ROOM_DESC,(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RTC) RESV_RTC_DESC,
-        RESV_ROOM,RESV_RATE,RESV_ETA,RESV_CO_TIME,RESV_RTC,RESV_FIXED_RATE,RESV_RESRV_TYPE,RESV_MARKET,RESV_SOURCE,RESV_ORIGIN,RESV_BOKR_LAST,RESV_BOKR_FIRST,RESV_BOKR_EMAIL,RESV_BOKR_PHONE,RESV_CONFIRM_YN FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:SYSID: AND CUST_ID=RESV_NAME";
+        RESV_ROOM,RESV_RATE,RESV_ETA,RESV_CO_TIME,RESV_RTC,RESV_FIXED_RATE,RESV_RESRV_TYPE,RESV_MARKET,RESV_SOURCE,RESV_ORIGIN,RESV_BOKR_LAST,RESV_BOKR_FIRST,RESV_BOKR_EMAIL,RESV_BOKR_PHONE,RESV_CONFIRM_YN,RESV_NO_POST FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:SYSID: AND CUST_ID=RESV_NAME";
        
         $response = $this->Db->query($sql,$param)->getRowArray();
         return $response;
@@ -176,14 +176,14 @@ class ApplicatioController extends BaseController
                 }else if($row=='IN'){
                     $addColumnCopty.='RESV_ITEM_INVT';
                 }else if($row=='GU'){
-                    $addColumnCopty.='RESV_NAME,(CUST_FIRST_NAME+\' \'+CUST_LAST_NAME)RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,(SELECT CNAME FROM COUNTRY WHERE ISO2=CUST_COUNTRY)CUST_COUNTRY_DESC,CUST_VIP,CUST_PHONE';
+                    $addColumnCopty.='RESV_NAME,(CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME))RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,(SELECT CNAME FROM COUNTRY WHERE ISO2=CUST_COUNTRY)CUST_COUNTRY_DESC,CUST_VIP,CUST_PHONE';
                 }
                 if($inx !== array_key_last($paramArr) && $row!='CR' && $row!='RU'){
                     $addColumnCopty.=',';  
                 }
             }
         }else{
-            $addColumnCopty='RESV_ID,RESV_PAYMENT_TYPE,RESV_SPECIALS,RESV_COMMENTS,RESV_PACKAGES,RESV_ITEM_INVT,RESV_NAME,(CUST_FIRST_NAME+\' \'+CUST_LAST_NAME)RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
+            $addColumnCopty='RESV_ID,RESV_PAYMENT_TYPE,RESV_SPECIALS,RESV_COMMENTS,RESV_PACKAGES,RESV_ITEM_INVT,RESV_NAME,(CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME))RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
             (SELECT CNAME FROM COUNTRY WHERE ISO2=CUST_COUNTRY)CUST_COUNTRY_DESC,CUST_VIP,CUST_PHONE';
         }
         $sql = "SELECT $addColumnCopty,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_MEMBER_TY,RESV_CUST_MEMBERSHIP,
@@ -193,7 +193,7 @@ class ApplicatioController extends BaseController
         RESV_PSEUDO,RESV_RATE_CLASS,RESV_RATE_CATEGORY,RESV_RATE_CODE,RESV_ROOM_CLASS,RESV_FEATURE,RESV_PURPOSE_STAY,RESV_STATUS,RESV_RM_TYPE,RESV_C_O_TIME,RESV_TAX_TYPE,RESV_EXEMPT_NO,RESV_PICKUP_YN,RESV_TRANSPORT_TYP,RESV_STATION_CD,RESV_CARRIER_CD,RESV_TRANSPORT_NO,FORMAT(RESV_ARRIVAL_DT_PK,'dd-MMM-yyyy')RESV_ARRIVAL_DT_PK,RESV_PICKUP_TIME,RESV_DROPOFF_YN,RESV_TRANSPORT_TYP_DO,RESV_STATION_CD_DO,RESV_CARRIER_CD_DO,RESV_TRANSPORT_NO_DO,FORMAT(RESV_ARRIVAL_DT_DO,'dd-MMM-yyyy')RESV_ARRIVAL_DT_DO,RESV_DROPOFF_TIME,RESV_GUST_TY,RESV_EXT_PURP_STAY,RESV_ENTRY_PONT,RESV_PROFILE,RESV_NAME_ON_CARD,RESV_EXT_PRINT_RT,
         (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RESV_RM_TYPE_DESC,
         (SELECT RM_DESC FROM FLXY_ROOM WHERE RM_NO=RESV_ROOM)RESV_ROOM_DESC,(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RTC) RESV_RTC_DESC,
-        RESV_ROOM,RESV_RATE,RESV_ETA,RESV_CO_TIME,RESV_RTC,RESV_FIXED_RATE,RESV_RESRV_TYPE,RESV_MARKET,RESV_SOURCE,RESV_ORIGIN,RESV_BOKR_LAST,RESV_BOKR_FIRST,RESV_BOKR_EMAIL,RESV_BOKR_PHONE,RESV_CONFIRM_YN FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:SYSID: AND CUST_ID=RESV_NAME";
+        RESV_ROOM,RESV_RATE,RESV_ETA,RESV_CO_TIME,RESV_RTC,RESV_FIXED_RATE,RESV_RESRV_TYPE,RESV_MARKET,RESV_SOURCE,RESV_ORIGIN,RESV_BOKR_LAST,RESV_BOKR_FIRST,RESV_BOKR_EMAIL,RESV_BOKR_PHONE,RESV_CONFIRM_YN,RESV_NO_POST FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:SYSID: AND CUST_ID=RESV_NAME";
         $response = $this->Db->query($sql,$param)->getResultArray();
         $response = $this->removeNullJson($response);
         echo json_encode($response);
@@ -290,6 +290,7 @@ class ApplicatioController extends BaseController
                 "RESV_BOKR_EMAIL" => $this->request->getPost("RESV_BOKR_EMAIL"),
                 "RESV_BOKR_PHONE" => $this->request->getPost("RESV_BOKR_PHONE"),
                 "RESV_CONFIRM_YN" => $this->request->getPost("RESV_CONFIRM_YN"),
+                "RESV_NO_POST" => $this->request->getPost("RESV_NO_POST"),
                 "RESV_C_O_TIME" => $this->request->getPost("RESV_C_O_TIME"),
                 "RESV_TAX_TYPE" => $this->request->getPost("RESV_TAX_TYPE"),
                 "RESV_EXEMPT_NO" => $this->request->getPost("RESV_EXEMPT_NO"),
@@ -390,6 +391,7 @@ class ApplicatioController extends BaseController
                     "RESV_BOKR_EMAIL" => $this->request->getPost("RESV_BOKR_EMAIL"),
                     "RESV_BOKR_PHONE" => $this->request->getPost("RESV_BOKR_PHONE"),
                     "RESV_CONFIRM_YN" => $this->request->getPost("RESV_CONFIRM_YN"),
+                    "RESV_NO_POST" => $this->request->getPost("RESV_NO_POST"),
                     "RESV_C_O_TIME" => $this->request->getPost("RESV_C_O_TIME"),
                     "RESV_TAX_TYPE" => $this->request->getPost("RESV_TAX_TYPE"),
                     "RESV_EXEMPT_NO" => $this->request->getPost("RESV_EXEMPT_NO"),
@@ -3201,30 +3203,50 @@ class ApplicatioController extends BaseController
     }
 
     function searchProfile(){
-        $CUST_LAST_NAME = $this->request->getPost("CUST_LAST_NAME") ? $this->request->getPost("CUST_LAST_NAME") : 'NULL';
-        $CUST_FIRST_NAME = $this->request->getPost("CUST_FIRST_NAME")? $this->request->getPost("CUST_FIRST_NAME") : 'NULL';
-        $CUST_CITY = $this->request->getPost("CUST_CITY")? $this->request->getPost("CUST_CITY") : 'NULL';
-        $CUST_EMAIL = $this->request->getPost("CUST_EMAIL")? $this->request->getPost("CUST_EMAIL") : 'NULL';
-        $CUST_CLIENT_ID = $this->request->getPost("CUST_CLIENT_ID")? $this->request->getPost("CUST_CLIENT_ID") : 'NULL';
-        $CUST_MOBILE = $this->request->getPost("CUST_MOBILE")? $this->request->getPost("CUST_MOBILE") : 'NULL';
-        $CUST_COMMUNICATION_DESC = $this->request->getPost("CUST_COMMUNICATION_DESC")? $this->request->getPost("CUST_COMMUNICATION_DESC") : 'NULL';
-        $CUST_PASSPORT = $this->request->getPost("CUST_PASSPORT")? $this->request->getPost("CUST_PASSPORT") : 'NULL';
         $CUST_ID = $this->request->getPost("CUST_ID") ? $this->request->getPost("CUST_ID") : 0;
-
         $reservation_customer_id = $this->request->getPost("reservation_customer_id") ? $this->request->getPost("reservation_customer_id") : 0;
+
+        $RESV_ID = $this->request->getPost("RESV_ID") ? $this->request->getPost("RESV_ID") : 0;
+        $get_accomp = $this->request->getPost("get_accomp") ? $this->request->getPost("get_accomp") : 0;
+        $get_not_accomp = $this->request->getPost("get_not_accomp") ? $this->request->getPost("get_not_accomp") : 0;
+        
 
         $sql = "SELECT  CUST_ID,CUST_FIRST_NAME,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,CUST_LAST_NAME,
                         FORMAT(CUST_DOB,'dd-MMM-yyyy')CUST_DOB,CUST_PASSPORT,CUST_NATIONALITY,CUST_VIP,CUST_ADDRESS_1,CUST_CITY,
                         CUST_EMAIL,CUST_MOBILE 
                 FROM FLXY_CUSTOMER WHERE 1 = 1 ";
 
+        $search_keys = ['CUST_LAST_NAME', 'CUST_FIRST_NAME', 'CUST_CITY', 'CUST_EMAIL', 
+                        'CUST_CLIENT_ID', 'CUST_MOBILE', 'CUST_COMMUNICATION_DESC', 'CUST_PASSPORT'];
+
+        $form_search = 0;
+        $form_conditions = '';
+
+        if($search_keys != NULL)
+        {
+            foreach($search_keys as $search_key)
+            {
+                if(null !== $this->request->getPost($search_key) && !empty(trim($this->request->getPost($search_key))))
+                {
+                    $form_search = 1;
+                    $value = trim($this->request->getPost($search_key));
+                    $form_conditions .= ($search_key == 'CUST_LAST_NAME' ? 'CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME)' : $search_key) ." LIKE '%$value%' OR";
+                }
+            }
+            $form_conditions = rtrim($form_conditions, ' OR');
+        }
+
+        if($form_search == 1)        
+            $sql .= " AND ( $form_conditions )";
+        
         if(!empty($CUST_ID))
-            $sql .= " AND CUST_ID = $CUST_ID";
-        else        
-            $sql .= " AND ( CUST_FIRST_NAME like '%$CUST_FIRST_NAME%' OR CUST_LAST_NAME like '%$CUST_LAST_NAME%' OR 
-                        CUST_CITY like '%$CUST_CITY%' OR CUST_EMAIL like '%$CUST_EMAIL%' OR CUST_CLIENT_ID like '%$CUST_CLIENT_ID%' OR 
-                        CUST_MOBILE like '%$CUST_MOBILE%' OR CUST_COMMUNICATION_DESC like '%$CUST_COMMUNICATION_DESC%' OR 
-                        CUST_PASSPORT like '%$CUST_PASSPORT%')";
+            $sql .= " AND CUST_ID IN ($CUST_ID)";
+
+        else if(!empty($RESV_ID) && !empty($get_accomp)) // Get Accompany Guests
+            $sql .= " AND CUST_ID IN (SELECT ACCOMP_CUST_ID FROM FLXY_ACCOMPANY_PROFILE WHERE ACCOMP_REF_RESV_ID = $RESV_ID)";
+        
+        else if(!empty($RESV_ID) && !empty($get_not_accomp)) // Get all except Accompany Guests
+            $sql .= " AND CUST_ID NOT IN (SELECT ACCOMP_CUST_ID FROM FLXY_ACCOMPANY_PROFILE WHERE ACCOMP_REF_RESV_ID = $RESV_ID)";
         
         if(!empty($reservation_customer_id))
             $sql .= " AND CUST_ID != $reservation_customer_id";
@@ -3232,10 +3254,13 @@ class ApplicatioController extends BaseController
         $response = $this->Db->query($sql)->getResultArray();
         $table='';
         if(empty($response)){
-            $table.='<tr><td class="text-center" colspan="11">No Record Found</td></tr>';
+            if(!empty($RESV_ID) && !empty($get_accomp))
+                $table.='<tr><td class="text-left" colspan="12" style="padding-left: 20% !important;">No Accompanying Guests</td></tr>';
+            else
+                $table.='<tr><td class="text-left" colspan="12" style="padding-left: 20% !important;">No Record Found</td></tr>';
         }
         $modeWindow = $this->request->getPost("windowmode");
-        $className = $modeWindow=='C' ? 'getExistCust' : 'activeRow';
+        $className = $modeWindow == 'C' ? 'getExistCust' : 'activeRow';
         foreach($response as $key=>$row){
             $table.='<tr class="'.$className.'" data_sysid="'.$row['CUST_ID'].'">'
             .'<td class="editcustomer" data_sysid="'.$row['CUST_ID'].'"><i class="fa-solid fa-user-pen"></i></td>'
@@ -3259,13 +3284,21 @@ class ApplicatioController extends BaseController
 
     function getExistingAppcompany(){
         $param = ['CUSTID'=> $this->request->getPost("custId"),'ACCOMP_REF_RESV_ID'=> $this->request->getPost("ressysId")];
-        $sql = "SELECT '0' ACCOPM_ID,CUST_ID,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,CUST_DOB,CUST_CITY FROM FLXY_CUSTOMER WHERE CUST_ID=:CUSTID:
-        UNION 
-        SELECT ACCOPM_ID,ACCOMP_CUST_ID CUST_ID,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,CUST_DOB,CUST_CITY FROM FLXY_ACCOMPANY_PROFILE,FLXY_CUSTOMER WHERE ACCOMP_REF_RESV_ID=:ACCOMP_REF_RESV_ID: AND CUST_ID=ACCOMP_CUST_ID";
+        
+        $sql = "SELECT '0' ACCOPM_ID,CUST_ID,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,
+                CUST_DOB,CUST_CITY 
+                FROM FLXY_CUSTOMER 
+                WHERE CUST_ID=:CUSTID:
+                UNION 
+                SELECT ACCOPM_ID,ACCOMP_CUST_ID CUST_ID,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) NAMES,
+                CUST_DOB,CUST_CITY 
+                FROM FLXY_ACCOMPANY_PROFILE,FLXY_CUSTOMER 
+                WHERE ACCOMP_REF_RESV_ID=:ACCOMP_REF_RESV_ID: AND CUST_ID=ACCOMP_CUST_ID";
+
         $response = $this->Db->query($sql,$param)->getResultArray();
         $table='';
         if(empty($response)){
-            $table.='<tr><td class="text-center" colspan="11">No Record Found</td></tr>';
+            $table.='<tr><td class="text-left" colspan="12" style="padding-left: 20% !important;">No Record Found</td></tr>';
         }
         foreach($response as $key=>$row){
             $table.='<tr class="activeDetach" data_sysid="'.$row['ACCOPM_ID'].'">'
@@ -3337,19 +3370,27 @@ class ApplicatioController extends BaseController
         try{
             $dateTime = $this->todayDate->format('Y-m-d H:i:s');
             $mode = $this->request->getPost("mode");
-            if($mode=='A'){
-                $data = ["ACCOMP_CUST_ID" => $this->request->getPost("ACCOMP_CUST_ID"),
-                    "ACCOMP_REF_RESV_ID" => $this->request->getPost("ACCOMP_REF_RESV_ID"),
-                    "ACCOMP_CREATE_DT" => $dateTime,
-                    "ACCOMP_CREATE_UID" => session()->get('USR_ID'),
-                 ];
+
+            $ACCOMP_CUST_ID = $this->request->getPost("ACCOMP_CUST_ID");
+            $ACCOMP_REF_RESV_ID = $this->request->getPost('ACCOMP_REF_RESV_ID');
+            
+            if($mode=='A'){ // Add Accompanying Guest
+                
+                $data = ["ACCOMP_CUST_ID" => $ACCOMP_CUST_ID,
+                         "ACCOMP_REF_RESV_ID" => $ACCOMP_REF_RESV_ID,
+                         "ACCOMP_CREATE_DT" => $dateTime,
+                         "ACCOMP_CREATE_UID" => session()->get('USR_ID'),
+                        ];
                 $return = $this->Db->table('FLXY_ACCOMPANY_PROFILE')->insert($data); 
                 $message='Record not inserted !';
+
             }else{
-                $ACCOPM_ID = $this->request->getPost("ACCOPM_ID");
-                $return = $this->Db->table('FLXY_ACCOMPANY_PROFILE')->delete(['ACCOPM_ID' => $ACCOPM_ID]);  
-                $message='Record not deleted !';
+                //$return = $this->Db->table('FLXY_ACCOMPANY_PROFILE')->delete(['ACCOPM_ID' => $ACCOPM_ID]);  
+                $return = $this->Db->query("DELETE FROM FLXY_ACCOMPANY_PROFILE WHERE ACCOMP_CUST_ID = ".$ACCOMP_CUST_ID." 
+                                                                                 AND ACCOMP_REF_RESV_ID = ".$ACCOMP_REF_RESV_ID.""); 
+                $message = 'Record not deleted !';
             }
+
             if($return){
                 $result = $this->responseJson("1","0",$return,$response='');
                 echo json_encode($result);
