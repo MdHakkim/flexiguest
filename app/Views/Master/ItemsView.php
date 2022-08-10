@@ -58,7 +58,7 @@
                             <div class="col-md-6">
                                 <lable class="form-lable"><b> Name *</b></lable>
                                 <input type="text" name="ITM_NAME" id="ITM_NAME" class="form-control bootstrap-maxlength"
-                                    maxlength="10" placeholder="eg: Accessories set per room" required />
+                                     placeholder="eg: Accessories set per room" required />
                             </div>
                             <div class="col-md-6">
                                 <lable class="form-lable"><b> Code *</b></lable>

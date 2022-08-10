@@ -4154,18 +4154,18 @@ class ApplicatioController extends BaseController
         try{           
             $response = NULL; 
             $result = NULL;   
-            $sql = "SELECT RESV_ARRIVAL_DT,RESV_NIGHT,RESV_DEPARTURE, CONCAT(CUST_FIRST_NAME,' ',CUST_MIDDLE_NAME,' ',CUST_LAST_NAME) FULL_NAME FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID WHERE RESV_ID = '".$reservID."'";                 
+            $sql = "SELECT RESV_ARRIVAL_DT,RESV_NIGHT,RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULL_NAME, RESV_STATUS  FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID WHERE RESV_ID = '".$reservID."'";                 
             $responseCount = $this->Db->query($sql)->getNumRows();
             if($responseCount > 0) {
                 $response = $this->Db->query($sql)->getResultArray(); 
                 foreach($response as $row){            
-                    $result = ['RESV_ARRIVAL_DT' => $row['RESV_ARRIVAL_DT'],'RESV_NIGHT' => $row['RESV_NIGHT'],'RESV_DEPARTURE' => $row['RESV_DEPARTURE'],'FULL_NAME' => $row['FULL_NAME'] ];
+                    $result = ['RESV_ARRIVAL_DT' => $row['RESV_ARRIVAL_DT'],'RESV_NIGHT' => $row['RESV_NIGHT'],'RESV_DEPARTURE' => $row['RESV_DEPARTURE'],'FULL_NAME' => $row['FULL_NAME'], 'RESV_STATUS' => $row['RESV_STATUS'] ];
                 }
             }
           
             echo json_encode($result);
-        } catch (\Exception $e) {
-            return $this->respond($e->errors());
+        } catch(\Exception $e) {
+            return $e->getMessage();
         }
     }
 }
