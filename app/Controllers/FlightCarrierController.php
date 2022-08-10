@@ -29,7 +29,7 @@ class FlightCarrierController extends BaseController
     public function allFlightCarriers()
     {
         $mine = new ServerSideDataTable();
-        $tableName = '[FLXY_FLIGHT_CARRIERS]';
+        $tableName = 'FLXY_FLIGHT_CARRIERS';
         $columns = 'FC_ID,FC_FLIGHT_CARRIER,FC_FLIGHT_CODE,FC_SEQUENCE,FC_CREATED_AT';
         $mine->generate_DatatTable($tableName, $columns);
         exit;

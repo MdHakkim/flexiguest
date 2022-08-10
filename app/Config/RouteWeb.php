@@ -651,7 +651,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         });
     });
 
-
+    $routes->group('property-info', function ($routes) { 
+        $routes->get('', 'PropertyInfoController::propertyInfo');
+        $routes->post('all-property-info', 'PropertyInfoController::allPropertyInfo');
+        $routes->post('store', 'PropertyInfoController::store');
+    });
 
     // ABUBAKAR CODE (END)
 });
