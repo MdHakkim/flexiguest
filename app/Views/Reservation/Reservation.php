@@ -6351,9 +6351,9 @@ function showTraces(resvID) {
             {
                 data: 'UE_FIRST_NAME',
                 render: function(data, type, full, meta) {
-                    let UE_LAST_NAME = full['UE_LAST_NAME'] != '' ? full['UE_LAST_NAME'] : '';                    
+                    let UE_LAST_NAME = (full['UE_LAST_NAME'] != '' || full['UE_LAST_NAME'] != null) ? full['UE_LAST_NAME'] : '';                    
                     if (full['UE_FIRST_NAME'] != null)
-                        return full['UE_FIRST_NAME'] + ' | ' + UE_LAST_NAME;
+                        return full['UE_FIRST_NAME'] + ' ' + UE_LAST_NAME;
                     else
                         return '';
                 }
@@ -6361,9 +6361,9 @@ function showTraces(resvID) {
             {
                 data: 'UR_FIRST_NAME',
                 render: function(data, type, full, meta) {
-                    let UR_FIRST_NAME = full['UR_FIRST_NAME'] != '' ? full['UR_FIRST_NAME'] : '';     
+                    let UR_LAST_NAME = (full['UR_LAST_NAME'] != '' || full['UR_LAST_NAME'] != null )? full['UR_LAST_NAME'] : '';     
                     if (full['UR_FIRST_NAME'] != null)
-                        return full['UR_FIRST_NAME'] + ' | ' + UR_FIRST_NAME;
+                        return full['UR_FIRST_NAME'] + ' ' + UR_LAST_NAME;
                     else
                         return '';
                 }
