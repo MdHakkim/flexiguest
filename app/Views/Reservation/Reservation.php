@@ -6195,6 +6195,7 @@ $(document).on('click', '#traceButton', function() {
             $('#TRACE_DEPARTURE').val(respn.RESV_DEPARTURE);
             $('#TRACE_ARRIVAL_DT').val(respn.RESV_ARRIVAL_DT);
             $('#TRACE_DEPARTURE_DT').val(respn.RESV_DEPARTURE);
+            $('#RESERVATION_STATUS').val(respn.RESV_STATUS);
             $('#RSV_TRACE_DATE').val(respn.RESV_ARRIVAL_DT);
         }
     });
@@ -6350,8 +6351,9 @@ function showTraces(resvID) {
             {
                 data: 'UE_FIRST_NAME',
                 render: function(data, type, full, meta) {
+                    let UE_LAST_NAME = full['UE_LAST_NAME'] != '' ? full['UE_LAST_NAME'] : '';                    
                     if (full['UE_FIRST_NAME'] != null)
-                        return full['UE_FIRST_NAME'] + ' | ' + full['UE_LAST_NAME'];
+                        return full['UE_FIRST_NAME'] + ' | ' + UE_LAST_NAME;
                     else
                         return '';
                 }
@@ -6359,8 +6361,9 @@ function showTraces(resvID) {
             {
                 data: 'UR_FIRST_NAME',
                 render: function(data, type, full, meta) {
+                    let UR_FIRST_NAME = full['UR_FIRST_NAME'] != '' ? full['UR_FIRST_NAME'] : '';     
                     if (full['UR_FIRST_NAME'] != null)
-                        return full['UR_FIRST_NAME'] + ' | ' + full['UR_LAST_NAME'];
+                        return full['UR_FIRST_NAME'] + ' | ' + UR_FIRST_NAME;
                     else
                         return '';
                 }
