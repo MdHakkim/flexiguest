@@ -162,6 +162,11 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
         $routes->post("add-comment", "MaintenanceController::addComment");
         $routes->get("get-comments", "MaintenanceController::getComments");
     });
+
+    $routes->group('asset-tracking', function ($routes) {
+        $routes->get("get-assets", "AssetTrackingController::getAssets");
+    });
+
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function ($routes) {
