@@ -1951,9 +1951,6 @@ class ApplicatioController extends BaseController
                     "RM_UPDATED_DT" => date("d-M-Y")
                  ];
             $return = $this->Db->table('FLXY_ROOM')->where('RM_ID', $sysid)->update($data); 
-/////////// Insert Room Log ///////////
-$logdata = ["RM_STAT_ROOM_ID" =>  $this->request->getPost("RM_ID") ,"RM_STAT_ROOM_STATUS"=>"2", "RM_STAT_UPDATED"=> date("Y-m-d H:i:s" )];
-$this->Db->table('FLXY_ROOM_STATUS_LOG')->insert($logdata);
 
            
             }else{
@@ -1979,6 +1976,11 @@ $this->Db->table('FLXY_ROOM_STATUS_LOG')->insert($logdata);
                     "RM_CREATED_DT" => date("d-M-Y")
                  ];
                 $return = $this->Db->table('FLXY_ROOM')->insert($data); 
+                /////////// Insert Room Log ///////////
+                $RMID = $this->Db->insertID();
+                $logdata = ["RM_STAT_ROOM_ID" =>  $RMID ,"RM_STAT_ROOM_STATUS"=>"2", "RM_STAT_UPDATED"=> date("Y-m-d H:i:s" )];
+                $this->Db->table('FLXY_ROOM_STATUS_LOG')->insert($logdata);
+
                 
 
             }
