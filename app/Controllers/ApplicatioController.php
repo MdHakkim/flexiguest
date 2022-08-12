@@ -1953,10 +1953,7 @@ class ApplicatioController extends BaseController
             $return = $this->Db->table('FLXY_ROOM')->where('RM_ID', $sysid)->update($data); 
 
 
-           /////////// Insert Room Log ///////////
-           $logdata = ["RM_STAT_ROOM_ID" =>  $this->request->getPost("RM_NO") ,"RM_STAT_ROOM_STATUS"=>"2", "RM_STAT_UPDATED"=> date("Y-m-d H:i:s" )];
-            $this->Db->table('FLXY_ROOM_STATUS_LOG')->insert($logdata);
-
+           
             }else{
                 $data = ["RM_NO" => $this->request->getPost("RM_NO"),
                     "RM_CLASS" => $this->request->getPost("RM_CLASS"),
@@ -1980,6 +1977,10 @@ class ApplicatioController extends BaseController
                     "RM_CREATED_DT" => date("d-M-Y")
                  ];
                 $return = $this->Db->table('FLXY_ROOM')->insert($data); 
+                /////////// Insert Room Log ///////////
+                $logdata = ["RM_STAT_ROOM_ID" =>  $this->request->getPost("RM_NO") ,"RM_STAT_ROOM_STATUS"=>"2", "RM_STAT_UPDATED"=> date("Y-m-d H:i:s" )];
+                $this->Db->table('FLXY_ROOM_STATUS_LOG')->insert($logdata);
+
             }
             if($return){
                 $result = $this->responseJson("1","0",$return,$response='');
