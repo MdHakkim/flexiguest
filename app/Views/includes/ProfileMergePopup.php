@@ -649,4 +649,13 @@ confirmText.onclick = function() {
         }
     });
 };
+
+$('#compareProfiles').find('.switch-input').change(function() {
+    var numCheckedFields = $('#compareProfiles').find('.switch-input:checked').length;
+    if (numCheckedFields == 0) {
+        toggleButton('.merge_profiles_go', 'btn-primary', 'btn-dark', true);
+    } else {
+        toggleButton('.merge_profiles_go', 'btn-dark', 'btn-primary', false);
+    }
+});
 </script>
