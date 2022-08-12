@@ -312,6 +312,16 @@
                                                 <textarea name="TR_PICKUP_INSTRUCTIONS" class="form-control" placeholder="Pickup instructions..."></textarea>
                                             </div>
 
+                                            <div class="col-md-6">
+                                                <label class="form-label"><b>Vehicle Detail</b></label>
+                                                <input type="text" name="TR_PICKUP_VEHICLE_Detail" class="form-control" placeholder="Vehicle Detail" />
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label"><b>Driver Detail</b></label>
+                                                <input type="text" name="TR_PICKUP_DRIVER_DETAIL" class="form-control" placeholder="Driver Detail" />
+                                            </div>
+
                                             <div class="col-12 d-flex justify-content-between">
                                                 <button class="btn btn-primary btn-prev">
                                                     <i class="bx bx-chevron-left bx-sm ms-sm-n2"></i>
@@ -352,13 +362,13 @@
                                             </div>
 
                                             <div class="col-md-6">
-                                                <label class="form-label"><b>Vehicle#</b></label>
-                                                <input type="text" name="TR_VEHICLE_NO" class="form-control" placeholder="Vehicle#" />
+                                                <label class="form-label"><b>Vehicle Detail</b></label>
+                                                <input type="text" name="TR_DROPOFF_VEHICLE_Detail" class="form-control" placeholder="Vehicle Detail" />
                                             </div>
 
                                             <div class="col-md-6">
-                                                <label class="form-label"><b>Return Vehicle#</b></label>
-                                                <input type="text" name="TR_RETURN_VEHICLE_NO" class="form-control" placeholder="Return Vehicle#" />
+                                                <label class="form-label"><b>Driver Detail</b></label>
+                                                <input type="text" name="TR_DROPOFF_DRIVER_DETAIL" class="form-control" placeholder="Driver Detail" />
                                             </div>
 
                                             <div class="col-12 d-flex justify-content-between">
