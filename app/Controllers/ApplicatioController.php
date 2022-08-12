@@ -956,17 +956,24 @@ class ApplicatioController extends BaseController
                         CUST_EMAIL,CUST_MOBILE,CUST_PHONE,CUST_CLIENT_ID,CUST_POSTAL_CODE,
                         CUST_VIP,(SELECT VIP_DESC FROM FLXY_VIP WHERE VIP_ID=CUST_VIP) CUST_VIP_DESC,
                         CUST_NATIONALITY,CUST_BUS_SEGMENT,CUST_GENDER,CUST_COMMUNICATION,CUST_COMMUNICATION_DESC,CUST_ACTIVE,
-                        CUST_CREATE_DT,CUST_UPDATE_DT,RATE_CODES,LAST_STAY 
+                        CUST_CREATE_DT,CUST_UPDATE_DT,RATE_CODES,LAST_STAY,CUST_MEMBERSHIPS,CUST_PREFERENCES 
                         
                 FROM FLXY_CUSTOMER
-                LEFT JOIN ( SELECT NR.PROFILE_ID AS P_ID, NR.PROFILE_TYPE AS P_TYPE, 
-                                  STRING_AGG(RC.RT_CD_CODE, ', ') WITHIN GROUP (ORDER BY RC.RT_CD_CODE) AS RATE_CODES
+                LEFT JOIN ( SELECT NR.PROFILE_ID AS P_ID, NR.PROFILE_TYPE AS P_TYPE, STRING_AGG(RC.RT_CD_CODE, ', ') WITHIN GROUP (ORDER BY RC.RT_CD_CODE) AS RATE_CODES
                             FROM FLXY_RATE_CODE_NEGOTIATED_RATE NR
                             LEFT JOIN FLXY_RATE_CODE RC ON RC.RT_CD_ID = NR.RT_CD_ID
                             GROUP BY NR.PROFILE_ID,NR.PROFILE_TYPE ) PRC ON (PRC.P_ID = FLXY_CUSTOMER.CUST_ID AND PRC.P_TYPE = 1)
                 LEFT JOIN ( SELECT RESV_NAME, MAX(RESV_ARRIVAL_DT) AS LAST_STAY
                             FROM FLXY_RESERVATION
                             GROUP BY RESV_NAME) RESV ON (RESV.RESV_NAME = FLXY_CUSTOMER.CUST_ID)
+                LEFT JOIN ( SELECT CM.CUST_ID AS C_ID, STRING_AGG(M.MEM_DESC, '<br/>') WITHIN GROUP (ORDER BY M.MEM_DESC) AS CUST_MEMBERSHIPS
+                            FROM FLXY_CUSTOMER_MEMBERSHIP CM
+                            LEFT JOIN FLXY_MEMBERSHIP M ON M.MEM_ID = CM.MEM_ID
+                            GROUP BY CM.CUST_ID ) CMS ON (CMS.C_ID = FLXY_CUSTOMER.CUST_ID)
+                LEFT JOIN ( SELECT CP.CUST_ID AS CP_ID, STRING_AGG(PC.PF_CD_DESC, '<br/>') WITHIN GROUP (ORDER BY PC.PF_CD_DESC) AS CUST_PREFERENCES
+                            FROM FLXY_CUSTOMER_PREFERENCE CP
+                            LEFT JOIN FLXY_PREFERENCE_CODE PC ON PC.PF_CD_ID = CP.PF_CD_ID
+                            GROUP BY CP.CUST_ID ) CPS ON (CPS.CP_ID = FLXY_CUSTOMER.CUST_ID)
                 
                 WHERE CUST_ID=:SYSID:";
 
@@ -985,12 +992,41 @@ class ApplicatioController extends BaseController
 
     public function mergeProfileTables()
     {
-        $pmCustId = null !== $this->request->getGet('pmCustId') ? $this->request->getGet('pmCustId') : 0;
-        $ogCustId = null !== $this->request->getGet('ogCustId') ? $this->request->getGet('ogCustId') : 0;
+        $pmCustId = null !== $this->request->getPost('pmCustId') ? $this->request->getPost('pmCustId') : 0;
+        $ogCustId = null !== $this->request->getPost('ogCustId') ? $this->request->getPost('ogCustId') : 0;
 
-        if(mergeCustomer($pmCustId, $ogCustId))
+        $allMergeFields = ['CUST_FULL_NAME', 'CUST_TITLE', 'CUST_LANG', 'CUST_ADDRESS_1', 'CUST_ADDRESS_2',
+            'CUST_CITY_DESC', 'CUST_STATE_DESC', 'CUST_COUNTRY_DESC', 'CUST_POSTAL_CODE', 'CUST_MOBILE', 'CUST_PHONE',
+            'CUST_MEMBERSHIPS', 'CUST_PREFERENCES', 'CUST_VIP_DESC', 'LAST_STAY', 'RATE_CODES'
+        ];
+
+        $checkedMergeFields = [];
+
+        foreach($allMergeFields as $mergeField)
+        {
+            if(null !== $this->request->getPost('chk_'.$mergeField))
+            {
+                switch($mergeField)
+                {
+                    case 'CUST_FULL_NAME':  $checkedMergeFields[] = 'CUST_FIRST_NAME';
+                                            $checkedMergeFields[] = 'CUST_MIDDLE_NAME';
+                                            $checkedMergeFields[] = 'CUST_LAST_NAME';
+                                            break;
+
+                    case 'CUST_CITY_DESC':
+                    case 'CUST_STATE_DESC':
+                    case 'CUST_COUNTRY_DESC': 
+                    case 'CUST_VIP_DESC':   $checkedMergeFields[] = str_replace("_DESC", "", $mergeField); break;
+
+                    default: $checkedMergeFields[] = $mergeField; break;
+                        
+                }
+            }
+        }
+
+        if(mergeCustomer($pmCustId, $ogCustId, $checkedMergeFields))
             echo '1';
-        else 
+        else
             echo '0';    
     }
 
