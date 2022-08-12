@@ -566,8 +566,8 @@
         }
 
         function updateTotalPassengers() {
-            let adults = $(`${form_id} input[name="TR_ADULTS"]`).val();
-            let children = $(`${form_id} input[name="TR_CHILDREN"]`).val();
+            let adults = parseInt($(`${form_id} input[name="TR_ADULTS"]`).val());
+            let children = parseInt($(`${form_id} input[name="TR_CHILDREN"]`).val());
 
             $(`${form_id} input[name="TR_TOTAL_PASSENGERS"]`).val(adults + children);
         }
