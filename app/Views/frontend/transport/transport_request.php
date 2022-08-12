@@ -53,6 +53,7 @@
                         <tr>
                             <th></th>
                             <th>Status</th>
+                            <th>Request ID</th>
                             <th>Reservation</th>
                             <th>Room</th>
                             <th>Guest Name</th>
@@ -609,6 +610,9 @@
                         }
                     },
                     {
+                        data: 'TR_ID'
+                    },
+                    {
                         data: 'TR_RESERVATION_ID'
                     },
                     {
@@ -688,7 +692,7 @@
                     // }
                 ],
                 "order": [
-                    [8, "desc"]
+                    [2, "desc"]
                 ],
                 destroy: true,
                 dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
