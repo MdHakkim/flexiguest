@@ -71,14 +71,14 @@
         RT_CD_BEGIN_SELL_DT: {
           validators: {
             notEmpty: {
-              message: 'The Begin Sell Date cannot be empty'
+              message: 'The Begin Booking Date cannot be empty'
             }
           }
         },
         RT_CD_END_SELL_DT: {
           validators: {
             notEmpty: {
-              message: 'The End Sell Date cannot be empty'
+              message: 'The End Booking Date cannot be empty'
             }
           }
         },

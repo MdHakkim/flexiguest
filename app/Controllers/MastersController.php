@@ -1154,7 +1154,7 @@ class MastersController extends BaseController
 
             $rules = [  'PKG_CD_ID' => ['label' => 'Package Code ID', 'rules' => 'required'],
                         'PKG_CD_START_DT' => ['label' => 'Start Date', 'rules' => 'required'],
-                        'PKG_CD_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Sell Date should be after Begin Date']],
+                        'PKG_CD_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Date should be after Begin Date']],
                         'PKG_CD_DT_PRICE' => ['label' => 'Package Price', 'rules' => 'required'],
                      ];
 
@@ -1694,8 +1694,8 @@ class MastersController extends BaseController
                 'RT_CT_ID' => ['label' => 'Rate Category', 'rules' => 'required'],
                 'TR_CD_ID' => ['label' => 'Transaction Code', 'rules' => 'required'],
                 'RT_CD_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
-                'RT_CD_BEGIN_SELL_DT' => ['label' => 'Begin Sell Date', 'rules' => 'required'],
-                'RT_CD_END_SELL_DT' => ['label' => 'End Sell Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Sell Date should be after Begin Date']],
+                'RT_CD_BEGIN_SELL_DT' => ['label' => 'Begin Booking Date', 'rules' => 'required'],
+                'RT_CD_END_SELL_DT' => ['label' => 'End Booking Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Booking Date should be after Begin Date']],
                 'RT_CD_ROOM_TYPES' => ['label' => 'Room Types', 'rules' => 'required'],
                 
             ]);
@@ -2103,8 +2103,8 @@ class MastersController extends BaseController
             }
 
             $rules = [  'RT_CD_ID' => ['label' => 'Rate Code ID', 'rules' => 'required'],
-                        'RT_CD_START_DT' => ['label' => 'Start Date', 'rules' => 'required|dateOverlapCheck[RT_CD_START_DT,'.$data["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['dateOverlapCheck' => 'The Start Sell Date overlaps with an existing Rate Detail. Change the date or selected room type']],
-                        'RT_CD_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate|dateOverlapCheck[RT_CD_END_DT,'.$data["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['compareDate' => 'The End Sell Date should be after Begin Date', 'dateOverlapCheck' => 'The End Sell Date overlaps with an existing Rate Detail. Change the date or selected room type']],
+                        'RT_CD_START_DT' => ['label' => 'Start Date', 'rules' => 'required|dateOverlapCheck[RT_CD_START_DT,'.$data["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['dateOverlapCheck' => 'The Start Booking Date overlaps with an existing Rate Detail. Change the date or selected room type']],
+                        'RT_CD_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate|dateOverlapCheck[RT_CD_END_DT,'.$data["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['compareDate' => 'The End Booking Date should be after Begin Date', 'dateOverlapCheck' => 'The End Booking Date overlaps with an existing Rate Detail. Change the date or selected room type']],
                         'RT_CD_DT_DAYS' => ['label' => 'Days', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one day']],
                         'RT_CD_DT_1_ADULT' => ['label' => 'Rate for 1 Adult', 'rules' => 'required'],
                         'RT_CD_DT_ROOM_TYPES' => ['label' => 'Room Types', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one room type']],
@@ -2224,8 +2224,8 @@ class MastersController extends BaseController
                 $validate = $this->validate([
                     'rep_RT_CD_DT_ID' => ['label' => 'Rate Code Detail', 'rules' => 'required'],
                     'rep_RT_CD_ID' => ['label' => 'Rate Code', 'rules' => 'required'],
-                    'rep_RT_CD_START_DT' => ['label' => 'Start Date', 'rules' => 'required|dateOverlapCheck[rep_RT_CD_START_DT,'.$newRateCodeDetail["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['dateOverlapCheck' => 'The Start Sell Date overlaps with an existing Rate Detail. Change the date or selected room type']],
-                    'rep_RT_CD_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate|dateOverlapCheck[rep_RT_CD_END_DT,'.$newRateCodeDetail["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['compareDate' => 'The End Sell Date should be after Begin Date', 'dateOverlapCheck' => 'The End Sell Date overlaps with an existing Rate Detail. Change the date or selected room type']],
+                    'rep_RT_CD_START_DT' => ['label' => 'Start Date', 'rules' => 'required|dateOverlapCheck[rep_RT_CD_START_DT,'.$newRateCodeDetail["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['dateOverlapCheck' => 'The Start Booking Date overlaps with an existing Rate Detail. Change the date or selected room type']],
+                    'rep_RT_CD_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate|dateOverlapCheck[rep_RT_CD_END_DT,'.$newRateCodeDetail["RT_CD_DT_ROOM_TYPES"].']', 'errors' => ['compareDate' => 'The End Booking Date should be after Begin Date', 'dateOverlapCheck' => 'The End Booking Date overlaps with an existing Rate Detail. Change the date or selected room type']],
                     'rep_RT_CD_DT_DAYS' => ['label' => 'Days', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one day']],
                     'rep_RT_CD_DT_ROOM_TYPES' => ['label' => 'Room Types', 'rules' => 'required', 'errors' => ['required' => 'Please select at least one room type']],
                 ]);
