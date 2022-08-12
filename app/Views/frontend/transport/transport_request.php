@@ -53,6 +53,7 @@
                         <tr>
                             <th></th>
                             <th>Status</th>
+                            <th>Request ID</th>
                             <th>Reservation</th>
                             <th>Room</th>
                             <th>Guest Name</th>
@@ -565,8 +566,8 @@
         }
 
         function updateTotalPassengers() {
-            let adults = $(`${form_id} input[name="TR_ADULTS"]`).val();
-            let children = $(`${form_id} input[name="TR_CHILDREN"]`).val();
+            let adults = parseInt($(`${form_id} input[name="TR_ADULTS"]`).val());
+            let children = parseInt($(`${form_id} input[name="TR_CHILDREN"]`).val());
 
             $(`${form_id} input[name="TR_TOTAL_PASSENGERS"]`).val(adults + children);
         }
@@ -607,6 +608,9 @@
                             <span class="${class_name}">${data['TR_STATUS']}</span>
                         `);
                         }
+                    },
+                    {
+                        data: 'TR_ID'
                     },
                     {
                         data: 'TR_RESERVATION_ID'
@@ -688,7 +692,7 @@
                     // }
                 ],
                 "order": [
-                    [8, "desc"]
+                    [2, "desc"]
                 ],
                 destroy: true,
                 dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
