@@ -143,7 +143,7 @@ function getMembershipTypeList($custId, $mode)
         return $membershipTypes;
 }
 
-function mergeCustomer($pmCustId, $ogCustId)
+function mergeCustomer($pmCustId, $ogCustId, $mergeFields = [])
 {
     $Db = \Config\Database::connect();
 
@@ -161,22 +161,27 @@ function mergeCustomer($pmCustId, $ogCustId)
 
     if($pm_cust_data != NULL && $og_cust_data != NULL)
     {
+        $update_custfields_desc = '';
         foreach($pm_cust_data as $col => $value)
         {
             if(in_array($col, $ignore_cols)) continue;
 
-            if( array_key_exists($col, $og_cust_data) && empty(trim($og_cust_data[$col])) && !empty(trim($value)) ){
+            if( array_key_exists($col, $og_cust_data) && in_array($col, $mergeFields) && !empty(trim($value)) ){
                 $up_cust_data[$col] = $value;
+                $update_custfields_desc .= "<b>".str_replace('CUST_', '', $col) . ": </b> '" . $og_cust_data[$col] . "' -> '". $pm_cust_data[$col]."'<br/>";
             }
         }
 
-        //echo "<pre>"; print_r($up_cust_data); echo "</pre>"; echo "<pre>"; exit;
-
+        /*
+        echo "<pre>"; print_r($mergeFields); echo "</pre>"; echo "<pre>";        
+        echo "<pre>"; print_r($up_cust_data); echo "</pre>"; echo "<pre>";        
+        exit;
+        */
+        
         //Update Customer Table
         if($up_cust_data != NULL)
             $Db->query(updateValuesinTable($up_cust_data, ['CUST_ID' => $ogCustId], 'FLXY_CUSTOMER'));
 
-        addActivityLog(3, 36, $ogCustId, "<b>Merged Profile with: </b> '" . trim($pm_cust_data['CUST_FIRST_NAME']." ".$pm_cust_data['CUST_MIDDLE_NAME']." ".$pm_cust_data['CUST_LAST_NAME']) ."'<br/>"); 
         
         $changed_cust_data = $Db->query($og_cust_sql,$param)->getRowArray();
 
@@ -221,17 +226,39 @@ function mergeCustomer($pmCustId, $ogCustId)
                    AND MEM_ID IN (SELECT MEM_ID FROM FLXY_CUSTOMER_MEMBERSHIP WHERE CUST_ID = ".$ogCustId.")";
         $Db->query($del_cm);
 
-        $get_cusmem_sql = "SELECT * FROM FLXY_CUSTOMER_MEMBERSHIP 
-                           WHERE CUST_ID = ".$pmCustId." 
-                           AND MEM_ID NOT IN (SELECT MEM_ID FROM FLXY_CUSTOMER_MEMBERSHIP WHERE CUST_ID = ".$ogCustId.")";
+        $get_cusmem_sql = "SELECT *, (SELECT MEM_DESC FROM FLXY_MEMBERSHIP WHERE MEM_ID = CM.MEM_ID) AS MEM_DESC
+                           FROM FLXY_CUSTOMER_MEMBERSHIP CM
+                           WHERE CM.CUST_ID = ".$pmCustId." 
+                           AND CM.MEM_ID NOT IN (SELECT MEM_ID FROM FLXY_CUSTOMER_MEMBERSHIP WHERE CUST_ID = ".$ogCustId.")";
 
         $get_cusmem_response = $Db->query($get_cusmem_sql)->getResultArray();
-        if($get_cusmem_response != NULL){
+        if($get_cusmem_response != NULL && in_array('CUST_MEMBERSHIPS', $mergeFields)){ // If Memberships selected to copy over
             foreach($get_cusmem_response as $cusmem_response){
                 /*$cusmem_sql = "UPDATE FLXY_CUSTOMER_MEMBERSHIP SET CUST_ID = ".$ogCustId." 
                                WHERE CM_ID = ".$cusmem_response['CM_ID']."";*/
                 $Db->query(updateValuesinTable(['CUST_ID' => $ogCustId], ['CM_ID' => $cusmem_response['CM_ID']], 'FLXY_CUSTOMER_MEMBERSHIP'));
+                $update_custfields_desc .= "<b>Added Membership: </b> '" . $cusmem_response['MEM_DESC'] . "'<br/>";
                 //$Db->query($cusmem_sql);
+            }
+        }
+
+        //Update Customer Preferences
+        $del_cm = "DELETE FROM FLXY_CUSTOMER_PREFERENCE 
+                   WHERE CUST_ID = ".$pmCustId." 
+                   AND PF_CD_ID IN (SELECT PF_CD_ID FROM FLXY_CUSTOMER_PREFERENCE WHERE CUST_ID = ".$ogCustId.")";
+        $Db->query($del_cm);
+
+        $get_cuspref_sql = "SELECT *, (SELECT PF_CD_DESC FROM FLXY_PREFERENCE_CODE WHERE PF_CD_ID = CP.PF_CD_ID) AS PF_CD_DESC
+                           FROM FLXY_CUSTOMER_PREFERENCE CP
+                           WHERE CP.CUST_ID = ".$pmCustId." 
+                           AND CP.PF_CD_ID NOT IN (SELECT PF_CD_ID FROM FLXY_CUSTOMER_PREFERENCE WHERE CUST_ID = ".$ogCustId.")";
+
+        $get_cuspref_response = $Db->query($get_cuspref_sql)->getResultArray();
+        if($get_cuspref_response != NULL && in_array('CUST_PREFERENCES', $mergeFields)){ // If Preferencess selected to copy over
+            foreach($get_cuspref_response as $cuspref_response){
+                $Db->query(updateValuesinTable(['CUST_ID' => $ogCustId], ['CPF_ID' => $cuspref_response['CPF_ID']], 'FLXY_CUSTOMER_PREFERENCE'));
+                $update_custfields_desc .= "<b>Added Preference: </b> '" . $cuspref_response['PF_CD_DESC'] . "'<br/>";
+                //$Db->query($cuspref_sql);
             }
         }
 
@@ -269,7 +296,7 @@ function mergeCustomer($pmCustId, $ogCustId)
                                                WHERE PROFILE_ID = ".$ogCustId." AND PROFILE_TYPE = 1)";
 
         $get_rcneg_response = $Db->query($get_rcneg_sql)->getResultArray();
-        if($get_rcneg_response != NULL){
+        if($get_rcneg_response != NULL && in_array('RATE_CODES', $mergeFields)){ // If Rate Codes selected to copy over
             foreach($get_rcneg_response as $rcneg_response){
                 //$rcneg_sql = "UPDATE FLXY_RATE_CODE_NEGOTIATED_RATE SET PROFILE_ID = ".$ogCustId." WHERE NG_RT_ID = ".$rcneg_response['NG_RT_ID']."";
                 $Db->query(updateValuesinTable(['PROFILE_ID' => $ogCustId], ['NG_RT_ID' => $rcneg_response['NG_RT_ID']], 'FLXY_RATE_CODE_NEGOTIATED_RATE'));
@@ -283,6 +310,9 @@ function mergeCustomer($pmCustId, $ogCustId)
         //Delete profile to merge
         $Db->table('FLXY_CUSTOMER')->delete(['CUST_ID' => $pmCustId]);
 
+        //Add Customer Log
+        addActivityLog(3, 36, $ogCustId, "<b>Merged Profile with: </b> '" . trim($pm_cust_data['CUST_FIRST_NAME']." ".$pm_cust_data['CUST_MIDDLE_NAME']." ".$pm_cust_data['CUST_LAST_NAME']) ."'<br/>" . $update_custfields_desc); 
+        
         return true;
     }
 }

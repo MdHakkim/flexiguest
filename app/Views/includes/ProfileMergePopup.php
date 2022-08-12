@@ -68,6 +68,9 @@
                                                     <p class="h6 mb-2">Profile to Merge</p>
                                                 </th>
                                                 <th scope="col">
+                                                    <p class="h6 mb-2">Copy / Replace To</p>
+                                                </th>
+                                                <th scope="col">
                                                     <p class="h6 mb-2">Original Profile</p>
                                                 </th>
                                             </tr>
@@ -78,6 +81,19 @@
                                                 <td>
                                                     <span id="1_CUST_FULL_NAME"></span>
                                                 </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_FULL_NAME" name="chk_CUST_FULL_NAME"
+                                                            type="checkbox" class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
+                                                </td>
                                                 <td>
                                                     <span id="0_CUST_FULL_NAME"></span>
                                                 </td>
@@ -86,6 +102,19 @@
                                                 <td>Title</td>
                                                 <td>
                                                     <span id="1_CUST_TITLE"></span>
+                                                </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_TITLE" name="chk_CUST_TITLE" type="checkbox"
+                                                            class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
                                                 </td>
                                                 <td>
                                                     <span id="0_CUST_TITLE"></span>
@@ -96,6 +125,19 @@
                                                 <td>
                                                     <span id="1_CUST_LANG"></span>
                                                 </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_LANG" name="chk_CUST_LANG" type="checkbox"
+                                                            class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
+                                                </td>
                                                 <td>
                                                     <span id="0_CUST_LANG"></span>
                                                 </td>
@@ -104,6 +146,19 @@
                                                 <td>Address 1</td>
                                                 <td>
                                                     <span id="1_CUST_ADDRESS_1"></span>
+                                                </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_ADDRESS_1" name="chk_CUST_ADDRESS_1"
+                                                            type="checkbox" class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
                                                 </td>
                                                 <td>
                                                     <span id="0_CUST_ADDRESS_1"></span>
@@ -114,6 +169,19 @@
                                                 <td>
                                                     <span id="1_CUST_ADDRESS_2"></span>
                                                 </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_ADDRESS_2" name="chk_CUST_ADDRESS_2"
+                                                            type="checkbox" class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
+                                                </td>
                                                 <td>
                                                     <span id="0_CUST_ADDRESS_2"></span>
                                                 </td>
@@ -122,6 +190,19 @@
                                                 <td>City</td>
                                                 <td>
                                                     <span id="1_CUST_CITY_DESC"></span>
+                                                </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_CITY_DESC" name="chk_CUST_CITY_DESC"
+                                                            type="checkbox" class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
                                                 </td>
                                                 <td>
                                                     <span id="0_CUST_CITY_DESC"></span>
@@ -132,6 +213,19 @@
                                                 <td>
                                                     <span id="1_CUST_STATE_DESC"></span>
                                                 </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_STATE_DESC" name="chk_CUST_STATE_DESC"
+                                                            type="checkbox" class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
+                                                </td>
                                                 <td>
                                                     <span id="0_CUST_STATE_DESC"></span>
                                                 </td>
@@ -140,6 +234,19 @@
                                                 <td>Country</td>
                                                 <td>
                                                     <span id="1_CUST_COUNTRY_DESC"></span>
+                                                </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_COUNTRY_DESC" name="chk_CUST_COUNTRY_DESC"
+                                                            type="checkbox" class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
                                                 </td>
                                                 <td>
                                                     <span id="0_CUST_COUNTRY_DESC"></span>
@@ -150,6 +257,19 @@
                                                 <td>
                                                     <span id="1_CUST_POSTAL_CODE"></span>
                                                 </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_POSTAL_CODE" name="chk_CUST_POSTAL_CODE"
+                                                            type="checkbox" class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
+                                                </td>
                                                 <td>
                                                     <span id="0_CUST_POSTAL_CODE"></span>
                                                 </td>
@@ -158,6 +278,19 @@
                                                 <td>Mobile No</td>
                                                 <td>
                                                     <span id="1_CUST_MOBILE"></span>
+                                                </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_MOBILE" name="chk_CUST_MOBILE"
+                                                            type="checkbox" class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
                                                 </td>
                                                 <td>
                                                     <span id="0_CUST_MOBILE"></span>
@@ -168,23 +301,84 @@
                                                 <td>
                                                     <span id="1_CUST_PHONE"></span>
                                                 </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_PHONE" name="chk_CUST_PHONE" type="checkbox"
+                                                            class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
+                                                </td>
                                                 <td>
                                                     <span id="0_CUST_PHONE"></span>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>Membership No</td>
+                                                <td>Memberships</td>
                                                 <td>
-                                                    <span id="1_CUST_NAME"></span>
+                                                    <span id="1_CUST_MEMBERSHIPS"></span>
+                                                </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_MEMBERSHIPS" name="chk_CUST_MEMBERSHIPS"
+                                                            type="checkbox" class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
                                                 </td>
                                                 <td>
-                                                    <span id="0_CUST_NAME"></span>
+                                                    <span id="0_CUST_MEMBERSHIPS"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Preferences</td>
+                                                <td>
+                                                    <span id="1_CUST_PREFERENCES"></span>
+                                                </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_PREFERENCES" name="chk_CUST_PREFERENCES"
+                                                            type="checkbox" class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
+                                                </td>
+                                                <td>
+                                                    <span id="0_CUST_PREFERENCES"></span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>VIP</td>
                                                 <td>
                                                     <span id="1_CUST_VIP_DESC"></span>
+                                                </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_CUST_VIP_DESC" name="chk_CUST_VIP_DESC"
+                                                            type="checkbox" class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
                                                 </td>
                                                 <td>
                                                     <span id="0_CUST_VIP_DESC"></span>
@@ -195,6 +389,19 @@
                                                 <td>
                                                     <span id="1_LAST_STAY"></span>
                                                 </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_LAST_STAY" name="chk_LAST_STAY" type="checkbox"
+                                                            class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
+                                                </td>
                                                 <td>
                                                     <span id="0_LAST_STAY"></span>
                                                 </td>
@@ -203,6 +410,19 @@
                                                 <td>Rate Codes (Negotiated)</td>
                                                 <td>
                                                     <span id="1_RATE_CODES"></span>
+                                                </td>
+                                                <td class="px-4">
+                                                    <label class="switch switch-lg switch-info">
+                                                        <input id="chk_RATE_CODES" name="chk_RATE_CODES" type="checkbox"
+                                                            class="switch-input" value="1">
+                                                        <span class="switch-toggle-slider">
+                                                            <span class="switch-on">
+                                                                <i class="bx bxs-right-arrow-alt bx-sm"></i>
+                                                            </span>
+                                                            <span class="switch-off">
+                                                            </span>
+                                                        </span>
+                                                    </label>
                                                 </td>
                                                 <td>
                                                     <span id="0_RATE_CODES"></span>
@@ -288,6 +508,13 @@ $(document).on('click', '.use_selected_profiles', function() {
 
 function showCompareProfiles(pmCustId, ogCustId) {
 
+    var mergeFields = ['CUST_FULL_NAME', 'CUST_TITLE', 'CUST_LANG', 'CUST_ADDRESS_1', 'CUST_ADDRESS_2',
+        'CUST_CITY_DESC', 'CUST_STATE_DESC', 'CUST_COUNTRY_DESC', 'CUST_POSTAL_CODE', 'CUST_MOBILE', 'CUST_PHONE',
+        'CUST_MEMBERSHIPS', 'CUST_PREFERENCES', 'CUST_VIP_DESC', 'LAST_STAY', 'RATE_CODES'
+    ];
+
+    $('#compareProfiles').find('.switch-input').prop('disabled', false);
+
     var url = '<?php echo base_url('/showCompareProfiles')?>';
     $.ajax({
         url: url,
@@ -313,24 +540,47 @@ function showCompareProfiles(pmCustId, ogCustId) {
                     }
                 });
             });
+
+            var ogCustData = respn[0];
+            var pmCustData = respn[1];
+
+            $(mergeFields).each(function(i, mergeField) {
+
+                if ($.trim(pmCustData[mergeField]) != '' && pmCustData[mergeField] != null && ($
+                        .trim(ogCustData[mergeField]) == '' ||
+                        ogCustData[mergeField] == null))
+                    $('#chk_' + mergeField).prop('checked', true);
+
+                if ($.trim(pmCustData[mergeField]) == '' || pmCustData[mergeField] == null)
+                    $('#chk_' + mergeField).prop('disabled', true);
+            });
         }
     });
 }
 
 function mergeProfiles(pmCustId, ogCustId) {
 
+    var formData = {};
+    $('#compareProfiles').find('.switch-input').each(function(i, data) {
+        var field = $(data).attr('id');
+        var values = $(this).val();
+
+        if ($(this).is(":checked"))
+            formData[field] = values;
+    });
+
+    formData['pmCustId'] = pmCustId;
+    formData['ogCustId'] = ogCustId;
+
     var url = '<?php echo base_url('/mergeProfileTables')?>';
     $.ajax({
         url: url,
-        type: "get",
+        type: "post",
         async: false,
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         },
-        data: {
-            pmCustId: pmCustId,
-            ogCustId: ogCustId
-        },
+        data: formData,
         dataType: 'json',
         success: function(respn) {
             return respn;

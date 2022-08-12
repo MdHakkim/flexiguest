@@ -70,7 +70,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/customerChangesView', 'ApplicatioController::CustomerChangesView');
 
     $routes->get('/showCompareProfiles', 'ApplicatioController::showCompareProfiles');
-    $routes->get('/mergeProfileTables', 'ApplicatioController::mergeProfileTables');
+    $routes->match(['post'],'/mergeProfileTables', 'ApplicatioController::mergeProfileTables');
 
     $routes->get('/company', 'ApplicatioController::company');
     $routes->match(['post'],'/companyView', 'ApplicatioController::companyView');
