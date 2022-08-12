@@ -4,6 +4,9 @@ namespace App\Controllers;
 use  App\Libraries\ServerSideDataTable;
 use  App\Libraries\EmailLibrary;
 use App\Models\Documents;
+use App\Models\Reservation;
+use App\Models\ReservationRoomAsset;
+use App\Models\RoomAsset;
 use CodeIgniter\API\ResponseTrait;
 use DateTime;
 use DateTimeZone;
@@ -17,6 +20,9 @@ class ApplicatioController extends BaseController
     public $request;
     public $todayDate;
     private $Documents;
+    private $Reservation;
+    private $RoomAsset;
+    private $ReservationRoomAsset;
 
     public function __construct(){
         $this->Db = \Config\Database::connect();
@@ -25,6 +31,10 @@ class ApplicatioController extends BaseController
         $this->request = \Config\Services::request();
         $this->todayDate = new DateTime("now", new DateTimeZone('Asia/Dubai'));
         $this->Documents = new Documents();
+
+        $this->Reservation = new Reservation();
+        $this->RoomAsset = new RoomAsset();
+        $this->ReservationRoomAsset = new ReservationRoomAsset();
     }
 
     public function Reservation(){   
@@ -3881,6 +3891,32 @@ class ApplicatioController extends BaseController
         }
     }
 
+    public function attachAssetList($reservation_id, $room_id) {
+        $user_id = session('USR_ID');
+        $assets = $this->RoomAsset->where('RA_ROOM_ID', $room_id)->findAll();
+        
+        // assets already added
+        $already_exist = $this->ReservationRoomAsset
+            ->where('RRA_RESERVATION_ID', $reservation_id)
+            ->where('RRA_ROOM_ID', $room_id)
+            ->first();
+
+        if(!empty($already_exist))
+            return;
+
+        foreach($assets as $asset) {
+            $data = [
+                'RRA_RESERVATION_ID' => $reservation_id,
+                'RRA_ROOM_ID' => $room_id,
+                'RRA_ROOM_ASSET_ID' => $asset['RA_ID'],
+                'RRA_CREATED_BY' => $user_id,
+                'RRA_UPDATED_BY' => $user_id
+            ];
+
+            $this->ReservationRoomAsset->insert($data);
+        }
+    }
+
     function confirmPrecheckinStatus(){
         $sysid = $this->request->getPost("DOC_RESV_ID");
 
@@ -3897,6 +3933,14 @@ class ApplicatioController extends BaseController
         $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
         $result = $this->responseJson("1","0",$return,$response='');
 
+        $reservation = $this->Reservation
+                            ->select('RESV_ID, RM_ID')
+                            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
+                            ->where('RESV_ID', $sysid)
+                            ->first();
+        if(isset($this->session->USR_ROLE) && $this->session->USR_ROLE == 'admin' && !empty($reservation))
+            $this->attachAssetList($sysid, $reservation['RM_ID']);
+
         $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, 
                     RESV_RATE, RESV_RM_TYPE, RESV_NAME, 
                     CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER,
@@ -3909,7 +3953,7 @@ class ApplicatioController extends BaseController
                     FROM FLXY_RESERVATION 
                         INNER JOIN FLXY_CUSTOMER ON FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID 
                         left join FLXY_DOCUMENTS as fd on FLXY_RESERVATION.RESV_ID = fd.DOC_RESV_ID and fd.DOC_FILE_TYPE = 'SIGN'
-                        WHERE RESV_ID = ".$_SESSION['RESV_ID'];
+                        WHERE RESV_ID = $sysid";
         $data['response'] = $this->Db->query($sql)->getResultArray();
 
         $dompdf = new \Dompdf\Dompdf();

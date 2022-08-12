@@ -651,7 +651,17 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         });
     });
 
+    $routes->group('property-info', function ($routes) { 
+        $routes->get('', 'PropertyInfoController::propertyInfo');
+        $routes->post('all-property-info', 'PropertyInfoController::allPropertyInfo');
+        $routes->post('store', 'PropertyInfoController::store');
+    });
 
+    $routes->group('branding-logo', function ($routes) { 
+        $routes->get('', 'BrandingLogoController::brandingLogo');
+        $routes->post('all-branding-logo', 'BrandingLogoController::allBrandingLogo');
+        $routes->post('store', 'BrandingLogoController::store');
+    });
 
     // ABUBAKAR CODE (END)
 });
