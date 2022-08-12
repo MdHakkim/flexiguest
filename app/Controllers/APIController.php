@@ -878,7 +878,7 @@ class APIController extends BaseController
 
             if ($update_data &&  $res_data) {
                 if ($user['USR_ROLE'] == 'admin')
-                    $this->ApplicatioController->attachAssetList($resID);
+                    $this->ApplicatioController->attachAssetList($USR_ID, $resID);
 
                 $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT'])]);
             }

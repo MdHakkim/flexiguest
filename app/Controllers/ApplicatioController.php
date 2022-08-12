@@ -3891,9 +3891,7 @@ class ApplicatioController extends BaseController
         }
     }
 
-    public function attachAssetList($reservation_id) {
-        $user_id = session('USR_ID');
-
+    public function attachAssetList($user_id, $reservation_id) {
         $reservation = $this->Reservation
                             ->select('RESV_ID, RM_ID')
                             ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
@@ -3946,7 +3944,7 @@ class ApplicatioController extends BaseController
         $result = $this->responseJson("1","0",$return,$response='');
 
         if(isset($this->session->USR_ROLE) && $this->session->USR_ROLE == 'admin')
-            $this->attachAssetList($sysid);
+            $this->attachAssetList(session('USR_ID'), $sysid);
 
         $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, 
                     RESV_RATE, RESV_RM_TYPE, RESV_NAME, 
