@@ -3891,9 +3891,19 @@ class ApplicatioController extends BaseController
         }
     }
 
-    public function attachAssetList($reservation_id, $room_id) {
+    public function attachAssetList($reservation_id) {
         $user_id = session('USR_ID');
-        $assets = $this->RoomAsset->where('RA_ROOM_ID', $room_id)->findAll();
+
+        $reservation = $this->Reservation
+                            ->select('RESV_ID, RM_ID')
+                            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
+                            ->where('RESV_ID', $reservation_id)
+                            ->first();
+                            
+        if(empty($reservation))
+            return;
+
+        $room_id = $reservation['RM_ID'];
         
         // assets already added
         $already_exist = $this->ReservationRoomAsset
@@ -3903,6 +3913,8 @@ class ApplicatioController extends BaseController
 
         if(!empty($already_exist))
             return;
+
+        $assets = $this->RoomAsset->where('RA_ROOM_ID', $room_id)->findAll();
 
         foreach($assets as $asset) {
             $data = [
@@ -3933,13 +3945,8 @@ class ApplicatioController extends BaseController
         $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
         $result = $this->responseJson("1","0",$return,$response='');
 
-        $reservation = $this->Reservation
-                            ->select('RESV_ID, RM_ID')
-                            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
-                            ->where('RESV_ID', $sysid)
-                            ->first();
-        if(isset($this->session->USR_ROLE) && $this->session->USR_ROLE == 'admin' && !empty($reservation))
-            $this->attachAssetList($sysid, $reservation['RM_ID']);
+        if(isset($this->session->USR_ROLE) && $this->session->USR_ROLE == 'admin')
+            $this->attachAssetList($sysid);
 
         $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, 
                     RESV_RATE, RESV_RM_TYPE, RESV_NAME, 
