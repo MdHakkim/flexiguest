@@ -17,6 +17,7 @@ class APIController extends BaseController
     private $VaccineDetail;
     private $State;
     private $City;
+    private $ApplicatioController;
 
     public function __construct()
     {
@@ -24,6 +25,7 @@ class APIController extends BaseController
         $this->VaccineDetail = new VaccineDetail();
         $this->State = new State();
         $this->City = new City();
+        $this->ApplicatioController = new ApplicatioController();
     }
 
     // ----------- START API FOR FLEXI GUEST --------------//
@@ -871,9 +873,15 @@ class APIController extends BaseController
 
                 $update_data = $this->DB->table('FLXY_DOCUMENTS')->insert($data);
             }
+
             $res_data = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resID)->update($dataRes);
-            if ($update_data &&  $res_data)
+
+            if ($update_data &&  $res_data) {
+                if ($user['USR_ROLE'] == 'admin')
+                    $this->ApplicatioController->attachAssetList($USR_ID, $resID);
+
                 $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT'])]);
+            }
             else
                 $result = responseJson(500, true, ["msg" => "Failed to upload image or updation in reservation"]);
 
