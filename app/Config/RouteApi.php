@@ -165,6 +165,7 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
 
     $routes->group('asset-tracking', function ($routes) {
         $routes->get("get-assets", "AssetTrackingController::getAssets");
+        $routes->post("submit-form", "AssetTrackingController::submitForm");
     });
 
 });

@@ -58,4 +58,27 @@ class AssetTrackingController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'assets list'], $rooms));
     }
+
+    public function submitForm()
+    {
+        $assets = $this->request->getVar('assets');
+
+        foreach($assets as $asset) {
+
+            $status = 'Discrepancy';
+            if($asset->IS_VERIFIED)
+                $status = 'Verified';
+
+            $data = [
+                'RRA_ID' => $asset->RRA_ID,
+                'RRA_TRACKING_REMARKS' => $asset->RRA_TRACKING_REMARKS,
+                'RRA_STATUS' => $status,
+            ];
+
+            $this->ReservationRoomAsset->save($data);
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Form Submitted']));
+    }
+
 }
