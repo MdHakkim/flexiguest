@@ -49,12 +49,17 @@
     .footer {
         margin-top: 50px;
     }
+    .border-top-bottom {
+        border-top: 2px solid black;
+        border-bottom: 2px solid black;
+    }
 </style>
 
 <div class="main">
     <div class="text-center">
         <!-- <img src="D:\wamp64\www\FlexiGuest\assets\img\farnek.png" height="50px" /> -->
-        <h1 class="logo">FlexiGuest</h1>
+        <!-- <h1 class="logo">FlexiGuest</h1> -->
+        <img src="<?= $reservation['branding_logo'] ?>" width="190px;" />
     </div>
 
     <div class="container">
@@ -157,9 +162,10 @@
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Text</th>
-                        <th>Charges (AED)</th>
-                        <th>Credits (AED)</th>
+                        <th>Description</th>
+                        <th>Unit Rate</th>
+                        <th>Quantity</th>
+                        <th>Amount</th>
                     </tr>
                 </thead>
 
@@ -168,7 +174,40 @@
                         <td><?= $reservation['RESV_ARRIVAL_DT'] ?> - <?= $reservation['RESV_DEPARTURE'] ?></td>
                         <td>Reservation</td>
                         <td><?= $reservation['RESV_RATE'] ?></td>
+                        <td>1</td>
+                        <td><?= $reservation['RESV_RATE'] ?></td>
+                    </tr>
+
+                    <tr>
+                        <td>2022-07-01</td>
+                        <td>Laudry</td>
+                        <td>20</td>
+                        <td>1</td>
+                        <td>20</td>
+                    </tr>
+
+                    <tr>
+                        <td>2022-07-10</td>
+                        <td>Additional Cleaning</td>
+                        <td>100</td>
+                        <td>1</td>
+                        <td>100</td>
+                    </tr>
+
+                    <br/>
+
+                    <tr>
                         <td></td>
+                        <td></td>
+                        <td colspan="2" class="border-top-bottom"><b>Total</b></td>
+                        <td class="border-top-bottom"><b><?= 534.25 ?></b></td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td colspan="2"><b>Net</b></td>
+                        <td><b><?= 534.25 ?></b></td>
                     </tr>
 
                     <!-- <tr>
