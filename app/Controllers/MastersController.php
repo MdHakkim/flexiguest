@@ -2957,4 +2957,100 @@ class MastersController extends BaseController
             return $this->respond($e->errors());
         }
     }
+
+    /**************      Product Category Functions      ***************/
+
+    public function productCategory()
+    {
+        $data['title'] = 'Product Categories';
+        $data['session'] = $this->session;
+        
+        return view('Master/ProductCategoryView', $data);
+    }
+
+    public function ProductCategoryView()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_PRODUCT_CATEGORIES';
+        $columns = 'PC_ID|PC_CATEGORY|FORMAT(PC_CREATED_AT,\'dd-MMM-yyyy hh:mm:ss\')PC_CREATED_AT|FORMAT(PC_UPDATED_AT,\'dd-MMM-yyyy hh:mm:ss\')PC_UPDATED_AT';
+        $mine->generate_DatatTable($tableName, $columns, [], '|');
+        exit;
+    }
+
+    public function insertProductCategory()
+    {
+        try {
+            $sysid = $this->request->getPost('PC_ID');
+
+            $validate = $this->validate([
+                'PC_CATEGORY' => ['label' => 'Product Category', 'rules' => 'required|is_unique[FLXY_PRODUCT_CATEGORIES.PC_CATEGORY,PC_ID,' . $sysid . ']'],
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            //echo json_encode(print_r($_POST));
+            //exit;
+
+            $data = [
+                "PC_CATEGORY" => trim($this->request->getPost('PC_CATEGORY')),
+                "PC_CREATED_AT" => date('Y-m-d H:i:s'),
+                "PC_UPDATED_AT" => date('Y-m-d H:i:s'),
+                "PC_CREATED_BY" => session()->get('USR_ID'),
+                "PC_UPDATED_BY" => session()->get('USR_ID'),
+            ];
+
+            if(!empty($sysid)){
+                unset($data["PC_CREATED_AT"]);
+                unset($data["PC_CREATED_BY"]);                    
+            }
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_PRODUCT_CATEGORIES')->where('PC_ID', $sysid)->update($data) : $this->Db->table('FLXY_PRODUCT_CATEGORIES')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function checkProductCategory($rcCode)
+    {
+        $sql = "SELECT PC_ID
+                FROM FLXY_PRODUCT_CATEGORIES
+                WHERE PC_CATEGORY = '" . $rcCode . "'";
+
+        $response = $this->Db->query($sql)->getNumRows();
+        return $rcCode == '' || strlen($rcCode) > 70 ? 1 : $response; // Send found row even if submitted code is empty
+    }
+
+    public function editProductCategory()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT *
+                FROM FLXY_PRODUCT_CATEGORIES
+                WHERE PC_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteProductCategory()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_PRODUCT_CATEGORIES')->delete(['PC_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+    
 }

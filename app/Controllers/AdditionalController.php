@@ -16,7 +16,7 @@ class AdditionalController extends BaseController
         $this->Db = \Config\Database::connect();
         $this->request = \Config\Services::request();
         $this->session = \Config\Services::session();
-        helper(['form', 'url', 'custom', 'common']);
+        helper(['form', 'url', 'custom', 'common', 'upload']);
     }
 
     // public function getMethodName()
@@ -2647,5 +2647,150 @@ class AdditionalController extends BaseController
             $dompdf->stream("RESERVATON_".$_SESSION['PROFORMA_RESV_ID'].".pdf", array("Attachment" => 1));     
         }    
     
+    /**************      Products Functions      ***************/
+
+    public function products()
+    {    
+        $productCategoryLists = $this->productCategoryList();
+
+        $data = [
+            'productCategoryLists' => $productCategoryLists
+        ];
+
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+        
+        return view('Master/ProductsView', $data);
+    }
+
+    public function ProductsView()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_PRODUCTS LEFT JOIN FLXY_PRODUCT_CATEGORIES ON PR_CATEGORY_ID = PC_ID';
+        $columns = 'PR_ID,PR_NAME,PR_CATEGORY_ID,PC_CATEGORY,PR_IMAGE,PR_PRICE,PR_QUANTITY,PR_ESCALATED_HOURS,PR_ESCALATED_MINS';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }    
+
+    public function insertProduct()
+    {
+        $user_id = session()->get('USR_ID');
+
+        try {
+            $sysid = $this->request->getPost('PR_ID');
+
+            $rules = [
+                'PR_NAME' => ['label' => 'Name', 'rules' => 'required|is_unique[FLXY_PRODUCTS.PR_NAME,PR_ID,' . $sysid . ']'],
+                'PR_CATEGORY_ID' => ['label' => 'Product Category', 'rules' => 'required'],
+                'PR_PRICE' => ['label' => 'Price', 'rules' => 'required'],
+                'PR_QUANTITY' => ['label' => 'Product Quantity', 'rules' => 'required'],
+                'PR_ESCALATED_HOURS' => ['label' => 'Escalated Hours', 'rules' => 'required'],
+                'PR_ESCALATED_MINS' => ['label' => 'Escalated Minutes', 'rules' => 'required'],
+            ];
+
+            if (empty($sysid) || null !== $this->request->getFile('PR_IMAGE'))
+                $rules = array_merge($rules, [
+                    'PR_IMAGE' => [
+                        'label' => 'Product Image',
+                        'rules' => ['uploaded[PR_IMAGE]', 'mime_in[PR_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[PR_IMAGE,2048]']
+                    ],
+                ]);
+
+            $validate = $this->validate($rules);
+
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $data = [
+                "PR_NAME" => trim($this->request->getPost('PR_NAME')),
+                "PR_CATEGORY_ID" => trim($this->request->getPost('PR_CATEGORY_ID')),
+                "PR_PRICE" => trim($this->request->getPost('PR_PRICE')),
+                "PR_QUANTITY" => trim($this->request->getPost('PR_QUANTITY')),
+                "PR_ESCALATED_HOURS" => trim($this->request->getPost('PR_ESCALATED_HOURS')),
+                "PR_ESCALATED_MINS" => trim($this->request->getPost('PR_ESCALATED_MINS')),
+                "PR_CREATED_AT" => date('Y-m-d H:i:s'),
+                "PR_UPDATED_AT" => date('Y-m-d H:i:s'),
+                "PR_CREATED_BY" => $user_id,
+                "PR_UPDATED_BY" => $user_id
+                ];
+
+                if(!empty($sysid)){
+                    unset($data["PR_CREATED_AT"]);
+                    unset($data["PR_CREATED_BY"]);                    
+                }
+                
+                if ($this->request->getFile('PR_IMAGE')) {
+                    $image = $this->request->getFile('PR_IMAGE');
+                    $image_name = $image->getRandomName();
+                    $directory = "assets/Uploads/laundry_amenities_products/";
+        
+                    $response = documentUpload($image, $image_name, $user_id, $directory);
+        
+                    if ($response['SUCCESS'] != 200)
+                        return $this->respond(responseJson("500", true, "Product Image not uploaded"));
+        
+                    $data['PR_IMAGE'] = $directory . $response['RESPONSE']['OUTPUT'];
+                }    
+
+                $return = !empty($sysid) ? $this->Db->table('FLXY_PRODUCTS')->where('PR_ID', $sysid)->update($data) : $this->Db->table('FLXY_PRODUCTS')->insert($data);
+                $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+                echo json_encode($result);
+            } catch (\Exception $e) {
+                return $this->respond($e->errors());
+        }
+    }    
+
+    public function editProduct()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT *, PC_CATEGORY FROM FLXY_PRODUCTS 
+                LEFT JOIN FLXY_PRODUCT_CATEGORIES ON PR_CATEGORY_ID = PC_ID 
+                WHERE PR_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteProduct()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_PRODUCTS')->delete(['PR_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+    
+    
+    public function productCategoryList()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT *
+                FROM FLXY_PRODUCT_CATEGORIES";
+
+        if ($search != '') {
+            $sql .= " WHERE PC_CATEGORY LIKE '%$search%'";
+        }
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['PC_ID'] . '">' . $row['PC_CATEGORY'] . '</option>';
+        }
+
+        return $option;
+    }
 
 }

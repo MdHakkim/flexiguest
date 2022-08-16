@@ -322,7 +322,17 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/editVaccineType', 'MastersController::editVaccineType');
     $routes->match(['post'],'/deleteVaccineType', 'MastersController::deleteVaccineType'); 
     
+    $routes->get('/productCategory', 'MastersController::productCategory');
+    $routes->match(['post'],'/productCategoryView', 'MastersController::ProductCategoryView');
+    $routes->match(['post'],'/insertProductCategory', 'MastersController::insertProductCategory');
+    $routes->match(['post'],'/editProductCategory', 'MastersController::editProductCategory');
+    $routes->match(['post'],'/deleteProductCategory', 'MastersController::deleteProductCategory');  
     
+    $routes->get('/products', 'AdditionalController::products');
+    $routes->match(['post'],'/ProductsView', 'AdditionalController::ProductsView');
+    $routes->match(['post'],'/insertProduct', 'AdditionalController::insertProduct');
+    $routes->match(['post'],'/editProduct', 'AdditionalController::editProduct');
+    $routes->match(['post'],'/deleteProduct', 'AdditionalController::deleteProduct');
 
 
     // Code By ALEESHA 
