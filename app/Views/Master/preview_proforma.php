@@ -275,8 +275,8 @@
   </header>
 
   <footer>
-    Farnek Services LLC, P.O. Box: 5423 DXB,Farnek Building, Floor 3, Al Quoz, Dubai<br>
-    Tel: +971 (04) 3824400,Fax: +971 (04) 3397456 Email: expovillage@farnek.com
+    HITEK Services LLC, P.O. Box: 5423 DXB, Farnek Building, Floor 2, Al Quoz, Dubai<br>
+    Tel: +971 4 382 4498, Email: info@hitekservices.com, Website: www.hitekservices.com
   </footer>
 
   <main >
