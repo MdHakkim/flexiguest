@@ -7,6 +7,8 @@ use App\Models\Reservation;
 use App\Models\ShareReservations;
 use App\Libraries\ServerSideDataTable;
 
+use function PHPSTORM_META\map;
+
 class ReservationController extends BaseController
 {
 
@@ -1164,6 +1166,56 @@ public function showPackages()
         }
         
     }
+    public function roomPlan()
+    {
+        $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
+        $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
+        $data['RoomReservations'] = $this->getReservations(); 
+        $data['RoomResources'] = $this->roomplanResources();
+        
+        return view('Reservation/RoomPlan',$data);
+    }
+
+   
+    public function roomplanResources()
+    {
+        $data = $response = NULL;
+        $sql = "SELECT RM_ID, RM_NO, RM_TYPE, SM.RM_STATUS_CODE, RL.RM_STAT_UPDATED      
+        FROM FLXY_ROOM 
+        LEFT JOIN (SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID
+                      ,RM_STAT_ROOM_ID
+                  FROM FLXY_ROOM_STATUS_LOG
+                  GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+        
+        INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
+        
+        INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
+
+        GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
+
+        ORDER BY RM_ID ASC";       
+        $responseCount = $this->DB->query($sql)->getNumRows();
+        if($responseCount > 0)
+        $response = $this->DB->query($sql)->getResultArray();
+        return $response;
+    }
+
+
+
+    public function getReservations(){
+        $response = NULL;
+        $sql = "SELECT RESV_ID, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, RESV_ROOM, RESV_STATUS, RM_ID FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID INNER JOIN FLXY_ROOM ON RM_ID = RESV_ROOM_ID";       
+        $responseCount = $this->DB->query($sql)->getNumRows();
+        if($responseCount > 0){
+            $response = $this->DB->query($sql)->getResultArray();           
+        }
+      return $response;
+    }
+
+
+    
+      
+    
 
 
 }

@@ -11,7 +11,7 @@
 
     <script src="<?php //echo base_url('assets/vendor/js/helpers.js')?>"></script>
     <script src="<?php echo base_url('assets/vendor/js/template-customizer.js') ?>"></script>
-
+    <script src="<?php //echo base_url('assets/vendor/libs/fullcalendar/fullcalendar.js') ?>"></script> 
     <script src="<?php echo base_url('assets/js/moment.min.js') ?>"></script>
     <script src="<?php echo base_url('assets/jquery.Jcrop.min.js'); ?>"></script>
     <!-- Added by Deleep -->
@@ -82,12 +82,12 @@
     <script src="<?php echo base_url('assets/vendor/libs/hammer/hammer.js') ?>"></script>
     <script src="<?php echo base_url('assets/vendor/libs/i18n/i18n.js') ?>"></script> 
     <!-- Vendors JS -->
-    <script src="<?php echo base_url('assets/vendor/libs/fullcalendar/fullcalendar.js') ?>"></script> 
+
     
    
     <script src="<?php echo base_url('assets/vendor/libs/flatpickr/flatpickr.js') ?>"></script>  
     <!-- Page JS -->
-    <script src="<?php ///echo base_url('assets/js/reservation-calendar-events.js') ?>"></script>
+    <script src="<?php // echo base_url('assets/js/reservation-calendar-events.js') ?>"></script>
     <script src="<?php //echo base_url('assets/js/reservation-calendar.js') ?>"></script>
     <!-- Added by Deleep -->
     <?php if (isset($js_to_load)) {
@@ -96,5 +96,8 @@
     <?php
         }
     }
+
+  
+    
     
     ?>
