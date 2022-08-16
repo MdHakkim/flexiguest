@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use CodeIgniter\API\ResponseTrait;
 use  App\Libraries\EmailLibrary;
 use App\Models\City;
+use App\Models\PropertyInfo;
 use App\Models\State;
 use App\Models\VaccineDetail;
 
@@ -18,6 +19,7 @@ class APIController extends BaseController
     private $State;
     private $City;
     private $ApplicatioController;
+    private $PropertyInfo;
 
     public function __construct()
     {
@@ -26,6 +28,7 @@ class APIController extends BaseController
         $this->State = new State();
         $this->City = new City();
         $this->ApplicatioController = new ApplicatioController();
+        $this->PropertyInfo = new PropertyInfo();
     }
 
     // ----------- START API FOR FLEXI GUEST --------------//
@@ -1171,10 +1174,11 @@ class APIController extends BaseController
     OUTPUT : HANDBOOK URL         */
     public function getHandBookURL()
     {
-        $path = 'assets/Uploads/handbook/hotel-handbook.pdf';
+        $book = $this->PropertyInfo->first();
+        // $path = 'assets/Uploads/handbook/hotel-handbook.pdf';
 
-        if (file_exists($path))
-            $result = responseJson(200, false, ["msg" => "Handbook URL fetched"], ['url' => base_url($path)]);
+        if (file_exists($book['PI_URL']))
+            $result = responseJson(200, false, ["msg" => "Handbook URL fetched"], ['url' => base_url($book['PI_URL'])]);
         else
             $result = responseJson(500, false, ["msg" => "No Handbook file uploaded"]);
 
