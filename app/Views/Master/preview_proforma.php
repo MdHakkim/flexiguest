@@ -159,7 +159,7 @@
   <header>
     <div class="header-wrapper" >
       <div class="header-wrapper-image">
-        <img src="<?php echo base_url() ?>/assets/img/farnek.png" width="100%"></th>
+        <img src="<?php echo base_url() ?>/assets/img/HITEK.png" width="100%"></th>
       </div>
       <div class="row">
         <div class="column">
