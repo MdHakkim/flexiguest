@@ -52,14 +52,17 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Status</th>
                             <th>Request ID</th>
+                            <th>Status</th>
+                            <th>Travel Type</th>
+                            <th>Travel Purpose</th>
                             <th>Reservation</th>
                             <th>Room</th>
                             <th>Guest Name</th>
                             <th>Transport Type</th>
                             <th>Payment Status</th>
-                            <th>Travel Date & Time</th>
+                            <th>Pickup Date & Time</th>
+                            <th>Dropoff Date & Time</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
@@ -169,7 +172,7 @@
 
                                                             RES<?= $reservation['RESV_ID'] ?>
                                                             -
-                                                            <?= $reservation['CUST_FIRST_NAME'] . ' ' . $reservation['CUST_MIDDLE_NAME'] . ' ' . $reservation['CUST_LAST_NAME'] ?>
+                                                            <?= $reservation['CUST_FIRST_NAME'] . ' ' . $reservation['CUST_LAST_NAME'] ?>
                                                             -
                                                             <?= $reservation['CUST_ID'] ?>
                                                         </option>
@@ -222,32 +225,14 @@
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Travel Purpose *</b></label>
                                                 <select class="select2" name="TR_TRAVEL_PURPOSE">
-                                                    <option>Airport Drop Off</option>
-                                                    <option>Airport Pickup</option>
+                                                    <option>Drop Off</option>
+                                                    <option>Pickup</option>
                                                 </select>
                                             </div>
 
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Guest Name *</b></label>
                                                 <input type="text" name="TR_GUEST_NAME" class="form-control" placeholder="Guest name" />
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label"><b>Travel Date *</b></label>
-
-                                                <div class="input-group">
-                                                    <input type="text" name="TR_TRAVEL_DATE" placeholder="YYYY-MM-DD" class="form-control">
-                                                    <span class="input-group-append">
-                                                        <span class="input-group-text bg-light d-block">
-                                                            <i class="fa fa-calendar"></i>
-                                                        </span>
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label"><b>Travel Time *</b></label>
-                                                <input type="time" name="TR_TRAVEL_TIME" class="form-control" />
                                             </div>
 
                                             <div class="col-md-6">
@@ -290,6 +275,24 @@
                                     <!-- pick-up -->
                                     <div id="pick-up" class="content">
                                         <div class="row g-3">
+
+                                            <div class="col-md-6">
+                                                <label class="form-label"><b>Pickup Date *</b></label>
+
+                                                <div class="input-group">
+                                                    <input type="text" name="TR_PICKUP_DATE" placeholder="YYYY-MM-DD" class="form-control">
+                                                    <span class="input-group-append">
+                                                        <span class="input-group-text bg-light d-block">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label"><b>Pickup Time *</b></label>
+                                                <input type="time" name="TR_PICKUP_TIME" class="form-control" />
+                                            </div>
 
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Pickup Point *</b></label>
@@ -339,6 +342,24 @@
                                     <!-- drop-off -->
                                     <div id="drop-off" class="content">
                                         <div class="row g-3">
+
+                                            <div class="col-md-6">
+                                                <label class="form-label"><b>Dropoff Date *</b></label>
+
+                                                <div class="input-group">
+                                                    <input type="text" name="TR_DROPOFF_DATE" placeholder="YYYY-MM-DD" class="form-control">
+                                                    <span class="input-group-append">
+                                                        <span class="input-group-text bg-light d-block">
+                                                            <i class="fa fa-calendar"></i>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <label class="form-label"><b>Dropoff Time *</b></label>
+                                                <input type="time" name="TR_DROPOFF_TIME" class="form-control" />
+                                            </div>
 
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Dropoff Point *</b></label>
@@ -524,7 +545,11 @@
         var form_id = '#submit-form';
 
         $(document).ready(function() {
-            $('input[name="TR_TRAVEL_DATE"]').datepicker({
+            $('input[name="TR_PICKUP_DATE"]').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+            });
+            $('input[name="TR_DROPOFF_DATE"]').datepicker({
                 format: 'yyyy-mm-dd',
                 autoclose: true,
             });
@@ -599,6 +624,9 @@
                         data: ''
                     },
                     {
+                        data: 'TR_ID'
+                    },
+                    {
                         data: null,
                         render: function(data, type, row, meta) {
                             let class_name = 'badge rounded-pill';
@@ -620,7 +648,10 @@
                         }
                     },
                     {
-                        data: 'TR_ID'
+                        data: 'TR_TRAVEL_TYPE'
+                    },
+                    {
+                        data: 'TR_TRAVEL_PURPOSE'
                     },
                     {
                         data: 'TR_RESERVATION_ID'
@@ -640,7 +671,13 @@
                     {
                         data: null,
                         render: function(data, type, row, meta) {
-                            return (`${data['TR_TRAVEL_DATE']} ${data['TR_TRAVEL_TIME']}`);
+                            return (`${data['TR_PICKUP_DATE']} ${data['TR_PICKUP_TIME']}`);
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return (`${data['TR_DROPOFF_DATE']} ${data['TR_DROPOFF_TIME']}`);
                         }
                     },
                     {
@@ -702,7 +739,7 @@
                     // }
                 ],
                 "order": [
-                    [2, "desc"]
+                    [1, "desc"]
                 ],
                 destroy: true,
                 dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -830,8 +867,8 @@
 
 
                         $.each(data, function(field, val) {
-                            if (field == 'TR_TRAVEL_TIME')
-                                val = val.replace('.0000000', '');
+                            // if (field == 'TR_TRAVEL_TIME')
+                            //     val = val.replace('.0000000', '');
 
                             if ($(`#${id} input[name='${field}'][type!='file']`).length)
                                 $(`#${id} input[name='${field}']`).val(val);
