@@ -37,9 +37,11 @@ class MaintenanceController extends BaseController
             $where_condition = "MAINT_ATTENDANT_ID = {$user['USR_ID']}";
 
         $maintenace_list = $this->Maintenance
-            ->select('FLXY_MAINTENANCE.*, fmc.MAINT_CATEGORY as MAINT_CATEGORY_TEXT, fmsc.MAINT_SUBCATEGORY as MAINT_SUBCATEGORY')
+            ->select("FLXY_MAINTENANCE.*, fmc.MAINT_CATEGORY as MAINT_CATEGORY_TEXT, fmsc.MAINT_SUBCATEGORY as MAINT_SUBCATEGORY,
+            case when MAINT_ATTENDANT_ID is not null then concat(CUST_FIRST_NAME, ' ', CUST_LAST_NAME) else null end as NAME")
             ->join('FLXY_MAINTENANCE_CATEGORY as fmc', 'FLXY_MAINTENANCE.MAINT_CATEGORY = fmc.MAINT_CAT_ID', 'left')
             ->join('FLXY_MAINTENANCE_SUBCATEGORY as fmsc', 'FLXY_MAINTENANCE.MAINT_SUB_CATEGORY = fmsc.MAINT_SUBCAT_ID', 'left')
+            ->join('FLXY_CUSTOMER', 'MAINT_ATTENDANT_ID = CUST_ID', 'left')
             ->where($where_condition)
             ->orderBy('FLXY_MAINTENANCE.MAINT_ID', 'desc')
             ->findAll();
