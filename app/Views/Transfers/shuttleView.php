@@ -602,10 +602,10 @@
                         $('#SHUTL_TO').val(SHUTL_TO).trigger('change');
                         $('#SHUTL_NAME').val(data['SHUTL_NAME']);
 
-                        data['SHUTL_START_AT'] = data['SHUTL_START_AT'].split(".")[0];
+                        data['SHUTL_START_AT'] = data['SHUTL_START_AT'].split(' ')[1].split(".")[0];
                         $('#SHUTL_START_AT').val(data['SHUTL_START_AT']);
 
-                        data['SHUTL_END_AT'] = data['SHUTL_END_AT'].split(".")[0];
+                        data['SHUTL_END_AT'] = data['SHUTL_END_AT'].split(' ')[1].split(".")[0];
                         $('#SHUTL_END_AT').val(data['SHUTL_END_AT']);
 
                         $('#SHUTL_NEXT').val(data['SHUTL_NEXT']);
