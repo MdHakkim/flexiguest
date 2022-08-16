@@ -210,7 +210,10 @@
                     data: 'MAINT_SUBCATEGORY'
                 },
                 {
-                    data: 'MAINT_PREFERRED_TIME'
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return `${data['MAINT_PREFERRED_DT']} ${data['MAINT_PREFERRED_TIME']}`;
+                    }
                 },
                 {
                     data: 'MAINT_STATUS'
@@ -571,7 +574,7 @@
                     $('#MAINT_DETAILS').val(data['MAINT_DETAILS']);
                     $('#MAINT_PREFERRED_DT').val(data['MAINT_PREFERRED_DT']);
 
-                    data['MAINT_PREFERRED_TIME'] = data['MAINT_PREFERRED_TIME'].split('.')[0];
+                    data['MAINT_PREFERRED_TIME'] = data['MAINT_PREFERRED_TIME'].split(' ')[1].split('.')[0];
                     $('#MAINT_PREFERRED_TIME').val(data['MAINT_PREFERRED_TIME']);
 
                     $('select[name="MAINT_STATUS"]').val(data.MAINT_STATUS).trigger('change');

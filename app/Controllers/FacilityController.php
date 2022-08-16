@@ -45,7 +45,7 @@ class FacilityController extends BaseController
     {
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_MAINTENANCE_VIEW left join FLXY_CUSTOMER on FLXY_MAINTENANCE_VIEW.CUST_NAME = FLXY_CUSTOMER.CUST_ID';
-        $columns = 'MAINT_ID|MAINT_ROOM_NO|MAINT_TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_ATTACHMENT|MAINT_CREATE_DT|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME';
+        $columns = 'MAINT_ID|MAINT_ROOM_NO|MAINT_TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_DT|cast(MAINT_PREFERRED_TIME as time)MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_ATTACHMENT|MAINT_CREATE_DT|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }
@@ -521,7 +521,7 @@ class FacilityController extends BaseController
     {
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_SHUTTLE';
-        $columns = 'SHUTL_ID|SHUTL_NAME|SHUTL_ROUTE|SHUTL_NEXT|SHUTL_DESCRIPTION|SHUTL_START_AT|SHUTL_END_AT|SHUTL_ROUTE_IMG';
+        $columns = 'SHUTL_ID|SHUTL_NAME|SHUTL_ROUTE|SHUTL_NEXT|SHUTL_DESCRIPTION|cast(SHUTL_START_AT as time)SHUTL_START_AT|cast(SHUTL_END_AT as time)SHUTL_END_AT|SHUTL_ROUTE_IMG';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }
