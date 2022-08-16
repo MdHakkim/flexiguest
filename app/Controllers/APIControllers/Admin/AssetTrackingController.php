@@ -43,12 +43,13 @@ class AssetTrackingController extends BaseController
             ->join('FLXY_RESERVATION_ROOM_ASSETS', 'RESV_ID = RRA_RESERVATION_ID', 'left')
             ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
             ->where('RESV_STATUS', 'Checked-In')
-            ->where('RRA_STATUS', 'Completed')
+            ->where("RRA_STATUS != 'Requested'")
             ->findAll();
 
         foreach ($rooms as $index => $room) {
             $rooms[$index]['ASSETS'] = $this->ReservationRoomAsset
-                ->select('AS_ID, AS_ASSET, RA_QUANTITY, RRA_STATUS, RRA_TRACKING_REMARKS')
+                ->select("AS_ID, AS_ASSET, RA_QUANTITY, RRA_STATUS, RRA_TRACKING_REMARKS,
+                case when RRA_STATUS = 'Verified' then 1 else 0 end as IS_VERIFIED")
                 ->join('FLXY_ROOM_ASSETS', 'RRA_ROOM_ID = RA_ROOM_ID', 'left')
                 ->join('FLXY_ASSETS', 'RRA_ASSET_ID = AS_ID', 'left')
                 ->where('RRA_RESERVATION_ID', $room['RESV_ID'])
