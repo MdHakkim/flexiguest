@@ -281,6 +281,7 @@ class ApplicatioController extends BaseController
                 "RESV_STATUS" => $this->request->getPost("RESV_STATUS"),
                 "RESV_RM_TYPE" => $this->request->getPost("RESV_RM_TYPE"),
                 "RESV_ROOM" => $this->request->getPost("RESV_ROOM"),
+                "RESV_ROOM_ID" => $this->request->getPost("RESV_ROOM_ID"),
                 "RESV_RATE" => $this->request->getPost("RESV_RATE"),
                 "RESV_ETA" => $this->request->getPost("RESV_ETA"),
                 "RESV_CO_TIME" => $this->request->getPost("RESV_CO_TIME"),
@@ -382,6 +383,7 @@ class ApplicatioController extends BaseController
                     "RESV_STATUS" => "Due Pre Check-In",
                     "RESV_RM_TYPE" => $this->request->getPost("RESV_RM_TYPE"),
                     "RESV_ROOM" => $this->request->getPost("RESV_ROOM"),
+                    "RESV_ROOM_ID" => $this->request->getPost("RESV_ROOM_ID"),
                     "RESV_RATE" => $this->request->getPost("RESV_RATE"),
                     "RESV_ETA" => $this->request->getPost("RESV_ETA"),
                     "RESV_CO_TIME" => $this->request->getPost("RESV_CO_TIME"),
@@ -2008,12 +2010,28 @@ class ApplicatioController extends BaseController
 
     public function roomList(){
         $search = $this->request->getPost("search");
-        $sql = "SELECT RM_NO,RM_DESC FROM FLXY_ROOM WHERE RM_DESC like '%$search%'";
+        $room_type = $this->request->getPost("room_type");
+
+        $sql = "SELECT RM_ID, RM_NO, RM_DESC FROM FLXY_ROOM WHERE 1 = 1"; 
+        
+        if(!empty($search))
+            $sql .= " AND RM_DESC like '%$search%'";
+
+        if(!empty($room_type))
+            $sql .= " AND RM_TYPE_REF_ID = $room_type";
+
         $response = $this->Db->query($sql)->getResultArray();
-        $option='<option value="">Select Room</option>';
-        foreach($response as $row){
-            $option.= '<option value="'.$row['RM_NO'].'">'.$row['RM_NO'].' - '.$row['RM_DESC'].'</option>';
+
+        if($response != NULL)
+        {
+            $option='<option value="">Select Room</option>';
+            foreach($response as $row){
+                $option.= '<option value="'.$row['RM_NO'].'" data-room-id="'.$row['RM_ID'].'">'.$row['RM_NO'].'</option>';
+            }
         }
+        else
+            $option='<option value="">No Rooms</option>';
+
         echo $option;
     }
 
@@ -2267,7 +2285,7 @@ class ApplicatioController extends BaseController
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select Room Type</option>';
         foreach($response as $row){
-            $option.= '<option data-feture="'.trim($row['RM_TY_FEATURE']).'" data-desc="'.trim($row['RM_TY_DESC']).'" data-rmclass="'.trim($row['RM_TY_ROOM_CLASS']).'" value="'.$row['RM_TY_CODE'].'">'.$row['RM_TY_DESC'].'</option>';
+            $option.= '<option data-room-type-id="'.trim($row['RM_TY_ID']).'" data-feture="'.trim($row['RM_TY_FEATURE']).'" data-desc="'.trim($row['RM_TY_DESC']).'" data-rmclass="'.trim($row['RM_TY_ROOM_CLASS']).'" value="'.$row['RM_TY_CODE'].'">'.$row['RM_TY_DESC'].'</option>';
         }
         echo $option;
     }
@@ -3927,6 +3945,7 @@ class ApplicatioController extends BaseController
                 'RRA_RESERVATION_ID' => $reservation_id,
                 'RRA_ROOM_ID' => $room_id,
                 'RRA_ROOM_ASSET_ID' => $asset['RA_ID'],
+                'RRA_ASSET_ID' => $asset['RA_ASSET_ID'],
                 'RRA_CREATED_BY' => $user_id,
                 'RRA_UPDATED_BY' => $user_id
             ];

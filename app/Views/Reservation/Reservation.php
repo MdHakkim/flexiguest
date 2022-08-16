@@ -80,6 +80,10 @@
     padding: 10px 15px;
     border: 2px solid #529432;
 }
+
+.nav-tabs .nav-item a {
+    font-weight: bold;
+}
 </style>
 
 <!-- Content wrapper -->
@@ -950,9 +954,10 @@
                                             <div class="col-md-3">
                                                 <label class="form-label">Room</label>
                                                 <select name="RESV_ROOM" id="RESV_ROOM" data-width="100%"
-                                                    class="selectpicker RESV_ROOM" data-live-search="true">
+                                                    class="select2 form-select RESV_ROOM" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
+                                                <input type="hidden" name="RESV_ROOM_ID" id="RESV_ROOM_ID" value="" readonly />
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Rate Code</label>
@@ -973,7 +978,7 @@
                                                 <div class="invalid-feedback"> Rate required can't empty.</div>
                                             </div>
                                             <div class="col-md-3 mt-4">
-                                                <label class="form-check-lable"> Fixed Rate</label>
+                                                <label class="form-label"> Fixed Rate</label>
                                                 <label class="switch">
                                                     <input type="checkbox" class="switch-input"
                                                         id="RESV_FIXED_RATE_CHK" />
@@ -1143,8 +1148,8 @@
                                                 <label class="switch switch-danger">
                                                     <input type="checkbox" class="switch-input" id="RESV_NO_POST_CHK"
                                                         value="1" />
-                                                    <input type="hidden" name="RESV_NO_POST" value="N"
-                                                        id="RESV_NO_POST" class="form-control" />
+                                                    <input type="hidden" name="RESV_NO_POST" value="N" id="RESV_NO_POST"
+                                                        class="form-control" />
                                                     <span class="switch-toggle-slider">
                                                         <span class="switch-on">
                                                             <i class="bx bx-x"></i>
@@ -1158,24 +1163,25 @@
                                     </div>
                                     <div class="tab-pane fade" id="moreDetails">
                                         <div class="row">
-                                            <div class="col-md-3">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">C/O Time</label>
                                                 <input type="time" name="RESV_C_O_TIME" id="RESV_C_O_TIME"
                                                     class="form-control" placeholder="c/o time" />
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Tax Type</label>
                                                 <select name="RESV_TAX_TYPE" id="RESV_TAX_TYPE"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Exempt No</label>
                                                 <input type="text" name="RESV_EXEMPT_NO" id="RESV_EXEMPT_NO"
                                                     class="form-control" placeholder="exempt no" />
                                             </div>
                                             <div class="col-md-3"></div>
+
                                             <div class="col-md-3 mt-4">
                                                 <label class="form-label">Pickup Requested ?</label>
                                                 <label class="switch">
@@ -1193,29 +1199,29 @@
                                                     </span>
                                                 </label>
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Transport Type</label>
                                                 <select name="RESV_TRANSPORT_TYP" id="RESV_TRANSPORT_TYP"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Station Code</label>
                                                 <input type="text" name="RESV_STATION_CD" id="RESV_STATION_CD"
                                                     class="form-control" placeholder="station code" />
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Carrier Code</label>
                                                 <input type="text" name="RESV_CARRIER_CD" id="RESV_CARRIER_CD"
                                                     class="form-control" placeholder="carrier code" />
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Transport No</label>
                                                 <input type="text" name="RESV_TRANSPORT_NO" id="RESV_TRANSPORT_NO"
                                                     class="form-control" placeholder="tranport no" />
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Arrival Date</label>
                                                 <div class="input-group ">
                                                     <input type="text" id="RESV_ARRIVAL_DT_PK" name="RESV_ARRIVAL_DT_PK"
@@ -1227,7 +1233,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Pick up Time</label>
                                                 <input type="time" name="RESV_PICKUP_TIME" id="RESV_PICKUP_TIME"
                                                     class="form-control" placeholder="pickup time" />
@@ -1250,29 +1256,29 @@
                                                     </span>
                                                 </label>
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Transport Type</label>
                                                 <select name="RESV_TRANSPORT_TYP_DO" id="RESV_TRANSPORT_TYP_DO"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Station Code</label>
                                                 <input type="text" name="RESV_STATION_CD_DO" id="RESV_STATION_CD_DO"
                                                     class="form-control" placeholder="station code" />
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Carrier Code</label>
                                                 <input type="text" name="RESV_CARRIER_CD_DO" id="RESV_CARRIER_CD_DO"
                                                     class="form-control" placeholder="carrier code" />
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Transport No</label>
                                                 <input type="text" name="RESV_TRANSPORT_NO_DO" id="RESV_TRANSPORT_NO_DO"
                                                     class="form-control" placeholder="transport no" />
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Arrival Date</label>
                                                 <div class="input-group">
                                                     <input type="text" id="RESV_ARRIVAL_DT_DO" name="RESV_ARRIVAL_DT_DO"
@@ -1284,27 +1290,27 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3 mb-3">
                                                 <label class="form-label">Drop off Time</label>
                                                 <input type="time" name="RESV_DROPOFF_TIME" id="RESV_DROPOFF_TIME"
                                                     class="form-control" placeholder="drop off time" />
                                             </div>
                                             <div class="col-md-3"></div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3">
                                                 <label class="form-label">Guest Type</label>
                                                 <select name="RESV_GUST_TY" id="RESV_GUST_TY"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3">
                                                 <label class="form-label">Purpose of Stay</label>
                                                 <select name="RESV_EXT_PURP_STAY" id="RESV_EXT_PURP_STAY"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 ">
+                                            <div class="col-md-3">
                                                 <label class="form-label">Entry Point</label>
                                                 <select name="RESV_ENTRY_PONT" id="RESV_ENTRY_PONT"
                                                     class="select2 form-select" data-allow-clear="true">
@@ -3518,8 +3524,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                         field == 'RESV_AGENT_DESC' || field == 'RESV_BLOCK_DESC') {
                         return true;
                     };
-                    if (field == 'RESV_NAME' || field ==
-                        'RESV_ROOM' || field == 'RESV_RTC') {
+                    if (field == 'RESV_NAME' || field == 'RESV_RTC') {
                         var option = '<option value="' + dataval + '">' + data[
                             field + '_DESC'] + '</option>';
                         $('*#' + field).html(option).selectpicker('refresh');
@@ -3534,7 +3539,8 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 
                     } else if (field == 'RESV_CONFIRM_YN' || field ==
                         'RESV_PICKUP_YN' || field == 'RESV_DROPOFF_YN' || field ==
-                        'RESV_EXT_PRINT_RT' || field == 'RESV_FIXED_RATE' || field == 'RESV_NO_POST') {
+                        'RESV_EXT_PRINT_RT' || field == 'RESV_FIXED_RATE' ||
+                        field == 'RESV_NO_POST') {
                         if (dataval == 'Y') {
                             $('#' + field + '_CHK').prop('checked', true);
                         } else {
@@ -4003,6 +4009,34 @@ $(document).on('keyup', '.RESV_RTC .form-control', function() {
 $(document).on('change', '#RESV_RM_TYPE,#RESV_RTC', function() {
     var feature = $(this).find('option:selected').attr('data-feture');
     $('[name="RESV_FEATURE"]').val(feature);
+
+    if ($(this).attr('id') == 'RESV_RM_TYPE') {
+
+        var room_type = $(this).find('option:selected').data('room-type-id');
+
+        $.ajax({
+            url: '<?php echo base_url('/roomList') ?>',
+            async: false,
+            type: "post",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                room_type: room_type
+            },
+            // dataType:'json',
+            success: function(respn) {
+
+                $('*#RESV_ROOM').html(respn);
+            }
+        });
+    }
+});
+
+$(document).on('change', '#RESV_ROOM', function() {
+
+    var room_id = $(this).find('option:selected').data('room-id');
+    $('#RESV_ROOM_ID').val(room_id);    
 });
 
 /*
@@ -4086,6 +4120,7 @@ $(document).on('keyup', '.RESV_NAME .form-control', function() {
     });
 });
 
+/*
 $(document).on('keyup', '.RESV_ROOM .form-control', function() {
     var search = $(this).val();
     $.ajax({
@@ -4104,6 +4139,7 @@ $(document).on('keyup', '.RESV_ROOM .form-control', function() {
         }
     });
 });
+*/
 
 
 $(document).on('change', '#CUST_COUNTRY', function() {
@@ -6351,7 +6387,8 @@ function showTraces(resvID) {
             {
                 data: 'UE_FIRST_NAME',
                 render: function(data, type, full, meta) {
-                    let UE_LAST_NAME = (full['UE_LAST_NAME'] != '' && full['UE_LAST_NAME'] != null) ? full['UE_LAST_NAME'] : '';                    
+                    let UE_LAST_NAME = (full['UE_LAST_NAME'] != '' && full['UE_LAST_NAME'] != null) ?
+                        full['UE_LAST_NAME'] : '';
                     if (full['UE_FIRST_NAME'] != null)
                         return full['UE_FIRST_NAME'] + ' ' + UE_LAST_NAME;
                     else
@@ -6361,7 +6398,8 @@ function showTraces(resvID) {
             {
                 data: 'UR_FIRST_NAME',
                 render: function(data, type, full, meta) {
-                    let UR_LAST_NAME = (full['UR_LAST_NAME'] != '' && full['UR_LAST_NAME'] != null )? full['UR_LAST_NAME'] : '';     
+                    let UR_LAST_NAME = (full['UR_LAST_NAME'] != '' && full['UR_LAST_NAME'] != null) ?
+                        full['UR_LAST_NAME'] : '';
                     if (full['UR_FIRST_NAME'] != null)
                         return full['UR_FIRST_NAME'] + ' ' + UR_LAST_NAME;
                     else

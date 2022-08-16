@@ -111,9 +111,7 @@
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label for="RT_CD_BEGIN_SELL_DT" class="col-form-label col-md-3"><b>Begin
-                                                    Sell
-                                                    Date *</b></label>
+                                            <label for="RT_CD_BEGIN_SELL_DT" class="col-form-label col-md-3"><b>Booking Date From *</b></label>
                                             <div class="col-md-5">
                                                 <input class="form-control dateField" type="text"
                                                     placeholder="d-Mon-yyyy" id="RT_CD_BEGIN_SELL_DT"
@@ -121,8 +119,7 @@
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label for="RT_CD_END_SELL_DT" class="col-form-label col-md-3"><b>End Sell
-                                                    Date *</b></label>
+                                            <label for="RT_CD_END_SELL_DT" class="col-form-label col-md-3"><b>Booking Date To *</b></label>
                                             <div class="col-md-5">
                                                 <input class="form-control dateField" type="text"
                                                     placeholder="d-Mon-yyyy" id="RT_CD_END_SELL_DT"
