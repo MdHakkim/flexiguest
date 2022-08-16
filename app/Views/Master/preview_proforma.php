@@ -159,7 +159,7 @@
   <header>
     <div class="header-wrapper" >
       <div class="header-wrapper-image">
-        <img src="<?php echo base_url() ?>/assets/img/farnek.png" width="100%"></th>
+        <img src="<?php echo base_url() ?>/assets/img/HITEK.png" width="100%"></th>
       </div>
       <div class="row">
         <div class="column">
@@ -275,8 +275,8 @@
   </header>
 
   <footer>
-    Farnek Services LLC, P.O. Box: 5423 DXB,Farnek Building, Floor 3, Al Quoz, Dubai<br>
-    Tel: +971 (04) 3824400,Fax: +971 (04) 3397456 Email: expovillage@farnek.com
+    HITEK Services LLC, P.O. Box: 5423 DXB, Farnek Building, Floor 2, Al Quoz, Dubai<br>
+    Tel: +971 4 382 4498, Email: info@hitekservices.com, Website: www.hitekservices.com
   </footer>
 
   <main >

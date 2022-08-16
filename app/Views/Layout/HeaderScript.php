@@ -24,35 +24,30 @@
 
 <!-- Vendors CSS -->
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') ?>" />
-
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/typeahead-js/typeahead.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/animate-css/animate.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/sweetalert2/sweetalert2.css') ?>" />
-
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/apex-charts/apex-charts.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/css/flexiguest.css')?>" />
-
 <link rel="stylesheet" href="<?php echo base_url('assets/fontawesome/css/all.min.css')?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/fontawesome/css/fontawesome.min.css')?>" />
-
 <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap.min.css')?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/css/dataTables.bootstrap5.min.css')?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-datepicker.min.css')?>" />
-
 <!-- Added by Deleep -->
 <link rel="stylesheet"
         href="<?php echo base_url('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css')?>" />
-    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/bs-stepper/bs-stepper.css')?>" />
-    <link rel="stylesheet"
-        href="<?php echo base_url('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css')?>" />
-    <link rel="stylesheet"
-        href="<?php echo base_url('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')?>" />
-    <link rel="stylesheet"
-        href="<?php echo base_url('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css')?>" />
-    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css')?>" />
-    <link rel="stylesheet"
-        href="<?php echo base_url('assets/vendor/libs/datatables-select-bs5/select.bootstrap5.css')?>" />
-    <link rel="stylesheet"
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/bs-stepper/bs-stepper.css')?>" />
+<link rel="stylesheet"
+    href="<?php echo base_url('assets/vendor/libs/formvalidation/dist/css/formValidation.min.css')?>" />
+<link rel="stylesheet"
+    href="<?php echo base_url('assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')?>" />
+<link rel="stylesheet"
+    href="<?php echo base_url('assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css')?>" />
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css')?>" />
+<link rel="stylesheet"
+    href="<?php echo base_url('assets/vendor/libs/datatables-select-bs5/select.bootstrap5.css')?>" />
+<link rel="stylesheet"
         href="<?php echo base_url('assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css')?>" />
 
 
@@ -64,11 +59,9 @@
 
 <!-- text editor -->
 <link rel="stylesheet" href="<?= base_url('assets/vendor/libs/quill/editor.css') ?>" />
-
-<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/fullcalendar/fullcalendar.css') ?>" />
+<link rel="stylesheet" href="<?php //echo base_url('assets/vendor/libs/fullcalendar/fullcalendar.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/flatpickr/flatpickr.css') ?>" />
-<link rel="stylesheet" href="<?php echo base_url('assets/vendor/css/pages/app-calendar.css')?>" >
-
+<link rel="stylesheet" href="<?php //echo base_url('assets/vendor/css/pages/app-calendar.css')?>" >
 
 
 <!-- Page CSS -->
@@ -81,7 +74,17 @@
 
 <?php if (isset($css_to_load)) {
         foreach ($css_to_load as $row) {
-    ?> <script type="text/javascript" src="<?php echo base_url('assets/css/' . $row); ?>"></script>
+    ?>
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/' . $row); ?>" />
+    <?php
+        }
+    }?>
+   
+    <?php if (isset($css_vendor_load)) {
+        foreach ($css_vendor_load as $row) {
+    ?>
+    <link rel="stylesheet" href="<?php echo base_url('assets/vendor/
+    ' . $row); ?>" />
     <?php
         }
     }?>

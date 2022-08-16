@@ -38,13 +38,48 @@ class AssetTrackingController extends BaseController
     {
         $rooms = $this->Reservation
             ->select("distinct(RESV_ID), RESV_ROOM as ROOM_NO, RRA_ROOM_ID as ROOM_ID, 
-                    concat(CUST_FIRST_NAME, ' ', CUST_LAST_NAME) as GUEST_NAME")
+                    concat(CUST_FIRST_NAME, ' ', CUST_LAST_NAME) as GUEST_NAME,
+                    RRA_STATUS")
             ->join('FLXY_RESERVATION_ROOM_ASSETS', 'RESV_ID = RRA_RESERVATION_ID', 'left')
             ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
             ->where('RESV_STATUS', 'Checked-In')
-            ->where('RRA_STATUS', 'Completed')
+            ->where("RRA_STATUS != 'Requested'")
             ->findAll();
+
+        foreach ($rooms as $index => $room) {
+            $rooms[$index]['ASSETS'] = $this->ReservationRoomAsset
+                ->select("AS_ID, AS_ASSET, RA_QUANTITY, RRA_STATUS, RRA_TRACKING_REMARKS, RRA_ID,
+                case when RRA_STATUS = 'Verified' then 1 else 0 end as IS_VERIFIED")
+                ->join('FLXY_ROOM_ASSETS', 'RRA_ROOM_ID = RA_ROOM_ID and  RRA_ASSET_ID = RA_ASSET_ID', 'left')
+                ->join('FLXY_ASSETS', 'RRA_ASSET_ID = AS_ID', 'left')
+                ->where('RRA_RESERVATION_ID', $room['RESV_ID'])
+                ->where('RRA_ROOM_ID', $room['ROOM_ID'])
+                ->findAll();
+        }
 
         return $this->respond(responseJson(200, false, ['msg' => 'assets list'], $rooms));
     }
+
+    public function submitForm()
+    {
+        $assets = $this->request->getVar('assets');
+
+        foreach($assets as $asset) {
+
+            $status = 'Discrepancy';
+            if($asset->IS_VERIFIED)
+                $status = 'Verified';
+
+            $data = [
+                'RRA_ID' => $asset->RRA_ID,
+                'RRA_TRACKING_REMARKS' => $asset->RRA_TRACKING_REMARKS,
+                'RRA_STATUS' => $status,
+            ];
+
+            $this->ReservationRoomAsset->save($data);
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Form Submitted']));
+    }
+
 }

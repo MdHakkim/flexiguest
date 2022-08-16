@@ -43,7 +43,12 @@ class CheckInOutController extends BaseController
         if ($reservation['RESV_STATUS'] == 'Checked-Out')
             return $this->respond(responseJson(202, false, ['msg' => 'This reservation is already checked-out.']));
         
-        $dompdf = new \Dompdf\Dompdf();
+        $reservation['branding_logo'] = brandingLogo();
+        
+        $options = new \Dompdf\Options();
+        $options->setIsRemoteEnabled(true);
+
+        $dompdf = new \Dompdf\Dompdf($options);
         $dompdf->loadHtml(view('Templates/ReservationInvoiceTemplate', ['reservation' => $reservation]));
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();

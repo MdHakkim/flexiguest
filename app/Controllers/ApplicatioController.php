@@ -3945,6 +3945,7 @@ class ApplicatioController extends BaseController
                 'RRA_RESERVATION_ID' => $reservation_id,
                 'RRA_ROOM_ID' => $room_id,
                 'RRA_ROOM_ASSET_ID' => $asset['RA_ID'],
+                'RRA_ASSET_ID' => $asset['RA_ASSET_ID'],
                 'RRA_CREATED_BY' => $user_id,
                 'RRA_UPDATED_BY' => $user_id
             ];

@@ -390,8 +390,6 @@ class AdditionalController extends BaseController
                 exit;
             }
 
-            //echo json_encode(print_r($_POST));
-            //exit;
 
             $data = [
                 "DEPT_CODE" => trim($this->request->getPost('DEPT_CODE')),
@@ -1409,17 +1407,17 @@ class AdditionalController extends BaseController
                     $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
                 } 
 
+                
                 ////////// Fixed Charges //////////////               
                 if(!empty($fixedChargesResponse)){
                     foreach($fixedChargesResponse as $fixedCharges) {
-                         
+                      
                         $FIXD_CHRG_BEGIN_DATE =gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_BEGIN_DATE'])) );
                         $FIXD_CHRG_END_DATE = gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_END_DATE'])));
                         $FIXD_CHRG_FREQUENCY = $fixedCharges['FIXD_CHRG_FREQUENCY'];
 
-
-                        $FIXD_CHRG_BEGIN_DATE = strtotime($FIXD_CHRG_BEGIN_DATE);
-                        $FIXD_CHRG_END_DATE = strtotime($FIXD_CHRG_END_DATE);
+                         $FIXD_CHRG_BEGIN_DATE = strtotime($FIXD_CHRG_BEGIN_DATE);
+                         $FIXD_CHRG_END_DATE = strtotime($FIXD_CHRG_END_DATE);
 
                         if($FIXD_CHRG_FREQUENCY == 1 && $CurrentDate == $FIXD_CHRG_BEGIN_DATE){
                             $ONCE = 1;
@@ -1600,7 +1598,7 @@ class AdditionalController extends BaseController
                         //     } 
                         // }  
 
-                        else if($FIXD_CHRG_FREQUENCY == 6 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && (date('d-m',$sCurrentDate) == date('d-m',$fixedCharges['FIXD_CHRG_YEARLY']))){
+                        else if($FIXD_CHRG_FREQUENCY == 6 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && (date('d-m',strtotime($sCurrentDate)) == date('d-m',strtotime($fixedCharges['FIXD_CHRG_YEARLY']))) ){
                             $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
                             $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
                             $fixedChargesTotal += $fixedChargesAMOUNT; 

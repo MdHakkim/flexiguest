@@ -45,7 +45,7 @@ class FacilityController extends BaseController
     {
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_MAINTENANCE_VIEW left join FLXY_CUSTOMER on FLXY_MAINTENANCE_VIEW.CUST_NAME = FLXY_CUSTOMER.CUST_ID';
-        $columns = 'MAINT_ID|MAINT_ROOM_NO|MAINT_TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_ATTACHMENT|MAINT_CREATE_DT|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME';
+        $columns = 'MAINT_ID|MAINT_ROOM_NO|MAINT_TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_DT|cast(MAINT_PREFERRED_TIME as time)MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_ATTACHMENT|MAINT_CREATE_DT|CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }
@@ -521,7 +521,7 @@ class FacilityController extends BaseController
     {
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_SHUTTLE';
-        $columns = 'SHUTL_ID|SHUTL_NAME|SHUTL_ROUTE|SHUTL_NEXT|SHUTL_DESCRIPTION|cast(SHUTL_START_AT as time)SHUTL_START_AT|cast(SHUTL_END_AT as time)SHUTL_END_AT';
+        $columns = 'SHUTL_ID|SHUTL_NAME|SHUTL_ROUTE|SHUTL_NEXT|SHUTL_DESCRIPTION|cast(SHUTL_START_AT as time)SHUTL_START_AT|cast(SHUTL_END_AT as time)SHUTL_END_AT|SHUTL_ROUTE_IMG';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }
@@ -539,10 +539,11 @@ class FacilityController extends BaseController
     public function insertShuttle()
     {
         try {
+            $sysid = $this->request->getPost("sysid");
 
             $attached_path = NULL;
-            $validate = $this->validate([
 
+            $rules = [
                 'SHUTL_NAME' => ['label' => 'Shuttle Name', 'rules' => 'required'],
                 'SHUTL_FROM' => ['label' => 'Shuttle From', 'rules' => 'required'],
                 'SHUTL_TO' => ['label' => 'Shuttle To', 'rules' => 'required'],
@@ -550,24 +551,25 @@ class FacilityController extends BaseController
                 'SHUTL_END_AT' => ['label' => 'End At', 'rules' => 'required'],
                 'SHUTL_NEXT' => ['label' => 'Shuttle Nect', 'rules' => 'required'],
                 'SHUTL_DESCRIPTION' => ['label' => 'Description', 'rules' => 'required'],
-                'SHUTL_ROUTE_IMG' => [
-                    'uploaded[SHUTL_ROUTE_IMG]',
-                    'mime_in[SHUTL_ROUTE_IMG,image/png,image/jpeg,image/jpg]',
-                    'max_size[SHUTL_ROUTE_IMG,500]',
-                ]
+            ];
 
-            ]);
-            if (!$validate) {
-
-                $validate = $this->validator->getErrors();
-                $result["SUCCESS"] = "-402";
-                $result[]["ERROR"] = $validate;
-                $result = responseJson("-402", $validate);
-                echo json_encode($result);
-                exit;
+            if(empty($sysid) || $this->request->getFile('SHUTL_ROUTE_IMG')) {
+                $rules['SHUTL_ROUTE_IMG'] = [
+                    'label' => 'Image',
+                    'rules' => [
+                        'uploaded[SHUTL_ROUTE_IMG]',
+                        'mime_in[SHUTL_ROUTE_IMG,image/png,image/jpeg,image/jpg]',
+                        'max_size[SHUTL_ROUTE_IMG,500]',
+                    ]
+                ];
             }
+
+            $validate = $this->validate($rules);
+
+            if (!$validate)
+                return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
             $doc_file = $this->request->getFile('SHUTL_ROUTE_IMG');
-            $sysid = $this->request->getPost("sysid");
             // GET SUTTLE NAME FROM IDS
             $stages_from = json_decode($this->getStages($this->request->getPost("SHUTL_FROM")));
             $stages_To = json_decode($this->getStages($this->request->getPost("SHUTL_TO")));
@@ -602,7 +604,20 @@ class FacilityController extends BaseController
                     ];
                 $ins = $this->Db->table('FLXY_SHUTTLE')->insert($data);
             } else {
-
+                $data = [
+                    "SHUTL_NAME" => $this->request->getPost("SHUTL_NAME"),
+                    "SHUTL_FROM" => $this->request->getPost("SHUTL_FROM"),
+                    "SHUTL_TO" => $this->request->getPost("SHUTL_TO"),
+                    "SHUTL_START_AT" => $this->request->getPost("SHUTL_START_AT"),
+                    "SHUTL_END_AT" => $this->request->getPost("SHUTL_END_AT"),
+                    "SHUTL_NEXT" => $this->request->getPost("SHUTL_NEXT"),
+                    "SHUTL_ROUTE" => $route,
+                    "SHUTL_DESCRIPTION" => $this->request->getPost("SHUTL_DESCRIPTION"),
+                    "SHUTL_CREATE_DT" => date("d-M-Y"),
+                    "SHUTL_CREATE_UID" => session()->get('USR_ID'),
+                    "SHUTL_UPDATE_DT" => date("d-M-Y"),
+                    "SHUTL_UPDATE_UID" => session()->get('USR_ID'),
+                ];
 
                 // UPDATE
                 // unlink the old file from the folder and update the column in db
@@ -620,7 +635,7 @@ class FacilityController extends BaseController
                                 // 
                                 $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
                                 if ($doc_up['SUCCESS'] == 200) {
-                                    $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                                    $data['SHUTL_ROUTE_IMG'] = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
                                 }
                             }
                         }
@@ -632,26 +647,11 @@ class FacilityController extends BaseController
                         // 
                         $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
                         if ($doc_up['SUCCESS'] == 200) {
-                            $attached_path = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
+                            $data['SHUTL_ROUTE_IMG'] = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
                         }
                     }
                 }
-                $data =
-                    [
-                        "SHUTL_NAME" => $this->request->getPost("SHUTL_NAME"),
-                        "SHUTL_FROM" => $this->request->getPost("SHUTL_FROM"),
-                        "SHUTL_TO" => $this->request->getPost("SHUTL_TO"),
-                        "SHUTL_START_AT" => $this->request->getPost("SHUTL_START_AT"),
-                        "SHUTL_END_AT" => $this->request->getPost("SHUTL_END_AT"),
-                        "SHUTL_NEXT" => $this->request->getPost("SHUTL_NEXT"),
-                        "SHUTL_ROUTE" => $route,
-                        "SHUTL_ROUTE_IMG" => $attached_path,
-                        "SHUTL_DESCRIPTION" => $this->request->getPost("SHUTL_DESCRIPTION"),
-                        "SHUTL_CREATE_DT" => date("d-M-Y"),
-                        "SHUTL_CREATE_UID" => session()->get('USR_ID'),
-                        "SHUTL_UPDATE_DT" => date("d-M-Y"),
-                        "SHUTL_UPDATE_UID" => session()->get('USR_ID'),
-                    ];
+                
                 $ins = $this->Db->table('FLXY_SHUTTLE')->where('SHUTL_ID', $sysid)->update($data);
             }
             if ($ins) {
