@@ -42,13 +42,12 @@ document.addEventListener('DOMContentLoaded', function () {
       eventUrl = document.querySelector('#eventURL'),
       eventLabel = $('#eventLabel'), // ! Using jquery vars due to select2 jQuery dependency
       eventGuests = $('#eventGuests'), // ! Using jquery vars due to select2 jQuery dependency
-     // eventLocation = document.querySelector('#eventLocation'),
+      eventLocation = document.querySelector('#eventLocation'),
       eventDescription = document.querySelector('#eventDescription'),
       allDaySwitch = document.querySelector('.allDay-switch'),
       selectAll = document.querySelector('.select-all'),
       filterInput = [].slice.call(document.querySelectorAll('.input-filter')),
       inlineCalendar = document.querySelector('.inline-calendar');
-      
 
     let eventToUpdate,
       currentEvents = events, // Assign app-calendar-events.js file events (assume events from API) to currentEvents (browser store/object) to manage and update calender events
@@ -116,33 +115,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Event start (flatpicker)
     if (eventStartDate) {
-
-     
       var start = eventStartDate.flatpickr({
-        enableTime: false,
-        allowInput: false,
-        altFormat: 'Y-m-d',
+        enableTime: true,
+        altFormat: 'Y-m-dTH:i:S',
         onReady: function (selectedDates, dateStr, instance) {
           if (instance.isMobile) {
             instance.mobileInput.setAttribute('step', null);
           }
         }
       });
-      eventStartDate.setAttribute('disabled', 'disabled');
     }
 
     // Event end (flatpicker)
     if (eventEndDate) {
       var end = eventEndDate.flatpickr({
-        enableTime: false,
-        altFormat: 'Y-m-d',
+        enableTime: true,
+        altFormat: 'Y-m-dTH:i:S',
         onReady: function (selectedDates, dateStr, instance) {
           if (instance.isMobile) {
             instance.mobileInput.setAttribute('step', null);
           }
         }
       });
-      eventEndDate.setAttribute('disabled', 'disabled');
     }
 
     // Inline sidebar calendar (flatpicker)
@@ -167,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // For update event set offcanvas title text: Update Event
       if (offcanvasTitle) {
-        offcanvasTitle.innerHTML = 'Item Details';
+        offcanvasTitle.innerHTML = 'Update Event';
       }
       btnDeleteEvent.classList.remove('d-none');
 
@@ -258,13 +252,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Init FullCalendar
     // ------------------------------------------------
-    let { dayGrid, interaction, timeGrid, list } = calendarPlugins;
+    let { dayGrid, interaction, list } = calendarPlugins;
     let calendar = new Calendar(calendarEl, {
-      
-      displayEventTime: false,
-      initialView: 'timeGridWeek',
+      initialView: 'dayGridMonth',
       events: fetchEvents,
-      plugins: [interaction, dayGrid, timeGrid, list],
+      plugins: [interaction, dayGrid, list],
       editable: true,
       dragScroll: true,
       dayMaxEvents: 2,
@@ -276,9 +268,8 @@ document.addEventListener('DOMContentLoaded', function () {
       },
       headerToolbar: {
         start: 'sidebarToggle, prev,next, title',
-        end: ''
+        end: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
       },
-      
       direction: direction,
       initialDate: new Date(),
       navLinks: true, // can click day/week names to navigate views
@@ -473,7 +464,7 @@ document.addEventListener('DOMContentLoaded', function () {
           newEvent.url = eventUrl.value;
         }
         if (allDaySwitch.checked) {
-          newEvent.allDay = false;
+          newEvent.allDay = true;
         }
         addEvent(newEvent);
         bsAddEventSidebar.hide();
@@ -491,7 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
           end: eventEndDate.value,
           url: eventUrl.value,
           extendedProps: {
-            //location: eventLocation.value,
+            location: eventLocation.value,
             guests: eventGuests.val(),
             calendar: eventLabel.val(),
             description: eventDescription.value
@@ -516,9 +507,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // ------------------------------------------------
     function resetValues() {
       eventEndDate.value = '';
+      eventUrl.value = '';
       eventStartDate.value = '';
       eventTitle.value = '';
-     // eventLocation.value = '';
+      eventLocation.value = '';
       allDaySwitch.checked = false;
       eventGuests.val('').trigger('change');
       eventDescription.value = '';
