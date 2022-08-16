@@ -2,6 +2,7 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<?= $this->include('Layout/image_modal') ?>
 
 <!-- Content wrapper -->
 <div class="content-wrapper">
@@ -17,6 +18,8 @@
                 <table id="dataTable_view" class="table table-striped">
                     <thead>
                         <tr>
+                            <th></th>
+                            <th>Image</th>
                             <th>Shuttle Name</th>
                             <th>Route</th>
                             <th>Start time</th>
@@ -190,6 +193,19 @@
                 'url': '<?php echo base_url('/shuttlelist') ?>'
             },
             'columns': [{
+                    data: ''
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return (
+                            `
+                                <img onClick='displayImagePopup("${data['SHUTL_ROUTE_IMG']}")' src='${data['SHUTL_ROUTE_IMG']}' width='80' height='80'/>
+                            `
+                        );
+                    }
+                },
+                {
                     data: 'SHUTL_NAME'
                 },
                 {
@@ -233,9 +249,71 @@
                     }
                 },
             ],
-            autowidth: true
+            columnDefs: [{
+                    width: "7%",
+                    className: 'control',
+                    responsivePriority: 1,
+                    orderable: false,
+                    targets: 0,
+                    searchable: false,
+                    render: function(data, type, full, meta) {
+                        return '';
+                    }
+                },
+                // {
+                //     width: "15%"
+                // }, {
+                //     width: "10%"
+                // }, {
+                //     width: "20%"
+                // }, {
+                //     width: "20%"
+                // }, {
+                //     width: "15%"
+                // }
+            ],
+            "order": [
+                [3, "asc"]
+            ],
+            destroy: true,
+            dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            responsive: {
+                details: {
+                    display: $.fn.dataTable.Responsive.display.modal({
+                        header: function(row) {
+                            var data = row.data();
+                            return 'Details of request# ' + data['SHUTL_NAME'];
+                        }
+                    }),
+                    type: 'column',
+                    renderer: function(api, rowIdx, columns) {
+                        var data = $.map(columns, function(col, i) {
 
+                            return col.title !==
+                                '' // ? Do not show row in modal popup if title is blank (for check box)
+                                ?
+                                '<tr data-dt-row="' +
+                                col.rowIndex +
+                                '" data-dt-column="' +
+                                col.columnIndex +
+                                '">' +
+                                '<td>' +
+                                col.title +
+                                ':' +
+                                '</td> ' +
+                                '<td>' +
+                                col.data +
+                                '</td>' +
+                                '</tr>' :
+                                '';
+                        }).join('');
+
+                        return data ? $('<table class="table"/><tbody />').append(data) : false;
+                    }
+                }
+            }
         });
+
         $("#dataTable_view_wrapper .row:first").before('<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i>Add</button></div></div>');
         $('#MAINT_PREFERRED_DT').datepicker({
             format: 'd-M-yyyy',
@@ -244,8 +322,16 @@
 
     });
 
+    function resetForm() {
+        let id = "maintenanceForm";
+        
+        $(`#${id} input`).val('');
+        $(`#${id} textarea`).val('');
+    }
 
     function addForm() {
+        resetForm();
+
         $(':input', '#reservationChild').val('').prop('checked', false).prop('selected', false);
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
         runStageList();
@@ -314,7 +400,14 @@
 
         var form = $('#' + id)[0];
         var formData = new FormData(form);
+        formData.delete('SHUTL_ROUTE_IMG');
+
+        files = $(`#${id} input[name='SHUTL_ROUTE_IMG']`)[0].files;
+        if (files.length)
+            formData.append('SHUTL_ROUTE_IMG', files[0]);
+
         var url = '<?php echo base_url('/insertShuttle') ?>';
+
         $.ajax({
             url: url,
             type: "post",
@@ -325,18 +418,21 @@
             dataType: 'json',
             processData: false,
             contentType: false,
-            success: function(respn) {
+            success: function(response) {
 
-                if (respn.SUCCESS == 200) {
-                    alert("Request Added successfully");
-                    // 
-                    $('#reservationChild').modal('hide');
-                    // $('#dataTable_view').dataTable().fnDraw();
-                    // window.location.reload();
+                if (response.SUCCESS != 200) {
+                    var mcontent = '';
+                    $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                        mcontent += '<li>' + data + '</li>';
+                    });
+
+                    showModalAlert('error', mcontent);
                 } else {
-                    alert("Please check required parameters are added");
-                }
+                    showModalAlert('success', 'Request Added successfully');
 
+                    $('#reservationChild').modal('hide');
+                    $('#dataTable_view').dataTable().fnDraw();
+                }
             }
         });
     }
@@ -477,6 +573,7 @@
     }
 
     $(document).on('click', '.editWindow', function() {
+        resetForm();
         runStageList();
         setTimeout(() => {
             var sysid = $(this).attr('data_sysid');
@@ -500,18 +597,16 @@
 
                         var SHUTL_FROM = $.trim(data['SHUTL_FROM']);
                         var SHUTL_TO = $.trim(data['SHUTL_TO']);
+
                         $('#SHUTL_FROM').val(SHUTL_FROM).trigger('change');
                         $('#SHUTL_TO').val(SHUTL_TO).trigger('change');
                         $('#SHUTL_NAME').val(data['SHUTL_NAME']);
 
-                        var StartAT = new Date(data['SHUTL_START_AT']);
-                        var timeStart = StartAT.getHours() + ":" + StartAT.getMinutes();
-                        $('#SHUTL_START_AT').val(timeStart);
+                        data['SHUTL_START_AT'] = data['SHUTL_START_AT'].split(".")[0];
+                        $('#SHUTL_START_AT').val(data['SHUTL_START_AT']);
 
-
-                        var EndAT = new Date(data['SHUTL_END_AT']);
-                        var timeEnd = EndAT.getHours() + ":" + EndAT.getMinutes();
-                        $('#SHUTL_END_AT').val(timeEnd);
+                        data['SHUTL_END_AT'] = data['SHUTL_END_AT'].split(".")[0];
+                        $('#SHUTL_END_AT').val(data['SHUTL_END_AT']);
 
                         $('#SHUTL_NEXT').val(data['SHUTL_NEXT']);
                         $('#SHUTL_ROUTE').val(data['SHUTL_ROUTE']);

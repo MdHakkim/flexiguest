@@ -28,7 +28,7 @@
                             <th>Prefered Date & Time</th>
                             <th>Status</th>
                             <th>Image</th>
-                            <th>Created AT</th>
+                            <th>Reported Time</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -571,9 +571,8 @@
                     $('#MAINT_DETAILS').val(data['MAINT_DETAILS']);
                     $('#MAINT_PREFERRED_DT').val(data['MAINT_PREFERRED_DT']);
 
-                    var javaDate = new Date(data['MAINT_PREFERRED_TIME']);
-                    var time = javaDate.getHours() + ":" + javaDate.getMinutes() + ":00";
-                    $('#MAINT_PREFERRED_TIME').val(time);
+                    data['MAINT_PREFERRED_TIME'] = data['MAINT_PREFERRED_TIME'].split('.')[0];
+                    $('#MAINT_PREFERRED_TIME').val(data['MAINT_PREFERRED_TIME']);
 
                     $('select[name="MAINT_STATUS"]').val(data.MAINT_STATUS).trigger('change');
                     $('textarea[name="MAINT_COMMENT"]').val(data.MAINT_COMMENT);
