@@ -397,7 +397,7 @@ v14.8C5,178.5,15.2,164.2,28,154.9z"></path>
                 <tbody>
                     <tr>
                         <td>EMAIL</td>
-                        <td><?=$CUST_ADDRESS_2?></td>
+                        <td><?=$CUST_EMAIL?></td>
                     </tr>
                     <?php if(!empty(trim($CUST_MOBILE))) { ?>
                     <tr>
