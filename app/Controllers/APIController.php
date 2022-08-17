@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use CodeIgniter\API\ResponseTrait;
 use  App\Libraries\EmailLibrary;
 use App\Models\City;
+use App\Models\PropertyInfo;
 use App\Models\State;
 use App\Models\VaccineDetail;
 
@@ -18,6 +19,7 @@ class APIController extends BaseController
     private $State;
     private $City;
     private $ApplicatioController;
+    private $PropertyInfo;
 
     public function __construct()
     {
@@ -26,6 +28,7 @@ class APIController extends BaseController
         $this->State = new State();
         $this->City = new City();
         $this->ApplicatioController = new ApplicatioController();
+        $this->PropertyInfo = new PropertyInfo();
     }
 
     // ----------- START API FOR FLEXI GUEST --------------//
@@ -881,8 +884,7 @@ class APIController extends BaseController
                     $this->ApplicatioController->attachAssetList($USR_ID, $resID);
 
                 $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT'])]);
-            }
-            else
+            } else
                 $result = responseJson(500, true, ["msg" => "Failed to upload image or updation in reservation"]);
 
 
@@ -1005,16 +1007,19 @@ class APIController extends BaseController
         }
 
         foreach ($data as $i => $maintenance_request) {
-            $attachments = explode(",", $maintenance_request['MAINT_ATTACHMENT']);
+            $attachments = [];
+            if ($maintenance_request['MAINT_ATTACHMENT']) {
+                $attachments = explode(",", $maintenance_request['MAINT_ATTACHMENT']);
 
-            foreach ($attachments as $j => $attachment) {
-                $name = $attachment;
-                $url = base_url("assets/Uploads/Maintenance/$attachment");
+                foreach ($attachments as $j => $attachment) {
+                    $name = $attachment;
+                    $url = base_url("assets/Uploads/Maintenance/$attachment");
 
-                $attachment_array = explode(".", $attachment);
-                $type = end($attachment_array);
+                    $attachment_array = explode(".", $attachment);
+                    $type = end($attachment_array);
 
-                $attachments[$j] = ['name' => $name, 'url' => $url, 'type' => $type];
+                    $attachments[$j] = ['name' => $name, 'url' => $url, 'type' => $type];
+                }
             }
 
             $data[$i]['MAINT_ATTACHMENT'] = $attachments;
@@ -1171,10 +1176,11 @@ class APIController extends BaseController
     OUTPUT : HANDBOOK URL         */
     public function getHandBookURL()
     {
-        $path = 'assets/Uploads/handbook/hotel-handbook.pdf';
+        $book = $this->PropertyInfo->first();
+        // $path = 'assets/Uploads/handbook/hotel-handbook.pdf';
 
-        if (file_exists($path))
-            $result = responseJson(200, false, ["msg" => "Handbook URL fetched"], ['url' => base_url($path)]);
+        if (file_exists($book['PI_URL']))
+            $result = responseJson(200, false, ["msg" => "Handbook URL fetched"], ['url' => base_url($book['PI_URL'])]);
         else
             $result = responseJson(500, false, ["msg" => "No Handbook file uploaded"]);
 

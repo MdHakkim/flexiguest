@@ -62,7 +62,7 @@ class TransportRequestController extends BaseController
                         left join FLXY_ROOM on TR_ROOM_ID = RM_ID
                         left join FLXY_TRANSPORT_TYPES on TR_TRANSPORT_TYPE_ID = TT_ID';
 
-        $columns = 'TR_ID,TR_RESERVATION_ID,TR_ROOM_ID,TR_CUSTOMER_ID,TR_GUEST_NAME,TR_TRANSPORT_TYPE_ID,TR_TRAVEL_DATE,TR_TRAVEL_TIME,TR_STATUS,TR_PAYMENT_STATUS,TR_CREATED_AT,RM_NO,TT_LABEL';
+        $columns = 'TR_ID,TR_RESERVATION_ID,TR_ROOM_ID,TR_CUSTOMER_ID,TR_GUEST_NAME,TR_TRAVEL_TYPE,TR_TRANSPORT_TYPE_ID,TR_TRAVEL_PURPOSE,TR_PICKUP_DATE,TR_PICKUP_TIME,TR_DROPOFF_DATE,TR_DROPOFF_TIME,TR_STATUS,TR_PAYMENT_STATUS,TR_CREATED_AT,RM_NO,TT_LABEL';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -80,11 +80,13 @@ class TransportRequestController extends BaseController
             'TR_TRAVEL_TYPE' => ['label' => 'travel type', 'rules' => 'required'],
             'TR_TRANSPORT_TYPE_ID' => ['label' => 'transport type', 'rules' => 'required'],
             'TR_TRAVEL_PURPOSE' => ['label' => 'travel purpose', 'rules' => 'required'],
-            'TR_TRAVEL_DATE' => ['label' => 'travel date', 'rules' => 'required'],
-            'TR_TRAVEL_TIME' => ['label' => 'travel time', 'rules' => 'required'],
             'TR_ADULTS' => ['label' => 'no of adults', 'rules' => 'required'],
             'TR_TOTAL_PASSENGERS' => ['label' => 'total passengers', 'rules' => 'required'],
+            'TR_PICKUP_DATE' => ['label' => 'pickup date', 'rules' => 'required'],
+            'TR_PICKUP_TIME' => ['label' => 'pickup time', 'rules' => 'required'],
             'TR_PICKUP_POINT_ID' => ['label' => 'pickup point', 'rules' => 'required'],
+            'TR_DROPOFF_DATE' => ['label' => 'dropoff date', 'rules' => 'required'],
+            'TR_DROPOFF_TIME' => ['label' => 'dropoff time', 'rules' => 'required'],
             'TR_DROPOFF_POINT_ID' => ['label' => 'dropoff point', 'rules' => 'required'],
             'TR_FLIGHT_CARRIER_ID' => ['label' => 'flight carrier', 'rules' => 'required'],
             'TR_STATUS' => ['label' => 'status', 'rules' => 'required'],
