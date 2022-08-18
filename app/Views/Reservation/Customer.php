@@ -594,6 +594,7 @@ function editCust(sysid) {
                             field + '_DESC'] + '</option>';
                         $('#' + field).html(option).selectpicker('refresh');
                     } else if (field == 'CUST_GENDER') {
+                        dataval = !dataval ? 'Male' : dataval;
                         $(`input[name='CUST_GENDER'][value=` + dataval + `]`).prop('checked', true);
                     } else if (field == 'CUST_ACTIVE') {
                         // var rmSpace = dataval.trim();

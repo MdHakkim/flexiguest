@@ -380,6 +380,7 @@ $(document).on('click', '.editcustomer', function() {
                     }
 
                     if (field == 'CUST_GENDER') {
+                        dataval = !dataval ? 'Male' : dataval;
                         $(`${form_id} input[name='CUST_GENDER'][value=` + dataval +
                             `]`).prop('checked', true);
                     } else if (field == 'CUST_ACTIVE') {
