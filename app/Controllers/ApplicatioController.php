@@ -3521,8 +3521,8 @@ class ApplicatioController extends BaseController
                 CTNAME as CUST_CITY_DESC
                 from FLXY_ACCOMPANY_PROFILE as ap 
                 left join FLXY_CUSTOMER as fc on ap.ACCOMP_CUST_ID = fc.CUST_ID
-                left join STATE on STATE.STATE_CODE = fc.CUST_STATE
-                left join CITY on CITY.ID = fc.CUST_CITY
+                left join STATE on STATE.id = fc.CUST_STATE_ID
+                left join CITY on CITY.id = fc.CUST_CITY
                 where ap.ACCOMP_REF_RESV_ID = :RESV_ID:";
             
             $response['ACCOMPANY_PROFILES'] = $this->Db->query($sql, $param)->getResultArray();
@@ -3736,13 +3736,29 @@ class ApplicatioController extends BaseController
             $cust_ids[] = $accompany_profile['ACCOMP_CUST_ID'];
         }
 
-        $cust_ids = implode(",", $cust_ids);
+        $resv_id = $param['RESV_ID'];
+        $response = [];
 
-        $sql = "select RESV_NAME as CUST_ID, RESV_ID, DOC_IS_VERIFY, VACC_IS_VERIFY from FLXY_RESERVATION
-                    left join FLXY_VACCINE_DETAILS on VACC_CUST_ID = RESV_NAME AND VACC_RESV_ID = RESV_ID
-                    left join FLXY_DOCUMENTS on DOC_CUST_ID = RESV_NAME AND DOC_RESV_ID = RESV_ID AND DOC_FILE_TYPE = 'PROOF'
-                    where RESV_NAME in ($cust_ids) and RESV_ID = :RESV_ID:";
-        $response = $this->Db->query($sql, $param)->getResultArray();
+        foreach($cust_ids as $cust_id) {
+            $data = [
+                'CUST_ID' => $cust_id,
+                'RESV_ID' => $param['RESV_ID'],
+                'DOC_IS_VERIFY' => null,
+                'VACC_IS_VERIFY' => null
+            ];
+
+            $sql = "select DOC_IS_VERIFY from FLXY_DOCUMENTS where DOC_CUST_ID = :CUST_ID: AND DOC_RESV_ID = :RESV_ID: AND DOC_FILE_TYPE = 'PROOF'";
+            $res = $this->Db->query($sql, ['CUST_ID' => $cust_id, 'RESV_ID' => $resv_id])->getResultArray();
+            if(count($res))
+                $data['DOC_IS_VERIFY'] = $res[0]['DOC_IS_VERIFY'];
+
+            $sql = "select VACC_IS_VERIFY from FLXY_VACCINE_DETAILS where VACC_CUST_ID = :CUST_ID: AND VACC_RESV_ID = :RESV_ID:";
+            $res = $this->Db->query($sql, ['CUST_ID' => $cust_id, 'RESV_ID' => $resv_id])->getResultArray();
+            if(count($res))
+                $data['VACC_IS_VERIFY'] = $res[0]['VACC_IS_VERIFY'];
+
+            $response[] = $data;
+        }
          
         if($condi){
             return $response;
