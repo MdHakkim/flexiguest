@@ -957,7 +957,8 @@
                                                     class="select2 form-select RESV_ROOM" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
-                                                <input type="hidden" name="RESV_ROOM_ID" id="RESV_ROOM_ID" value="" readonly />
+                                                <input type="hidden" name="RESV_ROOM_ID" id="RESV_ROOM_ID" value=""
+                                                    readonly />
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Rate Code</label>
@@ -1566,10 +1567,23 @@
                                     placeholder="address 3" />
                             </div>
 
-                            <div class="col-md-3"></div>
+                            <div class="col-md-3">
+                                <label for="html5-text-input" class="form-label" style="display: block"><b>GENDER
+                                        *</b></label>
+                                <div class="form-check mb-2" style="float:left;margin-right:10px">
+                                    <input type="radio" id="CUST_GENDER_Male" name="CUST_GENDER" value="Male"
+                                        class="form-check-input" required="" checked>
+                                    <label class="form-check-label" for="CUST_GENDER_Male">Male</label>
+                                </div>
+                                <div class="form-check" style="float:left">
+                                    <input type="radio" id="CUST_GENDER_Female" name="CUST_GENDER" value="Female"
+                                        class="form-check-input" required="">
+                                    <label class="form-check-label" for="CUST_GENDER_Female">Female</label>
+                                </div>
+                            </div>
 
 
-                            <div class="col-md-3 mt-0">
+                            <div class="col-md-3">
                                 <label class="form-label col-md-12">Country</label>
                                 <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%"
                                     class="selectpicker CUST_COUNTRY" data-live-search="true" required>
@@ -1579,14 +1593,14 @@
                                     country is required can't empty.
                                 </div>
                             </div>
-                            <div class="col-md-3 mt-0">
+                            <div class="col-md-3">
                                 <label class="form-label col-md-12">State</label>
                                 <select name="CUST_STATE" id="CUST_STATE" data-width="100%"
                                     class="selectpicker CUST_STATE" data-live-search="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
-                            <div class="col-md-3 mt-0">
+                            <div class="col-md-3">
                                 <label class="form-label col-md-12">City</label>
                                 <select name="CUST_CITY" id="CUST_CITY" data-width="100%" class="selectpicker CUST_CITY"
                                     data-live-search="true">
@@ -1656,7 +1670,7 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <label class="form-label">Communcation Desc.</label>
+                                <label class="form-label">Communication Desc.</label>
                                 <input type="text" name="CUST_COMMUNICATION_DESC" id="CUST_COMMUNICATION_DESC"
                                     class="form-control" placeholder="communication desc" />
                             </div>
@@ -4036,7 +4050,7 @@ $(document).on('change', '#RESV_RM_TYPE,#RESV_RTC', function() {
 $(document).on('change', '#RESV_ROOM', function() {
 
     var room_id = $(this).find('option:selected').data('room-id');
-    $('#RESV_ROOM_ID').val(room_id);    
+    $('#RESV_ROOM_ID').val(room_id);
 });
 
 /*

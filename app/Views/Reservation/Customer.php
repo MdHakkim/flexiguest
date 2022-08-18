@@ -3,6 +3,12 @@
 <?=$this->include('Layout/ErrorReport')?>
 <?=$this->include('Layout/SuccessReport')?>
 
+<style>
+.form-label {
+    font-weight: bold;
+}
+</style>
+
 <!-- Content wrapper -->
 <div class="content-wrapper">
     <!-- Content -->
@@ -107,7 +113,7 @@
                                     </span>
                                 </div>
                             </div>
-                            
+
                             <div class="col-md-3">
                                 <label class="form-label">Document Number</label>
                                 <input type="text" name="CUST_DOC_NUMBER" id="CUST_DOC_NUMBER" class="form-control"
@@ -116,12 +122,14 @@
 
                             <div class="col-md-3">
                                 <label class="form-label">Doc Issue Date</label>
-                                <input type="text" name="CUST_DOC_ISSUE" id="CUST_DOC_ISSUE" class="form-control" placeholder="YYYY-MM-DD" />
+                                <input type="text" name="CUST_DOC_ISSUE" id="CUST_DOC_ISSUE" class="form-control"
+                                    placeholder="YYYY-MM-DD" />
                             </div>
 
                             <div class="col-md-3">
                                 <label class="form-label">Doc Expiry Date</label>
-                                <input type="text" name="CUST_DOC_EXPIRY" id="CUST_DOC_EXPIRY" class="form-control" placeholder="YYYY-MM-DD" />
+                                <input type="text" name="CUST_DOC_EXPIRY" id="CUST_DOC_EXPIRY" class="form-control"
+                                    placeholder="YYYY-MM-DD" />
                             </div>
 
                             <div class="col-md-3">
@@ -139,7 +147,20 @@
                                 <input type="text" name="CUST_ADDRESS_3" id="CUST_ADDRESS_3" class="form-control"
                                     placeholder="address 3" />
                             </div>
-                            <div class="col-md-3"></div>
+                            <div class="col-md-3">
+                                <label for="html5-text-input" class="form-label" style="display: block"><b>GENDER
+                                        *</b></label>
+                                <div class="form-check mb-2" style="float:left;margin-right:10px">
+                                    <input type="radio" id="CUST_GENDER_Male" name="CUST_GENDER" value="Male"
+                                        class="form-check-input" required="" checked>
+                                    <label class="form-check-label" for="CUST_GENDER_Male">Male</label>
+                                </div>
+                                <div class="form-check" style="float:left">
+                                    <input type="radio" id="CUST_GENDER_Female" name="CUST_GENDER" value="Female"
+                                        class="form-check-input" required="">
+                                    <label class="form-check-label" for="CUST_GENDER_Female">Female</label>
+                                </div>
+                            </div>
 
                             <div class="col-md-3 ">
                                 <label class="form-label col-md-12">Country</label>
@@ -572,6 +593,8 @@ function editCust(sysid) {
                         var option = '<option value="' + dataval + '">' + data[
                             field + '_DESC'] + '</option>';
                         $('#' + field).html(option).selectpicker('refresh');
+                    } else if (field == 'CUST_GENDER') {
+                        $(`input[name='CUST_GENDER'][value=` + dataval + `]`).prop('checked', true);
                     } else if (field == 'CUST_ACTIVE') {
                         // var rmSpace = dataval.trim();
                         if (dataval == 'Y') {

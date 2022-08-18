@@ -124,7 +124,7 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <lable class="form-lable">Communcation Desc.</lable>
+                            <lable class="form-lable">Communication Desc.</lable>
                             <input type="text" name="COM_COMMUNI_DESC" id="COM_COMMUNI_DESC" class="form-control"
                                 placeholder="communication desc" />
                         </div>

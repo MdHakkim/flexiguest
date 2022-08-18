@@ -53,7 +53,8 @@
                         <div class="col-md-3">
                             <label class="form-label">DOB</label>
                             <div class="input-group mb-3">
-                                <input type="text" name="CUST_DOB" class="form-control flatpickr-input" placeholder="YYYY-MM-DD">
+                                <input type="text" name="CUST_DOB" class="form-control flatpickr-input dateField"
+                                    placeholder="YYYY-MM-DD">
                                 <span class="input-group-append">
                                     <span class="input-group-text bg-light d-block">
                                         <i class="fa fa-calendar"></i>
@@ -63,17 +64,20 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Document Number</label>
-                            <input type="text" name="CUST_DOC_NUMBER" class="form-control" placeholder="Document number" />
+                            <input type="text" name="CUST_DOC_NUMBER" class="form-control"
+                                placeholder="Document number" />
                         </div>
 
                         <div class="col-md-3">
                             <label class="form-label">Doc Issue Date</label>
-                            <input type="text" name="CUST_DOC_ISSUE" id="CUST_DOC_ISSUE" class="form-control" placeholder="YYYY-MM-DD" />
+                            <input type="text" name="CUST_DOC_ISSUE" id="CUST_DOC_ISSUE" class="form-control dateField"
+                                placeholder="YYYY-MM-DD" />
                         </div>
 
                         <div class="col-md-3">
                             <label class="form-label">Doc Expiry Date</label>
-                            <input type="text" name="CUST_DOC_EXPIRY" id="CUST_DOC_EXPIRY" class="form-control" placeholder="YYYY-MM-DD" />
+                            <input type="text" name="CUST_DOC_EXPIRY" id="CUST_DOC_EXPIRY"
+                                class="form-control dateField" placeholder="YYYY-MM-DD" />
                         </div>
 
                         <div class="col-md-3">
@@ -89,23 +93,39 @@
                             <input type="text" name="CUST_ADDRESS_3" class="form-control" placeholder="address 3" />
                         </div>
 
-                        <div class="col-md-3"></div>
+                        <div class="col-md-3">
+                            <label for="html5-text-input" class="form-label" style="display: block"><b>GENDER
+                                    *</b></label>
+                            <div class="form-check mb-2" style="float:left;margin-right:10px">
+                                <input type="radio" id="CUST_GENDER_Male" name="CUST_GENDER" value="Male"
+                                    class="form-check-input" required="" checked>
+                                <label class="form-check-label" for="CUST_GENDER_Male">Male</label>
+                            </div>
+                            <div class="form-check" style="float:left">
+                                <input type="radio" id="CUST_GENDER_Female" name="CUST_GENDER" value="Female"
+                                    class="form-check-input" required="">
+                                <label class="form-check-label" for="CUST_GENDER_Female">Female</label>
+                            </div>
+                        </div>
 
                         <div class="col-md-3 ">
                             <label class="form-label col-md-12">Country</label>
-                            <select name="CUST_COUNTRY" data-width="100%" class="selectpicker CUST_COUNTRY" data-live-search="true">
+                            <select name="CUST_COUNTRY" data-width="100%" class="selectpicker CUST_COUNTRY"
+                                data-live-search="true">
                                 <option value="">Select</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label col-md-12">State</label>
-                            <select name="CUST_STATE" data-width="100%" class="selectpicker CUST_STATE" data-live-search="true">
+                            <select name="CUST_STATE" data-width="100%" class="selectpicker CUST_STATE"
+                                data-live-search="true">
                                 <option value="">Select</option>
                             </select>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label col-md-12">City</label>
-                            <select name="CUST_CITY" data-width="100%" class="selectpicker CUST_CITY" data-live-search="true">
+                            <select name="CUST_CITY" data-width="100%" class="selectpicker CUST_CITY"
+                                data-live-search="true">
                                 <option value="">Select</option>
                             </select>
                         </div>
@@ -158,8 +178,9 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Communcation Desc.</label>
-                            <input type="text" name="CUST_COMMUNICATION_DESC" class="form-control" placeholder="communication desc" />
+                            <label class="form-label">Communication Desc.</label>
+                            <input type="text" name="CUST_COMMUNICATION_DESC" class="form-control"
+                                placeholder="communication desc" />
                         </div>
                         <div class="col-md-3">
                             <div class="form-check mt-3">
@@ -175,7 +196,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" id="edit-customer-submitBtn" onClick="submitEditCustomerForm('edit-customer-form','C')" class="btn btn-primary">Save</button>
+                <button type="button" id="edit-customer-submitBtn"
+                    onClick="submitEditCustomerForm('edit-customer-form','C')" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -183,197 +205,220 @@
 <!-- /Modal window -->
 
 <script>
-    const month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-    ];
-    var form_id = '#edit-customer-form';
+const month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+var form_id = '#edit-customer-form';
 
-    $(document).ready(function() {
-        $(`${form_id} input[name='CUST_DOB']`).datepicker({
-            format: 'd-M-yyyy',
-            autoclose: true
-        });
-
-        $(`${form_id} input[name='CUST_DOC_ISSUE']`).datepicker({
-            format: 'd-M-yyyy',
-            autoclose: true
-        });
-
-        $(`${form_id} input[name='CUST_DOC_EXPIRY']`).datepicker({
-            format: 'd-M-yyyy',
-            autoclose: true
-        });
+$(document).ready(function() {
+    $(`${form_id} input[name='CUST_DOB']`).datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
     });
 
-    function submitEditCustomerForm(id, mode) {
-        var formSerialization = $('#' + id).serializeArray();
-        var url = '<?php echo base_url('/insertCustomer') ?>';
-        $.ajax({
-            url: url,
-            type: "post",
-            data: formSerialization,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            dataType: 'json',
-            success: function(response) {
-                
-                if (response['SUCCESS'] != '1') {
-
-                    var ERROR = response['RESPONSE']['ERROR'];
-                    var mcontent = '';
-                    $.each(ERROR, function(ind, data) {
-                        mcontent += '<li>' + data + '</li>';
-                    });
-                    showModalAlert('error', mcontent);
-                } else {
-
-                    showModalAlert('success', "Customer has been updated successfully.");
-                    $('#edit-customer').modal('hide');
-                    $('#dataTable_view').dataTable().fnDraw();
-                }
-            }
-        });
-    }
-
-    $(document).on('change', `${form_id} select[name='CUST_COUNTRY']`, function() {
-        var ccode = $(this).val();
-        $.ajax({
-            url: '<?php echo base_url('/stateList') ?>',
-            type: "post",
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            data: {
-                ccode: ccode
-            },
-            // dataType:'json',
-            success: function(respn) {
-                $(`${form_id} select[name='CUST_STATE']`).html(respn).selectpicker('refresh');
-            }
-        });
+    $(`${form_id} input[name='CUST_DOC_ISSUE']`).datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
     });
 
-    $(document).on('change', `${form_id} select[name='CUST_STATE']`, function() {
-        var ccode = $(`${form_id} select[name='CUST_COUNTRY']`).find('option:selected').val();
-        var scode = $(this).val();
-        $.ajax({
-            url: '<?php echo base_url('/cityList') ?>',
-            type: "post",
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            data: {
-                ccode: ccode,
-                scode: scode
-            },
-            // dataType:'json',
-            success: function(respn) {
-                $(`${form_id} select[name='CUST_CITY']`).html(respn).selectpicker('refresh');
-            }
-        });
+    $(`${form_id} input[name='CUST_DOC_EXPIRY']`).datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
     });
+});
 
-    function editCustomerRunCountryList() {
-        $.ajax({
-            url: '<?php echo base_url('/countryList') ?>',
-            type: "post",
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            async: false,
-            // dataType:'json',
-            success: function(respn) {
-                // $(`${form_id} select[name='CUST_COUNTRY']`).html(respn).selectpicker('refresh');
-                $(`${form_id} select[name='CUST_COUNTRY']`).html(respn).selectpicker('refresh');
-                $(`${form_id} select[name='CUST_NATIONALITY']`).html(respn);
-            }
-        });
-    }
+function submitEditCustomerForm(id, mode) {
+    var formSerialization = $('#' + id).serializeArray();
+    var url = '<?php echo base_url('/insertCustomer') ?>';
+    $.ajax({
+        url: url,
+        type: "post",
+        data: formSerialization,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        dataType: 'json',
+        success: function(response) {
 
-    function editCustomerRunSupportingLov() {
-        $.ajax({
-            url: '<?php echo base_url('/getSupportingLov') ?>',
-            type: "post",
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            dataType: 'json',
-            async: false,
-            success: function(respn) {
-                var vipData = respn[0];
-                var busegmt = respn[1];
-                var option = '<option value="">Select Vip</option>';
-                var option2 = '<option value="">Select Segment</option>';
+            if (response['SUCCESS'] != '1') {
 
-                $(vipData).each(function(ind, data) {
-                    option += '<option value="' + data['VIP_ID'] + '">' + data['VIP_DESC'] + '</option>';
+                var ERROR = response['RESPONSE']['ERROR'];
+                var mcontent = '';
+                $.each(ERROR, function(ind, data) {
+                    mcontent += '<li>' + data + '</li>';
                 });
-                $(busegmt).each(function(ind, data) {
-                    option2 += '<option value="' + data['BUS_SEG_CODE'] + '">' + data['BUS_SEG_DESC'] + '</option>';
-                });
-                $(`${form_id} select[name='CUST_VIP']`).html(option);
-                $(`${form_id} select[name='CUST_BUS_SEGMENT']`).html(option2);
+                showModalAlert('error', mcontent);
+            } else {
+
+                showModalAlert('success', "Customer has been updated successfully.");
+                $('#edit-customer').modal('hide');
+                $('#dataTable_view').dataTable().fnDraw();
             }
-        });
-    }
+        }
+    });
+}
 
-    $(document).on('click', '.editcustomer', function() {
-        editCustomerRunCountryList();
-        editCustomerRunSupportingLov();
-        var sysid = $(this).attr('data_sysid');
-        $('#edit-customer').modal('show');
+$(document).on('change', `${form_id} select[name='CUST_COUNTRY']`, function() {
+    var ccode = $(this).val();
+    $.ajax({
+        url: '<?php echo base_url('/stateList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            ccode: ccode
+        },
+        // dataType:'json',
+        success: function(respn) {
+            $(`${form_id} select[name='CUST_STATE']`).html(respn).selectpicker('refresh');
+        }
+    });
+});
 
-        $.ajax({
-            url: '<?php echo base_url('/editCustomer') ?>',
-            type: "post",
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            data: {
-                sysid: sysid
-            },
-            dataType: 'json',
-            success: function(respn) {
-                $(respn).each(function(inx, data) {
-                    $.each(data, function(fields, datavals) {
-                        var field = $.trim(fields);
-                        var dataval = $.trim(datavals);
+$(document).on('change', `${form_id} select[name='CUST_STATE']`, function() {
+    var ccode = $(`${form_id} select[name='CUST_COUNTRY']`).find('option:selected').val();
+    var scode = $(this).val();
+    $.ajax({
+        url: '<?php echo base_url('/cityList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            ccode: ccode,
+            scode: scode
+        },
+        // dataType:'json',
+        success: function(respn) {
+            $(`${form_id} select[name='CUST_CITY']`).html(respn).selectpicker('refresh');
+        }
+    });
+});
 
-                        if (field == 'CUST_BUS_SEGMENT')
-                            dataval = datavals;
+function editCustomerRunCountryList() {
+    $.ajax({
+        url: '<?php echo base_url('/countryList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        async: false,
+        // dataType:'json',
+        success: function(respn) {
+            // $(`${form_id} select[name='CUST_COUNTRY']`).html(respn).selectpicker('refresh');
+            $(`${form_id} select[name='CUST_COUNTRY']`).html(respn).selectpicker('refresh');
+            $(`${form_id} select[name='CUST_NATIONALITY']`).html(respn);
+        }
+    });
+}
 
-                        if (field == 'CUST_COUNTRY_DESC' || field == 'CUST_STATE_DESC' || field == 'CUST_CITY_DESC') {
-                            return true;
-                        };
+function editCustomerRunSupportingLov() {
+    $.ajax({
+        url: '<?php echo base_url('/getSupportingLov') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        dataType: 'json',
+        async: false,
+        success: function(respn) {
+            var vipData = respn[0];
+            var busegmt = respn[1];
+            var option = '<option value="">Select Vip</option>';
+            var option2 = '<option value="">Select Segment</option>';
 
-                        if (field == 'CUST_DOB') {
-                            let dob_date = new Date(dataval);
-                            dataval = dob_date.getDate() + '-' + month_names[dob_date.getMonth()] + '-' + dob_date.getFullYear();
-                        }
+            $(vipData).each(function(ind, data) {
+                option += '<option value="' + data['VIP_ID'] + '">' + data['VIP_DESC'] +
+                    '</option>';
+            });
+            $(busegmt).each(function(ind, data) {
+                option2 += '<option value="' + data['BUS_SEG_CODE'] + '">' + data['BUS_SEG_DESC'] +
+                    '</option>';
+            });
+            $(`${form_id} select[name='CUST_VIP']`).html(option);
+            $(`${form_id} select[name='CUST_BUS_SEGMENT']`).html(option2);
+        }
+    });
+}
 
-                        if (field == 'CUST_ACTIVE') {
-                            if (dataval == 'Y')
-                                $(`${form_id} input[name='CUST_ACTIVE_CHK']`).prop('checked', true);
-                            else
-                                $(`${form_id} input[name='CUST_ACTIVE_CHK']`).prop('checked', false)
+$(document).on('click', '.editcustomer', function() {
+    editCustomerRunCountryList();
+    editCustomerRunSupportingLov();
+    var sysid = $(this).attr('data_sysid');
+    $('#edit-customer').modal('show');
 
-                        } else if ($(`${form_id} input[name='${field}']`).length)
+    $.ajax({
+        url: '<?php echo base_url('/editCustomer') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            sysid: sysid
+        },
+        dataType: 'json',
+        success: function(respn) {
+            $(respn).each(function(inx, data) {
+                $.each(data, function(fields, datavals) {
+                    var field = $.trim(fields);
+                    var dataval = $.trim(datavals);
+
+                    if (field == 'CUST_BUS_SEGMENT')
+                        dataval = datavals;
+
+                    if (field == 'CUST_COUNTRY_DESC' || field ==
+                        'CUST_STATE_DESC' || field == 'CUST_CITY_DESC') {
+                        return true;
+                    };
+
+                    if (field == 'CUST_DOB' || field == 'CUST_DOC_ISSUE' || field ==
+                        'CUST_DOC_EXPIRY') {
+                        let dob_date = new Date(dataval);
+                        dataval = dob_date.getDate() + '-' + month_names[dob_date
+                            .getMonth()] + '-' + dob_date.getFullYear();
+                    }
+
+                    if (field == 'CUST_GENDER') {
+                        $(`${form_id} input[name='CUST_GENDER'][value=` + dataval +
+                            `]`).prop('checked', true);
+                    } else if (field == 'CUST_ACTIVE') {
+                        if (dataval == 'Y')
+                            $(`${form_id} input[name='CUST_ACTIVE_CHK']`).prop(
+                                'checked', true);
+                        else
+                            $(`${form_id} input[name='CUST_ACTIVE_CHK']`).prop(
+                                'checked', false)
+
+                    } else if ($(`${form_id} input[name='${field}']`).length) {
+
+                        if ($(`${form_id} input[name='${field}']`).hasClass(
+                                'dateField'))
+                            $(`${form_id} input[name='${field}']`).datepicker()
+                            .datepicker("setDate", dataval);
+                        else
                             $(`${form_id} input[name='${field}']`).val(dataval);
 
-                        else if ($(`${form_id} select[name='${field}']`).length && $(`${form_id} select[name='${field}']`).hasClass('selectpicker') && dataval) {
-                            if (field == 'CUST_STATE' || field == 'CUST_CITY') {
-                                var option = '<option value="' + dataval + '">' + data[field + '_DESC'] + '</option>';
-                                $(`${form_id} select[name='${field}']`).html(option).selectpicker('refresh');
-                            } else
-                                $(`${form_id} select[name='${field}']`).val(dataval).selectpicker('refresh');
+                    } else if ($(`${form_id} select[name='${field}']`).length && $(
+                            `${form_id} select[name='${field}']`).hasClass(
+                            'selectpicker') && dataval) {
+                        if (field == 'CUST_STATE' || field == 'CUST_CITY') {
+                            var option = '<option value="' + dataval + '">' + data[
+                                field + '_DESC'] + '</option>';
+                            $(`${form_id} select[name='${field}']`).html(option)
+                                .selectpicker('refresh');
+                        } else
+                            $(`${form_id} select[name='${field}']`).val(dataval)
+                            .selectpicker('refresh');
 
-                        } else if ($(`${form_id} select[name='${field}']`).length)
-                            $(`${form_id} select[name='${field}']`).val(dataval).trigger('change');
-                    });
+                    } else if ($(`${form_id} select[name='${field}']`).length)
+                        $(`${form_id} select[name='${field}']`).val(dataval)
+                        .trigger('change');
                 });
-                $('#edit-customer-submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
-            }
-        });
+            });
+            $('#edit-customer-submitBtn').removeClass('btn-primary').addClass('btn-success').text(
+                'Update');
+        }
     });
+});
 </script>

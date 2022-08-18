@@ -103,7 +103,7 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Communcation Desc.</label>
+                            <label class="form-label">Communication Desc.</label>
                             <input type="text" name="GRP_COMMUNI_DESC" id="GRP_COMMUNI_DESC" class="form-control"
                                 placeholder="communication desc" />
                         </div>
