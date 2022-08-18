@@ -1,13 +1,11 @@
 <?= $this->include('Layout/image_modal') ?>
 
-<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed" dir="ltr" data-theme="theme-default"
-    data-assets-path="<?= base_url('assets') ?>/" data-template="vertical-menu-template">
+<html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="<?= base_url('assets') ?>/" data-template="vertical-menu-template">
 
 <head>
     <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar"></nav>
     <meta charset="utf-8" />
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
     <?= $this->include('Layout/HeaderScript') ?>
     <link rel="stylesheet" href="<?php echo base_url('assets/jquery.Jcrop.min.css'); ?>" />
@@ -21,9 +19,7 @@
                     <?php /* ?>
                     <span class="app-brand-logo demo">
 
-                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 187.6 228.8"
-                            style="enable-background:new 0 0 187.6 228.8;" xml:space="preserve">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 187.6 228.8" style="enable-background:new 0 0 187.6 228.8;" xml:space="preserve">
                             <style type="text/css">
                             .st0 {
                                 fill-rule: evenodd;
@@ -87,75 +83,50 @@
                                 fill: url(#SVGID_00000060011834154892075660000005155630478817162145_);
                             }
                             </style>
-                            <path class="st0"
-                                d="M4.9,126.3c0,37.8,93.7,55.2,120.3,11l23-47.2C140.6,105.6,24.2,155.9,5,61L4.9,97.4V126.3z" />
-                            <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="185.8746" y1="238.7527"
-                                x2="-43.7753" y2="111.4127" gradientTransform="matrix(1 0 0 -1 0 222.6383)">
+                            <path class="st0" d="M4.9,126.3c0,37.8,93.7,55.2,120.3,11l23-47.2C140.6,105.6,24.2,155.9,5,61L4.9,97.4V126.3z" />
+                            <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="185.8746" y1="238.7527" x2="-43.7753" y2="111.4127" gradientTransform="matrix(1 0 0 -1 0 222.6383)">
                                 <stop offset="0" style="stop-color:#E7E754" />
                                 <stop offset="1" style="stop-color:#5CB431" />
                             </linearGradient>
-                            <path class="st1"
-                                d="M90.4,57.8h44.8c28.8,0,49.2-36,49.2-54H86.9C44.2,3.8,4.8,25.9,4.8,65.1v61.2C10.5,82.7,47.7,57.8,90.4,57.8z" />
-                            <linearGradient id="SVGID_00000001665901154226395070000017377122798177628309_"
-                                gradientUnits="userSpaceOnUse" x1="177.4547" y1="227.0634" x2="-62.9653" y2="74.5734"
-                                gradientTransform="matrix(1 0 0 -1 0 222.6383)">
+                            <path class="st1" d="M90.4,57.8h44.8c28.8,0,49.2-36,49.2-54H86.9C44.2,3.8,4.8,25.9,4.8,65.1v61.2C10.5,82.7,47.7,57.8,90.4,57.8z" />
+                            <linearGradient id="SVGID_00000001665901154226395070000017377122798177628309_" gradientUnits="userSpaceOnUse" x1="177.4547" y1="227.0634" x2="-62.9653" y2="74.5734" gradientTransform="matrix(1 0 0 -1 0 222.6383)">
                                 <stop offset="0" style="stop-color:#E7E754" />
                                 <stop offset="1" style="stop-color:#2B893A" />
                             </linearGradient>
-                            <path
-                                style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000001665901154226395070000017377122798177628309_);"
-                                d="
+                            <path style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000001665901154226395070000017377122798177628309_);" d="
                   M6.6,76.9v33.8c11.7-35.1,45.8-54.6,83.8-54.6h44.8c3.9,0,7.8-0.7,11.4-2c7.5-2.7,14-7.8,19.3-13.6c5.1-5.7,9.2-12.1,12.3-19.1
                   c1.9-4.3,3.3-8.8,4.1-13.4c-1.8,2.6-3.7,5.1-5.8,7.5c-5.3,5.9-11.8,10.9-19.3,13.6c-3.7,1.3-7.5,2-11.4,2c-14.9,0-44.3,0.9-59.3,0.9
                   C52.1,31.9,20.9,47.8,6.6,76.9z" />
-                            <linearGradient id="SVGID_00000142161053142947608910000017353340766530899897_"
-                                gradientUnits="userSpaceOnUse" x1="214.0623" y1="185.2717" x2="-12.5577" y2="36.1917"
-                                gradientTransform="matrix(1 0 0 -1 0 222.6383)">
+                            <linearGradient id="SVGID_00000142161053142947608910000017353340766530899897_" gradientUnits="userSpaceOnUse" x1="214.0623" y1="185.2717" x2="-12.5577" y2="36.1917" gradientTransform="matrix(1 0 0 -1 0 222.6383)">
                                 <stop offset="0" style="stop-color:#E7E754" />
                                 <stop offset="1" style="stop-color:#5CB431" />
                             </linearGradient>
-                            <path
-                                style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000142161053142947608910000017353340766530899897_);"
-                                d="
+                            <path style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000142161053142947608910000017353340766530899897_);" d="
                   M86.1,137.3h27.6c2.3,0,10.5,0.5,6.7,6.6c1.8-2,3.5-4.2,4.8-6.6l22.9-47c3.2-6.6-4.8-7-7.7-7H82.5C39.7,83.5,5,118.2,4.9,161v63.3
                   c16.8,0,43.5-20.1,43.5-41.8C48.3,161.6,42,137.3,86.1,137.3z" />
-                            <linearGradient id="SVGID_00000026845750694380275960000014168185075937240968_"
-                                gradientUnits="userSpaceOnUse" x1="178.1774" y1="166.3042" x2="17.2574" y2="47.4942"
-                                gradientTransform="matrix(1 0 0 -1 0 222.6383)">
+                            <linearGradient id="SVGID_00000026845750694380275960000014168185075937240968_" gradientUnits="userSpaceOnUse" x1="178.1774" y1="166.3042" x2="17.2574" y2="47.4942" gradientTransform="matrix(1 0 0 -1 0 222.6383)">
                                 <stop offset="0" style="stop-color:#E7E754" />
                                 <stop offset="1" style="stop-color:#2B893A" />
                             </linearGradient>
-                            <path
-                                style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000026845750694380275960000014168185075937240968_);"
-                                d="
+                            <path style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000026845750694380275960000014168185075937240968_);" d="
                   M122.3,138.1c0.4-0.5,0.7-1.1,1-1.7l11.7-24.1c-15.2-0.2-44-0.8-51.6-0.8c-4.2,0-8.5,0.2-12.7,0.8l0,0l-2.1,0.3
                   c-25.2,4-48.5,14.3-60.4,34.1c-0.9,4.7-1.4,9.5-1.4,14.3v17.6c9.9-25.1,35.9-37.7,64.4-42.2l2.1-0.3l0,0c4.2-0.6,8.5-0.8,12.7-0.8
                   h27.6c1.5,0,3,0.2,4.5,0.5C119.7,136,121.2,136.9,122.3,138.1z" />
-                            <linearGradient id="SVGID_00000110460869155740343570000017850948155766471613_"
-                                gradientUnits="userSpaceOnUse" x1="35.4944" y1="-52.6618" x2="42.5244" y2="115.9482"
-                                gradientTransform="matrix(1 0 0 -1 0 222.6383)">
+                            <linearGradient id="SVGID_00000110460869155740343570000017850948155766471613_" gradientUnits="userSpaceOnUse" x1="35.4944" y1="-52.6618" x2="42.5244" y2="115.9482" gradientTransform="matrix(1 0 0 -1 0 222.6383)">
                                 <stop offset="0" style="stop-color:#E7E754" />
                                 <stop offset="1" style="stop-color:#2B893A" />
                             </linearGradient>
-                            <path
-                                style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000110460869155740343570000017850948155766471613_);"
-                                d="
+                            <path style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000110460869155740343570000017850948155766471613_);" d="
                   M4.9,202v22.3c16.8,0,43.5-20.1,43.5-41.8c0-18.3-4.8-39.1,23.3-44.1C51.6,141.7,4.4,153.3,4.9,202L4.9,202z M75,137.9L75,137.9z" />
-                            <linearGradient id="SVGID_00000182513730796094447060000010748656252746595768_"
-                                gradientUnits="userSpaceOnUse" x1="14.5765" y1="-41.5845" x2="25.5865" y2="96.7855"
-                                gradientTransform="matrix(1 0 0 -1 0 222.6383)">
+                            <linearGradient id="SVGID_00000182513730796094447060000010748656252746595768_" gradientUnits="userSpaceOnUse" x1="14.5765" y1="-41.5845" x2="25.5865" y2="96.7855" gradientTransform="matrix(1 0 0 -1 0 222.6383)">
                                 <stop offset="0" style="stop-color:#E7E754" />
                                 <stop offset="1" style="stop-color:#5CB431" />
                             </linearGradient>
-                            <path
-                                style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000182513730796094447060000010748656252746595768_);"
-                                d="
+                            <path style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000182513730796094447060000010748656252746595768_);" d="
                   M6.5,222.6c6.1-0.5,12.7-3.4,18.4-7c2.8-8.5,2-21.1,0.9-37.1s10.9-26.9,11-27C19,161.2,6.5,177.3,6.5,202.1L6.5,222.6z" />
                             <path class="st7" d="M49.9,154.2c2.6-7.5,8.5-13.5,21.8-15.8c-19.8,3.2-65.8,14.5-66.8,61.4C5.3,192.7,10,170.1,49.9,154.2
                   L49.9,154.2z M75,137.9L75,137.9z" />
-                            <linearGradient id="SVGID_00000005267255372703103320000011831359240645276035_"
-                                gradientUnits="userSpaceOnUse" x1="1.1712" y1="109.9574" x2="184.1612" y2="208.8374"
-                                gradientTransform="matrix(1 0 0 -1 0 222.6383)">
+                            <linearGradient id="SVGID_00000005267255372703103320000011831359240645276035_" gradientUnits="userSpaceOnUse" x1="1.1712" y1="109.9574" x2="184.1612" y2="208.8374" gradientTransform="matrix(1 0 0 -1 0 222.6383)">
                                 <stop offset="0" style="stop-color:#2B893A" />
                                 <stop offset="0.22" style="stop-color:#2D8A3B" />
                                 <stop offset="0.3" style="stop-color:#348E3F" />
@@ -169,15 +140,11 @@
                                 <stop offset="0.57" style="stop-color:#F7F5B8" />
                                 <stop offset="1" style="stop-color:#FDF160" />
                             </linearGradient>
-                            <path
-                                style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000005267255372703103320000011831359240645276035_);"
-                                d="
+                            <path style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000005267255372703103320000011831359240645276035_);" d="
                   M178.2,21.3c-3.1,7-7.2,13.4-12.3,19.1c-5.3,5.9-11.8,10.9-19.3,13.6c-3.7,1.3-7.5,2-11.4,2H90.4c-30.1,0-57.7,12.2-73.7,34.6
                   c-4.4,6.1-7.8,12.9-10.1,20v-0.3c-0.7,2.6-1.3,5.2-1.8,7.9v8.1c1.5-12.3,6-24,13-34.1C33.4,70,60.6,57.8,90.5,57.8h44.8
                   c28.5,0,48.8-35.3,49.2-53.4l-1.8,1.4C182,11.1,180.5,16.4,178.2,21.3z" />
-                            <linearGradient id="SVGID_00000099647703509215640730000017861532716248486312_"
-                                gradientUnits="userSpaceOnUse" x1="0.5407" y1="39.9869" x2="117.6607" y2="90.8269"
-                                gradientTransform="matrix(1 0 0 -1 0 222.6383)">
+                            <linearGradient id="SVGID_00000099647703509215640730000017861532716248486312_" gradientUnits="userSpaceOnUse" x1="0.5407" y1="39.9869" x2="117.6607" y2="90.8269" gradientTransform="matrix(1 0 0 -1 0 222.6383)">
                                 <stop offset="0" style="stop-color:#2B893A" />
                                 <stop offset="0.14" style="stop-color:#46974B" />
                                 <stop offset="0.43" style="stop-color:#8BBC75" />
@@ -188,9 +155,7 @@
                                 <stop offset="0.98" style="stop-color:#FBF27B" />
                                 <stop offset="1" style="stop-color:#FDF160" />
                             </linearGradient>
-                            <path
-                                style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000099647703509215640730000017861532716248486312_);"
-                                d="
+                            <path style="fill-rule:evenodd;clip-rule:evenodd;fill:url(#SVGID_00000099647703509215640730000017861532716248486312_);" d="
                   M28,154.9c14.7-10.6,32.8-14.7,43.5-16.4h0.1c1.1-0.2,2.2-0.4,3.4-0.5l0,0c3.7-0.4,7.3-0.6,11-0.6h27.6c2.3,0,10.5,0.5,6.7,6.6l0,0
                   c0.5-0.6,1.1-1.3,1.7-2s0.9-1.2,1.4-1.8c-0.2-0.8-0.5-1.5-0.9-2.2l-0.2,0.2c-1.1-1.2-2.6-2-4.2-2.3c-1.5-0.3-3-0.5-4.5-0.5H86.1
                   c-4.2,0-8.5,0.2-12.7,0.8l0,0l-2.1,0.3c-16.9,2.7-32.9,8.2-45.3,17.5c-8.6,6.3-15.2,14.8-19.2,24.7v-0.2c-0.7,2.4-1.4,5-2.1,7.6
@@ -209,9 +174,7 @@
                 </a>
             </div>
             <!-- <a class="navbar-brand" href="#">Navbar</a> -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
@@ -371,8 +334,7 @@
                             <!-- Document Status -->
                             <div class="sliderclass">
 
-                                <div
-                                    class="flxy_block_card flxy_document document-status-card customer-card-<?= $data['CUST_ID'] ?>">
+                                    <div class="flxy_block_card flxy_document document-status-card customer-card-<?= $data['CUST_ID'] ?>">
                                     <div class="card">
 
                                         <div class="card-body flxy_web_padd">
@@ -402,8 +364,7 @@
                                                 </div>
 
                                                 <div class="flxy-data">
-                                                    : <span
-                                                        class="flxy_doc_prof flxy_doc_st <?= $statusClass ?>">Pending</span>
+                                                        : <span class="flxy_doc_prof flxy_doc_st <?= $statusClass ?>">Pending</span>
                                                 </div>
                                             </li>
 
@@ -413,21 +374,18 @@
                                                 </div>
 
                                                 <div class="flxy-data">
-                                                    : <span
-                                                        class="flxy_doc_vacc flxy_doc_st <?= $statusClass ?>">Pending</span>
+                                                        : <span class="flxy_doc_vacc flxy_doc_st <?= $statusClass ?>">Pending</span>
                                                 </div>
                                             </li>
 
                                             <li class="list-group-item d-grid ">
-                                                <button class="btn btn-dark "
-                                                    onClick="docUploadClik('D', <?= $data['CUST_ID'] ?>)" type="button">
+                                                    <button class="btn btn-dark " onClick="docUploadClik('D', <?= $data['CUST_ID'] ?>)" type="button">
                                                     View & Upload Documents
                                                 </button>
                                             </li>
 
                                             <li class="list-group-item d-grid">
-                                                <button class="btn btn-dark"
-                                                    onClick="docUploadClik('V', <?= $data['CUST_ID'] ?>)" type="button">
+                                                    <button class="btn btn-dark" onClick="docUploadClik('V', <?= $data['CUST_ID'] ?>)" type="button">
                                                     Vaccination Details
                                                 </button>
                                             </li>
@@ -439,8 +397,7 @@
                                 <?php
                                     foreach ($data['ACCOMPANY_PROFILES'] as $accompany_profile) {
                                     ?>
-                                <div
-                                    class="flxy_block_card flxy_document document-status-card customer-card-<?= $accompany_profile['CUST_ID'] ?>">
+                                        <div class="flxy_block_card flxy_document document-status-card customer-card-<?= $accompany_profile['CUST_ID'] ?>">
                                     <div class="card">
 
                                         <div class="card-body flxy_web_padd">
@@ -470,8 +427,7 @@
                                                 </div>
 
                                                 <div class="flxy-data">
-                                                    : <span
-                                                        class="flxy_doc_prof flxy_doc_st <?= $statusClass ?>">Pending</span>
+                                                            : <span class="flxy_doc_prof flxy_doc_st <?= $statusClass ?>">Pending</span>
                                                 </div>
                                             </li>
 
@@ -481,23 +437,18 @@
                                                 </div>
 
                                                 <div class="flxy-data">
-                                                    : <span
-                                                        class="flxy_doc_vacc flxy_doc_st <?= $statusClass ?>">Pending</span>
+                                                            : <span class="flxy_doc_vacc flxy_doc_st <?= $statusClass ?>">Pending</span>
                                                 </div>
                                             </li>
 
                                             <li class="list-group-item d-grid ">
-                                                <button class="btn btn-dark "
-                                                    onClick="docUploadClik('D', <?= $accompany_profile['CUST_ID'] ?>)"
-                                                    type="button">
+                                                        <button class="btn btn-dark " onClick="docUploadClik('D', <?= $accompany_profile['CUST_ID'] ?>)" type="button">
                                                     View & Upload Documents
                                                 </button>
                                             </li>
 
                                             <li class="list-group-item d-grid">
-                                                <button class="btn btn-dark"
-                                                    onClick="docUploadClik('V', <?= $accompany_profile['CUST_ID'] ?>)"
-                                                    type="button">
+                                                        <button class="btn btn-dark" onClick="docUploadClik('V', <?= $accompany_profile['CUST_ID'] ?>)" type="button">
                                                     Vaccination Details
                                                 </button>
                                             </li>
@@ -549,11 +500,8 @@
                                                 <?php
                                                     if ($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' || (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin')) {
                                                     ?>
-                                                <input class="form-control" type="file" onchange="loadFile(event,this)"
-                                                    style="display:none" id="formFile">
-                                                <button type="button" onClick="browseFile()"
-                                                    class="btn btn-secondary flxy_brows btn-sm"><i
-                                                        class="fa-solid fa-upload"></i> Browse</button>
+                                                        <input class="form-control" type="file" onchange="loadFile(event,this)" style="display:none" id="formFile">
+                                                        <button type="button" onClick="browseFile()" class="btn btn-secondary flxy_brows btn-sm"><i class="fa-solid fa-upload"></i> Browse</button>
                                                 <?php
                                                     }
                                                     ?>
@@ -568,8 +516,7 @@
                                         <div class="col-12">
                                             <ul class="nav nav-tabs" id="myTab">
                                                 <li class="nav-item">
-                                                    <a href="#profile" class="nav-link active"
-                                                        data-bs-toggle="tab">Profile Detail</a>
+                                                        <a href="#profile" class="nav-link active" data-bs-toggle="tab">Profile Detail</a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a href="#contact" class="nav-link" data-bs-toggle="tab">Contact
@@ -579,48 +526,31 @@
                                             <div class="tab-content">
                                                 <div class="tab-pane fade show active p-3" id="profile">
                                                     <form id="documentDetailForm">
-                                                        <input type="hidden" value="<?php echo $data['CUST_ID']; ?>"
-                                                            name="DOC_CUST_ID">
-                                                        <input type="hidden" value="<?php echo $data['RESV_ID']; ?>"
-                                                            name="DOC_RESV_ID">
+                                                            <input type="hidden" value="<?php echo $data['CUST_ID']; ?>" name="DOC_CUST_ID">
+                                                            <input type="hidden" value="<?php echo $data['RESV_ID']; ?>" name="DOC_RESV_ID">
                                                         <input type="hidden" value="PROOF" name="DOC_FILE_TYPE">
                                                         <div class="row ">
-                                                            <label for="CUST_TITLE"
-                                                                class="col-sm-3 col-form-label text-start">Title</label>
+                                                                <label for="CUST_TITLE" class="col-sm-3 col-form-label text-start">Title</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text"
-                                                                    value="<?php echo $data['CUST_TITLE']; ?>"
-                                                                    class="form-control form-control-sm" id="CUST_TITLE"
-                                                                    name="CUST_TITLE" placeholder="Title">
+                                                                    <input type="text" value="<?php echo $data['CUST_TITLE']; ?>" class="form-control form-control-sm" id="CUST_TITLE" name="CUST_TITLE" placeholder="Title">
                                                             </div>
                                                         </div>
                                                         <div class="row ">
-                                                            <label for="CUST_FIRST_NAME"
-                                                                class="col-sm-3 col-form-label text-start">First
+                                                                <label for="CUST_FIRST_NAME" class="col-sm-3 col-form-label text-start">First
                                                                 Name</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text"
-                                                                    value="<?php echo $data['CUST_FIRST_NAME']; ?>"
-                                                                    class="form-control form-control-sm"
-                                                                    id="CUST_FIRST_NAME" name="CUST_FIRST_NAME"
-                                                                    placeholder="First Name">
+                                                                    <input type="text" value="<?php echo $data['CUST_FIRST_NAME']; ?>" class="form-control form-control-sm" id="CUST_FIRST_NAME" name="CUST_FIRST_NAME" placeholder="First Name">
                                                             </div>
                                                         </div>
                                                         <div class="row ">
-                                                            <label for="CUST_LAST_NAME"
-                                                                class="col-sm-3 col-form-label text-start">Last
+                                                                <label for="CUST_LAST_NAME" class="col-sm-3 col-form-label text-start">Last
                                                                 Name</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text"
-                                                                    value="<?php echo $data['CUST_LAST_NAME']; ?>"
-                                                                    class="form-control form-control-sm"
-                                                                    id="CUST_LAST_NAME" name="CUST_LAST_NAME"
-                                                                    name="CUST_LAST_NAME" placeholder="Last Name">
+                                                                    <input type="text" value="<?php echo $data['CUST_LAST_NAME']; ?>" class="form-control form-control-sm" id="CUST_LAST_NAME" name="CUST_LAST_NAME" name="CUST_LAST_NAME" placeholder="Last Name">
                                                             </div>
                                                         </div>
                                                         <div class="row ">
-                                                            <label for="CUST_GENDER"
-                                                                class="col-sm-3 col-form-label text-start">Gender</label>
+                                                                <label for="CUST_GENDER" class="col-sm-3 col-form-label text-start">Gender</label>
                                                             <div class="col-sm-9">
                                                                 <div class="form-check mb-2"
                                                                     style="float:left;margin-right:10px">
@@ -646,30 +576,22 @@
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
-                                                            <label for="CUST_NATIONALITY"
-                                                                class="col-sm-3 col-form-label text-start">Nationality</label>
+                                                                <label for="CUST_NATIONALITY" class="col-sm-3 col-form-label text-start">Nationality</label>
                                                             <div class="col-sm-9">
                                                                 <!-- <input type="text" value="<?php echo $data['CUST_NATIONALITY']; ?>" class="form-control form-control-sm" id="CUST_NATIONALITY" name="CUST_NATIONALITY" placeholder="Nationality"> -->
 
-                                                                <select name="CUST_NATIONALITY" id="CUST_NATIONALITY"
-                                                                    data-width="100%"
-                                                                    class="selectpicker CUST_NATIONALITY"
-                                                                    data-live-search="true">
+                                                                    <select name="CUST_NATIONALITY" id="CUST_NATIONALITY" data-width="100%" class="selectpicker CUST_NATIONALITY" data-live-search="true">
                                                                     <option value="">Select</option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="row ">
-                                                            <label for="CUST_DOB"
-                                                                class="col-sm-3 col-form-label text-start">Date of
+                                                                <label for="CUST_DOB" class="col-sm-3 col-form-label text-start">Date of
                                                                 Birth</label>
                                                             <div class="col-sm-9">
                                                                 <!-- <input type="text" value="<?php echo $data['CUST_DOB']; ?>"  class="form-control form-control-sm" id="CUST_DOB" name="CUST_DOB" placeholder="Date of Birth"> -->
                                                                 <div class="input-group mb-2">
-                                                                    <input type="text" id="CUST_DOB" name="CUST_DOB"
-                                                                        value="<?php echo $data['CUST_DOB']; ?>"
-                                                                        class="form-control CUST_DOB form-control-sm"
-                                                                        placeholder="DD-MM-YYYY">
+                                                                        <input type="text" id="CUST_DOB" name="CUST_DOB" value="<?php echo $data['CUST_DOB']; ?>" class="form-control CUST_DOB form-control-sm" placeholder="DD-MM-YYYY">
                                                                     <span class="input-group-append">
                                                                         <span class="input-group-text bg-light d-block">
                                                                             <i class="fa fa-calendar"></i>
@@ -679,21 +601,17 @@
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
-                                                            <label for="CUST_COUNTRY"
-                                                                class="col-sm-3 col-form-label text-start">Res
+                                                                <label for="CUST_COUNTRY" class="col-sm-3 col-form-label text-start">Res
                                                                 Country</label>
                                                             <div class="col-sm-9">
                                                                 <!-- <input type="text" value="<?php echo $data['CUST_COUNTRY']; ?>"  class="form-control form-control-sm" id="CUST_COUNTRY" name="CUST_COUNTRY" placeholder="Res Country"> -->
-                                                                <select name="CUST_COUNTRY" id="CUST_COUNTRY"
-                                                                    data-width="100%" class="selectpicker CUST_COUNTRY"
-                                                                    data-live-search="true">
+                                                                    <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%" class="selectpicker CUST_COUNTRY" data-live-search="true">
                                                                     <option value="">Select</option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
-                                                            <label for="CUST_DOC_TYPE"
-                                                                class="col-sm-3 col-form-label text-start">Document
+                                                                <label for="CUST_DOC_TYPE" class="col-sm-3 col-form-label text-start">Document
                                                                 Type</label>
                                                             <div class="col-sm-9">
                                                                 <!--
@@ -702,9 +620,7 @@
                                                                     class="form-control form-control-sm"
                                                                     id="CUST_DOC_TYPE" name="CUST_DOC_TYPE"
                                                                     placeholder="Document Type"> -->
-                                                                <select name="CUST_DOC_TYPE" id="CUST_DOC_TYPE"
-                                                                    data-width="100%" class="selectpicker CUST_DOC_TYPE"
-                                                                    data-live-search="true">
+                                                                    <select name="CUST_DOC_TYPE" id="CUST_DOC_TYPE" data-width="100%" class="selectpicker CUST_DOC_TYPE" data-live-search="true">
                                                                     <option value="">Select</option>
                                                                     <?php
                                                                         if ($doc_types != NULL) {
@@ -719,28 +635,18 @@
                                                             </div>
                                                         </div>
                                                         <div class="row ">
-                                                            <label for="CUST_DOC_NUMBER"
-                                                                class="col-sm-3 col-form-label text-start">Doc
+                                                                <label for="CUST_DOC_NUMBER" class="col-sm-3 col-form-label text-start">Doc
                                                                 Number</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text"
-                                                                    value="<?php echo $data['CUST_DOC_NUMBER']; ?>"
-                                                                    class="form-control form-control-sm"
-                                                                    id="CUST_DOC_NUMBER" name="CUST_DOC_NUMBER"
-                                                                    placeholder="Doc Number">
+                                                                    <input type="text" value="<?php echo $data['CUST_DOC_NUMBER']; ?>" class="form-control form-control-sm" id="CUST_DOC_NUMBER" name="CUST_DOC_NUMBER" placeholder="Doc Number">
                                                             </div>
                                                         </div>
                                                         <div class="row ">
-                                                            <label for="CUST_DOC_ISSUE"
-                                                                class="col-sm-3 col-form-label text-start">Issue
+                                                                <label for="CUST_DOC_ISSUE" class="col-sm-3 col-form-label text-start">Issue
                                                                 Date</label>
                                                             <div class="col-sm-9">
                                                                 <div class="input-group mb-2">
-                                                                    <input type="text" id="CUST_DOC_ISSUE"
-                                                                        name="CUST_DOC_ISSUE"
-                                                                        value="<?php echo $data['CUST_DOC_ISSUE']; ?>"
-                                                                        class="form-control CUST_DOC_ISSUE form-control-sm"
-                                                                        placeholder="DD-MM-YYYY">
+                                                                        <input type="text" id="CUST_DOC_ISSUE" name="CUST_DOC_ISSUE" value="<?php echo $data['CUST_DOC_ISSUE']; ?>" class="form-control CUST_DOC_ISSUE form-control-sm" placeholder="DD-MM-YYYY">
                                                                     <span class="input-group-append">
                                                                         <span class="input-group-text bg-light d-block">
                                                                             <i class="fa fa-calendar"></i>
@@ -750,23 +656,15 @@
                                                             </div>
                                                         </div>
                                                         <div class="row ">
-                                                            <label for="CUST_PHONE"
-                                                                class="col-sm-3 col-form-label text-start">Phone</label>
+                                                                <label for="CUST_PHONE" class="col-sm-3 col-form-label text-start">Phone</label>
                                                             <div class="col-sm-9">
-                                                                <input type="number"
-                                                                    value="<?php echo $data['CUST_PHONE']; ?>"
-                                                                    class="form-control form-control-sm" id="CUST_PHONE"
-                                                                    name="CUST_PHONE" placeholder="Phone">
+                                                                    <input type="number" value="<?php echo $data['CUST_PHONE']; ?>" class="form-control form-control-sm" id="CUST_PHONE" name="CUST_PHONE" placeholder="Phone">
                                                             </div>
                                                         </div>
                                                         <div class="row ">
-                                                            <label for="CUST_EMAIL"
-                                                                class="col-sm-3 col-form-label text-start">Email</label>
+                                                                <label for="CUST_EMAIL" class="col-sm-3 col-form-label text-start">Email</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text"
-                                                                    value="<?php echo $data['CUST_EMAIL']; ?>"
-                                                                    class="form-control form-control-sm" id="CUST_EMAIL"
-                                                                    name="CUST_EMAIL" placeholder="Email">
+                                                                    <input type="text" value="<?php echo $data['CUST_EMAIL']; ?>" class="form-control form-control-sm" id="CUST_EMAIL" name="CUST_EMAIL" placeholder="Email">
                                                             </div>
                                                         </div>
                                                     </form>
@@ -774,49 +672,33 @@
                                                 <div class="tab-pane fade  p-3" id="contact">
                                                     <form id="documentDetailForm1">
                                                         <div class="row ">
-                                                            <label for="CUST_ADDRESS_1"
-                                                                class="col-sm-3 col-form-label text-start">Address Line
+                                                                <label for="CUST_ADDRESS_1" class="col-sm-3 col-form-label text-start">Address Line
                                                                 1</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text"
-                                                                    value="<?php echo $data['CUST_ADDRESS_1']; ?>"
-                                                                    class="form-control form-control-sm"
-                                                                    id="CUST_ADDRESS_1" name="CUST_ADDRESS_1"
-                                                                    placeholder="Address Line 1">
+                                                                    <input type="text" value="<?php echo $data['CUST_ADDRESS_1']; ?>" class="form-control form-control-sm" id="CUST_ADDRESS_1" name="CUST_ADDRESS_1" placeholder="Address Line 1">
                                                             </div>
                                                         </div>
                                                         <div class="row ">
-                                                            <label for="CUST_ADDRESS_2"
-                                                                class="col-sm-3 col-form-label text-start">Address Line
+                                                                <label for="CUST_ADDRESS_2" class="col-sm-3 col-form-label text-start">Address Line
                                                                 2</label>
                                                             <div class="col-sm-9">
-                                                                <input type="text"
-                                                                    value="<?php echo $data['CUST_ADDRESS_2']; ?>"
-                                                                    class="form-control form-control-sm"
-                                                                    id="CUST_ADDRESS_2" name="CUST_ADDRESS_2"
-                                                                    placeholder="Address Line 2">
+                                                                    <input type="text" value="<?php echo $data['CUST_ADDRESS_2']; ?>" class="form-control form-control-sm" id="CUST_ADDRESS_2" name="CUST_ADDRESS_2" placeholder="Address Line 2">
                                                             </div>
                                                         </div>
                                                         <div class="row mb-2">
-                                                            <label for="CUST_STATE"
-                                                                class="col-sm-3 col-form-label text-start">State
+                                                                <label for="CUST_STATE" class="col-sm-3 col-form-label text-start">State
                                                             </label>
                                                             <div class="col-sm-9">
-                                                                <select name="CUST_STATE" id="CUST_STATE"
-                                                                    data-width="100%" class="selectpicker CUST_STATE"
-                                                                    data-live-search="true">
+                                                                    <select name="CUST_STATE" id="CUST_STATE" data-width="100%" class="selectpicker CUST_STATE" data-live-search="true">
                                                                     <option value="<?php echo $data['CUST_STATE']; ?>">
                                                                         <?php echo $data['CUST_STATE_DESC']; ?></option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="row ">
-                                                            <label for="CUST_CITY"
-                                                                class="col-sm-3 col-form-label text-start">City</label>
+                                                                <label for="CUST_CITY" class="col-sm-3 col-form-label text-start">City</label>
                                                             <div class="col-sm-9">
-                                                                <select name="CUST_CITY" id="CUST_CITY"
-                                                                    data-width="100%" class="selectpicker CUST_CITY"
-                                                                    data-live-search="true">
+                                                                    <select name="CUST_CITY" id="CUST_CITY" data-width="100%" class="selectpicker CUST_CITY" data-live-search="true">
                                                                     <option value="<?php echo $data['CUST_CITY']; ?>">
                                                                         <?php echo $data['CUST_CITY_DESC']; ?></option>
                                                                 </select>
@@ -871,9 +753,7 @@
                                                 <div class="col-md-4">
                                                     <label class="form-label"> Please update your expected time of
                                                         arrival </label>
-                                                    <input type="time" value="<?php echo $data['RESV_ETA']; ?>"
-                                                        name="RESV_ETA" id="RESV_ETA" class="form-control"
-                                                        placeholder="estime Time" />
+                                                        <input type="time" value="<?php echo $data['RESV_ETA']; ?>" name="RESV_ETA" id="RESV_ETA" class="form-control" placeholder="estime Time" />
                                                 </div>
                             </div>
                             </td>
@@ -936,9 +816,7 @@
                             </p>
 
                             <div class="form-check" style="display: flex;">
-                                <input class="form-check-input" type="checkbox"
-                                    <?php echo (trim($data['RESV_ACCP_TRM_CONDI']) == 'Y' ? 'checked' : ''); ?>
-                                    id="agreeTerms">
+                                    <input class="form-check-input" type="checkbox" <?php echo (trim($data['RESV_ACCP_TRM_CONDI']) == 'Y' ? 'checked' : ''); ?> id="agreeTerms">
                                 <label class="form-check-label" for="flexCheckDefault">
                                     I accept the terms and conditions
                                 </label>
@@ -946,37 +824,26 @@
 
                             <div class="row" style="justify-content: right;padding: 48px;">
                                 <div class="col-md-3">
-                                    <button type="button"
-                                        <?php echo $data['DOC_FILE_PATH'] != '' ? 'style="display:none;"' : ''; ?>
-                                        id="clickSignature" class="btn btn-secondary">Click to sign here</button>
+                                        <button type="button" <?php echo $data['DOC_FILE_PATH'] != '' ? 'style="display:none;"' : ''; ?> id="clickSignature" class="btn btn-secondary">Click to sign here</button>
 
-                                    <img id="captureSignature" class="<?= $data['DOC_FILE_PATH'] ? '' : 'd-none' ?>"
-                                        style="width:100%;"
-                                        src="<?= $data['DOC_FILE_PATH'] ? base_url('assets/Uploads/UserDocuments/signature/' . $data['DOC_FILE_PATH']) : '' ?>" />
+                                        <img id="captureSignature" class="<?= $data['DOC_FILE_PATH'] ? '' : 'd-none' ?>" style="width:100%;" src="<?= $data['DOC_FILE_PATH'] ? base_url('assets/Uploads/UserDocuments/signature/' . $data['DOC_FILE_PATH']) : '' ?>" />
                                 </div>
                             </div>
                         </div>
 
                     </div>
                     <div class="flxy_web-footer text-end">
-                        <button type="button" onClick="sliderWebWid('P')" class="btn btn-blue btn-primary"><i
-                                class="fa-solid fa-chevron-left"></i> Back</button>
-                        <button type="button" onClick="sliderWebWid('N')"
-                            class="btn continueDefult btn-blue btn-primary">Continue <i
-                                class="fa-solid fa-chevron-right"></i></button>
+                            <button type="button" onClick="sliderWebWid('P')" class="btn btn-blue btn-primary"><i class="fa-solid fa-chevron-left"></i> Back</button>
+                            <button type="button" onClick="sliderWebWid('N')" class="btn continueDefult btn-blue btn-primary">Continue <i class="fa-solid fa-chevron-right"></i></button>
                         <?php
                             if ($data['RESV_STATUS'] == 'Due Pre Check-In' || (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin' && $data['RESV_STATUS'] == 'Pre Checked-In')) {
                             ?>
-                        <button type="button" onClick="updateSignature('<?= $data['RESV_STATUS'] ?>')"
-                            class="btn btn-success updateSignature signHideClass">Continue <i
-                                class="fa-solid fa-chevron-right"></i></button>
+                                <button type="button" onClick="updateSignature('<?= $data['RESV_STATUS'] ?>')" class="btn btn-success updateSignature signHideClass">Continue <i class="fa-solid fa-chevron-right"></i></button>
                         <?php
                             }
                             if ($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' || (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin')) {
                             ?>
-                        <button type="button" onClick="updateCustomer()"
-                            class="btn saveContinue btn-success hideSaveCont">Save & Continue <i
-                                class="fa-solid fa-chevron-right"></i></button>
+                                <button type="button" onClick="updateCustomer()" class="btn saveContinue btn-success hideSaveCont">Save & Continue <i class="fa-solid fa-chevron-right"></i></button>
                         <?php
                             }
                             ?>
@@ -1023,8 +890,7 @@
 
 </html>
 <?php if (empty($condition)) { ?>
-<div class="modal fade" id="imageCropping" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="imageCropping" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" style="min-width:600px!important;">
         <div class="modal-content">
             <div class="modal-header">
@@ -1038,14 +904,12 @@
             </div>
             <div class="modal-footer flxy_modClass">
                 <span class="btnLeft">
-                    <button type="button" id="clickCropping" class="btn btn-primary btn-sm"><i
-                            class="fa-solid fa-crop"></i></button>
+                        <button type="button" id="clickCropping" class="btn btn-primary btn-sm"><i class="fa-solid fa-crop"></i></button>
                     <button type="button" id="croping" class="btn btn-primary btn-sm"><i class="fa-solid fa-check"></i>
                         Crop</button>
                 </span>
                 <span class="btnRight">
-                    <button type="button" id="saveCropping" class="btn btn-success btn-sm"><i
-                            class="fa-solid fa-floppy-disk"></i> Save</button>
+                        <button type="button" id="saveCropping" class="btn btn-success btn-sm"><i class="fa-solid fa-floppy-disk"></i> Save</button>
                 </span>
             </div>
         </div>
@@ -1641,6 +1505,7 @@ $(document).on('click', '#croping,#saveCropping', function() {
                 $('#clickCropping').removeClass('active');
                 // var listImage = respn['RESPONSE']['OUTPUT'];
                 generaListImage(listImageArr);
+                    checkStatusUploadFiles();
             } else {
                 $('#errorModal').show();
                 var ERROR = respn['RESPONSE']['ERROR'];
@@ -2082,7 +1947,7 @@ function confirmPrecheckin() {
         },
         dataType: 'json',
         success: function(respn) {
-            if (respn.SUCCESS == '1')
+                if(respn.SUCCESS == '1')
                 window.location.href = '<?= base_url('/reservationCheckin') ?>';
         }
     });
