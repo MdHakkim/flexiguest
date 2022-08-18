@@ -141,13 +141,6 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
 
     $routes->get("reservation/get-reservations-list", "ReservationController::getReservationsList");
 
-    $routes->group('maintenance', function ($routes) {
-        $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
-        $routes->get("get-room-list", "MaintenanceController::getRoomList");
-        $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
-        $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
-    });
-
     $routes->group('laundry-amenities', function ($routes) {
         $routes->get("orders-list", "LaundryAmenitiesController::ordersList");
         $routes->post("update-delivery-status", "LaundryAmenitiesController::updateDeliveryStatus");
@@ -155,13 +148,6 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
 
     $routes->get("user-departments", "UserController::userDepartments");
     $routes->get("get-user-by-department", "UserController::getUserByDepartment");
-
-    $routes->group('maintenance', function ($routes) {
-        $routes->post("assign-task", "MaintenanceController::assignTask");
-        $routes->post("update-status", "MaintenanceController::updateStatus");
-        $routes->post("add-comment", "MaintenanceController::addComment");
-        $routes->get("get-comments", "MaintenanceController::getComments");
-    });
 
     $routes->group('asset-tracking', function ($routes) {
         $routes->get("get-assets", "AssetTrackingController::getAssets");
@@ -184,6 +170,19 @@ $routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' =
         $routes->post("mark-subtask-completed-inspected", "HouseKeepingController::markSubtaskCompletedInspected");
         $routes->post("submit-task-note", "HouseKeepingController::submitTaskNote");
         $routes->post("submit-subtask-note", "HouseKeepingController::submitSubtaskNote");
+    });
+
+    $routes->group('maintenance', function ($routes) {
+        $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
+        $routes->get("get-room-list", "MaintenanceController::getRoomList");
+        $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
+        $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
+
+        // work order
+        $routes->post("assign-task", "MaintenanceController::assignTask");
+        $routes->post("update-status", "MaintenanceController::updateStatus");
+        $routes->post("add-comment", "MaintenanceController::addComment");
+        $routes->get("get-comments", "MaintenanceController::getComments");
     });
 });
 
