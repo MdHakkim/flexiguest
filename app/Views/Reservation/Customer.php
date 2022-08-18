@@ -584,6 +584,9 @@ function editCust(sysid) {
                 $.each(data, function(fields, datavals) {
                     var field = $.trim(fields); //fields.trim();
                     var dataval = $.trim(datavals); //datavals.trim();
+                    if (field == 'CUST_BUS_SEGMENT')
+                        dataval = datavals;
+
                     if (field == 'CUST_COUNTRY_DESC' || field ==
                         'CUST_STATE_DESC' || field == 'CUST_CITY_DESC') {
                         return true;
