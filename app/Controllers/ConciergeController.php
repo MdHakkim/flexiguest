@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\ConciergeRepository;
 use App\Libraries\DataTables\ConciergeOfferDataTable;
 use App\Libraries\DataTables\ConciergeRequestDataTable;
 use App\Models\ConciergeOffer;
@@ -21,6 +22,7 @@ class ConciergeController extends BaseController
     private $ConciergeRequest;
     private $Room;
     private $Reservation;
+    private $ConciergeRepository;
 
     public function __construct()
     {
@@ -29,6 +31,7 @@ class ConciergeController extends BaseController
         $this->ConciergeRequest = new ConciergeRequest();
         $this->Room = new Room();
         $this->Reservation = new Reservation();
+        $this->ConciergeRepository = new ConciergeRepository();
     }
 
     public function conciergeOffer()
@@ -58,6 +61,7 @@ class ConciergeController extends BaseController
             'CO_DESCRIPTION' => ['label' => 'Description', 'rules' => 'required'],
             'CO_VALID_FROM_DATE' => ['label' => 'From date', 'rules' => 'required'],
             'CO_VALID_TO_DATE' => ['label' => 'To date', 'rules' => 'required'],
+            'CO_PROVIDER_TITLE' => ['label' => 'Provider title', 'rules' => 'required'],
             'CO_PROVIDER_EMAIL' => ['label' => 'Provider email', 'rules' => 'required|valid_email'],
             'CO_CURRENCY_ID' => [
                 'label' => 'Currency',
@@ -266,9 +270,14 @@ class ConciergeController extends BaseController
         if (!$concierge_request_id)
             return $this->respond(responseJson("-444", false, "db insert/update not successful", $concierge_request_id));
 
-        if (empty($id))
+        if (empty($id)) {
+            $this->ConciergeRepository->sendConciergeRequestEmail([
+                'concierge_offer' => $concierge_offer,
+                'concierge_request' => $data,
+            ]);
+
             $msg = 'Concierge request has been created.';
-        else
+        } else
             $msg = 'Concierge request has been updated.';
 
         return $this->respond(responseJson("200", false, $msg));

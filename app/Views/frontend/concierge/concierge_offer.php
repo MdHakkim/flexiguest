@@ -225,7 +225,7 @@
 
                                             <div class="col-md-6">
 
-                                                <label class="form-label"><b>Provider Title</b></label>
+                                                <label class="form-label"><b>Provider Title *</b></label>
 
                                                 <input type="text" name="CO_PROVIDER_TITLE" class="form-control" placeholder="Provider Title" />
                                             </div>

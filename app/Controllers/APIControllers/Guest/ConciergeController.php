@@ -3,6 +3,8 @@
 namespace App\Controllers\APIControllers\Guest;
 
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\ConciergeRepository;
+use App\Libraries\EmailLibrary;
 use App\Models\ConciergeOffer;
 use App\Models\ConciergeRequest;
 use App\Models\Reservation;
@@ -15,12 +17,14 @@ class ConciergeController extends BaseController
     private $Reservation;
     private $ConciergeOffer;
     private $ConciergeRequest;
+    private $ConciergeRepository;
 
     public function __construct()
     {
         $this->Reservation = new Reservation();
         $this->ConciergeOffer = new ConciergeOffer();
         $this->ConciergeRequest = new ConciergeRequest();
+        $this->ConciergeRepository = new ConciergeRepository();
     }
 
     public function conciergeOffers()
@@ -98,8 +102,14 @@ class ConciergeController extends BaseController
         if (!$concierge_request_id)
             return $this->respond(responseJson(500, true, ['msg' => "db insert/update not successful"]));
 
-        if (empty($id))
+        if (empty($id)) {
+            $this->ConciergeRepository->sendConciergeRequestEmail([
+                'concierge_offer' => $concierge_offer,
+                'concierge_request' => $data,
+            ]);
+            
             $msg = 'Concierge request has been created.';
+        }
         else
             $msg = 'Concierge request has been updated.';
 
