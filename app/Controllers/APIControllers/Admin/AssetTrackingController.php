@@ -37,24 +37,33 @@ class AssetTrackingController extends BaseController
     public function getAssets()
     {
         $rooms = $this->Reservation
-            ->select("distinct(RESV_ID), RESV_ROOM as ROOM_NO, RRA_ROOM_ID as ROOM_ID, 
-                    concat(CUST_FIRST_NAME, ' ', CUST_LAST_NAME) as GUEST_NAME,
-                    RRA_STATUS")
-            ->join('FLXY_RESERVATION_ROOM_ASSETS', 'RESV_ID = RRA_RESERVATION_ID', 'left')
+            ->select("distinct(RESV_ID), RESV_ROOM as ROOM_NO, RM_ID as ROOM_ID,
+                    concat(CUST_FIRST_NAME, ' ', CUST_LAST_NAME) as GUEST_NAME")
+            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
             ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
             ->where('RESV_STATUS', 'Checked-In')
-            ->where("RRA_STATUS != 'Requested'")
             ->findAll();
 
+
+
         foreach ($rooms as $index => $room) {
-            $rooms[$index]['ASSETS'] = $this->ReservationRoomAsset
-                ->select("AS_ID, AS_ASSET, RA_QUANTITY, RRA_STATUS, RRA_TRACKING_REMARKS, RRA_ID,
+            $assets = $this->ReservationRoomAsset
+                ->select("AS_ID, AS_ASSET, AS_PRICE, RA_QUANTITY, RRA_STATUS, RRA_TRACKING_REMARKS, RRA_ID,
                 case when RRA_STATUS = 'Verified' then 1 else 0 end as IS_VERIFIED")
                 ->join('FLXY_ROOM_ASSETS', 'RRA_ROOM_ID = RA_ROOM_ID and  RRA_ASSET_ID = RA_ASSET_ID', 'left')
                 ->join('FLXY_ASSETS', 'RRA_ASSET_ID = AS_ID', 'left')
                 ->where('RRA_RESERVATION_ID', $room['RESV_ID'])
                 ->where('RRA_ROOM_ID', $room['ROOM_ID'])
                 ->findAll();
+            
+            if(!count($assets)) {
+                unset($rooms[$index]);
+            }
+            else{
+                $rooms[$index]['RRA_STATUS'] = ($assets[0]['RRA_STATUS'] == 'Verified' || $assets[0]['RRA_STATUS'] == 'Discrepancy') 
+                                                ? 'Verified' : $assets[0]['RRA_STATUS']; 
+                $rooms[$index]['ASSETS'] = $assets;
+            }
         }
 
         return $this->respond(responseJson(200, false, ['msg' => 'assets list'], $rooms));
@@ -64,10 +73,10 @@ class AssetTrackingController extends BaseController
     {
         $assets = $this->request->getVar('assets');
 
-        foreach($assets as $asset) {
+        foreach ($assets as $asset) {
 
             $status = 'Discrepancy';
-            if($asset->IS_VERIFIED)
+            if ($asset->IS_VERIFIED)
                 $status = 'Verified';
 
             $data = [
@@ -81,5 +90,4 @@ class AssetTrackingController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'Form Submitted']));
     }
-
 }

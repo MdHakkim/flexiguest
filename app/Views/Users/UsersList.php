@@ -817,6 +817,10 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                         {
                           $('#USR_CONFIRM_PASSWORD').val($('#USR_PASSWORD').val());
                         }
+
+                        else if(field == 'USR_DOB' || field == 'USR_DOJ') {
+                            $('#' + field).datepicker("setDate", new Date(dataval));
+                          } 
                         else{
                            
                             $('#' + field).val(dataval);

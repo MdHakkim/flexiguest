@@ -884,8 +884,7 @@ class APIController extends BaseController
                     $this->ApplicatioController->attachAssetList($USR_ID, $resID);
 
                 $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT'])]);
-            }
-            else
+            } else
                 $result = responseJson(500, true, ["msg" => "Failed to upload image or updation in reservation"]);
 
 
@@ -1008,16 +1007,19 @@ class APIController extends BaseController
         }
 
         foreach ($data as $i => $maintenance_request) {
-            $attachments = explode(",", $maintenance_request['MAINT_ATTACHMENT']);
+            $attachments = [];
+            if ($maintenance_request['MAINT_ATTACHMENT']) {
+                $attachments = explode(",", $maintenance_request['MAINT_ATTACHMENT']);
 
-            foreach ($attachments as $j => $attachment) {
-                $name = $attachment;
-                $url = base_url("assets/Uploads/Maintenance/$attachment");
+                foreach ($attachments as $j => $attachment) {
+                    $name = $attachment;
+                    $url = base_url("assets/Uploads/Maintenance/$attachment");
 
-                $attachment_array = explode(".", $attachment);
-                $type = end($attachment_array);
+                    $attachment_array = explode(".", $attachment);
+                    $type = end($attachment_array);
 
-                $attachments[$j] = ['name' => $name, 'url' => $url, 'type' => $type];
+                    $attachments[$j] = ['name' => $name, 'url' => $url, 'type' => $type];
+                }
             }
 
             $data[$i]['MAINT_ATTACHMENT'] = $attachments;

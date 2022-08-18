@@ -55,7 +55,8 @@ class PropertyInfoController extends BaseController
         if ($this->request->getFile('PI_FILE')) {
             $file = $this->request->getFile('PI_FILE');
 
-            $file_name = 'HospitalityBrochure.pdf';
+            // $file_name = 'HospitalityBrochure.pdf';
+            $file_name = $file->getName();
             $directory = "assets/Uploads/handbook/";
 
             $folder_path = "{$_SERVER['DOCUMENT_ROOT']}/assets/Uploads/handbook/$file_name"; // for live

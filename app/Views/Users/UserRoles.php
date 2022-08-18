@@ -337,7 +337,18 @@
 
                     <div class="row mb-3">
                       <div class="col-md-4">
-                        <label for="html5-text-input" class="col-form-label"><b>DOJ
+
+                      <label class="form-label"><b>DOJ *</b></label>
+                                <div class="input-group mb-6">
+                                    <input type="text" id="USR_DOJ" name="USR_DOJ"
+                                        class="form-control USR_DOJ" placeholder="d-Mon-yyyy" required />
+                                    <span class="input-group-append">
+                                        <span class="input-group-text bg-light d-block">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                        <!-- <label for="html5-text-input" class="col-form-label"><b>DOJ
                             *</b></label>
                         <div class="col-md-12">
                           <div class="input-group">
@@ -348,7 +359,7 @@
                               </span>
                             </span>
                           </div>
-                        </div>
+                        </div> -->
                       </div>
 
                       <div class="col-md-4">
@@ -482,15 +493,24 @@
 
     loadRoles();
     roleList();
-
     $('#USR_DOB').datepicker({
-        format: 'd-M-yyyy',
-        autoclose: true,
+        format: 'dd-M-yyyy',
+        setDate: '<?php date('d-M-Y'); ?>',
+        autoclose: true
     });
     $('#USR_DOJ').datepicker({
-        format: 'd-M-yyyy',
-        autoclose: true,
+        format: 'dd-M-yyyy',
+        setDate: '<?php date('d-M-Y'); ?>',
+        autoclose: true
     });
+    // $('#USR_DOB').datepicker({
+    //     format: 'd-MMM-yyyy',
+    //     autoclose: true,
+    // });
+    // $('#USR_DOJ').datepicker({
+    //     format: 'd-MMM-yyyy',
+    //     autoclose: true,
+    // });
     
 
     // Users datatable
@@ -857,7 +877,7 @@
 
 
 
-    $(document).on('show.bs.modal', '.modal', function() {
+    $(document).on('show.bs.modal', '#addRoleModal', function() {
       var maxZ = parseInt($('.modal-backdrop').css('z-index')) || 1090;
       $('.modal:visible').each(function() {
         maxZ = Math.max(parseInt($(this).css('z-index')), maxZ);
@@ -870,7 +890,7 @@
 
 
 
-    $(document).on('hidden.bs.modal', '.modal', function() {
+    $(document).on('hidden.bs.modal', '#addRoleModal', function() {
       if ($('.modal:visible').length) {
         $(document.body).addClass('modal-open');
         var maxZ = 1040;
@@ -981,6 +1001,7 @@
                 $('#selectAll').prop('checked', true);
 
             }
+           
             else{
               $('#' + field).val(dataval);
             }
@@ -1184,7 +1205,11 @@
 
             } else if (field == 'USR_PASSWORD') {
               $('#USR_CONFIRM_PASSWORD').val($('#USR_PASSWORD').val());
-            } else {
+            }            
+            else if(field == 'USR_DOB' || field == 'USR_DOJ') {
+              $('#' + field).datepicker("setDate", new Date(dataval));
+            } 
+            else {
 
               $('#' + field).val(dataval);
             }
