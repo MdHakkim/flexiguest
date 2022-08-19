@@ -62,7 +62,7 @@ class ConciergeController extends BaseController
             'CR_GUEST_NAME' => ['label' => 'Guest Name', 'rules' => 'required'],
             'CR_GUEST_EMAIL' => ['label' => 'Guest Email', 'rules' => 'required|valid_email'],
             'CR_GUEST_PHONE' => ['label' => 'Guest Phone', 'rules' => 'required'],
-            'CR_PREFERRED_DATE' => ['label' => 'Preffered Date', 'rules' => 'required'],
+            'CR_PREFERRED_DATE' => ['label' => 'Preferred Date', 'rules' => 'required'],
         ];
 
         if (!$this->validate($rules))
