@@ -969,7 +969,7 @@ class APIController extends BaseController
 
         $ins = $this->DB->table('FLXY_MAINTENANCE')->insert($data);
         if ($ins)
-            $result = responseJson(200, true, ["msg" => "Maintenance request created"]);
+            $result = responseJson(200, false, ["msg" => "Maintenance request created"]);
         else
             $result = responseJson(500, true, ["msg" => "Creation Failed"]);
 
