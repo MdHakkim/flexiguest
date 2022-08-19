@@ -22,6 +22,7 @@ class ConciergeRequest extends Model
         'CR_NET_AMOUNT',
         'CR_STATUS',
         'CR_PREFERRED_DATE',
+        'CR_PREFERRED_TIME',
         'CR_CREATED_BY',
         'CR_UPDATED_BY',
     ];

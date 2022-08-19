@@ -251,6 +251,10 @@ class ConciergeController extends BaseController
             'CR_PREFERRED_DATE' => [
                 'label' => 'Preferred Date',
                 'rules' => 'required'
+            ],
+            'CR_PREFERRED_TIME' => [
+                'label' => 'Preferred Time',
+                'rules' => 'required'
             ]
         ];
 

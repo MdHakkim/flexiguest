@@ -170,6 +170,11 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Preferred Time *</b></label>
+                                <input type="time" name="CR_PREFERRED_TIME" class="form-control" />
+                            </div>
+
                             <div class="col-md-12">
 
                                 <label class="form-label"><b>Remarks</b></label>
@@ -538,10 +543,7 @@
     function resetConciergeRequestForm() {
         let id = "concierge-request-form";
 
-        $(`#${id} input[type='hidden']`).val('');
-        $(`#${id} input[type='text']`).val('');
-        $(`#${id} input[type='email']`).val('');
-        $(`#${id} input[type='number']`).val('');
+        $(`#${id} input`).val('');
         $(`#${id} select`).val('').trigger('change');
         $(`#${id} #CR_QUANTITY`).val('1');
     }
