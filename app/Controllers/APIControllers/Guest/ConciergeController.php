@@ -4,7 +4,6 @@ namespace App\Controllers\APIControllers\Guest;
 
 use App\Controllers\BaseController;
 use App\Controllers\Repositories\ConciergeRepository;
-use App\Libraries\EmailLibrary;
 use App\Models\ConciergeOffer;
 use App\Models\ConciergeRequest;
 use App\Models\Reservation;
@@ -105,7 +104,7 @@ class ConciergeController extends BaseController
         if (empty($id)) {
             $this->ConciergeRepository->sendConciergeRequestEmail([
                 'concierge_offer' => $concierge_offer,
-                'concierge_request' => $data,
+                'concierge_request' => (array) $data,
             ]);
             
             $msg = 'Concierge request has been created.';
