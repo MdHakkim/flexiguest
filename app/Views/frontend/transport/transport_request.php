@@ -553,6 +553,10 @@
                 format: 'yyyy-mm-dd',
                 autoclose: true,
             });
+            $('input[name="TR_FLIGHT_DATE"]').datepicker({
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+            });
 
             const wizard_form = $(".wizard-numbered")[0];
             if (typeof wizard_form !== undefined && wizard_form !== null) {
