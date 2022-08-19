@@ -460,6 +460,9 @@
                                             <span>${stop.SHUTL_STAGE_NAME}</span>
                                         </span>
 
+                                        <span>
+                                            ${stop.FSR_DURATION_MINS} Mins
+                                        </span>
                                         <i onClick="removeShuttleStop(${stop.FSR_ID})" class="text-danger cursor-pointer fa-solid fa-xmark"></i>
                                     </li>
                         `;
