@@ -593,12 +593,14 @@ class ReservationController extends BaseController
 
 
     public function RateCategory(){ 
-        $option = '';
-      
+        $option = '';      
         $rate_class_id = $this->request->getPost('rate_class_id');
 
         $sql = "SELECT RT_CT_ID, RT_CT_CODE, RT_CT_DESC
-                FROM FLXY_RATE_CATEGORY WHERE RT_CL_ID = ".$rate_class_id;           
+                FROM FLXY_RATE_CATEGORY WHERE 1 = 1"; 
+                
+        if(!empty(trim($rate_class_id)))
+            $sql .= " AND RT_CL_ID = ".$rate_class_id;           
 
         $response = $this->DB->query($sql)->getResultArray();
 
@@ -614,9 +616,18 @@ class ReservationController extends BaseController
     public function RateCodes(){ 
         $option = '';          
         $rate_category_id = $this->request->getPost('rate_category_id');
+        $rate_class_id = $this->request->getPost('rate_class_id');
 
         $sql = "SELECT RT_CD_ID, RT_CD_CODE, RT_CD_DESC
-                FROM FLXY_RATE_CODE WHERE RT_CT_ID = ".$rate_category_id;           
+                FROM FLXY_RATE_CODE WHERE 1 = 1";
+
+        if(!empty(trim($rate_category_id)))
+            $sql .= " AND RT_CT_ID = ".$rate_category_id;
+
+        if(!empty(trim($rate_class_id)))
+            $sql .= " AND RT_CT_ID IN ( SELECT RT_CT_ID 
+                                        FROM FLXY_RATE_CATEGORY 
+                                        WHERE RT_CL_ID = ".$rate_class_id.")";        
 
         $response = $this->DB->query($sql)->getResultArray();
 

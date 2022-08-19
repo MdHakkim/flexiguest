@@ -674,22 +674,22 @@
                                         placeholder="IATA no" />
                                 </div>
                                 <div class="col-md-3 flxi_ds_flx">
-                                    <div class="form-check mt-3 me-1">
+                                    <div class="form-check mt-4 me-3">
                                         <input class="form-check-input flxCheckBox" type="checkbox"
                                             id="RESV_CLOSED_CHK">
-                                        <label class="form-check-lable" for="defaultCheck1"> Closed </label>
+                                        <label class="form-label" for="RESV_CLOSED_CHK"> Closed </label>
                                     </div>
-                                    <div class="form-check mt-3 me-1">
+                                    <div class="form-check mt-4 me-3">
                                         <input class="form-check-input flxCheckBox" type="checkbox" value="N"
                                             id="RESV_DAY_USE_CHK">
                                         <!-- <input type="hidden" name="RESV_DAY_USE" id="RESV_DAY_USE" value="N" class="form-control" /> -->
-                                        <label class="form-check-lable" for="defaultCheck1"> Day Use </label>
+                                        <label class="form-label" for="RESV_DAY_USE_CHK"> Day Use </label>
                                     </div>
-                                    <div class="form-check mt-3">
+                                    <div class="form-check mt-4">
                                         <input class="form-check-input flxCheckBox" type="checkbox" value="N"
                                             id="RESV_PSEUDO_CHK">
                                         <!-- <input type="hidden" name="RESV_PSEUDO" id="RESV_PSEUDO" value="N" class="form-control" /> -->
-                                        <label class="form-check-lable" for="defaultCheck1"> Pseudo </label>
+                                        <label class="form-label" for="RESV_PSEUDO_CHK"> Pseudo </label>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -3212,6 +3212,14 @@ function generateRateQuery(mode = 'AVG') {
         formData['mode'] = mode;
     });
 
+    // Room Class filter
+    formData['RESV_ROOM_CLASS'] = $('.window-1').is(':visible') ? $('#RESV_ROOM_CLASS').val() : '';
+
+    // Rate Code, Category, Class filters
+    formData['RESV_RATE_CODE'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CODE').val() : '';
+    formData['RESV_RATE_CATEGORY'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CATEGORY').val() : ''; 
+    formData['RESV_RATE_CLASS'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CLASS').val() : ''; 
+
     // Closed and Day Use filters
 
     formData['resv_room_type'] = $('#RESV_RM_TYPE').val();
@@ -3300,9 +3308,12 @@ function getRoomRateDetails(rateCodeInfo, roomTypeInfo) {
     if (rateCodeInfo)
         info += rateCodeInfo + ', ';
 
-    info += roomTypeInfo;
+    if (roomTypeInfo)
+        info += roomTypeInfo;
 
-    $('#roomRateInfo').html(info);
+    info = info == '' ? 'None' : info;
+
+    $('#roomRateInfo').html(info); //alert(info);
 }
 
 function selectRate() {
@@ -3703,7 +3714,7 @@ function addResvation() {
     $('#RESV_CONFIRM_YN,#RESV_NO_POST,#RESV_PICKUP_YN,#RESV_DROPOFF_YN,#RESV_EXT_PRINT_RT,#RESV_FIXED_RATE').val('N');
 }
 
-$(document).on('click', '.flxCheckBox', function() {
+$(document).on('change', '.flxCheckBox', function() {
     var checked = $(this).is(':checked');
     var parent = $(this).parent();
     if (checked) {
@@ -3711,6 +3722,12 @@ $(document).on('click', '.flxCheckBox', function() {
     } else {
         parent.find('input[type=hidden]').val('N');
     }
+
+    if ($(this).attr('id') == 'RESV_CLOSED_CHK')
+        $('#closedRateFilter').prop('checked', checked);
+    else if ($(this).attr('id') == 'RESV_DAY_USE_CHK')
+        $('#dayUseRateFilter').prop('checked', checked);
+
 });
 
 $(document).on('change', '*#RESV_NAME', function() {
@@ -5780,42 +5797,60 @@ function RateClassList() {
 
 $("#RESV_RATE_CLASS").change(function(e, param = 0) {
     var rate_class_id = $(this).val();
-    if (rate_class_id > 0) {
-        $.ajax({
-            url: '<?php echo base_url('/RateCategory') ?>',
-            type: "post",
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            data: {
-                rate_class_id: rate_class_id
-            },
-            success: function(respn) {
-                $('#RESV_RATE_CATEGORY').html('<option value="">Select</option>');
-                $('#RESV_RATE_CATEGORY').html(respn);
-            }
-        });
-    }
+    //if (rate_class_id > 0) {
+    $.ajax({
+        url: '<?php echo base_url('/RateCategory') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            rate_class_id: rate_class_id
+        },
+        success: function(respn) {
+            $('#RESV_RATE_CATEGORY').html('<option value="">Select</option>');
+            $('#RESV_RATE_CATEGORY').html(respn);
+        }
+    });
+
+    $.ajax({
+        url: '<?php echo base_url('/RateCodes') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            rate_class_id: rate_class_id
+        },
+        success: function(respn2) {
+            $('#RESV_RATE_CODE').html('<option value="">Select</option>');
+            $('#RESV_RATE_CODE').html(respn2);
+        }
+    });
+    //}
 });
 
 $("#RESV_RATE_CATEGORY").change(function(e, param = 0) {
+    var rate_class_id = $("#RESV_RATE_CLASS").val();
     var rate_category_id = $(this).val();
-    if (rate_category_id > 0) {
-        $.ajax({
-            url: '<?php echo base_url('/RateCodes') ?>',
-            type: "post",
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            data: {
-                rate_category_id: rate_category_id
-            },
-            success: function(respn) {
-                $('#RESV_RATE_CODE').html('<option value="">Select</option>');
-                $('#RESV_RATE_CODE').html(respn);
-            }
-        });
-    }
+
+    //if (rate_category_id > 0) {
+    $.ajax({
+        url: '<?php echo base_url('/RateCodes') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            rate_class_id: rate_class_id,
+            rate_category_id: rate_category_id
+        },
+        success: function(respn) {
+            $('#RESV_RATE_CODE').html('<option value="">Select</option>');
+            $('#RESV_RATE_CODE').html(respn);
+        }
+    });
+    //}
 });
 
 

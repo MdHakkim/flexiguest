@@ -3031,6 +3031,19 @@ class ApplicatioController extends BaseController
             $RESV_ADULTS=$this->request->getPost('RESV_ADULTS');
             $RESV_CHILDREN=$this->request->getPost('RESV_CHILDREN');
 
+            $RESV_ROOM_CLASS = $this->request->getPost('RESV_ROOM_CLASS');
+            $room_class_filter = !empty($RESV_ROOM_CLASS) ? " AND RM_TY_ROOM_CLASS = '".$RESV_ROOM_CLASS."'" : "";
+
+            $RESV_RATE_CLASS = $this->request->getPost('RESV_RATE_CLASS');
+            $RESV_RATE_CATEGORY = $this->request->getPost('RESV_RATE_CATEGORY');
+            $RESV_RATE_CODE = $this->request->getPost('RESV_RATE_CODE');
+            
+            $rate_code_filter = (!empty($RESV_RATE_CODE) ? " AND RT_CD_ID = '".$RESV_RATE_CODE."'" : 
+                                (!empty($RESV_RATE_CATEGORY) ? " AND RT_CT_ID = '".$RESV_RATE_CATEGORY."'" : 
+                                (!empty($RESV_RATE_CLASS) ? " AND RT_CT_ID IN ( SELECT RT_CT_ID 
+                                                                                FROM FLXY_RATE_CATEGORY 
+                                                                                WHERE RT_CL_ID = '".$RESV_RATE_CLASS."')" : "")));
+
             $RESV_ROOM_TYPE = $this->request->getPost('resv_room_type');
             $RESV_RATE = $this->request->getPost('resv_rate');
             
@@ -3044,13 +3057,19 @@ class ApplicatioController extends BaseController
                         'TODAYDATE'=> $TODAYDATE
                      ];
 
-            $sql="SELECT RM_TY_CODE, RM_TY_DESC, RM_TY_TOTAL_ROOM,TOTAL_OVER_BOOKING FROM 
-			(SELECT RM_TY_CODE,(RM_TY_TOTAL_ROOM) RM_TY_TOTAL_ROOM, RM_TY_DESC,
-			(RM_TY_TOTAL_ROOM)TOTAL_OVER_BOOKING,
-			ROW_NUMBER() OVER (PARTITION BY RM_TY_CODE ORDER BY RM_TY_CODE) AS ROW_NUMBER
-			FROM FLXY_ROOM_TYPE ROOMTYTB
-			LEFT JOIN FLXY_OVERBOOKING OVERBTB ON RM_TY_CODE=OB_RM_TYPE 
-			AND (:ARRIVAL_DT: BETWEEN  OB_FROM_DT AND OB_UPTO_DT AND :DEPARTURE_DT: BETWEEN  OB_FROM_DT AND OB_UPTO_DT))MAIN_DATA WHERE ROW_NUMBER=1 ORDER BY RM_TY_CODE ASC";
+            $sql = "SELECT RM_TY_CODE, RM_TY_DESC, RM_TY_TOTAL_ROOM, TOTAL_OVER_BOOKING 
+                    FROM 
+			            (   SELECT  RM_TY_CODE,(RM_TY_TOTAL_ROOM) RM_TY_TOTAL_ROOM, RM_TY_DESC, RM_TY_ROOM_CLASS,
+			                        (RM_TY_TOTAL_ROOM)TOTAL_OVER_BOOKING,
+			                        ROW_NUMBER() OVER (PARTITION BY RM_TY_CODE ORDER BY RM_TY_CODE) AS ROW_NUMBER
+			                FROM    FLXY_ROOM_TYPE ROOMTYTB
+                			LEFT JOIN FLXY_OVERBOOKING OVERBTB  ON RM_TY_CODE = OB_RM_TYPE 
+			                                                    AND ( :ARRIVAL_DT: BETWEEN OB_FROM_DT AND OB_UPTO_DT 
+                                                                      AND :DEPARTURE_DT: BETWEEN OB_FROM_DT AND OB_UPTO_DT ) 
+                        ) MAIN_DATA 
+                    WHERE ROW_NUMBER = 1 
+                    $room_class_filter
+                    ORDER BY RM_TY_CODE ASC";
             
             $response = $this->Db->query($sql,$param)->getResultArray();
             // print_r($response);exit;
@@ -3062,34 +3081,37 @@ class ApplicatioController extends BaseController
                 $groupby=' GROUP BY value,RT_CD_ID,RT_DESCRIPTION,RT_INFO ORDER BY RT_CD_ID,ROOM_TYPE ASC';
             }
 
-            $closed  = $RATE_CLOSED == 1 ? "" : "WHERE ( :ARRIVAL_DT: BETWEEN RT_CD_START_DT AND RT_CD_END_DT 
-                                                         AND :DEPARTURE_DT: BETWEEN RT_CD_START_DT AND RT_CD_END_DT
-                                                       )";
+            $closed  = $RATE_CLOSED == 1 ? "" : "AND ( :ARRIVAL_DT: BETWEEN RT_CD_START_DT AND RT_CD_END_DT 
+                                                       AND :DEPARTURE_DT: BETWEEN RT_CD_START_DT AND RT_CD_END_DT
+                                                     )";
             $day_use = $RATE_DAY_USE == 1 ? "" : "AND RT_CD_DAY_USE != 1";
 
             $sqlRate = "SELECT RT_DESCRIPTION, RT_INFO, RT_CD_ID, value as ROOM_TYPE, $operation
-            FROM (SELECT (SELECT RT_CD_CODE FROM FLXY_RATE_CODE WHERE RATEQUERY.RT_CD_ID=RT_CD_ID)RT_DESCRIPTION, 
-                         (SELECT RT_CD_DESC FROM FLXY_RATE_CODE WHERE RATEQUERY.RT_CD_ID=RT_CD_ID)RT_INFO, RATEQUERY.*,
-            CASE 
-            WHEN 1 = '$RESV_ADULTS' THEN CAST(RT_CD_DT_1_ADULT AS DECIMAL(10, 2))
-            WHEN 2 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_2_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
-            WHEN 3 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_3_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
-            WHEN 4 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_4_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
-            WHEN 5 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_5_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
-            ELSE (CAST(ISNULL(RT_CD_DT_5_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))+CAST(ISNULL(RT_CD_DT_EXTRA_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2)))
-            END AS ACTUAL_ADULT_PRICE
-            FROM (
-                    SELECT * FROM FLXY_RATE_CODE_DETAIL RT_DETAIL 
-                    WHERE EXISTS(   SELECT RT_CD_ID FROM FLXY_RATE_CODE 
-                                    WHERE :TODAYDATE: BETWEEN RT_CD_BEGIN_SELL_DT AND RT_CD_END_SELL_DT
-                                    AND RT_CD_ID = RT_DETAIL.RT_CD_ID 
-                                    AND RT_CD_NEGOTIATED != 1 
-                                    $day_use
-                                )
-                 ) RATEQUERY 
-            $closed
-            ) TEMP_QUERY CROSS APPLY STRING_SPLIT(RT_CD_DT_ROOM_TYPES,',')
-            $groupby";
+                        FROM (SELECT 
+                                (SELECT RT_CD_CODE FROM FLXY_RATE_CODE WHERE RATEQUERY.RT_CD_ID=RT_CD_ID)RT_DESCRIPTION, 
+                                (SELECT RT_CD_DESC FROM FLXY_RATE_CODE WHERE RATEQUERY.RT_CD_ID=RT_CD_ID)RT_INFO, RATEQUERY.*,
+                                CASE 
+                                    WHEN 1 = '$RESV_ADULTS' THEN CAST(RT_CD_DT_1_ADULT AS DECIMAL(10, 2))
+                                    WHEN 2 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_2_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
+                                    WHEN 3 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_3_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
+                                    WHEN 4 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_4_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
+                                    WHEN 5 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_5_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
+                                ELSE (CAST(ISNULL(RT_CD_DT_5_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))+CAST(ISNULL(RT_CD_DT_EXTRA_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2)))
+                                END AS ACTUAL_ADULT_PRICE
+                              FROM (
+                                        SELECT * FROM FLXY_RATE_CODE_DETAIL RT_DETAIL 
+                                        WHERE EXISTS(   SELECT RT_CD_ID FROM FLXY_RATE_CODE 
+                                                        WHERE :TODAYDATE: BETWEEN RT_CD_BEGIN_SELL_DT AND RT_CD_END_SELL_DT
+                                                        AND RT_CD_ID = RT_DETAIL.RT_CD_ID 
+                                                        AND RT_CD_NEGOTIATED != 1 
+                                                        $day_use
+                                                        $rate_code_filter
+                                                    )
+                                   ) RATEQUERY 
+                              WHERE 1 = 1     
+                              $closed
+                            ) TEMP_QUERY CROSS APPLY STRING_SPLIT(RT_CD_DT_ROOM_TYPES,',')
+                        $groupby";
 
             $rateresult = $this->Db->query($sqlRate,$param)->getResultArray();  
             $roomType='';
