@@ -1,14 +1,15 @@
-<?= $this->extend("Layout/AppView") ?>
+<?= $this->extend("Layout/CalendarView") ?>
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/SuccessReport') ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <style>
+
   #calendar {
       max-width: 1100px;
       margin: 40px auto;
       font-size: 14px;
     }
-    .fc-time{ display : none; } 
+    .fc-time{ display : none !important; } 
     .fc-event-time { display: none }
     
     
@@ -37,6 +38,20 @@
   }
   .fc-resource-area col.fc-main-col {
     width: 35% !important;
+}
+.tooltip
+{
+opacity: 1;
+}
+#errorModal{
+  display: none;
+}
+#errorModal{
+    position: fixed;
+    top: 10px;
+    right: 22px;
+    z-index: 10000;
+    width: 500px;
 }
   
   </style>
@@ -308,6 +323,7 @@ var calendarEl = document.getElementById('calendar');
 var calendar = new FullCalendar.Calendar(calendarEl, {
 //schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
 schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+//titleFormat: 'YYYY-MM-DD',
 timeZone: 'UTC',
 plugins: [ 'resourceTimeline', 'interaction' ],
 
@@ -322,13 +338,16 @@ center: 'title',
 right: ''
 
 },
-slotDuration: '24:00',
+
 
 aspectRatio: 1.5,
 
 defaultView: 'resourceTimelineWeek',
-editable: true,
 
+slotLabelFormat: [{ weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true }],
+slotLabelInterval: { days: 1 },
+
+editable: true,
 
 resourceAreaWidth: '35%',
 
@@ -391,15 +410,15 @@ render: function(resource, el) {
     <?php
         if (!empty($RoomReservations)) {
             foreach ($RoomReservations as $row) {
-                $start = $row['RESV_ARRIVAL_DT'];
-                $startDate = '2022-08-13';
+                $start = date("Y-m-d H:i:s", strtotime($row['RESV_ARRIVAL_DT']));
+                //$startDate = '2022-08-15';
 
-                $end = $row['RESV_DEPARTURE'];
-                $endDate = '2022-08-14';
+                $end = date("Y-m-d 23:59:59", strtotime($row['RESV_DEPARTURE']));
+                //$endDate = '2022-08-18 23:00:00';
         ?> {
         id: '<?php echo $row['RESV_ID'] ?>',
         resourceId: '<?php echo $row['RM_ID'] ?>',
-        title: '<?php echo $row['FULLNAME']; ?>',
+        title: '<?php echo $row['FULLNAME'].' - '.$row['RESV_STATUS']; ?>',
         start: '<?php echo $start; ?>',
         end: '<?php echo $end; ?>',
         backgroundColor:"#ccc",
@@ -421,26 +440,125 @@ render: function(resource, el) {
     //   textColor:"#fff"
     // }
   ],
-  // eventRender: function (info) {
-  //      // console.log(info.event.id);
-  //       //{description: "Lecture", department: "BioChemistry"}
-  // },
-  eventDrop: function(info) {
+  // eventDidMount: function(info) {
+  //     var tooltip = new Tooltip(info.el, {
+  //       title: info.event.extendedProps.title,
+  //       placement: 'top',
+  //       trigger: 'hover',
+  //       container: 'body'
+  //     });
+  //   },
+    eventRender: function(info) {
+      var tooltip = new Tooltip(info.el, {
+        title: info.event.extendedProps.title,
+        placement: 'top',
+        trigger: 'hover',
+        container: 'body'
+      });
+    },
+    // eventRender: function(event, element) {
+    //         element.attr('title', event.tip);
+    //     },
+    
+  eventDrop: function(info) {    
     console.log(info);
-    alert(info.event.title + " was dropped on " + info.event.start.toISOString()+"stop"+info.event.end.toISOString());
-      if (confirm("Are you sure about this change?")) {
-        alert(info.oldResource.extendedProps.room);
-        alert(info.newResource.extendedProps.room)
+   // console.log(info.newResource.id)
+   //alert(info.event.title + " was dropped on " + info.event.start.toISOString()+"stop"+info.event.end.toISOString());
+    let RESV_ID  = info.event.id;
+    let START    =   info.event.start;
+    let s        = new Date(START);
+    START        = s.toISOString(START); 
+    let END      =    info.event.end;
+    let e        = new Date(END);
+    END          = e.toISOString(END); 
+    let OLD_ROOM_ID =   (info.oldResource != null)?info.oldResource.id:'';
+    let NEW_ROOM_ID =   (info.newResource != null)?info.newResource.id:'';
+    let OLD_ROOM =   (info.oldResource != null)?info.oldResource.extendedProps.room:'';
+    let NEW_ROOM =   (info.newResource != null)?info.newResource.extendedProps.room:'';
+    
+      if (confirm("Are you sure about this change?")) {        
         $.ajax({
-   url: '<?php echo base_url('/updateReservation') ?>',
-   data: 'title=' + info.event.title + '&start='+ info.event.start +'&end=' + info.event.end + '&id=' + info.event.id ,
-   type: "POST",
-   success: function(json) {   
-    alert("Updated Successfully");
-   }
-   });
+            url: '<?php echo base_url('/updateRoomPlan') ?>',
+            data: 'RESV_ID=' + RESV_ID + '&START='+ START +'&END=' + END + '&OLD_ROOM_ID=' +OLD_ROOM_ID + '&NEW_ROOM_ID=' +NEW_ROOM_ID + '&OLD_ROOM=' +OLD_ROOM + '&NEW_ROOM=' +NEW_ROOM,
+            type: "POST",
+            dataType: 'json',
+            success: function(data) {              
+              if( data.status_message != '' )  
+              {
+                var mcontent = '';               
+                mcontent += '<li>' + data.status_message + '</li>';               
+                
+                if( data.status == 1 ) 
+                {
+                  info.revert();
+                  showModalAlert('error', mcontent);
+                }
+                else if( data.status == 0 ) 
+                {
+                  showModalAlert('success', mcontent);
+                }
+              //   else if( data.status == 2 )  
+              //   {
+              //     alert("Can't change the dates. Already checked-in");
+              //     info.revert();
+              //   }
+              // }
+              }
+            }
+              
+            
+          });
       }
+  },
+  eventResize: function(info) {
+   // alert(info.event.id)
+    let RESV_ID  = info.event.id;
+    let START    =   info.event.start;
+    let s        = new Date(START);
+    START        = s.toISOString(START); 
+    let END      =    info.event.end;
+    let e        = new Date(END);
+    END          = e.toISOString(END); 
+    //alert(info.event.title + " end is now " + info.event.end.toISOString());
+    $.ajax({
+            url: '<?php echo base_url('/changeReservationDates') ?>',
+            data: 'RESV_ID=' + RESV_ID + '&START='+ START +'&END=' + END ,
+            type: "POST",
+            dataType: 'json',
+            success: function(data) {              
+              if( data.status_message != '' )  
+              {
+                var mcontent = '';               
+                mcontent += '<li>' + data.status_message + '</li>';               
+                
+                if( data.status == 1 ) 
+                {
+                  info.revert();
+                  showModalAlert('error', mcontent);
+                }
+                else if( data.status == 0 ) 
+                {
+                  showModalAlert('success', mcontent);
+                }
+              
+              }
+              
+              
+            }
+          });
+
+    // if (!confirm("is this okay?")) {
+    //   info.revert();
+    // }
+  },
+  eventTimeFormat: { // like '14:30:00'
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
   }
+
+
 });
 
 calendar.render();
@@ -462,11 +580,6 @@ function item(){
         }
     });
 }
-
-
-
-
-
 
 
 // Display function toggleButton

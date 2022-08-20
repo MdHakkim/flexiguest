@@ -1169,7 +1169,7 @@ public function showPackages()
     public function roomPlan()
     {
         $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
-        $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
+        $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js","RoomPlan/FullCalendar/popper.min.js","RoomPlan/FullCalendar/tooltip.min.js");
         $data['RoomReservations'] = $this->getReservations(); 
         $data['RoomResources'] = $this->roomplanResources();
         
@@ -1204,7 +1204,17 @@ public function showPackages()
 
     public function getReservations(){
         $response = NULL;
-        $sql = "SELECT RESV_ID, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, RESV_ROOM, RESV_STATUS, RM_ID FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID INNER JOIN FLXY_ROOM ON RM_ID = RESV_ROOM_ID";       
+        $sql = "SELECT RESV_ID, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, RESV_ROOM, RESV_STATUS, RM_ID FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID INNER JOIN FLXY_ROOM ON RM_ID = RESV_ROOM_ID WHERE RESV_STATUS != 'Checked-Out' ORDER BY RM_ID ASC";       
+        $responseCount = $this->DB->query($sql)->getNumRows();
+        if($responseCount > 0){
+            $response = $this->DB->query($sql)->getResultArray();           
+        }
+      return $response;
+    }
+
+    public function getAllReservations($RESV_ID){
+        $response = NULL;
+        $sql = "SELECT RESV_ID, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, RESV_ROOM, RESV_STATUS, RM_ID,RESV_ROOM_ID FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID INNER JOIN FLXY_ROOM ON RM_ID = RESV_ROOM_ID WHERE RESV_STATUS != 'Checked-Out' AND RESV_ID !=".$RESV_ID;       
         $responseCount = $this->DB->query($sql)->getNumRows();
         if($responseCount > 0){
             $response = $this->DB->query($sql)->getResultArray();           
@@ -1213,9 +1223,177 @@ public function showPackages()
     }
 
 
-    
-      
-    
+    public function updateRoomPlan(){
+        $RESV_ID   = $this->request->getPost('RESV_ID');
+        $START     = $this->request->getPost('START');
+        $END       = $this->request->getPost('END');
+        $OLD_ROOM  = $this->request->getPost('OLD_ROOM');
+        $NEW_ROOM  = $this->request->getPost('NEW_ROOM');
+        $OLD_ROOM_ID  = $this->request->getPost('OLD_ROOM_ID');
+        $NEW_ROOM_ID  = $this->request->getPost('NEW_ROOM_ID');
+        $data = [];
 
+        $reservations = $this->getAllReservations($RESV_ID);
+        if($reservations){
+            foreach($reservations as $resv){
+                $ALL_RESV_ARRIVAL_DT[] = strtotime($resv['RESV_ARRIVAL_DT']);
+                $ALL_RESV_DEPARTURE[]      = strtotime($resv['RESV_DEPARTURE']);
+                $RESV_ROOM_ID[]        = $resv['RESV_ROOM_ID'];
+            }
+        }
+
+        //// FIRST CASE
+        ///// IF THE RESERVATION IS Checked-In THEN WE CAN'T CHANGE THE DATES
+        $sql = "SELECT RESV_STATUS, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, RESV_ROOM_ID, RESV_ROOM FROM FLXY_RESERVATION WHERE RESV_ID = ".$RESV_ID;       
+        $responseCount = $this->DB->query($sql)->getNumRows();
+        if($responseCount > 0){
+            $row = $this->DB->query($sql)->getRow();
+
+            //$start = date("Y-m-d H:i:s", strtotime($row['RESV_ARRIVAL_DT']));
+            //$startDate = '2022-08-15';
+
+            //$end = date("Y-m-d 23:59:59", strtotime($row['RESV_DEPARTURE']));
+
+            $START_DATE = explode('T',$START); 
+            $END_DATE = explode('T',$END);
+        //    / echo ($END_DATE[0]).'kk'.$row->RESV_DEPARTURE;
+            $RESV_ARRIVAL_DT = strtotime(date("Y-m-d", strtotime($row->RESV_ARRIVAL_DT)));
+            $RESV_DEPARTURE  = strtotime(date("Y-m-d", strtotime($row->RESV_DEPARTURE)));
+            $RESV_STATUS     = $row->RESV_STATUS;
+            $RESV_ROOM_ID    = $row->RESV_ROOM_ID;
+            $RESV_ROOM       = $row->RESV_ROOM;
+            $START           = strtotime($START_DATE[0]);
+            $END             = strtotime($END_DATE[0]);
+
+            $START_OVERLAP   = date('Y-m-d',  $START );
+            $END_OVERLAP     = date('Y-m-d', $END);
+
+
+            
+          // echo ($END).'kk'.$RESV_DEPARTURE;
+          // echo $NEW_ROOM_ID;
+           //echo $RESV_ROOM_ID;
+           if($NEW_ROOM_ID == ''){
+            $ROOM_ID = $RESV_ROOM_ID;
+            $ROOM_NO = $RESV_ROOM;
+           }
+            
+           else{
+            $ROOM_ID = $NEW_ROOM_ID;
+            $ROOM_NO = $NEW_ROOM;
+
+           }
+            
+//echo  $ROOM_ID.'dfd'.$ROOM_NO;
+           $overlappedResv = $this->dateExistsOverlap($RESV_ID,$START_OVERLAP,$END_OVERLAP, $ROOM_ID );
+
+            if($RESV_STATUS === "Checked-In" )
+                if($START != $RESV_ARRIVAL_DT && $END != $RESV_DEPARTURE){
+                    $data['status_message'] = "Can't change the dates. Already checked-in";
+                    $data['status'] = 1;
+                }
+                else if($overlappedResv > 0){
+                    $data['status_message'] = "Can't change the room. Already Booked";
+                    $data['status'] = 1;
+                }
+                else{
+                    $this->updateRoomReservation($RESV_ID,$ROOM_ID,$ROOM_NO,'','');
+                    $data['status_message'] = "Successfully moved to new room";
+                    $data['status'] = 0;
+                }
+            else if($row->RESV_STATUS === "Due Pre Check-In" || $row->RESV_STATUS === "Pre Checked-In"){
+                if($overlappedResv > 0){
+                    $data['status_message'] = "Can't change the room. Already Booked";
+                    $data['status'] = 1;
+                }
+                else{
+                    $output = $this->updateRoomReservation($RESV_ID,$ROOM_ID,$ROOM_NO,$START_OVERLAP,$END_OVERLAP);
+                    if($output){
+                    $data['status_message'] = "Successfully moved to new room";
+                    $data['status'] = 0;
+                    }else{
+                        $data['status_message'] = "Error";
+                        $data['status'] = 1;
+                    }
+                }
+                
+                
+            }         
+                 
+        }
+        echo json_encode($data);
+    }
+
+
+public function changeReservationDates(){
+    $RESV_ID      = $this->request->getPost('RESV_ID');
+    $START        = $this->request->getPost('START');
+    $END          = $this->request->getPost('END');
+    $START_DATE   = explode('T',$START); 
+    $END_DATE     = explode('T',$END);
+    $START        = strtotime($START_DATE[0]);
+    $END          = strtotime($END_DATE[0]);
+
+    $START_OVERLAP   = date('Y-m-d',  $START );
+    $END_OVERLAP     = date('Y-m-d', $END);
+        //// FIRST CASE
+        ///// IF THE RESERVATION IS Checked-In THEN WE CAN'T CHANGE THE DATES
+        $sql = "SELECT RESV_STATUS, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, RESV_ROOM_ID, RESV_ROOM  FROM FLXY_RESERVATION WHERE RESV_ID = ".$RESV_ID;       
+        $responseCount = $this->DB->query($sql)->getNumRows();
+        if($responseCount > 0){
+            $row = $this->DB->query($sql)->getRow();
+            $RESV_ARRIVAL_DT = $row->RESV_ARRIVAL_DT;
+            $RESV_DEPARTURE  = $row->RESV_DEPARTURE;
+            $RESV_STATUS     = $row->RESV_STATUS;
+            $RESV_ROOM_ID    = $row->RESV_ROOM_ID;
+            $RESV_ROOM       = $row->RESV_ROOM;
+            $overlappedDates = $this->dateExistsOverlap($RESV_ID,$START_OVERLAP,$END_OVERLAP, $RESV_ROOM_ID, $RESV_ROOM );
+            if($RESV_STATUS === "Checked-In" ){
+                $data['status_message'] = "You can't change the dates. Already checked-in";
+            } 
+            else if($row->RESV_STATUS === "Due Pre Check-In" || $row->RESV_STATUS === "Pre Checked-In"){
+                if($overlappedDates > 0){
+                    $data['status_message'] = "Can't change the dates. Already Booked";
+                    $data['status'] = 1;
+                }
+                else{
+                    $output = $this->updateRoomReservation($RESV_ID,$RESV_ROOM_ID,$RESV_ROOM,$START_OVERLAP,$END_OVERLAP);
+                    if($output){
+                    $data['status_message'] = "Successfully moved to new dates";
+                    $data['status'] = 0;
+                    }else{
+                        $data['status_message'] = "Error";
+                        $data['status'] = 1;
+                    }
+                }
+                
+                
+            }          
+                 
+        }
+        echo json_encode($data);
+}
+
+public function updateRoomReservation($RESV_ID,$NEW_ROOM_ID,$NEW_ROOM,$START_OVERLAP,$END_OVERLAP){
+    if( $RESV_ID != '' ){
+        
+        if($START_OVERLAP != '' && $END_OVERLAP!= '')      
+          $data = array('RESV_ROOM' => $NEW_ROOM, 'RESV_ROOM_ID' => $NEW_ROOM_ID, 'RESV_ARRIVAL_DT' => $START_OVERLAP, 'RESV_DEPARTURE' => $END_OVERLAP);
+        
+        else
+          $data = array('RESV_ROOM' => $NEW_ROOM, 'RESV_ROOM_ID' => $NEW_ROOM_ID);
+
+        $output = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $RESV_ID)->update($data);
+        return $output;
+    }
+}
+
+public function dateExistsOverlap($RESV_ID,$START,$END,$NEW_ROOM_ID){
+    $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE ((RESV_ARRIVAL_DT BETWEEN '$START' AND '$END') OR (RESV_DEPARTURE BETWEEN '$START' AND '$END')) AND RESV_ROOM_ID = '$NEW_ROOM_ID' AND RESV_STATUS != 'Checked-Out' AND RESV_ID != ".$RESV_ID; 
+
+    //$sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE (((RESV_ARRIVAL_DT BETWEEN '$START' AND '$END') AND (RESV_DEPARTURE BETWEEN '$START' AND '$END')) OR  (('$START' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE) AND ('$END' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE))) AND RESV_ROOM_ID = '$NEW_ROOM_ID' AND RESV_STATUS != 'Checked-Out' AND RESV_ID != ".$RESV_ID; 
+   $responseCount = $this->DB->query($sql)->getNumRows();
+   return $responseCount;
+}
 
 }
