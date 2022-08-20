@@ -436,6 +436,7 @@ class APIController extends BaseController
             'state' => 'required',
             'city' => 'required',
             'DOB' => 'required',
+            'mobileCode' => 'required',
             'mobile' => 'required',
             'gender' => 'required',
             'docType' => 'required',
