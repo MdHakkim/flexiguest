@@ -59,9 +59,9 @@
 
 <!-- text editor -->
 <link rel="stylesheet" href="<?= base_url('assets/vendor/libs/quill/editor.css') ?>" />
-<link rel="stylesheet" href="<?php //echo base_url('assets/vendor/libs/fullcalendar/fullcalendar.css') ?>" />
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/fullcalendar/fullcalendar.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/flatpickr/flatpickr.css') ?>" />
-<link rel="stylesheet" href="<?php //echo base_url('assets/vendor/css/pages/app-calendar.css')?>" >
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/css/pages/app-calendar.css')?>" >
 
 
 <!-- Page CSS -->
