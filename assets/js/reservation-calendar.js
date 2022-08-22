@@ -260,9 +260,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // ------------------------------------------------
     let { dayGrid, interaction, timeGrid, list } = calendarPlugins;
     let calendar = new Calendar(calendarEl, {
-      
       displayEventTime: false,
-      initialView: 'timeGridWeek',
+      initialView: 'listMonth',
       events: fetchEvents,
       plugins: [interaction, dayGrid, timeGrid, list],
       editable: true,
@@ -278,7 +277,6 @@ document.addEventListener('DOMContentLoaded', function () {
         start: 'sidebarToggle, prev,next, title',
         end: ''
       },
-      
       direction: direction,
       initialDate: new Date(),
       navLinks: true, // can click day/week names to navigate views
