@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Controllers\Repositories\GuidelineRepository;
 use App\Libraries\DataTables\GuidelineDataTable;
 use App\Models\Guideline;
 use App\Models\GuidelineFile;
@@ -12,11 +13,13 @@ class GuidelineController extends BaseController
 
     use ResponseTrait;
 
+    private $GuidelineRepository;
     private $Guideline;
     private $GuidelineFile;
 
     public function __construct()
     {
+        $this->GuidelineRepository = new GuidelineRepository();
         $this->Guideline = new Guideline();
         $this->GuidelineFile = new GuidelineFile();
     }
@@ -166,5 +169,13 @@ class GuidelineController extends BaseController
         $this->GuidelineFile->where('GLF_ID', $file_id)->delete();
 
         return $this->respond(responseJson(200, false, ['msg' => "File deleted successfully."]));
+    }
+
+    public function disableEnableGuideline()
+    {
+        $data = $this->request->getPost();
+        $response = $this->GuidelineRepository->disableEnableGuideline($data['id']);
+
+        return $this->respond($response);
     }
 }
