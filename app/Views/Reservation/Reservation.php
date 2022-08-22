@@ -3217,6 +3217,8 @@ function generateRateQuery(mode = 'AVG') {
 
     // Rate Code, Category, Class filters
     formData['RESV_RATE_CODE'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CODE').val() : '';
+    formData['RESV_RATE_CODE_ROOM_TYPES'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CODE').find(':selected').attr('data-rc-roomtypes') : '';
+    
     formData['RESV_RATE_CATEGORY'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CATEGORY').val() : ''; 
     formData['RESV_RATE_CLASS'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CLASS').val() : ''; 
 

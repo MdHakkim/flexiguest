@@ -618,7 +618,7 @@ class ReservationController extends BaseController
         $rate_category_id = $this->request->getPost('rate_category_id');
         $rate_class_id = $this->request->getPost('rate_class_id');
 
-        $sql = "SELECT RT_CD_ID, RT_CD_CODE, RT_CD_DESC
+        $sql = "SELECT RT_CD_ID, RT_CD_CODE, RT_CD_DESC, RT_CD_ROOM_TYPES
                 FROM FLXY_RATE_CODE WHERE 1 = 1";
 
         if(!empty(trim($rate_category_id)))
@@ -634,7 +634,7 @@ class ReservationController extends BaseController
         $option = '<option value="">Select</option>';
         if(!empty($response)){
             foreach ($response as $row) {
-                $option .= '<option value="' . $row['RT_CD_ID'] . '">' . $row['RT_CD_CODE'] . ' | ' . $row['RT_CD_DESC'] . '</option>';
+                $option .= '<option value="' . $row['RT_CD_ID'] . '" data-rc-roomtypes="' . $row['RT_CD_ROOM_TYPES'] . '">' . $row['RT_CD_CODE'] . ' | ' . $row['RT_CD_DESC'] . '</option>';
             }
         }
         return $option;
@@ -669,7 +669,7 @@ class ReservationController extends BaseController
         if(!empty($response)){
             foreach ($response as $row) {
                 $option = ['PO_RH_DESC' => $row['PO_RH_DESC'], 'CLC_RL_DESC' => $row['CLC_RL_DESC']];
-            }
+            } 
         }
         echo json_encode($option);
     }

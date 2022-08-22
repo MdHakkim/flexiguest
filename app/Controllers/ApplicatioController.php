@@ -3044,6 +3044,10 @@ class ApplicatioController extends BaseController
                                                                                 FROM FLXY_RATE_CATEGORY 
                                                                                 WHERE RT_CL_ID = '".$RESV_RATE_CLASS."')" : "")));
 
+            $RESV_RATE_CODE_ROOM_TYPES = $this->request->getPost('RESV_RATE_CODE_ROOM_TYPES');
+            $rcode_roomtype_filter = (!empty($RESV_RATE_CODE_ROOM_TYPES)) ? 
+                                        " AND RM_TY_CODE IN ('".str_replace(",", "','",$RESV_RATE_CODE_ROOM_TYPES)."') " : "";
+
             $RESV_ROOM_TYPE = $this->request->getPost('resv_room_type');
             $RESV_RATE = $this->request->getPost('resv_rate');
             
@@ -3069,6 +3073,7 @@ class ApplicatioController extends BaseController
                         ) MAIN_DATA 
                     WHERE ROW_NUMBER = 1 
                     $room_class_filter
+                    $rcode_roomtype_filter
                     ORDER BY RM_TY_CODE ASC";
             
             $response = $this->Db->query($sql,$param)->getResultArray();
