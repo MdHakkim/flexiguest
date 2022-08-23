@@ -44,7 +44,8 @@
   TagifyRoomTypeListRoomTypeEl.forEach(function (el) {
 
     // initialize Tagify on the above input node reference
-    let TagifyRoomTypeList = new Tagify(el, {
+
+    var tagifyOpts = {
       tagTextProp: 'name', // very important since a custom template is used with this property as text. allows typing a "value" or a "name" to match input with whitelist
       enforceWhitelist: true,
       skipInvalid: true, // do not temporarily add invalid tags
@@ -65,8 +66,51 @@
       callbacks: {
         //"remove": (e) => $('#RT_CL_CODE').val(""),
         "blur": (e) => dropdown.hide()
-      }
-    });
+      },
+      hooks: {}
+    };
+
+    if (rateCodeID) {
+      tagifyOpts['hooks'] = {
+        /**
+         * Removes a tag
+         * @param  {Array}  tags [Array of Objects [{node:..., data:...}, {...}, ...]]
+         */
+        beforeRemoveTag: function (tags) {
+          return new Promise((resolve, reject) => {
+
+            // Check if Room Type is used in an existing Rate Code Detail
+
+            if (confirm(`Are you sure you want to remove room type '${tags[0].data.name}' from this Rate Code ?`)) {
+              $.ajax({
+                url: checkRmTypeUrl,
+                type: "post",
+                async: false,
+                data: {
+                  room_type: tags[0].data.name,
+                  rate_code_id: rateCodeID
+                },
+                headers: {
+                  'X-Requested-With': 'XMLHttpRequest'
+                },
+                dataType: 'json',
+                success: function (respn) {
+                  if (!respn) {
+                    alert("'" + tags[0].data.name + "' cannot be removed as it is part of a Rate Code Detail.");
+                    reject();
+                  } else
+                    resolve();
+                }
+              });
+            }
+            else
+              reject();
+          })
+        }
+      };
+    }
+
+    let TagifyRoomTypeList = new Tagify(el, tagifyOpts);
 
     TagifyRoomTypeList.on('dropdown:show dropdown:updated', onDropdownRoomTypeShow);
     TagifyRoomTypeList.on('dropdown:select', onSelectRoomTypeSuggestion);
@@ -100,7 +144,7 @@
       }]);
     }
 
-    if (el.id == 'RT_CD_ROOM_TYPES' && typeof selectedRoomTypes !== 'undefined' && selectedRoomTypes != '') {
+    if (el.id == 'RT_CD_ROOM_TYPES' && typeof selectedRoomTypes !== 'undefined' && selectedRoomTypes != '' && rateCodeID) {
       TagifyRoomTypeList.addTags(selectedRoomTypes);
     }
 

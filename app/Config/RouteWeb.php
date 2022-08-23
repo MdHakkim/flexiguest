@@ -228,7 +228,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/negotiatedRateView', 'MastersController::NegotiatedRateView');
     $routes->match(['post'],'/combinedProfilesView', 'MastersController::CombinedProfilesView');
     $routes->match(['post'],'/insertNegotiatedRate', 'MastersController::insertNegotiatedRate');
-    $routes->match(['post'],'/deleteNegotiatedRate', 'MastersController::deleteNegotiatedRate');    
+    $routes->match(['post'],'/deleteNegotiatedRate', 'MastersController::deleteNegotiatedRate');   
+    $routes->match(['post'],'/checkRoomTypeinRateCodeDetail', 'MastersController::checkRoomTypeinRateCodeDetail');    
     
     $routes->match(['post'],'/customerNegotiatedRateView', 'ApplicatioController::CustomerNegotiatedRateView');
     $routes->match(['post'],'/insertCustomerNegotiatedRate', 'ApplicatioController::insertCustomerNegotiatedRate');

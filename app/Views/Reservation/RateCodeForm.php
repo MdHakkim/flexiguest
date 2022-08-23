@@ -111,7 +111,8 @@
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label for="RT_CD_BEGIN_SELL_DT" class="col-form-label col-md-3"><b>Booking Date From *</b></label>
+                                            <label for="RT_CD_BEGIN_SELL_DT" class="col-form-label col-md-3"><b>Booking
+                                                    Date From *</b></label>
                                             <div class="col-md-5">
                                                 <input class="form-control dateField" type="text"
                                                     placeholder="d-Mon-yyyy" id="RT_CD_BEGIN_SELL_DT"
@@ -119,7 +120,8 @@
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <label for="RT_CD_END_SELL_DT" class="col-form-label col-md-3"><b>Booking Date To *</b></label>
+                                            <label for="RT_CD_END_SELL_DT" class="col-form-label col-md-3"><b>Booking
+                                                    Date To *</b></label>
                                             <div class="col-md-5">
                                                 <input class="form-control dateField" type="text"
                                                     placeholder="d-Mon-yyyy" id="RT_CD_END_SELL_DT"
@@ -131,7 +133,7 @@
                                             <div class="col-md-7">
                                                 <select id="MK_CD_ID" name="MK_CD_ID"
                                                     class="select2 form-select form-select-lg" data-allow-clear="true">
-                                                    <?=$marketCodeOptions?>
+                                                    <?= $marketCodeOptions ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -140,7 +142,7 @@
                                             <div class="col-md-5">
                                                 <select id="SOR_ID" name="SOR_ID"
                                                     class="select2 form-select form-select-lg" data-allow-clear="true">
-                                                    <?=$sourceCodeOptions?>
+                                                    <?= $sourceCodeOptions ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -222,7 +224,7 @@
                                                 <div class="col-md-8">
                                                     <select id="TR_CD_ID" name="TR_CD_ID"
                                                         class="select2 form-select form-select-lg">
-                                                        <?=$transactionCodeOptions?>
+                                                        <?= $transactionCodeOptions ?>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-12">
@@ -251,7 +253,7 @@
                                                     <select id="PKG_TR_CD_ID" name="PKG_TR_CD_ID"
                                                         class="select2 select2Pkg form-select form-select-lg"
                                                         data-allow-clear="true">
-                                                        <?=$pkgTransactionCodeOptions?>
+                                                        <?= $pkgTransactionCodeOptions ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -370,7 +372,7 @@
 
                                         </div>
 
-                                        <?php if(isset($rateCodeID)) { ?>
+                                        <?php if (isset($rateCodeID)) { ?>
 
                                         <div class="text-center">
 
@@ -387,7 +389,7 @@
                                     </div>
 
                                     <div class="d-flex col-12 justify-content-between">
-                                        <a class="btn btn-danger" href="<?php echo base_url('/rateCode')?>">
+                                        <a class="btn btn-danger" href="<?php echo base_url('/rateCode') ?>">
                                             <i class="fa-solid fa-ban"></i>&nbsp;
                                             <span class="d-none d-sm-inline-block">Cancel</span>
                                         </a>
@@ -690,7 +692,7 @@
                                                     <select id="RT_CD_DT_MK_CD_ID" name="RT_CD_DT_MK_CD_ID"
                                                         class="select2 form-select form-select-lg"
                                                         data-allow-clear="true">
-                                                        <?=$marketCodeOptions?>
+                                                        <?= $marketCodeOptions ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -701,7 +703,7 @@
                                                     <select id="RT_CD_DT_SOR_ID" name="RT_CD_DT_SOR_ID"
                                                         class="select2 form-select form-select-lg"
                                                         data-allow-clear="true">
-                                                        <?=$sourceCodeOptions?>
+                                                        <?= $sourceCodeOptions ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -712,14 +714,13 @@
                                                     <select id="RT_CD_DT_ROOM_TYPES" name="RT_CD_DT_ROOM_TYPES[]"
                                                         class="select2 form-select form-select-lg" multiple>
                                                         <?php
-                                                            if($roomTypeOptions != NULL) {
-                                                                foreach($roomTypeOptions as $roomTypeOption)
-                                                                {
-                                                        ?> <option value="<?=$roomTypeOption['value']; ?>">
-                                                            <?=$roomTypeOption['name'] .' | '. $roomTypeOption['desc']; ?>
+                                                        if ($selectedRoomTypes != NULL) {
+                                                            foreach ($selectedRoomTypes as $selectedRoomType) {
+                                                        ?> <option value="<?= $selectedRoomType['value']; ?>">
+                                                            <?= $selectedRoomType['name'] . ' | ' . $selectedRoomType['desc']; ?>
                                                         </option>
                                                         <?php   }
-                                                            }                                                            
+                                                        }
                                                         ?>
                                                     </select>
                                                 </div>
@@ -731,14 +732,13 @@
                                                     <select id="RT_CD_DT_PACKAGES" name="RT_CD_DT_PACKAGES[]"
                                                         class="select2 form-select form-select-lg" multiple>
                                                         <?php
-                                                            if($packageCodeOptions != NULL) {
-                                                                foreach($packageCodeOptions as $packageCodeOption)
-                                                                {
-                                                        ?> <option value="<?=$packageCodeOption['value']; ?>">
-                                                            <?=$packageCodeOption['name'] .' | '. $packageCodeOption['desc']; ?>
+                                                        if ($packageCodeOptions != NULL) {
+                                                            foreach ($packageCodeOptions as $packageCodeOption) {
+                                                        ?> <option value="<?= $packageCodeOption['value']; ?>">
+                                                            <?= $packageCodeOption['name'] . ' | ' . $packageCodeOption['desc']; ?>
                                                         </option>
                                                         <?php   }
-                                                            }                                                            
+                                                        }
                                                         ?>
                                                     </select>
                                                 </div>
@@ -871,8 +871,9 @@
                     <form id="repeatForm" class="needs-validation" novalidate>
                         <div class="row g-3">
                             <input type="hidden" name="rep_RT_CD_DT_ID" id="rep_RT_CD_DT_ID" class="form-control" />
-                            <input type="hidden" name="rep_RT_CD_ID" id="rep_RT_CD_ID"
-                                value="<?php if(isset($rateCodeID)){ echo $rateCodeID; }?>" />
+                            <input type="hidden" name="rep_RT_CD_ID" id="rep_RT_CD_ID" value="<?php if (isset($rateCodeID)) {
+                                                                                                    echo $rateCodeID;
+                                                                                                } ?>" />
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Start Date *</b></label>
@@ -1020,14 +1021,13 @@
                                 <select id="rep_RT_CD_DT_ROOM_TYPES" name="rep_RT_CD_DT_ROOM_TYPES[]"
                                     class="select2 form-select form-select-lg" multiple>
                                     <?php
-                                            if($roomTypeOptions != NULL) {
-                                                foreach($roomTypeOptions as $roomTypeOption)
-                                                {
-                                              ?> <option value="<?=$roomTypeOption['value']; ?>">
-                                        <?=$roomTypeOption['name'] .' | '. $roomTypeOption['desc']; ?>
+                                    if ($selectedRoomTypes != NULL) {
+                                        foreach ($selectedRoomTypes as $selectedRoomType) {
+                                    ?> <option value="<?= $selectedRoomType['value']; ?>">
+                                        <?= $selectedRoomType['name'] . ' | ' . $selectedRoomType['desc']; ?>
                                     </option>
                                     <?php       }
-                                            }                                                            
+                                    }
                                     ?>
                                 </select>
                             </div>
@@ -1152,7 +1152,7 @@
     </div>
 
 
-    <?php if($rateCodeDetails != NULL) { ?>
+    <?php if ($rateCodeDetails != NULL) { ?>
 
     <!-- Rate Package Settings -->
 
@@ -1240,7 +1240,7 @@
                                                 <div class="col-md-4">
                                                     <select id="PKG_RT_TR_CD_ID" name="PKG_RT_TR_CD_ID"
                                                         class="select2 form-select form-select-lg" disabled>
-                                                        <?=$transactionCodeOptions?>
+                                                        <?= $transactionCodeOptions ?>
                                                     </select>
                                                 </div>
                                             </div>
@@ -1252,22 +1252,22 @@
 
                                                 <div class="col-md-4">
 
-                                                    <?php if($rateInclusionRules != NULL) { 
-                                                            foreach($rateInclusionRules as $rateInclusionRule) { ?>
+                                                    <?php if ($rateInclusionRules != NULL) {
+                                                            foreach ($rateInclusionRules as $rateInclusionRule) { ?>
 
                                                     <div class="form-check mt-3">
                                                         <input class="form-check-input" type="radio"
-                                                            value="<?=$rateInclusionRule['value']?>"
-                                                            id="RT_INCL_ID<?=$rateInclusionRule['value']?>"
+                                                            value="<?= $rateInclusionRule['value'] ?>"
+                                                            id="RT_INCL_ID<?= $rateInclusionRule['value'] ?>"
                                                             name="RT_INCL_ID"
-                                                            <?php if($rateInclusionRule['value'] == 1) echo ' checked'; ?> />
+                                                            <?php if ($rateInclusionRule['value'] == 1) echo ' checked'; ?> />
                                                         <label class="form-check-label"
-                                                            for="RT_INCL_ID<?=$rateInclusionRule['value']?>">
-                                                            <?=$rateInclusionRule['name']?> </label>
+                                                            for="RT_INCL_ID<?= $rateInclusionRule['value'] ?>">
+                                                            <?= $rateInclusionRule['name'] ?> </label>
                                                     </div>
                                                     <?php   }
-                                                    }   
-                                                    ?>
+                                                        }
+                                                        ?>
                                                 </div>
 
                                                 <div class="col-md-8">
@@ -1279,15 +1279,15 @@
                                                             <select id="PO_RH_ID" name="PO_RH_ID"
                                                                 class="select2 select2Pkg form-select form-select-lg">
                                                                 <?php
-                                                            if($postingRhythmOptions != NULL) {
-                                                                foreach($postingRhythmOptions as $postingRhythmOption)
-                                                                {
-                                                        ?> <option value="<?=$postingRhythmOption['value']; ?>">
-                                                                    <?=$postingRhythmOption['name']; ?>
+                                                                    if ($postingRhythmOptions != NULL) {
+                                                                        foreach ($postingRhythmOptions as $postingRhythmOption) {
+                                                                    ?> <option
+                                                                    value="<?= $postingRhythmOption['value']; ?>">
+                                                                    <?= $postingRhythmOption['name']; ?>
                                                                 </option>
                                                                 <?php   }
-                                                            }                                                            
-                                                        ?>
+                                                                    }
+                                                                    ?>
                                                             </select>
                                                         </div>
 
@@ -1301,15 +1301,15 @@
                                                             <select id="CLC_RL_ID" name="CLC_RL_ID"
                                                                 class="select2 select2Pkg form-select form-select-lg">
                                                                 <?php
-                                                            if($calcInclusionRules != NULL) {
-                                                                foreach($calcInclusionRules as $calcInclusionRule)
-                                                                {
-                                                        ?> <option value="<?=$calcInclusionRule['value']; ?>">
-                                                                    <?=$calcInclusionRule['name']; ?>
+                                                                    if ($calcInclusionRules != NULL) {
+                                                                        foreach ($calcInclusionRules as $calcInclusionRule) {
+                                                                    ?> <option
+                                                                    value="<?= $calcInclusionRule['value']; ?>">
+                                                                    <?= $calcInclusionRule['name']; ?>
                                                                 </option>
                                                                 <?php   }
-                                                            }                                                            
-                                                        ?>
+                                                                    }
+                                                                    ?>
                                                             </select>
                                                         </div>
 
@@ -1465,24 +1465,25 @@
 const rateCategoryList = <?php echo json_encode($rateCategoryOptions); ?>;
 const roomTypeList = <?php echo json_encode($roomTypeOptions); ?>;
 const packageCodeList = <?php echo json_encode($packageCodeOptions); ?>;
-const colorArray = <?php echo isset($color_array) ? '["'.implode('","', $color_array).'"]' : '[]'; ?>;
+const colorArray = <?php echo isset($color_array) ? '["' . implode('","', $color_array) . '"]' : '[]'; ?>;
 
 var rateCodeID = <?php echo isset($rateCodeID) ? $rateCodeID : 0; ?>;
 var rateCodeDetailID =
     <?php echo (isset($rateCodeDetailsList) && $rateCodeDetailsList != NULL) ? $rateCodeDetailsList[0]['RT_CD_DT_ID'] : 0; ?>;
 
-<?php echo (isset($selectedRoomTypes) && $selectedRoomTypes != NULL) ? 'const selectedRoomTypes = '.json_encode($selectedRoomTypes).';' : '' ?>
-<?php echo (isset($selectedPackageCodes) && $selectedPackageCodes != NULL) ? 'const selectedPackageCodes = '.json_encode($selectedPackageCodes).';' : '' ?>
+<?php echo (isset($selectedRoomTypes) && $selectedRoomTypes != NULL) ? 'const selectedRoomTypes = ' . json_encode($selectedRoomTypes) . ';' : '' ?>
+<?php echo (isset($selectedPackageCodes) && $selectedPackageCodes != NULL) ? 'const selectedPackageCodes = ' . json_encode($selectedPackageCodes) . ';' : '' ?>
 
 var showTab = <?php echo isset($showTab) ? $showTab : 0; ?>;
 
+var checkRmTypeUrl = '<?php echo base_url('/checkRoomTypeinRateCodeDetail') ?>';
 
 $(document).ready(function() {
 
     $('.dateField').datepicker({
         format: 'dd-M-yyyy',
         autoclose: true,
-        <?php if($rateCodeDetails == NULL) { ?>
+        <?php if ($rateCodeDetails == NULL) { ?>
         startDate: '-0m',
         <?php } ?>
         onSelect: function() {
@@ -1490,11 +1491,11 @@ $(document).ready(function() {
         }
     });
 
-    <?php if($rateCodeDetails != NULL) { ?>
+    <?php if ($rateCodeDetails != NULL) { ?>
 
     $("#RT_CD_CODE").prop("readonly", true);
 
-    var url = '<?php echo base_url('/showRateCodeInfo')?>';
+    var url = '<?php echo base_url('/showRateCodeInfo') ?>';
     $.ajax({
         url: url,
         type: "get",
@@ -1590,7 +1591,7 @@ $(document).ready(function() {
         'serverSide': true,
         'serverMethod': 'post',
         'ajax': {
-            'url': '<?php echo base_url('/negotiatedRateView')?>',
+            'url': '<?php echo base_url('/negotiatedRateView') ?>',
             'data': {
                 "sysid": rateCodeID
             }
@@ -1663,7 +1664,7 @@ $(document).ready(function() {
         hideModalAlerts();
         clearFormFields('.dt_adv_search');
         toggleButton('.use_selected_profiles', 'btn-primary', 'btn-dark', true);
-        
+
         //$('#combined_profiles').dataTable().fnDraw();
 
         var filterData = [
@@ -1732,7 +1733,7 @@ $(document).ready(function() {
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('/deleteNegotiatedRate')?>',
+                        url: '<?php echo base_url('/deleteNegotiatedRate') ?>',
                         type: "post",
                         data: {
                             sysid: sysid
@@ -1867,7 +1868,7 @@ function submitRatePackageForm(id) {
 
 function deleteRatePackageCode(rcId, pkgId, rcPkgId) {
     $.ajax({
-        url: '<?php echo base_url('/deleteRatePackageCode')?>',
+        url: '<?php echo base_url('/deleteRatePackageCode') ?>',
         type: "post",
         async: false,
         data: {
@@ -1893,7 +1894,7 @@ function deleteRatePackageCode(rcId, pkgId, rcPkgId) {
 
 function loadPackageCodeDetails(packageCodeID, id) {
 
-    var url = '<?php echo base_url('/showPackageCodeDetails')?>';
+    var url = '<?php echo base_url('/showPackageCodeDetails') ?>';
     $.ajax({
         url: url,
         type: "get",
@@ -1979,7 +1980,7 @@ function showPackageCodeDetails(pkgCodeID, dtID = 0) {
 function submitForm(id) {
     hideModalAlerts();
     var formSerialization = $('#' + id).serializeArray();
-    var url = '<?php echo base_url('/insertRateCode')?>';
+    var url = '<?php echo base_url('/insertRateCode') ?>';
     $.ajax({
         url: url,
         type: "post",
@@ -2012,6 +2013,16 @@ function submitForm(id) {
                         .val() + '\' has been created</li>' : '<li>The Rate Code \'' + $('#RT_CD_CODE')
                         .val() +
                         '\' has been updated</li>';
+
+                    var rmtype_options = '';
+                    var rc_room_types = JSON.parse($('#RT_CD_ROOM_TYPES').val());
+                    $.each(rc_room_types, function(ix, field) {
+                        rmtype_options += '<option value="' + field.value + '">' + field.name +
+                            ' | ' + field.desc + '</option>';
+                    });
+                    $('#RT_CD_DT_ROOM_TYPES').html(rmtype_options);
+                    $('#rep_RT_CD_DT_ROOM_TYPES').html(rmtype_options);
+
                     showModalAlert('success', alertText);
                 }
             }
@@ -2021,7 +2032,7 @@ function submitForm(id) {
 
 function getRoomTypes(codes, field) {
 
-    var url = '<?php echo base_url('/showRoomTypeList')?>';
+    var url = '<?php echo base_url('/showRoomTypeList') ?>';
     $.ajax({
         url: url,
         type: "get",
@@ -2049,7 +2060,7 @@ function getRoomTypes(codes, field) {
 
 function getPackageCodes(codes, field) {
 
-    var url = '<?php echo base_url('/showPackageCodeList')?>';
+    var url = '<?php echo base_url('/showPackageCodeList') ?>';
     $.ajax({
         url: url,
         type: "get",
@@ -2080,7 +2091,7 @@ function getPackageCodes(codes, field) {
 function submitNegotiatedForm(id) {
     hideModalAlerts();
     var formSerialization = $('#' + id).serializeArray();
-    var url = '<?php echo base_url('/insertNegotiatedRate')?>';
+    var url = '<?php echo base_url('/insertNegotiatedRate') ?>';
     $.ajax({
         url: url,
         type: "post",
@@ -2124,7 +2135,7 @@ function submitNegotiatedForm(id) {
 
 function loadRateCodeDetails(id) {
 
-    var url = '<?php echo base_url('/showRateCodeDetails')?>';
+    var url = '<?php echo base_url('/showRateCodeDetails') ?>';
     $.ajax({
         url: url,
         type: "get",
@@ -2236,7 +2247,7 @@ $(document).on('click', '.save-rate-code-detail', function() {
 function submitDetailsForm(id) {
     hideModalAlerts();
     var formSerialization = $('#' + id).serializeArray();
-    var url = '<?php echo base_url('/updateRateCodeDetail')?>';
+    var url = '<?php echo base_url('/updateRateCodeDetail') ?>';
     $.ajax({
         url: url,
         type: "post",
@@ -2289,7 +2300,7 @@ function repeatForm() {
 
     hideModalAlerts();
     var formSerialization = $('#repeatForm').serializeArray();
-    var url = '<?php echo base_url('/copyRateCodeDetail')?>';
+    var url = '<?php echo base_url('/copyRateCodeDetail') ?>';
     $.ajax({
         url: url,
         type: "post",
@@ -2357,7 +2368,7 @@ $(document).on('click', '.delete-rate-code-detail', function() {
         callback: function(result) {
             if (result) {
                 $.ajax({
-                    url: '<?php echo base_url('/deleteRateCodeDetail')?>',
+                    url: '<?php echo base_url('/deleteRateCodeDetail') ?>',
                     type: "post",
                     data: {
                         sysid: sysid,
