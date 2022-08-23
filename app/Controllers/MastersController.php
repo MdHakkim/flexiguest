@@ -3067,4 +3067,116 @@ class MastersController extends BaseController
             return $this->respond($e->errors());
         }
     }
+
+    /**************      Cancellation Reason Functions      ***************/
+
+    public function cancellationReason()
+    {
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+
+        return view('Master/CancellationReasonView', $data);
+    }
+
+    public function CancellationReasonView()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_CANCELLATION_REASONS';
+        $columns = 'CN_RS_ID,CN_RS_CODE,CN_RS_DESC,CN_RS_DIS_SEQ,CN_RS_STATUS';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+    public function insertCancellationReason()
+    {
+        try {
+            $sysid = $this->request->getPost('CN_RS_ID');
+
+            $validate = $this->validate([
+                'CN_RS_CODE' => ['label' => 'Cancellation Code', 'rules' => 'required|is_unique[FLXY_CANCELLATION_REASONS.CN_RS_CODE,CN_RS_ID,' . $sysid . ']'],
+                'CN_RS_DESC' => ['label' => 'Cancellation Description', 'rules' => 'required'],
+                'CN_RS_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            //echo json_encode(print_r($_POST)); exit;
+
+            $data = [
+                "CN_RS_CODE" => trim($this->request->getPost('CN_RS_CODE')),
+                "CN_RS_DESC" => trim($this->request->getPost('CN_RS_DESC')),
+                "CN_RS_DIS_SEQ" => trim($this->request->getPost('CN_RS_DIS_SEQ')) != '' ? trim($this->request->getPost('CN_RS_DIS_SEQ')) : '',
+                "CN_RS_STATUS" => trim($this->request->getPost('CN_RS_STATUS')),
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_CANCELLATION_REASONS')->where('CN_RS_ID', $sysid)->update($data) : $this->Db->table('FLXY_CANCELLATION_REASONS')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function checkCancellationReason($rcCode)
+    {
+        $sql = "SELECT CN_RS_ID
+                FROM FLXY_CANCELLATION_REASONS
+                WHERE CN_RS_CODE = '" . $rcCode . "'";
+
+        $response = $this->Db->query($sql)->getNumRows();
+        return $rcCode == '' || strlen($rcCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
+    }
+
+    public function cancellationReasonList()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT CN_RS_ID, CN_RS_CODE, CN_RS_DESC
+                FROM FLXY_CANCELLATION_REASONS WHERE CN_RS_STATUS = 1 ";
+
+        if ($search != '') {
+            $sql .= " AND CN_RS_CODE LIKE '%$search%'
+                      OR CN_RS_DESC LIKE '%$search%'";
+        }
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['CN_RS_ID'] . '">' . $row['CN_RS_CODE'] . ' | ' . $row['CN_RS_DESC'] . '</option>';
+        }
+
+        return $option;
+    }
+
+    public function editCancellationReason()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT CN_RS_ID, CN_RS_CODE, CN_RS_DESC, CN_RS_DIS_SEQ, CN_RS_STATUS
+                FROM FLXY_CANCELLATION_REASONS
+                WHERE CN_RS_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteCancellationReason()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_CANCELLATION_REASONS')->delete(['CN_RS_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
 }

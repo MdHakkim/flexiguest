@@ -335,6 +335,18 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/editProduct', 'AdditionalController::editProduct');
     $routes->match(['post'],'/deleteProduct', 'AdditionalController::deleteProduct');
 
+    $routes->get('/amenitiesRequests', 'FacilityController::amenitiesRequests');
+    $routes->match(['post'],'/getAmenitiesRequestList', 'FacilityController::getAmenitiesRequestList');
+    $routes->match(['post'],'/insertAmenitiesRequest', 'FacilityController::insertAmenitiesRequest');
+    $routes->match(['post'],'/editAmenitiesRequest', 'FacilityController::editAmenitiesRequest');
+    $routes->match(['post'],'/deleteAmenitiesRequest', 'FacilityController::deleteAmenitiesRequest');  
+    
+    $routes->get('/cancellationReason', 'MastersController::cancellationReason');
+    $routes->match(['post'],'/cancellationReasonView', 'MastersController::CancellationReasonView');
+    $routes->match(['post'],'/insertCancellationReason', 'MastersController::insertCancellationReason');
+    $routes->match(['post'],'/editCancellationReason', 'MastersController::editCancellationReason');
+    $routes->match(['post'],'/deleteCancellationReason', 'MastersController::deleteCancellationReason'); 
+    
 
     // Code By ALEESHA 
     // Maintenance Request 
