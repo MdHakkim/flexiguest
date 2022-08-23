@@ -13,6 +13,7 @@ class Guideline extends Model
         'GL_COVER_IMAGE',
         'GL_DESCRIPTION',
         'GL_BODY',
+        'GL_IS_ENABLED',
         'GL_CREATED_BY',
         'GL_UPDATED_BY',
     ];

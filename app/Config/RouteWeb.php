@@ -605,6 +605,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('edit', 'GuidelineController::edit');
         $routes->delete('delete', 'GuidelineController::delete');
         $routes->post('delete-optional-file', 'GuidelineController::deleteOptionalFile');
+        $routes->post('disable-enable-guideline', 'GuidelineController::disableEnableGuideline');
     });
 
     $routes->group('app-update', function ($routes) {
