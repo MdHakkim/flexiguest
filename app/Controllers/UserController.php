@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use CodeIgniter\API\ResponseTrait;
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\UserRepository;
 use App\Models\UserModel;
 use App\Libraries\ServerSideDataTable;
 use App\Libraries\EmailLibrary;
@@ -11,12 +12,16 @@ use DateTimeZone;
 
 class UserController extends BaseController
 {
+    use ResponseTrait;
 
+    private $UserRepository;
     public $Db;
     public $session;
     public $request;
     public $todayDate;
+
     public function __construct(){
+        $this->UserRepository = new UserRepository();
         $this->Db = \Config\Database::connect();
         $this->session = \Config\Services::session();
         helper(['form', 'common', 'custom']);
@@ -765,7 +770,11 @@ public function accessDenied()
         return view('Users/notAuth');
     }
 
-   
+    public function userByDepartment()
+    {
+        $department_ids = $this->request->getPost('department_ids');
 
-
+        $result = $this->UserRepository->userByDepartment($department_ids);
+        return $this->respond(responseJson(200, false, ['msg' => 'users'], $result));
+    }
 }
