@@ -21,7 +21,8 @@ class UserModel extends Model
 		"USR_PASSWORD",
 		"USR_ROLE",
 		"USR_ROLE_ID",
-		"USR_CUST_ID"
+		"USR_CUST_ID",
+		"USR_DEPARTMENT"
 	];
 
 	// Dates
