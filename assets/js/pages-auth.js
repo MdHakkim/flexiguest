@@ -15,11 +15,12 @@ document.addEventListener('DOMContentLoaded', function (e) {
             validators: {
               notEmpty: {
                 message: 'Please enter username'
-              },
-              stringLength: {
-                min: 6,
-                message: 'Username must be more than 6 characters'
               }
+              /*,
+                            stringLength: {
+                              min: 6,
+                              message: 'Username must be more than 6 characters'
+                            }*/
             }
           },
           email: {
@@ -86,7 +87,6 @@ document.addEventListener('DOMContentLoaded', function (e) {
             rowSelector: '.mb-3'
           }),
           submitButton: new FormValidation.plugins.SubmitButton(),
-
           defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
           autoFocus: new FormValidation.plugins.AutoFocus()
         },
@@ -97,6 +97,9 @@ document.addEventListener('DOMContentLoaded', function (e) {
             }
           });
         }
+      }).on('core.form.valid', function () {
+        // submit the form
+        $('#loginSubmitBtn').html('<span><span class="spinner-border"></span> Loading...</span>').prop('disabled', true);
       });
     }
 

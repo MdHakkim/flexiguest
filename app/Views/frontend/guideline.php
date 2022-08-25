@@ -55,6 +55,8 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>ID</th>
+                            <th>Disable/Enable</th>
                             <th>Title</th>
                             <th>Cover Image</th>
                             <th>Description</th>
@@ -194,6 +196,28 @@
                     data: ''
                 },
                 {
+                    data: 'GL_ID'
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        let class_name = 'badge rounded-pill';
+
+                        let status = '';
+                        if (!data['GL_IS_ENABLED']) {
+                            class_name += ' bg-label-danger';
+                            status = 'Disabled';
+                        } else {
+                            class_name += ' bg-label-success';
+                            status = 'Enabled';
+                        }
+
+                        return (`
+                            <span class="${class_name}">${status}</span>
+                        `);
+                    }
+                },
+                {
                     data: 'GL_TITLE'
                 },
                 {
@@ -258,6 +282,18 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
+                                    <a 
+                                        href="javascript:;" 
+                                        data_id="${data['GL_ID']}" 
+                                        class="dropdown-item change-status ${!data['GL_IS_ENABLED'] ? 'text-success' : 'text-info'}">
+
+                                        <i class="fa-solid ${!data['GL_IS_ENABLED'] ? 'fa-unlock' : 'fa-lock'}"></i>
+
+                                        ${!data['GL_IS_ENABLED'] ? 'Enable' : 'Disable'}
+                                    </a>
+                                </li>
+
+                                <li>
                                     <a href="javascript:;" data_id="${data['GL_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
@@ -300,7 +336,7 @@
                 width: "5%"
             }],
             "order": [
-                [5, "desc"]
+                [0, "desc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -401,7 +437,7 @@
                     var ERROR = response['RESPONSE']['REPORT_RES'];
                     var mcontent = '';
                     $.each(ERROR, function(ind, data) {
-                        
+
                         mcontent += '<li>' + data + '</li>';
                     });
                     showModalAlert('error', mcontent);
@@ -440,7 +476,7 @@
             dataType: 'json',
             success: function(respn) {
                 $(respn).each(function(inx, data) {
-                    
+
 
                     $.each(data, function(field, val) {
 
@@ -543,7 +579,7 @@
             },
             dataType: 'json',
             success: function(respn) {
-                
+
                 var response = respn['SUCCESS'];
 
                 if (response != '200') {
@@ -551,7 +587,7 @@
                     var ERROR = respn['RESPONSE']['ERROR'];
                     var mcontent = '';
                     $.each(ERROR, function(ind, data) {
-                        
+
                         mcontent += '<li>' + data + '</li>';
                     });
                     showModalAlert('error', mcontent);
@@ -566,6 +602,36 @@
             }
         });
     }
+
+    $(document).on('click', '.change-status', function() {
+        let guideline_id = $(this).attr('data_id');
+
+        var url = '<?php echo base_url('/guideline/disable-enable-guideline') ?>';
+        $.ajax({
+            url: url,
+            type: "post",
+            data: {
+                id: guideline_id,
+            },
+            dataType: 'json',
+            success: function(respn) {
+                var ERROR = respn['RESPONSE']['REPORT_RES'];
+
+                var mcontent = '';
+                $.each(ERROR, function(ind, data) {
+                    mcontent += '<li>' + data + '</li>';
+                });
+
+                if (respn['SUCCESS'] != 200) {
+                    showModalAlert('error', mcontent);
+                } else {
+                    showModalAlert('success', mcontent);
+                    $('#dataTable_view').dataTable().fnDraw();
+                }
+
+            }
+        });
+    });
 
     // bootstrap-maxlength & repeater (jquery)
     $(function() {

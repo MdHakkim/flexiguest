@@ -352,7 +352,7 @@ td{
   border-top: 3px solid #959495;
   border-radius: 3px;
 }
-.flxy_status_cls{
+.flxy_status_cls, .flxy_status_cncl{
   background: #0fd02e;
   padding: 3px;
   font-size: 13px;
@@ -361,6 +361,8 @@ td{
   color: white;
   text-transform: uppercase;
 }
+.flxy_status_cncl{background: gray !important;}
+
 .flxy_signature_block{
   display: none;
 }

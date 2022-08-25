@@ -43,6 +43,10 @@
     float: left;
 }
 
+.selPickerDiv .show-tick {
+    width: 100% !important;
+}
+
 .form-label {
     font-weight: bold;
 }
@@ -247,6 +251,7 @@ opacity: 1;
                                             <option value="4">Checked In</option>
                                             <option value="5">Checked Out</option>
                                             <option value="6">No Shows</option>
+                                            <option value="7">Cancelled</option>
                                         </select>
                                     </div>
                                 </div>
@@ -417,6 +422,10 @@ opacity: 1;
                             <button type="button" class="btn btn-primary accompany-guests">Accompanying</button>
                             <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add
                                 On</button>
+                            <button type="button" class="btn btn-primary cancel-reservation d-none"
+                                data_sysid="">Cancel</button>
+                            <button type="button" class="btn btn-primary reinstate-reservation d-none"
+                                data_sysid="">Reinstate</button>
                             <button type="button" class="btn btn-primary show-activity-log">Changes</button>
                             <button type="button" class="btn btn-primary mt-2" id="registerCardButton" data_sysid=""
                                 style="width: 135px;">Registration Card</button>
@@ -776,10 +785,11 @@ opacity: 1;
                                         <option value="">Select</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="form-label">Feature</label>
-                                    <select id="RESV_FEATURE" class="select2 form-select" data-allow-clear="true">
-                                        <option value="">Select</option>
+                                <div class="col-md-3 selPickerDiv">
+                                    <label class="form-label">Features</label>
+                                    <select id="RESV_FEATURE" class="selectpicker" multiple data-icon-base="bx"
+                                        data-tick-icon="bx-check text-primary" data-live-search="true"
+                                        data-allow-clear="true">
                                     </select>
                                 </div>
                                 <div class="col-md-3">
@@ -1120,11 +1130,11 @@ opacity: 1;
                                                 </select>
                                                 <div class="invalid-feedback"> Payment required can't empty.</div>
                                             </div>
-                                            <div class="col-md-3 mt-2">
-                                                <label class="form-label">Specials</label>
-                                                <select name="RESV_SPECIALS" id="RESV_SPECIALS"
-                                                    class="select2 form-select" data-allow-clear="true">
-                                                    <option value="">Select</option>
+                                            <div class="col-md-3 mt-2 selPickerDiv">
+                                                <label class="form-label" for="RESV_SPECIALS">Specials</label>
+                                                <select name="RESV_SPECIALS[]" id="RESV_SPECIALS" class="selectpicker"
+                                                    multiple data-icon-base="bx" data-tick-icon="bx-check text-primary"
+                                                    data-live-search="true" data-allow-clear="true">
                                                 </select>
                                             </div>
                                             <div class="col-md-3 mt-2">
@@ -2961,7 +2971,7 @@ $(document).ready(function() {
                 className: "text-center",
                 "orderable": false,
                 render: function(data, type, row, meta) {
-                    return (
+                    var resvListButtons =
                         '<div class="d-inline-block flxy_option_view dropend">' +
                         '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                         '<ul class="dropdown-menu dropdown-menu-end">' +
@@ -2975,14 +2985,17 @@ $(document).ready(function() {
                         '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
                             'RM_TY_DESC'] + '" data-reservation_customer_id = "' + data[
                             'CUST_ID'] +
-                        '"  class="dropdown-item reserOption text-success"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
-                        // '<div class="dropdown-divider"></div>' +
-                        '<div class="dropdown-divider"></div>' +
+                        '"  class="dropdown-item reserOption text-success"><i class="fa-solid fa-align-justify"></i> Options</a></li>';
+
+                    if (data['RESV_STATUS'] != 'Checked-In')
+                        resvListButtons += '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
-                        '" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>' +
-                        '</ul>' +
-                        '</div>'
-                    );
+                        '" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>';
+
+                    resvListButtons += '</ul>' +
+                        '</div>';
+
+                    return resvListButtons;
                 }
             },
             {
@@ -3008,8 +3021,10 @@ $(document).ready(function() {
             {
                 data: 'RESV_STATUS',
                 render: function(data, type, row, meta) {
+                    var statClass = data == 'Cancelled' ? 'flxy_status_cncl' :
+                        'flxy_status_cls';
                     return (
-                        '<div class="flxy_status_cls">' + data + '</div>'
+                        '<div class="' + statClass + '">' + data + '</div>'
                     );
                 }
             },
@@ -3142,6 +3157,18 @@ $(document).ready(function() {
 
     loadBlockList();
 
+    $.ajax({
+        url: '<?php echo base_url('/specialsList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        // dataType:'json',
+        success: function(respn) {
+            $('#RESV_SPECIALS').html(respn).selectpicker('refresh');
+        }
+    });
+
 });
 
 $(document).on('hide.bs.modal', '#compnayAgentWindow', function() {
@@ -3206,11 +3233,16 @@ function generateRateQuery(mode = 'AVG') {
 
     // Room Class filter
     formData['RESV_ROOM_CLASS'] = $('.window-1').is(':visible') ? $('#RESV_ROOM_CLASS').val() : '';
+    formData['RESV_FEATURE'] = $('.window-1').is(':visible') ? $('#RESV_FEATURE').val() : '';
 
     // Rate Code, Category, Class filters
     formData['RESV_RATE_CODE'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CODE').val() : '';
-    formData['RESV_RATE_CATEGORY'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CATEGORY').val() : ''; 
-    formData['RESV_RATE_CLASS'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CLASS').val() : ''; 
+    formData['RESV_RATE_CODE_ROOM_TYPES'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CODE').find(
+        ':selected').attr('data-rc-roomtypes') : '';
+
+    formData['RESV_RATE_CATEGORY'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CATEGORY').val() :
+        '';
+    formData['RESV_RATE_CLASS'] = $('.window-1').is(':visible') ? $('.window-1').find('#RESV_RATE_CLASS').val() : '';
 
     // Closed and Day Use filters
 
@@ -3316,6 +3348,7 @@ function selectRate() {
 
     $('[name="RESV_COMPANY"]').val($('#RESV_COMPANY_ADD').val()).trigger('change').trigger('select2:select');
     $('[name="RESV_AGENT"]').val($('#RESV_AGENT_ADD').val()).trigger('change').trigger('select2:select');
+    $('#RESV_EXT_PURP_STAY').val($('#RESV_PURPOSE_STAY').val()).trigger('change').trigger('select2:select');
 
     if ($('.window-1').is(':visible')) {
         $('.window-2').find('.RESV_ARRIVAL_DT').datepicker().datepicker("setDate", $('.window-1').find(
@@ -3350,6 +3383,8 @@ function selectRate() {
         $('.window-1,#nextbtn').hide();
         $('.window-2,#previousbtn').show();
         $('#submitResrBtn').removeClass('submitResr');
+        $('.window-2').find('.nav a:first').tab('show'); // Make first tab of Edit form active
+
         runInitializeConfig();
         $.ajax({
             url: '<?php echo base_url('/getRoomTypeDetails') ?>',
@@ -3455,6 +3490,9 @@ $(document).on('click', '.reserOption', function() {
     });
 
     $('#Accompany').show();
+
+    $('.flxy_opt_btn > .btn').removeClass('d-none').prop('disabled', false); // Show all buttons by default
+
     //$('#Addon').hide();
     $('#Addon,#reservationW').modal('hide');
     $('#optionWindow').modal('show');
@@ -3467,6 +3505,39 @@ $(document).on('click', '.reserOption', function() {
     $('#proformaButton').attr('data_sysid', ressysId);
     $('#rateInfoButton').attr('data_sysid', ressysId);
     $('#traceButton').attr('data_sysid', ressysId);
+
+    $('.cancel-reservation,.reinstate-reservation').attr('data_sysid', ressysId);
+
+    // Reservation Specific Option display
+
+    $.ajax({
+        url: '<?php echo base_url('/getReservDetails') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        async: false,
+        data: {
+            reservID: ressysId,
+        },
+        dataType: 'json',
+        success: function(respn) {
+            if (respn.RESV_STATUS == 'Cancelled') {
+                $('.cancel-reservation').addClass('d-none').prop('disabled', true);
+                $('.reinstate-reservation').removeClass('d-none').prop('disabled', false);
+                $('.accompany-guests,#proformaButton,#registerCardButton,.shares-btn').prop(
+                    'disabled', true);
+            } else {
+                $('.reinstate-reservation').addClass('d-none').prop('disabled', true);
+
+                if (respn.RESV_STATUS == 'Due Pre Check-In' || respn.RESV_STATUS ==
+                    'Pre Checked-In')
+                    $('.cancel-reservation').removeClass('d-none').prop('disabled', false);
+                else
+                    $('.cancel-reservation').addClass('d-none').prop('disabled', true);
+            }
+        }
+    });
 });
 
 $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
@@ -3476,7 +3547,8 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     itemClassList();
 
     $('#reservationForm').removeClass('was-validated');
-    $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
+    $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false).prop('disabled',
+        false);
     $('#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
 
     runSupportingResevationLov();
@@ -3571,13 +3643,25 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                     } else if (field == 'CUST_VIP' || field == 'RESV_BLOCK') {
                         $('.' + field).select2("val", dataval);
                     } else {
+                        if (field == 'RESV_SPECIALS') {
+                            var dataval = dataval.split(',');
+                        }
+
                         $('*#' + field).val(dataval).trigger('change');
-                        if (field == 'CUST_COUNTRY') {
+                        if (field == 'CUST_COUNTRY' || field == 'RESV_SPECIALS') {
                             $('*#' + field).selectpicker('refresh');
                         }
                     }
                 });
             });
+
+            // Disable all fields if 'Cancelled'
+            if ($('#RESV_STATUS').val() == 'Cancelled')
+                $(':input', '#reservationForm').prop('disabled', true);
+            else if ($('#RESV_STATUS').val() == 'Checked-In') {
+                $('.RESV_NAME,#CUST_FIRST_NAME,#RESV_ARRIVAL_DT,#RESV_RESRV_TYPE,#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RM_TYPE,#RESV_ROOM')
+                    .prop('disabled', true);
+            }
 
             if (mode == 'CPY') {
 
@@ -3677,7 +3761,8 @@ function addResvation() {
     RateClassList();
 
     clearFormFields('#select_items');
-    $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false);
+    $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false).prop('disabled',
+        false);
     $('#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
     $('.select2').val(null).trigger('change');
 
@@ -4232,8 +4317,11 @@ function runSupportingResevationLov() {
                     $('#RESV_RATE_CATEGORY').html(option);
                 } else if (idArray[ind] == 'CUST_VIP') {
                     $('.CUST_VIP').html(option);
+                } else if (idArray[ind] == 'RESV_FEATURE') {
+                    $('#RESV_FEATURE').html(option).selectpicker('refresh');
                 } else if (idArray[ind] != 'RESV_MEMBER_TY') {
                     $('#' + idArray[ind]).html(option);
+
                     if (idArray[ind] == 'RESV_TRANSPORT_TYP') {
                         $('#RESV_TRANSPORT_TYP_DO').html(option);
                     }

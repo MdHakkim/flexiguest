@@ -104,6 +104,7 @@ class TransportRequestController extends BaseController
             ->join('FLXY_PICKUP_POINTS as pp', 'FLXY_TRANSPORT_REQUESTS.TR_PICKUP_POINT_ID = pp.PP_ID', 'left')
             ->join('FLXY_DROPOFF_POINTS as dp', 'FLXY_TRANSPORT_REQUESTS.TR_DROPOFF_POINT_ID = dp.DP_ID', 'left')
             ->where('TR_CUSTOMER_ID', $customer_id)
+            ->orderBy('TR_ID', 'desc')
             ->findAll();
 
         return $this->respond(responseJson(200, false, ['msg' => 'All requests'], $all_requests));
