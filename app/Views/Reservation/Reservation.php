@@ -3390,6 +3390,8 @@ function selectRate() {
         $('.window-1,#nextbtn').hide();
         $('.window-2,#previousbtn').show();
         $('#submitResrBtn').removeClass('submitResr');
+        $('.window-2').find('.nav a:first').tab('show'); // Make first tab of Edit form active
+
         runInitializeConfig();
         $.ajax({
             url: '<?php echo base_url('/getRoomTypeDetails') ?>',
@@ -3577,8 +3579,6 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     clearFormFields('#select_items');
     showInventoryItems(sysid);
     showPackages(sysid);
-
-    $('.window-2').find('.nav a:first').tab('show'); // Make first tab of Edit form active
 
     var mode = '';
     if (param) {
