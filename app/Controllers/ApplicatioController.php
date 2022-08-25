@@ -127,6 +127,7 @@ class ApplicatioController extends BaseController
                                                     case '3': $init_cond["RESV_ARRIVAL_DT = "] = "RESV_DEPARTURE"; break;
                                                     case '4': $init_cond["RESV_STATUS = "] = "'Checked-In'"; break;
                                                     case '5': $init_cond["RESV_STATUS = "] = "'Checked-Out'"; break;
+                                                    case '7': $init_cond["RESV_STATUS = "] = "'Cancelled'"; break;
                                                     default: break;
                                                 }
                                               } break;
@@ -292,7 +293,6 @@ class ApplicatioController extends BaseController
                 "RESV_SOURCE" => $this->request->getPost("RESV_SOURCE"),
                 "RESV_ORIGIN" => $this->request->getPost("RESV_ORIGIN"),
                 "RESV_PAYMENT_TYPE" => $this->request->getPost("RESV_PAYMENT_TYPE"),
-                "RESV_SPECIALS" => $this->request->getPost("RESV_SPECIALS"),
                 "RESV_COMMENTS" => $this->request->getPost("RESV_COMMENTS"),
                 "RESV_ITEM_INVT" => $this->request->getPost("RESV_ITEM_INVT"),
                 "RESV_BOKR_LAST" => $this->request->getPost("RESV_BOKR_LAST"),
@@ -327,6 +327,11 @@ class ApplicatioController extends BaseController
                 "RESV_UPDATE_UID" => session()->get('USR_ID'),
                 "RESV_UPDATE_DT" => date("d-M-Y")
                 ];
+
+                $RESV_SPECIALS = $this->request->getPost('RESV_SPECIALS[]');
+                if($RESV_SPECIALS != NULL)
+                    $data['RESV_SPECIALS'] = implode(",", $RESV_SPECIALS);
+
                 $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data); 
 
                 foreach($currentReservation as $rkey => $rvalue)
@@ -394,7 +399,6 @@ class ApplicatioController extends BaseController
                     "RESV_SOURCE" => $this->request->getPost("RESV_SOURCE"),
                     "RESV_ORIGIN" => $this->request->getPost("RESV_ORIGIN"),
                     "RESV_PAYMENT_TYPE" => $this->request->getPost("RESV_PAYMENT_TYPE"),
-                    "RESV_SPECIALS" => $this->request->getPost("RESV_SPECIALS"),
                     "RESV_COMMENTS" => $this->request->getPost("RESV_COMMENTS"),
                     "RESV_ITEM_INVT" => $this->request->getPost("RESV_ITEM_INVT"),
                     "RESV_BOKR_LAST" => $this->request->getPost("RESV_BOKR_LAST"),
@@ -429,6 +433,11 @@ class ApplicatioController extends BaseController
                     "RESV_CREATE_UID" => session()->get('USR_ID'),
                     "RESV_CREATE_DT" => date("d-M-Y")
                 ];
+
+                $RESV_SPECIALS = $this->request->getPost('RESV_SPECIALS[]');
+                if($RESV_SPECIALS != NULL)
+                    $data['RESV_SPECIALS'] = implode(",", $RESV_SPECIALS);
+
                 $return = $this->Db->table('FLXY_RESERVATION')->insert($data); 
                 $sysid = $this->Db->insertID();
 
@@ -2769,6 +2778,17 @@ class ApplicatioController extends BaseController
         }
     }
 
+    public function specialsList(){
+        $search = $this->request->getPost("search");
+        $sql = "SELECT * FROM FLXY_SPECIAL_CODE ORDER BY SPC_SEQ ASC";
+        $response = $this->Db->query($sql)->getResultArray();
+        $option='';
+        foreach($response as $row){
+            $option.= '<option data-special-id="'.trim($row['SPC_ID']).'" value="'.$row['SPC_CODE'].'">'.$row['SPC_DESC'].'</option>';
+        }
+        echo $option;
+    }
+
     public function editSpecial(){
         $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT SPC_ID,SPC_CODE,SPC_DESC,SPC_SEQ FROM FLXY_SPECIAL_CODE WHERE SPC_ID=:SYSID:";
@@ -3034,6 +3054,10 @@ class ApplicatioController extends BaseController
             $RESV_ROOM_CLASS = $this->request->getPost('RESV_ROOM_CLASS');
             $room_class_filter = !empty($RESV_ROOM_CLASS) ? " AND RM_TY_ROOM_CLASS = '".$RESV_ROOM_CLASS."'" : "";
 
+            $RESV_FEATURE = $this->request->getPost('RESV_FEATURE');
+            $features_filter = $RESV_FEATURE != NULL ? 
+                               " AND CONCAT(',', RM_TY_FEATURE, ',') LIKE '%,".str_replace(",", ",%' OR CONCAT(',', RM_TY_FEATURE, ',') LIKE '%,", implode(",", $RESV_FEATURE)).",%'" : "";
+
             $RESV_RATE_CLASS = $this->request->getPost('RESV_RATE_CLASS');
             $RESV_RATE_CATEGORY = $this->request->getPost('RESV_RATE_CATEGORY');
             $RESV_RATE_CODE = $this->request->getPost('RESV_RATE_CODE');
@@ -3061,10 +3085,10 @@ class ApplicatioController extends BaseController
                         'TODAYDATE'=> $TODAYDATE
                      ];
 
-            $sql = "SELECT RM_TY_CODE, RM_TY_DESC, RM_TY_TOTAL_ROOM, TOTAL_OVER_BOOKING 
+            $sql = "SELECT RM_TY_CODE, RM_TY_DESC, RM_TY_TOTAL_ROOM, TOTAL_OVER_BOOKING, RM_TY_FEATURE 
                     FROM 
 			            (   SELECT  RM_TY_CODE,(RM_TY_TOTAL_ROOM) RM_TY_TOTAL_ROOM, RM_TY_DESC, RM_TY_ROOM_CLASS,
-			                        (RM_TY_TOTAL_ROOM)TOTAL_OVER_BOOKING,
+			                        (RM_TY_TOTAL_ROOM)TOTAL_OVER_BOOKING, RM_TY_FEATURE,
 			                        ROW_NUMBER() OVER (PARTITION BY RM_TY_CODE ORDER BY RM_TY_CODE) AS ROW_NUMBER
 			                FROM    FLXY_ROOM_TYPE ROOMTYTB
                 			LEFT JOIN FLXY_OVERBOOKING OVERBTB  ON RM_TY_CODE = OB_RM_TYPE 
@@ -3074,6 +3098,7 @@ class ApplicatioController extends BaseController
                     WHERE ROW_NUMBER = 1 
                     $room_class_filter
                     $rcode_roomtype_filter
+                    $features_filter
                     ORDER BY RM_TY_CODE ASC";
             
             $response = $this->Db->query($sql,$param)->getResultArray();

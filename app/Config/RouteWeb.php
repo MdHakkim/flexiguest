@@ -163,6 +163,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertSpecial', 'ApplicatioController::insertSpecial');
     $routes->match(['post'],'/editSpecial', 'ApplicatioController::editSpecial');
     $routes->match(['post'],'/deleteSpecial', 'ApplicatioController::deleteSpecial');
+    $routes->match(['post'],'/specialsList', 'ApplicatioController::specialsList');
 
     $routes->get('/reservationType', 'ApplicatioController::reservationType');
     $routes->match(['post'],'/reservationTypeView', 'ApplicatioController::ReservationTypeView');
