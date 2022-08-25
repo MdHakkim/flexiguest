@@ -3,6 +3,13 @@
 <?= $this->include('Layout/SuccessReport') ?>
 <?= $this->include('Layout/ErrorReport') ?>
 
+
+<style>
+/* style comparison */
+
+
+</style>
+
 <style>
 .active-tr {
     background-color: #d1e7ff !important;
@@ -10,8 +17,7 @@
 }
 
 #accompanyTd .activeTr td {
-    background-color: #f0e0cc;
-     !important;
+    background-color: #f0e0cc !important;
     color: #000 !important;
 }
 
@@ -84,6 +90,57 @@
 .nav-tabs .nav-item a {
     font-weight: bold;
 }
+
+#calendar {
+      max-width: 1100px;
+      margin: 40px auto;
+      font-size: 14px;
+    }
+    .fc-time{ display : none !important; } 
+    .fc-event-time { display: none }
+    
+    
+    .fc-time-grid-event.fc-short .fc-time,.fc-time-grid-event .fc-time{
+        display: none !important;
+    }
+    
+    .fc-time-grid .fc-content-skeleton {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%; }
+
+  .fc-event-container .fc-timeline-event{
+    background-color: #405974 !important;
+    border-color: #405974 !important;
+    color: rgb(255, 255, 255) !important;
+   
+    top: 3px !important;
+  }
+  .fc-timeline-event .fc-time, .fc-timeline-event .fc-title{
+    padding: 4px !important;
+    font-size: 13px !important;
+  }
+  .fc-resource-area col.fc-main-col {
+    width: 35% !important;
+}
+.tooltip
+{
+opacity: 1;
+}
+#errorModal{
+  display: none;
+}
+#errorModal{
+    position: fixed;
+    top: 10px;
+    right: 22px;
+    z-index: 10000;
+    width: 500px;
+}
+  
 </style>
 
 <!-- Content wrapper -->
@@ -1947,15 +2004,15 @@
 
                     <div id="wizard-validation" class="bs-stepper mt-2">
                         <div class="bs-stepper-header">
-                            <div class="step" data-target="#select_items">
+                            <div class="step" data-target="#select_items" >
                                 <button type="button" class="step-trigger">
                                     <span class="bs-stepper-circle">1</span>
                                     <span class="bs-stepper-label">Items</span>
                                 </button>
                             </div>
                             <div class="line"></div>
-                            <div class="step" data-target="#item_availability">
-                                <button type="button" class="step-trigger">
+                            <div class="step" data-target="#item_availability"  onclick="showInventoryAvailability()" >
+                                <button type="button" class="step-trigger" >
                                     <span class="bs-stepper-circle">2</span>
                                     <span class="bs-stepper-label">Inventory Availability</span>
                                 </button>
@@ -2031,7 +2088,6 @@
                                                         </button>&nbsp;
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                         </div>
@@ -2084,13 +2140,13 @@
                                     </div>
 
                                 </div>
-                            </form>
+                                </form>
                             <div id="item_availability" class="content">
                                 <div class="card app-calendar-wrapper">
                                     <div class="row g-0">
 
                                         <!-- Calendar Sidebar -->
-                                        <div class="app-calendar-sidebar col" id="app-calendar-sidebar">
+                                        <div class="app-calendar-sidebar col" id="app-calendar-sidebar" style="display: none;">
                                             <div class="border-bottom p-4 my-sm-0 mb-3">
                                                 <div class="d-grid">
                                                     <button class="btn btn-primary btn-toggle-sidebar">
@@ -2132,77 +2188,13 @@
                                             </div>
                                             <div class="app-overlay"></div>
                                             <!-- FullCalendar Offcanvas -->
-                                            <div class="offcanvas offcanvas-end event-sidebar" tabindex="-1"
-                                                id="addEventSidebar" aria-labelledby="addEventSidebarLabel">
-                                                <div class="offcanvas-header border-bottom">
-                                                    <h6 class="offcanvas-title" id="addEventSidebarLabel">Show Item
-                                                        Details</h6>
-                                                    <button type="button" class="btn-close text-reset"
-                                                        data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                                                </div>
-                                                <div class="offcanvas-body">
-                                                    <form class="event-form pt-0" id="eventForm"
-                                                        onsubmit="return false">
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="eventTitle">Title</label>
-                                                            <input type="text" class="form-control" id="eventTitle"
-                                                                name="eventTitle" placeholder="Event Title" />
-                                                        </div>
-
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="eventStartDate">Start
-                                                                Date</label>
-                                                            <input type="text" class="form-control" id="eventStartDate"
-                                                                name="eventStartDate" placeholder="Start Date" />
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="eventEndDate">End
-                                                                Date</label>
-                                                            <input type="text" class="form-control" id="eventEndDate"
-                                                                name="eventEndDate" placeholder="End Date" />
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="switch">
-                                                                <input type="checkbox"
-                                                                    class="switch-input allDay-switch" />
-                                                                <span class="switch-toggle-slider">
-                                                                    <span class="switch-on"></span>
-                                                                    <span class="switch-off"></span>
-                                                                </span>
-                                                                <span class="switch-label">All Day</span>
-                                                            </label>
-                                                        </div>
-
-                                                        <div class="mb-3">
-                                                            <label class="form-label"
-                                                                for="eventDescription">Description</label>
-                                                            <textarea class="form-control" name="eventDescription"
-                                                                id="eventDescription"></textarea>
-                                                        </div>
-
-                                                        <div class="d-flex justify-content-start justify-content-sm-between my-4 mb-3"
-                                                            style="display:none !important">
-                                                            <div>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary btn-add-event me-1 me-sm-3">Add</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary btn-update-event d-none me-1 me-sm-3">
-                                                                    Update
-                                                                </button>
-
-                                                            </div>
-                                                            <div><button
-                                                                    class="btn btn-label-danger btn-delete-event d-none">Delete</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
+                                            
                                         </div>
                                         <!-- /Calendar & Modal -->
                                     </div>
                                 </div>
                             </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -5259,52 +5251,147 @@ function itemInventoryClassSingle() {
 
 
 
+// let date = new Date();
+// let nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+// // prettier-ignore
+// let nextMonth = date.getMonth() === 11 ? new Date(date.getFullYear() + 1, 0, 1) : new Date(date.getFullYear(), date
+//     .getMonth() + 1, 1);
+// // prettier-ignore
+// let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) : new Date(date.getFullYear(), date
+//     .getMonth() - 1, 1);
+
+
+
+
+//document.addEventListener('DOMContentLoaded', function() {
+  function showInventoryAvailability()
+ {    
+    if($('#calendar>*').length == 0) {calendarRender();}
+ }
+
+
+function calendarRender(){
+    
 let date = new Date();
 let nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 // prettier-ignore
-let nextMonth = date.getMonth() === 11 ? new Date(date.getFullYear() + 1, 0, 1) : new Date(date.getFullYear(), date
-    .getMonth() + 1, 1);
+let nextMonth = date.getMonth() === 11 ? new Date(date.getFullYear() + 1, 0, 1) : new Date(date.getFullYear(), date.getMonth() + 1, 1);
 // prettier-ignore
-let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) : new Date(date.getFullYear(), date
-    .getMonth() - 1, 1);
+let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) : new Date(date.getFullYear(), date.getMonth() - 1, 1);
 
 
 
-// $row['ITM_AVAIL_TO_TIME']
-// $row['ITM_AVAIL_FROM_TIME']
-let events = [
+var calendarEl = document.getElementById('calendar');
+
+var calendar = new FullCalendar.Calendar(calendarEl, {
+//schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+//titleFormat: 'YYYY-MM-DD',
+timeZone: 'UTC',
+plugins: [ 'resourceTimeline', 'interaction' ],
+
+droppable: true,
+
+header: {
+
+left: 'today prev,next',
+
+center: 'title',
+
+right: ''
+
+},
+
+
+aspectRatio: 1.5,
+
+defaultView: 'resourceTimelineWeek',
+
+slotLabelFormat: [{ weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true }],
+
+slotLabelInterval: { days: 1 },
+
+editable: true,
+
+resourceAreaWidth: '35%',
+
+resourceColumns: [
+
+{
+
+labelText: 'Item',
+
+field: 'item',
+
+},
+
+
+],
+validRange: {
+    start: '2022-01-01',
+    end: '2040-12-31'
+},
+
+resources: [<?php
+ if(!empty($itemResources))
+  {
+    foreach($itemResources as $resources) {?>
+    {   id: '<?php echo $resources['ITM_ID']?>',
+        item: '<?php echo $resources['ITM_NAME']?>'
+    },
+    <?php }
+  } ?>
+ ],
+ 
+events: [
     <?php
         if (!empty($itemAvail)) {
-            foreach ($itemAvail as $row) {
+           for($j=0; $j<count($itemResources);$j++) {
+            for($i=1; $i<=count($itemAvail[$j]);$i++) { 
+                
+                $start = date("Y-m-d H:i:s", strtotime($itemAvail[$j][$i]['START']));
+                $end = date("Y-m-d 23:59:59", strtotime($itemAvail[$j][$i]['END']));
+               
+        ?> {
+            id: '<?php echo $itemAvail[$j][$i]['ITM_ID'] ?>',
+            resourceId: '<?php echo $itemAvail[$j][$i]['ITM_ID']?>',
+            title: '<?php echo $itemAvail[$j][$i]['ITM_REMAINING_STOCK'].' | '.$itemAvail[$j][$i]['ITM_QTY_IN_STOCK']; ?>',
+            start: '<?php echo $start; ?>',
+            end: '<?php echo $end; ?>',
+            backgroundColor:"#405974",
+            borderColor: "#405974",
+            textColor:"#fff"
+        },
 
-                $start = $row['ITM_DLY_BEGIN_DATE'];
-                $startDate = date("Y-m-d", strtotime($start));
+    <?php   }
+    
+           }
+         }
+         ?>
+ 
+],
 
-                $end = $row['ITM_DLY_END_DATE'];
-                $endDate = date("Y-m-d", strtotime($end));
+eventMouseEnter: function (info) {
+    console.log(info.event)
+       $(info.el).tooltip({
+          title: info.event.title,
+          html: true,
+          placement: 'top',
+          trigger: 'hover',
+          container: 'body',
+    });
+},
+ 
+    
+});
 
-                $startTime = date("H:i A", strtotime($row['ITM_AVAIL_FROM_TIME']));
+calendar.render();
 
-                $endTime = date("H:i A", strtotime($row['ITM_AVAIL_TO_TIME']));
+}
+//});
 
 
-        ?>, {
-        id: '<?php echo $row['ITM_ID'] ?>',
-        url: '',
-        title: '<?php echo $startTime . ' - ' . $endTime . '  | ' . $row['ITM_CODE'] . ' - ' . $row['ITM_CODE'] ?>',
-        start: '<?php echo $startDate; ?>',
-        end: '<?php echo $endDate; ?>',
-        allDay: false,
-        description: '',
-        extendedProps: {
-            calendar: 'Business'
-        }
-    },
 
-    <?php }
-        } ?>
-
-];
 
 
 //////// Fixed Charges Functions
@@ -5337,7 +5424,6 @@ $(document).on('click', '#fixedChargeButton', function() {
             $('#FIXD_CHRG_FREQUENCY4').prop('disabled', false);
             $('#FIXD_CHRG_FREQUENCY5').prop('disabled', false);
             $('#FIXD_CHRG_FREQUENCY6').prop('disabled', false);
-
         }
     });
 

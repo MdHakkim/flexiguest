@@ -42,8 +42,9 @@ class ApplicatioController extends BaseController
         $data['session'] = $this->session;
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $itemLists = $this->itemList();    
-        $data['itemLists'] = $itemLists;                 
-        $data['itemAvail'] = $this->ItemCalendar();     
+        $data['itemLists'] = $itemLists;   
+        $data['itemResources'] = $this->itemResources();                 
+        $data['itemAvail'] = $this->ItemCalendar();
         $data['classList'] = $this->itemInventoryClassList();
         $data['FrequencyList'] = $this->frequencyList();  
         $data['toggleButton_javascript'] = toggleButton_javascript();
@@ -51,10 +52,49 @@ class ApplicatioController extends BaseController
         $data['blockLoader_javascript'] = blockLoader_javascript();
 
         $data['userList'] = geUsersList(); 
-
-        $data['js_to_load'] = array("inventoryFormWizardNumbered.js","reservation-calendar.js");
-
+        //$data['js_to_load'] = array("inventoryFormWizardNumbered.js","reservation-calendar.js");
+        $data['js_to_load'] = array("inventoryFormWizardNumbered.js","RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
+        //$data['js_to_load'] = array("inventoryFormWizardNumbered.js","RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
+        $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
+        
+        $data['RoomReservations'] = $this->getReservations(); 
+        $data['RoomResources'] = $this->roomplanResources();
         return view('Reservation/Reservation', $data);
+    }
+
+    public function roomplanResources()
+    {
+        $data = $response = NULL;
+        $sql = "SELECT RM_ID, RM_NO, RM_TYPE, SM.RM_STATUS_CODE, RL.RM_STAT_UPDATED      
+        FROM FLXY_ROOM 
+        LEFT JOIN (SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID
+                      ,RM_STAT_ROOM_ID
+                  FROM FLXY_ROOM_STATUS_LOG
+                  GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+        
+        INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
+        
+        INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
+
+        GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
+
+        ORDER BY RM_ID ASC";       
+        $responseCount = $this->Db->query($sql)->getNumRows();
+        if($responseCount > 0)
+        $response = $this->Db->query($sql)->getResultArray();
+        return $response;
+    }
+
+
+
+    public function getReservations(){
+        $response = NULL;
+        $sql = "SELECT RESV_ID, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, RESV_ROOM, RESV_STATUS, RM_ID FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID INNER JOIN FLXY_ROOM ON RM_ID = RESV_ROOM_ID WHERE RESV_STATUS != 'Checked-Out' ORDER BY RM_ID ASC";       
+        $responseCount = $this->Db->query($sql)->getNumRows();
+        if($responseCount > 0){
+            $response = $this->Db->query($sql)->getResultArray();           
+        }
+      return $response;
     }
 
     public function blockList(){
@@ -68,8 +108,8 @@ class ApplicatioController extends BaseController
                 $option.= '<option value="'.$row['BLK_ID'].'">'.$description.'</option>';
             }
             echo $option;
-        }catch (Exception $e){
-            echo json_encode($e->errors());
+        }catch (\Exception $e){
+            echo json_encode($e->getMessage());
         }
     }
 
@@ -4099,17 +4139,94 @@ class ApplicatioController extends BaseController
         }
 
 
-
+        public function ItemResources(){
+            $response = NULL;
+            $sql = "SELECT ITM_ID, ITM_CODE, ITM_NAME         
+                    FROM FLXY_ITEM WHERE ITM_STATUS = '1' ORDER BY ITM_ID ASC";       
+            $responseCount = $this->Db->query($sql)->getNumRows();
+            if($responseCount > 0)
+            $response = $this->Db->query($sql)->getResultArray();
+    
+          return $response;
+        }
 
     public function ItemCalendar(){
         $response = NULL;
-        $sql = "SELECT dbo.FLXY_ITEM.ITM_ID, ITM_CODE, ITM_NAME, ITM_DESC, dbo.FLXY_ITEM.IT_CL_ID, IT_CL_CODE, IT_CL_DESC, ITM_AVAIL_FROM_TIME, ITM_AVAIL_TO_TIME, ITM_DLY_BEGIN_DATE, ITM_DLY_END_DATE          
-                FROM dbo.FLXY_ITEM LEFT JOIN dbo.FLXY_DAILY_INVENTORY ON dbo.FLXY_ITEM.ITM_ID = dbo.FLXY_DAILY_INVENTORY.ITM_ID INNER JOIN dbo.FLXY_ITEM_CLASS ON dbo.FLXY_ITEM.IT_CL_ID = dbo.FLXY_ITEM_CLASS.IT_CL_ID ";       
+        
+        $sql = "SELECT ITM_ID, ITM_QTY_IN_STOCK         
+                FROM FLXY_ITEM ORDER BY ITM_ID ASC";       
         $responseCount = $this->Db->query($sql)->getNumRows();
-        if($responseCount > 0)
-        $response = $this->Db->query($sql)->getResultArray();
+        if($responseCount > 0){
+            $response = $this->Db->query($sql)->getResultArray();
+            $j=0;
+            foreach($response as $row){
+                $ITM_BEGIN_DATE    = strtotime('2022-01-01');
+                $ITM_END_DATE      = strtotime('2032-12-31'); 
+                $DATEDIFF = $ITM_END_DATE - $ITM_BEGIN_DATE;
+                $AVAILABLE_DAYS = round($DATEDIFF / (60 * 60 * 24));
+                $ITM_DLY_QTY = 0;
+                $ITEM_RESERVED = 0;
+                for($i = 1; $i <= ($AVAILABLE_DAYS+1); $i++ ){
+                    $sCurrentDate = gmdate("Y-m-d", strtotime("+$i day", $ITM_BEGIN_DATE)); 
+                    $CurrentDate = strtotime($sCurrentDate); 
+                    $items[$j][$i]['ITM_ID'] = $row['ITM_ID'];
+                    //$ITM_DLY_QTY = $this->checkItemDailyInventory($row['ITM_ID'],$sCurrentDate );
+                    $ITEM_RESERVED = $this->checkItemReserved($row['ITM_ID'],$sCurrentDate );
 
-      return $response;
+                    /////// Item Total quantity and Item Available quantity are depends on the Items table and Daily inventory table
+
+
+                    // if($ITM_DLY_QTY > 0){
+                    //     $ITM_REMAINING_STOCK = $ITM_DLY_QTY - $ITEM_RESERVED;
+                    //     $ITM_QTY_IN_STOCK    = $ITM_DLY_QTY;
+
+                    // }
+                    // else{
+                        $ITM_REMAINING_STOCK = $row['ITM_QTY_IN_STOCK'] - $ITEM_RESERVED;
+                        $ITM_QTY_IN_STOCK    = $row['ITM_QTY_IN_STOCK'];
+                    //}
+                                      
+                    $items[$j][$i]['ITM_REMAINING_STOCK'] = $ITM_REMAINING_STOCK;
+                    $items[$j][$i]['ITM_QTY_IN_STOCK']    = $ITM_QTY_IN_STOCK;
+                    $items[$j][$i]['START'] = $sCurrentDate;
+                    $items[$j][$i]['END'] = $sCurrentDate;
+                }
+                $j++;
+
+            }
+        }
+      return $items;
+    }
+
+    public function checkItemDailyInventory($item_id, $sCurrentDate){
+        $response = NULL;
+        $ITM_DLY_QTY = 0;
+        $sql = "SELECT ITM_DLY_QTY FROM FLXY_DAILY_INVENTORY WHERE ITM_ID = '$item_id' AND '$sCurrentDate' BETWEEN ITM_DLY_BEGIN_DATE AND ITM_DLY_END_DATE";                 
+        $responseCount = $this->Db->query($sql)->getNumRows();
+        if($responseCount > 0) {
+            $response = $this->Db->query($sql)->getResultArray(); 
+            foreach($response as $resp){
+                $ITM_DLY_QTY += $resp['ITM_DLY_QTY'];
+            }
+        }
+        return $ITM_DLY_QTY;       
+
+    }
+
+    public function checkItemReserved($item_id, $sCurrentDate){
+        $response = NULL;
+        $total_qty = 0;
+        $sql = "SELECT RSV_ITM_QTY FROM FLXY_RESERVATION_ITEM WHERE RSV_ITM_ID = '$item_id' AND '$sCurrentDate' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE";                 
+        $responseCount = $this->Db->query($sql)->getNumRows();
+        if($responseCount > 0) {
+            $response = $this->Db->query($sql)->getResultArray(); 
+            foreach($response as $resp){
+                $total_qty += $resp['RSV_ITM_QTY'];
+            }
+        }
+        return $total_qty;
+        
+
     }
 
 

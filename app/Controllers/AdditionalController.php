@@ -603,7 +603,7 @@ class AdditionalController extends BaseController
                 }
 
                 //echo json_encode(print_r($_POST)); exit;
-                $ITEM_AVAIL_QTY = (int)$this->request->getPost('ITM_QTY_IN_STOCK')-(int)$this->request->getPost('ITM_QTY_DEFAULT');
+                $ITEM_AVAIL_QTY = (int)$this->request->getPost('ITM_QTY_IN_STOCK');
 
                 $data = [
                     "ITM_NAME" => trim($this->request->getPost('ITM_NAME')),
@@ -620,8 +620,11 @@ class AdditionalController extends BaseController
                     "ITM_SELL_CONTROL" => trim($this->request->getPost('ITM_SELL_CONTROL')),
                     "ITM_SELL_SEPARATE" => trim($this->request->getPost('ITM_SELL_SEPARATE')),
                     "ITM_STATUS" => trim($this->request->getPost('ITM_STATUS')),
-                    "ITEM_AVAIL_QTY" => $ITEM_AVAIL_QTY
                 ];
+
+                if(empty($sysid)){
+                    $data["ITEM_AVAIL_QTY"]  = trim($this->request->getPost('ITM_QTY_IN_STOCK'));                    
+                }
 
                 $return = !empty($sysid) ? $this->Db->table('FLXY_ITEM')->where('ITM_ID', $sysid)->update($data) : $this->Db->table('FLXY_ITEM')->insert($data);
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
@@ -752,20 +755,22 @@ class AdditionalController extends BaseController
                 //echo json_encode(print_r($_POST)); exit;
 
                 $data = [
-                    "IT_CL_ID" => trim($this->request->getPost('IT_CL_ID')),
-                    "ITM_ID" => trim($this->request->getPost('ITM_ID')),
+                    "IT_CL_ID"           => trim($this->request->getPost('IT_CL_ID')),
+                    "ITM_ID"             => trim($this->request->getPost('ITM_ID')),
                     "ITM_DLY_BEGIN_DATE" => trim($this->request->getPost('ITM_DLY_BEGIN_DATE')),
-                    "ITM_DLY_END_DATE" => trim($this->request->getPost('ITM_DLY_END_DATE')),
-                    "ITM_DLY_QTY" => trim($this->request->getPost('ITM_DLY_QTY')),
-                    "ITM_DLY_SUN" => trim($this->request->getPost('ITM_DLY_SUN')),
-                    "ITM_DLY_MON" => trim($this->request->getPost('ITM_DLY_MON')),
-                    "ITM_DLY_TUE" => trim($this->request->getPost('ITM_DLY_TUE')),
-                    "ITM_DLY_WED" => trim($this->request->getPost('ITM_DLY_WED')),
-                    "ITM_DLY_THU" => trim($this->request->getPost('ITM_DLY_THU')),
-                    "ITM_DLY_FRI" => trim($this->request->getPost('ITM_DLY_FRI')),
-                    "ITM_DLY_SAT" => trim($this->request->getPost('ITM_DLY_SAT')),
-                    "ITM_DLY_STATUS" => trim($this->request->getPost('ITM_DLY_STATUS'))
+                    "ITM_DLY_END_DATE"   => trim($this->request->getPost('ITM_DLY_END_DATE')),
+                    "ITM_DLY_QTY"        => trim($this->request->getPost('ITM_DLY_QTY')),                    
+                    "ITM_DLY_SUN"        => trim($this->request->getPost('ITM_DLY_SUN')),
+                    "ITM_DLY_MON"        => trim($this->request->getPost('ITM_DLY_MON')),
+                    "ITM_DLY_TUE"        => trim($this->request->getPost('ITM_DLY_TUE')),
+                    "ITM_DLY_WED"        => trim($this->request->getPost('ITM_DLY_WED')),
+                    "ITM_DLY_THU"        => trim($this->request->getPost('ITM_DLY_THU')),
+                    "ITM_DLY_FRI"        => trim($this->request->getPost('ITM_DLY_FRI')),
+                    "ITM_DLY_SAT"        => trim($this->request->getPost('ITM_DLY_SAT')),
+                    "ITM_DLY_STATUS"     => trim($this->request->getPost('ITM_DLY_STATUS'))
                 ];
+                if(empty($sysid))
+                    $data["ITM_AVAIL_QTY"] = trim($this->request->getPost('ITM_DLY_QTY'));
 
                 $return = !empty($sysid) ? $this->Db->table('FLXY_DAILY_INVENTORY')->where('ITM_DLY_ID', $sysid)->update($data) : $this->Db->table('FLXY_DAILY_INVENTORY')->insert($data);
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
@@ -1818,9 +1823,9 @@ class AdditionalController extends BaseController
                 $DEFAULT_VAT = $RESV_RATE * $VAT;
                 $DEFAULT_PAGE_BREAK = '<tr></tr><div style="margin-top:370px;margin-bottom:5px; page-break-after:always"></div></tr>';
                 $sCurrentDate = gmdate("d-m-Y", strtotime("+$i day", $RESV_ARRIVAL_DATE)); 
-                $CurrentDate = strtotime($sCurrentDate); 
-                $sCurrentDay = gmdate("w", strtotime("+{$i} day", $RESV_ARRIVAL_DATE));
-                $sCurrentD = gmdate("d", strtotime("+{$i} day", $RESV_ARRIVAL_DATE)); 
+                $CurrentDate  = strtotime($sCurrentDate); 
+                $sCurrentDay  = gmdate("w", strtotime("+{$i} day", $RESV_ARRIVAL_DATE));
+                $sCurrentD    = gmdate("d", strtotime("+{$i} day", $RESV_ARRIVAL_DATE)); 
                 $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
                         <td class="text-center" >'.$sCurrentDate.'</td>
                         <td class="text-center">Room Charge </td>

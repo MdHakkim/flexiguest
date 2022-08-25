@@ -554,7 +554,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/getReservations', 'ReservationController::getReservations');     
       $routes->get('/pdfTest', 'AdditionalController::pdfTest');
       $routes->match(['post'],'/updateRoomPlan', 'ReservationController::updateRoomPlan'); 
-      $routes->match(['post'],'/changeReservationDates', 'ReservationController::changeReservationDates');  
+      $routes->match(['post'],'/changeReservationDates', 'ReservationController::changeReservationDates'); 
+      
+      $routes->get('/roomPlanTest', 'ReservationController::roomPlanTest'); 
         
 
       
