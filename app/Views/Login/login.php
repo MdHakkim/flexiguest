@@ -198,8 +198,12 @@
 
             <?php if (isset($validation)) : ?>
                         <div class="col-12">
-                            <div class="alert alert-danger" role="alert">
-                                <?= $validation->listErrors() ?>
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <?php $validationErrors = $validation->getErrors();
+                                      foreach($validationErrors as $field => $validationError)
+                                        echo $validationError.'<br/>'; 
+                                ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -207,7 +211,7 @@
             <form id="formAuthentication" class="mb-3" action="<?= base_url('login') ?>" method="POST">
               <div class="mb-3">
                 <label for="email" class="form-label">Email or Username</label>
-                <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email or username" autofocus
+                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your email or username" autofocus
                 />
               </div>
               <div class="form-password-toggle mb-3">
@@ -235,7 +239,7 @@
                   <label class="form-check-label" for="remember-me"> Remember Me </label>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary d-grid w-100">Sign in</button>
+              <button id="loginSubmitBtn" type="submit" class="btn btn-primary d-grid w-100">Sign in</button>
             </form>
 
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use CodeIgniter\API\ResponseTrait;
 use App\Controllers\BaseController;
 use App\Controllers\Repositories\UserRepository;
@@ -20,7 +21,8 @@ class UserController extends BaseController
     public $request;
     public $todayDate;
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->UserRepository = new UserRepository();
         $this->Db = \Config\Database::connect();
         $this->session = \Config\Services::session();
@@ -36,13 +38,13 @@ class UserController extends BaseController
         if ($this->request->getMethod() == 'post') {
             // echo "Test";exit;
             $rules = [
-                'email' => 'required|min_length[6]|max_length[50]|valid_email',
-                'password' => 'required|min_length[8]|max_length[255]|validateUser[email,password]',
+                'username' => 'required|max_length[50]',
+                'password' => 'required|min_length[8]|max_length[255]|validateUser[username,password]',
             ];
 
             $errors = [
                 'password' => [
-                    'validateUser' => "Email or Password didn't match",
+                    'validateUser' => "Email/Username or Password don't match",
                 ],
             ];
 
@@ -51,22 +53,17 @@ class UserController extends BaseController
                 return view('login/login', [
                     "validation" => $this->validator,
                 ]);
-
             } else {
                 $model = new UserModel();
-                $user = $model->where('USR_EMAIL', $this->request->getVar('email'))
-                    ->first();
+                $user = $model->where('USR_EMAIL', $this->request->getVar('username'))->orWhere('USR_NAME', $this->request->getVar('username'))->first();
 
                 // Stroing session values
                 $this->setUserSession($user);
 
                 // Redirecting to dashboard after login
-                if($user['USR_ROLE_ID'] == "1"){
-
+                if ($user['USR_ROLE_ID'] == "1") {
                     return redirect()->to(base_url('/'));
-
-                }elseif($user['USR_ROLE_ID'] == "3"){
-
+                } elseif ($user['USR_ROLE_ID'] == "3") {
                     return redirect()->to(base_url('editor'));
                 }
             }
@@ -82,7 +79,7 @@ class UserController extends BaseController
             'USR_PHONE' => $user['USR_PHONE'],
             'USR_EMAIL' => $user['USR_EMAIL'],
             'isLoggedIn' => true,
-            "USR_ROLE" => $user['USR_ROLE'],            
+            "USR_ROLE" => $user['USR_ROLE'],
             'USR_ROLE_ID' => $user['USR_ROLE_ID']
         ];
 
@@ -104,19 +101,19 @@ class UserController extends BaseController
     public function Users()
     {
         $data['title'] = getMethodName();
-        $data['session'] = $this->session; 
-        $data['roleList'] = $this->roleList(); 
-        $data['departmentList'] = $this->departmentList();       
+        $data['session'] = $this->session;
+        $data['roleList'] = $this->roleList();
+        $data['departmentList'] = $this->departmentList();
         //$data['js_to_load'] = array("app-user-list.js");
         return view('Users/UsersList', $data);
     }
 
-    public function UsersList()  
+    public function UsersList()
     {
-        $mine      = new ServerSideDataTable(); 
+        $mine      = new ServerSideDataTable();
         $tableName = 'FLXY_USERS LEFT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID LEFT JOIN FLXY_DEPARTMENT ON DEPT_ID = USR_DEPARTMENT';
-        $columns = 'USR_ID,USR_NAME,ROLE_NAME,USR_ROLE_ID,USR_EMAIL,USR_FIRST_NAME,USR_LAST_NAME,USR_DOJ,ROLE_CODE,ROLE_DESC,USR_STATUS,DEPT_CODE,DEPT_DESC'; 
-        
+        $columns = 'USR_ID,USR_NAME,ROLE_NAME,USR_ROLE_ID,USR_EMAIL,USR_FIRST_NAME,USR_LAST_NAME,USR_DOJ,ROLE_CODE,ROLE_DESC,USR_STATUS,DEPT_CODE,DEPT_DESC';
+
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -125,20 +122,19 @@ class UserController extends BaseController
 
 
 
-    public function UserRole()  
+    public function UserRole()
     {
-        
+
         $data['title'] = getMethodName();
-        $data['session'] = $this->session;  
+        $data['session'] = $this->session;
         return view('Users/UserRoleView', $data);
-       
     }
 
     public function UserRoleView()
     {
-        $mine      = new ServerSideDataTable(); 
+        $mine      = new ServerSideDataTable();
         $tableName = 'FLXY_USER_ROLE';
-        $columns = 'ROLE_ID,ROLE_CODE,ROLE_NAME,ROLE_DESC,ROLE_DIS_SEQ,ROLE_STATUS';  
+        $columns = 'ROLE_ID,ROLE_CODE,ROLE_NAME,ROLE_DESC,ROLE_DIS_SEQ,ROLE_STATUS';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -151,8 +147,8 @@ class UserController extends BaseController
             $validate = $this->validate([
                 'ROLE_CODE' => ['label' => 'Role Code', 'rules' => 'required|is_unique[FLXY_USER_ROLE.ROLE_CODE,ROLE_ID,' . $sysid . ']'],
                 'ROLE_NAME' => ['label' => 'Role Name', 'rules' => 'required|is_unique[FLXY_USER_ROLE.ROLE_NAME,ROLE_ID,' . $sysid . ']'],
-                'ROLE_DESC' => ['label' => 'Description', 'rules' => 'required']                        
-                
+                'ROLE_DESC' => ['label' => 'Description', 'rules' => 'required']
+
             ]);
             if (!$validate) {
                 $validate = $this->validator->getErrors();
@@ -168,7 +164,7 @@ class UserController extends BaseController
                 "ROLE_NAME" => trim($this->request->getPost('ROLE_NAME')),
                 "ROLE_DESC" => trim($this->request->getPost('ROLE_DESC')),
                 "ROLE_DIS_SEQ" => trim($this->request->getPost('ROLE_DIS_SEQ')),
-                "ROLE_STATUS" => trim($this->request->getPost('ROLE_STATUS'))               
+                "ROLE_STATUS" => trim($this->request->getPost('ROLE_STATUS'))
             ];
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_USER_ROLE')->where('ROLE_ID', $sysid)->update($data) : $this->Db->table('FLXY_USER_ROLE')->insert($data);
@@ -224,7 +220,7 @@ class UserController extends BaseController
                             "ROLE_NAME" => $origGuestCode["ROLE_NAME"],
                             "ROLE_DESC" => $origGuestCode["ROLE_DESC"],
                             "ROLE_DIS_SEQ" => '',
-                           
+
                         ];
 
                         $this->Db->table('FLXY_USER_ROLE')->insert($newRateCode);
@@ -236,7 +232,6 @@ class UserController extends BaseController
 
             echo $no_of_added;
             exit;
-
         } catch (Exception $e) {
             return $this->respond($e->errors());
         }
@@ -258,18 +253,18 @@ class UserController extends BaseController
     }
 
 
-    public function UserJobTitle()  
-    {       
+    public function UserJobTitle()
+    {
         $data['title'] = getMethodName();
-        $data['session'] = $this->session;  
+        $data['session'] = $this->session;
         return view('Users/UserJobTitleView', $data);
     }
 
     public function UserJobTitleView()
     {
-        $mine      = new ServerSideDataTable(); 
+        $mine      = new ServerSideDataTable();
         $tableName = 'FLXY_JOB_TITLE';
-        $columns = 'JOB_TITLE_ID,JOB_TITLE_CODE,JOB_TITLE_DESC,JOB_TITLE_DIS_SEQ,JOB_TITLE_STATUS';  
+        $columns = 'JOB_TITLE_ID,JOB_TITLE_CODE,JOB_TITLE_DESC,JOB_TITLE_DIS_SEQ,JOB_TITLE_STATUS';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -281,8 +276,8 @@ class UserController extends BaseController
 
             $validate = $this->validate([
                 'JOB_TITLE_CODE' => ['label' => 'Job Title', 'rules' => 'required|is_unique[FLXY_JOB_TITLE.JOB_TITLE_CODE,JOB_TITLE_ID,' . $sysid . ']'],
-                'JOB_TITLE_DESC' => ['label' => 'Description', 'rules' => 'required']                        
-                
+                'JOB_TITLE_DESC' => ['label' => 'Description', 'rules' => 'required']
+
             ]);
             if (!$validate) {
                 $validate = $this->validator->getErrors();
@@ -297,7 +292,7 @@ class UserController extends BaseController
                 "JOB_TITLE_CODE" => trim($this->request->getPost('JOB_TITLE_CODE')),
                 "JOB_TITLE_DESC" => trim($this->request->getPost('JOB_TITLE_DESC')),
                 "JOB_TITLE_DIS_SEQ" => trim($this->request->getPost('JOB_TITLE_DIS_SEQ')),
-                "JOB_TITLE_STATUS" => trim($this->request->getPost('JOB_TITLE_STATUS'))                
+                "JOB_TITLE_STATUS" => trim($this->request->getPost('JOB_TITLE_STATUS'))
             ];
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_JOB_TITLE')->where('JOB_TITLE_ID', $sysid)->update($data) : $this->Db->table('FLXY_JOB_TITLE')->insert($data);
@@ -353,7 +348,7 @@ class UserController extends BaseController
 
         $option = '<option value="">Choose an Option</option>';
         foreach ($response as $row) {
-            $option .= '<option value="' . $row['JOB_TITLE_ID'] . '">' . $row['JOB_TITLE_CODE'].' | '.$row['JOB_TITLE_DESC']  . '</option>';
+            $option .= '<option value="' . $row['JOB_TITLE_ID'] . '">' . $row['JOB_TITLE_CODE'] . ' | ' . $row['JOB_TITLE_DESC']  . '</option>';
         }
 
         return $option;
@@ -397,281 +392,289 @@ class UserController extends BaseController
 
         $option = '<option value="">Choose an Option</option>';
         foreach ($response as $row) {
-            $option .= '<option value="' . $row['DEPT_ID'] . '">' . $row['DEPT_CODE'].' | '.$row['DEPT_DESC']  . '</option>';
+            $option .= '<option value="' . $row['DEPT_ID'] . '">' . $row['DEPT_CODE'] . ' | ' . $row['DEPT_DESC']  . '</option>';
         }
 
         return $option;
     }
 
     public function insertUser()
-        {
-            try {
-                $sysid = $this->request->getPost('USR_ID');
-               
-                $validate = $this->validate([
-                    'USR_NAME' => ['label' => 'User Name', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NAME,USR_ID,' . $sysid . ']'],
-                    'USR_NUMBER' => ['label' => 'User Number', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NUMBER,USR_ID,' . $sysid . ']'],
-                    'USR_EMAIL' => ['label' => 'User Email', 'rules' => 'trim|required|valid_email|is_unique[FLXY_USERS.USR_EMAIL,USR_ID,' . $sysid . ']'],
-                    'USR_PASSWORD' => ['label' => 'Password', 'rules' => 'trim|required|min_length[8]|is_password_strong[USR_PASSWORD]',
+    {
+        try {
+            $sysid = $this->request->getPost('USR_ID');
+
+            $validate = $this->validate([
+                'USR_NAME' => ['label' => 'User Name', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NAME,USR_ID,' . $sysid . ']'],
+                'USR_NUMBER' => ['label' => 'User Number', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NUMBER,USR_ID,' . $sysid . ']'],
+                'USR_EMAIL' => ['label' => 'User Email', 'rules' => 'trim|required|valid_email|is_unique[FLXY_USERS.USR_EMAIL,USR_ID,' . $sysid . ']'],
+                'USR_PASSWORD' => [
+                    'label' => 'Password', 'rules' => 'trim|required|min_length[8]|is_password_strong[USR_PASSWORD]',
                     'errors' => [
                         'is_password_strong' => 'The password field must be contains at least one letter and one digit'
-                        ]
-                    ],
-                    'USR_CONFIRM_PASSWORD' => ['label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]|min_length[8]|is_password_strong[USR_CONFIRM_PASSWORD]',
+                    ]
+                ],
+                'USR_CONFIRM_PASSWORD' => [
+                    'label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]|min_length[8]|is_password_strong[USR_CONFIRM_PASSWORD]',
                     'errors' => [
                         'is_password_strong' => 'The confirm-password field must be contains at least one letter and one digit'
-                        ]],
-                    'USR_FIRST_NAME' => ['label' => 'First Name', 'rules' => 'trim|required'],
-                    'USR_LAST_NAME' => ['label' => 'Last Name', 'rules' => 'trim|required'],
-                    'USR_ROLE_ID' => ['label' => 'Role', 'rules' => 'trim|required'],
-                    'USR_DOB' => ['label' => 'Date of Birth', 'rules' => 'trim|required'],
-                    'USR_ADDRESS' => ['label' => 'Address', 'rules' => 'trim|required'],
-                    'USR_COUNTRY' => ['label' => 'Country', 'rules' => 'trim|required'],
-                    'USR_STATE' => ['label' => 'State', 'rules' => 'trim|required'],
-                    'USR_CITY' => ['label' => 'City', 'rules' => 'trim|required'],
-                    'USR_DOJ' => ['label' => 'Date of Joining', 'rules' => 'trim|required'],
-                    'USR_PHONE' => ['label' => 'Phone', 'rules' => 'trim|required'],                    
-                    'USR_DEPARTMENT' => ['label' => 'Department', 'rules' => 'trim|required'],
-                    'USR_GENDER' => ['label' => 'Gender', 'rules' => 'trim|required']
-                ]);
-                if (!$validate) {
-                    $validate = $this->validator->getErrors();
-                    $result["SUCCESS"] = "-402";
-                    $result[]["ERROR"] = $validate;
-                    $result = $this->responseJson("-402", $validate);
-                    echo json_encode($result);
-                    exit;
-                }
-
-                $data = [
-                    "USR_NAME" => trim($this->request->getPost('USR_NAME')),
-                    "USR_NUMBER" => trim($this->request->getPost('USR_NUMBER')),
-                    "USR_FIRST_NAME" => trim($this->request->getPost('USR_FIRST_NAME')),
-                    "USR_LAST_NAME" => trim($this->request->getPost('USR_LAST_NAME')),
-                    "USR_EMAIL" => trim($this->request->getPost('USR_EMAIL')),
-                    "USR_PASSWORD" => password_hash($this->request->getPost("USR_PASSWORD"), PASSWORD_DEFAULT),
-                    "USR_ROLE" => trim($this->request->getPost('USR_ROLE')),
-                    "USR_ROLE_ID" => trim($this->request->getPost('USR_ROLE_ID')),
-                    "USR_JOB_TITLE" => trim($this->request->getPost('USR_ROLE_ID')),
-                    "USR_DEPARTMENT" => trim($this->request->getPost('USR_DEPARTMENT')),                    
-                    "USR_DOB" => date('Y-m-d', strtotime($this->request->getPost('USR_DOB'))),
-                    "USR_ADDRESS" => trim($this->request->getPost('USR_ADDRESS')),
-                    "USR_COUNTRY" => trim($this->request->getPost('USR_COUNTRY')),
-                    "USR_STATE" => trim($this->request->getPost('USR_STATE')),
-                    "USR_CITY" => trim($this->request->getPost('USR_CITY')),
-                    "USR_DOJ" => date('Y-m-d', strtotime($this->request->getPost('USR_DOJ'))),
-                    "USR_PHONE" => trim($this->request->getPost('USR_PHONE')),                   
-                    "USR_GENDER" => trim(!($this->request->getPost('USR_GENDER'))) ? 0 :1,
-                    "USR_TEL_EXT" => trim($this->request->getPost('USR_TEL_EXT')),
-                    "USR_CREATED_DT" => date("Y-m-d H:i:s"),
-                    "USR_STATUS" => trim(!($this->request->getPost('USR_STATUS')) ? 0 :1)
-
-                ];
-                
-
-                $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
-                $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+                    ]
+                ],
+                'USR_FIRST_NAME' => ['label' => 'First Name', 'rules' => 'trim|required'],
+                'USR_LAST_NAME' => ['label' => 'Last Name', 'rules' => 'trim|required'],
+                'USR_ROLE_ID' => ['label' => 'Role', 'rules' => 'trim|required'],
+                'USR_DOB' => ['label' => 'Date of Birth', 'rules' => 'trim|required'],
+                'USR_ADDRESS' => ['label' => 'Address', 'rules' => 'trim|required'],
+                'USR_COUNTRY' => ['label' => 'Country', 'rules' => 'trim|required'],
+                'USR_STATE' => ['label' => 'State', 'rules' => 'trim|required'],
+                'USR_CITY' => ['label' => 'City', 'rules' => 'trim|required'],
+                'USR_DOJ' => ['label' => 'Date of Joining', 'rules' => 'trim|required'],
+                'USR_PHONE' => ['label' => 'Phone', 'rules' => 'trim|required'],
+                'USR_DEPARTMENT' => ['label' => 'Department', 'rules' => 'trim|required'],
+                'USR_GENDER' => ['label' => 'Gender', 'rules' => 'trim|required']
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
                 echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
+                exit;
             }
-        }   
-        
-        function userCountryList(){
-            $response = $this->Db->table('COUNTRY')->select('id,cname')->get()->getResultArray();
-            $option='<option value="">Select Country</option>';
-            foreach($response as $row){
-                $option.= '<option value="'.$row['id'].'">'.$row['cname'].'</option>';
-            }
-            echo $option;
+
+            $data = [
+                "USR_NAME" => trim($this->request->getPost('USR_NAME')),
+                "USR_NUMBER" => trim($this->request->getPost('USR_NUMBER')),
+                "USR_FIRST_NAME" => trim($this->request->getPost('USR_FIRST_NAME')),
+                "USR_LAST_NAME" => trim($this->request->getPost('USR_LAST_NAME')),
+                "USR_EMAIL" => trim($this->request->getPost('USR_EMAIL')),
+                "USR_PASSWORD" => password_hash($this->request->getPost("USR_PASSWORD"), PASSWORD_DEFAULT),
+                "USR_ROLE" => trim($this->request->getPost('USR_ROLE')),
+                "USR_ROLE_ID" => trim($this->request->getPost('USR_ROLE_ID')),
+                "USR_JOB_TITLE" => trim($this->request->getPost('USR_ROLE_ID')),
+                "USR_DEPARTMENT" => trim($this->request->getPost('USR_DEPARTMENT')),
+                "USR_DOB" => date('Y-m-d', strtotime($this->request->getPost('USR_DOB'))),
+                "USR_ADDRESS" => trim($this->request->getPost('USR_ADDRESS')),
+                "USR_COUNTRY" => trim($this->request->getPost('USR_COUNTRY')),
+                "USR_STATE" => trim($this->request->getPost('USR_STATE')),
+                "USR_CITY" => trim($this->request->getPost('USR_CITY')),
+                "USR_DOJ" => date('Y-m-d', strtotime($this->request->getPost('USR_DOJ'))),
+                "USR_PHONE" => trim($this->request->getPost('USR_PHONE')),
+                "USR_GENDER" => trim(!($this->request->getPost('USR_GENDER'))) ? 0 : 1,
+                "USR_TEL_EXT" => trim($this->request->getPost('USR_TEL_EXT')),
+                "USR_CREATED_DT" => date("Y-m-d H:i:s"),
+                "USR_STATUS" => trim(!($this->request->getPost('USR_STATUS')) ? 0 : 1)
+
+            ];
+
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
         }
-    
-        function userStateList(){
-            $ccode = $this->request->getPost("ccode");
-            $state_id = $this->request->getPost("state_id");
-            $sql = "SELECT id,sname,state_code FROM STATE WHERE country_id='$ccode'";
+    }
+
+    function userCountryList()
+    {
+        $response = $this->Db->table('COUNTRY')->select('id,cname')->get()->getResultArray();
+        $option = '<option value="">Select Country</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['id'] . '">' . $row['cname'] . '</option>';
+        }
+        echo $option;
+    }
+
+    function userStateList()
+    {
+        $ccode = $this->request->getPost("ccode");
+        $state_id = $this->request->getPost("state_id");
+        $sql = "SELECT id,sname,state_code FROM STATE WHERE country_id='$ccode'";
+        $response = $this->Db->query($sql)->getResultArray();
+        $option = '<option value="">Select State</option>';
+        $selected = "";
+        foreach ($response as $row) {
+            if ($row['id'] == $state_id) {
+                $selected = "selected";
+            }
+            $option .= '<option value="' . $row['id'] . '"' . $selected . '>' . $row['sname'] . '</option>';
+        }
+        echo $option;
+    }
+
+    function userCityList()
+    {
+        $ccode = $this->request->getPost("ccode");
+        $scode = $this->request->getPost("scode");
+        $cityid = $this->request->getPost("cityid");
+        $sql = "SELECT ctname,id FROM CITY WHERE country_id='$ccode' AND state_id='$scode'";
+        $response = $this->Db->query($sql)->getResultArray();
+        $option = '<option value="">Select City</option>';
+        $selected = "";
+        foreach ($response as $row) {
+            if ($row['id'] == $cityid) {
+                $selected = "selected";
+            }
+            $option .= '<option value="' . $row['id'] . '"' . $selected . '>' . $row['ctname'] . '</option>';
+        }
+        echo $option;
+    }
+
+    public function editUser()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT USR_NAME,USR_NUMBER,USR_FIRST_NAME,USR_LAST_NAME,USR_EMAIL,USR_PASSWORD,USR_ROLE_ID,USR_DEPARTMENT,FORMAT(USR_DOB, 'dd-MMM-yyyy') as USR_DOB,USR_ADDRESS,USR_CITY,USR_STATE,USR_COUNTRY,FORMAT(USR_DOJ, 'dd-MMM-yyyy') as USR_DOJ,USR_PHONE,USR_GENDER,USR_TEL_EXT,USR_STATUS,ROLE_NAME FROM FLXY_USERS LEFT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID LEFT JOIN COUNTRY ON FLXY_USERS.USR_COUNTRY = COUNTRY.id LEFT JOIN FLXY_DEPARTMENT ON USR_DEPARTMENT = DEPT_ID LEFT JOIN STATE ON FLXY_USERS.USR_STATE = STATE.id WHERE USR_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function suspendUser()
+    {
+        $sysid = $this->request->getPost('sysid');
+        $suspend = $this->request->getPost('suspend');
+
+        try {
+            $return = $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update(array('USR_STATUS' => $suspend));
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not suspended");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function userRoles()
+    {
+        try {
+            $data['title'] = getMethodName();
+            $data['session'] = $this->session;
+            $responseSubMenu = null;
+            $sql = "SELECT ROLE_NAME,COUNT(USR_ID) AS USR_COUNT FROM FLXY_USERS RIGHT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID GROUP BY ROLE_NAME";
             $response = $this->Db->query($sql)->getResultArray();
-            $option='<option value="">Select State</option>';
-            $selected = "";
-            foreach($response as $row){
-                if($row['id'] == $state_id){
-                    $selected = "selected";
-                }
-                $option.= '<option value="'.$row['id'].'"'.$selected.'>'.$row['sname'].'</option>';
-            }
-            echo $option;
-        }
-    
-        function userCityList(){
-            $ccode = $this->request->getPost("ccode");
-            $scode = $this->request->getPost("scode");
-            $cityid = $this->request->getPost("cityid");
-            $sql = "SELECT ctname,id FROM CITY WHERE country_id='$ccode' AND state_id='$scode'";
-            $response = $this->Db->query($sql)->getResultArray();
-            $option='<option value="">Select City</option>';
-            $selected = "";
-            foreach($response as $row){
-                if($row['id'] == $cityid){
-                    $selected = "selected";
-                }
-                $option.= '<option value="'.$row['id'].'"'.$selected.'>'.$row['ctname'].'</option>';
-            }
-            echo $option;
-        }
+            $responseCount = $this->Db->query($sql)->getNumRows();
 
-        public function editUser()
-        {
-            $param = ['SYSID' => $this->request->getPost('sysid')];
-          
-            $sql = "SELECT USR_NAME,USR_NUMBER,USR_FIRST_NAME,USR_LAST_NAME,USR_EMAIL,USR_PASSWORD,USR_ROLE_ID,USR_DEPARTMENT,FORMAT(USR_DOB, 'dd-MMM-yyyy') as USR_DOB,USR_ADDRESS,USR_CITY,USR_STATE,USR_COUNTRY,FORMAT(USR_DOJ, 'dd-MMM-yyyy') as USR_DOJ,USR_PHONE,USR_GENDER,USR_TEL_EXT,USR_STATUS,ROLE_NAME FROM FLXY_USERS LEFT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID LEFT JOIN COUNTRY ON FLXY_USERS.USR_COUNTRY = COUNTRY.id LEFT JOIN FLXY_DEPARTMENT ON USR_DEPARTMENT = DEPT_ID LEFT JOIN STATE ON FLXY_USERS.USR_STATE = STATE.id WHERE USR_ID=:SYSID:";
-
-            $response = $this->Db->query($sql, $param)->getResultArray();
-            echo json_encode($response);
-        }
-
-        public function suspendUser()
-        {
-            $sysid = $this->request->getPost('sysid');
-            $suspend = $this->request->getPost('suspend');
-
-            try {
-                $return = $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update(array('USR_STATUS'=> $suspend));
-                $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not suspended");
-                echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
-        }
-
-        public function userRoles()
-        {               
-            try{
-                $data['title'] = getMethodName();
-                $data['session'] = $this->session; 
-                $responseSubMenu = null;
-                $sql = "SELECT ROLE_NAME,COUNT(USR_ID) AS USR_COUNT FROM FLXY_USERS RIGHT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID GROUP BY ROLE_NAME"; 
-                $response = $this->Db->query($sql)->getResultArray();
-                $responseCount = $this->Db->query($sql)->getNumRows();
-
-                $sql = "SELECT MENU_ID,MENU_NAME,PARENT_MENU_ID FROM FLXY_MENU WHERE MENU_STATUS = 1 AND PARENT_MENU_ID = 0"; 
-                $responseMenu = $this->Db->query($sql)->getResultArray();
-                $responseMenuCount = $this->Db->query($sql)->getNumRows();
-                if($responseMenuCount >0 ){
-                    foreach($responseMenu as $menu){
-                         $sql = "SELECT MENU_ID,MENU_NAME FROM FLXY_MENU WHERE MENU_STATUS = 1 AND PARENT_MENU_ID = ".$menu['MENU_ID']." AND  PARENT_MENU_ID > 0"; 
-                        $subMenu = $this->Db->query($sql)->getResultArray();
-                        $subMenuCount = $this->Db->query($sql)->getNumRows();
-                        if($subMenuCount > 0)
-                        {
-                            foreach($subMenu as $value){
-                                 $responseSubMenu[$menu['MENU_ID']][] = ['sub_menu_id'=>$value['MENU_ID'],'sub_menu_name'=>$value['MENU_NAME']];
-                            }
-                        }                        
-                    }
-                }
-
-                $data['roleList'] = $this->roleList(); 
-                $data['departmentList'] = $this->departmentList(); 
-                $data['response'] = $response; 
-                $data['responseCount'] = $responseCount; 
-                $data['responseMenu'] = $responseMenu; 
-                $data['responseMenuCount'] = $responseMenuCount;
-                $data['responseSubMenu'] = $responseSubMenu; 
-               //print_r($data['responseSubMenu']);
-                return view('Users/UserRoles', $data);
-            }catch (Exception $e){
-                echo json_encode($e->errors());
-            }
-
-        }
-
-        public function addRolePermission()
-        {
-            try {
-                $sysid = $this->request->getPost('ROLE_ID');
-
-                $validate = $this->validate([
-                    'ROLE_NAME' => ['label' => 'Role', 'rules' => 'required|is_unique[FLXY_USER_ROLE.ROLE_NAME,ROLE_ID,' . $sysid . ']',],
-                    'MENU_ID' => ['label' => 'Permission', 'rules' => 'required']
-                                   
-                    
-                ]);
-                if (!$validate) {
-                    $validate = $this->validator->getErrors();
-                    $result["SUCCESS"] = "-402";
-                    $result[]["ERROR"] = $validate;
-                    $result = $this->responseJson("-402", $validate);
-                    echo json_encode($result);
-                    exit;
-                }
-              
-                $data = [ "ROLE_NAME" => trim($this->request->getPost('ROLE_NAME')),
-                "ROLE_CODE" => trim($this->request->getPost('ROLE_NAME'))];
-
-                $return = !empty($sysid) ? $this->Db->table('FLXY_USER_ROLE')->where('ROLE_ID', $sysid)->update($data) : $this->Db->table('FLXY_USER_ROLE')->insert($data);
-                $ROLE_ID = !empty($sysid) ? $sysid : $this->Db->insertID(); 
-
-                // if($sysid > 0 ){
-                    $deleteRolePerm = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->delete(['ROLE_ID' => $sysid]);
-                
-                    $MENU_PERM = $this->request->getPost('MENU_ID');
-                    if(!empty($MENU_PERM)){               
-                        for($i = 0; $i< count($MENU_PERM); $i++){
-                            $data = [ "ROLE_ID" => trim($ROLE_ID),
-                                "ROLE_MENU_ID" => $MENU_PERM[$i],
-                                "ROLE_PERM_STATUS" => 1];
-                            $return = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->insert($data);
-                        
+            $sql = "SELECT MENU_ID,MENU_NAME,PARENT_MENU_ID FROM FLXY_MENU WHERE MENU_STATUS = 1 AND PARENT_MENU_ID = 0";
+            $responseMenu = $this->Db->query($sql)->getResultArray();
+            $responseMenuCount = $this->Db->query($sql)->getNumRows();
+            if ($responseMenuCount > 0) {
+                foreach ($responseMenu as $menu) {
+                    $sql = "SELECT MENU_ID,MENU_NAME FROM FLXY_MENU WHERE MENU_STATUS = 1 AND PARENT_MENU_ID = " . $menu['MENU_ID'] . " AND  PARENT_MENU_ID > 0";
+                    $subMenu = $this->Db->query($sql)->getResultArray();
+                    $subMenuCount = $this->Db->query($sql)->getNumRows();
+                    if ($subMenuCount > 0) {
+                        foreach ($subMenu as $value) {
+                            $responseSubMenu[$menu['MENU_ID']][] = ['sub_menu_id' => $value['MENU_ID'], 'sub_menu_name' => $value['MENU_NAME']];
                         }
                     }
-
-                    $SUB_MENU_PERM = $this->request->getPost('sub_menu_id');
-                    if(!empty($SUB_MENU_PERM)){               
-                        for($j = 0; $j< count($SUB_MENU_PERM); $j++){
-                            $data = ["ROLE_ID" => trim($ROLE_ID),
-                                "ROLE_MENU_ID" => $SUB_MENU_PERM[$j],
-                                "ROLE_PERM_STATUS" => 1];
-                            $return = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->insert($data);
-                        
-                        }
-                    }
-               // }
-               
-                
-
-    
-                // $return = !empty($sysid) ? $this->Db->table('FLXY_SUB_MENU')->where('SUB_MENU_ID', $sysid)->update($data) : $this->Db->table('FLXY_SUB_MENU')->insert($data);
-                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
-                echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
+                }
             }
+
+            $data['roleList'] = $this->roleList();
+            $data['departmentList'] = $this->departmentList();
+            $data['response'] = $response;
+            $data['responseCount'] = $responseCount;
+            $data['responseMenu'] = $responseMenu;
+            $data['responseMenuCount'] = $responseMenuCount;
+            $data['responseSubMenu'] = $responseSubMenu;
+            //print_r($data['responseSubMenu']);
+            return view('Users/UserRoles', $data);
+        } catch (Exception $e) {
+            echo json_encode($e->errors());
         }
+    }
+
+    public function addRolePermission()
+    {
+        try {
+            $sysid = $this->request->getPost('ROLE_ID');
+
+            $validate = $this->validate([
+                'ROLE_NAME' => ['label' => 'Role', 'rules' => 'required|is_unique[FLXY_USER_ROLE.ROLE_NAME,ROLE_ID,' . $sysid . ']',],
+                'MENU_ID' => ['label' => 'Permission', 'rules' => 'required']
+
+
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $data = [
+                "ROLE_NAME" => trim($this->request->getPost('ROLE_NAME')),
+                "ROLE_CODE" => trim($this->request->getPost('ROLE_NAME'))
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_USER_ROLE')->where('ROLE_ID', $sysid)->update($data) : $this->Db->table('FLXY_USER_ROLE')->insert($data);
+            $ROLE_ID = !empty($sysid) ? $sysid : $this->Db->insertID();
+
+            // if($sysid > 0 ){
+            $deleteRolePerm = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->delete(['ROLE_ID' => $sysid]);
+
+            $MENU_PERM = $this->request->getPost('MENU_ID');
+            if (!empty($MENU_PERM)) {
+                for ($i = 0; $i < count($MENU_PERM); $i++) {
+                    $data = [
+                        "ROLE_ID" => trim($ROLE_ID),
+                        "ROLE_MENU_ID" => $MENU_PERM[$i],
+                        "ROLE_PERM_STATUS" => 1
+                    ];
+                    $return = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->insert($data);
+                }
+            }
+
+            $SUB_MENU_PERM = $this->request->getPost('sub_menu_id');
+            if (!empty($SUB_MENU_PERM)) {
+                for ($j = 0; $j < count($SUB_MENU_PERM); $j++) {
+                    $data = [
+                        "ROLE_ID" => trim($ROLE_ID),
+                        "ROLE_MENU_ID" => $SUB_MENU_PERM[$j],
+                        "ROLE_PERM_STATUS" => 1
+                    ];
+                    $return = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->insert($data);
+                }
+            }
+            // }
+
+
+
+
+            // $return = !empty($sysid) ? $this->Db->table('FLXY_SUB_MENU')->where('SUB_MENU_ID', $sysid)->update($data) : $this->Db->table('FLXY_SUB_MENU')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
 
 
     public function loadUserRoles()
     {
-        $sql = "SELECT ROLE_ID,ROLE_NAME,COUNT(USR_ID) AS USR_COUNT FROM FLXY_USERS RIGHT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID GROUP BY ROLE_NAME,ROLE_ID ORDER BY ROLE_ID OFFSET 0 ROWS FETCH FIRST 5 ROWS ONLY"; 
-        $sql1 = "SELECT ROLE_ID,ROLE_NAME,COUNT(USR_ID) AS USR_COUNT FROM FLXY_USERS RIGHT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID GROUP BY ROLE_NAME,ROLE_ID ORDER BY ROLE_ID "; 
+        $sql = "SELECT ROLE_ID,ROLE_NAME,COUNT(USR_ID) AS USR_COUNT FROM FLXY_USERS RIGHT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID GROUP BY ROLE_NAME,ROLE_ID ORDER BY ROLE_ID OFFSET 0 ROWS FETCH FIRST 5 ROWS ONLY";
+        $sql1 = "SELECT ROLE_ID,ROLE_NAME,COUNT(USR_ID) AS USR_COUNT FROM FLXY_USERS RIGHT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID GROUP BY ROLE_NAME,ROLE_ID ORDER BY ROLE_ID ";
         $response = $this->Db->query($sql)->getResultArray();
         $responseCount = $this->Db->query($sql1)->getNumRows();
         $rolesOutput = $rolesAddNew = $addRole = '';
 
-        if($responseCount > 5 ) {
-           $addRole =  '<button
+        if ($responseCount > 5) {
+            $addRole =  '<button
             data-bs-target="#viewRoleModal"
             data-bs-toggle="modal"
             class="btn btn-primary view-user-role text-nowrap mb-3"
             >
             View All
             </button>';
-         }
+        }
 
 
-        if(!empty($response)) {               
-            foreach( $response as $row ){   
-            $ROLE_NAME =  ucfirst(strtolower($row['ROLE_NAME']));       
-            $rolesOutput.= <<<EOD
+        if (!empty($response)) {
+            foreach ($response as $row) {
+                $ROLE_NAME =  ucfirst(strtolower($row['ROLE_NAME']));
+                $rolesOutput .= <<<EOD
             <div class="col-md-6 col-lg-6 col-xl-4">
                 <div class="card">
                 <div class="card-body">
@@ -705,7 +708,7 @@ class UserController extends BaseController
         }
 
 
-        $rolesOutput.= <<<EOD
+        $rolesOutput .= <<<EOD
         <div class="col-md-6 col-lg-6 col-xl-4">
         <div class="card">
         <div class="card-body">
@@ -738,35 +741,36 @@ class UserController extends BaseController
     </div></div>
     EOD;
 
-  echo $rolesOutput;
-}
+        echo $rolesOutput;
+    }
 
 
-public function editRolePermission(){
-    $param = ['SYSID' => $this->request->getPost('sysid')];    
-    $sql = "SELECT FLXY_USER_ROLE.ROLE_ID, ROLE_MENU_ID as MENU_ID, ROLE_NAME
+    public function editRolePermission()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+        $sql = "SELECT FLXY_USER_ROLE.ROLE_ID, ROLE_MENU_ID as MENU_ID, ROLE_NAME
             FROM FLXY_USER_ROLE LEFT JOIN FLXY_USER_ROLE_PERMISSION ON FLXY_USER_ROLE.ROLE_ID = FLXY_USER_ROLE_PERMISSION.ROLE_ID
             WHERE FLXY_USER_ROLE.ROLE_ID=:SYSID: ";
 
-    $response = $this->Db->query($sql, $param)->getResultArray();
-    echo json_encode($response);
-}
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
 
 
 
-public function viewUserRoles(){   
-
-    $mine      = new ServerSideDataTable(); 
-    $tableName = 'FLXY_USERS_ROLES_VIEW';
-    $columns   = 'ROLE_ID,ROLE_NAME,USR_COUNT';
-    $mine->generate_DatatTable($tableName, $columns);
-    exit;
-
-}
-
-public function accessDenied()
+    public function viewUserRoles()
     {
-        
+
+        $mine      = new ServerSideDataTable();
+        $tableName = 'FLXY_USERS_ROLES_VIEW';
+        $columns   = 'ROLE_ID,ROLE_NAME,USR_COUNT';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+    public function accessDenied()
+    {
+
         return view('Users/notAuth');
     }
 
