@@ -154,6 +154,10 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
         $routes->post("submit-form", "AssetTrackingController::submitForm");
     });
 
+    $routes->group('evallet', function ($routes) {
+        $routes->post('submit-form', 'EvalletController::submitForm');
+        $routes->get('vallet-list', 'EvalletController::valletList');
+    });
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function ($routes) {
