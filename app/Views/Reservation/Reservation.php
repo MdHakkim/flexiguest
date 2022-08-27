@@ -10,7 +10,19 @@
 
 </style>
 
+
+
 <style>
+    .tooltip{
+    z-index: 99999 !important;
+}
+
+.tooltip.top .tooltip-inner {
+    background-color:red !important;
+}
+.tooltip.top .tooltip-arrow {
+      border-top-color: red !important;
+}
 .active-tr {
     background-color: #d1e7ff !important;
     --bs-table-striped-bg: none;
@@ -5354,20 +5366,37 @@ function itemInventoryClassSingle() {
 //document.addEventListener('DOMContentLoaded', function() {
   function showInventoryAvailability()
  {    
-    if($('#calendar>*').length == 0) {calendarRender();}
+    var output = '';
+    $.ajax({
+        url: '<?php echo base_url('/getInventoryCalendarData') ?>',
+        type: "post",       
+        async:false,
+        dataType:'json',
+        success: function(respn) {
+
+            output = respn;
+            
+        }
+    });
+
+    itemCalendarResources = output['itemResources'];
+    itemCalendarAvail = output['itemAvail'];
+
+    if($('#calendar>*').length == 0) {calendarRender(itemCalendarResources,itemCalendarAvail);}
+
+    console.log( itemCalendarAvail)
+
  }
 
 
-function calendarRender(){
-    
+function calendarRender(itemCalendarResources, itemCalendarAvail){
+   
 let date = new Date();
 let nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 // prettier-ignore
 let nextMonth = date.getMonth() === 11 ? new Date(date.getFullYear() + 1, 0, 1) : new Date(date.getFullYear(), date.getMonth() + 1, 1);
 // prettier-ignore
 let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) : new Date(date.getFullYear(), date.getMonth() - 1, 1);
-
-
 
 var calendarEl = document.getElementById('calendar');
 
@@ -5420,67 +5449,75 @@ validRange: {
     end: '2040-12-31'
 },
 
-resources: [<?php
- if(!empty($itemResources))
-  {
-    foreach($itemResources as $resources) {?>
-    {   id: '<?php echo $resources['ITM_ID']?>',
-        item: '<?php echo $resources['ITM_NAME']?>'
-    },
-    <?php }
-  } ?>
- ],
- 
-events: [
-    <?php
-        if (!empty($itemAvail)) {
-           for($j=0; $j<count($itemResources);$j++) {
-            for($i=1; $i<=count($itemAvail[$j]);$i++) { 
-                
-                $start = date("Y-m-d H:i:s", strtotime($itemAvail[$j][$i]['START']));
-                $end = date("Y-m-d 23:59:59", strtotime($itemAvail[$j][$i]['END']));
-               
-        ?> {
-            id: '<?php echo $itemAvail[$j][$i]['ITM_ID'] ?>',
-            resourceId: '<?php echo $itemAvail[$j][$i]['ITM_ID']?>',
-            title: '<?php echo $itemAvail[$j][$i]['ITM_REMAINING_STOCK'].' | '.$itemAvail[$j][$i]['ITM_QTY_IN_STOCK']; ?>',
-            start: '<?php echo $start; ?>',
-            end: '<?php echo $end; ?>',
-            backgroundColor:"#405974",
-            borderColor: "#405974",
-            textColor:"#fff"
+resources: itemCalendarResources,
+//events: itemCalendarAvail,
+events: function(info, successCallback, failureCallback) {   
+        let START = info.start;
+        let s = new Date(START);
+        START = s.toISOString(START);
+        let END = info.end;
+        let e = new Date(END);
+        END = e.toISOString(END);
+    $.ajax({
+        url: '<?php echo base_url('/getInventoryAllocatedData') ?>',
+        type: "post",  
+        dataType: 'json',
+        data: {
+            start: START,
+            end: END
         },
-
-    <?php   }
-    
-           }
-         }
-         ?>
- 
-],
-
-eventMouseEnter: function (info) {
-    console.log(info.event)
-       $(info.el).tooltip({
-          title: info.event.title,
-          html: true,
-          placement: 'top',
-          trigger: 'hover',
-          container: 'body',
+        success: function(res) {
+         
+          var events = [];
+          res.forEach(function (evt) {
+            events.push({
+              id:evt.id,
+              resourceId:evt.resourceId,
+              title: evt.title,
+              start: evt.start,
+              end: evt.end,
+            });
+          });
+          successCallback(events);
+        },
+        
     });
 },
+eventMouseEnter: function (info) {
+    var titleText = info.event.title;
+    var myarr = titleText.split("|");
+    var title = 'Available Quantity : '+ myarr[0] + ", Total Quantity: " + myarr[1];
+    var title = 
+        $(info.el).tooltip({
+              title: title,
+              html: true,
+              placement: 'top',
+              trigger: 'hover',
+              container: 'body',
+              
+        });
+},
+
+eventDidMount: function(info) {
+      var tooltip = new Tooltip(info.el, {
+        title: 'titlesdasd',
+        placement: 'top',
+        trigger: 'hover',
+        container: 'body',
+      });
+    },
  
     
 });
 
 calendar.render();
-
+//console.log(itemCalendarAvail);
 }
 //});
 
+////class="fc-timeline-event fc-h-event fc-event fc-start fc-end fc-draggable fc-resizable fc-allow-mouse-resize"
 
-
-
+//a.fc-timeline-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable
 
 //////// Fixed Charges Functions
 
