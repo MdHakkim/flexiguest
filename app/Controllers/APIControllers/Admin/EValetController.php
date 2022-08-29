@@ -37,4 +37,21 @@ class EValetController extends BaseController
 
         return $this->respond($result);
     }
+
+    public function assignDriver()
+    {
+        $user_id = $this->request->user['USR_ID'];
+
+        $data = $this->request->getVar();
+        $data['EV_STATUS'] = 'Driver Assigned';
+        $data['EV_KEYS_COLLECTED'] = 1;
+        $data['EV_UPDATE_BY'] = $user_id;
+        $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
+        $data['EV_ASSIGNED_AT'] = date('Y-m-d H:i:s');
+
+
+        $this->EValetRepository->updateEValet($data);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Driver assigned successfully.']));
+    }
 }

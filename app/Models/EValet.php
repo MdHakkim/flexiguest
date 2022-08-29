@@ -10,6 +10,7 @@ class EValet extends Model
     protected $primaryKey = 'EV_ID';
     protected $allowedFields = [
         'EV_DRIVER_ID',
+        'EV_CUSTOMER_ID',
         'EV_RESERVATION_ID',
         'EV_ROOM_ID',
         'EV_GUEST_TYPE',

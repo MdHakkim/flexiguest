@@ -155,8 +155,9 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
     });
 
     $routes->group('evalet', function ($routes) {
-        $routes->post('submit-form', 'EvaletController::submitForm');
-        $routes->get('valet-list', 'EvaletController::valetList');
+        $routes->post('submit-form', 'EValetController::submitForm');
+        $routes->get('valet-list', 'EValetController::valetList');
+        $routes->post('assign-driver', 'EValetController::assignDriver');
     });
 });
 

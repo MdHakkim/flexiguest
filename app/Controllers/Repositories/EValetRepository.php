@@ -78,4 +78,9 @@ class EValetRepository extends BaseController
 
         return responseJson(200, false, ['msg' => 'valet list'], $valet_list);
     }
+
+    public function updateEValet($data)
+    {
+        return $this->EValet->save($data);
+    }
 }
