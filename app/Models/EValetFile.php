@@ -4,12 +4,12 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class EValletFile extends Model
+class EValetFile extends Model
 {
-    protected $table      = 'FLXY_EVALLET_FILES';
+    protected $table      = 'FLXY_EVALET_FILES';
     protected $primaryKey = 'EVI_ID';
     protected $allowedFields = [
-        'EVI_EVALLET_ID',
+        'EVI_EVALET_ID',
         'EVI_FILE_URL',
         'EVI_FILE_TYPE',
         'EVI_FILE_NAME',

@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class EVallet extends Model
+class EValet extends Model
 {
-    protected $table      = 'FLXY_EVALLET';
+    protected $table      = 'FLXY_EVALET';
     protected $primaryKey = 'EV_ID';
     protected $allowedFields = [
         'EV_DRIVER_ID',

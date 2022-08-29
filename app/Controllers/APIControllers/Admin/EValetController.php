@@ -3,23 +3,23 @@
 namespace App\Controllers\APIControllers\Admin;
 
 use App\Controllers\BaseController;
-use App\Controllers\Repositories\EValletRepository;
+use App\Controllers\Repositories\EValetRepository;
 use CodeIgniter\API\ResponseTrait;
 
-class EValletController extends BaseController
+class EValetController extends BaseController
 {
     use ResponseTrait;
 
-    private $EValletRepository;
+    private $EValetRepository;
 
     public function __construct()
     {
-        $this->EValletRepository = new EValletRepository();
+        $this->EValetRepository = new EValetRepository();
     }
 
     public function submitForm()
     {        
-        if(!$this->validate($this->EValletRepository->validationRules()))
+        if(!$this->validate($this->EValetRepository->validationRules()))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
         $user_id = $this->request->user['USR_ID'];
@@ -27,13 +27,13 @@ class EValletController extends BaseController
         $data['EV_CAR_IMAGES'] = $this->request->getFileMultiple('EV_CAR_IMAGES');
 
         
-        $result = $this->EValletRepository->submitEValletForm($user_id, $data);
+        $result = $this->EValetRepository->submitEValetForm($user_id, $data);
         return $this->respond($result);
     }
 
-    public function valletList()
+    public function valetList()
     {
-        $result = $this->EValletRepository->valletList();
+        $result = $this->EValetRepository->valetList();
 
         return $this->respond($result);
     }
