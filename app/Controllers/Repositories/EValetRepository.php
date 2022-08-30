@@ -66,7 +66,7 @@ class EValetRepository extends BaseController
 
     public function valetList()
     {
-        $valet_list = $this->EValet->findAll();
+        $valet_list = $this->EValet->orderBy('EV_ID', 'desc')->findAll();
         foreach ($valet_list as $index => $valet) {
             $images = $this->EValetFile->where('EVI_EVALET_ID', $valet['EV_ID'])->findAll();
             foreach($images as $i => $image) {
