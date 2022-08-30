@@ -61,7 +61,7 @@ class UserController extends BaseController
                 $this->setUserSession($user);
 
                 // Redirecting to dashboard after login
-                if ($user['USR_ROLE_ID'] == "1") {
+                if ($user['USR_ROLE_ID'] != "3") {
                     return redirect()->to(base_url('/'));
                 } elseif ($user['USR_ROLE_ID'] == "3") {
                     return redirect()->to(base_url('editor'));

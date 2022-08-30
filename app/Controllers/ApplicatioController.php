@@ -4179,16 +4179,16 @@ class ApplicatioController extends BaseController
         }
 
 
-        public function ItemResources(){
-            $response = NULL;
-            $sql = "SELECT ITM_ID as id, ITM_NAME as item         
-                    FROM FLXY_ITEM WHERE ITM_STATUS = '1' ORDER BY ITM_ID ASC";       
-            $responseCount = $this->Db->query($sql)->getNumRows();
-            if($responseCount > 0)
-            $response = $this->Db->query($sql)->getResultArray();
-    
-          return $response;
-        }
+    public function ItemResources(){
+        $response = NULL;
+        $sql = "SELECT ITM_ID as id, ITM_NAME as item         
+                FROM FLXY_ITEM WHERE ITM_STATUS = '1' ORDER BY ITM_ID ASC";       
+        $responseCount = $this->Db->query($sql)->getNumRows();
+        if($responseCount > 0)
+        $response = $this->Db->query($sql)->getResultArray();
+
+        return $response;
+    }
 
     public function ItemCalendar(){
         $response = NULL;
@@ -4383,10 +4383,10 @@ class ApplicatioController extends BaseController
     public function updateFixedCharges()
     {
         try {
-            $FIXD_CHRG_WEEKLY    = '';
-            $FIXD_CHRG_MONTHLY   = '';
-            $FIXD_CHRG_QUARTERLY = '';
-            $FIXD_CHRG_YEARLY   = '';
+            $FIXD_CHRG_WEEKLY       = '';
+            $FIXD_CHRG_MONTHLY      = '';
+            $FIXD_CHRG_QUARTERLY    = '';
+            $FIXD_CHRG_YEARLY       = '';
             $FIXD_CHRG_ID           =  $this->request->getPost('FIXD_CHRG_ID');
             $FIXD_CHRG_RESV_ID      =  $this->request->getPost('FIXD_CHRG_RESV_ID');
             $FIXD_CHRG_TRNCODE      =  $this->request->getPost('FIXD_CHRG_TRNCODE');
