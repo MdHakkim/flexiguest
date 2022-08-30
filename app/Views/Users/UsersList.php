@@ -92,7 +92,7 @@
                   <div class="col-md-4">
                     <label for="html5-text-input" class="col-form-label"><b>PASSWORD
                         *</b></label>
-                      <input type="password" id="USR_PASSWORD" name="USR_PASSWORD" class="form-control" placeholder="">
+                      <input type="password" id="USR_PASSWORD" name="USR_PASSWORD" class="form-control" placeholder="Password">
                       
                     </div>
                     <div class="col-md-4">
@@ -815,7 +815,8 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                         }
                         else if(field == 'USR_PASSWORD')
                         {
-                          $('#USR_CONFIRM_PASSWORD').val($('#USR_PASSWORD').val());
+                          // $('#USR_PASSWORD').val(dataval);
+                          // $('#USR_CONFIRM_PASSWORD').val($('#USR_PASSWORD').val());
                         }
 
                         else if(field == 'USR_DOB' || field == 'USR_DOJ') {

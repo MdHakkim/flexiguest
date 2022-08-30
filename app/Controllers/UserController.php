@@ -403,22 +403,10 @@ class UserController extends BaseController
         try {
             $sysid = $this->request->getPost('USR_ID');
 
-            $validate = $this->validate([
+            $rules = [
                 'USR_NAME' => ['label' => 'User Name', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NAME,USR_ID,' . $sysid . ']'],
                 'USR_NUMBER' => ['label' => 'User Number', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NUMBER,USR_ID,' . $sysid . ']'],
-                'USR_EMAIL' => ['label' => 'User Email', 'rules' => 'trim|required|valid_email|is_unique[FLXY_USERS.USR_EMAIL,USR_ID,' . $sysid . ']'],
-                'USR_PASSWORD' => [
-                    'label' => 'Password', 'rules' => 'trim|required|min_length[8]|is_password_strong[USR_PASSWORD]',
-                    'errors' => [
-                        'is_password_strong' => 'The password field must be contains at least one letter and one digit'
-                    ]
-                ],
-                'USR_CONFIRM_PASSWORD' => [
-                    'label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]|min_length[8]|is_password_strong[USR_CONFIRM_PASSWORD]',
-                    'errors' => [
-                        'is_password_strong' => 'The confirm-password field must be contains at least one letter and one digit'
-                    ]
-                ],
+                'USR_EMAIL' => ['label' => 'User Email', 'rules' => 'trim|required|valid_email|is_unique[FLXY_USERS.USR_EMAIL,USR_ID,' . $sysid . ']'],            
                 'USR_FIRST_NAME' => ['label' => 'First Name', 'rules' => 'trim|required'],
                 'USR_LAST_NAME' => ['label' => 'Last Name', 'rules' => 'trim|required'],
                 'USR_ROLE_ID' => ['label' => 'Role', 'rules' => 'trim|required'],
@@ -431,7 +419,56 @@ class UserController extends BaseController
                 'USR_PHONE' => ['label' => 'Phone', 'rules' => 'trim|required'],
                 'USR_DEPARTMENT' => ['label' => 'Department', 'rules' => 'trim|required'],
                 'USR_GENDER' => ['label' => 'Gender', 'rules' => 'trim|required']
-            ]);
+            ];
+
+            if (!empty($sysid) && $this->request->getPost("USR_PASSWORD") == ''){
+            }
+            else if(!empty($sysid) && $this->request->getPost("USR_PASSWORD") != ''){
+                $rules = array_merge($rules, ['USR_PASSWORD' => [
+                    'label' => 'Password', 'rules' => 'trim|min_length[8]|is_password_strong[USR_PASSWORD]',
+                    'errors' => [
+                        'is_password_strong' => 'The password field must be contains at least one letter and one digit'
+                    ]
+                ],
+                'USR_CONFIRM_PASSWORD' => [
+                    'label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]|min_length[8]|is_password_strong[USR_CONFIRM_PASSWORD]',
+                    'errors' => [
+                        'is_password_strong' => 'The confirm-password field must be contains at least one letter and one digit'
+                    ]
+                ]]);
+            }
+            else{
+                $rules = array_merge($rules, ['USR_PASSWORD' => [
+                    'label' => 'Password', 'rules' => 'trim|required|min_length[8]|is_password_strong[USR_PASSWORD]',
+                    'errors' => [
+                        'is_password_strong' => 'The password field must be contains at least one letter and one digit'
+                    ]
+                ],
+                'USR_CONFIRM_PASSWORD' => [
+                    'label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]|min_length[8]|is_password_strong[USR_CONFIRM_PASSWORD]',
+                    'errors' => [
+                        'is_password_strong' => 'The confirm-password field must be contains at least one letter and one digit'
+                    ]
+                ]]);
+
+            }
+
+
+            // $validate.= $this->validate(['USR_PASSWORD' => [
+            //     'label' => 'Password', 'rules' => 'trim|required|min_length[8]|is_password_strong[USR_PASSWORD]',
+            //     'errors' => [
+            //         'is_password_strong' => 'The password field must be contains at least one letter and one digit'
+            //     ]
+            // ],
+            // 'USR_CONFIRM_PASSWORD' => [
+            //     'label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]|min_length[8]|is_password_strong[USR_CONFIRM_PASSWORD]',
+            //     'errors' => [
+            //         'is_password_strong' => 'The confirm-password field must be contains at least one letter and one digit'
+            //     ]
+            // ]]);
+
+            $validate = $this->validate($rules);
+
             if (!$validate) {
                 $validate = $this->validator->getErrors();
                 $result["SUCCESS"] = "-402";
@@ -446,8 +483,7 @@ class UserController extends BaseController
                 "USR_NUMBER" => trim($this->request->getPost('USR_NUMBER')),
                 "USR_FIRST_NAME" => trim($this->request->getPost('USR_FIRST_NAME')),
                 "USR_LAST_NAME" => trim($this->request->getPost('USR_LAST_NAME')),
-                "USR_EMAIL" => trim($this->request->getPost('USR_EMAIL')),
-                "USR_PASSWORD" => password_hash($this->request->getPost("USR_PASSWORD"), PASSWORD_DEFAULT),
+                "USR_EMAIL" => trim($this->request->getPost('USR_EMAIL')),                
                 "USR_ROLE" => trim($this->request->getPost('USR_ROLE')),
                 "USR_ROLE_ID" => trim($this->request->getPost('USR_ROLE_ID')),
                 "USR_JOB_TITLE" => trim($this->request->getPost('USR_ROLE_ID')),
@@ -465,6 +501,8 @@ class UserController extends BaseController
                 "USR_STATUS" => trim(!($this->request->getPost('USR_STATUS')) ? 0 : 1)
 
             ];
+           if($this->request->getPost("USR_PASSWORD") != '')
+            $data["USR_PASSWORD"] =  password_hash($this->request->getPost("USR_PASSWORD"), PASSWORD_DEFAULT);
 
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
