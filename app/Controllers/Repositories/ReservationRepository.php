@@ -21,6 +21,7 @@ class ReservationRepository extends BaseController
     {
         return $this->Reservation
             ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
+            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
             ->where('RESV_ID', $reservation_id)
             ->first();
     }
