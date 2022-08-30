@@ -62,7 +62,7 @@
                             <th>Description</th>
                             <th>Body</th>
                             <th>Created At</th>
-                            <th>Optional Files</th>
+                            <th>Optional File</th>
                             <th class="all">Action</th>
                         </tr>
                     </thead>
@@ -112,9 +112,9 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label class="form-label"><b>Optional Files</b></label>
+                                <label class="form-label"><b>Optional File</b></label>
 
-                                <input type="file" name="GL_FILES[]" class="form-control" multiple />
+                                <input type="file" name="GL_FILES[]" class="form-control" />
                             </div>
 
                             <div class="col-md-12 optional-files">
@@ -582,20 +582,17 @@
 
                 var response = respn['SUCCESS'];
 
+                var ERROR = respn['RESPONSE']['REPORT_RES'];
+                var mcontent = '';
+                $.each(ERROR, function(ind, data) {
+
+                    mcontent += '<li>' + data + '</li>';
+                });
+
                 if (response != '200') {
-
-                    var ERROR = respn['RESPONSE']['ERROR'];
-                    var mcontent = '';
-                    $.each(ERROR, function(ind, data) {
-
-                        mcontent += '<li>' + data + '</li>';
-                    });
                     showModalAlert('error', mcontent);
                 } else {
-
-                    var alertText = respn['RESPONSE']['REPORT_RES'];
-
-                    showModalAlert('success', alertText);
+                    showModalAlert('success', mcontent);
 
                     $(e.parentNode).remove();
                 }

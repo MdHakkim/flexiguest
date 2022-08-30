@@ -107,6 +107,8 @@ class GuidelineController extends BaseController
             $guideline_id = $id;
 
         if ($this->request->getFileMultiple('GL_FILES')) {
+            if (!empty($id)) // when updating
+                $this->GuidelineRepository->deleteGuidelineFile("GLF_GUIDELINE_ID = $guideline_id");
 
             foreach ($this->request->getFileMultiple('GL_FILES') as $file) {
                 $file_name = $file->getName();

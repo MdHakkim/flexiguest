@@ -50,4 +50,9 @@ class GuidelineRepository extends BaseController
 
         return responseJson(200, false, 'Guidelines list', $guidelines);
     }
+
+    public function deleteGuidelineFile($where_condition)
+    {   
+        return $this->GuidelineFile->where($where_condition)->delete();
+    }
 }
