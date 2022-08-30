@@ -514,7 +514,7 @@ $(document).on('click', '.delete-mem-record', function() {
 
 });
 
-// Funtion to execute after Customer Memberhsip form submit
+// Funtion to execute after Customer Membership form submit
 
 function afterMemFormClose() {
     $('#customerMembershipsWindow').modal('show');

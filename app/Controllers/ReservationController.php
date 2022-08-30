@@ -11,7 +11,6 @@ use function PHPSTORM_META\map;
 
 class ReservationController extends BaseController
 {
-
     use ResponseTrait;
 
     private $DB;
@@ -24,7 +23,7 @@ class ReservationController extends BaseController
         $this->Reservation = new Reservation();
         $this->ShareReservations = new ShareReservations();
         $this->session = \Config\Services::session();
-        
+        helper(['form', 'common', 'custom']);
     }
 
     public function getReservationDetails()
@@ -147,6 +146,19 @@ class ReservationController extends BaseController
 
         if (!$reservation_id)
             return $this->respond(responseJson(500, false, ['msg' => 'Something went wrong!']));
+        else // Add Log for New Reservation
+        {
+            $log_action_desc = '';
+            foreach($data as $dkey => $dvalue)
+            {
+                    // Save changes in log description if data is not empty
+                    if(!empty(trim($dvalue)))
+                    {
+                        $log_action_desc .= "<b>".str_replace('RESV_', '', $dkey) . ": </b> '" . $dvalue ."'<br/>";
+                    }
+            }
+            addActivityLog(1, 10, $reservation_id, $log_action_desc);
+        }
 
         $this->Reservation->update($reservation_id, ['RESV_NO' => "RES$reservation_id"]);
 

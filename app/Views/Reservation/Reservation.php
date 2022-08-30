@@ -355,7 +355,7 @@
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="rateQueryWindowLable">Reservation Option</h5>
+                    <h5 class="modal-title" id="optionWindowLable">Reservation Options</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -364,26 +364,24 @@
                             <button type="button" class="btn btn-primary accompany-guests">Accompanying</button>
                             <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add
                                 On</button>
-                            <button type="button" class="btn btn-primary cancel-reservation d-none"
-                                data_sysid="">Cancel</button>
-                            <button type="button" class="btn btn-primary reinstate-reservation d-none"
-                                data_sysid="">Reinstate</button>
+                            <button type="button" class="btn btn-primary cancel-reservation d-none" data_sysid=""
+                                data_custId="">Cancel</button>
                             <button type="button" class="btn btn-primary show-activity-log">Changes</button>
-                            <button type="button" class="btn btn-primary mt-2" id="registerCardButton" data_sysid=""
-                                style="width: 135px;">Registration Card</button>
+                            <button type="button" class="btn btn-primary checkout-reservation"
+                                onclick="reservationCheckout()">Checkout</button>
+                            <button type="button" class="btn btn-primary web-link-btn">Docs</button>
                             <button type="button" class="btn btn-primary mt-2" id="fixedChargeButton" data_sysid=""
                                 style="width: 135px;">Fixed Charges</button>
                             <button type="button" class="btn btn-primary mt-2" id="proformaButton" data_sysid=""
                                 style="width: 135px;">Pro-Forma Folio</button>
-                            <button type="button" class="btn btn-primary"
-                                onclick="reservationCheckout()">Checkout</button>
-                            <button type="button" class="btn btn-primary web-link-btn">Docs</button>
-                            <button type="button" class="btn btn-primary shares-btn">Shares</button>
                             <button type="button" class="btn btn-primary" onclick="getRateInfo()" id="rateInfoButton"
                                 data_sysid="">Rate Info.</button>
+                            <button type="button" class="btn btn-primary mt-2" id="registerCardButton" data_sysid=""
+                                style="width: 135px;">Registration Card</button>
+                            <button type="button" class="btn btn-primary reinstate-reservation d-none"
+                                data_sysid="">Reinstate</button>
+                            <button type="button" class="btn btn-primary shares-btn">Shares</button>
                             <button type="button" class="btn btn-primary" id="traceButton" data_sysid="">Traces</button>
-
-
                         </div>
                     </div>
                 </div>
@@ -2931,6 +2929,8 @@
 
     <?= $this->include('includes/CustomerMembershipPopup') ?>
 
+    <?= $this->include('includes/CancelReservationPopup') ?>
+
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
@@ -2994,7 +2994,7 @@ $(document).ready(function() {
                             'CUST_ID'] +
                         '"  class="dropdown-item reserOption text-success"><i class="fa-solid fa-align-justify"></i> Options</a></li>';
 
-                    if (data['RESV_STATUS'] != 'Checked-In')
+                    if ($.inArray(data['RESV_STATUS'], ["Checked-In", "Checked-Out"]) == -1)
                         resvListButtons += '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
                         '" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>';
@@ -3358,9 +3358,15 @@ function selectRate() {
     $('#RESV_EXT_PURP_STAY').val($('#RESV_PURPOSE_STAY').val()).trigger('change').trigger('select2:select');
 
     if ($('.window-1').is(':visible')) {
-        $('.window-2').find('.RESV_ARRIVAL_DT').datepicker().datepicker("setDate", $('.window-1').find(
+        $('.window-2').find('.RESV_ARRIVAL_DT').datepicker({
+            format: 'd-M-yyyy',
+            autoclose: true
+        }).datepicker("setDate", $('.window-1').find(
             '.RESV_ARRIVAL_DT').val());
-        $('.window-2').find('.RESV_DEPARTURE').datepicker().datepicker("setDate", $('.window-1').find(
+        $('.window-2').find('.RESV_DEPARTURE').datepicker({
+            format: 'd-M-yyyy',
+            autoclose: true
+        }).datepicker("setDate", $('.window-1').find(
             '.RESV_DEPARTURE').val());
     }
 
@@ -3436,7 +3442,10 @@ $(document).on('change', '.RESV_ARRIVAL_DT,.RESV_DEPARTURE', function() {
     setNights($(this), $(this).val());
 
     if ($(this).hasClass('RESV_ARRIVAL_DT')) {
-        $('#RESV_ARRIVAL_DT_PK,#RESV_ARRIVAL_DT_DO').datepicker().datepicker("setDate", $(this).val());
+        $('#RESV_ARRIVAL_DT_PK,#RESV_ARRIVAL_DT_DO').datepicker({
+            format: 'd-M-yyyy',
+            autoclose: true
+        }).datepicker("setDate", $(this).val());
     }
 });
 
@@ -3448,8 +3457,12 @@ $(document).on('blur', '.RESV_NIGHT', function() {
 
     //alert(startField.val()); alert(new_date);
 
-    endField.datepicker("setDate", new_date);
-
+    if ($.inArray($('#RESV_STATUS').val(), ["Cancelled", "Checked-Out"]) == -1) {
+        endField.datepicker({
+            format: 'd-M-yyyy',
+            autoclose: true
+        }).datepicker("setDate", new_date);
+    }
     //alert(value);
 });
 
@@ -3492,13 +3505,12 @@ $(document).on('click', '.reserOption', function() {
     roomType = $(this).attr('rmtype');
     roomTypedesc = $(this).attr('rmtypedesc');
     reservation_customer_id = $(this).data('reservation_customer_id');
+
     $('#optionsResrBtn').attr({
         'data-reservation_customer_id': reservation_customer_id
     });
 
     $('#Accompany').show();
-
-    $('.flxy_opt_btn > .btn').removeClass('d-none').prop('disabled', false); // Show all buttons by default
 
     //$('#Addon').hide();
     $('#Addon,#reservationW').modal('hide');
@@ -3513,9 +3525,19 @@ $(document).on('click', '.reserOption', function() {
     $('#rateInfoButton').attr('data_sysid', ressysId);
     $('#traceButton').attr('data_sysid', ressysId);
 
-    $('.cancel-reservation,.reinstate-reservation').attr('data_sysid', ressysId);
+    $('.cancel-reservation,.reinstate-reservation').attr({
+        'data_sysid': ressysId,
+        'data_custId': reservation_customer_id
+    });
 
+    displayResvOptionButtons(ressysId);
+});
+
+function displayResvOptionButtons(ressysId) {
     // Reservation Specific Option display
+
+    $('.flxy_opt_btn > .btn').removeClass('d-none').prop('disabled', false); // Show all buttons by default
+    $('.checkout-reservation').addClass('d-none').prop('disabled', true);
 
     $.ajax({
         url: '<?php echo base_url('/getReservDetails') ?>',
@@ -3529,6 +3551,17 @@ $(document).on('click', '.reserOption', function() {
         },
         dataType: 'json',
         success: function(respn) {
+
+            var arrivalDate = new Date(respn.RESV_ARRIVAL_DT);
+            var departureDate = new Date(respn.RESV_DEPARTURE);
+            var currentDate = new Date();
+
+            $('.cancel-reservation,.reinstate-reservation').attr({
+                'data_resv_no': respn.RESV_NO
+            });
+
+            $('#optionWindowLable').html('Reservation Options of ' + respn.RESV_NO);
+
             if (respn.RESV_STATUS == 'Cancelled') {
                 $('.cancel-reservation').addClass('d-none').prop('disabled', true);
                 $('.reinstate-reservation').removeClass('d-none').prop('disabled', false);
@@ -3540,12 +3573,23 @@ $(document).on('click', '.reserOption', function() {
                 if (respn.RESV_STATUS == 'Due Pre Check-In' || respn.RESV_STATUS ==
                     'Pre Checked-In')
                     $('.cancel-reservation').removeClass('d-none').prop('disabled', false);
-                else
+                else {
                     $('.cancel-reservation').addClass('d-none').prop('disabled', true);
+                    if (respn.RESV_STATUS == 'Checked-In' || respn.RESV_STATUS ==
+                        'Checked-Out-Requested') {
+                        $('.checkout-reservation').removeClass('d-none');
+                        if (currentDate >= departureDate) {
+                            $('.checkout-reservation').prop('disabled', false);
+                        }
+                    } else if (respn.RESV_STATUS == 'Checked-Out') {
+                        $('.accompany-guests,#proformaButton').prop(
+                            'disabled', true);
+                    }
+                }
             }
         }
     });
-});
+}
 
 $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
     reservation_customer_id = $(this).data('reservation_customer_id');
@@ -3556,6 +3600,9 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     $('#reservationForm').removeClass('was-validated');
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false).prop('disabled',
         false);
+    $(':input', '#reservationForm').not(
+        '#CUST_FIRST_NAME,#RESV_MEMBER_NO,#RESV_GUST_BAL,#RESV_ROOM_ID,#RESV_RATE_CODE,#RESV_PACKAGE,#RESV_INV_ITEM,#PACKAGE_EXCLUDE,#RSV_PCKG_POST_RYTHM,RSV_PCKG_CALC_RULE'
+    ).prop('readonly', false);
     $('#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
 
     runSupportingResevationLov();
@@ -3645,8 +3692,11 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                         $('#' + field).val(dataval);
                     } else if (field == 'RESV_ARRIVAL_DT' || field ==
                         'RESV_DEPARTURE') {
-                        $('.' + field).datepicker().datepicker(
-                            "setDate", dataval);
+                        $('.' + field).datepicker({
+                            format: 'd-M-yyyy',
+                            autoclose: true
+                        }).datepicker("setDate", dataval);
+
                     } else if (field == 'CUST_VIP' || field == 'RESV_BLOCK') {
                         $('.' + field).select2("val", dataval);
                     } else {
@@ -3662,14 +3712,6 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                 });
             });
 
-            // Disable all fields if 'Cancelled'
-            if ($('#RESV_STATUS').val() == 'Cancelled')
-                $(':input', '#reservationForm').prop('disabled', true);
-            else if ($('#RESV_STATUS').val() == 'Checked-In') {
-                $('.RESV_NAME,#CUST_FIRST_NAME,#RESV_ARRIVAL_DT,#RESV_RESRV_TYPE,#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RM_TYPE,#RESV_ROOM')
-                    .prop('disabled', true);
-            }
-
             if (mode == 'CPY') {
 
                 var nights = parseInt($('#RESV_NIGHT').val());
@@ -3677,11 +3719,33 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 
                 var today = moment().format('DD-MM-YYYY');
                 var end = moment().add(nights, 'days').format('DD-MM-YYYY');
-                $('.RESV_ARRIVAL_DT').datepicker().datepicker("setDate", today);
-                $('.RESV_DEPARTURE').datepicker().datepicker("setDate", end);
+                $('.RESV_ARRIVAL_DT').datepicker({
+                    format: 'd-M-yyyy',
+                    autoclose: true
+                }).datepicker("setDate", today);
+                $('.RESV_DEPARTURE').datepicker({
+                    format: 'd-M-yyyy',
+                    autoclose: true
+                }).datepicker("setDate", end);
             }
 
             checkArrivalDate();
+
+            $('.RESV_ARRIVAL_DT,.RESV_DEPARTURE').removeClass('is-valid');
+
+            // Disable all fields if 'Cancelled'
+            if ($('#RESV_STATUS').val() == 'Cancelled' || $('#RESV_STATUS').val() ==
+                'Checked-Out') {
+                $(':input', '#reservationForm').prop('readonly', true);
+                $('#reservationForm .select2,#reservationForm .selectpicker,#reservationForm input[type=checkbox],#reservationForm .flxi_btn,#reservationForm #submitResrBtn')
+                    .prop('disabled', true);
+                $('#reservationForm .selectpicker').selectpicker('refresh');
+                $('.RESV_ARRIVAL_DT,.RESV_DEPARTURE').datepicker("destroy");
+            } else if ($('#RESV_STATUS').val() == 'Checked-In') {
+                $('.RESV_NAME,#CUST_FIRST_NAME,#RESV_RESRV_TYPE,#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RM_TYPE,#RESV_ROOM')
+                    .prop('readonly', true);
+                $('.RESV_ARRIVAL_DT').datepicker("destroy");
+            }
         }
     });
 });
@@ -3791,8 +3855,14 @@ function addResvation() {
 
     var today = moment().format('DD-MM-YYYY');
     var end = moment().add(1, 'days').format('DD-MM-YYYY');
-    $('.RESV_ARRIVAL_DT').datepicker().datepicker("setDate", today);
-    $('.RESV_DEPARTURE').datepicker().datepicker("setDate", end);
+    $('.RESV_ARRIVAL_DT').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
+    }).datepicker("setDate", today);
+    $('.RESV_DEPARTURE').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
+    }).datepicker("setDate", end);
 
     $('#RESV_NIGHT,#RESV_NO_F_ROOM,#RESV_ADULTS').val('1');
     $('#RESV_CONFIRM_YN,#RESV_NO_POST,#RESV_PICKUP_YN,#RESV_DROPOFF_YN,#RESV_EXT_PRINT_RT,#RESV_FIXED_RATE').val('N');
@@ -4884,7 +4954,7 @@ $(document).on('click', '.show-activity-log', function() {
     showReservationChanges(ressysId);
 });
 
-// Funtion to execute after Customer Memberhsip form submit
+// Funtion to execute after Customer Membership form submit
 
 function afterMemFormClose() {
     fillCustomerMemberships($('.window-2').is(':visible') ? $('.window-2').find('#RESV_NAME').val() : $('.window-1')

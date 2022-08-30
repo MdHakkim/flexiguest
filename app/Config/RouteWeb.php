@@ -348,6 +348,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/editCancellationReason', 'MastersController::editCancellationReason');
     $routes->match(['post'],'/deleteCancellationReason', 'MastersController::deleteCancellationReason'); 
     
+    $routes->match(['post'], '/insertResvCancelHistory', 'ApplicatioController::insertResvCancelHistory');
+    $routes->match(['post'], '/reinstateReservation', 'ApplicatioController::reinstateReservation');
+    $routes->match(['post'],'/resvCancelHistoryView', 'ApplicatioController::ResvCancelHistoryView');
 
     // Code By ALEESHA 
     // Maintenance Request 

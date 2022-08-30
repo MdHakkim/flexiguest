@@ -52,6 +52,8 @@ class ApplicatioController extends BaseController
 
         $data['userList'] = geUsersList(); 
 
+        $data['cancelReasons'] = $this->cancellationReasonList();
+
         $data['js_to_load'] = array("inventoryFormWizardNumbered.js","reservation-calendar.js");
 
         return view('Reservation/Reservation', $data);
@@ -4378,12 +4380,12 @@ class ApplicatioController extends BaseController
         try{           
             $response = NULL; 
             $result = NULL;   
-            $sql = "SELECT RESV_ARRIVAL_DT,RESV_NIGHT,RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULL_NAME, RESV_STATUS  FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID WHERE RESV_ID = '".$reservID."'";                 
+            $sql = "SELECT RESV_ARRIVAL_DT,RESV_NIGHT,RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULL_NAME, RESV_NO, RESV_STATUS  FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID WHERE RESV_ID = '".$reservID."'";                 
             $responseCount = $this->Db->query($sql)->getNumRows();
             if($responseCount > 0) {
                 $response = $this->Db->query($sql)->getResultArray(); 
                 foreach($response as $row){            
-                    $result = ['RESV_ARRIVAL_DT' => $row['RESV_ARRIVAL_DT'],'RESV_NIGHT' => $row['RESV_NIGHT'],'RESV_DEPARTURE' => $row['RESV_DEPARTURE'],'FULL_NAME' => $row['FULL_NAME'], 'RESV_STATUS' => $row['RESV_STATUS'] ];
+                    $result = ['RESV_ARRIVAL_DT' => $row['RESV_ARRIVAL_DT'],'RESV_NIGHT' => $row['RESV_NIGHT'],'RESV_DEPARTURE' => $row['RESV_DEPARTURE'],'FULL_NAME' => $row['FULL_NAME'], 'RESV_NO' => $row['RESV_NO'], 'RESV_STATUS' => $row['RESV_STATUS'] ];
                 }
             }
           
@@ -4391,7 +4393,151 @@ class ApplicatioController extends BaseController
         } catch(\Exception $e) {
             return $e->getMessage();
         }
+    }    
+
+    public function cancellationReasonList()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT CN_RS_ID, CN_RS_CODE, CN_RS_DESC
+                FROM FLXY_CANCELLATION_REASONS WHERE CN_RS_STATUS = 1 ";
+
+        if ($search != '') {
+            $sql .= " AND CN_RS_CODE LIKE '%$search%'
+                      OR CN_RS_DESC LIKE '%$search%'";
+        }
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['CN_RS_ID'] . '">' . $row['CN_RS_CODE'] . ' | ' . $row['CN_RS_DESC'] . '</option>';
+        }
+
+        return $option;
     }
+
+    public function insertResvCancelHistory()
+    {
+        try {
+            $validate = $this->validate([
+                'CN_RS_ID' => ['label' => 'Cancellation Reason', 'rules' => 'required'],
+                'RESV_ID' => ['label' => 'Reservation ID', 'rules' => 'required'],                
+            ]);
+            
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $current_date = date('Y-m-d H:i:s');
+            $resv_id = trim($this->request->getPost('RESV_ID'));
+            $cust_id = trim($this->request->getPost('CUST_ID'));
+            //echo json_encode(print_r($_POST)); exit;
+
+            $resv_sql = "SELECT RESV_STATUS FROM FLXY_RESERVATION WHERE RESV_ID=:SYSID:";                                      
+            $resv_data = $this->Db->query($resv_sql,['SYSID'=> $resv_id])->getRowArray();
+
+            $data = [
+                "CN_RS_ID" => trim($this->request->getPost('CN_RS_ID')),
+                "RESV_ID" => $resv_id,
+                "RESV_STATUS" => $resv_data['RESV_STATUS'],
+                "USR_ID" => session()->get('USR_ID'),
+                "HIST_ACTION_DESCRIPTION" => trim($this->request->getPost('HIST_ACTION_DESCRIPTION')),
+                "HIST_DATETIME" => $current_date,
+            ];
+
+            $return = $this->Db->table('FLXY_RESERVATION_CANCELLATION_HISTORY')->insert($data);
+
+            if($return){
+                $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $resv_id)
+                                                    ->update(["RESV_STATUS" => "Cancelled",
+                                                              "RESV_UPDATE_UID" => session()->get('USR_ID'),
+                                                              "RESV_UPDATE_DT" => $current_date]); 
+
+                $cust_sql = "SELECT TRIM(CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME)) CUST_FULL_NAME
+                             FROM FLXY_CUSTOMER
+                             WHERE CUST_ID=:SYSID:";
+                                      
+                $cust_data = $this->Db->query($cust_sql,['SYSID'=> $cust_id])->getRowArray();
+
+                $log_action_desc = "CANCELLED Reservation of ".$cust_data['CUST_FULL_NAME']."
+                                    <br/>Reason: ".trim($this->request->getPost('HIST_REASON'))."
+                                    <br/>Date: ".date('d-M-Y g:i a');                                              
+                addActivityLog(1, 1, $resv_id, $log_action_desc);
+            }
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function reinstateReservation()
+    {
+        try {
+            $validate = $this->validate([
+                'RESV_ID' => ['label' => 'Reservation ID', 'rules' => 'required']                
+            ]);
+            
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $current_date = date('Y-m-d H:i:s');
+            $resv_id = trim($this->request->getPost('RESV_ID'));
+
+            //Get last status prior to cancellation
+            $resv_sql = "SELECT TOP (1) RESV_STATUS FROM FLXY_RESERVATION_CANCELLATION_HISTORY 
+                         WHERE RESV_ID=:SYSID:";                                      
+            $resv_data = $this->Db->query($resv_sql,['SYSID'=> $resv_id])->getRowArray();
+
+            if($resv_data){
+                $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $resv_id)
+                                                              ->update(["RESV_STATUS" => $resv_data['RESV_STATUS'],
+                                                              "RESV_UPDATE_UID" => session()->get('USR_ID'),
+                                                              "RESV_UPDATE_DT" => $current_date]); 
+
+                $log_action_desc = "REINSTATED Reservation ".$resv_id." to status '".$resv_data['RESV_STATUS']."'
+                                    <br/>Date: ".date('d-M-Y g:i a');                                              
+                addActivityLog(1, 22, $resv_id, $log_action_desc);
+            }
+            
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function ResvCancelHistoryView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array( "RESV_ID = " => "'$sysid'"); // Add condition for Reservation
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = '( SELECT  HIST_ID, RESV_ID, TRIM(CONCAT_WS(\' \', USR_FIRST_NAME, USR_LAST_NAME)) USR_FULL_NAME,
+                        CN_RS_DESC, CN_RS_CODE, HIST_ACTION_DESCRIPTION, FORMAT(HIST_DATETIME,\'dd-MMM-yyyy hh:mm:ss tt\')HIST_DATETIME 
+                        FROM FLXY_RESERVATION_CANCELLATION_HISTORY
+                        LEFT JOIN FlXY_USERS ON FlXY_USERS.USR_ID = FLXY_RESERVATION_CANCELLATION_HISTORY.USR_ID
+                        LEFT JOIN FLXY_CANCELLATION_REASONS ON FLXY_CANCELLATION_REASONS.CN_RS_ID = FLXY_RESERVATION_CANCELLATION_HISTORY.CN_RS_ID
+                        ) RESV_CANCEL_HISTORY';
+        $columns = 'CN_RS_CODE,HIST_ACTION_DESCRIPTION,USR_FULL_NAME,CN_RS_DESC,RESV_ID,HIST_DATETIME';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
+
 
    
 }

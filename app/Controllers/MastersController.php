@@ -3133,28 +3133,6 @@ class MastersController extends BaseController
         return $rcCode == '' || strlen($rcCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
     }
 
-    public function cancellationReasonList()
-    {
-        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
-
-        $sql = "SELECT CN_RS_ID, CN_RS_CODE, CN_RS_DESC
-                FROM FLXY_CANCELLATION_REASONS WHERE CN_RS_STATUS = 1 ";
-
-        if ($search != '') {
-            $sql .= " AND CN_RS_CODE LIKE '%$search%'
-                      OR CN_RS_DESC LIKE '%$search%'";
-        }
-
-        $response = $this->Db->query($sql)->getResultArray();
-
-        $option = '<option value="">Choose an Option</option>';
-        foreach ($response as $row) {
-            $option .= '<option value="' . $row['CN_RS_ID'] . '">' . $row['CN_RS_CODE'] . ' | ' . $row['CN_RS_DESC'] . '</option>';
-        }
-
-        return $option;
-    }
-
     public function editCancellationReason()
     {
         $param = ['SYSID' => $this->request->getPost('sysid')];
