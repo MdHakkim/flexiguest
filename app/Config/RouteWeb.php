@@ -589,10 +589,10 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/updateRoomPlan', 'ReservationController::updateRoomPlan'); 
       $routes->match(['post'],'/changeReservationDates', 'ReservationController::changeReservationDates');     
       $routes->get('/roomPlanTest', 'ReservationController::roomPlanTest'); 
+      $routes->match(['post'],'/getInventoryCalendarData', 'ApplicatioController::getInventoryCalendarData');
+      $routes->match(['post'],'/getInventoryAllocatedData', 'ApplicatioController::getInventoryAllocatedData'); 
 
-
-
-
+      
 
 
 

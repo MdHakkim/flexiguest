@@ -52,14 +52,24 @@ class ApplicatioController extends BaseController
         $data['blockLoader_javascript'] = blockLoader_javascript();
 
         $data['userList'] = geUsersList(); 
-        //$data['js_to_load'] = array("inventoryFormWizardNumbered.js","reservation-calendar.js");
         $data['js_to_load'] = array("inventoryFormWizardNumbered.js","RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
-        //$data['js_to_load'] = array("inventoryFormWizardNumbered.js","RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
         $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
         
         $data['RoomReservations'] = $this->getReservations(); 
         $data['RoomResources'] = $this->roomplanResources();
         return view('Reservation/Reservation', $data);
+    }
+
+    function getInventoryCalendarData(){
+        $data['itemResources'] = $this->itemResources();                 
+        $data['itemAvail'] = $this->ItemCalendar();           
+        echo json_encode($data);
+    }
+
+    function getInventoryAllocatedData(){     
+        
+        $data  = $this->ItemCalendar();           
+        echo json_encode($data);
     }
 
     public function roomplanResources()
@@ -4169,60 +4179,55 @@ class ApplicatioController extends BaseController
         }
 
 
-        public function ItemResources(){
-            $response = NULL;
-            $sql = "SELECT ITM_ID, ITM_CODE, ITM_NAME         
-                    FROM FLXY_ITEM WHERE ITM_STATUS = '1' ORDER BY ITM_ID ASC";       
-            $responseCount = $this->Db->query($sql)->getNumRows();
-            if($responseCount > 0)
-            $response = $this->Db->query($sql)->getResultArray();
-    
-          return $response;
-        }
+    public function ItemResources(){
+        $response = NULL;
+        $sql = "SELECT ITM_ID as id, ITM_NAME as item         
+                FROM FLXY_ITEM WHERE ITM_STATUS = '1' ORDER BY ITM_ID ASC";       
+        $responseCount = $this->Db->query($sql)->getNumRows();
+        if($responseCount > 0)
+        $response = $this->Db->query($sql)->getResultArray();
+
+        return $response;
+    }
 
     public function ItemCalendar(){
         $response = NULL;
+        $items = array();
         
         $sql = "SELECT ITM_ID, ITM_QTY_IN_STOCK         
                 FROM FLXY_ITEM ORDER BY ITM_ID ASC";       
         $responseCount = $this->Db->query($sql)->getNumRows();
         if($responseCount > 0){
             $response = $this->Db->query($sql)->getResultArray();
-            $j=0;
+           
+            $START        = $this->request->getPost('start');
+            $END          = $this->request->getPost('end');
+            $START_DATE   = explode('T',$START); 
+            $END_DATE     = explode('T',$END);
+            $start        = strtotime($START_DATE[0]);
+            $end          = strtotime($END_DATE[0]);
             foreach($response as $row){
-                $ITM_BEGIN_DATE    = strtotime('2022-01-01');
-                $ITM_END_DATE      = strtotime('2032-12-31'); 
-                $DATEDIFF = $ITM_END_DATE - $ITM_BEGIN_DATE;
+              
+                $ITM_BEGIN_DATE    = $start;
+                $ITM_END_DATE      = $end; 
+                $DATEDIFF = (int)$end-(int)$start;
                 $AVAILABLE_DAYS = round($DATEDIFF / (60 * 60 * 24));
                 $ITM_DLY_QTY = 0;
                 $ITEM_RESERVED = 0;
                 for($i = 1; $i <= ($AVAILABLE_DAYS+1); $i++ ){
+                    $values = [];
                     $sCurrentDate = gmdate("Y-m-d", strtotime("+$i day", $ITM_BEGIN_DATE)); 
                     $CurrentDate = strtotime($sCurrentDate); 
-                    $items[$j][$i]['ITM_ID'] = $row['ITM_ID'];
-                    //$ITM_DLY_QTY = $this->checkItemDailyInventory($row['ITM_ID'],$sCurrentDate );
-                    $ITEM_RESERVED = $this->checkItemReserved($row['ITM_ID'],$sCurrentDate );
-
-                    /////// Item Total quantity and Item Available quantity are depends on the Items table and Daily inventory table
-
-
-                    // if($ITM_DLY_QTY > 0){
-                    //     $ITM_REMAINING_STOCK = $ITM_DLY_QTY - $ITEM_RESERVED;
-                    //     $ITM_QTY_IN_STOCK    = $ITM_DLY_QTY;
-
-                    // }
-                    // else{
-                        $ITM_REMAINING_STOCK = $row['ITM_QTY_IN_STOCK'] - $ITEM_RESERVED;
-                        $ITM_QTY_IN_STOCK    = $row['ITM_QTY_IN_STOCK'];
-                    //}
-                                      
-                    $items[$j][$i]['ITM_REMAINING_STOCK'] = $ITM_REMAINING_STOCK;
-                    $items[$j][$i]['ITM_QTY_IN_STOCK']    = $ITM_QTY_IN_STOCK;
-                    $items[$j][$i]['START'] = $sCurrentDate;
-                    $items[$j][$i]['END'] = $sCurrentDate;
-                }
-                $j++;
-
+                    $values['id'] = $row['ITM_ID'];
+                    $values['resourceId'] = $row['ITM_ID'];
+                    $ITEM_RESERVED = $this->checkItemReserved($row['ITM_ID'],$sCurrentDate );                    
+                    $ITM_REMAINING_STOCK = $row['ITM_QTY_IN_STOCK'] - $ITEM_RESERVED;
+                    $ITM_QTY_IN_STOCK    = $row['ITM_QTY_IN_STOCK'];
+                    $values['title'] = $ITM_REMAINING_STOCK.' | '.$ITM_QTY_IN_STOCK;
+                    $values['start'] = $sCurrentDate;
+                    $values['end'] = $sCurrentDate;
+                    $items[] = $values;
+                }   
             }
         }
       return $items;
@@ -4378,10 +4383,10 @@ class ApplicatioController extends BaseController
     public function updateFixedCharges()
     {
         try {
-            $FIXD_CHRG_WEEKLY    = '';
-            $FIXD_CHRG_MONTHLY   = '';
-            $FIXD_CHRG_QUARTERLY = '';
-            $FIXD_CHRG_YEARLY   = '';
+            $FIXD_CHRG_WEEKLY       = '';
+            $FIXD_CHRG_MONTHLY      = '';
+            $FIXD_CHRG_QUARTERLY    = '';
+            $FIXD_CHRG_YEARLY       = '';
             $FIXD_CHRG_ID           =  $this->request->getPost('FIXD_CHRG_ID');
             $FIXD_CHRG_RESV_ID      =  $this->request->getPost('FIXD_CHRG_RESV_ID');
             $FIXD_CHRG_TRNCODE      =  $this->request->getPost('FIXD_CHRG_TRNCODE');

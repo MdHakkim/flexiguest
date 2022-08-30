@@ -864,10 +864,11 @@ public function showPackages()
                 <td class="select">'.$RSV_PCKG_BEGIN_DATE.'</td>
                 <td class="select">'.$PKG_CD_DT_PRICE.'</td>
                 <td class="select">'.$RSV_PCKG_TOTAL.'</td>                    
-                    </tr>';
+                </tr>';
             }
+           
 
-            $RSV_PCKG_BEGIN_DATE  = date("Y-m-d", strtotime("+$i day", strtotime($RSV_PCKG_BEGIN_DATE))); 
+            $RSV_PCKG_BEGIN_DATE  = date("Y-m-d", strtotime("+1 day", strtotime($RSV_PCKG_BEGIN_DATE))); 
 
             if( $Posting_Rhythm == 2)
             break;
