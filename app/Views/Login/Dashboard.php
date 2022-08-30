@@ -576,7 +576,7 @@
                             <p class="mb-2">Project meeting with john @10:15am</p>
                             <div class="d-flex flex-wrap">
                               <div class="avatar me-3">
-                                <img src="assets/img/avatars/1.png" alt="Avatar" class="rounded-circle" />
+                                <img src="<?php echo base_url()?>/assets/img/avatars/1.png" alt="Avatar" class="rounded-circle" />
                               </div>
                               <div>
                                 <h6 class="mb-0">John Doe (Client)</h6>

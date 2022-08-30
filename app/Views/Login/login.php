@@ -15,7 +15,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Login Cover - Pages | Frest - Bootstrap Admin Template</title>
+    <title>FlexiGuest</title>
 
     <meta name="description" content="" />
 
