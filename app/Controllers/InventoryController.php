@@ -91,56 +91,76 @@ class InventoryController extends BaseController
     public function updateInventoryItems()
     {
         try {
+            $checkDailyInventory = 0;
             $RSV_PRI_ID    = $this->request->getPost('RSV_PRI_ID');
             $RESV_ID       = $this->request->getPost('ITEM_RESV_ID');
             $RSV_ITM_CL_ID = $this->request->getPost('RSV_ITM_CL_ID');
             $RSV_ITM_ID    = $this->request->getPost('RSV_ITM_ID');
+            $RSV_ITM_BEGIN_DATE = date('Y-m-d',(strtotime($this->request->getPost('RSV_ITM_BEGIN_DATE'))));
+            $RSV_ITM_END_DATE = date('Y-m-d',(strtotime($this->request->getPost('RSV_ITM_END_DATE'))));
             $existsCount   = 0;
             if($RESV_ID == '') 
             $RESV_ID = 0;
             if($RSV_PRI_ID == ''){
                  
-                 $existsCount = $this->ItemExists($RSV_ITM_CL_ID, $RSV_ITM_ID, $RESV_ID);
+                 $existsCount = $this->ItemExists($RSV_ITM_CL_ID, $RSV_ITM_ID, $RESV_ID,$RSV_ITM_BEGIN_DATE,$RSV_ITM_END_DATE);
+                 
                  if($existsCount > 0){
                     $result['SUCCESS'] = '2';
                     echo json_encode($result);
                     return;
                  }
+
+                 
             }         
 
 
              // Checks item quantity
             $resvItemQty = $this->request->getPost('RSV_ITM_QTY');
-            $resvItemID  =  $this->request->getPost('RSV_ITM_ID');            
+            $resvItemID  =  $this->request->getPost('RSV_ITM_ID');  
+            
+            
+           // $checkDailyInventory = $this->checkDailyInventoryAvailable($RSV_ITM_ID, $RSV_ITM_BEGIN_DATE, $RSV_ITM_END_DATE); 
              
-            $ITEM_AVAIL_QTY = 0;
- 
-            $ITEM_AVAIL_QTY = $this->Db->table('FLXY_ITEM')->select('ITEM_AVAIL_QTY')->where('ITM_ID', $this->request->getPost('RSV_ITM_ID'))->get()->getRowArray();
-             $ITEM_QTY = (int)$ITEM_AVAIL_QTY['ITEM_AVAIL_QTY']; 
+
+            $ITM_RESERVED_QTY = $this->checkReservedItems($RSV_ITM_ID, $RSV_ITM_BEGIN_DATE, $RSV_ITM_END_DATE,$RSV_PRI_ID); 
+             
+            // $ITEM_AVAIL_QTY = 0; 
+            $ITM_QTY_IN_STOCK = $this->Db->table('FLXY_ITEM')->select('ITM_QTY_IN_STOCK')->where('ITM_ID', $this->request->getPost('RSV_ITM_ID'))->get()->getRowArray();
+             $ITM_QTY_IN_STOCK = (int)$ITM_QTY_IN_STOCK['ITM_QTY_IN_STOCK']; 
+            // $ITEM_AVAILABLE_QTY =  ($checkDailyInventory > 0) ? $checkDailyInventory: $ITEM_QTY;
+
+
+             $ITM_REMAINING_QTY = $ITM_QTY_IN_STOCK  - $ITM_RESERVED_QTY;
 
             $data = [
                 "RSV_ID" => $RESV_ID,
                 "RSV_ITM_CL_ID" => trim($this->request->getPost('RSV_ITM_CL_ID')),
                 "RSV_ITM_ID" => trim($this->request->getPost('RSV_ITM_ID')),
-                "RSV_ITM_BEGIN_DATE" => date('Y-m-d',(strtotime($this->request->getPost('RSV_ITM_BEGIN_DATE')))),
-                "RSV_ITM_END_DATE" => date('Y-m-d',(strtotime($this->request->getPost('RSV_ITM_END_DATE')))),
+                "RSV_ITM_BEGIN_DATE" => $RSV_ITM_BEGIN_DATE,
+                "RSV_ITM_END_DATE" => $RSV_ITM_END_DATE,
                 "RSV_ITM_QTY" => trim($this->request->getPost('RSV_ITM_QTY')),
                 "RSV_SESSION_ID" => session_id()
             ];
 
-
-           // echo  $data['RSV_ITM_BEGIN_DATE'];
-           
-            
           
 
-            $rules = [  'RSV_ITM_CL_ID' => ['label' => 'Class', 'rules' => 'required'],
-                        'RSV_ITM_ID' => ['label' => 'Item', 'rules' => 'required'],
-                        'RSV_ITM_BEGIN_DATE' => ['label' => 'Start Date', 'rules' => 'required|itemAvailableCheck[RSV_ITM_BEGIN_DATE]|itemDateOverlapCheck[RSV_ITM_BEGIN_DATE]', 'errors' => ['itemAvailableCheck' => 'Item is unavailable on this start date','itemDateOverlapCheck' => 'The Start Date of item overlaps with an existing reservation. Change the date']],                       
-                         'RSV_ITM_END_DATE' => ['label' => 'End Date', 'rules' => 'required|compareDate[RSV_ITM_END_DATE]|itemAvailableCheck[RSV_ITM_END_DATE]|itemDateOverlapCheck[RSV_ITM_END_DATE]', 'errors' => ['compareDate' => 'The End Date should be after Begin Date','itemAvailableCheck' => 'Item is unavailable on this end date','itemDateOverlapCheck' => 'The End Date of item overlaps with an existing reservation. Change the date']],
-                        'RSV_ITM_QTY' => ['label' => 'Quantity', 'rules' => 'required|checkAvailableItemQty['.$ITEM_QTY.']', 'errors' => ['checkAvailableItemQty' => 'Item available quantity is less than the requested quantity']]                      
+            // $rules = [  'RSV_ITM_CL_ID' => ['label' => 'Class', 'rules' => 'required'],
+            //             'RSV_ITM_ID' => ['label' => 'Item', 'rules' => 'required'],
+            //             'RSV_ITM_BEGIN_DATE' => ['label' => 'Start Date', 'rules' => 'required|itemAvailableCheck[RSV_ITM_BEGIN_DATE]|itemDateOverlapCheck[RSV_ITM_BEGIN_DATE]', 'errors' => ['itemAvailableCheck' => 'Item is unavailable on this start date','itemDateOverlapCheck' => 'The Start Date of item overlaps with an existing reservation. Change the date']],                       
+            //              'RSV_ITM_END_DATE' => ['label' => 'End Date', 'rules' => 'required|compareDate[RSV_ITM_END_DATE]|itemAvailableCheck[RSV_ITM_END_DATE]|itemDateOverlapCheck[RSV_ITM_END_DATE]', 'errors' => ['compareDate' => 'The End Date should be after Begin Date','itemAvailableCheck' => 'Item is unavailable on this end date','itemDateOverlapCheck' => 'The End Date of item overlaps with an existing reservation. Change the date']],
+            //             'RSV_ITM_QTY' => ['label' => 'Quantity', 'rules' => 'required|checkAvailableItemQty['.$ITEM_AVAILABLE_QTY.']', 'errors' => ['checkAvailableItemQty' => 'Item available quantity is less than the requested quantity']]                      
                         
-                     ];
+            //          ];
+
+            $rules = [  'RSV_ITM_CL_ID' => ['label' => 'Class', 'rules' => 'required'],
+                    'RSV_ITM_ID' => ['label' => 'Item', 'rules' => 'required'],
+                    'RSV_ITM_BEGIN_DATE' => ['label' => 'Start Date', 'rules' => 'required|itemAvailableCheck[RSV_ITM_BEGIN_DATE]', 'errors' => ['itemAvailableCheck' => 'Item is unavailable on this start date']],                       
+                    'RSV_ITM_END_DATE' => ['label' => 'End Date', 'rules' => 'required|compareDate[RSV_ITM_END_DATE]|itemAvailableCheck[RSV_ITM_END_DATE]', 'errors' => ['compareDate' => 'The End Date should be after Begin Date','itemAvailableCheck' => 'Item is unavailable on this end date']],
+                    'RSV_ITM_QTY' => ['label' => 'Quantity', 'rules' => 'required|checkAvailableItemQty['.$ITM_REMAINING_QTY.']', 'errors' => ['checkAvailableItemQty' => 'Item available quantity is less than the requested quantity']]                      
+                    
+                ];
+
 
                    
 
@@ -157,9 +177,14 @@ class InventoryController extends BaseController
            
 
             
-          
-            (int)$ITEM_QTY = $ITEM_QTY-(int)$resvItemQty;
-            $this->Db->table('FLXY_ITEM')->where('ITM_ID', $resvItemID)->update(['ITEM_AVAIL_QTY' => $ITEM_QTY]);
+        //   if($checkDailyInventory > 0 ){
+        //     (int)$ITEM_QTY = $checkDailyInventory-(int)$resvItemQty;
+        //     $this->Db->table('FLXY_DAILY_INVENTORY')->where('ITM_ID', $resvItemID)->update(['ITM_AVAIL_QTY' => $ITEM_QTY]);
+
+        //   }else{ 
+        //     (int)$ITEM_QTY = $ITEM_QTY-(int)$resvItemQty;
+        //     $this->Db->table('FLXY_ITEM')->where('ITM_ID', $resvItemID)->update(['ITEM_AVAIL_QTY' => $ITEM_QTY]);
+        //   }
 
 
             $return = !empty($RSV_PRI_ID) ? $this->Db->table('FLXY_RESERVATION_ITEM')->where('RSV_PRI_ID', $RSV_PRI_ID)->update($data) : $this->Db->table('FLXY_RESERVATION_ITEM')->insert($data);
@@ -172,20 +197,46 @@ class InventoryController extends BaseController
             // $row   = $query->getRowArray();
             // echo $row['ITEM_AVAIL_QTY'];exit;
            
-            if(!$return)
-                $this->session->setFlashdata('error', 'There has been an error. Please try again.');
-            else
-            {
-                if(empty($RSV_PRI_ID))
-                    //$this->session->setFlashdata('success', 'The Package Code has been updated.');
-                    //else
-                    $this->session->setFlashdata('success', 'The new Item  has been added.');
-            }
+            // if(!$return)
+            //     $this->session->setFlashdata('error', 'There has been an error. Please try again.');
+            // else
+            // {
+            //     if(empty($RSV_PRI_ID))
+            //         //$this->session->setFlashdata('success', 'The Package Code has been updated.');
+            //         //else
+            //         //$this->session->setFlashdata('success', 'The new Item  has been added.');
+            // }
             echo json_encode($result);
 
         } catch (Exception $e) {
             return $this->respond($e->errors());
         }
+    }
+
+    public function checkDailyInventoryAvailable($RSV_ITM_ID, $RSV_ITM_BEGIN_DATE, $RSV_ITM_END_DATE){
+        $ITM_AVAIL_QTY = 0;
+        $sql = "SELECT ITM_ID, ITM_DLY_QTY, ITM_AVAIL_QTY FROM FLXY_DAILY_INVENTORY WHERE ('".$RSV_ITM_BEGIN_DATE."' BETWEEN ITM_DLY_BEGIN_DATE AND ITM_DLY_END_DATE) AND ('".$RSV_ITM_END_DATE."' BETWEEN ITM_DLY_BEGIN_DATE AND ITM_DLY_END_DATE) AND FLXY_DAILY_INVENTORY.ITM_ID = ".$RSV_ITM_ID; 
+        $response = $this->Db->query($sql)->getNumRows();
+    
+        if($response > 0){
+          $responseArray = $this->Db->query($sql)->getResultArray();
+          $ITM_AVAIL_QTY = $responseArray[0]['ITM_AVAIL_QTY'];
+        }
+        return $ITM_AVAIL_QTY;
+
+    }
+
+    public function checkReservedItems($RSV_ITM_ID, $RSV_ITM_BEGIN_DATE, $RSV_ITM_END_DATE, $RSV_PRI_ID){
+
+        $ITM_RESERVED_QTY = 0;
+        $sql = "SELECT RSV_ITM_QTY FROM FLXY_RESERVATION_ITEM WHERE ('".$RSV_ITM_BEGIN_DATE."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE) AND ('".$RSV_ITM_END_DATE."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE) AND RSV_PRI_ID != '$RSV_PRI_ID'"; 
+        $response = $this->Db->query($sql)->getNumRows();
+    
+        if($response > 0){
+          $responseArray = $this->Db->query($sql)->getResultArray();
+          $ITM_RESERVED_QTY = $responseArray[0]['RSV_ITM_QTY'];
+        }
+        return $ITM_RESERVED_QTY;
     }
 
     public function showInventoryDetails()
@@ -221,13 +272,20 @@ class InventoryController extends BaseController
         
     }
 
-    public function ItemExists($itemClass, $itemID, $reserID)
+    public function ItemExists($itemClass, $itemID, $reserID,$beginDate,$endDate)
     {      
-                
+        $cond = '';  
+        
+        if($reserID > 0){
+            $cond = '';
+        }
+        else{
+            $cond = "' AND RSV_SESSION_ID LIKE  '" . session_id() . "'"; 
+        }
 
         $sql = "SELECT *           
                 FROM dbo.FLXY_RESERVATION_ITEM
-                WHERE RSV_ITM_CL_ID = '" . $itemClass . "' AND RSV_ITM_ID = '" . $itemID . "' AND RSV_ID = '" . $reserID . "' AND RSV_SESSION_ID LIKE  '" . session_id() . "'";  
+                WHERE RSV_ITM_CL_ID = '" . $itemClass . "' AND RSV_ITM_ID = '" . $itemID . "' AND RSV_ID = '" . $reserID . "' AND ('".$beginDate."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE) AND ('".$endDate."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE) ".$cond;  
 
         $response = $this->Db->query($sql)->getNumRows();
         return $response;

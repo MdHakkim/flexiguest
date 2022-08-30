@@ -97,6 +97,8 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
         $routes->get('get-assets-list', 'ReceivingFormController::getAssetsList');
         $routes->post('submit-asset-handover-form', 'ReceivingFormController::submitAssetHandoverForm');
     });
+
+    $routes->get('reservation-by-id', 'ReservationController::reservationById');
 });
 
 $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
@@ -154,6 +156,11 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
         $routes->post("submit-form", "AssetTrackingController::submitForm");
     });
 
+    $routes->group('evalet', function ($routes) {
+        $routes->post('submit-form', 'EValetController::submitForm');
+        $routes->get('valet-list', 'EValetController::valetList');
+        $routes->post('assign-driver', 'EValetController::assignDriver');
+    });
 });
 
 $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function ($routes) {

@@ -139,8 +139,34 @@ class CustomRules{
     /**
      *  Check Item QTY is less than the available QTY 
      */
+//ECHO $data['RSV_ITM_QTY']. ''.  $fields;
 
-     if($data['RSV_ITM_QTY'] < $fields )
+    $ITM_REMAINING_QTY = $fields;
+
+    $RSV_ITM_BEGIN_DATE  = date('Y-m-d',(strtotime($data['RSV_ITM_BEGIN_DATE'])));
+    $RSV_ITM_END_DATE    = date('Y-m-d',(strtotime($data['RSV_ITM_END_DATE'])));
+    $RSV_ITM_QTY         = $data['RSV_ITM_QTY'];
+    $RSV_ITM_ID         = $data['RSV_ITM_ID'];
+    $RSV_PRI_ID         = $data['RSV_PRI_ID'];
+
+
+    $ITM_RESERVED_QTY = 0;
+
+    $ITM_QTY_IN_STOCK = $this->Db->table('FLXY_ITEM')->select('ITM_QTY_IN_STOCK')->where('ITM_ID', $RSV_ITM_ID)->get()->getRowArray();
+    $ITM_QTY_IN_STOCK = (int)$ITM_QTY_IN_STOCK['ITM_QTY_IN_STOCK']; 
+
+
+    $sql = "SELECT RSV_ITM_QTY FROM FLXY_RESERVATION_ITEM WHERE (('".$RSV_ITM_BEGIN_DATE."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE) OR ('".$RSV_ITM_END_DATE."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE)) AND RSV_PRI_ID != '$RSV_PRI_ID'"; 
+    $response = $this->Db->query($sql)->getNumRows();
+    
+        if($response > 0){
+          $responseArray = $this->Db->query($sql)->getResultArray();
+          $ITM_RESERVED_QTY = $responseArray[0]['RSV_ITM_QTY'];
+        }
+
+        (INT)$ITM_REMAINING_QTY = (INT)$ITM_QTY_IN_STOCK - (INT)$ITM_RESERVED_QTY;
+
+     if($RSV_ITM_QTY <= $ITM_REMAINING_QTY )
      {
       return true;
      }
@@ -156,13 +182,30 @@ class CustomRules{
      *  Check Item QTY is less than the available QTY 
      */
 
-    $RSV_ITM_BEGIN_DATE = date('Y-m-d',(strtotime($data['RSV_ITM_BEGIN_DATE'])));
-    $RSV_ITM_END_DATE   =  date('Y-m-d',(strtotime($data['RSV_ITM_END_DATE'])));
+    $RSV_ITM_BEGIN_DATE  = date('Y-m-d',(strtotime($data['RSV_ITM_BEGIN_DATE'])));
+    $RSV_ITM_END_DATE    = date('Y-m-d',(strtotime($data['RSV_ITM_END_DATE'])));
+    $RSV_ITM_QTY         = $data['RSV_ITM_QTY'];
 
-    $sql = "SELECT FLXY_DAILY_INVENTORY.ITM_ID FROM FLXY_DAILY_INVENTORY INNER JOIN FLXY_ITEM ON FLXY_ITEM.ITM_ID = FLXY_DAILY_INVENTORY.ITM_ID WHERE ('".$RSV_ITM_BEGIN_DATE."' BETWEEN ITM_DLY_BEGIN_DATE AND ITM_DLY_END_DATE) AND ('".$RSV_ITM_END_DATE."' BETWEEN ITM_DLY_BEGIN_DATE AND ITM_DLY_END_DATE) AND FLXY_DAILY_INVENTORY.ITM_ID = ".$data['RSV_ITM_ID'];                 
 
+     $sql = "SELECT ITM_ID, ITM_DLY_QTY, ITM_AVAIL_QTY FROM FLXY_DAILY_INVENTORY WHERE ('".$RSV_ITM_BEGIN_DATE."' BETWEEN ITM_DLY_BEGIN_DATE AND ITM_DLY_END_DATE) AND ('".$RSV_ITM_END_DATE."' BETWEEN ITM_DLY_BEGIN_DATE AND ITM_DLY_END_DATE) AND FLXY_DAILY_INVENTORY.ITM_ID = ".$data['RSV_ITM_ID']; 
     $response = $this->Db->query($sql)->getNumRows();
 
+    if($response > 0){
+      $responseArray = $this->Db->query($sql)->getResultArray();
+      //$ITM_AVAIL_QTY = $responseArray[0]['ITM_AVAIL_QTY'];
+      // if($RSV_ITM_QTY > $ITM_AVAIL_QTY)
+      // $response = 0;
+    }
+    else{
+      $sql = "SELECT ITM_ID, ITEM_AVAIL_QTY FROM FLXY_ITEM WHERE ITM_STATUS = '1' AND ITM_ID = ".$data['RSV_ITM_ID']; 
+      $responseArray = $this->Db->query($sql)->getResultArray();
+      //$ITEM_AVAIL_QTY = $responseArray[0]['ITEM_AVAIL_QTY'];
+      // if($RSV_ITM_QTY > $ITEM_AVAIL_QTY)
+      // $response = 0;
+      $response = 1;
+
+    }
+    
      if($response == 0)
      {
       return false;
@@ -187,14 +230,9 @@ class CustomRules{
     $sql = "SELECT * FROM FLXY_RESERVATION_ITEM WHERE RSV_ITM_ID = '".$data['RSV_ITM_ID']."' AND ('".$RSV_ITM_BEGIN_DATE."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE) AND ('".$RSV_ITM_END_DATE."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE)"; 
     else
     $sql = "SELECT * FROM FLXY_RESERVATION_ITEM WHERE RSV_ID = '".$data['RSV_ID']."' AND RSV_ITM_ID = '".$data['RSV_ITM_ID']."' AND ('".$RSV_ITM_BEGIN_DATE."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE) AND ('".$RSV_ITM_END_DATE."' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE)";
-
-
    
     $response = $this->Db->query($sql)->getNumRows();
     return ($response==0 ? true : false);
-    
-
-
   }
 
   	//Create strong password 

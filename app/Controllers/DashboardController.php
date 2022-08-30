@@ -9,10 +9,10 @@ class DashboardController extends BaseController
     public function __construct()
     {
       
-        if (session()->get('USR_ROLE_ID') != "1") {
-            echo 'Access denied';
-            exit;
-        }
+        // if (session()->get('USR_ROLE_ID') != "1") {
+        //     echo 'Access denied';
+        //     exit;
+        // }
     }
     public function index()
     {

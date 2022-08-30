@@ -876,10 +876,11 @@ public function showPackages()
                 <td class="select">'.$RSV_PCKG_BEGIN_DATE.'</td>
                 <td class="select">'.$PKG_CD_DT_PRICE.'</td>
                 <td class="select">'.$RSV_PCKG_TOTAL.'</td>                    
-                    </tr>';
+                </tr>';
             }
+           
 
-            $RSV_PCKG_BEGIN_DATE  = date("Y-m-d", strtotime("+$i day", strtotime($RSV_PCKG_BEGIN_DATE))); 
+            $RSV_PCKG_BEGIN_DATE  = date("Y-m-d", strtotime("+1 day", strtotime($RSV_PCKG_BEGIN_DATE))); 
 
             if( $Posting_Rhythm == 2)
             break;
@@ -1193,11 +1194,98 @@ public function showPackages()
     {
         $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
         $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
+
         $data['RoomReservations'] = $this->getReservations(); 
         $data['RoomResources'] = $this->roomplanResources();
         
         return view('Reservation/RoomPlan',$data);
     }
+
+    public function roomPlanTest()
+    {
+        $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
+        $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
+
+        $data['itemResources'] = $this->itemResources();                 
+        $data['itemAvail'] = $this->ItemCalendar();
+        
+        return view('Reservation/RoomPlanTest',$data);
+    }
+
+    public function ItemResources(){
+        $response = NULL;
+        $sql = "SELECT ITM_ID, ITM_CODE, ITM_NAME         
+                FROM FLXY_ITEM WHERE ITM_STATUS = '1' ORDER BY ITM_ID ASC";       
+        $responseCount = $this->DB->query($sql)->getNumRows();
+        if($responseCount > 0)
+        $response = $this->DB->query($sql)->getResultArray();
+
+      return $response;
+    }
+
+public function ItemCalendar(){
+    $response = NULL;
+    
+    $sql = "SELECT ITM_ID, ITM_QTY_IN_STOCK         
+            FROM FLXY_ITEM ORDER BY ITM_ID ASC";       
+    $responseCount = $this->DB->query($sql)->getNumRows();
+    if($responseCount > 0){
+        $response = $this->DB->query($sql)->getResultArray();
+        $j=0;
+        foreach($response as $row){
+            $ITM_BEGIN_DATE    = strtotime('2022-01-01');
+            $ITM_END_DATE      = strtotime('2032-12-31'); 
+            $DATEDIFF = $ITM_END_DATE - $ITM_BEGIN_DATE;
+            $AVAILABLE_DAYS = round($DATEDIFF / (60 * 60 * 24));
+            $ITM_DLY_QTY = 0;
+            $ITEM_RESERVED = 0;
+            for($i = 1; $i <= ($AVAILABLE_DAYS+1); $i++ ){
+                $sCurrentDate = gmdate("Y-m-d", strtotime("+$i day", $ITM_BEGIN_DATE)); 
+                $CurrentDate = strtotime($sCurrentDate); 
+                $items[$j][$i]['ITM_ID'] = $row['ITM_ID'];
+                //$ITM_DLY_QTY = $this->checkItemDailyInventory($row['ITM_ID'],$sCurrentDate );
+                $ITEM_RESERVED = $this->checkItemReserved($row['ITM_ID'],$sCurrentDate );
+
+                /////// Item Total quantity and Item Available quantity are depends on the Items table and Daily inventory table
+
+
+                // if($ITM_DLY_QTY > 0){
+                //     $ITM_REMAINING_STOCK = $ITM_DLY_QTY - $ITEM_RESERVED;
+                //     $ITM_QTY_IN_STOCK    = $ITM_DLY_QTY;
+
+                // }
+                // else{
+                    $ITM_REMAINING_STOCK = $row['ITM_QTY_IN_STOCK'] - $ITEM_RESERVED;
+                    $ITM_QTY_IN_STOCK    = $row['ITM_QTY_IN_STOCK'];
+                //}
+                                  
+                $items[$j][$i]['ITM_REMAINING_STOCK'] = $ITM_REMAINING_STOCK;
+                $items[$j][$i]['ITM_QTY_IN_STOCK']    = $ITM_QTY_IN_STOCK;
+                $items[$j][$i]['START'] = $sCurrentDate;
+                $items[$j][$i]['END'] = $sCurrentDate;
+            }
+            $j++;
+
+        }
+    }
+  return $items;
+}
+
+public function checkItemReserved($item_id, $sCurrentDate){
+    $response = NULL;
+    $total_qty = 0;
+    $sql = "SELECT RSV_ITM_QTY FROM FLXY_RESERVATION_ITEM WHERE RSV_ITM_ID = '$item_id' AND '$sCurrentDate' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE";                 
+    $responseCount = $this->DB->query($sql)->getNumRows();
+    if($responseCount > 0) {
+        $response = $this->DB->query($sql)->getResultArray(); 
+        foreach($response as $resp){
+            $total_qty += $resp['RSV_ITM_QTY'];
+        }
+    }
+    return $total_qty;
+    
+
+}
 
    
     public function roomplanResources()
@@ -1373,6 +1461,7 @@ public function changeReservationDates(){
             $overlappedDates = $this->dateExistsOverlap($RESV_ID,$START_OVERLAP,$END_OVERLAP, $RESV_ROOM_ID, $RESV_ROOM );
             if($RESV_STATUS === "Checked-In" ){
                 $data['status_message'] = "You can't change the dates. Already checked-in";
+                $data['status'] = 1;
             } 
             else if($row->RESV_STATUS === "Due Pre Check-In" || $row->RESV_STATUS === "Pre Checked-In"){
                 if($overlappedDates > 0){

@@ -578,27 +578,24 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
 
 
+      $routes->match(['post'],'/updateTraces', 'ReservationController::updateTraces'); 
+      $routes->match(['post'],'/showTraces', 'ReservationController::showTraces'); 
+      $routes->match(['post'],'/deleteTraces', 'ReservationController::deleteTraces');
+      $routes->match(['post'],'/showTraceDetails', 'ReservationController::showTraceDetails');
+      $routes->match(['post'],'/resolveTraces', 'ReservationController::resolveTraces');
+      $routes->get('/roomPlan', 'ReservationController::roomPlan');
+      $routes->get('/roomPlanResource', 'ReservationController::roomPlanResource');
+    
+      $routes->match(['post'],'/roomplanResources', 'ReservationController::roomplanResources');
+      $routes->match(['post'],'/getReservations', 'ReservationController::getReservations');     
+      $routes->get('/pdfTest', 'AdditionalController::pdfTest');
+      $routes->match(['post'],'/updateRoomPlan', 'ReservationController::updateRoomPlan'); 
+      $routes->match(['post'],'/changeReservationDates', 'ReservationController::changeReservationDates');     
+      $routes->get('/roomPlanTest', 'ReservationController::roomPlanTest'); 
+      $routes->match(['post'],'/getInventoryCalendarData', 'ApplicatioController::getInventoryCalendarData');
+      $routes->match(['post'],'/getInventoryAllocatedData', 'ApplicatioController::getInventoryAllocatedData'); 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      
 
 
 

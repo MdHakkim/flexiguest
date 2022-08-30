@@ -3,7 +3,26 @@
 <?= $this->include('Layout/SuccessReport') ?>
 <?= $this->include('Layout/ErrorReport') ?>
 
+
 <style>
+/* style comparison */
+
+
+</style>
+
+
+
+<style>
+    .tooltip{
+    z-index: 99999 !important;
+}
+
+.tooltip.top .tooltip-inner {
+    background-color:red !important;
+}
+.tooltip.top .tooltip-arrow {
+      border-top-color: red !important;
+}
 .active-tr {
     background-color: #d1e7ff !important;
     --bs-table-striped-bg: none;
@@ -87,6 +106,58 @@
 .nav-tabs .nav-item a {
     font-weight: bold;
 }
+
+#calendar {
+      max-width: 1100px;
+      margin: 40px auto;
+      font-size: 14px;
+    }
+.fc-time{ display : none !important; } 
+.fc-event-time { display: none }
+    
+    
+.fc-time-grid-event.fc-short .fc-time,.fc-time-grid-event .fc-time{
+    display: none !important;
+}
+    
+.fc-time-grid .fc-content-skeleton {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%; 
+}
+
+.fc-event-container .fc-timeline-event{
+    background-color: #405974 !important;
+    border-color: #405974 !important;
+    color: rgb(255, 255, 255) !important;
+   
+    top: 3px !important;
+}
+.fc-timeline-event .fc-time, .fc-timeline-event .fc-title{
+    padding: 4px !important;
+    font-size: 13px !important;
+}
+  .fc-resource-area col.fc-main-col {
+    width: 35% !important;
+}
+.tooltip
+{
+opacity: 1;
+}
+#errorModal{
+  display: none;
+}
+#errorModal{
+    position: fixed;
+    top: 10px;
+    right: 22px;
+    z-index: 10000;
+    width: 500px;
+}
+  
 </style>
 
 <!-- Content wrapper -->
@@ -1954,15 +2025,15 @@
 
                     <div id="wizard-validation" class="bs-stepper mt-2">
                         <div class="bs-stepper-header">
-                            <div class="step" data-target="#select_items">
+                            <div class="step" data-target="#select_items" >
                                 <button type="button" class="step-trigger">
                                     <span class="bs-stepper-circle">1</span>
                                     <span class="bs-stepper-label">Items</span>
                                 </button>
                             </div>
                             <div class="line"></div>
-                            <div class="step" data-target="#item_availability">
-                                <button type="button" class="step-trigger">
+                            <div class="step" data-target="#item_availability"  onclick="showInventoryAvailability()" >
+                                <button type="button" class="step-trigger" >
                                     <span class="bs-stepper-circle">2</span>
                                     <span class="bs-stepper-label">Inventory Availability</span>
                                 </button>
@@ -2038,7 +2109,6 @@
                                                         </button>&nbsp;
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                         </div>
@@ -2091,13 +2161,13 @@
                                     </div>
 
                                 </div>
-                            </form>
+                                </form>
                             <div id="item_availability" class="content">
                                 <div class="card app-calendar-wrapper">
                                     <div class="row g-0">
 
                                         <!-- Calendar Sidebar -->
-                                        <div class="app-calendar-sidebar col" id="app-calendar-sidebar">
+                                        <div class="app-calendar-sidebar col" id="app-calendar-sidebar" style="display: none;">
                                             <div class="border-bottom p-4 my-sm-0 mb-3">
                                                 <div class="d-grid">
                                                     <button class="btn btn-primary btn-toggle-sidebar">
@@ -2139,77 +2209,13 @@
                                             </div>
                                             <div class="app-overlay"></div>
                                             <!-- FullCalendar Offcanvas -->
-                                            <div class="offcanvas offcanvas-end event-sidebar" tabindex="-1"
-                                                id="addEventSidebar" aria-labelledby="addEventSidebarLabel">
-                                                <div class="offcanvas-header border-bottom">
-                                                    <h6 class="offcanvas-title" id="addEventSidebarLabel">Show Item
-                                                        Details</h6>
-                                                    <button type="button" class="btn-close text-reset"
-                                                        data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                                                </div>
-                                                <div class="offcanvas-body">
-                                                    <form class="event-form pt-0" id="eventForm"
-                                                        onsubmit="return false">
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="eventTitle">Title</label>
-                                                            <input type="text" class="form-control" id="eventTitle"
-                                                                name="eventTitle" placeholder="Event Title" />
-                                                        </div>
-
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="eventStartDate">Start
-                                                                Date</label>
-                                                            <input type="text" class="form-control" id="eventStartDate"
-                                                                name="eventStartDate" placeholder="Start Date" />
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="form-label" for="eventEndDate">End
-                                                                Date</label>
-                                                            <input type="text" class="form-control" id="eventEndDate"
-                                                                name="eventEndDate" placeholder="End Date" />
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="switch">
-                                                                <input type="checkbox"
-                                                                    class="switch-input allDay-switch" />
-                                                                <span class="switch-toggle-slider">
-                                                                    <span class="switch-on"></span>
-                                                                    <span class="switch-off"></span>
-                                                                </span>
-                                                                <span class="switch-label">All Day</span>
-                                                            </label>
-                                                        </div>
-
-                                                        <div class="mb-3">
-                                                            <label class="form-label"
-                                                                for="eventDescription">Description</label>
-                                                            <textarea class="form-control" name="eventDescription"
-                                                                id="eventDescription"></textarea>
-                                                        </div>
-
-                                                        <div class="d-flex justify-content-start justify-content-sm-between my-4 mb-3"
-                                                            style="display:none !important">
-                                                            <div>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary btn-add-event me-1 me-sm-3">Add</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary btn-update-event d-none me-1 me-sm-3">
-                                                                    Update
-                                                                </button>
-
-                                                            </div>
-                                                            <div><button
-                                                                    class="btn btn-label-danger btn-delete-event d-none">Delete</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
+                                            
                                         </div>
                                         <!-- /Calendar & Modal -->
                                     </div>
                                 </div>
                             </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -2951,6 +2957,7 @@ $(document).ready(function() {
     $('#Each_Package_Details').DataTable({
         "ordering": true,
         "searching": false,
+        paging: true,
         autowidth: true,
         responsive: true
     });
@@ -3103,43 +3110,51 @@ $(document).ready(function() {
         autoclose: true,
     });
 
-    $('.dateFieldItem').datepicker({
-        format: 'dd-M-yyyy',
+    $('#RSV_ITM_BEGIN_DATE').datepicker({
+        format: 'd-M-yyyy',
         autoclose: true,
-        startDate: '-0m',
-        onSelect: function() {
-            $(this).change();
-        }
+       
+       
+    });
+
+    $('#RSV_ITM_END_DATE').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true,
+       
+       
+    });
+
+    $('.dateFieldItem').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true,
+        
+       
     });
     $('#FIXD_CHRG_BEGIN_DATE').datepicker({
-        format: 'yyyy-mm-d',
+        format: 'd-M-yyyy',
         autoclose: true,
-        startDate: '-0m'
+       
     });
     $('#FIXD_CHRG_END_DATE').datepicker({
-        format: 'yyyy-mm-d',
+        format: 'd-M-yyyy',
         autoclose: true,
-        startDate: '-0m'
+      
     });
 
     $('#RSV_PCKG_BEGIN_DATE').datepicker({
-        format: 'yyyy-mm-d',
+        format: 'd-M-yyyy',
         autoclose: true,
-        startDate: '-0m',
-        validateOnBlur: false,
-        defaultDate: '2014/01/26'
+        
     });
     $('#RSV_PCKG_END_DATE').datepicker({
-        format: 'yyyy-mm-d',
+        format: 'd-M-yyyy',
         autoclose: true,
-        startDate: '-0m',
-        validateOnBlur: false
+        
     });
     $('#RSV_TRACE_DATE').datepicker({
-        format: 'yyyy-mm-d',
+        format: 'd-M-yyyy',
         autoclose: true,
-        startDate: '-0m',
-        validateOnBlur: false
+        
     });
 
     //$('#RSV_TRACE_TIME').timepicker();
@@ -5021,7 +5036,7 @@ $(document).ready(function() {
     });
 
     $('#FIXD_CHRG_YEARLY').datepicker({
-        format: 'yyyy-mm-dd',
+        format: 'd-M-yyyy',
         autoclose: true,
 
     });
@@ -5287,6 +5302,7 @@ function showInventoryItems(resvID) {
             },
             {
                 data: 'RSV_ITM_BEGIN_DATE'
+               
             },
             {
                 data: 'RSV_ITM_END_DATE'
@@ -5346,7 +5362,11 @@ function loadInventoryDetails(itemID) {
                         class_val = dataval;
                     } else if (field == 'RSV_ITM_CL_ID') {
                         $('#' + field).val(dataval).trigger('change', class_val);
-                    } else {
+                    }
+                    else if(field == 'RSV_ITM_BEGIN_DATE' || field == 'RSV_ITM_END_DATE'){
+                        $('#' + field).datepicker("setDate", new Date(dataval));
+                    }                    
+                    else {
                         $('#' + field).val(dataval);
                     }
                 });
@@ -5416,53 +5436,168 @@ function itemInventoryClassSingle() {
 
 
 
+// let date = new Date();
+// let nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+// // prettier-ignore
+// let nextMonth = date.getMonth() === 11 ? new Date(date.getFullYear() + 1, 0, 1) : new Date(date.getFullYear(), date
+//     .getMonth() + 1, 1);
+// // prettier-ignore
+// let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) : new Date(date.getFullYear(), date
+//     .getMonth() - 1, 1);
+
+
+
+
+//document.addEventListener('DOMContentLoaded', function() {
+  function showInventoryAvailability()
+ {    
+    var output = '';
+    $.ajax({
+        url: '<?php echo base_url('/getInventoryCalendarData') ?>',
+        type: "post",       
+        async:false,
+        dataType:'json',
+        success: function(respn) {
+            output = respn;            
+        }
+    });
+
+    itemCalendarResources = output['itemResources'];
+    itemCalendarAvail     = output['itemAvail'];
+
+    if($('#calendar>*').length == 0) {
+        calendarRender(itemCalendarResources,itemCalendarAvail);
+    }
+    console.log( itemCalendarAvail )
+ }
+
+
+function calendarRender(itemCalendarResources, itemCalendarAvail){
+   
 let date = new Date();
 let nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 // prettier-ignore
-let nextMonth = date.getMonth() === 11 ? new Date(date.getFullYear() + 1, 0, 1) : new Date(date.getFullYear(), date
-    .getMonth() + 1, 1);
+let nextMonth = date.getMonth() === 11 ? new Date(date.getFullYear() + 1, 0, 1) : new Date(date.getFullYear(), date.getMonth() + 1, 1);
 // prettier-ignore
-let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) : new Date(date.getFullYear(), date
-    .getMonth() - 1, 1);
+let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) : new Date(date.getFullYear(), date.getMonth() - 1, 1);
+
+var calendarEl = document.getElementById('calendar');
+
+var calendar = new FullCalendar.Calendar(calendarEl, {
+//schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+//schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+//titleFormat: 'YYYY-MM-DD',
+timeZone: 'UTC',
+plugins: [ 'resourceTimeline', 'interaction' ],
+
+droppable: true,
+
+header: {
+
+left: 'today prev,next',
+
+center: 'title',
+
+right: ''
+
+},
 
 
+aspectRatio: 1.5,
 
-// $row['ITM_AVAIL_TO_TIME']
-// $row['ITM_AVAIL_FROM_TIME']
-let events = [
-    <?php
-        if (!empty($itemAvail)) {
-            foreach ($itemAvail as $row) {
+defaultView: 'resourceTimelineWeek',
 
-                $start = $row['ITM_DLY_BEGIN_DATE'];
-                $startDate = date("Y-m-d", strtotime($start));
+slotLabelFormat: [{ weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true }],
 
-                $end = $row['ITM_DLY_END_DATE'];
-                $endDate = date("Y-m-d", strtotime($end));
+slotLabelInterval: { days: 1 },
 
-                $startTime = date("H:i A", strtotime($row['ITM_AVAIL_FROM_TIME']));
+editable: true,
 
-                $endTime = date("H:i A", strtotime($row['ITM_AVAIL_TO_TIME']));
+resourceAreaWidth: '35%',
 
+resourceColumns: [
+{
+labelText: 'Item',
 
-        ?>, {
-        id: '<?php echo $row['ITM_ID'] ?>',
-        url: '',
-        title: '<?php echo $startTime . ' - ' . $endTime . '  | ' . $row['ITM_CODE'] . ' - ' . $row['ITM_CODE'] ?>',
-        start: '<?php echo $startDate; ?>',
-        end: '<?php echo $endDate; ?>',
-        allDay: false,
-        description: '',
-        extendedProps: {
-            calendar: 'Business'
-        }
+field: 'item',
+
+},
+],
+validRange: {
+    start: '2022-01-01',
+    end: '2040-12-31'
+},
+
+resources: itemCalendarResources,
+//events: itemCalendarAvail,
+events: function(info, successCallback, failureCallback) {  
+    //console.log(info.start)
+        let START = info.start;
+        let s = new Date(START);
+        START = s.toISOString(START);
+        let END = info.end;
+        let e = new Date(END);
+        END = e.toISOString(END);
+    $.ajax({
+        url: '<?php echo base_url('/getInventoryAllocatedData') ?>',
+        type: "post",  
+        dataType: 'json',
+        data: {
+            start: START,
+            end: END
+        },
+        success: function(res) {
+         
+          var events = [];
+          res.forEach(function (evt) {
+            events.push({
+              id:evt.id,
+              resourceId:evt.resourceId,
+              title: evt.title,
+              start: evt.start,
+              end: evt.end,
+            });
+          });
+          successCallback(events);
+        },
+        
+    });
+},
+eventMouseEnter: function (info) {
+    var titleText = info.event.title;
+    var myarr = titleText.split("|");
+    var title = 'Available Quantity : '+ myarr[0] + ", Total Quantity: " + myarr[1];
+    var title = 
+        $(info.el).tooltip({
+              title: title,
+              html: true,
+              placement: 'top',
+              trigger: 'hover',
+              container: 'body',
+              
+        });
+},
+
+eventDidMount: function(info) {
+      var tooltip = new Tooltip(info.el, {
+        title: 'titlesdasd',
+        placement: 'top',
+        trigger: 'hover',
+        container: 'body',
+      });
     },
+ 
+    
+});
 
-    <?php }
-        } ?>
+calendar.render();
+//console.log(itemCalendarAvail);
+}
+//});
 
-];
+////class="fc-timeline-event fc-h-event fc-event fc-start fc-end fc-draggable fc-resizable fc-allow-mouse-resize"
 
+//a.fc-timeline-event.fc-h-event.fc-event.fc-start.fc-end.fc-draggable.fc-resizable
 
 //////// Fixed Charges Functions
 
@@ -5489,12 +5624,12 @@ $(document).on('click', '#fixedChargeButton', function() {
             $('#FIXD_NIGHTS').val(respn.RESV_NIGHT);
             $('#FIXD_DEPARTURE').val(respn.RESV_DEPARTURE);
             $('#FIXD_DEPARTURE_UP').val(respn.RESV_DEPARTURE);
-            $('#FIXD_CHRG_BEGIN_DATE').val(respn.RESV_ARRIVAL_DT);
-            $('#FIXD_CHRG_END_DATE').val(respn.RESV_DEPARTURE);
+            $('#FIXD_CHRG_BEGIN_DATE').datepicker("setDate", $('.window-1').find('.RESV_ARRIVAL_DT').val());
+            $('#FIXD_CHRG_END_DATE').datepicker("setDate", $('.window-1').find('.RESV_DEPARTURE').val());
+            //alert($('#FIXD_CHRG_BEGIN_DATE').val());
             $('#FIXD_CHRG_FREQUENCY4').prop('disabled', false);
             $('#FIXD_CHRG_FREQUENCY5').prop('disabled', false);
             $('#FIXD_CHRG_FREQUENCY6').prop('disabled', false);
-
         }
     });
 
@@ -5520,8 +5655,8 @@ $(document).on('click', '.add-fixedcharge-detail', function() {
     transactionList();
     hideModalAlerts();
     $('.dtr-bs-modal').modal('hide');
-    $('#FIXD_CHRG_BEGIN_DATE').val($('#FIXD_ARRIVAL').val());
-    $('#FIXD_CHRG_END_DATE').val($('#FIXD_DEPARTURE').val());
+    $('#FIXD_CHRG_BEGIN_DATE').datepicker("setDate", $('.window-1').find('.RESV_ARRIVAL_DT').val());
+    $('#FIXD_CHRG_END_DATE').datepicker("setDate", $('.window-1').find('.RESV_DEPARTURE').val());
     $('#FIXD_CHRG_TRNCODE').val('');
     $('#FIXD_CHRG_AMT').val('');
     $('#FIXD_CHRG_QTY').val('');
@@ -5760,9 +5895,13 @@ function loadFixedchargeDetails(fixedChargeID) {
                     } else if (FIXD_CHRG_FREQUENCY == 3 && field ==
                         'FIXD_CHRG_WEEKLY') {
                         $('#' + field).val(dataval).trigger('change');
-                    } else {
-                        $('#' + field).val(dataval);
+                    } 
 
+                    else if (field == 'FIXD_CHRG_BEGIN_DATE' || field == 'FIXD_CHRG_END_DATE' || field == 'FIXD_CHRG_YEARLY'){
+                        $('#' + field).datepicker("setDate", new Date(dataval)); 
+                    } 
+                    else {
+                        $('#' + field).val(dataval);
                     }
                 });
             });
@@ -5887,7 +6026,7 @@ function frequency(value) {
 
     } else if (value == 6) {
         $('.END_DATE').show();
-        $('#FIXD_CHRG_YEARLY').val($('#FIXD_ARRIVAL').val());
+        $('#FIXD_CHRG_YEARLY').datepicker("setDate", new Date($('#FIXD_ARRIVAL').val()));
         $('.YEARLY_EXCECUTE').show();
 
 
@@ -6031,8 +6170,8 @@ function getPackageList() {
 
 function getPackages() {
     getPackageList();
-    $('#RSV_PCKG_BEGIN_DATE').val($('#RESV_ARRIVAL_DT').val());
-    $('#RSV_PCKG_END_DATE').val($('#RESV_DEPARTURE').val())
+    $('#RSV_PCKG_BEGIN_DATE').datepicker("setDate", $('.window-1').find('.RESV_ARRIVAL_DT').val());
+    $('#RSV_PCKG_END_DATE').datepicker("setDate", $('.window-1').find('.RESV_DEPARTURE').val());
     $('#packagesModal').modal('show');
     resvID = $('#PCKG_RESV_ID').val();
     showPackages(resvID);
@@ -6123,6 +6262,7 @@ $(document).on('click', '.save-package-detail', function() {
 $(document).on('click', '.add-package-detail', function() {
     hideModalAlerts();
     $('.dtr-bs-modal').modal('hide');
+    
     bootbox.dialog({
         message: "Do you want to add a new Package Detail?",
         buttons: {
@@ -6135,6 +6275,8 @@ $(document).on('click', '.add-package-detail', function() {
                         $("#RSV_PCKG_ID").val('');
                         $('#Package_Details').find('tr.table-warning').removeClass(
                             'table-warning');
+                            $('#RSV_PCKG_BEGIN_DATE').datepicker("setDate", $('.window-1').find('.RESV_ARRIVAL_DT').val());
+                            $('#RSV_PCKG_END_DATE').datepicker("setDate", $('.window-1').find('.RESV_DEPARTURE').val());
 
                         //Disable Delete button
                         toggleButton('.delete-package-detail', 'btn-danger', 'btn-dark', true);
@@ -6328,7 +6470,10 @@ $(document).on('click', '#Package_Details > tbody > tr', function() {
         },
         async: false,
         success: function(respn) {
+            $('#Each_Package_Details').DataTable().destroy();
             $('#Each_Package_Details > tbody').html(respn);
+            $('#Each_Package_Details').DataTable({ paging: true});
+            
         }
     });
 
@@ -6358,13 +6503,19 @@ function loadPackageDetails(packageID) {
                     var dataval = $.trim(datavals);
                     if (field == 'PCKG_ID') {
                         $('#' + field).val(dataval).trigger('change');
-                    } else {
+                    }
+                    else if(field == 'RSV_PCKG_BEGIN_DATE' || field == 'RSV_PCKG_END_DATE'){
+                        $('#' + field).datepicker("setDate", new Date(dataval));
+                    } 
+                    else {
                         $('#' + field).val(dataval);
                     }
                 });
             });
         }
     });
+
+
 
     $.ajax({
         url: '<?php echo base_url('/showSinglePackageDetails') ?>',
@@ -6377,7 +6528,9 @@ function loadPackageDetails(packageID) {
         },
         async: false,
         success: function(respn) {
+            $('#Each_Package_Details').DataTable().destroy();
             $('#Each_Package_Details > tbody').html(respn);
+            $('#Each_Package_Details').DataTable({ paging: true});
         }
     });
 }
@@ -6473,7 +6626,7 @@ $(document).on('click', '.add-trace-detail', function() {
 
 
     bootbox.dialog({
-        message: "Do you want to add a new fixed charges?",
+        message: "Do you want to add a new trace details?",
         buttons: {
             ok: {
                 label: 'Yes',
