@@ -20,6 +20,7 @@ class ReservationRepository extends BaseController
     public function reservationById($reservation_id)
     {
         return $this->Reservation
+            ->select("FLXY_RESERVATION.*, FLXY_CUSTOMER.*, FLXY_ROOM.*, concat(CUST_FIRST_NAME, ' ', CUST_LAST_NAME) as CUST_NAME")
             ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
             ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
             ->where('RESV_ID', $reservation_id)
