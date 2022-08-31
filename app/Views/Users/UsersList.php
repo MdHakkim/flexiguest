@@ -449,7 +449,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
                 roleBadge = roleBadgeObj[$role] ?? '';
                 return "<span class='text-truncate d-flex align-items-center'>" + roleBadge + $role + '</span>';
               } else {
-                return "<span class='text-truncate d-flex align-items-center'><span class='badge badge-center rounded-pill bg-label-primary w-px-30 h-px-30 me-2'><i class='bx bx-pie-chart-alt bx-xs'></i></span>" + $role + '</span>';
+                return "<span class='text-truncate d-flex align-items-center'>" + $role + '</span>';
               }
             }
           },
