@@ -54,6 +54,7 @@
               <thead>
                 <tr>
                   <th></th>
+                  <th>ID</th>
                   <th>User</th>
                   <th>User Role</th>
                   <th>Department</th>
@@ -482,14 +483,6 @@
 <script>
   $(document).ready(function() {
 
-    // // Select All checkbox click
-    // const selectAll = document.querySelector('#selectAll'),
-    // checkboxList = document.querySelectorAll('[type="checkbox"]');
-    // selectAll.addEventListener('change', t => {
-    // checkboxList.forEach(e => {
-    // e.checked = t.target.checked;
-    // });
-    // });
 
     loadRoles();
     roleList();
@@ -503,14 +496,7 @@
         setDate: '<?php date('d-M-Y'); ?>',
         autoclose: true
     });
-    // $('#USR_DOB').datepicker({
-    //     format: 'd-MMM-yyyy',
-    //     autoclose: true,
-    // });
-    // $('#USR_DOJ').datepicker({
-    //     format: 'd-MMM-yyyy',
-    //     autoclose: true,
-    // });
+    
     
 
     // Users datatable
@@ -518,10 +504,7 @@
     var dt_user_roles_table = $('.datatables-users-roles');
 
     statusObj = {
-      // 0: {
-      //   title: 'Pending',
-      //   class: 'bg-label-warning'
-      // },
+     
       1: {
         title: 'Active',
         class: 'bg-label-success'
@@ -543,6 +526,10 @@
           // columns according to JSON
           {
             data: ''
+          },
+          {
+            data: 'USR_ID',
+            'visible': false
           },
           {
             data: 'USR_NAME'
@@ -576,11 +563,15 @@
             }
           },
           {
+            targets: 1,           
+            
+          },
+          {
             // User full name and email
-            targets: 1,
+            targets: 2,
             responsivePriority: 4,
             render: function(data, type, full, meta) {
-              var $name = (full['USR_FIRST_NAME'] ?? '') + '' + (full['USR_LAST_NAME'] ?? ''),
+              var $name = (full['USR_FIRST_NAME'] ?? '') + ' ' + (full['USR_LAST_NAME'] ?? ''),
                 $email = full['USR_EMAIL'] ?? '',
                 $image = full['USR_IMAGE'] ?? '';
               if ($image) {
@@ -620,25 +611,26 @@
           },
           {
             // User Role
-            targets: 2,
+            targets: 3,
             render: function(data, type, full, meta) {
               var $role = full['ROLE_NAME'] ?? '';
               if (full['USR_ROLE_ID'] <= 3) {
                 var roleBadgeObj = {
-                  GUEST: '<span class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i class="bx bx-user bx-xs"></i></span>',
-                  Editor: '<span class="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2"><i class="bx bx-edit bx-xs"></i></span>',
-                  Admin: '<span class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30 me-2"><i class="bx bx-mobile-alt bx-xs"></i></span>'
+                  // GUEST: '<span class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i class="bx bx-user bx-xs"></i></span>',
+                  // Editor: '<span class="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2"><i class="bx bx-edit bx-xs"></i></span>',
+                  // Admin: '<span class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30 me-2"><i class="bx bx-mobile-alt bx-xs"></i></span>'
                 };
                 roleBadge = roleBadgeObj[$role] ?? '';
                 return "<span class='text-truncate d-flex align-items-center'>" + roleBadge + $role + '</span>';
               } else {
-                return "<span class='text-truncate d-flex align-items-center'><span class='badge badge-center rounded-pill bg-label-primary w-px-30 h-px-30 me-2'><i class='bx bx-pie-chart-alt bx-xs'></i></span>" + $role + '</span>';
+                return $role;
+                // return "<span class='text-truncate d-flex align-items-center'><span class='badge badge-center rounded-pill bg-label-primary w-px-30 h-px-30 me-2'><i class='bx bx-pie-chart-alt bx-xs'></i></span>" + $role + '</span>';
               }
             }
           },
           {
             // Department
-            targets: 3,
+            targets: 4,
             render: function(data, type, full, meta) {
               var $DEPT_DESC = (full['DEPT_DESC'] ?? "");
               return '<span class="fw-semibold">' + $DEPT_DESC + '</span>';
@@ -646,7 +638,7 @@
           },
           {
             // User Status
-            targets: 5,
+            targets: 6,
             render: function(data, type, full, meta) {
               var $status = full['USR_STATUS'];
               return '<span class="badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';

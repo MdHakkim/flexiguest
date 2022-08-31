@@ -18,9 +18,8 @@ class Menu{
         $rolesMenuOutput = $rolesSubmenuOutput = '';
         $user_role = session()->get('USR_ROLE_ID');
 
-        $sql = "SELECT ROLE_ID, MENU_ID, MENU_NAME, MENU_URL, MENU_ICON, ROLE_MENU_ID, ROLE_PERM_STATUS FROM FLXY_MENU LEFT JOIN FLXY_USER_ROLE_PERMISSION ON MENU_ID = ROLE_MENU_ID WHERE PARENT_MENU_ID = 0 AND SHOW_IN_MENU = 1 AND ROLE_ID = ".$user_role." ORDER BY MENU_DIS_SEQ ASC";
-        $responseMenu = $this->Db->query($sql)->getResultArray();       
-        
+        $sql = "SELECT ROLE_ID, MENU_ID, MENU_NAME, MENU_URL, MENU_ICON, ROLE_MENU_ID, ROLE_PERM_STATUS FROM FLXY_MENU LEFT JOIN FLXY_USER_ROLE_PERMISSION ON MENU_ID = ROLE_MENU_ID WHERE PARENT_MENU_ID = 0 AND SHOW_IN_MENU = '1' AND MENU_STATUS = '1' AND ROLE_PERM_STATUS = '1' AND ROLE_ID = ".$user_role." ORDER BY MENU_DIS_SEQ ASC ";
+        $responseMenu = $this->Db->query($sql)->getResultArray();  
 
         if(!empty($responseMenu)){
             foreach($responseMenu as $menu){

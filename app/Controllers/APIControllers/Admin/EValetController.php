@@ -19,14 +19,13 @@ class EValetController extends BaseController
 
     public function submitForm()
     {        
-        if(!$this->validate($this->EValetRepository->validationRules()))
-            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-
         $user_id = $this->request->user['USR_ID'];
         $data = (array) $this->request->getVar();
-        $data['EV_CAR_IMAGES'] = $this->request->getFileMultiple('EV_CAR_IMAGES');
+        $data['EV_CAR_IMAGES'] = $this->request->getFileMultiple('EV_CAR_IMAGES') ?? [];
 
-        
+        if(!$this->validate($this->EValetRepository->validationRules($data)))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
         $result = $this->EValetRepository->submitEValetForm($user_id, $data);
         return $this->respond($result);
     }
@@ -42,7 +41,7 @@ class EValetController extends BaseController
     {
         $user_id = $this->request->user['USR_ID'];
 
-        $data = $this->request->getVar();
+        $data = (array) $this->request->getVar();
         $data['EV_STATUS'] = 'Driver Assigned';
         $data['EV_KEYS_COLLECTED'] = 1;
         $data['EV_UPDATE_BY'] = $user_id;
