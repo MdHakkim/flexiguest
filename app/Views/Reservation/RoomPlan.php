@@ -361,6 +361,15 @@
         } ?>
        
       ],
+      eventClick: function(info) {
+        info.jsEvent.preventDefault(); // don't let the browser navigate
+
+        if (info.event.id) {
+          var base_url = '<?php echo base_url()?>';
+          var url = '/reservation?RESV_ID='+info.event.id;
+          window.open(base_url+url);
+        }
+      },
      
       
 

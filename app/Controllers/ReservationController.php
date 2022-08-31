@@ -1195,8 +1195,9 @@ public function showPackages()
         $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
         $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
 
-        $data['RoomReservations'] = $this->getReservations(); 
-        $data['RoomResources'] = $this->roomplanResources();
+        $data['RoomReservations']  = $this->getReservations(); 
+        $data['RoomResources']     = $this->roomplanResources();
+        $data['title']             =  'Room Plan';
         
         return view('Reservation/RoomPlan',$data);
     }

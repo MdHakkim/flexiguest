@@ -65,6 +65,20 @@ function checkValueinTable($column, $value, $table)
     return $response;    
 }
 
+function getValueFromTable($column, $cond, $table)
+{
+    $Db = \Config\Database::connect();
+    $param = ['COLUMN' => $column, 'COND' => $cond, 'TABLENAME' => $table];
+
+    $sql = "SELECT ".$param['COLUMN']."
+            FROM ".$param['TABLENAME']."
+            WHERE ".$param['COND']." = :COND:";
+
+    $response = $Db->query($sql,$param)->getRow()->{$param['COLUMN']};
+    return $response;    
+}
+
+
 function updateValuesinTable($columns, $conditions, $table)
 {
     if($columns == NULL) return NULL;

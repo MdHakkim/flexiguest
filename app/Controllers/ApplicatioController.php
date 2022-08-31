@@ -40,14 +40,13 @@ class ApplicatioController extends BaseController
     public function Reservation(){   
         $data['title'] = getMethodName();
         $data['session'] = $this->session;
-        
+        $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $itemLists = $this->itemList();    
         $data['itemLists'] = $itemLists;   
         $data['itemResources'] = $this->itemResources();                 
         $data['itemAvail'] = $this->ItemCalendar();
         $data['classList'] = $this->itemInventoryClassList();
         $data['FrequencyList'] = $this->frequencyList();  
-        
         $data['toggleButton_javascript'] = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['blockLoader_javascript'] = blockLoader_javascript();
@@ -61,6 +60,14 @@ class ApplicatioController extends BaseController
         $data['RoomResources'] = $this->roomplanResources();
 
         $data['cancelReasons'] = $this->cancellationReasonList();
+
+        $data['RESV_ID'] = null !== $this->request->getGet("RESV_ID") ? $this->request->getGet("RESV_ID") : null;
+        $data['CUSTOMER_ID'] = null !== $this->request->getGet("RESV_ID") ? getValueFromTable('RESV_NAME',$this->request->getGet("RESV_ID"),'FLXY_RESERVATION') : null;
+
+
+        //Check if RESV_ID exists in Customer table
+        if($data['RESV_ID'] && !checkValueinTable('RESV_ID', $data['RESV_ID'], 'FLXY_RESERVATION'))
+            return redirect()->to(base_url('reservation')); 
 
         return view('Reservation/Reservation', $data);
     }

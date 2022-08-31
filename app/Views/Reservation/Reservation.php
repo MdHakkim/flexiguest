@@ -2946,7 +2946,21 @@ var compAgntMode = '';
 var linkMode = '';
 var windowmode = '';
 
-$(document).ready(function() {
+// $(window).on('load', function() {
+//    // $('.editReserWindow[data_sysid="2061"]').trigger('click');
+// });
+
+$(document).ready(function() {   
+    <?php
+  
+    if(!empty($RESV_ID)) {  ?>    
+        $(".editReserWindow").attr('data_sysid','<?php echo $RESV_ID; ?>');
+        $(".editReserWindow").attr('data-reservation_customer_id','<?php echo $CUSTOMER_ID; ?>');
+        $(".editReserWindow").click();
+    <?php
+    }
+    ?>
+
     $('#Rate_info').DataTable({
         "ordering": false,
         "searching": false,
@@ -3192,6 +3206,8 @@ $(document).ready(function() {
     });
 
 });
+
+
 
 $(document).on('hide.bs.modal', '#compnayAgentWindow', function() {
 
@@ -3607,7 +3623,10 @@ function displayResvOptionButtons(ressysId) {
 }
 
 $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
-    reservation_customer_id = $(this).data('reservation_customer_id');
+    
+
+    var sysid = $(this).attr('data_sysid');
+    reservation_customer_id = $(this).attr('data-reservation_customer_id');
     ////Item Inventory
     // showInventoryItems();
     itemClassList();
@@ -3632,7 +3651,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 
     $('#reservationWlable').html('Edit Reservation');
 
-    var sysid = $(this).attr('data_sysid');
+    
     $('#ITEM_RESV_ID').val(sysid);
     $('#FIXCHRG_RESV_ID').val(sysid);
     $('#PCKG_RESV_ID').val(sysid);
