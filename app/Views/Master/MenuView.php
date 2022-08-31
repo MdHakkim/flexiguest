@@ -194,15 +194,9 @@ $(document).ready(function() {
                 render: function(data, type, row, meta) {
                     return (
                         '<div class="d-inline-block">' +
-                        '<a href="javascript:;" title="Edit or Delete" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
-                        '<ul class="dropdown-menu dropdown-menu-end">' +
-                        '<li><a href="javascript:;" data_sysid="' + data['MENU_ID'] +
-                        '" class="dropdown-item editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>' +
-                        '<div class="dropdown-divider"></div>' +                      
+                        '<a href="javascript:;" data_sysid="' + data['MENU_ID'] +
+                        '" class="dropdown-item editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a>'+                      
                         
-                        '<li><a href="javascript:;" data_sysid="' + data['MENU_ID'] +
-                        '" class="dropdown-item text-danger delete-record"><i class="fa-solid fa-ban"></i> Delete</a></li>' +
-                        '</ul>' +
                         '</div>'
                     );
                 }
@@ -350,6 +344,7 @@ function submitForm(id) {
                 menuList();
                 $('#popModalWindow').modal('hide');
                 $('#dataTable_view').dataTable().fnDraw();
+                location.reload();
                
                 
             }

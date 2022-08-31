@@ -397,7 +397,7 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
             targets: 2,
             responsivePriority: 4,
             render: function(data, type, full, meta) {
-              var $name = full['USR_FIRST_NAME']??'' + '' + full['USR_LAST_NAME']??'',
+              var $name = (full['USR_FIRST_NAME'] ?? '') + ' ' + (full['USR_LAST_NAME'] ?? ''),
                 $email = full['USR_EMAIL']??'',
                 $image = full['USR_IMAGE']??'';
               if ($image) {
@@ -441,10 +441,10 @@ jQuery.fn.dataTableExt.oSort['string-num-desc'] = function(x1, y1) {
             render: function(data, type, full, meta) {
               var $role = full['ROLE_NAME'] ?? '';
               if (full['USR_ROLE_ID'] <= 3) {
-                var roleBadgeObj = {
-                  GUEST: '<span class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i class="bx bx-user bx-xs"></i></span>',
-                  Editor: '<span class="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2"><i class="bx bx-edit bx-xs"></i></span>',
-                  Admin: '<span class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30 me-2"><i class="bx bx-mobile-alt bx-xs"></i></span>'
+                 var roleBadgeObj = {
+                //   GUEST: '<span class="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i class="bx bx-user bx-xs"></i></span>',
+                //   Editor: '<span class="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2"><i class="bx bx-edit bx-xs"></i></span>',
+                //   Admin: '<span class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30 me-2"><i class="bx bx-mobile-alt bx-xs"></i></span>'
                 };
                 roleBadge = roleBadgeObj[$role] ?? '';
                 return "<span class='text-truncate d-flex align-items-center'>" + roleBadge + $role + '</span>';
