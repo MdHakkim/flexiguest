@@ -53,4 +53,32 @@ class EValetController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'Driver assigned successfully.']));
     }
+
+    public function parked()
+    {
+        $user_id = $this->request->user['USR_ID'];
+
+        $data = (array) $this->request->getVar();
+        $data['EV_STATUS'] = 'Parked';
+        $data['EV_UPDATE_BY'] = $user_id;
+        $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
+
+        $this->EValetRepository->updateEValet($data);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Car Parked successfully.']));
+    }
+
+    public function guestCollected()
+    {
+        $user_id = $this->request->user['USR_ID'];
+
+        $data = (array) $this->request->getVar();
+        $data['EV_STATUS'] = 'Guest Collected';
+        $data['EV_UPDATE_BY'] = $user_id;
+        $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
+
+        $this->EValetRepository->updateEValet($data);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Car Parked successfully.']));
+    }
 }
