@@ -421,51 +421,26 @@ class UserController extends BaseController
                 'USR_GENDER' => ['label' => 'Gender', 'rules' => 'trim|required']
             ];
 
-            if (!empty($sysid) && $this->request->getPost("USR_PASSWORD") == ''){
+            if (!empty($sysid) && $this->request->getPost("USR_PASSWORD") == '' && $this->request->getPost("USR_CONFIRM_PASSWORD") == ''){
             }
-            else if(!empty($sysid) && $this->request->getPost("USR_PASSWORD") != ''){
-                $rules = array_merge($rules, ['USR_PASSWORD' => [
-                    'label' => 'Password', 'rules' => 'trim|min_length[8]|is_password_strong[USR_PASSWORD]',
-                    'errors' => [
-                        'is_password_strong' => 'The password field must be contains at least one letter and one digit'
-                    ]
-                ],
-                'USR_CONFIRM_PASSWORD' => [
-                    'label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]|min_length[8]|is_password_strong[USR_CONFIRM_PASSWORD]',
-                    'errors' => [
-                        'is_password_strong' => 'The confirm-password field must be contains at least one letter and one digit'
-                    ]
-                ]]);
-            }
-            else{
-                $rules = array_merge($rules, ['USR_PASSWORD' => [
+
+            else if(empty($sysid) || (!empty($sysid) && (null !== $this->request->getPost("USR_PASSWORD") || null !== $this->request->getPost("USR_CONFIRM_PASSWORD")))){
+                $rules['USR_PASSWORD'] = [
                     'label' => 'Password', 'rules' => 'trim|required|min_length[8]|is_password_strong[USR_PASSWORD]',
                     'errors' => [
                         'is_password_strong' => 'The password field must be contains at least one letter and one digit'
                     ]
-                ],
-                'USR_CONFIRM_PASSWORD' => [
+                    ];
+                    $rules['USR_CONFIRM_PASSWORD'] = [
                     'label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]|min_length[8]|is_password_strong[USR_CONFIRM_PASSWORD]',
                     'errors' => [
                         'is_password_strong' => 'The confirm-password field must be contains at least one letter and one digit'
                     ]
-                ]]);
-
+                ];
             }
+           
 
 
-            // $validate.= $this->validate(['USR_PASSWORD' => [
-            //     'label' => 'Password', 'rules' => 'trim|required|min_length[8]|is_password_strong[USR_PASSWORD]',
-            //     'errors' => [
-            //         'is_password_strong' => 'The password field must be contains at least one letter and one digit'
-            //     ]
-            // ],
-            // 'USR_CONFIRM_PASSWORD' => [
-            //     'label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]|min_length[8]|is_password_strong[USR_CONFIRM_PASSWORD]',
-            //     'errors' => [
-            //         'is_password_strong' => 'The confirm-password field must be contains at least one letter and one digit'
-            //     ]
-            // ]]);
 
             $validate = $this->validate($rules);
 
