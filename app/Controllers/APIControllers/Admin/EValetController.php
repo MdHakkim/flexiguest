@@ -63,6 +63,13 @@ class EValetController extends BaseController
         $data['EV_UPDATE_BY'] = $user_id;
         $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
 
+        $evalet = $this->EValetRepository->eValetById($data['EV_ID']);
+        if(Empty($evalet))
+            return $this->respond(responseJson(202, true, ['msg' => 'Invalid Evalet.']));
+
+        if($evalet['EV_STATUS'] != 'Driver Assigned')
+            return $this->respond(responseJson(202, true, ['msg' => 'Driver is not assigned yet.']));
+
         $this->EValetRepository->updateEValet($data);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Car Parked successfully.']));
@@ -76,6 +83,13 @@ class EValetController extends BaseController
         $data['EV_STATUS'] = 'Guest Collected';
         $data['EV_UPDATE_BY'] = $user_id;
         $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
+
+        $evalet = $this->EValetRepository->eValetById($data['EV_ID']);
+        if(Empty($evalet))
+            return $this->respond(responseJson(202, true, ['msg' => 'Invalid Evalet.']));
+
+        if($evalet['EV_STATUS'] != 'Driver Assigned')
+            return $this->respond(responseJson(202, true, ['msg' => 'Car status is not parked yet.']));
 
         $this->EValetRepository->updateEValet($data);
 
