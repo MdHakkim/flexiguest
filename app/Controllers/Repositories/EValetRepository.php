@@ -20,18 +20,22 @@ class EValetRepository extends BaseController
         $this->EValetFile = new EValetFile();
     }
 
-    public function validationRules()
+    public function validationRules($data)
     {
-        return [
+        $rules = [
             'EV_GUEST_TYPE' => ['label' => 'guest type', 'rules' => 'required'], // Walk-In | InHouse Guest
             'EV_CAR_PLATE_NUMBER' => ['label' => 'plate number', 'rules' => 'required'],
             'EV_CAR_MAKE' => ['label' => 'car make', 'rules' => 'required'],
             'EV_CAR_MODEL' => ['label' => 'car model', 'rules' => 'required'],
-            'EV_CAR_IMAGES' => [
+        ];
+
+        if (!empty($data['EV_CAR_IMAGES']))
+            $rules['EV_CAR_IMAGES'] = [
                 'label' => 'car images',
                 'rules' => ['uploaded[EV_CAR_IMAGES]', 'mime_in[EV_CAR_IMAGES,image/png,image/jpg,image/jpeg]', 'max_size[EV_CAR_IMAGES,2048]']
-            ],
-        ];
+            ];
+
+        return $rules;
     }
 
     public function submitEValetForm($user_id, $data)
@@ -69,7 +73,7 @@ class EValetRepository extends BaseController
         $valet_list = $this->EValet->orderBy('EV_ID', 'desc')->findAll();
         foreach ($valet_list as $index => $valet) {
             $images = $this->EValetFile->where('EVI_EVALET_ID', $valet['EV_ID'])->findAll();
-            foreach($images as $i => $image) {
+            foreach ($images as $i => $image) {
                 $images[$i]['EVI_FILE_URL'] = base_url($image['EVI_FILE_URL']);
             }
 
