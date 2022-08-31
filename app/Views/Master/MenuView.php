@@ -3,6 +3,15 @@
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
 
+<style>
+
+.disabled {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.6;
+}
+</style>
+
 <!-- Content wrapper -->
 <div class="content-wrapper">
     <!-- Content -->
@@ -192,13 +201,23 @@ $(document).ready(function() {
                 className: "text-center",
                 "orderable": false,
                 render: function(data, type, row, meta) {
-                    return (
-                        '<div class="d-inline-block">' +
-                        '<a href="javascript:;" data_sysid="' + data['MENU_ID'] +
-                        '" class="dropdown-item editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a>'+                      
-                        
-                        '</div>'
-                    );
+                
+                    if(data['MENU_CODE'] == "MASTR"){
+                        return (
+                            '<div class="d-inline-block">' +
+                            '<a class="disabled" href="javascript:;" data_sysid="' + data['MENU_ID'] +
+                            '" class="dropdown-item editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a>'+
+                            '</div>'
+                        );
+                    }else{
+                        return (
+                            '<div class="d-inline-block">' +
+                            '<a href="javascript:;" data_sysid="' + data['MENU_ID'] +
+                            '" class="dropdown-item editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a>'+                      
+                            
+                            '</div>'
+                        );
+                    }
                 }
             },
         ],
