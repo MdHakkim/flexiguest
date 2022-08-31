@@ -348,7 +348,7 @@ function showResvCancelHistory(resvId = 0) {
     });
 }
 
-// Funtion to execute after Reservation Cancellation form submit
+// Function to execute after Reservation Cancellation form submit
 
 function afterResvCnclFormClose() {
     $('#resvCancelHistoryWindow').modal('show');

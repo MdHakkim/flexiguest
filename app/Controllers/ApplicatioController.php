@@ -40,13 +40,14 @@ class ApplicatioController extends BaseController
     public function Reservation(){   
         $data['title'] = getMethodName();
         $data['session'] = $this->session;
-        $data['clearFormFields_javascript'] = clearFormFields_javascript();
+        
         $itemLists = $this->itemList();    
         $data['itemLists'] = $itemLists;   
         $data['itemResources'] = $this->itemResources();                 
         $data['itemAvail'] = $this->ItemCalendar();
         $data['classList'] = $this->itemInventoryClassList();
         $data['FrequencyList'] = $this->frequencyList();  
+        
         $data['toggleButton_javascript'] = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['blockLoader_javascript'] = blockLoader_javascript();

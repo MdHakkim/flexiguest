@@ -4969,7 +4969,7 @@ $(document).on('click', '.show-activity-log', function() {
     showReservationChanges(ressysId);
 });
 
-// Funtion to execute after Customer Membership form submit
+// Function to execute after Customer Membership form submit
 
 function afterMemFormClose() {
     fillCustomerMemberships($('.window-2').is(':visible') ? $('.window-2').find('#RESV_NAME').val() : $('.window-1')
