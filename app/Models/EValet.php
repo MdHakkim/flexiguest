@@ -13,7 +13,7 @@ class EValet extends Model
         'EV_CUSTOMER_ID',
         'EV_RESERVATION_ID',
         'EV_ROOM_ID',
-        'EV_GUEST_TYPE',
+        'EV_GUEST_TYPE', // InHouse Guest, Walk-In
         'EV_GUEST_NAME',
         'EV_CONTACT_NUMBER',
         'EV_EMAIL',
@@ -21,7 +21,7 @@ class EValet extends Model
         'EV_CAR_MAKE',
         'EV_CAR_MODEL',
         'EV_KEYS_COLLECTED',
-        'EV_STATUS',
+        'EV_STATUS', // New, Driver Assigned, Parked, Guest Collected
         'EV_PARKING_DETAILS',
         'EV_ASSIGNED_AT',
         'EV_CREATED_BY',

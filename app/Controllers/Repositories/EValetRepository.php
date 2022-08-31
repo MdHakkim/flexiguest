@@ -87,4 +87,9 @@ class EValetRepository extends BaseController
     {
         return $this->EValet->save($data);
     }
+
+    public function eValetById($evalet_id)
+    {
+        return $this->EValet->find($evalet_id);
+    }
 }
