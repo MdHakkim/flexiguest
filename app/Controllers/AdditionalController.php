@@ -1204,18 +1204,20 @@ class AdditionalController extends BaseController
                     "MENU_STATUS" => null !==($this->request->getPost('MENU_STATUS'))? 1:0               
                 ];
 
-                //$permissionsData = ['ROLE_PERM_STATUS' => '0']; 
-                if(!empty($sysid) && (null !== $this->request->getPost('MENU_STATUS') &&  $this->request->getPost('MENU_STATUS') == 1)){
-                    $permissions = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->where('ROLE_MENU_ID', $sysid)->update(['ROLE_PERM_STATUS' => '1']);                   
-                   $childPermissions = $this->Db->query("UPDATE FLXY_USER_ROLE_PERMISSION SET ROLE_PERM_STATUS = '1' WHERE ROLE_MENU_ID IN (SELECT MENU_ID FROM FLXY_MENU WHERE PARENT_MENU_ID = ".$sysid.")");
-
-                  
-                }
-                else{
-                    $permissions = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->where('ROLE_MENU_ID', $sysid)->update(['ROLE_PERM_STATUS' => '0']);
-                    $childPermissions = $this->Db->query("UPDATE FLXY_USER_ROLE_PERMISSION SET ROLE_PERM_STATUS = '0' WHERE ROLE_MENU_ID IN (SELECT MENU_ID FROM FLXY_MENU WHERE PARENT_MENU_ID = ".$sysid.")");
+                
+                if(!empty($sysid)) {
+                        if(null !== $this->request->getPost('MENU_STATUS') &&  $this->request->getPost('MENU_STATUS') == 1){
+                        $permissions = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->where('ROLE_MENU_ID', $sysid)->update(['ROLE_PERM_STATUS' => '1']);                   
+                        $childPermissions = $this->Db->query("UPDATE FLXY_USER_ROLE_PERMISSION SET ROLE_PERM_STATUS = '1' WHERE ROLE_MENU_ID IN (SELECT MENU_ID FROM FLXY_MENU WHERE PARENT_MENU_ID = $sysid)");
+                        
                     
-                }
+                    }
+                    else{
+                        $permissions = $this->Db->table('FLXY_USER_ROLE_PERMISSION')->where('ROLE_MENU_ID', $sysid)->update(['ROLE_PERM_STATUS' => '0']);
+                        $childPermissions = $this->Db->query("UPDATE FLXY_USER_ROLE_PERMISSION SET ROLE_PERM_STATUS = '0' WHERE ROLE_MENU_ID IN (SELECT MENU_ID FROM FLXY_MENU WHERE PARENT_MENU_ID = $sysid)");
+                        
+                    }
+            }
     
                 $return = !empty($sysid) ? $this->Db->table('FLXY_MENU')->where('MENU_ID', $sysid)->update($data) : $this->Db->table('FLXY_MENU')->insert($data);
                

@@ -299,7 +299,8 @@ $(document).ready(function() {
 
 function addForm() {
     $("#MENU_CODE").prop("readonly", false);
-   $(':input', '#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
+   $(':input', '#submitForm').not('[type="checkbox"]').val('').prop('selected', false);
+   $('.switch-input').prop('checked', false);
    $('.select2').val(null).trigger('change');
    $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
    $('#popModalWindowlabel').html('Add new menu');   
