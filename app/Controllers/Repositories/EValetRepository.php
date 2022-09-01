@@ -35,6 +35,9 @@ class EValetRepository extends BaseController
                 'rules' => ['uploaded[EV_CAR_IMAGES]', 'mime_in[EV_CAR_IMAGES,image/png,image/jpg,image/jpeg]', 'max_size[EV_CAR_IMAGES,2048]']
             ];
 
+        if (!empty($data['EV_EMAIL']))
+            $rules['EV_EMAIL'] = ['label' => 'email', 'rules' => "required|valid_email"];
+
         return $rules;
     }
 
@@ -71,10 +74,9 @@ class EValetRepository extends BaseController
     public function valetList($user)
     {
         $where_condtion = "1 = 1";
-        if($user['USR_ROLE'] == 'GUEST') {
+        if ($user['USR_ROLE'] == 'GUEST') {
             $where_condtion = "EV_CUSTOMER_ID = {$user['USR_CUST_ID']}";
-        }
-        else if($user['USR_ROLE'] != 'admin' && $user['USR_ROLE'] != 'supervisor') {
+        } else if ($user['USR_ROLE'] != 'admin' && $user['USR_ROLE'] != 'supervisor') {
             $where_condtion = "EV_DRIVER_ID = {$user['USR_ID']}";
         }
 
