@@ -3,6 +3,7 @@
 namespace App\Controllers\APIControllers\Guest;
 
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\ReservationRepository;
 use App\Models\Reservation;
 use CodeIgniter\API\ResponseTrait;
 
@@ -10,10 +11,12 @@ class ReservationController extends BaseController
 {
     use ResponseTrait;
 
+    private $ReservationRepository;
     private $Reservation;
 
     public function __construct()
     {
+        $this->ReservationRepository = new ReservationRepository();
         $this->Reservation = new Reservation();
     }
 
@@ -63,5 +66,15 @@ class ReservationController extends BaseController
         $this->Reservation->save($reservation);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Checkout request has been submitted successfully.'], ['invoice' => base_url($file_name)]));
+    }
+
+    public function reservationsOfCustomer()
+    {
+        $customer_id = $this->request->user['USR_CUST_ID'];
+
+        $where_condition = "RESV_STATUS = 'Due Pre Check-In' or RESV_STATUS = 'Pre Checked-In' or RESV_STATUS = 'Checked-In'";
+        $result = $this->ReservationRepository->reservationsOfCustomer($customer_id, $where_condition);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'reservations'], $result));
     }
 }

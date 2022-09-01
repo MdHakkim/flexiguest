@@ -204,5 +204,7 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
         $routes->post('create-request', 'TransportRequestController::createRequest');
         $routes->get('all-requests', 'TransportRequestController::allRequests');
     });
+
+    $routes->get("reservations-of-customer", "ReservationController::reservationsOfCustomer");
 });
 //  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
