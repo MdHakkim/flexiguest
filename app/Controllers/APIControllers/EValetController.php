@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\APIControllers\Admin;
+namespace App\Controllers\APIControllers;
 
 use App\Controllers\BaseController;
 use App\Controllers\Repositories\EValetRepository;
@@ -32,7 +32,8 @@ class EValetController extends BaseController
 
     public function valetList()
     {
-        $result = $this->EValetRepository->valetList();
+        $user = $this->request->user;
+        $result = $this->EValetRepository->valetList($user);
 
         return $this->respond($result);
     }

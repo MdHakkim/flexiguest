@@ -56,6 +56,15 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 
 
 //  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
+
+/*****************************  ADMIN *****************************/
+$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function ($routes) {
+    $routes->get("profile", "APIController::profileAPI");
+    $routes->post('checkin/verify-documents', 'APIController::verifyDocuments');
+    $routes->post('checkin/guest-checked-in', 'APIController::guestCheckedIn');
+});
+
+/*****************************  ADMIN + GUEST *****************************/
 $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Controllers'], function ($routes) {
 
     $routes->group('maintenance', function ($routes) {
@@ -91,6 +100,7 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
     $routes->get('apartment-list', 'APIController::apartmentList');
 });
 
+/*****************************  ADMIN + GUEST *****************************/
 $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Controllers\APIControllers'], function ($routes) {
     $routes->group('asset-handover', function ($routes) {
         $routes->get('', 'ReceivingFormController::assetHandover');
@@ -99,8 +109,66 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
     });
 
     $routes->get('reservation-by-id', 'ReservationController::reservationById');
+
+    $routes->group('evalet', function ($routes) {
+        $routes->post('submit-form', 'EValetController::submitForm');
+        $routes->get('valet-list', 'EValetController::valetList');
+    });
 });
 
+/***************************** ADMIN + ATTENDEE *****************************/
+$routes->group("api", ["filter" => "authapi:admin,attendee", 'namespace' => 'App\Controllers\APIControllers'], function ($routes) {
+    $routes->group('evalet', function ($routes) {
+        $routes->post('assign-driver', 'EValetController::assignDriver');
+        $routes->post('parked', 'EValetController::parked');
+        $routes->post('guest-collected', 'EValetController::guestCollected');
+    });
+});
+
+/*****************************  ADMIN *****************************/
+$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
+
+    $routes->get("reservation/get-reservations-list", "ReservationController::getReservationsList");
+
+    $routes->group('laundry-amenities', function ($routes) {
+        $routes->get("orders-list", "LaundryAmenitiesController::ordersList");
+        $routes->post("update-delivery-status", "LaundryAmenitiesController::updateDeliveryStatus");
+    });
+
+    $routes->get("user-departments", "UserController::userDepartments");
+    $routes->get("get-user-by-department", "UserController::getUserByDepartment");
+
+    $routes->group('asset-tracking', function ($routes) {
+        $routes->get("get-assets", "AssetTrackingController::getAssets");
+        $routes->post("submit-form", "AssetTrackingController::submitForm");
+    });
+});
+
+/*****************************  ADMIN + ATTENDEE *****************************/
+$routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
+    $routes->group('housekeeping', function ($routes) {
+        $routes->get("all-tasks", "HouseKeepingController::allTasks");
+        $routes->get("task-details/(:segment)", "HouseKeepingController::taskDetails/$1");
+        $routes->post("mark-subtask-completed-inspected", "HouseKeepingController::markSubtaskCompletedInspected");
+        $routes->post("submit-task-note", "HouseKeepingController::submitTaskNote");
+        $routes->post("submit-subtask-note", "HouseKeepingController::submitSubtaskNote");
+    });
+
+    $routes->group('maintenance', function ($routes) {
+        $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
+        $routes->get("get-room-list", "MaintenanceController::getRoomList");
+        $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
+        $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
+
+        // work order
+        $routes->post("assign-task", "MaintenanceController::assignTask");
+        $routes->post("update-status", "MaintenanceController::updateStatus");
+        $routes->post("add-comment", "MaintenanceController::addComment");
+        $routes->get("get-comments", "MaintenanceController::getComments");
+    });
+});
+
+/*****************************  GUEST *****************************/
 $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
 
     $routes->group('concierge', function ($routes) {
@@ -137,63 +205,4 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
         $routes->get('all-requests', 'TransportRequestController::allRequests');
     });
 });
-
-// ADMIN ROUTES (START)
-$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
-
-    $routes->get("reservation/get-reservations-list", "ReservationController::getReservationsList");
-
-    $routes->group('laundry-amenities', function ($routes) {
-        $routes->get("orders-list", "LaundryAmenitiesController::ordersList");
-        $routes->post("update-delivery-status", "LaundryAmenitiesController::updateDeliveryStatus");
-    });
-
-    $routes->get("user-departments", "UserController::userDepartments");
-    $routes->get("get-user-by-department", "UserController::getUserByDepartment");
-
-    $routes->group('asset-tracking', function ($routes) {
-        $routes->get("get-assets", "AssetTrackingController::getAssets");
-        $routes->post("submit-form", "AssetTrackingController::submitForm");
-    });
-
-    $routes->group('evalet', function ($routes) {
-        $routes->post('submit-form', 'EValetController::submitForm');
-        $routes->get('valet-list', 'EValetController::valetList');
-        $routes->post('assign-driver', 'EValetController::assignDriver');
-        $routes->post('parked', 'EValetController::parked');
-        $routes->post('guest-collected', 'EValetController::guestCollected');
-    });
-});
-
-$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function ($routes) {
-    $routes->get("profile", "APIController::profileAPI");
-    $routes->post('checkin/verify-documents', 'APIController::verifyDocuments');
-    $routes->post('checkin/guest-checked-in', 'APIController::guestCheckedIn');
-});
-// ADMIN ROUTES (END)
-
-$routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
-    $routes->group('housekeeping', function ($routes) {
-        $routes->get("all-tasks", "HouseKeepingController::allTasks");
-        $routes->get("task-details/(:segment)", "HouseKeepingController::taskDetails/$1");
-        $routes->post("mark-subtask-completed-inspected", "HouseKeepingController::markSubtaskCompletedInspected");
-        $routes->post("submit-task-note", "HouseKeepingController::submitTaskNote");
-        $routes->post("submit-subtask-note", "HouseKeepingController::submitSubtaskNote");
-    });
-
-    $routes->group('maintenance', function ($routes) {
-        $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
-        $routes->get("get-room-list", "MaintenanceController::getRoomList");
-        $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
-        $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
-
-        // work order
-        $routes->post("assign-task", "MaintenanceController::assignTask");
-        $routes->post("update-status", "MaintenanceController::updateStatus");
-        $routes->post("add-comment", "MaintenanceController::addComment");
-        $routes->get("get-comments", "MaintenanceController::getComments");
-    });
-});
-
-
 //  ----------------------------------- ABUBAKAR CODE (END) --------------------------------------- //
