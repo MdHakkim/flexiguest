@@ -3,8 +3,9 @@
 namespace App\Controllers\Repositories;
 
 use App\Controllers\BaseController;
+use App\Libraries\DataTables\EValetDataTable;
 use App\Models\EValet;
-use App\Models\EValetFile;
+use App\Models\EValetImage;
 use CodeIgniter\API\ResponseTrait;
 
 class EValetRepository extends BaseController
@@ -12,12 +13,12 @@ class EValetRepository extends BaseController
     use ResponseTrait;
 
     private $EValet;
-    private $EValetFile;
+    private $EValetImage;
 
     public function __construct()
     {
         $this->EValet = new EValet();
-        $this->EValetFile = new EValetFile();
+        $this->EValetImage = new EValetImage();
     }
 
     public function validationRules($data)
@@ -65,7 +66,7 @@ class EValetRepository extends BaseController
             $evalet_image['EVI_FILE_NAME'] = $image_name;
             $evalet_image['EVI_CREATED_BY'] = $evalet_image['EVI_UPDATED_BY'] = $user_id;
 
-            $this->EValetFile->insert($evalet_image);
+            $this->EValetImage->insert($evalet_image);
         }
 
         return responseJson(200, false, ['msg' => 'created successfully.']);
@@ -85,7 +86,7 @@ class EValetRepository extends BaseController
             ->orderBy('EV_ID', 'desc')->findAll();
 
         foreach ($valet_list as $index => $valet) {
-            $images = $this->EValetFile->where('EVI_EVALET_ID', $valet['EV_ID'])->findAll();
+            $images = $this->EValetImage->where('EVI_EVALET_ID', $valet['EV_ID'])->findAll();
             foreach ($images as $i => $image) {
                 $images[$i]['EVI_FILE_URL'] = base_url($image['EVI_FILE_URL']);
             }
@@ -104,5 +105,15 @@ class EValetRepository extends BaseController
     public function eValetById($evalet_id)
     {
         return $this->EValet->find($evalet_id);
+    }
+
+    public function allEValet()
+    {
+        $mine = new EValetDataTable();
+        $tableName = 'FLXY_EVALET left join FlXY_USERS on EV_DRIVER_ID = USR_ID';
+        $columns = 'EV_ID,EV_DRIVER_ID,EV_CUSTOMER_ID,EV_RESERVATION_ID,EV_ROOM_ID,EV_GUEST_TYPE,EV_GUEST_NAME,EV_CONTACT_NUMBER,EV_EMAIL,EV_CAR_PLATE_NUMBER,EV_CAR_MAKE,EV_CAR_MODEL,EV_KEYS_COLLECTED,EV_STATUS,EV_PARKING_DETAILS,EV_ASSIGNED_AT,EV_CREATED_AT,USR_FIRST_NAME,USR_LAST_NAME';
+
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
     }
 }

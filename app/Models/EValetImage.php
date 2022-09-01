@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class EValetFile extends Model
+class EValetImage extends Model
 {
-    protected $table      = 'FLXY_EVALET_FILES';
+    protected $table      = 'FLXY_EVALET_IMAGES';
     protected $primaryKey = 'EVI_ID';
     protected $allowedFields = [
         'EVI_EVALET_ID',

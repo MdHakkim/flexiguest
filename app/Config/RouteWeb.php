@@ -706,6 +706,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('edit', 'AlertController::edit');
         $routes->delete('delete', 'AlertController::delete');
     });
+
+    $routes->group('evalet', function ($routes) {
+        $routes->get('', 'EValetController::eValet');
+        $routes->post('all-evalet', 'EValetController::allEValet');
+    });
     // ABUBAKAR CODE (END)
 });
 
