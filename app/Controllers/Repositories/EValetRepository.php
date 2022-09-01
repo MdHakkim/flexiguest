@@ -68,9 +68,20 @@ class EValetRepository extends BaseController
         return responseJson(200, false, ['msg' => 'created successfully.']);
     }
 
-    public function valetList()
+    public function valetList($user)
     {
-        $valet_list = $this->EValet->orderBy('EV_ID', 'desc')->findAll();
+        $where_condtion = "1 = 1";
+        if($user['USR_ROLE'] == 'GUEST') {
+            $where_condtion = "EV_CUSTOMER_ID = {$user['USR_CUST_ID']}";
+        }
+        else if($user['USR_ROLE'] != 'admin' && $user['USR_ROLE'] != 'supervisor') {
+            $where_condtion = "EV_DRIVER_ID = {$user['USR_ID']}";
+        }
+
+        $valet_list = $this->EValet
+            ->where($where_condtion)
+            ->orderBy('EV_ID', 'desc')->findAll();
+
         foreach ($valet_list as $index => $valet) {
             $images = $this->EValetFile->where('EVI_EVALET_ID', $valet['EV_ID'])->findAll();
             foreach ($images as $i => $image) {
