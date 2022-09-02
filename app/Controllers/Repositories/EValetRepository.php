@@ -44,12 +44,26 @@ class EValetRepository extends BaseController
 
     public function submitEValetForm($user_id, $data)
     {
-        $images = $data['EV_CAR_IMAGES'];
+        $evalet_id = $data['id'];
 
-        $data['EV_CREATED_BY'] = $data['EV_UPDATED_BY'] = $user_id;
+        $images = $data['EV_CAR_IMAGES'];
         unset($data['EV_CAR_IMAGES']);
 
-        $evalet_id = $this->EValet->insert($data);
+        foreach ($data as $index => $row) {
+            if (empty($row))
+                unset($data[$index]);
+        }
+        
+        if (empty($evalet_id)) {
+            $data['EV_CREATED_BY'] = $data['EV_UPDATED_BY'] = $user_id;
+            $evalet_id = $this->EValet->insert($data);
+        } else {
+            $data['AL_UPDATED_BY'] = $user_id;
+            $this->Alert->update($evalet_id, $data);
+        }
+
+        if(!empty($images))
+            $this->deleteEValetImages("EVI_EVALET_ID = $evalet_id");
 
         foreach ($images as $image) {
             $image_name = $image->getName();
@@ -69,7 +83,7 @@ class EValetRepository extends BaseController
             $this->EValetImage->insert($evalet_image);
         }
 
-        return responseJson(200, false, ['msg' => 'created successfully.']);
+        return responseJson(200, false, ['msg' => 'created/updated successfully.']);
     }
 
     public function valetList($user)
@@ -115,5 +129,39 @@ class EValetRepository extends BaseController
 
         $mine->generate_DatatTable($tableName, $columns);
         exit;
+    }
+
+    public function deleteEValetImages($where_condtion)
+    {
+        return $this->EValetImage->where($where_condtion)->delete();
+    }
+
+    public function storeEValet($user_id, $data)
+    {
+        $id = $data['id'];
+        unset($data['id']);
+
+        if (empty($id)) {
+            $data['EV_CREATED_BY'] = $data['EV_UPDATED_BY'] = $user_id;
+            $response = $this->EValet->insert($data);
+        } else {
+            $data['AL_UPDATED_BY'] = $user_id;
+            $response = $this->Alert->update($id, $data);
+        }
+
+        if (!$response)
+            return responseJson(500, false, ['msg' => "db insert/update not successful"]);
+
+        if (empty($id))
+            $msg = 'Alert has been created successflly.';
+        else
+            $msg = 'Alert has been updated successflly.';
+
+        return responseJson(200, false, ['msg' => $msg]);
+    }
+
+    public function deleteAlert($alert_id)
+    {
+        return $this->Alert->delete($alert_id);
     }
 }

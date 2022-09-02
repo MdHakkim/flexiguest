@@ -98,6 +98,20 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
     $routes->post("checkin/signatureUpload", "APIController::acceptAndSignatureUpload");
 
     $routes->get('apartment-list', 'APIController::apartmentList');
+
+    $routes->group('evalet', function ($routes) {
+        $routes->post('submit-form', 'EValetController::submitForm');
+        $routes->get('valet-list', 'EValetController::valetList');
+    });
+});
+
+/***************************** ADMIN + ATTENDEE *****************************/
+$routes->group("api", ["filter" => "authapi:admin,attendee", 'namespace' => 'App\Controllers'], function ($routes) {
+    $routes->group('evalet', function ($routes) {
+        $routes->post('assign-driver', 'EValetController::assignDriver');
+        $routes->post('parked', 'EValetController::parked');
+        $routes->post('guest-collected', 'EValetController::guestCollected');
+    });
 });
 
 /*****************************  ADMIN + GUEST *****************************/
@@ -109,20 +123,6 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
     });
 
     $routes->get('reservation-by-id', 'ReservationController::reservationById');
-
-    $routes->group('evalet', function ($routes) {
-        $routes->post('submit-form', 'EValetController::submitForm');
-        $routes->get('valet-list', 'EValetController::valetList');
-    });
-});
-
-/***************************** ADMIN + ATTENDEE *****************************/
-$routes->group("api", ["filter" => "authapi:admin,attendee", 'namespace' => 'App\Controllers\APIControllers'], function ($routes) {
-    $routes->group('evalet', function ($routes) {
-        $routes->post('assign-driver', 'EValetController::assignDriver');
-        $routes->post('parked', 'EValetController::parked');
-        $routes->post('guest-collected', 'EValetController::guestCollected');
-    });
 });
 
 /*****************************  ADMIN *****************************/

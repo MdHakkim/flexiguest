@@ -82,7 +82,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h4 class="modal-title" id="popModalWindowlabel">App Updates</h4>
+                    <h4 class="modal-title" id="popModalWindowlabel">Add EValet</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
 
@@ -93,10 +93,18 @@
                             <input type="hidden" name="EV_CUSTOMER_ID" class="form-control" />
                             <input type="hidden" name="EV_ROOM_ID" class="form-control" />
 
+                            <div class="col-md-12">
+                                <label class="form-label"><b>Guest Type *</b></label>
+                                <select class="select2" name="EV_GUEST_TYPE">
+                                    <option>InHouse Guest</option>
+                                    <option>Walk-In</option>
+                                </select>
+                            </div>
+
                             <div class="col-md-6">
                                 <label class="form-label"><b>Reservation</b></label>
                                 <select class="select2" name="EV_RESERVATION_ID" onchange="onChangeReservation()">
-                                    <option value="">Select Reservation</option>
+                                    <option value="0">Select Reservation</option>
                                     <?php foreach ($reservations as $reservation) : ?>
                                         <option value="<?= $reservation['RESV_ID'] ?>" data-customer_id="<?= $reservation['CUST_ID'] ?>" data-customer_name="<?= $reservation['CUST_FIRST_NAME'] . ' ' . $reservation['CUST_LAST_NAME'] ?>" data-room_no="<?= $reservation['RESV_ROOM'] ?>" data-room_id="<?= $reservation['RM_ID'] ?>" data-email="<?= $reservation['CUST_EMAIL'] ?>" data-mobile="<?= $reservation['CUST_MOBILE'] ?>">
 
@@ -130,6 +138,8 @@
                                 <input type="text" name="EV_CONTACT_NUMBER" class="form-control" placeholder="Mobile number" />
                             </div>
 
+                            <div class="col-md-6 extra-space"></div>
+
                             <div class="col-md-6">
                                 <label class="form-label"><b>Car Plate Number *</b></label>
                                 <input type="text" name="EV_CAR_PLATE_NUMBER" class="form-control" placeholder="Plate number" />
@@ -138,6 +148,47 @@
                             <div class="col-md-6">
                                 <label class="form-label"><b>Car Make *</b></label>
                                 <input type="text" name="EV_CAR_MAKE" class="form-control" placeholder="Car make" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Car Model *</b></label>
+                                <input type="text" name="EV_CAR_MODEL" class="form-control" placeholder="Car model" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Status *</b></label>
+                                <select class="select2" name="EV_STATUS">
+                                    <option>New</option>
+                                    <option>Driver Assigned</option>
+                                    <option>Parked</option>
+                                    <option>Guest Collected</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label"><b>Image</b></label>
+                                <input type="file" name="EV_CAR_IMAGES[]" class="form-control" multiple/>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Department</b></label>
+
+                                <select name="EV_DEPARTMENT_ID" class="select2 form-select">
+                                    <?php foreach ($departments as $department) { ?>
+                                        <option value="<?= $department['DEPT_ID'] ?>"><?= $department['DEPT_DESC'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Driver</b></label>
+                                <select name="EV_DRIVER_ID" class="select2 form-select">
+                                </select>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label"><b>Parking Details</b></label>
+                                <textarea name="EV_PARKING_DETAILS" class="form-control" placeholder="Parking Details..."></textarea>
                             </div>
                         </div>
                     </form>
@@ -167,6 +218,73 @@
 <?= $this->section("script") ?>
 <script>
     var form_id = "#submit-form";
+
+    function onChangeReservation() {
+        let customer_id = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('customer_id');
+        let customer_name = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('customer_name');
+        let room_id = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('room_id');
+        let room_no = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('room_no');
+        let email = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('email');
+        let mobile = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('mobile');
+
+        $(`${form_id} input[name="EV_CUSTOMER_ID"]`).val(customer_id);
+        $(`${form_id} input[name="EV_ROOM_ID"]`).val(room_id);
+        $(`${form_id} input[name="EV_GUEST_NAME"]`).val(customer_name);
+        $(`${form_id} input[name="EV_ROOM_NO"]`).val(room_no);
+        $(`${form_id} input[name="EV_GUEST_EMAIL"]`).val(email);
+        $(`${form_id} input[name="EV_CONTACT_NUMBER"]`).val(mobile);
+    }
+
+    $(`${form_id} [name='EV_DEPARTMENT_ID']`).change(function() {
+        let department_id = $(this).val();
+
+        if (department_id) {
+            $.ajax({
+                url: '<?= base_url('/user-by-department') ?>',
+                type: "post",
+                data: {
+                    department_ids: [department_id]
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response['SUCCESS'] == 200) {
+                        let users = response['RESPONSE']['OUTPUT'];
+
+                        let html = '';
+                        for (let user of users) {
+                            html += `
+                            <option value="${user.USR_ID}">${user.USR_FIRST_NAME} ${user.USR_LAST_NAME}</option>
+                        `;
+                        }
+
+                        $(`${form_id} select[name='EV_DRIVER_ID']`).html(html);
+                        $(`${form_id} select[name='EV_DRIVER_ID']`).trigger('change');
+                    }
+                }
+            });
+        }
+    });
+
+    $(`${form_id} select[name='EV_GUEST_TYPE']`).change(function() {
+
+        if ($(this).val()) {
+            if ($(this).val() == 'InHouse Guest') {
+                $(`${form_id} select[name="EV_RESERVATION_ID"]`).parent().parent().removeClass('d-none');
+                $(`${form_id} input[name="EV_ROOM_NO"]`).parent().removeClass('d-none');
+                $(`${form_id} input[name="EV_GUEST_NAME"]`).parent().removeClass('d-none');
+                $(`${form_id} input[name="EV_GUEST_EMAIL"]`).parent().removeClass('d-none');
+                $(`${form_id} input[name="EV_CONTACT_NUMBER"]`).parent().removeClass('d-none');
+                $(`${form_id} .extra-space`).removeClass('d-none');
+            } else {
+                $(`${form_id} select[name="EV_RESERVATION_ID"]`).parent().parent().addClass('d-none');
+                $(`${form_id} input[name="EV_ROOM_NO"]`).parent().addClass('d-none');
+                $(`${form_id} input[name="EV_GUEST_NAME"]`).parent().addClass('d-none');
+                $(`${form_id} input[name="EV_GUEST_EMAIL"]`).parent().addClass('d-none');
+                $(`${form_id} input[name="EV_CONTACT_NUMBER"]`).parent().addClass('d-none');
+                $(`${form_id} .extra-space`).addClass('d-none');
+            }
+        }
+    });
 
     var compAgntMode = '';
     var linkMode = '';
@@ -325,28 +443,13 @@
         );
     });
 
-    function onChangeReservation() {
-        let customer_id = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('customer_id');
-        let customer_name = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('customer_name');
-        let room_id = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('room_id');
-        let room_no = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('room_no');
-        let email = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('email');
-        let mobile = $(`${form_id} select[name="EV_RESERVATION_ID"]`).find(":selected").data('mobile');
-
-        $(`${form_id} input[name="EV_CUSTOMER_ID"]`).val(customer_id);
-        $(`${form_id} input[name="EV_ROOM_ID"]`).val(room_id);
-        $(`${form_id} input[name="EV_GUEST_NAME"]`).val(customer_name);
-        $(`${form_id} input[name="EV_ROOM_NO"]`).val(room_no);
-        $(`${form_id} input[name="EV_GUEST_EMAIL"]`).val(email);
-        $(`${form_id} input[name="EV_CONTACT_NUMBER"]`).val(mobile);
-    }
-
     function resetForm() {
-        let id = "submit-form";
+        $(`${form_id} input`).val('');
+        $(`${form_id} textarea`).val('');
+        $(`${form_id} select`).val('').trigger('change');
 
-        $(`#${id} input`).val('');
-        $(`#${id} textarea`).val('');
-        $(`#${id} select`).val('').trigger('change');
+        $(`${form_id} select[name="EV_RESERVATION_ID"]`).val('0').trigger('change');
+        $(`${form_id} select[name="EV_GUEST_TYPE"]`).val('InHouse Guest').trigger('change');
     }
 
     // Show Add Rate Class Form
@@ -362,12 +465,19 @@
     // Add New or Edit Rate Class submit Function
     function submitForm() {
         hideModalAlerts();
-        let id = "submit-form";
 
-        var fd = new FormData($(`#${id}`)[0]);
+        var fd = new FormData($(`${form_id}`)[0]);
+        fd.delete('EV_CAR_IMAGES[]');
+
+        if ($(`${form_id} select[name="EV_RESERVATION_ID"]`).val() == '0')
+            fd.delete('EV_RESERVATION_ID');
+        
+        files = $(`${form_id} input[name='EV_CAR_IMAGES[]']`)[0].files;
+        for (let i = 0; i < files.length; i++)
+            fd.append('EV_CAR_IMAGES[]', files[i]);
 
         $.ajax({
-            url: '<?= base_url('/alert/store') ?>',
+            url: '<?= base_url('/evalet/store') ?>',
             type: "post",
             data: fd,
             processData: false,
@@ -477,54 +587,6 @@
             }
         });
     });
-
-    $(`${form_id} [name='AL_DEPARTMENT_IDS[]']`).change(function() {
-        let department_ids = $(this).val();
-
-        if (department_ids.length) {
-            if (department_ids.includes('all')) {
-                $(`${form_id} [name='AL_DEPARTMENT_IDS[]'] > option`).prop("selected", true);
-                $(`${form_id} [name='AL_DEPARTMENT_IDS[]'] > option`).first().prop("selected", false);
-                $(`${form_id} [name='AL_DEPARTMENT_IDS[]']`).trigger("change");
-                return;
-            }
-
-            $.ajax({
-                url: '<?= base_url('/user-by-department') ?>',
-                type: "post",
-                data: {
-                    department_ids: department_ids
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response['SUCCESS'] == 200) {
-                        let users = response['RESPONSE']['OUTPUT'];
-
-                        let html = `<option value='all'>All</option>`;
-                        for (let user of users) {
-                            html += `
-                            <option value="${user.USR_ID}">${user.USR_FIRST_NAME} ${user.USR_LAST_NAME}</option>
-                        `;
-                        }
-
-                        $(`${form_id} select[name='AL_USER_IDS[]']`).html(html);
-                        $(`${form_id} select[name='AL_USER_IDS[]']`).trigger('change');
-                    }
-                }
-            });
-        }
-    });
-
-    $(`${form_id} [name='AL_USER_IDS[]']`).change(function() {
-        let user_ids = $(this).val();
-
-        if (user_ids.length && user_ids.includes('all')) {
-            $(`${form_id} [name='AL_USER_IDS[]'] > option`).prop("selected", true);
-            $(`${form_id} [name='AL_USER_IDS[]'] > option`).first().prop("selected", false);
-            $(`${form_id} [name='AL_USER_IDS[]']`).trigger("change");
-        }
-    });
-
 
     // bootstrap-maxlength & repeater (jquery)
     $(function() {
