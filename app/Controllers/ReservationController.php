@@ -1207,8 +1207,9 @@ public function showPackages()
         $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
         $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
 
-        $data['itemResources'] = $this->itemResources();                 
-        $data['itemAvail'] = $this->ItemCalendar();
+        $data['RoomReservations']  = $this->getReservations(); 
+        $data['RoomResources']     = $this->roomplanResources();
+        $data['title']             =  'Room Plan';
         
         return view('Reservation/RoomPlanTest',$data);
     }
@@ -1508,5 +1509,70 @@ public function dateExistsOverlap($RESV_ID,$START,$END,$NEW_ROOM_ID){
    $responseCount = $this->DB->query($sql)->getNumRows();
    return $responseCount;
 }
+
+
+    public function getRoomStatistics(){
+        $response = NULL;
+        $items = array();     
+        $START        = $this->request->getPost('start');
+        $END          = $this->request->getPost('end');
+        $START_DATE   = explode('T',$START); 
+        $END_DATE     = explode('T',$END);
+        $start        = strtotime($START_DATE[0]);
+        $end          = strtotime($END_DATE[0]);
+
+        for($i=1; $i<=5; $i++){            
+            $BEGIN_DATE     = $start;
+            $END_DATE       = $end; 
+            $DATEDIFF       = (int)$end-(int)$start;
+            $AVAILABLE_DAYS = round($DATEDIFF / (60 * 60 * 24));
+            
+            for($j = 1; $j <= ($AVAILABLE_DAYS + 1); $j++ ){
+                $values = [];
+                $sCurrentDate = gmdate("Y-m-d", strtotime("+$j day", $BEGIN_DATE)); 
+
+                if($i == 1){
+                    $TotalRoomsReserved = $this->getTotalRoomsReserved(1, $sCurrentDate);
+                } 
+                else if($i == 2){
+                    $TotalRoomsReserved = $this->getTotalRoomsReserved(2, $sCurrentDate);
+                }
+                else if($i == 3){
+                    $TotalRoomsReserved = $this->getTotalRoomsReserved(3, $sCurrentDate);
+                }
+                else if($i == 4){
+                    $TotalRoomsReserved = $this->getTotalRoomsReserved(4, $sCurrentDate);
+                }
+                else if($i == 5){
+                    $TotalRoomsReserved = $this->getTotalRoomsReserved(5, $sCurrentDate);
+                }
+                $values['id'] = $j;
+                $values['resourceId'] = $i;                
+                $values['title'] = $TotalRoomsReserved;
+                $values['start'] = $sCurrentDate;
+                $values['end'] = $sCurrentDate;
+                $items[] = $values;
+            }   
+        }
+       
+        echo json_encode($items);
+    }
+
+    public function getTotalRoomsReserved($value, $sCurrentDate){
+        if($value == 1){
+            $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE RESV_ARRIVAL_DT = '$sCurrentDate' AND RESV_STATUS != 'Checked-Out'";     
+            $responseCount = $this->DB->query($sql)->getNumRows();
+            return $responseCount;
+        }
+        else if($value == 2){
+        }
+        else if($value == 3){
+        }
+        else if($value == 4){
+        }
+        else if($value == 5){
+        }       
+
+    }
 
 }
