@@ -49,6 +49,11 @@ class EValetController extends BaseController
         $user_id = $this->request->user['USR_ID'];
 
         $data = (array) $this->request->getVar();
+
+        $evalet = $this->EValetRepository->eValetById($data['EV_ID']);
+        if (empty($evalet))
+            return $this->respond(responseJson(202, true, ['msg' => 'Invalid Evalet.']));
+
         $data['EV_STATUS'] = 'Parking Driver Assigned';
         $data['EV_KEYS_COLLECTED'] = 1;
         $data['EV_UPDATE_BY'] = $user_id;
@@ -65,6 +70,11 @@ class EValetController extends BaseController
         $user_id = $this->request->user['USR_ID'];
 
         $data = (array) $this->request->getVar();
+
+        $evalet = $this->EValetRepository->eValetById($data['EV_ID']);
+        if (empty($evalet))
+            return $this->respond(responseJson(202, true, ['msg' => 'Invalid Evalet.']));
+
         $data['EV_STATUS'] = 'Collecting Driver Assigned';
         $data['EV_UPDATE_BY'] = $user_id;
         $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
@@ -122,6 +132,11 @@ class EValetController extends BaseController
         $user_id = $this->request->user['USR_ID'];
 
         $data = (array) $this->request->getVar();
+
+        $evalet = $this->EValetRepository->eValetById($data['EV_ID']);
+        if (empty($evalet))
+            return $this->respond(responseJson(202, true, ['msg' => 'Invalid Evalet.']));
+            
         $data['EV_STATUS'] = 'Car Delivery Request';
         $data['EV_UPDATE_BY'] = $user_id;
         $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
