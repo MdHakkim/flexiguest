@@ -144,4 +144,9 @@ class EValetController extends BaseController
 
         return $this->respond($result);
     }
+
+    public function qr($evalet_id)
+    {
+        return redirect()->to("https://chart.googleapis.com/chart?cht=qr&chl=$evalet_id&chs=260x260&chld=L|0");
+    }
 }

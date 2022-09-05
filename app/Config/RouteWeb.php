@@ -739,3 +739,5 @@ $routes->get('autherropage', 'ApplicatioController::AuthErroPage');
 $routes->group('laundry-amenities', function ($routes) {
     $routes->get('check-unattended-items', 'LaundryAmenitiesController::checkUnattendedItems');
 });
+
+$routes->get('evalet/qr/(:segment)', 'EValetController::qr/$1');
