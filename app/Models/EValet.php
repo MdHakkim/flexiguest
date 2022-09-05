@@ -10,7 +10,7 @@ class EValet extends Model
     protected $primaryKey = 'EV_ID';
     protected $allowedFields = [
         'EV_PARKING_DRIVER_ID',
-        'EV_COLLECTING_DRIVER_ID',
+        'EV_DELIVERY_DRIVER_ID',
         'EV_CUSTOMER_ID',
         'EV_RESERVATION_ID',
         'EV_ROOM_ID',
@@ -22,10 +22,10 @@ class EValet extends Model
         'EV_CAR_MAKE',
         'EV_CAR_MODEL',
         'EV_KEYS_COLLECTED',
-        'EV_STATUS', // New, Parking Driver Assigned, Collecting Driver Assigned, Parked, Car Delivery Request, Guest Collected
+        'EV_STATUS', // New, Parking Assigned, Delivery Assigned, Parked, Delivery Request, Guest Collected
         'EV_PARKING_DETAILS',
         'EV_PARKING_ASSIGNED_AT',
-        'EV_COLLECTING_ASSIGNED_AT',
+        'EV_DELIVERY_ASSIGNED_AT',
         'EV_CREATED_BY',
         'EV_UPDATED_BY',
     ];

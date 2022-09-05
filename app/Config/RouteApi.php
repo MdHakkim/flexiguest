@@ -65,7 +65,7 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
 
     $routes->group('evalet', function ($routes) {
         $routes->post('assign-parking-driver', 'EValetController::assignParkingDriver');
-        $routes->post('assign-collecting-driver', 'EValetController::assignCollectingDriver');
+        $routes->post('assign-delivery-driver', 'EValetController::assignDeliveryDriver');
     });
 });
 
