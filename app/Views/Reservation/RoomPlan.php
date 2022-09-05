@@ -84,7 +84,7 @@
       <div class="col-md-3 mt-3 mb-3">
         <button type="button" class="btn btn-primary"  id="showRoomStatisticsModal" 
         > Statistics</button>
-        <!-- <button type="button" class="btn btn-primary" id="showRoomOS"  > OOO / OOS</button></div>         -->
+        <!-- <button type="button" class="btn btn-primary" id="showRoomOS"  > OOO / OOS</button>        --></div> 
     </div>
         <!-- Calendar Sidebar -->
         <div class="app-calendar-sidebar col" id="app-calendar-sidebar" style="display: none">
