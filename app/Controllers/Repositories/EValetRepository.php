@@ -44,7 +44,7 @@ class EValetRepository extends BaseController
 
     public function submitEValetForm($user_id, $data)
     {
-        $evalet_id = $data['id'];
+        $evalet_id = $data['id'] ?? null;
 
         $images = $data['EV_CAR_IMAGES'];
         unset($data['EV_CAR_IMAGES']);
@@ -142,7 +142,7 @@ class EValetRepository extends BaseController
 
     public function storeEValet($user_id, $data)
     {
-        $id = $data['id'];
+        $id = $data['id'] ?? null;
         unset($data['id']);
 
         if (empty($id)) {
