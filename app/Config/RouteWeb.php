@@ -595,8 +595,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/getInventoryCalendarData', 'ApplicatioController::getInventoryCalendarData');
       $routes->match(['post'],'/getInventoryAllocatedData', 'ApplicatioController::getInventoryAllocatedData'); 
 
-      
+      //$routes->match(['post'],'/RoomStatistics', 'ApplicatioController::RoomStatistics'); 
+      $routes->match(['post'],'/getRoomStatistics', 'ReservationController::getRoomStatistics'); 
 
+      
+      //$routes->get('/roomStatistics', 'ApplicatioController::roomStatistics');
 
 
     //Subina Code (END)  
