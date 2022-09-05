@@ -98,8 +98,8 @@ class EValetRepository extends BaseController
         $valet_list = $this->EValet
             ->select("FLXY_EVALET.*, concat(fu.USR_FIRST_NAME, ' ', fu.USR_LAST_NAME) as EV_PARKING_DRIVER_NAME, 
                 concat(users.USR_FIRST_NAME, ' ', users.USR_LAST_NAME) as EV_COLLECTING_DRIVER_NAME")
-            ->join('FlXY_USERS as fu', 'EV_PARKING_DRIVER_ID = fu.USR_ID')
-            ->join('FlXY_USERS as users', 'EV_COLLECTING_DRIVER_ID = users.USR_ID')
+            ->join('FlXY_USERS as fu', 'EV_PARKING_DRIVER_ID = fu.USR_ID', 'left')
+            ->join('FlXY_USERS as users', 'EV_COLLECTING_DRIVER_ID = users.USR_ID', 'left')
             ->where($where_condtion)
             ->orderBy('EV_ID', 'desc')->findAll();
 
