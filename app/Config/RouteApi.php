@@ -64,8 +64,7 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
     $routes->post('checkin/guest-checked-in', 'APIController::guestCheckedIn');
 
     $routes->group('evalet', function ($routes) {
-        $routes->post('assign-parking-driver', 'EValetController::assignParkingDriver');
-        $routes->post('assign-delivery-driver', 'EValetController::assignDeliveryDriver');
+        $routes->post('assign-driver', 'EValetController::assignDriver');
     });
 });
 
