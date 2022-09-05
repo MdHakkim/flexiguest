@@ -98,7 +98,7 @@ class EValetController extends BaseController
         if (empty($evalet))
             return $this->respond(responseJson(202, true, ['msg' => 'Invalid Evalet.']));
 
-        if ($evalet['EV_STATUS'] != 'Driver Assigned')
+        if ($evalet['EV_STATUS'] != 'Parking Assigned')
             return $this->respond(responseJson(202, true, ['msg' => 'Driver is not assigned yet.']));
 
         $this->EValetRepository->updateEValet($data);
