@@ -6788,7 +6788,7 @@ function showTraces(resvID) {
                 data: 'RSV_TRACE_RESOLVED_ON',
                 render: function(data, type, full, meta) {
                     if (full['RSV_TRACE_RESOLVED_ON'] != '1900-01-01')
-                        return full['RSV_TRACE_RESOLVED_ON'];
+                        return full['RSV_TRACE_RESOLVED_ON']+' '+full['RSV_TRACE_RESOLVED_TIME'];
                     else
                         return '';
                 }

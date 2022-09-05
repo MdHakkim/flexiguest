@@ -1070,10 +1070,10 @@ public function showPackages()
         $tableName = '( SELECT  RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_TIME,
                                 DEPT_CODE,DEPT_DESC,
                                 UE.USR_FIRST_NAME AS UE_FIRST_NAME,UE.USR_LAST_NAME AS UE_LAST_NAME, 
-                                UR.USR_FIRST_NAME AS UR_FIRST_NAME,UR.USR_LAST_NAME AS UR_LAST_NAME, RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_STATUS FROM
+                                UR.USR_FIRST_NAME AS UR_FIRST_NAME,UR.USR_LAST_NAME AS UR_LAST_NAME, RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_RESOLVED_TIME,RSV_TRACE_STATUS FROM
                         FLXY_RESERVATION_TRACES INNER JOIN FLXY_DEPARTMENT ON RSV_TRACE_DEPARTMENT = DEPT_ID INNER JOIN FLXY_USERS UE ON UE.USR_ID = RSV_TRACE_ENTERED_BY LEFT JOIN FLXY_USERS UR ON UR.USR_ID = RSV_TRACE_RESOLVED_BY) TRACE_LIST';
 
-        $columns = 'RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_TIME,UE_FIRST_NAME,UE_LAST_NAME,UR_FIRST_NAME,UR_LAST_NAME,DEPT_CODE,DEPT_DESC,RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_STATUS';
+        $columns = 'RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_TIME,UE_FIRST_NAME,UE_LAST_NAME,UR_FIRST_NAME,UR_LAST_NAME,DEPT_CODE,DEPT_DESC,RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_RESOLVED_TIME,RSV_TRACE_STATUS';
         
         $mine->generate_DatatTable($tableName, $columns, $init_cond);  
         
@@ -1179,9 +1179,9 @@ public function showPackages()
         $RESOLVE = $this->request->getPost('resolve');
         $user_id = session()->get('USR_ID');
         if($RESOLVE == 2)
-        $data = ['RSV_TRACE_RESOLVED_BY'=> '', 'RSV_TRACE_RESOLVED_ON' => '' ];
+        $data = ['RSV_TRACE_RESOLVED_BY'=> '', 'RSV_TRACE_RESOLVED_ON' => '' , 'RSV_TRACE_RESOLVED_TIME' => ''];
         else
-        $data = ['RSV_TRACE_RESOLVED_BY'=> $user_id, 'RSV_TRACE_RESOLVED_ON' => date('Y-m-d') ];
+        $data = ['RSV_TRACE_RESOLVED_BY'=> $user_id, 'RSV_TRACE_RESOLVED_ON' => date('Y-m-d'), 'RSV_TRACE_RESOLVED_TIME' => date('H:i:s A') ];
         try {
             $return = $this->DB->table('FLXY_RESERVATION_TRACES')->where('RSV_TRACE_ID', $RSV_TRACE_ID)->update($data);            
             echo json_encode($return);
@@ -1222,7 +1222,7 @@ public function showPackages()
         if($responseCount > 0)
         $response = $this->DB->query($sql)->getResultArray();
 
-      return $response;
+        return $response;
     }
 
 public function ItemCalendar(){
@@ -1311,6 +1311,28 @@ public function checkItemReserved($item_id, $sCurrentDate){
         if($responseCount > 0)
         $response = $this->DB->query($sql)->getResultArray();
         return $response;
+    }
+
+    public function roomplanResourceStatus($firstStatus, $secondStatus)
+    {
+        $data = $response = NULL;
+        $sql = "SELECT RM_ID, RM_NO, RM_TYPE, SM.RM_STATUS_CODE, RL.RM_STAT_UPDATED      
+        FROM FLXY_ROOM 
+        LEFT JOIN (SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID
+                      ,RM_STAT_ROOM_ID
+                  FROM FLXY_ROOM_STATUS_LOG WHERE (RM_STAT_ROOM_STATUS = '$firstStatus' OR RM_STAT_ROOM_STATUS = '$secondStatus')
+                  GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+        
+        INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
+        
+        INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
+
+        GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
+
+        ORDER BY RM_ID ASC";       
+        $responseCount = $this->DB->query($sql)->getNumRows();
+        
+        return $responseCount;
     }
 
 
@@ -1559,19 +1581,38 @@ public function dateExistsOverlap($RESV_ID,$START,$END,$NEW_ROOM_ID){
     }
 
     public function getTotalRoomsReserved($value, $sCurrentDate){
+        $responseCount = 0;
         if($value == 1){
-            $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE RESV_ARRIVAL_DT = '$sCurrentDate' AND RESV_STATUS != 'Checked-Out'";     
+            $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE ('$sCurrentDate' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE) AND (RESV_ROOM_ID !='' OR RESV_ROOM_ID != '0')";     
             $responseCount = $this->DB->query($sql)->getNumRows();
-            return $responseCount;
+            
         }
         else if($value == 2){
+            $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE ('$sCurrentDate' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE) AND (RESV_ROOM_ID !='' OR RESV_ROOM_ID != '0')";     
+            $reservedRoomsCount = $this->DB->query($sql)->getNumRows();
+
+            $sql = "SELECT count(RM_ID) as COUNT FROM FLXY_ROOM";     
+            $roomsCount = $this->DB->query($sql)->getRow()->COUNT;
+            $OOO_OOS = $this->roomplanResourceStatus(4,5);
+            $roomsCount = $roomsCount - $OOO_OOS;
+            $responseCount = number_format(($reservedRoomsCount/$roomsCount)*100,2);
         }
+
         else if($value == 3){
+            $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE RESV_ARRIVAL_DT = '$sCurrentDate' AND (RESV_ROOM_ID !='' OR RESV_ROOM_ID != '0')";     
+            $responseCount = $this->DB->query($sql)->getNumRows();
+
         }
         else if($value == 4){
+            $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE RESV_ARRIVAL_DT = '$sCurrentDate' AND RESV_DEPARTURE != '$sCurrentDate'  AND (RESV_ROOM_ID !='' OR RESV_ROOM_ID != '0') ";     
+            $responseCount = $this->DB->query($sql)->getNumRows();
         }
         else if($value == 5){
-        }       
+            $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE RESV_DEPARTURE = '$sCurrentDate' AND (RESV_ROOM_ID !='' OR RESV_ROOM_ID != 0)";     
+            $responseCount = $this->DB->query($sql)->getNumRows();
+        }   
+        
+        return $responseCount;
 
     }
 
