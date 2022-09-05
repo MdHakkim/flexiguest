@@ -24,7 +24,7 @@ class EValetController extends BaseController
     }
 
     public function submitForm()
-    {        
+    {
         $user_id = session('USR_ID') ?? $this->request->user['USR_ID'];
         $data = (array) $this->request->getVar();
         $data['EV_CAR_IMAGES'] = $this->request->getFileMultiple('EV_CAR_IMAGES') ?? [];
@@ -44,20 +44,35 @@ class EValetController extends BaseController
         return $this->respond($result);
     }
 
-    public function assignDriver()
+    public function assignParkingDriver()
     {
         $user_id = $this->request->user['USR_ID'];
 
         $data = (array) $this->request->getVar();
-        $data['EV_STATUS'] = 'Driver Assigned';
+        $data['EV_STATUS'] = 'Parking Driver Assigned';
         $data['EV_KEYS_COLLECTED'] = 1;
         $data['EV_UPDATE_BY'] = $user_id;
         $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
-        $data['EV_ASSIGNED_AT'] = date('Y-m-d H:i:s');
+        $data['EV_PARKING_ASSIGNED_AT'] = date('Y-m-d H:i:s');
 
         $this->EValetRepository->updateEValet($data);
 
-        return $this->respond(responseJson(200, false, ['msg' => 'Driver assigned successfully.']));
+        return $this->respond(responseJson(200, false, ['msg' => 'Parking Driver assigned successfully.']));
+    }
+
+    public function assignCollectingDriver()
+    {
+        $user_id = $this->request->user['USR_ID'];
+
+        $data = (array) $this->request->getVar();
+        $data['EV_STATUS'] = 'Collecting Driver Assigned';
+        $data['EV_UPDATE_BY'] = $user_id;
+        $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
+        $data['EV_COLLECTING_ASSIGNED_AT'] = date('Y-m-d H:i:s');
+
+        $this->EValetRepository->updateEValet($data);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Collecting Driver assigned successfully.']));
     }
 
     public function parked()
@@ -70,10 +85,10 @@ class EValetController extends BaseController
         $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
 
         $evalet = $this->EValetRepository->eValetById($data['EV_ID']);
-        if(Empty($evalet))
+        if (empty($evalet))
             return $this->respond(responseJson(202, true, ['msg' => 'Invalid Evalet.']));
 
-        if($evalet['EV_STATUS'] != 'Driver Assigned')
+        if ($evalet['EV_STATUS'] != 'Driver Assigned')
             return $this->respond(responseJson(202, true, ['msg' => 'Driver is not assigned yet.']));
 
         $this->EValetRepository->updateEValet($data);
@@ -91,15 +106,29 @@ class EValetController extends BaseController
         $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
 
         $evalet = $this->EValetRepository->eValetById($data['EV_ID']);
-        if(Empty($evalet))
+        if (empty($evalet))
             return $this->respond(responseJson(202, true, ['msg' => 'Invalid Evalet.']));
 
-        if($evalet['EV_STATUS'] != 'Parked')
+        if ($evalet['EV_STATUS'] != 'Parked')
             return $this->respond(responseJson(202, true, ['msg' => 'Car status is not parked yet.']));
 
         $this->EValetRepository->updateEValet($data);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Car Parked successfully.']));
+    }
+
+    public function carDeliveryRequest()
+    {
+        $user_id = $this->request->user['USR_ID'];
+
+        $data = (array) $this->request->getVar();
+        $data['EV_STATUS'] = 'Car Delivery Request';
+        $data['EV_UPDATE_BY'] = $user_id;
+        $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
+
+        $this->EValetRepository->updateEValet($data);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Car delivery request submitted successfully.']));
     }
 
     public function evalet()

@@ -96,6 +96,10 @@ class EValetRepository extends BaseController
         }
 
         $valet_list = $this->EValet
+            ->select("FLXY_EVALET.*, concat(fu.USR_FIRST_NAME, ' ', fu.USR_LAST_NAME) as EV_PARKING_DRIVER_NAME, 
+                concat(users.USR_FIRST_NAME, ' ', users.USR_LAST_NAME) as EV_COLLECTING_DRIVER_NAME")
+            ->join('FlXY_USERS as fu', 'EV_PARKING_DRIVER_ID = fu.USR_ID')
+            ->join('FlXY_USERS as users', 'EV_COLLECTING_DRIVER_ID = users.USR_ID')
             ->where($where_condtion)
             ->orderBy('EV_ID', 'desc')->findAll();
 
@@ -124,8 +128,8 @@ class EValetRepository extends BaseController
     public function allEValet()
     {
         $mine = new EValetDataTable();
-        $tableName = 'FLXY_EVALET left join FlXY_USERS on EV_DRIVER_ID = USR_ID';
-        $columns = 'EV_ID,EV_DRIVER_ID,EV_CUSTOMER_ID,EV_RESERVATION_ID,EV_ROOM_ID,EV_GUEST_TYPE,EV_GUEST_NAME,EV_CONTACT_NUMBER,EV_EMAIL,EV_CAR_PLATE_NUMBER,EV_CAR_MAKE,EV_CAR_MODEL,EV_KEYS_COLLECTED,EV_STATUS,EV_PARKING_DETAILS,EV_ASSIGNED_AT,EV_CREATED_AT,USR_FIRST_NAME,USR_LAST_NAME';
+        $tableName = 'FLXY_EVALET left join FlXY_USERS on EV_PARKING_DRIVER_ID = USR_ID';
+        $columns = 'EV_ID,EV_PARKING_DRIVER_ID,EV_CUSTOMER_ID,EV_RESERVATION_ID,EV_ROOM_ID,EV_GUEST_TYPE,EV_GUEST_NAME,EV_CONTACT_NUMBER,EV_EMAIL,EV_CAR_PLATE_NUMBER,EV_CAR_MAKE,EV_CAR_MODEL,EV_KEYS_COLLECTED,EV_STATUS,EV_PARKING_DETAILS,EV_ASSIGNED_AT,EV_CREATED_AT,USR_FIRST_NAME,USR_LAST_NAME';
 
         $mine->generate_DatatTable($tableName, $columns);
         exit;

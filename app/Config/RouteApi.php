@@ -62,6 +62,11 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
     $routes->get("profile", "APIController::profileAPI");
     $routes->post('checkin/verify-documents', 'APIController::verifyDocuments');
     $routes->post('checkin/guest-checked-in', 'APIController::guestCheckedIn');
+
+    $routes->group('evalet', function ($routes) {
+        $routes->post('assign-parking-driver', 'EValetController::assignParkingDriver');
+        $routes->post('assign-collecting-driver', 'EValetController::assignCollectingDriver');
+    });
 });
 
 /*****************************  ADMIN + GUEST *****************************/
@@ -102,13 +107,13 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
     $routes->group('evalet', function ($routes) {
         $routes->post('submit-form', 'EValetController::submitForm');
         $routes->get('valet-list', 'EValetController::valetList');
+        $routes->post('car-delivery-request', 'EValetController::carDeliveryRequest');
     });
 });
 
 /***************************** ADMIN + ATTENDEE *****************************/
 $routes->group("api", ["filter" => "authapi:admin,attendee", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('evalet', function ($routes) {
-        $routes->post('assign-driver', 'EValetController::assignDriver');
         $routes->post('parked', 'EValetController::parked');
         $routes->post('guest-collected', 'EValetController::guestCollected');
     });

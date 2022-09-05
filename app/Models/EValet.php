@@ -9,7 +9,8 @@ class EValet extends Model
     protected $table      = 'FLXY_EVALET';
     protected $primaryKey = 'EV_ID';
     protected $allowedFields = [
-        'EV_DRIVER_ID',
+        'EV_PARKING_DRIVER_ID',
+        'EV_COLLECTING_DRIVER_ID',
         'EV_CUSTOMER_ID',
         'EV_RESERVATION_ID',
         'EV_ROOM_ID',
@@ -23,7 +24,8 @@ class EValet extends Model
         'EV_KEYS_COLLECTED',
         'EV_STATUS', // New, Driver Assigned, Parked, Guest Collected
         'EV_PARKING_DETAILS',
-        'EV_ASSIGNED_AT',
+        'EV_PARKING_ASSIGNED_AT',
+        'EV_COLLECTING_ASSIGNED_AT',
         'EV_CREATED_BY',
         'EV_UPDATED_BY',
     ];
