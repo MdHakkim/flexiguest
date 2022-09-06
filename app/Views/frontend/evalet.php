@@ -58,7 +58,8 @@
                             <th></th>
                             <th>ID</th>
                             <th>Status</th>
-                            <th>Driver Name</th>
+                            <th>Parking Driver Name</th>
+                            <th>Delivery Driver Name</th>
                             <th>Guest Type</th>
                             <th>Guest Name</th>
                             <th>Contact Number</th>
@@ -159,21 +160,28 @@
                                 <label class="form-label"><b>Status *</b></label>
                                 <select class="select2" name="EV_STATUS">
                                     <option>New</option>
-                                    <option>Driver Assigned</option>
+                                    <option>Parking Assigned</option>
                                     <option>Parked</option>
+                                    <option>Delivery Requested</option>
+                                    <option>Delivery Assigned</option>
+                                    <option>Ready to Collect</option>
                                     <option>Guest Collected</option>
                                 </select>
                             </div>
 
                             <div class="col-md-12">
                                 <label class="form-label"><b>Image</b></label>
-                                <input type="file" name="EV_CAR_IMAGES[]" class="form-control" multiple/>
+                                <input type="file" name="EV_CAR_IMAGES[]" class="form-control" multiple />
+                            </div>
+
+                            <div class="col-md-12">
+                                <h5 class="mb-0">Parking Driver</h5>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Department</b></label>
 
-                                <select name="EV_DEPARTMENT_ID" class="select2 form-select">
+                                <select name="EV_PARKING_DEPARTMENT_ID" class="select2 form-select">
                                     <?php foreach ($departments as $department) { ?>
                                         <option value="<?= $department['DEPT_ID'] ?>"><?= $department['DEPT_DESC'] ?></option>
                                     <?php } ?>
@@ -182,7 +190,27 @@
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Driver</b></label>
-                                <select name="EV_DRIVER_ID" class="select2 form-select">
+                                <select name="EV_PARKING_DRIVER_ID" class="select2 form-select">
+                                </select>
+                            </div>
+
+                            <div class="col-md-12">
+                                <h5 class="mb-0">Delivery Driver</h5>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Department</b></label>
+
+                                <select name="EV_DELIVERY_DEPARTMENT_ID" class="select2 form-select">
+                                    <?php foreach ($departments as $department) { ?>
+                                        <option value="<?= $department['DEPT_ID'] ?>"><?= $department['DEPT_DESC'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Driver</b></label>
+                                <select name="EV_DELIVERY_DRIVER_ID" class="select2 form-select">
                                 </select>
                             </div>
 
@@ -235,8 +263,9 @@
         $(`${form_id} input[name="EV_CONTACT_NUMBER"]`).val(mobile);
     }
 
-    $(`${form_id} [name='EV_DEPARTMENT_ID']`).change(function() {
+    $(`${form_id} [name='EV_PARKING_DEPARTMENT_ID'], ${form_id} [name='EV_DELIVERY_DEPARTMENT_ID']`).change(function() {
         let department_id = $(this).val();
+        let name = $(this).attr('name');
 
         if (department_id) {
             $.ajax({
@@ -257,8 +286,13 @@
                         `;
                         }
 
-                        $(`${form_id} select[name='EV_DRIVER_ID']`).html(html);
-                        $(`${form_id} select[name='EV_DRIVER_ID']`).trigger('change');
+                        if (name == 'EV_PARKING_DEPARTMENT_ID') {
+                            $(`${form_id} select[name='EV_PARKING_DRIVER_ID']`).html(html);
+                            $(`${form_id} select[name='EV_PARKING_DRIVER_ID']`).trigger('change');
+                        } else {
+                            $(`${form_id} select[name='EV_DELIVERY_DRIVER_ID']`).html(html);
+                            $(`${form_id} select[name='EV_DELIVERY_DRIVER_ID']`).trigger('change');
+                        }
                     }
                 }
             });
@@ -309,10 +343,10 @@
                     data: 'EV_STATUS'
                 },
                 {
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return `${data['USR_FIRST_NAME'] || ''} ${data['USR_LAST_NAME'] || ''}`
-                    }
+                    data: 'EV_PARKING_DRIVER_NAME',
+                },
+                {
+                    data: 'EV_DELIVERY_DRIVER_NAME',
                 },
                 {
                     data: 'EV_GUEST_TYPE'
@@ -356,7 +390,11 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['EV_ID']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" 
+                                        data_id="${data['EV_ID']}" 
+                                        data-parking_department_id="${data['EV_PARKING_DEPARTMENT_ID']}" 
+                                        data-delivery_department_id="${data['EV_DELIVERY_DEPARTMENT_ID']}" 
+                                        class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -450,6 +488,7 @@
 
         $(`${form_id} select[name="EV_RESERVATION_ID"]`).val('0').trigger('change');
         $(`${form_id} select[name="EV_GUEST_TYPE"]`).val('InHouse Guest').trigger('change');
+        $(`${form_id} select[name="EV_STATUS"]`).val('New').trigger('change');
     }
 
     // Show Add Rate Class Form
@@ -471,7 +510,7 @@
 
         if ($(`${form_id} select[name="EV_RESERVATION_ID"]`).val() == '0')
             fd.delete('EV_RESERVATION_ID');
-        
+
         files = $(`${form_id} input[name='EV_CAR_IMAGES[]']`)[0].files;
         for (let i = 0; i < files.length; i++)
             fd.append('EV_CAR_IMAGES[]', files[i]);
@@ -508,34 +547,48 @@
     // Show Edit Rate Class Form
     $(document).on('click', '.editWindow', function() {
         resetForm();
-
+        
         $('.dtr-bs-modal').modal('hide');
-        var alert_id = $(this).attr('data_id');
+        var evalet_id = $(this).attr('data_id');
 
-        let id = "submit-form";
-        $(`#${id} input[name='id']`).val(alert_id);
+        $(`${form_id} input[name='id']`).val(evalet_id);
 
-        $('#popModalWindowlabel').html('Edit Alert');
+        $('#popModalWindowlabel').html('Edit E-Valet');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('/alert/edit') ?>';
+        
+        $(`${form_id} select[name='EV_PARKING_DEPARTMENT_ID']`).val($(this).data('parking_department_id'));
+        $(`${form_id} select[name='EV_PARKING_DEPARTMENT_ID']`).trigger('change');
+
+        $(`${form_id} select[name='EV_DELIVERY_DEPARTMENT_ID']`).val($(this).data('delivery_department_id'));
+        $(`${form_id} select[name='EV_DELIVERY_DEPARTMENT_ID']`).trigger('change');
+
+        var url = '<?php echo base_url('/evalet/edit') ?>';
         $.ajax({
             url: url,
             type: "post",
             data: {
-                id: alert_id
+                id: evalet_id
             },
             dataType: 'json',
             success: function(response) {
-                $(`#${id} textarea[name='AL_MESSAGE']`).val(response.AL_MESSAGE);
+                $(response).each(function(inx, data) {
+                    $.each(data, function(field, val) {
+                        // setTimeout(() => {
+                        //     $(`#${id} select[name='AL_USER_IDS[]']`).val(JSON.parse(response.AL_USER_IDS));
+                        //     $(`#${id} select[name='AL_USER_IDS[]']`).trigger('change');
+                        // }, 500);
 
-                $(`#${id} select[name='AL_DEPARTMENT_IDS[]']`).val(JSON.parse(response.AL_DEPARTMENT_IDS));
-                $(`#${id} select[name='AL_DEPARTMENT_IDS[]']`).trigger('change');
+                        if ($(`${form_id} input[name='${field}'][type!='file']`).length)
+                            $(`${form_id} input[name='${field}']`).val(val);
 
-                setTimeout(() => {
-                    $(`#${id} select[name='AL_USER_IDS[]']`).val(JSON.parse(response.AL_USER_IDS));
-                    $(`#${id} select[name='AL_USER_IDS[]']`).trigger('change');
-                }, 500);
+                        else if ($(`${form_id} textarea[name='${field}']`).length)
+                            $(`${form_id} textarea[name='${field}']`).val(val);
+
+                        else if ($(`${form_id} select[name='${field}']`).length)
+                            $(`${form_id} select[name='${field}']`).val(val).trigger('change');
+                    });
+                });
 
                 $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
             }
@@ -563,7 +616,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('/alert/delete') ?>',
+                        url: '<?php echo base_url('/evalet/delete') ?>',
                         type: "post",
                         data: {
                             id: id,

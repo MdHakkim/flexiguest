@@ -177,23 +177,23 @@ class EValetController extends BaseController
     {
         $id = $this->request->getPost('id');
 
-        $alert = $this->AlertRepository->alertById($id);
+        $evalet = $this->EValetRepository->eValetById($id);
 
-        if ($alert)
-            return $this->respond($alert);
+        if ($evalet)
+            return $this->respond($evalet);
 
-        return $this->respond(responseJson(404, true, ['msg' => "Alert not found"]));
+        return $this->respond(responseJson(404, true, ['msg' => "EValet not found"]));
     }
 
     public function delete()
     {
-        $alert_id = $this->request->getPost('id');
+        $valet_id = $this->request->getPost('id');
 
-        $result = $this->AlertRepository->deleteAlert($alert_id);
+        $result = $this->EValetRepository->deleteEValetById($valet_id);
 
         $result = $result
-            ? responseJson(200, false, ['msg' => "Alert deleted successfully."])
-            : responseJson(500, true, ['msg' => "Alert not deleted"]);
+            ? responseJson(200, false, ['msg' => "E-Valet deleted successfully."])
+            : responseJson(500, true, ['msg' => "E-Valet not deleted"]);
 
         return $this->respond($result);
     }

@@ -30,6 +30,12 @@ class EValetRepository extends BaseController
             'EV_CAR_MODEL' => ['label' => 'car model', 'rules' => 'required'],
         ];
 
+        if(isWeb()) {
+            $rules = array_merge($rules, [
+                'EV_STATUS' => ['label' => 'status', 'rules' => 'required']
+            ]);
+        }
+
         if (!empty($data['EV_CAR_IMAGES']))
             $rules['EV_CAR_IMAGES'] = [
                 'label' => 'car images',
@@ -59,7 +65,7 @@ class EValetRepository extends BaseController
             $evalet_id = $this->EValet->insert($data);
         } else {
             $data['AL_UPDATED_BY'] = $user_id;
-            $this->Alert->update($evalet_id, $data);
+            $this->EValet->update($evalet_id, $data);
         }
 
         if(!empty($images))
@@ -128,10 +134,10 @@ class EValetRepository extends BaseController
     public function allEValet()
     {
         $mine = new EValetDataTable();
-        $tableName = 'FLXY_EVALET left join FlXY_USERS on EV_PARKING_DRIVER_ID = USR_ID';
-        $columns = 'EV_ID,EV_PARKING_DRIVER_ID,EV_CUSTOMER_ID,EV_RESERVATION_ID,EV_ROOM_ID,EV_GUEST_TYPE,EV_GUEST_NAME,EV_CONTACT_NUMBER,EV_EMAIL,EV_CAR_PLATE_NUMBER,EV_CAR_MAKE,EV_CAR_MODEL,EV_KEYS_COLLECTED,EV_STATUS,EV_PARKING_DETAILS,EV_ASSIGNED_AT,EV_CREATED_AT,USR_FIRST_NAME,USR_LAST_NAME';
+        $tableName = 'FLXY_EVALET left join FlXY_USERS as pd on EV_PARKING_DRIVER_ID = pd.USR_ID left join FlXY_USERS as dd on EV_DELIVERY_DRIVER_ID = dd.USR_ID';
+        $columns = "EV_ID|EV_PARKING_DRIVER_ID|EV_DELIVERY_DRIVER_ID|EV_CUSTOMER_ID|EV_RESERVATION_ID|EV_ROOM_ID|EV_GUEST_TYPE|EV_GUEST_NAME|EV_CONTACT_NUMBER|EV_EMAIL|EV_CAR_PLATE_NUMBER|EV_CAR_MAKE|EV_CAR_MODEL|EV_KEYS_COLLECTED|EV_STATUS|EV_PARKING_DETAILS|EV_PARKING_ASSIGNED_AT|EV_DELIVERY_ASSIGNED_AT|EV_CREATED_AT|concat(pd.USR_FIRST_NAME,' ',pd.USR_LAST_NAME)EV_PARKING_DRIVER_NAME|concat(dd.USR_FIRST_NAME,' ',dd.USR_LAST_NAME)EV_DELIVERY_DRIVER_NAME|(pd.USR_DEPARTMENT)EV_PARKING_DEPARTMENT_ID|(dd.USR_DEPARTMENT)EV_DELIVERY_DEPARTMENT_ID";
 
-        $mine->generate_DatatTable($tableName, $columns);
+        $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }
 
@@ -140,32 +146,9 @@ class EValetRepository extends BaseController
         return $this->EValetImage->where($where_condtion)->delete();
     }
 
-    public function storeEValet($user_id, $data)
+    public function deleteEValetById($valet_id)
     {
-        $id = $data['id'] ?? null;
-        unset($data['id']);
-
-        if (empty($id)) {
-            $data['EV_CREATED_BY'] = $data['EV_UPDATED_BY'] = $user_id;
-            $response = $this->EValet->insert($data);
-        } else {
-            $data['AL_UPDATED_BY'] = $user_id;
-            $response = $this->Alert->update($id, $data);
-        }
-
-        if (!$response)
-            return responseJson(500, false, ['msg' => "db insert/update not successful"]);
-
-        if (empty($id))
-            $msg = 'Alert has been created successflly.';
-        else
-            $msg = 'Alert has been updated successflly.';
-
-        return responseJson(200, false, ['msg' => $msg]);
-    }
-
-    public function deleteAlert($alert_id)
-    {
-        return $this->Alert->delete($alert_id);
+        $this->deleteEValetImages("EVI_EVALET_ID = $valet_id");
+        return $this->EValet->delete($valet_id);
     }
 }
