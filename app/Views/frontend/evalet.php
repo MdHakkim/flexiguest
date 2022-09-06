@@ -131,7 +131,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Guest Email</b></label>
-                                <input type="email" name="EV_GUEST_EMAIL" class="form-control" placeholder="Guest email" />
+                                <input type="email" name="EV_EMAIL" class="form-control" placeholder="Guest email" />
                             </div>
 
                             <div class="col-md-6">
@@ -259,7 +259,7 @@
         $(`${form_id} input[name="EV_ROOM_ID"]`).val(room_id);
         $(`${form_id} input[name="EV_GUEST_NAME"]`).val(customer_name);
         $(`${form_id} input[name="EV_ROOM_NO"]`).val(room_no);
-        $(`${form_id} input[name="EV_GUEST_EMAIL"]`).val(email);
+        $(`${form_id} input[name="EV_EMAIL"]`).val(email);
         $(`${form_id} input[name="EV_CONTACT_NUMBER"]`).val(mobile);
     }
 
@@ -300,23 +300,12 @@
     });
 
     $(`${form_id} select[name='EV_GUEST_TYPE']`).change(function() {
-
-        if ($(this).val()) {
-            if ($(this).val() == 'InHouse Guest') {
-                $(`${form_id} select[name="EV_RESERVATION_ID"]`).parent().parent().removeClass('d-none');
-                $(`${form_id} input[name="EV_ROOM_NO"]`).parent().removeClass('d-none');
-                $(`${form_id} input[name="EV_GUEST_NAME"]`).parent().removeClass('d-none');
-                $(`${form_id} input[name="EV_GUEST_EMAIL"]`).parent().removeClass('d-none');
-                $(`${form_id} input[name="EV_CONTACT_NUMBER"]`).parent().removeClass('d-none');
-                $(`${form_id} .extra-space`).removeClass('d-none');
-            } else {
-                $(`${form_id} select[name="EV_RESERVATION_ID"]`).parent().parent().addClass('d-none');
-                $(`${form_id} input[name="EV_ROOM_NO"]`).parent().addClass('d-none');
-                $(`${form_id} input[name="EV_GUEST_NAME"]`).parent().addClass('d-none');
-                $(`${form_id} input[name="EV_GUEST_EMAIL"]`).parent().addClass('d-none');
-                $(`${form_id} input[name="EV_CONTACT_NUMBER"]`).parent().addClass('d-none');
-                $(`${form_id} .extra-space`).addClass('d-none');
-            }
+        if ($(this).val() == 'InHouse Guest') {
+            $(`${form_id} select[name="EV_RESERVATION_ID"]`).parent().parent().removeClass('d-none');
+            $(`${form_id} input[name="EV_ROOM_NO"]`).parent().removeClass('d-none');
+        } else {
+            $(`${form_id} select[name="EV_RESERVATION_ID"]`).parent().parent().addClass('d-none');
+            $(`${form_id} input[name="EV_ROOM_NO"]`).parent().addClass('d-none');
         }
     });
 
@@ -394,6 +383,7 @@
                                         data_id="${data['EV_ID']}" 
                                         data-parking_department_id="${data['EV_PARKING_DEPARTMENT_ID']}" 
                                         data-delivery_department_id="${data['EV_DELIVERY_DEPARTMENT_ID']}" 
+                                        data-reservation_id="${data['EV_RESERVATION_ID']}" 
                                         class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
@@ -547,7 +537,7 @@
     // Show Edit Rate Class Form
     $(document).on('click', '.editWindow', function() {
         resetForm();
-        
+
         $('.dtr-bs-modal').modal('hide');
         var evalet_id = $(this).attr('data_id');
 
@@ -556,12 +546,15 @@
         $('#popModalWindowlabel').html('Edit E-Valet');
         $('#popModalWindow').modal('show');
 
-        
+
         $(`${form_id} select[name='EV_PARKING_DEPARTMENT_ID']`).val($(this).data('parking_department_id'));
         $(`${form_id} select[name='EV_PARKING_DEPARTMENT_ID']`).trigger('change');
 
         $(`${form_id} select[name='EV_DELIVERY_DEPARTMENT_ID']`).val($(this).data('delivery_department_id'));
         $(`${form_id} select[name='EV_DELIVERY_DEPARTMENT_ID']`).trigger('change');
+
+        $(`${form_id} select[name='EV_RESERVATION_ID']`).val($(this).data('reservation_id'));
+        $(`${form_id} select[name='EV_RESERVATION_ID']`).trigger('change');
 
         var url = '<?php echo base_url('/evalet/edit') ?>';
         $.ajax({
@@ -585,7 +578,7 @@
                         else if ($(`${form_id} textarea[name='${field}']`).length)
                             $(`${form_id} textarea[name='${field}']`).val(val);
 
-                        else if ($(`${form_id} select[name='${field}']`).length)
+                        else if (field != 'EV_RESERVATION_ID' && $(`${form_id} select[name='${field}']`).length)
                             $(`${form_id} select[name='${field}']`).val(val).trigger('change');
                     });
                 });
