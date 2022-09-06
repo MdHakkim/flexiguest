@@ -94,6 +94,27 @@ class EValetController extends BaseController
         return $this->respond(responseJson(200, false, ['msg' => 'Car Parked successfully.']));
     }
 
+    public function readyToCollect()
+    {
+        $user_id = $this->request->user['USR_ID'];
+
+        $data = (array) $this->request->getVar();
+        $data['EV_STATUS'] = 'Ready to Collect';
+        $data['EV_UPDATE_BY'] = $user_id;
+        $data['EV_UPDATE_AT'] = date('Y-m-d H:i:s');
+
+        $evalet = $this->EValetRepository->eValetById($data['EV_ID']);
+        if (empty($evalet))
+            return $this->respond(responseJson(202, true, ['msg' => 'Invalid Evalet.']));
+
+        if ($evalet['EV_STATUS'] != 'Delivery Assigned')
+            return $this->respond(responseJson(202, true, ['msg' => 'Delivery Driver is not assigned yet.']));
+
+        $this->EValetRepository->updateEValet($data);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Car is ready to collect.']));
+    }
+
     public function guestCollected()
     {
         $user_id = $this->request->user['USR_ID'];
@@ -107,8 +128,8 @@ class EValetController extends BaseController
         if (empty($evalet))
             return $this->respond(responseJson(202, true, ['msg' => 'Invalid Evalet.']));
 
-        if ($evalet['EV_STATUS'] != 'Parked')
-            return $this->respond(responseJson(202, true, ['msg' => 'Car status is not parked yet.']));
+        if ($evalet['EV_STATUS'] != 'Delivery Assigned' || $evalet['EV_STATUS'] != 'Ready to Collect')
+            return $this->respond(responseJson(202, true, ['msg' => 'Delivery Driver is not assigned yet.']));
 
         $this->EValetRepository->updateEValet($data);
 

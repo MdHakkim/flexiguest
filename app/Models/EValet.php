@@ -22,7 +22,7 @@ class EValet extends Model
         'EV_CAR_MAKE',
         'EV_CAR_MODEL',
         'EV_KEYS_COLLECTED',
-        'EV_STATUS', // New, Parking Assigned, Delivery Assigned, Parked, Delivery Requested, Guest Collected
+        'EV_STATUS', // New, Parking Assigned, Delivery Assigned, Parked, Delivery Requested, Guest Collected, Ready to Collect
         'EV_PARKING_DETAILS',
         'EV_PARKING_ASSIGNED_AT',
         'EV_DELIVERY_ASSIGNED_AT',
