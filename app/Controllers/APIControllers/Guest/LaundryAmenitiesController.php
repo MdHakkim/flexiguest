@@ -244,7 +244,7 @@ class LaundryAmenitiesController extends BaseController
         $data = $this->request->getVar();
 
         $this->PaymentRepository->createUpdateTransaction([
-            'PT_RESERVATION_ID' => $data['reservaation_id'],
+            'PT_RESERVATION_ID' => $data['reservation_id'],
             'PT_CUSTOMER_ID' => $customer_id,
             'PT_TRANSACTION_NO' => $data['transaction_no'],
             'PT_AMOUNT' => $data['amount'],
