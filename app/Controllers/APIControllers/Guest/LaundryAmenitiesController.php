@@ -3,6 +3,8 @@
 namespace App\Controllers\APIControllers\Guest;
 
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\LaundryAmenitiesRepository;
+use App\Controllers\Repositories\PaymentRepository;
 use App\Models\LaundryAmenitiesOrder;
 use App\Models\LaundryAmenitiesOrderDetail;
 use App\Models\Product;
@@ -12,12 +14,16 @@ class LaundryAmenitiesController extends BaseController
 {
     use ResponseTrait;
 
+    private $LaundryAmenitiesRepository;
+    private $PaymentRepository;
     private $Product;
     private $LaundryAmenitiesOrder;
     private $LaundryAmenitiesOrderDetail;
 
     public function __construct()
     {
+        $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
+        $this->PaymentRepository = new PaymentRepository();
         $this->Product = new Product();
         $this->LaundryAmenitiesOrder = new LaundryAmenitiesOrder();
         $this->LaundryAmenitiesOrderDetail = new LaundryAmenitiesOrderDetail();
@@ -227,5 +233,34 @@ class LaundryAmenitiesController extends BaseController
         }
 
         return $this->respond(responseJson(200, false, ['msg' => 'Order is cancelled.']));
+    }
+
+    public function paymentSuccessful()
+    {
+        $user = $this->request->user;
+        $user_id = $user['USR_ID'];
+        $customer_id = $user['USR_CUST_ID'];
+
+        $data = $this->request->getVar();
+
+        $this->PaymentRepository->createUpdateTransaction([
+            'PT_RESERVATION_ID' => $data['reservaation_id'],
+            'PT_CUSTOMER_ID' => $customer_id,
+            'PT_TRANSACTION_NO' => $data['transaction_no'],
+            'PT_AMOUNT' => $data['amount'],
+            'PT_MODEL' => 'FLXY_LAUNDRY_AMENITIES_ORDERS',
+            'PT_MODEL_ID' => $data['order_id'],
+            'PT_CREATED_BY' => $user_id,
+            'PT_UPDATED_BY' => $user_id
+        ]);
+
+        $this->LaundryAmenitiesRepository->createUpdateOrder([
+            'LAO_ID' => $data['order_id'],
+            'LAO_PAYMENT_STATUS' => 'Paid',
+            'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
+            'LAO_UPDATED_BY' => $user_id,
+        ]);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Transaction recorded successfully.']));
     }
 }

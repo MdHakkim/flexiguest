@@ -198,6 +198,7 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
         $routes->get("download-invoice", "LaundryAmenitiesController::downloadInvoice");
         $routes->post("acknowledged-delivery", "LaundryAmenitiesController::acknowledgedDelivery");
         $routes->post("cancel-order", "LaundryAmenitiesController::cancelOrder");
+        $routes->post("payment-successful", "LaundryAmenitiesController::paymentSuccessful");
     });
 
     $routes->group('profile', function ($routes) {
