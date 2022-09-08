@@ -57,8 +57,13 @@ class EValetRepository extends BaseController
 
         foreach ($data as $index => $row) {
             if (empty($row))
-                unset($data[$index]);
+                $data[$index] = null;
         }
+        
+        $data['EV_RESERVATION_ID'] = $data['EV_RESERVATION_ID'] ?? null;
+        $data['EV_ROOM_ID'] = $data['EV_ROOM_ID'] ?? null;
+        $data['EV_PARKING_DRIVER_ID'] = $data['EV_PARKING_DRIVER_ID'] ?? null;
+        $data['EV_DELIVERY_DRIVER_ID'] = $data['EV_DELIVERY_DRIVER_ID'] ?? null;
         
         if (empty($evalet_id)) {
             $data['EV_CREATED_BY'] = $data['EV_UPDATED_BY'] = $user_id;

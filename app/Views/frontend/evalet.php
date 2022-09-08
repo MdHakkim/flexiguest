@@ -257,10 +257,14 @@
 
         $(`${form_id} input[name="EV_CUSTOMER_ID"]`).val(customer_id);
         $(`${form_id} input[name="EV_ROOM_ID"]`).val(room_id);
-        $(`${form_id} input[name="EV_GUEST_NAME"]`).val(customer_name);
         $(`${form_id} input[name="EV_ROOM_NO"]`).val(room_no);
-        $(`${form_id} input[name="EV_EMAIL"]`).val(email);
-        $(`${form_id} input[name="EV_CONTACT_NUMBER"]`).val(mobile);
+        
+        if(customer_name)
+            $(`${form_id} input[name="EV_GUEST_NAME"]`).val(customer_name);
+        if(email)
+            $(`${form_id} input[name="EV_EMAIL"]`).val(email);
+        if(mobile)
+            $(`${form_id} input[name="EV_CONTACT_NUMBER"]`).val(mobile);
     }
 
     $(`${form_id} [name='EV_PARKING_DEPARTMENT_ID'], ${form_id} [name='EV_DELIVERY_DEPARTMENT_ID']`).change(function() {
@@ -306,6 +310,9 @@
         } else {
             $(`${form_id} select[name="EV_RESERVATION_ID"]`).parent().parent().addClass('d-none');
             $(`${form_id} input[name="EV_ROOM_NO"]`).parent().addClass('d-none');
+
+            $(`${form_id} select[name="EV_RESERVATION_ID"]`).val('').trigger('change');
+            $(`${form_id} input[name="EV_ROOM_NO"]`).val('');
         }
     });
 
@@ -486,7 +493,7 @@
         resetForm();
 
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add Alert');
+        $('#popModalWindowlabel').html('Add E-Valet');
 
         $('#popModalWindow').modal('show');
     }
@@ -547,14 +554,10 @@
         $('#popModalWindow').modal('show');
 
 
-        $(`${form_id} select[name='EV_PARKING_DEPARTMENT_ID']`).val($(this).data('parking_department_id'));
-        $(`${form_id} select[name='EV_PARKING_DEPARTMENT_ID']`).trigger('change');
-
-        $(`${form_id} select[name='EV_DELIVERY_DEPARTMENT_ID']`).val($(this).data('delivery_department_id'));
-        $(`${form_id} select[name='EV_DELIVERY_DEPARTMENT_ID']`).trigger('change');
-
-        $(`${form_id} select[name='EV_RESERVATION_ID']`).val($(this).data('reservation_id'));
-        $(`${form_id} select[name='EV_RESERVATION_ID']`).trigger('change');
+        $(`${form_id} select[name='EV_PARKING_DEPARTMENT_ID']`).val($(this).data('parking_department_id')).trigger('change');
+        $(`${form_id} select[name='EV_DELIVERY_DEPARTMENT_ID']`).val($(this).data('delivery_department_id')).trigger('change');
+        
+        $(`${form_id} select[name='EV_RESERVATION_ID']`).val($(this).data('reservation_id')).trigger('change');
 
         var url = '<?php echo base_url('/evalet/edit') ?>';
         $.ajax({
@@ -567,16 +570,17 @@
             success: function(response) {
                 $(response).each(function(inx, data) {
                     $.each(data, function(field, val) {
-                        // setTimeout(() => {
-                        //     $(`#${id} select[name='AL_USER_IDS[]']`).val(JSON.parse(response.AL_USER_IDS));
-                        //     $(`#${id} select[name='AL_USER_IDS[]']`).trigger('change');
-                        // }, 500);
 
                         if ($(`${form_id} input[name='${field}'][type!='file']`).length)
                             $(`${form_id} input[name='${field}']`).val(val);
 
                         else if ($(`${form_id} textarea[name='${field}']`).length)
                             $(`${form_id} textarea[name='${field}']`).val(val);
+
+                        else if (field == 'EV_PARKING_DRIVER_ID' || field == 'EV_DELIVERY_DRIVER_ID')
+                            setTimeout(() => {
+                                $(`${form_id} select[name='${field}']`).val(val).trigger('change');
+                            }, 500);
 
                         else if (field != 'EV_RESERVATION_ID' && $(`${form_id} select[name='${field}']`).length)
                             $(`${form_id} select[name='${field}']`).val(val).trigger('change');
