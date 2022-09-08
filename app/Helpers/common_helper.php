@@ -417,8 +417,3 @@ function isWeb()
 {
     return !str_contains(current_url(), "/api/");
 }
-
-function isApi()
-{
-    return str_contains(current_url(), "/api/");
-}
