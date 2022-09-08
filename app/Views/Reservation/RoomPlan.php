@@ -79,66 +79,13 @@
     <div class="card app-calendar-wrapper">
    
       <div class="row g-0">
-      <div class="row">
-
-      <div class="col-md-3 mt-3 mb-3">
-        <button type="button" class="btn btn-primary"  id="showRoomStatisticsModal" 
-        > Statistics</button>
-        <!-- <button type="button" class="btn btn-primary" id="showRoomOS"  > OOO / OOS</button>        --></div> 
-    </div>
-        <!-- Calendar Sidebar -->
-        <div class="app-calendar-sidebar col" id="app-calendar-sidebar" style="display: none">
-          <div class="border-bottom p-4 my-sm-0 mb-3">
-            <div class="d-grid">
-              <button class="btn btn-primary btn-toggle-sidebar" data-bs-toggle="offcanvas" data-bs-target="#addEventSidebar" aria-controls="addEventSidebar">
-                <i class="bx bx-plus"></i>
-                <span class="align-middle">Add Event</span>
-              </button>
-            </div>
-          </div>
-          <div class="p-4">
-            <!-- inline calendar (flatpicker) -->
-            <div class="ms-n2">
-              <div class="inline-calendar"></div>
-            </div>
-
-            <hr class="container-m-nx my-4" />
-
-            <!-- Filter -->
-            <div class="mb-4">
-              <small class="text-small text-muted text-uppercase align-middle">Filter</small>
-            </div>
-
-            <div class="form-check mb-2">
-              <input class="form-check-input select-all" type="checkbox" id="selectAll" data-value="all" checked />
-              <label class="form-check-label" for="selectAll">View All</label>
-            </div>
-
-            <div class="app-calendar-events-filter">
-              <div class="form-check form-check-danger mb-2">
-                <input class="form-check-input input-filter" type="checkbox" id="select-personal" data-value="personal" checked />
-                <label class="form-check-label" for="select-personal">Personal</label>
-              </div>
-              <div class="form-check mb-2">
-                <input class="form-check-input input-filter" type="checkbox" id="select-business" data-value="business" checked />
-                <label class="form-check-label" for="select-business">Business</label>
-              </div>
-              <div class="form-check form-check-warning mb-2">
-                <input class="form-check-input input-filter" type="checkbox" id="select-family" data-value="family" checked />
-                <label class="form-check-label" for="select-family">Family</label>
-              </div>
-              <div class="form-check form-check-success mb-2">
-                <input class="form-check-input input-filter" type="checkbox" id="select-holiday" data-value="holiday" checked />
-                <label class="form-check-label" for="select-holiday">Holiday</label>
-              </div>
-              <div class="form-check form-check-info">
-                <input class="form-check-input input-filter" type="checkbox" id="select-etc" data-value="etc" checked />
-                <label class="form-check-label" for="select-etc">ETC</label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- /Calendar Sidebar -->
+        <div class="row">
+          <div class="col-md-3 mt-3 mb-3">
+            <button type="button" class="btn btn-primary"  id="showRoomStatisticsModal" 
+            > Statistics</button>
+            <button type="button" class="btn btn-primary" id="showRoomOSModal"  > OOO / OOS</button>
+          </div> 
+        </div>       
 
         <!-- Calendar & Modal -->
         <div class="app-calendar-content col">
@@ -150,83 +97,7 @@
           </div>
           <div class="app-overlay"></div>
           <!-- FullCalendar Offcanvas -->
-          <div class="offcanvas offcanvas-end event-sidebar" tabindex="-1" id="addEventSidebar" aria-labelledby="addEventSidebarLabel">
-            <div class="offcanvas-header border-bottom">
-              <h6 class="offcanvas-title" id="addEventSidebarLabel">Add Event</h6>
-              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-              <form class="event-form pt-0" id="eventForm" onsubmit="return false">
-                <div class="mb-3">
-                  <label class="form-label" for="eventTitle">Title</label>
-                  <input type="text" class="form-control" id="eventTitle" name="eventTitle" placeholder="Event Title" />
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="eventLabel">Label</label>
-                  <select class="select2 select-event-label form-select" id="eventLabel" name="eventLabel">
-                    <option data-label="primary" value="Business" selected>Business</option>
-                    <option data-label="danger" value="Personal">Personal</option>
-                    <option data-label="warning" value="Family">Family</option>
-                    <option data-label="success" value="Holiday">Holiday</option>
-                    <option data-label="info" value="ETC">ETC</option>
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="eventStartDate">Start Date</label>
-                  <input type="text" class="form-control" id="eventStartDate" name="eventStartDate" placeholder="Start Date" />
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="eventEndDate">End Date</label>
-                  <input type="text" class="form-control" id="eventEndDate" name="eventEndDate" placeholder="End Date" />
-                </div>
-                <div class="mb-3">
-                  <label class="switch">
-                    <input type="checkbox" class="switch-input allDay-switch" />
-                    <span class="switch-toggle-slider">
-                      <span class="switch-on"></span>
-                      <span class="switch-off"></span>
-                    </span>
-                    <span class="switch-label">All Day</span>
-                  </label>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="eventURL">Event URL</label>
-                  <input type="url" class="form-control" id="eventURL" name="eventURL" placeholder="https://www.google.com" />
-                </div>
-                <div class="select2-primary mb-3">
-                  <label class="form-label" for="eventGuests">Add Guests</label>
-                  <select class="select2 select-event-guests form-select" id="eventGuests" name="eventGuests" multiple>
-                    <option data-avatar="1.png" value="Jane Foster">Jane Foster</option>
-                    <option data-avatar="3.png" value="Donna Frank">Donna Frank</option>
-                    <option data-avatar="5.png" value="Gabrielle Robertson">Gabrielle Robertson</option>
-                    <option data-avatar="7.png" value="Lori Spears">Lori Spears</option>
-                    <option data-avatar="9.png" value="Sandy Vega">Sandy Vega</option>
-                    <option data-avatar="11.png" value="Cheryl May">Cheryl May</option>
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="eventLocation">Location</label>
-                  <input type="text" class="form-control" id="eventLocation" name="eventLocation" placeholder="Enter Location" />
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="eventDescription">Description</label>
-                  <textarea class="form-control" name="eventDescription" id="eventDescription"></textarea>
-                </div>
-                <div class="d-flex justify-content-start justify-content-sm-between my-4 mb-3">
-                  <div>
-                    <button type="submit" class="btn btn-primary btn-add-event me-1 me-sm-3">Add</button>
-                    <button type="submit" class="btn btn-primary btn-update-event d-none me-1 me-sm-3">
-                      Update
-                    </button>
-                    <button type="reset" class="btn btn-label-secondary btn-cancel me-1 me-sm-0" data-bs-dismiss="offcanvas">
-                      Cancel
-                    </button>
-                  </div>
-                  <div><button class="btn btn-label-danger btn-delete-event d-none">Delete</button></div>
-                </div>
-              </form>
-            </div>
-          </div>
+          
         </div>
         <!-- /Calendar & Modal -->
       </div>
@@ -393,194 +264,102 @@
         </div>
     </div>
 
-
-
-
         <!-- OOO/OOS Modal window -->
         <div class="modal fade" id="OOOSCharges" data-backdrop="static" data-keyboard="false"
         aria-labelledby="popModalWindowlabel">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="popModalWindowlabel">Fixed Charges</h4>
+                    <h4 class="modal-title" id="popModalWindowlabel">OOO / OOS </h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
                     <form id="ooos-submit-form" onSubmit="return false">
                         <div id="OOOS_DIV" class="content">
                             <input type="hidden" name="OOOS_ID" id="OOOS_ID" class="form-control" />
                             <div class="row g-3">
                                 <div class="border rounded p-4 mb-3">
                                     <div class="row">
-                                        <div class="col-md-3 mb-3">
-                                        
-                                            <label for="ROOM_CODE"
+                                        <div class="col-md-4 mb-3">                                        
+                                            <label for="ROOMS"
                                                 class="col-form-label col-md-5"><b>Room *</b></label>
-                                            <select id="ROOM_CODE" name="ROOM_CODE"
-                                                class="select2 form-select form-select-lg"></select>
-                                       
+                                            <select id="ROOMS" name="ROOMS"
+                                                class="select2 form-select form-select-lg"></select>                                       
                                         </div>
-                                        <div class="col-md-3 mb-3">
-                                            <label for="FIXD_ARRIVAL" class="col-form-label col-md-4"><b>
-                                                    Arrival</b></label>
-                                            <input type="text" name="FIXD_ARRIVAL" id="FIXD_ARRIVAL" disabled
-                                                class="form-control" />
-
-                                        </div>
-                                        <div class="col-md-3 mb-3">
-                                            <label for="FIXD_NIGHTS" class="col-form-label col-md-4"><b>
-                                                    Nights</b></label>
-                                            <input type="text" name="FIXD_NIGHTS" id="FIXD_NIGHTS" class="form-control"
-                                                disabled />
-
-                                        </div>
-                                        <div class="col-md-3 mb-3">
-                                            <label for="FIXD_DEPARTURE" class="col-form-label col-md-4"><b>
-                                                    Departure</b></label>
-                                            <input type="text" name="FIXD_DEPARTURE" id="FIXD_DEPARTURE" disabled
-                                                class="form-control" />
-                                            <input type="hidden" name="FIXD_DEPARTURE_UP" id="FIXD_DEPARTURE_UP"
-                                                class="form-control" />
-
-                                        </div>
-                                    </div>
-                                    <div class="row g-3">
-                                        <div class="col-md-2 mb-3">
-                                            <label for="FIXD_CHRG_FREQUENCY" class="col-form-label col-md-4"><b>
-                                                    FREQUENCY</b></label>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="row g-3 mb-3">
-                                        <?php if (!empty($FrequencyList)) {
-                                            foreach ($FrequencyList as $Freequency) {
-                                        ?>
-                                        <div class="col-md-2">
-                                            <div class="form-check">
-                                                <input id="FIXD_CHRG_FREQUENCY<?php echo $Freequency['ID']; ?>"
-                                                    value="<?php echo $Freequency['ID']; ?>" name="FIXD_CHRG_FREQUENCY"
-                                                    class="form-check-input" type="radio"
-                                                    <?php if ($Freequency['ID'] == 2) { ?> checked="checked" <?php } ?>
-                                                    onclick=frequency(<?php echo $Freequency['ID']; ?>)>
-                                                <label class="form-check-label" for="FIXD_CHRG_FREQUENCY">
-                                                    <?php echo $Freequency['FREQ_NAME']; ?> </label>
-                                            </div>
-                                        </div>
-                                        <?php
-                                            }
-                                        } ?>
-                                    </div>
-                                    <div class="row g-3 ">
                                         <div class="col-md-4 mb-3">
-                                            <label for="FIXD_CHRG_BEGIN_DATE" class="col-form-label col-md-4"><b>Start
-                                                    Date *</b></label>
-                                            <input class="form-control" type="text" placeholder="d-Mon-yyyy"
-                                                id="FIXD_CHRG_BEGIN_DATE" name="FIXD_CHRG_BEGIN_DATE" />
+                                            <label for="STATUS_FROM_DATE" class="col-form-label col-md-4"><b>
+                                                    From Date</b></label>
+                                            <input type="text" name="STATUS_FROM_DATE" id="STATUS_FROM_DATE"
+                                                class="form-control" />
                                         </div>
-                                        <div class="col-md-4 END_DATE">
-                                            <label for="FIXD_CHRG_END_DATE" class="col-form-label col-md-4"><b>End
-                                                    Date *</b></label>
-                                            <input class="form-control" type="text" placeholder="d-Mon-yyyy"
-                                                id="FIXD_CHRG_END_DATE" name="FIXD_CHRG_END_DATE" />
+                                        <div class="col-md-4 mb-3">
+                                            <label for="STATUS_TO_DATE" class="col-form-label col-md-4"><b>
+                                                    Through Date</b></label>
+                                            <input type="text" name="STATUS_TO_DATE" id="STATUS_TO_DATE" class="form-control"
+                                                 />
+                                        </div>
+                                        <div class="col-md-4 mb-3">                                        
+                                        <label for="ROOM_STATUS"
+                                            class="col-form-label col-md-5"><b>Status </b></label>
+                                        <select id="ROOM_STATUS" name="ROOM_STATUS"
+                                            class="select2 form-select form-select-lg"></select>                                   
+                                       </div>
 
-                                        </div>
-                                        <div class="col-md-4 WEEKLY_EXCECUTE" style="display: none">
-                                            <label for="FIXD_CHRG_WEEKLY" class="col-form-label col-md-4"><b>Day to
-                                                    Execute</b></label>
-                                            <select name="FIXD_CHRG_WEEKLY" id="FIXD_CHRG_WEEKLY"
-                                                class="select2 form-select form-select-lg">
-                                                <option value="0" selected>Sunday</option>
-                                                <option value="1">Monday</option>
-                                                <option value="2">Tuesday</option>
-                                                <option value="3">Wednesday</option>
-                                                <option value="4">Thursday</option>
-                                                <option value="5">Friday</option>
-                                                <option value="6">Saturday</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4 MONTHLY_EXCECUTE" style="display: none">
-                                            <label for="FIXD_CHRG_MONTHLY" class="col-form-label col-md-5"><b>Day to
-                                                    Execute ( 1-31 )</b></label>
-                                            <input type="text" name="FIXD_CHRG_MONTHLY" id="FIXD_CHRG_MONTHLY"
-                                                class="form-control" placeholder="eg: 1" value='1' />
-                                        </div>
-
-                                        <div class="col-md-4 QUARTERLY_EXCECUTE" style="display: none">
-                                            <label for="FIXD_CHRG_QUARTERLY" class="col-form-label col-md-5"><b>Day to
-                                                    Execute ( 1-31 )</b></label>
-                                            <input type="text" name="FIXD_CHRG_QUARTERLY" id="FIXD_CHRG_QUARTERLY"
-                                                class="form-control" placeholder="eg: 1" value='1' />
-                                        </div>
-
-                                        <div class="col-md-4 YEARLY_EXCECUTE" style="display: none">
-                                            <label for="FIXD_CHRG_YEARLY" class="col-form-label col-md-5"><b>Day to
-                                                    Execute</b></label>
-                                            <input class="form-control dateFIXD_CHRG" type="text"
-                                                placeholder="yyyy-mm-dd" id="FIXD_CHRG_YEARLY"
-                                                name="FIXD_CHRG_YEARLY" />
-                                        </div>
-                                    </div>
-                                    <div class="row g-3 mb-3">
-                                        <div class="col-md-4">
-                                            <label for="FIXD_CHRG_TRNCODE"
-                                                class="col-form-label col-md-5"><b>TRANSACTION CODE *</b></label>
-                                            <select id="FIXD_CHRG_TRNCODE" name="FIXD_CHRG_TRNCODE"
-                                                class="select2 form-select form-select-lg"></select>
-
-                                        </div>
-                                        <div class="col-md-4 ">
-                                            <label for="FIXD_CHRG_AMT" class="col-form-label col-md-4"><b>AMOUNT
-                                                    *</b></label>
-                                            <input type="number" name="FIXD_CHRG_AMT" id="FIXD_CHRG_AMT"
-                                                class="form-control" min="1" step="1" placeholder="eg: 12" />
-
-                                        </div>
-
-                                        <div class="col-md-4">
-                                            <label for="FIXD_CHRG_QTY" class="col-form-label col-md-4"><b>QUANTITY
-                                                    *</b></label>
-                                            <input type="number" name="FIXD_CHRG_QTY" id="FIXD_CHRG_QTY"
-                                                class="form-control" min="1" step="1" placeholder="eg: 12" />
-
-                                        </div>
+                                       <div class="col-md-4 mb-3">                                        
+                                        <label for="ROOM_RETURN_STATUS"
+                                            class="col-form-label col-md-5"><b>Return Status </b></label>
+                                        <select id="ROOM_RETURN_STATUS" name="ROOM_RETURN_STATUS"
+                                            class="select2 form-select form-select-lg">
+                                          </select>                                   
+                                       </div>
+                                       <div class="col-md-4 mb-3">                                        
+                                        <label for="ROOM_CHANGE_REASON"
+                                            class="col-form-label col-md-5"><b>Change Reason *</b></label>
+                                        <select id="ROOM_CHANGE_REASON" name="ROOM_CHANGE_REASON"
+                                            class="select2 form-select form-select-lg">
+                                          </select>                                   
+                                       </div>
+                                       <div class="col-md-8 mb-3">                                        
+                                        <label for="ROOM_REMARKS"
+                                            class="col-form-label col-md-5"><b>Remarks</b></label>
+                                               <textarea name="ROOM_REMARKS" id="ROOM_REMARKS" class="form-control" rows="4"></textarea>                                               
+                                       </div>
                                     </div>
 
                                     <div class="row g-3 ">
                                         <div class="col-md-3 mb-3">
                                             <div class="col-md-8 float-right">
-                                                <button type="button" class="btn btn-success save-fixedcharge-detail">
+                                                <button type="button" class="btn btn-success save-roomstatus-details">
                                                     <i class="fa-solid fa-floppy-disk"></i>&nbsp; Save
                                                 </button>&nbsp;
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="border rounded p-4 mb-3">
                                         <div class="col-md-6 mb-3">
-                                            <button type="button" class="btn btn-primary add-fixedcharge-detail">
+                                            <button type="button" class="btn btn-primary add-room-status">
                                                 <i class="fa-solid fa-circle-plus"></i>&nbsp; Add New
                                             </button>&nbsp;
 
-                                            <button type="button" class="btn btn-danger delete-fixedcharge-detail">
+                                            <button type="button" class="btn btn-danger delete-room-status">
                                                 <i class="fa-solid fa-ban"></i>&nbsp; Delete
                                             </button>&nbsp;
                                         </div>
 
                                         <div class="table-responsive text-nowrap">
-                                            <table id="FixedCharge_Details" class="table table-bordered table-hover">
+                                            <table id="Status_Details" class="table table-bordered table-hover">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID</th>
-                                                        <th class="all">Trans Code & Description</th>
-                                                        <th class="all">Quantity</th>
-                                                        <th class="all">Amount</th>
-                                                        <th class="all">Frequency</th>
-                                                        <th class="all">Begin Date</th>
-                                                        <th class="all">End Date</th>
+                                                      <th></th>
+                                                      <th class="all">Room</th>
+                                                      <th class="all">Status</th>
+                                                      <th class="all">From Date</th>
+                                                      <th class="all">Through Date</th>
+                                                      <th class="all">Return As</th>
+                                                      <th class="all">Reason</th>
+                                                      <th class="all">Remarks</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -625,6 +404,20 @@ $( document ).ready(function() {
         roomStatistics()
     })
     roomPlanFunc()
+
+    var today = moment().format('DD-MM-YYYY');             
+
+    $('#STATUS_FROM_DATE').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true,
+        
+    }).datepicker("setDate", today);
+
+    $('#STATUS_TO_DATE').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true,
+        
+    }).datepicker("setDate", today);
 });
 
 function roomPlanFunc(){
@@ -710,9 +503,14 @@ function roomPlanFunc(){
             } else if (extendedProps.status == 'Inspected') {
               el.style.backgroundColor = '#065c06'
             }
+            else if (extendedProps.status == 'Out of Service') {
+              el.style.backgroundColor = '#495563'
+            }
+            else if (extendedProps.status == 'Out of Order') {
+              el.style.backgroundColor = '#495563'
+            }            
+            
           },
-
-
 
         }
 
@@ -1013,13 +811,13 @@ function roomPlanFunc(){
 
   }
 
-  
+
 
   //$(document).on('click', '#showRoomStatisticsModal', function() {
    
    // if($('#calendarStatistics1>*').length == 0) {
    
-    $('#showRoomStatisticsModal').click(function() {
+    $('#showRoomStatisticsModal').click(function(){
       
     //window.setTimeout(clickToday, 100);
     $('#RoomStatisticsModal').modal('show');
@@ -1028,30 +826,340 @@ function roomPlanFunc(){
 
     //////// OOO/OOS Functions
 
-$(document).on('click', '#OOO_OOS_Button', function() {
+$(document).on('click', '#showRoomOSModal', function() {
     $('#OOOSCharges').modal('show');    
     roomsList();
     roomsStatus();
+    roomsReturnStatus();
     roomsChangeReason();    
-
+    showRoomStatus();
 });
 
 
 function roomsList() {
     $.ajax({
-        url: '<?php echo base_url('/roomsList') ?>',
+        url: '<?php echo base_url('/roomPlanList') ?>',
         type: "post",
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
         },
         async: false,
-        // dataType:'json',
         success: function(respn) {
-            // console.log(respn,"testing");
-            $('#RSV_ITM_CL_ID').html(respn);
+            $('#ROOMS').html(respn);
         }
     });
 }
+
+function roomsStatus() {
+    $.ajax({
+        url: '<?php echo base_url('/roomsStatusList') ?>',
+        type: "post",
+        data:{type:1},
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        async: false,
+        success: function(respn) {
+            $('#ROOM_STATUS').html(respn);
+        }
+    });
+}
+
+function roomsReturnStatus() {
+    $.ajax({
+        url: '<?php echo base_url('/roomsStatusList') ?>',
+        type: "post",
+        data:{type:2},
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        async: false,
+        success: function(respn) {
+            $('#ROOM_RETURN_STATUS').html(respn);
+        }
+    });
+}
+
+function roomsChangeReason() {
+    $.ajax({
+        url: '<?php echo base_url('/roomsChangeReasonList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        async: false,
+        success: function(respn) {
+            $('#ROOM_CHANGE_REASON').html(respn);
+        }
+    });
+}
+
+$(document).on('click', '.add-room-status', function() {
+    hideModalAlerts();
+    $('.dtr-bs-modal').modal('hide'); 
+
+    bootbox.dialog({
+        message: "Do you want to update room status?",
+        buttons: {
+            ok: {
+                label: 'Yes',
+                className: 'btn-success',
+                callback: function(result) {
+                    if (result) {
+                      clearFormFields('#OOOS_DIV');
+                      $("#ROOM_REMARKS").val('');
+                      var today = moment().format('DD-MM-YYYY');   
+                      $('#STATUS_FROM_DATE').datepicker("setDate", today);
+                      $('#STATUS_TO_DATE').datepicker("setDate", today);
+                      
+                        $('#Status_Details').find('tr.table-warning').removeClass(
+                            'table-warning');
+
+                        //Disable Delete button
+                        toggleButton('.delete_room_status', 'btn-danger', 'btn-dark',
+                            true);
+
+                        showModalAlert('info',
+                            'Fill in the form and click the \'Save\' button to update the status'
+                        );
+                        $('#infoModal').delay(2500).fadeOut();
+
+                    }
+                }
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        }
+    });
+});
+
+$(document).on('click', '.save-roomstatus-details', function() {
+
+    hideModalAlerts();
+    var formSerialization = $('#ooos-submit-form').serializeArray();
+    var url = '<?php echo base_url('/insertRoomOOS') ?>';
+    $.ajax({
+        url: url,
+        type: "post",
+        data: formSerialization,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        dataType: 'json',
+        success: function(respn) {
+            var response = respn['SUCCESS'];
+            if (response == '2') {
+                mcontent = '<li>Something went wrong</li>';
+                showModalAlert('error', mcontent);
+            } else if (response != '1') {
+                var ERROR = respn['RESPONSE']['ERROR'];
+                var mcontent = '';
+                $.each(ERROR, function(ind, data) {
+                    //console.log(data, "SDF");
+                    mcontent += '<li>' + data + '</li>';
+                });
+                showModalAlert('error', mcontent);
+            } else {
+                var alertText = $('#OOOS_ID').val() == '' ?
+                    '<li>Successfully added</li>' :
+                    '<li>Successfully updated</li>';
+                hideModalAlerts();
+                showModalAlert('success', alertText);
+
+
+                if (respn['RESPONSE']['OUTPUT'] != '') {
+                  
+                    $('#OOOS_ID').val(respn['RESPONSE']['OUTPUT']);
+                    showRoomStatus();
+                }
+            }
+        }
+    });
+});
+
+
+function showRoomStatus() {
+
+    $('#Status_Details').find('tr.table-warning').removeClass('table-warning');
+
+    $('#Status_Details').DataTable({
+        'processing': true,
+        async: false,
+        'serverSide': true,
+        'serverMethod': 'post',
+        'ajax': {
+            'url': '<?php echo base_url('/roomOOSList') ?>',
+           
+        },
+        'columns': [{
+                data: 'OOOS_ID',
+                'visible': false
+            }, {
+
+                data: 'RM_NO',
+                render: function(data, type, full, meta) {
+                    if (full['RM_NO'] != null)
+                        return full['RM_NO'];
+                    else
+                        return '';
+                }
+            },
+            {
+                data: 'RSM_RM_STATUS_CODE'
+            },
+
+            {
+                data: 'STATUS_FROM_DATE'
+            },
+            {
+                data: 'STATUS_TO_DATE'
+            },
+            
+            {
+                data: 'SM_RM_STATUS_CODE'
+            },
+            {
+
+              data: 'RM_STATUS_CHANGE_CODE',
+              render: function(data, type, full, meta) {
+                  if (full['RM_STATUS_CHANGE_CODE'] != null)
+                      return full['RM_STATUS_CHANGE_CODE']+' | '+full['RM_STATUS_CHANGE_DESC'];
+                  else
+                      return '';
+              }
+            },
+            {
+                data: 'ROOM_REMARKS'
+            },
+
+        ],
+        "order": [
+            [1, "asc"]
+        ],
+        'createdRow': function(row, data, dataIndex) {
+
+            $(row).attr('data-status_id', data['OOOS_ID']);
+
+            if (dataIndex == 0) {
+                $(row).addClass('table-warning');
+                loadRoomStatusDetails(data['OOOS_ID']);
+            }
+        },
+
+
+        destroy: true,
+        "ordering": true,
+        "searching": false,
+        autowidth: true,
+        responsive: true
+    });
+}
+
+
+
+function loadRoomStatusDetails(OOOS_ID) {
+    var url = '<?php echo base_url('/showRoomStatusDetails') ?>';
+    $.ajax({
+        url: url,
+        type: "post",
+        async: false,
+        'processing': true,
+        'serverSide': true,
+        'serverMethod': 'post',
+        data: {
+          OOOS_ID: OOOS_ID
+        },
+        dataType: 'json',
+        success: function(respn) {
+          console.log(respn)
+            toggleButton('.delete-room-status', 'btn-dark', 'btn-danger', false);
+            $(respn).each(function(inx, data) {
+                $.each(data, function(fields, datavals) {                   
+                    var field = $.trim(fields);
+                    var dataval = $.trim(datavals);                  
+
+                   if ( field == 'STATUS_FROM_DATE' || field == 'STATUS_TO_DATE' ){
+                        $('#' + field).datepicker("setDate", new Date(dataval)); 
+                    } 
+                   else if (field == 'ROOMS' || field == 'ROOM_STATUS' || field == 'ROOM_RETURN_STATUS' || field == 'ROOM_CHANGE_REASON') {
+                        $('#' + field).val(dataval).trigger('change');
+                    } 
+                   else {
+                        $('#' + field).val(dataval);
+                    }
+                });
+            });
+        }
+    });
+}
+
+// Delete status
+$(document).on('click', '.delete-room-status', function() {
+    hideModalAlerts();
+    $('.dtr-bs-modal').modal('hide');
+    var status_id = $('#Status_Details').find("tr.table-warning").data("status_id");
+
+    bootbox.confirm({
+        message: "Status is active. Do you want to Delete?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function(result) {
+            if (result) {
+                $.ajax({
+                    url: '<?php echo base_url('/deleteRoomOOS') ?>',
+                    type: "post",
+                    data: {
+                      OOOS_ID: status_id,
+                      
+                    },
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    dataType: 'json',
+                    success: function(respn) {
+                        var response = respn['SUCCESS'];
+                        if (response == '0') {
+                            clearFormFields('#OOOSCharges');
+                            showModalAlert('error',
+                                '<li>The status cannot be deleted</li>');
+                            $('#warningModal').delay(2500).fadeOut();
+                        } else {
+                          clearFormFields('#OOOSCharges');
+                            blockLoader('#OOOSCharges');
+                            showModalAlert('warning',
+                                '<li>The status has been deleted</li>');
+                            $('#warningModal').delay(2500).fadeOut(); 
+                            showRoomStatus();
+                        }
+                    }
+                });
+            }
+        }
+    });
+
+});
+
+
+
+$(document).on('click', '#Status_Details > tbody > tr', function() {
+    $('#Status_Details').find('tr.table-warning').removeClass('table-warning');
+    $(this).addClass('table-warning');
+    $.when(loadRoomStatusDetails($(this).data('status_id')))
+        .done(function() {})
+        .done(function() {
+            blockLoader('#OOOS_DIV');
+        });
+});
 
 
 

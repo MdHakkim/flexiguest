@@ -594,14 +594,18 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->get('/roomPlanTest', 'ReservationController::roomPlanTest'); 
       $routes->match(['post'],'/getInventoryCalendarData', 'ApplicatioController::getInventoryCalendarData');
       $routes->match(['post'],'/getInventoryAllocatedData', 'ApplicatioController::getInventoryAllocatedData'); 
+      $routes->match(['post'],'/getRoomStatistics', 'ReservationController::getRoomStatistics');
 
-      //$routes->match(['post'],'/RoomStatistics', 'ApplicatioController::RoomStatistics'); 
-      $routes->match(['post'],'/getRoomStatistics', 'ReservationController::getRoomStatistics'); 
+ 
+      $routes->match(['post'],'/roomOOSList', 'ReservationController::roomOOSList'); 
+      $routes->match(['post'],'/roomPlanList', 'ReservationController::roomPlanList'); 
+      $routes->match(['post'],'/roomsStatusList', 'ReservationController::roomsStatusList'); 
+      $routes->match(['post'],'/roomsChangeReasonList', 'ReservationController::roomsChangeReasonList'); 
+      $routes->match(['post'],'/insertRoomOOS', 'ReservationController::insertRoomOOS'); 
+      $routes->match(['post'],'/showRoomStatusDetails', 'ReservationController::showRoomStatusDetails');  
+      $routes->match(['post'],'/deleteRoomOOS', 'ReservationController::deleteRoomOOS');    
 
       
-      //$routes->get('/roomStatistics', 'ApplicatioController::roomStatistics');
-
-
     //Subina Code (END)  
 
 

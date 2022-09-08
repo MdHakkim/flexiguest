@@ -1194,6 +1194,9 @@ public function showPackages()
     {
         $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
         $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
+        $data['toggleButton_javascript'] = toggleButton_javascript();
+        $data['clearFormFields_javascript'] = clearFormFields_javascript();
+        $data['blockLoader_javascript'] = blockLoader_javascript();
 
         $data['RoomReservations']  = $this->getReservations(); 
         $data['RoomResources']     = $this->roomplanResources();
@@ -1533,7 +1536,7 @@ public function dateExistsOverlap($RESV_ID,$START,$END,$NEW_ROOM_ID){
 }
 
 
-    public function getRoomStatistics(){
+public function getRoomStatistics(){
         $response = NULL;
         $items = array();     
         $START        = $this->request->getPost('start');
@@ -1615,5 +1618,196 @@ public function dateExistsOverlap($RESV_ID,$START,$END,$NEW_ROOM_ID){
         return $responseCount;
 
     }
+
+
+    public function roomPlanList(){
+        $search = $this->request->getPost("search");       
+        $sql = "SELECT RM_ID, RM_NO, RM_DESC FROM FLXY_ROOM WHERE 1 = 1"; 
+
+        if(!empty($search))
+            $sql .= " AND RM_DESC like '%$search%'";
+      
+        $response = $this->DB->query($sql)->getResultArray();
+
+        if($response != NULL)
+        {
+            $option='<option value="">Select Room</option>';
+            foreach($response as $row){
+                $option.= '<option value="'.$row['RM_ID'].'" data-room-id="'.$row['RM_ID'].'">'.$row['RM_NO'].'</option>';
+            }
+        }
+        else
+            $option='<option value="">No Rooms</option>';
+
+        echo $option;
+    }
+
+    public function roomsStatusList(){
+
+        $type = $this->request->getPost("type"); 
+        
+        $option = ''; 
+        
+        if($type == 1)
+
+        $sql = "SELECT * FROM FLXY_ROOM_STATUS_MASTER WHERE RM_STATUS_ID = '4' OR RM_STATUS_ID = '5'"; 
+
+        if($type == 2)
+
+        $sql = "SELECT * FROM FLXY_ROOM_STATUS_MASTER WHERE RM_STATUS_ID != '4' AND RM_STATUS_ID != '5'"; 
+
+        $response = $this->DB->query($sql)->getResultArray();
+
+        if($response != NULL)
+        {           
+            foreach($response as $row){
+                $option.= '<option value="'.$row['RM_STATUS_ID'].'" data-room-id="'.$row['RM_STATUS_ID'].'">'.$row['RM_STATUS_CODE'].'</option>';
+            }
+        }
+        
+        echo $option;
+    }
+
+    public function roomsChangeReasonList(){
+        
+        $search = $this->request->getPost("search");       
+        $sql = "SELECT * FROM FLXY_ROOM_STATUS_CHANGE_REASON WHERE 1 = 1"; 
+
+        if(!empty($search))
+            $sql .= " AND RM_STATUS_CHANGE_CODE like '%$search%' OR RM_STATUS_CHANGE_DESC like '%$search%'";
+      
+        $response = $this->DB->query($sql)->getResultArray();
+
+        if($response != NULL)
+        {
+            $option='<option value="">Select Reason</option>';
+            foreach($response as $row){
+                $option.= '<option value="'.$row['RM_STATUS_CHANGE_ID'].'" data-room-id="'.$row['RM_STATUS_CHANGE_ID'].'">'.$row['RM_STATUS_CHANGE_CODE'].' | '.$row['RM_STATUS_CHANGE_DESC'].'</option>';
+            }
+        }
+        else
+            $option='<option value="">No Reasons</option>';
+
+        echo $option;
+    }
+
+
+    
+
+    public function showRoomStatusDetails()
+    {
+        $roomStatusDetails = $this->getRoomStatusDetails($this->request->getPost('OOOS_ID'));
+        echo json_encode($roomStatusDetails);
+    }
+
+    
+
+    public function getRoomStatusDetails($OOOS_ID = 0)
+    {
+        $param = ['SYSID' => $OOOS_ID];
+        $sql = "SELECT *           
+                FROM dbo.FLXY_ROOM_OOOS
+                WHERE OOOS_ID=:SYSID:";       
+
+        $response = $this->DB->query($sql, $param)->getResultArray();
+        return $response;
+    }
+
+  
+    public function roomOOSList()
+    {
+        
+        $mine      = new ServerSideDataTable(); 
+        
+        $tableName = '( SELECT OOOS_ID,ROOMS,RM_NO,STATUS_FROM_DATE,STATUS_TO_DATE,ROOM_STATUS,ROOM_RETURN_STATUS,ROOM_CHANGE_REASON,RSM.RM_STATUS_CODE AS RSM_RM_STATUS_CODE,SM.RM_STATUS_CODE AS SM_RM_STATUS_CODE,RM_STATUS_CHANGE_DESC,RM_STATUS_CHANGE_CODE,ROOM_REMARKS
+        FROM
+        FLXY_ROOM_OOOS INNER JOIN FLXY_ROOM_STATUS_CHANGE_REASON ON RM_STATUS_CHANGE_ID = ROOM_CHANGE_REASON INNER JOIN FLXY_ROOM ON RM_ID = ROOMS INNER JOIN FLXY_ROOM_STATUS_MASTER RSM ON RSM.RM_STATUS_ID = ROOM_STATUS LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = ROOM_RETURN_STATUS) STATUS_LIST';
+    
+        $columns = 'OOOS_ID,ROOMS,RM_NO,STATUS_FROM_DATE,STATUS_TO_DATE,RSM_RM_STATUS_CODE,SM_RM_STATUS_CODE,RM_STATUS_CHANGE_CODE,RM_STATUS_CHANGE_DESC,ROOM_REMARKS';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+
+    public function insertRoomOOS()
+    {
+        try {
+            $sysid = $this->request->getPost('OOOS_ID');
+
+            $validate = $this->validate([
+                'ROOMS' => ['label' => 'Room', 'rules' => 'required|is_unique[FLXY_ROOM_OOOS.ROOMS,OOOS_ID,' . $sysid . ']'],
+                'STATUS_FROM_DATE' => ['label' => 'From Date', 'rules' => 'required'],               
+                'STATUS_TO_DATE' => ['label' => 'To Date', 'rules' => 'required'], 
+                'ROOM_CHANGE_REASON' => ['label' => 'Reason ', 'rules' => 'required']                     
+                
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $data = [
+                "ROOMS" => trim($this->request->getPost('ROOMS')),
+                "STATUS_FROM_DATE" => trim($this->request->getPost('STATUS_FROM_DATE')),                
+                "STATUS_TO_DATE" => trim($this->request->getPost('STATUS_TO_DATE')),
+                "ROOM_STATUS" => trim($this->request->getPost('ROOM_STATUS')),
+                "ROOM_RETURN_STATUS" => trim($this->request->getPost('ROOM_RETURN_STATUS')),
+                "ROOM_CHANGE_REASON" => trim($this->request->getPost('ROOM_CHANGE_REASON')),
+                "ROOM_REMARKS" => trim($this->request->getPost('ROOM_REMARKS'))             
+            ];
+            
+
+           
+
+           $return = !empty($sysid) ? $this->DB->table('FLXY_ROOM_OOOS')->where('OOOS_ID', $sysid)->update($data) : $this->DB->table('FLXY_ROOM_OOOS')->insert($data);
+
+           $statusData = ['RM_STAT_ROOM_ID' => $this->request->getPost('ROOMS'), 'RM_STAT_ROOM_STATUS'=> trim($this->request->getPost('ROOM_STATUS')), 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
+
+           $roomStatus = $this->DB->table('FLXY_ROOM_STATUS_LOG')->insert($statusData);          
+
+           $result = $return ? $this->responseJson("1", "0", $return, !empty($sysid) ? $sysid : $this->DB->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function editRoomOOS()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+        $sql = "SELECT OOOS_ID, ROOMS, STATUS_FROM_DATE, STATUS_TO_DATE,
+                ROOM_STATUS,ROOM_RETURN_STATUS,ROOM_CHANGE_REASON, ROOM_REMARKS
+                FROM FLXY_ROOM_OOOS
+                WHERE OOOS_ID=:SYSID: ";
+
+        $response = $this->DB->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteRoomOOS()
+    {
+        $sysid = $this->request->getPost('OOOS_ID');
+        try {          
+
+
+            $ROOMS =  getValueFromTable('ROOMS',$sysid,'FLXY_ROOM_OOOS');
+            $ROOM_RETURN_STATUS =  getValueFromTable('ROOM_RETURN_STATUS',$sysid,'FLXY_ROOM_OOOS');
+
+            $statusData = ['RM_STAT_ROOM_ID' => $ROOMS, 'RM_STAT_ROOM_STATUS'=> $ROOM_RETURN_STATUS, 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
+            $roomStatus = $this->DB->table('FLXY_ROOM_STATUS_LOG')->insert($statusData); 
+
+
+            $return = $this->DB->table('FLXY_ROOM_OOOS')->delete(['OOOS_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
 
 }
