@@ -83,7 +83,7 @@
           <div class="col-md-3 mt-3 mb-3">
             <button type="button" class="btn btn-primary"  id="showRoomStatisticsModal" 
             > Statistics</button>
-            <button type="button" class="btn btn-primary" id="showRoomOSModal"  > OOO / OOS</button>
+            <!-- <button type="button" class="btn btn-primary" id="showRoomOSModal"  > OOO / OOS</button> -->
           </div> 
         </div>       
 
