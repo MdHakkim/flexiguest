@@ -1118,6 +1118,8 @@ class APIController extends BaseController
             "FB_RATINGS" => $this->request->getVar("rating"),
             "FB_CUST_ID"  => $cust_id,
             "FB_DESCRIPTION" => $this->request->getVar("comments"),
+            "FB_MODEL" => $this->request->getVar("model") ?? null,
+            "FB_MODEL_ID" => $this->request->getVar("model_id") ?? null,
             "FB_CREATE_DT" => date("d-M-Y H:i"),
             "FB_CREATE_UID" => $cust_id,
             "FB_UPDATE_DT" => date("d-M-Y"),
