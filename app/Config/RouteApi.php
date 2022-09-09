@@ -111,11 +111,17 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
     });
 });
 
+/*****************************  ADMIN + GUEST *****************************/
+$routes->group("api", ["filter" => "authapi:admin,GUEST,attendee", 'namespace' => 'App\Controllers'], function ($routes) {
+    $routes->group('evalet', function ($routes) {
+        $routes->post('guest-collected', 'EValetController::guestCollected');
+    });
+});
+
 /***************************** ADMIN + ATTENDEE *****************************/
 $routes->group("api", ["filter" => "authapi:admin,attendee", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('evalet', function ($routes) {
         $routes->post('parked', 'EValetController::parked');
-        $routes->post('guest-collected', 'EValetController::guestCollected');
     });
 });
 
