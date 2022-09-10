@@ -45,7 +45,7 @@ class PaymentRepository extends BaseController
 
             return responseJson(200, false, ['msg' => 'client secret'], $output);
         } catch (\Exception $e) {
-            return responseJson(500, true, ['msg' => 'Something went wrong.'], $e->getMessage());
+            return responseJson(500, true, ['msg' => $e->getMessage()]);
             // http_response_code(500);
             // echo json_encode(['error' => $e->getMessage()]);
         }
