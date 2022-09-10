@@ -16,4 +16,12 @@ class PaymentController extends BaseController
     {
         $this->PaymentRepository = new PaymentRepository();
     }
+
+    public function createPaymentIntent()
+    {
+        $amount = $this->request->getVar('amount');
+
+        $result = $this->PaymentRepository->createPaymentIntent($amount);
+        return $this->respond($result);
+    }
 }
