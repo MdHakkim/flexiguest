@@ -748,3 +748,5 @@ $routes->group('laundry-amenities', function ($routes) {
 });
 
 $routes->get('evalet/qr/(:segment)', 'EValetController::qr/$1');
+
+$routes->get('checkout', 'PaymentController::checkout');
