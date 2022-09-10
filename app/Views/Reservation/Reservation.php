@@ -5822,8 +5822,8 @@ function showFixedCharges(resvID) {
 
             if (dataIndex == 0) {
 
-                $(row).addClass('table-warning');
-                loadFixedchargeDetails(data['FIXD_CHRG_ID']);
+                //$(row).addClass('table-warning');
+                //loadFixedchargeDetails(data['FIXD_CHRG_ID']);
             }
         },
 
