@@ -61,7 +61,7 @@ class PaymentRepository extends BaseController
 
             $output = [
                 'client_secret' => $paymentIntent->client_secret,
-                'ephemeral_key' => $ephemeral_key,
+                'ephemeral_key' => $ephemeral_key->id,
                 'customer_id' => $customer_id
             ];
 
