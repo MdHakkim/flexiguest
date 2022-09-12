@@ -3,7 +3,9 @@
 namespace App\Controllers\Repositories;
 
 use App\Controllers\BaseController;
+use App\Models\Customer;
 use App\Models\PaymentTransaction;
+use App\Models\UserModel;
 use CodeIgniter\API\ResponseTrait;
 
 class PaymentRepository extends BaseController
@@ -11,6 +13,7 @@ class PaymentRepository extends BaseController
     use ResponseTrait;
 
     private $PaymentTransaction;
+    private $Customer;
 
     public function __construct()
     {
@@ -18,6 +21,7 @@ class PaymentRepository extends BaseController
         \Stripe\Stripe::setApiKey('sk_test_51Lg1MuA6gmHSIFPihgF6i18MSWFmCtqCs6OZPGgkfypw8cRPMRl2Q6lQyxOoCglwSgzBnZaLHCqN41Q5k4hVU6yF00H19RITcI');
 
         $this->PaymentTransaction = new PaymentTransaction();
+        $this->Customer = new Customer();
     }
 
     public function createUpdateTransaction($data)
@@ -25,10 +29,26 @@ class PaymentRepository extends BaseController
         return $this->PaymentTransaction->save($data);
     }
 
-    public function createPaymentIntent($amount)
+    public function createPaymentIntent($user, $amount)
     {
         try {
             $amount = floatval($amount) * 100;
+
+            // Use an existing Customer ID if this is a returning customer.
+            if (is_null($customer_id = $user['CUST_STRIPE_CUSTOMER_ID'])) {
+                $customer = \Stripe\Customer::create();
+                $customer_id = $customer->id;
+                $this->Customer->update($user['CUST_ID'], ['CUST_STRIPE_CUSTOMER_ID' => $customer_id]);
+            }
+            
+            $ephemeral_key = \Stripe\EphemeralKey::create(
+                [
+                    'customer' => $customer_id,
+                ],
+                [
+                    'stripe_version' => '2022-08-01',
+                ]
+            );
 
             // Create a PaymentIntent with amount and currency
             $paymentIntent = \Stripe\PaymentIntent::create([
@@ -41,9 +61,11 @@ class PaymentRepository extends BaseController
 
             $output = [
                 'client_secret' => $paymentIntent->client_secret,
+                'ephemeral_key' => $ephemeral_key,
+                'customer_id' => $customer_id
             ];
 
-            return responseJson(200, false, ['msg' => 'client secret'], $output);
+            return responseJson(200, false, ['msg' => 'payment intent created successfully.'], $output);
         } catch (\Exception $e) {
             return responseJson(500, true, ['msg' => $e->getMessage()]);
             // http_response_code(500);
@@ -58,7 +80,7 @@ class PaymentRepository extends BaseController
         // If you are testing with the CLI, find the secret by running 'stripe listen'
         // If you are using an endpoint defined with the API or dashboard, look in your webhook settings
         // at https://dashboard.stripe.com/webhooks
-        
+
         // $endpoint_secret = 'we_1Lh72rA6gmHSIFPiokiCpuzh';
         $endpoint_secret = 'whsec_lOnchTfrLaXyvHhGrIGwzdIK6PVpwZBi';
         // whsec_8ea018b171cb3fbd22d77fe43124c15ac9676c9fa897a3694576aa21937a138d
