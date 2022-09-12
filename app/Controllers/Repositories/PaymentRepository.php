@@ -58,7 +58,10 @@ class PaymentRepository extends BaseController
         // If you are testing with the CLI, find the secret by running 'stripe listen'
         // If you are using an endpoint defined with the API or dashboard, look in your webhook settings
         // at https://dashboard.stripe.com/webhooks
-        $endpoint_secret = 'we_1Lh5IuA6gmHSIFPiTJnxy2zh';
+        
+        // $endpoint_secret = 'we_1Lh72rA6gmHSIFPiokiCpuzh';
+        $endpoint_secret = 'whsec_lOnchTfrLaXyvHhGrIGwzdIK6PVpwZBi';
+        // whsec_8ea018b171cb3fbd22d77fe43124c15ac9676c9fa897a3694576aa21937a138d
 
         $payload = @file_get_contents('php://input');
         $event = null;
