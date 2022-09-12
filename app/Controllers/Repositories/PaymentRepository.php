@@ -88,7 +88,7 @@ class PaymentRepository extends BaseController
             ['type' => 'card']
         );
 
-        print_r($response);
+        echo(json_encode($response));
         die();
     }
 
