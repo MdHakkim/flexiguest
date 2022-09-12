@@ -58,6 +58,7 @@ class PaymentRepository extends BaseController
             $paymentIntent = \Stripe\PaymentIntent::create([
                 'amount' => $amount,
                 'currency' => 'aed',
+                'customer' => $customer_id,
                 // 'automatic_payment_methods' => [
                 //     'enabled' => true,
                 // ],
