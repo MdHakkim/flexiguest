@@ -57,10 +57,11 @@ class PaymentRepository extends BaseController
             // Create a PaymentIntent with amount and currency
             $paymentIntent = \Stripe\PaymentIntent::create([
                 'amount' => $amount,
-                'currency' => 'aed',
+                // 'currency' => 'aed',
+                'currency' => 'eur',
                 'customer' => $customer_id,
+                'setup_future_usage' => 'on_session',
                 'payment_method_types' => ['card'],
-                'setup_future_usage' => 'off_session'
                 // 'automatic_payment_methods' => [
                 //     'enabled' => true,
                 // ],
