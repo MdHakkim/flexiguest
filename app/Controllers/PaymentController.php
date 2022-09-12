@@ -24,4 +24,9 @@ class PaymentController extends BaseController
         $result = $this->PaymentRepository->createPaymentIntent($amount);
         return $this->respond($result);
     }
+
+    public function webhook()
+    {
+        $this->PaymentRepository->webhook();
+    }
 }
