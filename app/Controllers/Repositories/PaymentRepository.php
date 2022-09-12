@@ -36,7 +36,11 @@ class PaymentRepository extends BaseController
 
             // Use an existing Customer ID if this is a returning customer.
             if (is_null($customer_id = $user['CUST_STRIPE_CUSTOMER_ID'])) {
-                $customer = \Stripe\Customer::create();
+                $customer = \Stripe\Customer::create([
+                    'name' => $user['CUST_FIRST_NAME'] . ' ' . $user['CUST_LAST_NAME'],
+                    'email' => $user['CUST_EMAIL'],
+                    'description' => "AED $amount received from ". $user['CUST_FIRST_NAME'] . ' ' . $user['CUST_LAST_NAME']
+                ]);
                 $customer_id = $customer->id;
                 $this->Customer->update($user['CUST_ID'], ['CUST_STRIPE_CUSTOMER_ID' => $customer_id]);
             }
@@ -54,9 +58,10 @@ class PaymentRepository extends BaseController
             $paymentIntent = \Stripe\PaymentIntent::create([
                 'amount' => $amount,
                 'currency' => 'aed',
-                // 'automatic_payment_methods' => [
-                //     'enabled' => true,
-                // ],
+                'automatic_payment_methods' => [
+                    'enabled' => true,
+                ],
+                'setup_future_usage' => 'off_session'
             ]);
 
             $output = [
