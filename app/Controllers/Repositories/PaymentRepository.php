@@ -80,6 +80,18 @@ class PaymentRepository extends BaseController
         }
     }
 
+    public function retrievePaymentMethod($user)
+    {
+        $custoer_id = $user['CUST_STRIPE_CUSTOMER_ID'];
+        $response = \Stripe\Customer::allPaymentMethods(
+            $custoer_id,
+            ['type' => 'card']
+        );
+
+        print_r($response);
+        die();
+    }
+
     public function webhook()
     {
         $this->writeToFile('called');

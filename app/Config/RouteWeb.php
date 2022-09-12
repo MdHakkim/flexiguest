@@ -750,3 +750,4 @@ $routes->group('laundry-amenities', function ($routes) {
 $routes->get('evalet/qr/(:segment)', 'EValetController::qr/$1');
 
 $routes->get('webhook', 'PaymentController::webhook');
+$routes->get('retrieve-payment-method', 'PaymentController::retrievePaymentMethod');
