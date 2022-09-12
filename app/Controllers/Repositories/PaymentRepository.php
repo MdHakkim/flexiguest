@@ -99,7 +99,7 @@ class PaymentRepository extends BaseController
                 $paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
                 // Then define and call a method to handle the successful payment intent.
                 // handlePaymentIntentSucceeded($paymentIntent);
-                $this->writeToFile($paymentIntent);
+                $this->writeToFile('paymentIntent');
 
                 break;
             case 'payment_method.attached':
