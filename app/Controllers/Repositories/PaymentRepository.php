@@ -61,7 +61,7 @@ class PaymentRepository extends BaseController
                 'automatic_payment_methods' => [
                     'enabled' => true,
                 ],
-                'setup_future_usage' => 'off_session'
+                'setup_future_usage' => 'on_session'
             ]);
 
             $output = [
