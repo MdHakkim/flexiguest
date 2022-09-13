@@ -30,10 +30,4 @@ class PaymentController extends BaseController
     {
         $this->PaymentRepository->webhook();
     }
-
-    public function retrievePaymentMethod()
-    {
-        $user = $this->request->user;
-        $this->PaymentRepository->retrievePaymentMethod($user);
-    }
 }

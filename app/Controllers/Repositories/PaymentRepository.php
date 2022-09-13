@@ -47,19 +47,19 @@ class PaymentRepository extends BaseController
         return $payment_method_id;
     }
 
-    public function attachPaymentMethod($user, $payment_method_id)
-    {
-        try {
-            \Stripe\PaymentMethod::attach(
-                $payment_method_id,
-                ['customer' => $user['CUST_STRIPE_CUSTOMER_ID']]
-            );
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
+    // public function attachPaymentMethod($user, $payment_method_id)
+    // {
+    //     try {
+    //         \Stripe\PaymentMethod::attach(
+    //             $payment_method_id,
+    //             ['customer' => $user['CUST_STRIPE_CUSTOMER_ID']]
+    //         );
+    //     } catch (\Exception $e) {
+    //         return $e->getMessage();
+    //     }
 
-        return true;
-    }
+    //     return true;
+    // }
 
     public function createPaymentIntent($user, $amount)
     {
@@ -78,8 +78,8 @@ class PaymentRepository extends BaseController
             }
 
             $payment_method_id = $this->retrievePaymentMethod($user);
-            if ($payment_method_id)
-                $this->attachPaymentMethod($user, $payment_method_id);
+            // if ($payment_method_id)
+            //     $this->attachPaymentMethod($user, $payment_method_id);
 
                 $ephemeral_key = \Stripe\EphemeralKey::create(
                     [
@@ -100,6 +100,7 @@ class PaymentRepository extends BaseController
                 'automatic_payment_methods' => [
                     'enabled' => true,
                 ],
+                'payment_method' => $payment_method_id
             ]);
 
             $output = [

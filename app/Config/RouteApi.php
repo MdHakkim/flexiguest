@@ -53,7 +53,6 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
     });
 
     $routes->post('create-payment-intent', 'PaymentController::createPaymentIntent');
-    $routes->get('retrieve-payment-method', 'PaymentController::retrievePaymentMethod');
 });
 //  ------------------------------------ALEESHA CODES ENDS--------------------------------------- //
 
