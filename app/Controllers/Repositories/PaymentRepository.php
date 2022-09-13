@@ -62,6 +62,12 @@ class PaymentRepository extends BaseController
     public function createPaymentIntent($user, $amount)
     {
         try {
+            \Stripe\SetupIntent::create(['usage' => 'on_session']);
+            
+            // $res = \Stripe\SetupIntent::all(['limit' => 3]);
+            // echo json_encode($res);
+            // die();
+
             $amount = floatval($amount) * 100;
 
             // Use an existing Customer ID if this is a returning customer.
