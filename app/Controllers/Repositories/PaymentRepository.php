@@ -77,6 +77,7 @@ class PaymentRepository extends BaseController
     public function webhook()
     {
         http_response_code(200);
+        exit;
 
         $this->writeToFile('called');
         // Replace this endpoint secret with your endpoint's unique secret
@@ -141,6 +142,7 @@ class PaymentRepository extends BaseController
         }
 
         http_response_code(200);
+        exit;
     }
 
     public function writeToFile($text)
