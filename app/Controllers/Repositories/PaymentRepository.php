@@ -83,7 +83,7 @@ class PaymentRepository extends BaseController
         // at https://dashboard.stripe.com/webhooks
 
         // $endpoint_secret = 'we_1Lh72rA6gmHSIFPiokiCpuzh';
-        $endpoint_secret = 'whsec_lOnchTfrLaXyvHhGrIGwzdIK6PVpwZBi';
+        $endpoint_secret = 'whsec_KM4iN5MYtNp8DivaaTpc4qcIQKjnJjue';
         // whsec_8ea018b171cb3fbd22d77fe43124c15ac9676c9fa897a3694576aa21937a138d
 
         $payload = @file_get_contents('php://input');
