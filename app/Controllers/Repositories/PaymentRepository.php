@@ -94,8 +94,8 @@ class PaymentRepository extends BaseController
                 'amount' => $amount,
                 'currency' => 'aed',
                 'customer' => $customer_id,
-                'setup_future_usage' => 'on_session',
-                'payment_method_types' => ['card'],
+                // 'setup_future_usage' => 'on_session',
+                // 'payment_method_types' => ['card'],
                 // 'automatic_payment_methods' => [
                     // 'enabled' => true,
                 // ],
