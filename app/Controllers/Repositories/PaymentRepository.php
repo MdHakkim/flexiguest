@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers\Repositories;
 
 use App\Controllers\BaseController;
@@ -63,7 +64,7 @@ class PaymentRepository extends BaseController
     {
         try {
             \Stripe\SetupIntent::create(['usage' => 'on_session']);
-            
+
             // $res = \Stripe\SetupIntent::all(['limit' => 3]);
             // echo json_encode($res);
             // die();
@@ -77,24 +78,24 @@ class PaymentRepository extends BaseController
                     'email' => $user['CUST_EMAIL'],
                     'description' => "AED $amount received from " . $user['CUST_FIRST_NAME'] . ' ' . $user['CUST_LAST_NAME']
                 ]);
-                
+
                 $user['CUST_STRIPE_CUSTOMER_ID'] = $customer_id = $customer->id;
                 $this->Customer->update($user['CUST_ID'], ['CUST_STRIPE_CUSTOMER_ID' => $customer_id]);
             }
 
-            $payment_method_id = $this->retrievePaymentMethod($user);
+            // $payment_method_id = $this->retrievePaymentMethod($user);
             // if ($payment_method_id)
             //     $this->attachPaymentMethod($user, $payment_method_id);
 
-                $ephemeral_key = \Stripe\EphemeralKey::create(
-                    [
-                        'customer' => $customer_id,
-                    ],
-                    [
-                        'stripe_version' => '2022-08-01',
-                    ]
-                );
-            
+            $ephemeral_key = \Stripe\EphemeralKey::create(
+                [
+                    'customer' => $customer_id,
+                ],
+                [
+                    'stripe_version' => '2022-08-01',
+                ]
+            );
+
             // Create a PaymentIntent with amount and currency
             $paymentIntent = \Stripe\PaymentIntent::create([
                 'amount' => $amount,
@@ -103,13 +104,13 @@ class PaymentRepository extends BaseController
                 // 'setup_future_usage' => 'on_session',
                 // 'payment_method_types' => ['card'],
                 // 'automatic_payment_methods' => [
-                    // 'enabled' => true,
+                // 'enabled' => true,
                 // ],
             ]);
 
             $output = [
                 'client_secret' => $paymentIntent->client_secret,
-                'ephemeral_key' => $ephemeral_key->id,
+                'ephemeral_key' => $ephemeral_key->secret,
                 'customer_id' => $customer_id
             ];
 
