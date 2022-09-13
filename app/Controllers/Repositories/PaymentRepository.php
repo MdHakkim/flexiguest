@@ -1,11 +1,9 @@
 <?php
-
 namespace App\Controllers\Repositories;
 
 use App\Controllers\BaseController;
 use App\Models\Customer;
 use App\Models\PaymentTransaction;
-use App\Models\UserModel;
 use CodeIgniter\API\ResponseTrait;
 
 class PaymentRepository extends BaseController
@@ -73,7 +71,8 @@ class PaymentRepository extends BaseController
                     'email' => $user['CUST_EMAIL'],
                     'description' => "AED $amount received from " . $user['CUST_FIRST_NAME'] . ' ' . $user['CUST_LAST_NAME']
                 ]);
-                $customer_id = $customer->id;
+                
+                $user['CUST_STRIPE_CUSTOMER_ID'] = $customer_id = $customer->id;
                 $this->Customer->update($user['CUST_ID'], ['CUST_STRIPE_CUSTOMER_ID' => $customer_id]);
             }
 
@@ -89,18 +88,17 @@ class PaymentRepository extends BaseController
                         'stripe_version' => '2022-08-01',
                     ]
                 );
-
+            
             // Create a PaymentIntent with amount and currency
             $paymentIntent = \Stripe\PaymentIntent::create([
                 'amount' => $amount,
                 'currency' => 'aed',
                 'customer' => $customer_id,
                 'setup_future_usage' => 'on_session',
-                // 'payment_method_types' => ['card'],
-                'automatic_payment_methods' => [
-                    'enabled' => true,
-                ],
-                'payment_method' => $payment_method_id
+                'payment_method_types' => ['card'],
+                // 'automatic_payment_methods' => [
+                    // 'enabled' => true,
+                // ],
             ]);
 
             $output = [
