@@ -76,6 +76,8 @@ class PaymentRepository extends BaseController
 
     public function webhook()
     {
+        http_response_code(200);
+
         $this->writeToFile('called');
         // Replace this endpoint secret with your endpoint's unique secret
         // If you are testing with the CLI, find the secret by running 'stripe listen'
