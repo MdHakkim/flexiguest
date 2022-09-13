@@ -28,47 +28,10 @@ class PaymentRepository extends BaseController
         return $this->PaymentTransaction->save($data);
     }
 
-    public function retrievePaymentMethod($user)
-    {
-        try {
-            $response = \Stripe\Customer::allPaymentMethods(
-                $user['CUST_STRIPE_CUSTOMER_ID'],
-                ['type' => 'card']
-            );
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-
-        $payment_method_id = null;
-        if (isset($response['data']) && count($response['data']))
-            $payment_method_id = $response['data'][0]['id'];
-
-        return $payment_method_id;
-    }
-
-    // public function attachPaymentMethod($user, $payment_method_id)
-    // {
-    //     try {
-    //         \Stripe\PaymentMethod::attach(
-    //             $payment_method_id,
-    //             ['customer' => $user['CUST_STRIPE_CUSTOMER_ID']]
-    //         );
-    //     } catch (\Exception $e) {
-    //         return $e->getMessage();
-    //     }
-
-    //     return true;
-    // }
-
     public function createPaymentIntent($user, $amount)
     {
         try {
-            \Stripe\SetupIntent::create(['usage' => 'on_session']);
-
-            // $res = \Stripe\SetupIntent::all(['limit' => 3]);
-            // echo json_encode($res);
-            // die();
-
+            $original_amount = $amount;
             $amount = floatval($amount) * 100;
 
             // Use an existing Customer ID if this is a returning customer.
@@ -76,16 +39,12 @@ class PaymentRepository extends BaseController
                 $customer = \Stripe\Customer::create([
                     'name' => $user['CUST_FIRST_NAME'] . ' ' . $user['CUST_LAST_NAME'],
                     'email' => $user['CUST_EMAIL'],
-                    'description' => "AED $amount received from " . $user['CUST_FIRST_NAME'] . ' ' . $user['CUST_LAST_NAME']
+                    'description' => "AED $original_amount received from " . $user['CUST_FIRST_NAME'] . ' ' . $user['CUST_LAST_NAME']
                 ]);
 
                 $user['CUST_STRIPE_CUSTOMER_ID'] = $customer_id = $customer->id;
                 $this->Customer->update($user['CUST_ID'], ['CUST_STRIPE_CUSTOMER_ID' => $customer_id]);
             }
-
-            // $payment_method_id = $this->retrievePaymentMethod($user);
-            // if ($payment_method_id)
-            //     $this->attachPaymentMethod($user, $payment_method_id);
 
             $ephemeral_key = \Stripe\EphemeralKey::create(
                 [
@@ -101,11 +60,6 @@ class PaymentRepository extends BaseController
                 'amount' => $amount,
                 'currency' => 'aed',
                 'customer' => $customer_id,
-                // 'setup_future_usage' => 'on_session',
-                // 'payment_method_types' => ['card'],
-                // 'automatic_payment_methods' => [
-                // 'enabled' => true,
-                // ],
             ]);
 
             $output = [
@@ -117,8 +71,6 @@ class PaymentRepository extends BaseController
             return responseJson(200, false, ['msg' => 'payment intent created successfully.'], $output);
         } catch (\Exception $e) {
             return responseJson(500, true, ['msg' => $e->getMessage()]);
-            // http_response_code(500);
-            // echo json_encode(['error' => $e->getMessage()]);
         }
     }
 
