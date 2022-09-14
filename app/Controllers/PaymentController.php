@@ -28,6 +28,8 @@ class PaymentController extends BaseController
 
     public function webhook()
     {
+        return $this->response->setStatusCode(200);
+        // return $this->respond(200);
         $this->PaymentRepository->webhook();
     }
 }
