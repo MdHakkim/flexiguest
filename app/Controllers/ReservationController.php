@@ -1200,22 +1200,24 @@ public function showPackages()
 
         $data['RoomReservations']  = $this->getReservations(); 
         $data['RoomResources']     = $this->roomplanResources();
+        $data['RoomOOS']           = $this->getRoomOOS(); 
         $data['title']             =  'Room Plan';
         
         return view('Reservation/RoomPlan',$data);
     }
 
-    public function roomPlanTest()
-    {
-        $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
-        $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
+    // public function roomPlanTest()
+    // {
+    //     $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
+    //     $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
 
-        $data['RoomReservations']  = $this->getReservations(); 
-        $data['RoomResources']     = $this->roomplanResources();
-        $data['title']             =  'Room Plan';
+    //     $data['RoomReservations']  = $this->getReservations(); 
         
-        return view('Reservation/RoomPlanTest',$data);
-    }
+    //     $data['RoomResources']     = $this->roomplanResources();
+    //     $data['title']             =  'Room Plan';
+        
+    //     return view('Reservation/RoomPlanTest',$data);
+    // }
 
     public function ItemResources(){
         $response = NULL;
@@ -1343,6 +1345,16 @@ public function checkItemReserved($item_id, $sCurrentDate){
     public function getReservations(){
         $response = NULL;
         $sql = "SELECT RESV_ID, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, RESV_ROOM, RESV_STATUS, RM_ID FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID INNER JOIN FLXY_ROOM ON RM_ID = RESV_ROOM_ID WHERE RESV_STATUS != 'Checked-Out' ORDER BY RM_ID ASC";       
+        $responseCount = $this->DB->query($sql)->getNumRows();
+        if($responseCount > 0){
+            $response = $this->DB->query($sql)->getResultArray();           
+        }
+      return $response;
+    }
+
+    public function getRoomOOS(){
+        $response = NULL;
+        $sql = "SELECT OOOS_ID, ROOMS, STATUS_FROM_DATE, STATUS_TO_DATE, ROOM_STATUS, RM_STATUS_CODE FROM FLXY_ROOM_OOOS INNER JOIN FLXY_ROOM_STATUS_MASTER ON RM_STATUS_ID = ROOM_STATUS";       
         $responseCount = $this->DB->query($sql)->getNumRows();
         if($responseCount > 0){
             $response = $this->DB->query($sql)->getResultArray();           
@@ -1512,6 +1524,21 @@ public function changeReservationDates(){
         }
         echo json_encode($data);
 }
+
+
+public function checkArrivalExists(){
+    $ARRIVAL_DATE  = $this->request->getPost('ARRIVAL');    
+    $data = [];
+    $sql = "SELECT RESV_ARRIVAL_DT FROM FLXY_RESERVATION WHERE RESV_ARRIVAL_DT = '".$ARRIVAL_DATE."'";       
+    $responseCount = $this->DB->query($sql)->getNumRows();
+    if($responseCount > 0){
+        $data['status_message'] = "Already Reserved. Please choose different dates";
+        $data['status'] = 1;
+    }               
+    echo json_encode($data);
+}
+
+
 
 public function updateRoomReservation($RESV_ID,$NEW_ROOM_ID,$NEW_ROOM,$START_OVERLAP,$END_OVERLAP){
     if( $RESV_ID != '' ){
@@ -1732,7 +1759,7 @@ public function getRoomStatistics(){
     public function insertRoomOOS()
     {
         try {
-            $sysid = $this->request->getPost('OOOS_ID');
+            $sysid   = $this->request->getPost('OOOS_ID');
 
             $validate = $this->validate([
                 'ROOMS' => ['label' => 'Room', 'rules' => 'required|is_unique[FLXY_ROOM_OOOS.ROOMS,OOOS_ID,' . $sysid . ']'],
@@ -1758,9 +1785,8 @@ public function getRoomStatistics(){
                 "ROOM_RETURN_STATUS" => trim($this->request->getPost('ROOM_RETURN_STATUS')),
                 "ROOM_CHANGE_REASON" => trim($this->request->getPost('ROOM_CHANGE_REASON')),
                 "ROOM_REMARKS" => trim($this->request->getPost('ROOM_REMARKS'))             
-            ];
+            ];   
             
-
            
 
            $return = !empty($sysid) ? $this->DB->table('FLXY_ROOM_OOOS')->where('OOOS_ID', $sysid)->update($data) : $this->DB->table('FLXY_ROOM_OOOS')->insert($data);
@@ -1791,16 +1817,13 @@ public function getRoomStatistics(){
     public function deleteRoomOOS()
     {
         $sysid = $this->request->getPost('OOOS_ID');
-        try {          
-
-
+        try {   
+            
             $ROOMS =  getValueFromTable('ROOMS',$sysid,'FLXY_ROOM_OOOS');
             $ROOM_RETURN_STATUS =  getValueFromTable('ROOM_RETURN_STATUS',$sysid,'FLXY_ROOM_OOOS');
 
             $statusData = ['RM_STAT_ROOM_ID' => $ROOMS, 'RM_STAT_ROOM_STATUS'=> $ROOM_RETURN_STATUS, 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
-            $roomStatus = $this->DB->table('FLXY_ROOM_STATUS_LOG')->insert($statusData); 
-
-
+            $roomStatus = $this->DB->table('FLXY_ROOM_STATUS_LOG')->insert($statusData);
             $return = $this->DB->table('FLXY_ROOM_OOOS')->delete(['OOOS_ID' => $sysid]);
             $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
             echo json_encode($result);

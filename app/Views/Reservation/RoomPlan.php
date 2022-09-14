@@ -4,11 +4,48 @@
 <?= $this->include('Layout/ErrorReport') ?>
 <style>
 
+/* .fc-scroller-canvas {
+    max-width: 100% !important;
+    min-width: 100% !important;
+} */
+
+.fc-time-area.fc-widget-header .fc-content table tr:nth-child(2){
+  display: none;
+}
+.fc-cell-text{
+  font-size: 13px !important;
+}
+.flxy_table_resp .table-bordered th{
+  padding-right: 12px !important;
+} 
+/* .fc-time-area  .fc-rows td.fc-widget-content {
+ 
+ padding: 0 25px !important;
+} */
+
+ .fc-time-area.fc-widget-header{
+  padding: 0 0px !important;
+}
+
+
+.fc-divider {
+  padding: 0 !important;
+}
+
+
+.fc-time-area .fc-rows td>div {
+    position: relative;
+    height: 37px !important;
+}
+
+.fc-rows table tr{
+  height: 37px !important;
+}
 #RoomStatisticsModal .fc-scroller, #calendarRoomPlan .fc-scroller {
     height: auto !important;
 }
   #calendar {
-    max-width: 1100px;
+    max-width: 1000px;
     margin: 40px auto;
     font-size: 14px;
   }
@@ -112,7 +149,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="popModalWindowlabel">Statistics</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
                 </div>
                 <div class="modal-body">
                <!-- Calendar Sidebar -->
@@ -271,12 +308,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="popModalWindowlabel">OOO / OOS </h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="OOS_Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="ooos-submit-form" onSubmit="return false">
                         <div id="OOOS_DIV" class="content">
                             <input type="hidden" name="OOOS_ID" id="OOOS_ID" class="form-control" />
+                            <input type="hidden" name="Room_ID" id="Room_ID" class="form-control" />
                             <div class="row g-3">
                                 <div class="border rounded p-4 mb-3">
                                     <div class="row">
@@ -369,7 +407,7 @@
                                 </div>
                                 <div class="d-flex col-12 justify-content-between">
                                     <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
+                                        data-bs-dismiss="modal" id="OOS_Close">Close</button>
                                 </div>
 
                             </div>
@@ -454,15 +492,17 @@ function roomPlanFunc(){
 
       defaultView: 'resourceTimelineWeek',
 
-      slotLabelFormat: [{
-        weekday: 'short',
-        month: 'numeric',
-        day: 'numeric',
-        omitCommas: true
-      }],
-      slotLabelInterval: {
-        days: 1
-      },
+    //   slotLabelFormat: [{
+    //     weekday: 'short',
+    //     month: 'numeric',
+    //     day: 'numeric',
+    //     omitCommas: true
+    //   }],
+    //   slotLabelInterval: {
+    //     days: 1
+    //   },
+      minTime:			'10:00:00',
+      maxTime:			'11:59:59',
 
       editable: true,
 
@@ -532,10 +572,10 @@ function roomPlanFunc(){
         <?php
         if (!empty($RoomReservations)) {
           foreach ($RoomReservations as $row) {
-            $start = date("Y-m-d H:i:s", strtotime($row['RESV_ARRIVAL_DT']));
+            $start = date("Y-m-d 11:00:00", strtotime($row['RESV_ARRIVAL_DT']));
             //$startDate = '2022-08-15';
 
-            $end = date("Y-m-d 23:59:59", strtotime($row['RESV_DEPARTURE']));
+            $end = date("Y-m-d 11:00:00", strtotime($row['RESV_DEPARTURE']));
             //$endDate = '2022-08-18 23:00:00';
         ?> {
               id: '<?php echo $row['RESV_ID'] ?>',
@@ -554,9 +594,12 @@ function roomPlanFunc(){
 
         <?php }
         } ?>
+
+
        
       ],
       eventClick: function(info) {
+        console.log(info);
         info.jsEvent.preventDefault(); // don't let the browser navigate
 
         if (info.event.id) {
@@ -675,8 +718,39 @@ function roomPlanFunc(){
         minute: '2-digit',
         second: '2-digit',
         hour12: false
+      },
+      dateClick: function(info) {
+        if (info.resource.id) {
+          let START = info.dateStr;
+          const STARTARRAY = START.split("T");
+          START = STARTARRAY[0];
+        $.ajax({
+          url: '<?php echo base_url('/checkArrivalExists') ?>',
+          data: 'ARRIVAL=' + START,
+          type: "POST",
+          dataType: 'json',
+          success: function(data) {
+            if (data.status_message != '') {
+              var mcontent = '';
+              mcontent += '<li>' + data.status_message + '</li>';
+
+              if (data.status == 1) {               
+                showModalAlert('error', mcontent);
+              } 
+              else{
+                var base_url = '<?php echo base_url()?>';
+                
+                var url = '/reservation?ROOM_ID='+info.resource.id+'&ARRIVAL_DATE='+START;
+                window.open(base_url+url);
+
+              }
+
+            }
+          }
+        });
       }
 
+      },
 
     });
 
@@ -1043,8 +1117,8 @@ function showRoomStatus() {
             $(row).attr('data-status_id', data['OOOS_ID']);
 
             if (dataIndex == 0) {
-                $(row).addClass('table-warning');
-                loadRoomStatusDetails(data['OOOS_ID']);
+                //$(row).addClass('table-warning');
+                //loadRoomStatusDetails(data['OOOS_ID']);
             }
         },
 
@@ -1078,13 +1152,17 @@ function loadRoomStatusDetails(OOOS_ID) {
             $(respn).each(function(inx, data) {
                 $.each(data, function(fields, datavals) {                   
                     var field = $.trim(fields);
-                    var dataval = $.trim(datavals);                  
-
+                    var dataval = $.trim(datavals); 
+                    
+                    
+                  
                    if ( field == 'STATUS_FROM_DATE' || field == 'STATUS_TO_DATE' ){
                         $('#' + field).datepicker("setDate", new Date(dataval)); 
                     } 
                    else if (field == 'ROOMS' || field == 'ROOM_STATUS' || field == 'ROOM_RETURN_STATUS' || field == 'ROOM_CHANGE_REASON') {
                         $('#' + field).val(dataval).trigger('change');
+                        
+                        if(field == 'ROOMS') $('#Room_ID').val(dataval);
                     } 
                    else {
                         $('#' + field).val(dataval);
@@ -1161,6 +1239,10 @@ $(document).on('click', '#Status_Details > tbody > tr', function() {
         });
 });
 
+
+$(document).on('click', '#OOS_Close', function() {
+  location.reload();
+});
 
 
 

@@ -62,7 +62,14 @@ class ApplicatioController extends BaseController
         $data['cancelReasons'] = $this->cancellationReasonList();
 
         $data['RESV_ID'] = null !== $this->request->getGet("RESV_ID") ? $this->request->getGet("RESV_ID") : null;
-        $data['CUSTOMER_ID'] = null !== $this->request->getGet("RESV_ID") ? getValueFromTable('RESV_NAME',$this->request->getGet("RESV_ID"),'FLXY_RESERVATION') : null;
+        $data['ROOM_ID'] = null !== $this->request->getGet("ROOM_ID") ? $this->request->getGet("ROOM_ID") : null;
+        $cond = "RM_ID = '".$this->request->getGet('ROOM_ID')."'";
+        $data['ROOM_NO'] = null !== $this->request->getGet("ROOM_ID") ? getValueFromTable('RM_NO',$cond,'FLXY_ROOM') : null;        
+        $data['ROOM_TYPE'] = null !== $this->request->getGet("ROOM_ID") ? getValueFromTable('RM_TYPE',$cond,'FLXY_ROOM') : null;
+        $data['ARRIVAL_DATE'] = null !== $this->request->getGet("ARRIVAL_DATE") ? date("d-M-Y", strtotime($this->request->getGet("ARRIVAL_DATE"))) : null;
+        $data['DEPARTURE_DATE'] = null !== $this->request->getGet("ARRIVAL_DATE") ? date("d-M-Y", strtotime("+1 day", strtotime($this->request->getGet("ARRIVAL_DATE")))): null; 
+        $cond = "RESV_ID = '".$this->request->getGet("RESV_ID")."'";
+        $data['CUSTOMER_ID'] = null !== $this->request->getGet("RESV_ID") ? getValueFromTable('RESV_NAME',$cond,'FLXY_RESERVATION') : null;
 
 
         //Check if RESV_ID exists in Customer table
@@ -3109,9 +3116,10 @@ class ApplicatioController extends BaseController
             $RESV_DEPARTURE = strtotime($RESV_DEPARTURE);
             $RESV_DEPARTURE = date('Y-m-d', $RESV_DEPARTURE);
             $TODAYDATE = date('Y-m-d');
-            $RESV_NIGHT=$this->request->getPost('RESV_NIGHT');
-            $RESV_ADULTS=$this->request->getPost('RESV_ADULTS');
-            $RESV_CHILDREN=$this->request->getPost('RESV_CHILDREN');
+            $RESV_NIGHT = $this->request->getPost('RESV_NIGHT');
+            $RESV_ADULTS = $this->request->getPost('RESV_ADULTS');
+            $RESV_CHILDREN = $this->request->getPost('RESV_CHILDREN');
+
 
             $RESV_ROOM_CLASS = $this->request->getPost('RESV_ROOM_CLASS');
             $room_class_filter = !empty($RESV_ROOM_CLASS) ? " AND RM_TY_ROOM_CLASS = '".$RESV_ROOM_CLASS."'" : "";
@@ -3139,6 +3147,8 @@ class ApplicatioController extends BaseController
             
             $RATE_CLOSED  = $this->request->getPost('closed');
             $RATE_DAY_USE = $this->request->getPost('day_use');
+
+            $ROOM_PLAN_ROOM_TYPE =  $this->request->getPost('ROOM_PLAN_ROOM_TYPE') ?? 0;
 
             $param = [  'ARRIVAL_DT'=> $RESV_ARRIVAL_DT,
                         'DEPARTURE_DT'=> $RESV_DEPARTURE,
@@ -3255,12 +3265,19 @@ class ApplicatioController extends BaseController
                 }
             }
             $totalrmType = count($roomtypeStore);
-            // print_r($roomTypeArr);exit;
+             //print_r($roomTypeArr);
+             $j = 0;
             foreach($roomTypeArr as $key=>$data){ 
                 $trRow .='<tr class="ratePrice">';
                 $trRow .='<td><input type="hidden" id="RT_DESCRIPTION" value="'.trim($key).'">'.$key.'</td>';
+                
                 for($i=0;$i<$totalrmType;$i++){
-                    if(!empty($data[$i])){
+                    if(!empty($data[$i])){                   
+                        if($ROOM_PLAN_ROOM_TYPE == $data[$i]['ROOM_TYPE'] && $j == 0){
+                            $active = 'active';
+                            $j++;
+                        }                        
+                        else
                         $active = ($data[$i]['ACTUAL_ADULT_PRICE'] == $RESV_RATE && $data[$i]['ROOM_TYPE'] == $RESV_ROOM_TYPE) ? 'active' : '';
                         $trRow .='<td class="clickPrice '.$active.'" data-rate-info="'.$data[$i]['RT_INFO'].'">'
                         .'<input type="hidden" id="ACTUAL_ADULT_PRICE" value="'.number_format($data[$i]['ACTUAL_ADULT_PRICE'], 2).'">'

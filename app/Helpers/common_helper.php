@@ -72,7 +72,7 @@ function getValueFromTable($column, $cond, $table)
 
     $sql = "SELECT ".$param['COLUMN']."
             FROM ".$param['TABLENAME']."
-            WHERE ".$param['COND']." = :COND:";
+            WHERE ".$cond."";
 
     $response = $Db->query($sql,$param)->getRow()->{$param['COLUMN']};
     return $response;    

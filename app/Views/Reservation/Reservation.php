@@ -174,7 +174,7 @@ opacity: 1;
 
                 <div class="row">
                     <div class="col-md-3 mt-1 mb-3"><button type="button" class="btn btn-primary"
-                            onClick="addResvation()"><i class="fa-solid fa-plus fa-lg"></i> Add New</button></div>
+                            onClick="addResvation()" id="addReservation"><i class="fa-solid fa-plus fa-lg"></i> Add New</button></div>
                 </div>
                 <form class="dt_adv_search mb-2" method="POST">
                     <div class="border rounded p-3 mb-3">
@@ -1032,7 +1032,7 @@ opacity: 1;
                                             <div class="col-md-3">
                                                 <label class="form-label">Room</label>
                                                 <select name="RESV_ROOM" id="RESV_ROOM" data-width="100%"
-                                                    class="select2 form-select RESV_ROOM" data-allow-clear="true">
+                                                    class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                                 <input type="hidden" name="RESV_ROOM_ID" id="RESV_ROOM_ID" value=""
@@ -2959,6 +2959,12 @@ $(document).ready(function() {
         $(".editReserWindow").click();
     <?php
     }
+
+    if(!empty($ROOM_ID)) { ?>  
+       $("#addReservation").click();
+        
+    <?php
+    }
     ?>
 
     $('#Rate_info').DataTable({
@@ -3289,6 +3295,9 @@ function generateRateQuery(mode = 'AVG') {
 
     formData['closed'] = $('#closedRateFilter').is(':checked') ? '1' : '0';
     formData['day_use'] = $('#dayUseRateFilter').is(':checked') ? '1' : '0';
+    <?php if($ROOM_TYPE != ''){ ?>
+    formData['ROOM_PLAN_ROOM_TYPE'] = '<?php  echo $ROOM_TYPE;?>';
+    <?php } ?>
 
     $.ajax({
         url: '<?php echo base_url('/getRateQueryData') ?>',
@@ -3449,6 +3458,15 @@ function selectRate() {
                     '" value="' + dataSet['RM_TY_CODE'] + '">' + dataSet['RM_TY_DESC'] + '</option>';
                 $('#RESV_RTC').html(option).selectpicker('refresh');
                 $('#RESV_RM_TYPE').val(dataSet['RM_TY_CODE']).trigger('change');
+               <?php  if(!empty($ROOM_ID)) { ?>  
+                            
+                            $("#RESV_RM_TYPE").val('<?php echo $ROOM_TYPE; ?>');  
+                            $("#RESV_ROOM").val('<?php echo $ROOM_NO; ?>').trigger('change');             
+                            
+                            
+                        <?php
+                        }
+                        ?>
             }
         });
     }
@@ -3887,16 +3905,30 @@ function addResvation() {
 
     fillMembershipTypes('', 'add', '#RESV_MEMBER_TY_ADD');
 
-    var today = moment().format('DD-MM-YYYY');
-    var end = moment().add(1, 'days').format('DD-MM-YYYY');
-    $('.RESV_ARRIVAL_DT').datepicker({
-        format: 'd-M-yyyy',
-        autoclose: true
-    }).datepicker("setDate", today);
-    $('.RESV_DEPARTURE').datepicker({
-        format: 'd-M-yyyy',
-        autoclose: true
-    }).datepicker("setDate", end);
+
+    <?php if(!empty($ROOM_ID)) { ?>      
+      
+        $("#RESV_ARRIVAL_DT").val('<?php echo $ARRIVAL_DATE ?>');
+        $("#RESV_DEPARTURE").val('<?php echo $DEPARTURE_DATE ?>');      
+     
+       
+    <?php
+    }else{
+    ?>
+        var today = moment().format('DD-MM-YYYY');
+        var end = moment().add(1, 'days').format('DD-MM-YYYY');
+        $('.RESV_ARRIVAL_DT').datepicker({
+            format: 'd-M-yyyy',
+            autoclose: true
+        }).datepicker("setDate", today);
+        $('.RESV_DEPARTURE').datepicker({
+            format: 'd-M-yyyy',
+            autoclose: true
+        }).datepicker("setDate", end);
+        
+        <?php } ?>
+
+
 
     $('#RESV_NIGHT,#RESV_NO_F_ROOM,#RESV_ADULTS').val('1');
     $('#RESV_CONFIRM_YN,#RESV_NO_POST,#RESV_PICKUP_YN,#RESV_DROPOFF_YN,#RESV_EXT_PRINT_RT,#RESV_FIXED_RATE').val('N');
@@ -4226,6 +4258,7 @@ $(document).on('keyup', '.RESV_RTC .form-control', function() {
 });
 
 $(document).on('change', '#RESV_RM_TYPE,#RESV_RTC', function() {
+   
     var feature = $(this).find('option:selected').attr('data-feture');
     $('[name="RESV_FEATURE"]').val(feature);
 
