@@ -28,11 +28,11 @@ class PaymentRepository extends BaseController
         return $this->PaymentTransaction->save($data);
     }
 
-    public function createPaymentIntent($user, $amount)
+    public function createPaymentIntent($user, $data)
     {
         try {
-            $original_amount = $amount;
-            $amount = floatval($amount) * 100;
+            $original_amount = $data['amount'];
+            $amount = floatval($original_amount) * 100;
 
             // Use an existing Customer ID if this is a returning customer.
             if (is_null($customer_id = $user['CUST_STRIPE_CUSTOMER_ID'])) {
@@ -60,6 +60,15 @@ class PaymentRepository extends BaseController
                 'amount' => $amount,
                 'currency' => 'aed',
                 'customer' => $customer_id,
+                'metadata' => [
+                    'reservation_id' => $data['reservation_id'],
+                    'customer_id' => $user['USR_CUST_ID'],
+                    'amount' => $original_amount,
+                    'model' => $data['model'],
+                    'model_id' => $data['model_id'],
+                    'created_by' => $data['USR_ID'],
+                    'updated_by' => $data['USR_ID']
+                ]
             ]);
 
             $output = [
@@ -76,10 +85,6 @@ class PaymentRepository extends BaseController
 
     public function webhook()
     {
-        http_response_code(200);
-        exit;
-
-        $this->writeToFile('called');
         // Replace this endpoint secret with your endpoint's unique secret
         // If you are testing with the CLI, find the secret by running 'stripe listen'
         // If you are using an endpoint defined with the API or dashboard, look in your webhook settings
@@ -99,10 +104,10 @@ class PaymentRepository extends BaseController
         } catch (\UnexpectedValueException $e) {
             // Invalid payload
             echo '⚠️  Webhook error while parsing basic request.';
-            $this->writeToFile('⚠️  Webhook error while parsing basic request.');
             http_response_code(400);
             exit();
         }
+
         if ($endpoint_secret) {
             // Only verify the event if there is an endpoint secret defined
             // Otherwise use the basic decoded event
@@ -116,7 +121,6 @@ class PaymentRepository extends BaseController
             } catch (\Stripe\Exception\SignatureVerificationException $e) {
                 // Invalid signature
                 echo '⚠️  Webhook error while validating signature.';
-                $this->writeToFile('⚠️  Webhook error while validating signature.');
                 http_response_code(400);
                 exit();
             }
@@ -128,9 +132,8 @@ class PaymentRepository extends BaseController
                 $paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent
                 // Then define and call a method to handle the successful payment intent.
                 // handlePaymentIntentSucceeded($paymentIntent);
-                $this->writeToFile('paymentIntent');
-
                 break;
+
             case 'payment_method.attached':
                 $paymentMethod = $event->data->object; // contains a \Stripe\PaymentMethod
                 // Then define and call a method to handle the successful attachment of a PaymentMethod.
@@ -145,10 +148,17 @@ class PaymentRepository extends BaseController
         exit;
     }
 
-    public function writeToFile($text)
+    public function localWebhook($data)
     {
-        $myfile = fopen("text.txt", "w") or die("Unable to open file!");
-        fwrite($myfile, $text);
-        fclose($myfile);
+        if($data['type'] == 'payment_intent.succeded')
+        {
+            $obj_id = $data['id'];
+
+            $obj_data = $data['data']['object'];
+            $amount_received = $obj_data['amount_received'] / 100;
+            
+            $charge_data = $obj_data['charges']['data'][0];
+            $balance_transaction_id = $charge_data['balance_transaction'];
+        }
     }
 }

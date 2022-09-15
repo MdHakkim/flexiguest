@@ -19,17 +19,18 @@ class PaymentController extends BaseController
 
     public function createPaymentIntent()
     {
+        $data = $this->request->getVar();
         $user = $this->request->user;
-        $amount = $this->request->getVar('amount');
 
-        $result = $this->PaymentRepository->createPaymentIntent($user, $amount);
+        $result = $this->PaymentRepository->createPaymentIntent($user, $data);
         return $this->respond($result);
     }
 
     public function webhook()
     {
-        return $this->response->setStatusCode(200);
-        // return $this->respond(200);
-        $this->PaymentRepository->webhook();
+        $data = (array) $this->request->getVar();
+
+        // $this->PaymentRepository->webhook($data);
+        $this->PaymentRepository->localWebhook($data);
     }
 }
