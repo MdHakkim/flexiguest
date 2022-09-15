@@ -4,7 +4,6 @@ namespace App\Controllers\APIControllers\Guest;
 
 use App\Controllers\BaseController;
 use App\Controllers\Repositories\LaundryAmenitiesRepository;
-use App\Controllers\Repositories\PaymentRepository;
 use App\Models\LaundryAmenitiesOrder;
 use App\Models\LaundryAmenitiesOrderDetail;
 use App\Models\Product;
@@ -15,7 +14,6 @@ class LaundryAmenitiesController extends BaseController
     use ResponseTrait;
 
     private $LaundryAmenitiesRepository;
-    private $PaymentRepository;
     private $Product;
     private $LaundryAmenitiesOrder;
     private $LaundryAmenitiesOrderDetail;
@@ -23,7 +21,6 @@ class LaundryAmenitiesController extends BaseController
     public function __construct()
     {
         $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
-        $this->PaymentRepository = new PaymentRepository();
         $this->Product = new Product();
         $this->LaundryAmenitiesOrder = new LaundryAmenitiesOrder();
         $this->LaundryAmenitiesOrderDetail = new LaundryAmenitiesOrderDetail();

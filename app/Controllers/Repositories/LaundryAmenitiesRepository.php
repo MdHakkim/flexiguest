@@ -7,6 +7,7 @@ use App\Models\LaundryAmenitiesOrder;
 use App\Models\LaundryAmenitiesOrderDetail;
 use App\Models\Product;
 use CodeIgniter\API\ResponseTrait;
+use App\Controllers\Repositories\PaymentRepository;
 
 class LaundryAmenitiesRepository extends BaseController
 {
