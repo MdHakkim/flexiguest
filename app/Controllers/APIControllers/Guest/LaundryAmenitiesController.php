@@ -4,6 +4,7 @@ namespace App\Controllers\APIControllers\Guest;
 
 use App\Controllers\BaseController;
 use App\Controllers\Repositories\LaundryAmenitiesRepository;
+use App\Controllers\Repositories\PaymentRepository;
 use App\Models\LaundryAmenitiesOrder;
 use App\Models\LaundryAmenitiesOrderDetail;
 use App\Models\Product;
@@ -14,6 +15,7 @@ class LaundryAmenitiesController extends BaseController
     use ResponseTrait;
 
     private $LaundryAmenitiesRepository;
+    private $PaymentRepository;
     private $Product;
     private $LaundryAmenitiesOrder;
     private $LaundryAmenitiesOrderDetail;
@@ -21,6 +23,7 @@ class LaundryAmenitiesController extends BaseController
     public function __construct()
     {
         $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
+        $this->PaymentRepository = new PaymentRepository();
         $this->Product = new Product();
         $this->LaundryAmenitiesOrder = new LaundryAmenitiesOrder();
         $this->LaundryAmenitiesOrderDetail = new LaundryAmenitiesOrderDetail();
@@ -36,6 +39,20 @@ class LaundryAmenitiesController extends BaseController
 
         $data = (array) $this->request->getVar();
         $result = $this->LaundryAmenitiesRepository->placeOrder($user, $data);
+
+        if ($result['SUCCESS'] == 200 && $data['payment_method'] == 'Credit/Debit card') {
+            $data = $result['RESPONSE']['OUTPUT'];
+            $result = $this->PaymentRepository->createPaymentIntent($user, $data);
+
+            if ($result['SUCCESS'] == 200) {
+                $this->LaundryAmenitiesRepository->updateOrderById([
+                    'LAO_ID' => $data['model_id'],
+                    'LAO_PAYMENT_STATUS' => 'Payment Initiated',
+                    'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
+                    'LAO_UPDATED_BY' => $user['USR_ID'],
+                ]);
+            }
+        }
 
         return $this->respond($result);
     }

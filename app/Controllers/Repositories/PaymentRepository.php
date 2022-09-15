@@ -11,7 +11,6 @@ class PaymentRepository extends BaseController
 {
     use ResponseTrait;
 
-    private $LaundryAmenitiesRepository;
     private $PaymentTransaction;
     private $Customer;
 
@@ -19,8 +18,6 @@ class PaymentRepository extends BaseController
     {
         // This is your test secret API key.
         \Stripe\Stripe::setApiKey('sk_test_51Lg1MuA6gmHSIFPihgF6i18MSWFmCtqCs6OZPGgkfypw8cRPMRl2Q6lQyxOoCglwSgzBnZaLHCqN41Q5k4hVU6yF00H19RITcI');
-
-        $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
 
         $this->PaymentTransaction = new PaymentTransaction();
         $this->Customer = new Customer();
@@ -72,15 +69,6 @@ class PaymentRepository extends BaseController
                     'user_id' => $user['USR_ID'],
                 ]
             ]);
-
-            if($data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
-                $this->LaundryAmenitiesRepository->updateOrderById([
-                    'LAO_ID' => $data['model_id'],
-                    'LAO_PAYMENT_STATUS' => 'Payment Initiated',
-                    'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
-                    'LAO_UPDATED_BY' => $user['USR_ID'],
-                ]);
-            }
 
             $output = [
                 'client_secret' => $paymentIntent->client_secret,

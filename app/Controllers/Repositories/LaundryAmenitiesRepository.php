@@ -7,20 +7,17 @@ use App\Models\LaundryAmenitiesOrder;
 use App\Models\LaundryAmenitiesOrderDetail;
 use App\Models\Product;
 use CodeIgniter\API\ResponseTrait;
-use App\Controllers\Repositories\PaymentRepository;
 
 class LaundryAmenitiesRepository extends BaseController
 {
     use ResponseTrait;
 
-    private $PaymentRepository;
     private $Product;
     private $LaundryAmenitiesOrder;
     private $LaundryAmenitiesOrderDetail;
 
     public function __construct()
     {
-        $this->PaymentRepository = new PaymentRepository();
         $this->Product = new Product();
         $this->LaundryAmenitiesOrder = new LaundryAmenitiesOrder();
         $this->LaundryAmenitiesOrderDetail = new LaundryAmenitiesOrderDetail();
@@ -114,10 +111,8 @@ class LaundryAmenitiesRepository extends BaseController
                 'model_id' => $order_id,
                 'reservation_id' => $data['reservation_id'],
             ];
-
-            return $this->PaymentRepository->createPaymentIntent($user, $data);
         }
 
-        return responseJson(200, false, ['msg' => 'Order placed successfully.']);
+        return responseJson(200, false, ['msg' => 'Order placed successfully.'], $data);
     }
 }
