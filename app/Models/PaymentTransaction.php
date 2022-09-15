@@ -11,6 +11,8 @@ class PaymentTransaction extends Model
     protected $allowedFields = [
         'PT_RESERVATION_ID',
         'PT_CUSTOMER_ID',
+        'PT_PAYMENT_METHOD',
+        'PT_PAYMENT_OBJECT_ID',
         'PT_TRANSACTION_NO',
         'PT_AMOUNT',
         'PT_MODEL',

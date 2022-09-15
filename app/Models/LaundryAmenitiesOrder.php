@@ -14,8 +14,8 @@ class LaundryAmenitiesOrder extends Model
         'LAO_ROOM_ID',
         'LAO_TOTAL_PAYABLE',
         'LAO_PAYMENT_METHOD', // Pay at Reception, Samsung Pay, Credit/Debit card
-        'LAO_PAYMENT_STATUS', // UnPaid, Paid
-        'LAO_CREATED_BY',
+        'LAO_PAYMENT_STATUS', // UnPaid, Paid, Payment Initiated
+        'LAO_CREATED_BY',   
         'LAO_UPDATED_BY',
     ];
 

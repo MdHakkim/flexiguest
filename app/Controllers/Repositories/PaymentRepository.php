@@ -11,6 +11,7 @@ class PaymentRepository extends BaseController
 {
     use ResponseTrait;
 
+    private $LaundryAmenitiesRepository;
     private $PaymentTransaction;
     private $Customer;
 
@@ -18,6 +19,8 @@ class PaymentRepository extends BaseController
     {
         // This is your test secret API key.
         \Stripe\Stripe::setApiKey('sk_test_51Lg1MuA6gmHSIFPihgF6i18MSWFmCtqCs6OZPGgkfypw8cRPMRl2Q6lQyxOoCglwSgzBnZaLHCqN41Q5k4hVU6yF00H19RITcI');
+
+        $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
 
         $this->PaymentTransaction = new PaymentTransaction();
         $this->Customer = new Customer();
@@ -66,10 +69,18 @@ class PaymentRepository extends BaseController
                     'amount' => $original_amount,
                     'model' => $data['model'],
                     'model_id' => $data['model_id'],
-                    'created_by' => $user['USR_ID'],
-                    'updated_by' => $user['USR_ID']
+                    'user_id' => $user['USR_ID'],
                 ]
             ]);
+
+            if($data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
+                $this->LaundryAmenitiesRepository->createUpdateOrder([
+                    'LAO_ID' => $data['model_id'],
+                    'LAO_PAYMENT_STATUS' => 'Payment Initiated',
+                    'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
+                    'LAO_UPDATED_BY' => $user['USR_ID'],
+                ]);
+            }
 
             $output = [
                 'client_secret' => $paymentIntent->client_secret,
@@ -148,17 +159,63 @@ class PaymentRepository extends BaseController
         exit;
     }
 
+    public function paymentSucceded($data)
+    {
+        $payment_obj_id = $data['id'];
+
+        $obj_data = $data['data']['object'];
+        $meta_data = $obj_data['metadata'];
+        $charge_data = $obj_data['charges']['data'][0];
+
+        $payment_method = $obj_data['payment_method_types'][0];
+        $balance_transaction_id = $charge_data['balance_transaction'];
+
+        $this->createUpdateTransaction([
+            'PT_RESERVATION_ID' => $meta_data['reservation_id'],
+            'PT_CUSTOMER_ID' => $meta_data['customer_id'],
+            'PT_PAYMENT_METHOD' => $payment_method,
+            'PT_PAYMENT_OBJECT_ID' => $payment_obj_id,
+            'PT_TRANSACTION_NO' => $balance_transaction_id,
+            'PT_AMOUNT' => $meta_data['amount'],
+            'PT_MODEL' => $meta_data['model'],
+            'PT_MODEL_ID' => $meta_data['model_id'],
+            'PT_CREATED_BY' => $meta_data['user_id'],
+            'PT_UPDATED_BY' => $meta_data['user_id']
+        ]);
+
+        if($meta_data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
+            $this->LaundryAmenitiesRepository->createUpdateOrder([
+                'LAO_ID' => $meta_data['model_id'],
+                'LAO_PAYMENT_STATUS' => 'Paid',
+                'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
+                'LAO_UPDATED_BY' => $meta_data['user_id'],
+            ]);
+        }
+    }
+
+    public function paymentCancelled($data)
+    {
+        $obj_data = $data['data']['object'];
+        $meta_data = $obj_data['metadata'];
+
+        if($meta_data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
+            $this->LaundryAmenitiesRepository->createUpdateOrder([
+                'LAO_ID' => $meta_data['model_id'],
+                'LAO_PAYMENT_STATUS' => 'UnPaid',
+                'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
+                'LAO_UPDATED_BY' => $meta_data['user_id'],
+            ]);
+        }
+    }
+
     public function localWebhook($data)
     {
         if($data['type'] == 'payment_intent.succeded')
-        {
-            $obj_id = $data['id'];
-
-            $obj_data = $data['data']['object'];
-            $amount_received = $obj_data['amount_received'] / 100;
-            
-            $charge_data = $obj_data['charges']['data'][0];
-            $balance_transaction_id = $charge_data['balance_transaction'];
+        {   
+            $this->paymentSucceded($data);
+        }
+        else if($data['type'] == 'payment_intent.canceled') {
+            $this->paymentCancelled($data);
         }
     }
 }

@@ -32,5 +32,7 @@ class PaymentController extends BaseController
 
         // $this->PaymentRepository->webhook($data);
         $this->PaymentRepository->localWebhook($data);
+
+        return $this->response->setStatusCode(200);
     }
 }
