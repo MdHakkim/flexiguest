@@ -9,11 +9,16 @@
     min-width: 100% !important;
 } */
 
+.fc-resource-area .fc-rows table tr td:first-child:hover{
+  cursor: pointer;
+  color: #000;
+
+}
 .fc-time-area.fc-widget-header .fc-content table tr:nth-child(2){
   display: none;
 }
 .fc-cell-text{
-  font-size: 13px !important;
+  font-size: 14px !important;
 }
 .flxy_table_resp .table-bordered th{
   padding-right: 12px !important;
@@ -74,9 +79,9 @@
   }
 
   .fc-event-container .fc-timeline-event {
-    background-color: #405974 !important;
+    /* background-color: #405974 !important;
     border-color: #405974 !important;
-    color: rgb(255, 255, 255) !important;
+    color: rgb(255, 255, 255) !important; */
 
     top: 3px !important;
   }
@@ -93,6 +98,7 @@
 
   .tooltip {
     opacity: 1;
+    font-size: 13px !important;
   }
 
   #errorModal {
@@ -567,6 +573,11 @@ function roomPlanFunc(){
         <?php }
                   } ?>
       ],
+      resourceRender: function (renderInfo) {
+        renderInfo.el.addEventListener("click", function () {            
+            console.log('clicked:' + renderInfo.resource.id);
+           });
+      },
 
       events: [
         <?php
@@ -583,30 +594,59 @@ function roomPlanFunc(){
               title: '<?php echo $row['FULLNAME'] . ' - ' . $row['RESV_STATUS']; ?>',
               start: '<?php echo $start; ?>',
               end: '<?php echo $end; ?>',
-              backgroundColor: "#ccc",
-              borderColor: "#ddd",
-              textColor: "#fff",
-              backgroundColor: "#ccc",
-              borderColor: "#ddd",
-              textColor: "#fff",
-              
+              backgroundColor: "#405974 ",
+              borderColor: "#405974",
+              textColor: "#fff",                           
             },
 
         <?php }
         } ?>
+<?php
+        if (!empty($RoomOOS)) {
+          foreach ($RoomOOS as $row) { ?>
+            {
+              id: '<?php echo $row['OOOS_ID'] ?>',
+              resourceId: '<?php echo $row['ROOMS'] ?>',
+              title: '<?php echo $row['REASON']; ?>',
+              start: '<?php echo date("Y-m-d 00:00:00", strtotime($row["STATUS_FROM_DATE"])); ?>',
+              end: '<?php echo date("Y-m-d 13:00:00", strtotime($row["STATUS_TO_DATE"])); ?>',
+              backgroundColor: 'rgb(195, 8, 8, 0.93)',
+              borderColor: "rgb(195, 8, 8, 0.93)",
+              textColor: "#fff",            
+              
+            },
+
+            <?php }
+          } ?>
 
 
        
       ],
       eventClick: function(info) {
         console.log(info);
-        info.jsEvent.preventDefault(); // don't let the browser navigate
+        info.jsEvent.preventDefault(); 
 
-        if (info.event.id) {
-          var base_url = '<?php echo base_url()?>';
-          var url = '/reservation?RESV_ID='+info.event.id;
-          window.open(base_url+url);
-        }
+        $.ajax({
+          url: '<?php echo base_url('/checkReservationExists') ?>',
+          data: 'ID=' + info.event.id,
+          type: "POST",
+          dataType: 'json',
+          success: function(data) {
+            if (data.status == 1) {
+            var base_url = '<?php echo base_url()?>';
+            var url = '/reservation?RESV_ID='+info.event.id;
+              window.open(base_url+url);
+            }
+            else{
+              $("#showRoomOSModal").click()
+            }
+
+
+          }
+        });
+
+
+        
       },
      
       
@@ -710,6 +750,7 @@ function roomPlanFunc(){
               placement: 'top',
               trigger: 'hover',
               container: 'body',
+
         });
       },
     
@@ -1010,7 +1051,7 @@ $(document).on('click', '.add-room-status', function() {
 });
 
 $(document).on('click', '.save-roomstatus-details', function() {
-
+  $('#ROOMS').prop("disabled", false);
     hideModalAlerts();
     var formSerialization = $('#ooos-submit-form').serializeArray();
     var url = '<?php echo base_url('/insertRoomOOS') ?>';
@@ -1023,6 +1064,7 @@ $(document).on('click', '.save-roomstatus-details', function() {
         },
         dataType: 'json',
         success: function(respn) {
+          
             var response = respn['SUCCESS'];
             if (response == '2') {
                 mcontent = '<li>Something went wrong</li>';
@@ -1047,6 +1089,7 @@ $(document).on('click', '.save-roomstatus-details', function() {
                   
                     $('#OOOS_ID').val(respn['RESPONSE']['OUTPUT']);
                     showRoomStatus();
+                    clearFormFields('#OOOSCharges');
                 }
             }
         }
@@ -1134,6 +1177,7 @@ function showRoomStatus() {
 
 
 function loadRoomStatusDetails(OOOS_ID) {
+  $('#ROOMS').prop("disabled", true);
     var url = '<?php echo base_url('/showRoomStatusDetails') ?>';
     $.ajax({
         url: url,
@@ -1152,8 +1196,7 @@ function loadRoomStatusDetails(OOOS_ID) {
             $(respn).each(function(inx, data) {
                 $.each(data, function(fields, datavals) {                   
                     var field = $.trim(fields);
-                    var dataval = $.trim(datavals); 
-                    
+                    var dataval = $.trim(datavals);                
                     
                   
                    if ( field == 'STATUS_FROM_DATE' || field == 'STATUS_TO_DATE' ){
@@ -1162,7 +1205,7 @@ function loadRoomStatusDetails(OOOS_ID) {
                    else if (field == 'ROOMS' || field == 'ROOM_STATUS' || field == 'ROOM_RETURN_STATUS' || field == 'ROOM_CHANGE_REASON') {
                         $('#' + field).val(dataval).trigger('change');
                         
-                        if(field == 'ROOMS') $('#Room_ID').val(dataval);
+                        if(field == 'ROOMS')  $('#Room_ID').val(dataval);
                     } 
                    else {
                         $('#' + field).val(dataval);
@@ -1178,7 +1221,7 @@ $(document).on('click', '.delete-room-status', function() {
     hideModalAlerts();
     $('.dtr-bs-modal').modal('hide');
     var status_id = $('#Status_Details').find("tr.table-warning").data("status_id");
-
+if(status_id > 0){
     bootbox.confirm({
         message: "Status is active. Do you want to Delete?",
         buttons: {
@@ -1224,6 +1267,11 @@ $(document).on('click', '.delete-room-status', function() {
             }
         }
     });
+  }else{
+    showModalAlert('warning',
+            '<li>Please select a status</li>');
+        $('#warningModal').delay(2500).fadeOut(); 
+  }
 
 });
 
