@@ -438,8 +438,10 @@ opacity: 1;
                             <button type="button" class="btn btn-primary cancel-reservation d-none" data_sysid=""
                                 data_custId="">Cancel</button>
                             <button type="button" class="btn btn-primary show-activity-log">Changes</button>
+                            <button type="button" class="btn btn-primary web-link-btn d-none" id="Resv-Check-In" > Check In</button>
                             <button type="button" class="btn btn-primary checkout-reservation"
                                 onclick="reservationCheckout()">Checkout</button>
+                                
                             <button type="button" class="btn btn-primary web-link-btn">Docs</button>
                             <button type="button" class="btn btn-primary mt-2" id="fixedChargeButton" data_sysid=""
                                 style="width: 135px;">Fixed Charges</button>
@@ -453,6 +455,7 @@ opacity: 1;
                                 data_sysid="">Reinstate</button>
                             <button type="button" class="btn btn-primary shares-btn">Shares</button>
                             <button type="button" class="btn btn-primary" id="traceButton" data_sysid="">Traces</button>
+                            
                         </div>
                     </div>
                 </div>
@@ -3620,19 +3623,25 @@ function displayResvOptionButtons(ressysId) {
                 $('.reinstate-reservation').addClass('d-none').prop('disabled', true);
 
                 if (respn.RESV_STATUS == 'Due Pre Check-In' || respn.RESV_STATUS ==
-                    'Pre Checked-In')
+                    'Pre Checked-In'){
                     $('.cancel-reservation').removeClass('d-none').prop('disabled', false);
+                    $('#Resv-Check-In').removeClass('d-none').prop('disabled', false);
+                    
+                    }
                 else {
                     $('.cancel-reservation').addClass('d-none').prop('disabled', true);
                     if (respn.RESV_STATUS == 'Checked-In' || respn.RESV_STATUS ==
                         'Checked-Out-Requested') {
+                        $('#Resv-Check-In').removeClass('d-none').prop('disabled', true);
                         $('.checkout-reservation').removeClass('d-none');
                         if (currentDate >= departureDate) {
                             $('.checkout-reservation').prop('disabled', false);
+                            
                         }
                     } else if (respn.RESV_STATUS == 'Checked-Out') {
                         $('.accompany-guests,#proformaButton').prop(
                             'disabled', true);
+                        $('#Resv-Check-In').removeClass('d-none').prop('disabled', true);
                     }
                 }
             }
@@ -3797,6 +3806,9 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                 $('.RESV_NAME,#CUST_FIRST_NAME,#RESV_RESRV_TYPE,#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RM_TYPE,#RESV_ROOM')
                     .prop('readonly', true);
                 $('.RESV_ARRIVAL_DT').datepicker("destroy");
+            }
+            else if($('#RESV_STATUS').val() == 'Due Pre Check-In' || $('#RESV_STATUS').val() == 'Pre Checked-In'){
+
             }
         }
     });
