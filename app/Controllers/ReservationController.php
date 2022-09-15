@@ -1354,7 +1354,7 @@ public function checkItemReserved($item_id, $sCurrentDate){
 
     public function getRoomOOS(){
         $response = NULL;
-        $sql = "SELECT OOOS_ID, ROOMS, STATUS_FROM_DATE, STATUS_TO_DATE, ROOM_STATUS, RM_STATUS_CODE FROM FLXY_ROOM_OOOS INNER JOIN FLXY_ROOM_STATUS_MASTER ON RM_STATUS_ID = ROOM_STATUS";       
+        $sql = "SELECT OOOS_ID, ROOMS, STATUS_FROM_DATE, STATUS_TO_DATE, ROOM_STATUS, CONCAT_WS(' - ', RM_STATUS_CODE, RM_STATUS_CHANGE_CODE) AS REASON FROM FLXY_ROOM_OOOS INNER JOIN FLXY_ROOM_STATUS_MASTER ON RM_STATUS_ID = ROOM_STATUS INNER JOIN FLXY_ROOM_STATUS_CHANGE_REASON ON ROOM_CHANGE_REASON = RM_STATUS_CHANGE_ID ";       
         $responseCount = $this->DB->query($sql)->getNumRows();
         if($responseCount > 0){
             $response = $this->DB->query($sql)->getResultArray();           
@@ -1535,6 +1535,18 @@ public function checkArrivalExists(){
         $data['status_message'] = "Already Reserved. Please choose different dates";
         $data['status'] = 1;
     }               
+    echo json_encode($data);
+}
+
+public function checkReservationExists(){
+    $RESV_ID  = $this->request->getPost('ID');    
+    $data = [];
+    $data['status'] = 0;
+    $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE RESV_ID = '".$RESV_ID."'";       
+    $responseCount = $this->DB->query($sql)->getNumRows();
+    if($responseCount > 0)       
+        $data['status'] = 1;
+                 
     echo json_encode($data);
 }
 
@@ -1791,7 +1803,7 @@ public function getRoomStatistics(){
 
            $return = !empty($sysid) ? $this->DB->table('FLXY_ROOM_OOOS')->where('OOOS_ID', $sysid)->update($data) : $this->DB->table('FLXY_ROOM_OOOS')->insert($data);
 
-           $statusData = ['RM_STAT_ROOM_ID' => $this->request->getPost('ROOMS'), 'RM_STAT_ROOM_STATUS'=> trim($this->request->getPost('ROOM_STATUS')), 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
+           $statusData = ['RM_STAT_ROOM_ID' => $this->request->getPost('ROOMS'), 'RM_STAT_ROOM_STATUS'=> trim($this->request->getPost('ROOM_RETURN_STATUS')), 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
 
            $roomStatus = $this->DB->table('FLXY_ROOM_STATUS_LOG')->insert($statusData);          
 
@@ -1818,15 +1830,15 @@ public function getRoomStatistics(){
     {
         $sysid = $this->request->getPost('OOOS_ID');
         try {   
-            
-            $ROOMS =  getValueFromTable('ROOMS',$sysid,'FLXY_ROOM_OOOS');
-            $ROOM_RETURN_STATUS =  getValueFromTable('ROOM_RETURN_STATUS',$sysid,'FLXY_ROOM_OOOS');
-
-            $statusData = ['RM_STAT_ROOM_ID' => $ROOMS, 'RM_STAT_ROOM_STATUS'=> $ROOM_RETURN_STATUS, 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
-            $roomStatus = $this->DB->table('FLXY_ROOM_STATUS_LOG')->insert($statusData);
-            $return = $this->DB->table('FLXY_ROOM_OOOS')->delete(['OOOS_ID' => $sysid]);
-            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
-            echo json_encode($result);
+                $cond = "OOOS_ID = '".$sysid."'";
+                $ROOMS =  getValueFromTable('ROOMS',$cond,'FLXY_ROOM_OOOS');                
+                $ROOM_RETURN_STATUS =  getValueFromTable('ROOM_RETURN_STATUS',$cond,'FLXY_ROOM_OOOS');
+               
+                $statusData = ['RM_STAT_ROOM_ID' => $ROOMS, 'RM_STAT_ROOM_STATUS'=> $ROOM_RETURN_STATUS, 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
+                $roomStatus = $this->DB->table('FLXY_ROOM_STATUS_LOG')->insert($statusData);            
+                $return = $this->DB->table('FLXY_ROOM_OOOS')->delete(['OOOS_ID' => $sysid]);          
+                $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+                echo json_encode($result);
         } catch(\Exception $e) {
             return $e->getMessage();
         }

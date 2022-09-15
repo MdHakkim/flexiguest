@@ -3908,8 +3908,8 @@ function addResvation() {
 
     <?php if(!empty($ROOM_ID)) { ?>      
       
-        $("#RESV_ARRIVAL_DT").val('<?php echo $ARRIVAL_DATE ?>');
-        $("#RESV_DEPARTURE").val('<?php echo $DEPARTURE_DATE ?>');      
+        $(".RESV_ARRIVAL_DT").val('<?php echo $ARRIVAL_DATE ?>');
+        $(".RESV_DEPARTURE").val('<?php echo $DEPARTURE_DATE ?>');      
      
        
     <?php
