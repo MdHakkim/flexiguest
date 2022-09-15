@@ -74,7 +74,7 @@ class PaymentRepository extends BaseController
             ]);
 
             if($data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
-                $this->LaundryAmenitiesRepository->createUpdateOrder([
+                $this->LaundryAmenitiesRepository->updateOrderById([
                     'LAO_ID' => $data['model_id'],
                     'LAO_PAYMENT_STATUS' => 'Payment Initiated',
                     'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
@@ -184,7 +184,7 @@ class PaymentRepository extends BaseController
         ]);
 
         if($meta_data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
-            $this->LaundryAmenitiesRepository->createUpdateOrder([
+            $this->LaundryAmenitiesRepository->updateOrderById([
                 'LAO_ID' => $meta_data['model_id'],
                 'LAO_PAYMENT_STATUS' => 'Paid',
                 'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
@@ -199,7 +199,7 @@ class PaymentRepository extends BaseController
         $meta_data = $obj_data['metadata'];
 
         if($meta_data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
-            $this->LaundryAmenitiesRepository->createUpdateOrder([
+            $this->LaundryAmenitiesRepository->updateOrderById([
                 'LAO_ID' => $meta_data['model_id'],
                 'LAO_PAYMENT_STATUS' => 'UnPaid',
                 'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
