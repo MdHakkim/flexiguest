@@ -3294,6 +3294,7 @@ function generateRateQuery(mode = 'AVG') {
     // Closed and Day Use filters
 
     formData['resv_room_type'] = $('#RESV_RM_TYPE').val();
+    formData['resv_room_type_id'] = $('#RESV_RM_TYPE').data('room-type-id');
     formData['resv_rate'] = $('#RESV_RATE').val();
 
     formData['closed'] = $('#closedRateFilter').is(':checked') ? '1' : '0';
@@ -4110,6 +4111,13 @@ function submitForm(id, mode, event) {
     $('#loader_flex_bg').show();
     $('#errorModal').hide();
     var formSerialization = $('#' + id).serializeArray();
+    var RESV_RM_TYPE_ID = $('.RESV_RM_TYPE').find(':selected').attr('data-room-type-id') ?? 0;    
+    
+    formSerialization.push({
+        name: 'RESV_RM_TYPE_ID',
+        value: RESV_RM_TYPE_ID
+    });
+
 
     if (mode == 'R') {
         var url = '<?php echo base_url('/insertReservation') ?>';
