@@ -96,14 +96,12 @@ class PaymentController extends BaseController
 
     public function webhook()
     {
-        $data = (array) $this->request->getVar();
+        $data = $this->request->getVar();
 
         // $this->PaymentRepository->webhook($data);
-        if($data['type'] == 'payment_intent.succeded')
-        {   
+        if ($data->type == 'payment_intent.succeeded') {
             $this->paymentSucceded($data);
-        }
-        else if($data['type'] == 'payment_intent.canceled') {
+        } else if ($data->type == 'payment_intent.canceled') {
             $this->paymentCancelled($data);
         }
 
@@ -112,50 +110,52 @@ class PaymentController extends BaseController
 
     public function paymentSucceded($data)
     {
-        $payment_obj_id = $data['id'];
+        $payment_obj_id = $data->id;
 
-        $obj_data = $data['data']['object'];
-        $meta_data = $obj_data['metadata'];
-        $charge_data = $obj_data['charges']['data'][0];
+        $obj_data = $data->data->object;
+        $meta_data = $obj_data->metadata;
+        $charge_data = $obj_data->charges->data[0];
 
-        $payment_method = $obj_data['payment_method_types'][0];
-        $balance_transaction_id = $charge_data['balance_transaction'];
+        $payment_method = $obj_data->payment_method_types[0];
+        $balance_transaction_id = $charge_data->balance_transaction;
 
         $this->PaymentRepository->createUpdateTransaction([
-            'PT_RESERVATION_ID' => $meta_data['reservation_id'],
-            'PT_CUSTOMER_ID' => $meta_data['customer_id'],
+            'PT_RESERVATION_ID' => $meta_data->reservation_id,
+            'PT_CUSTOMER_ID' => $meta_data->customer_id,
             'PT_PAYMENT_METHOD' => $payment_method,
             'PT_PAYMENT_OBJECT_ID' => $payment_obj_id,
             'PT_TRANSACTION_NO' => $balance_transaction_id,
-            'PT_AMOUNT' => $meta_data['amount'],
-            'PT_MODEL' => $meta_data['model'],
-            'PT_MODEL_ID' => $meta_data['model_id'],
-            'PT_CREATED_BY' => $meta_data['user_id'],
-            'PT_UPDATED_BY' => $meta_data['user_id']
+            'PT_AMOUNT' => $meta_data->amount,
+            'PT_MODEL' => $meta_data->model,
+            'PT_MODEL_ID' => $meta_data->model_id,
+            'PT_CREATED_BY' => $meta_data->user_id,
+            'PT_UPDATED_BY' => $meta_data->user_id
         ]);
 
-        if($meta_data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
-            $this->LaundryAmenitiesRepository->updateOrderById([
-                'LAO_ID' => $meta_data['model_id'],
-                'LAO_PAYMENT_STATUS' => 'Paid',
-                'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
-                'LAO_UPDATED_BY' => $meta_data['user_id'],
-            ]);
+        if ($meta_data->model == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
+            if (!empty($this->LaundryAmenitiesRepository->orderById($meta_data->model_id)))
+                $this->LaundryAmenitiesRepository->updateOrderById([
+                    'LAO_ID' => $meta_data->model_id,
+                    'LAO_PAYMENT_STATUS' => 'Paid',
+                    'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
+                    'LAO_UPDATED_BY' => $meta_data->user_id,
+                ]);
         }
     }
 
     public function paymentCancelled($data)
     {
-        $obj_data = $data['data']['object'];
-        $meta_data = $obj_data['metadata'];
+        $obj_data = $data->data->object;
+        $meta_data = $obj_data->metadata;
 
-        if($meta_data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
-            $this->LaundryAmenitiesRepository->updateOrderById([
-                'LAO_ID' => $meta_data['model_id'],
-                'LAO_PAYMENT_STATUS' => 'UnPaid',
-                'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
-                'LAO_UPDATED_BY' => $meta_data['user_id'],
-            ]);
+        if ($meta_data->model == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
+            if (!empty($this->LaundryAmenitiesRepository->orderById($meta_data->model_id)))
+                $this->LaundryAmenitiesRepository->updateOrderById([
+                    'LAO_ID' => $meta_data->model_id,
+                    'LAO_PAYMENT_STATUS' => 'UnPaid',
+                    'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
+                    'LAO_UPDATED_BY' => $meta_data->user_id,
+                ]);
         }
     }
 }

@@ -55,6 +55,11 @@ class LaundryAmenitiesRepository extends BaseController
         return $this->LaundryAmenitiesOrder->save($data);
     }
 
+    public function orderById($id)
+    {
+        return $this->LaundryAmenitiesOrder->find($id);
+    }
+
     public function placeOrder($user, $data)
     {
         $user_id = $user['USR_ID'];
