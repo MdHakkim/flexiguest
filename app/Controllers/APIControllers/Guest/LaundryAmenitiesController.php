@@ -43,15 +43,6 @@ class LaundryAmenitiesController extends BaseController
         if ($result['SUCCESS'] == 200 && $data['payment_method'] == 'Credit/Debit card') {
             $data = $result['RESPONSE']['OUTPUT'];
             $result = $this->PaymentRepository->createPaymentIntent($user, $data);
-
-            if ($result['SUCCESS'] == 200) {
-                $this->LaundryAmenitiesRepository->updateOrderById([
-                    'LAO_ID' => $data['model_id'],
-                    'LAO_PAYMENT_STATUS' => 'Payment Processing',
-                    'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
-                    'LAO_UPDATED_BY' => $user['USR_ID'],
-                ]);
-            }
         }
 
         return $this->respond($result);

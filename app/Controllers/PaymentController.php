@@ -101,6 +101,8 @@ class PaymentController extends BaseController
         // $this->PaymentRepository->webhook($data);
         if ($data->type == 'payment_intent.succeeded') {
             $this->paymentSucceded($data);
+        } else if ($data->type == 'payment_intent.processing') {
+            $this->paymentProcessing($data);
         } else if ($data->type == 'payment_intent.canceled') {
             $this->paymentCancelled($data);
         }
@@ -137,6 +139,22 @@ class PaymentController extends BaseController
                 $this->LaundryAmenitiesRepository->updateOrderById([
                     'LAO_ID' => $meta_data->model_id,
                     'LAO_PAYMENT_STATUS' => 'Paid',
+                    'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
+                    'LAO_UPDATED_BY' => $meta_data->user_id,
+                ]);
+        }
+    }
+
+    public function paymentProcessing($data)
+    {
+        $obj_data = $data->data->object;
+        $meta_data = $obj_data->metadata;
+
+        if ($meta_data->model == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
+            if (!empty($this->LaundryAmenitiesRepository->orderById($meta_data->model_id)))
+                $this->LaundryAmenitiesRepository->updateOrderById([
+                    'LAO_ID' => $meta_data->model_id,
+                    'LAO_PAYMENT_STATUS' => 'Payment Processing',
                     'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
                     'LAO_UPDATED_BY' => $meta_data->user_id,
                 ]);
