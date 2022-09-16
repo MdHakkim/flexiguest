@@ -51,7 +51,7 @@ class LaundryAmenitiesController extends BaseController
         if(empty($payment_status))
             return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
 
-        if($payment_status['LAO_PAYMENT_STATUS'] == 'UnPaid' || $payment_status['LAO_PAYMENT_STATUS'] == 'Payment Processing')
+        if($payment_status['LAO_PAYMENT_STATUS'] == 'UnPaid')
             return $this->respond(responseJson(202, true, ['msg' => 'Can\'t change status becasue payment is still pending for this order.']));
         
         $this->LaundryAmenitiesOrderDetail->update($order_detail_id, ['LAOD_DELIVERY_STATUS' => $delivery_status]);
