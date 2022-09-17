@@ -100,9 +100,10 @@ class TransportRequestController extends BaseController
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
         $all_requests = $this->TransportRequest
-            ->select('FLXY_TRANSPORT_REQUESTS.*, pp.PP_POINT, dp.DP_POINT, RM_NO')
+            ->select('FLXY_TRANSPORT_REQUESTS.*, pp.PP_POINT, dp.DP_POINT, RM_NO, TT_LABEL')
             ->join('FLXY_PICKUP_POINTS as pp', 'FLXY_TRANSPORT_REQUESTS.TR_PICKUP_POINT_ID = pp.PP_ID', 'left')
             ->join('FLXY_DROPOFF_POINTS as dp', 'FLXY_TRANSPORT_REQUESTS.TR_DROPOFF_POINT_ID = dp.DP_ID', 'left')
+            ->join('FLXY_TRANSPORT_TYPES', 'TR_TRANSPORT_TYPE_ID = TT_ID', 'left')
             ->join('FLXY_ROOM', 'TR_ROOM_ID = RM_ID', 'left')
             ->where('TR_CUSTOMER_ID', $customer_id)
             ->orderBy('TR_ID', 'desc')
