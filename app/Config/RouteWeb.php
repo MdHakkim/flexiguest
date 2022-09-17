@@ -341,6 +341,15 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'],'/insertAmenitiesRequest', 'FacilityController::insertAmenitiesRequest');
     $routes->match(['post'],'/editAmenitiesRequest', 'FacilityController::editAmenitiesRequest');
     $routes->match(['post'],'/deleteAmenitiesRequest', 'FacilityController::deleteAmenitiesRequest');  
+    $routes->match(['post'], '/updateAmenityOrder', 'FacilityController::updateAmenityOrder');
+    $routes->match(['post'], '/amenityOrderDetailsView', 'FacilityController::AmenityOrderDetailsView');
+    $routes->match(['post'], '/updateAmenityOrderDetails', 'FacilityController::updateAmenityOrderDetails');
+    $routes->match(['post'], '/searchRequestProducts', 'FacilityController::searchRequestProducts');
+    $routes->match(['post'], '/showRequestProducts', 'FacilityController::showRequestProducts');
+    $routes->match(['post'], '/getReservationCustomers', 'FacilityController::getReservationCustomers');
+    $routes->match(['post'], '/showReservationCustomers', 'FacilityController::showReservationCustomers');
+    $routes->match(['post'], '/insertAmenityOrder', 'FacilityController::insertAmenityOrder');
+    
     
     $routes->get('/cancellationReason', 'MastersController::cancellationReason');
     $routes->match(['post'],'/cancellationReasonView', 'MastersController::CancellationReasonView');

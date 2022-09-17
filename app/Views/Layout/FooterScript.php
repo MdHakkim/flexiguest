@@ -44,6 +44,8 @@
     <!-- Added by Deleep -->
 
     <script src="<?php echo base_url('assets/js/bootstrap-datepicker.min.js') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/moment/moment.js') ?>"></script>
+    <script src="<?php echo base_url('assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/bootstrap-datetimepicker.min.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/defaults-en_US.js') ?>"></script>
     <script src="<?php echo base_url('assets/js/bootbox.js') ?>"></script>

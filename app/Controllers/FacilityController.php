@@ -7,6 +7,9 @@ use  App\Libraries\EmailLibrary;
 use App\Models\ShutlStages;
 use App\Models\Shuttle;
 use App\Models\ShuttleRoute;
+use App\Models\LaundryAmenitiesOrder;
+use App\Models\LaundryAmenitiesOrderDetail;
+use App\Models\Product;
 use CodeIgniter\API\ResponseTrait;
 use DateTime;
 use DateTimeZone;
@@ -27,13 +30,17 @@ class FacilityController extends BaseController
     {
         $this->Db = \Config\Database::connect();
         $this->session = \Config\Services::session();
-        helper(['form', 'responsejson', 'upload']);
+        helper(['form', 'responsejson', 'upload', 'custom', 'common']);
         $this->request = \Config\Services::request();
         $this->todayDate = new DateTime("now", new DateTimeZone('Asia/Dubai'));
 
         $this->Shuttle = new Shuttle();
         $this->ShutlStages = new ShutlStages();
         $this->ShuttleRoute = new ShuttleRoute();
+
+        $this->Product = new Product();
+        $this->LaundryAmenitiesOrder = new LaundryAmenitiesOrder();
+        $this->LaundryAmenitiesOrderDetail = new LaundryAmenitiesOrderDetail();
     }
     // CODE BY ALEESHA  - Maintenance Request
     public function maintenanceRequest()
@@ -874,4 +881,498 @@ class FacilityController extends BaseController
             return $this->respond(responseJson(500, true, "Something Went Wrong!"));
         }
     }
+
+    /**************      Amenities Functions      ***************/
+
+    public function amenitiesRequests()
+    {    
+        $data = [
+            'toggleButton_javascript' => toggleButton_javascript(),
+            'clearFormFields_javascript' => clearFormFields_javascript(),
+            'blockLoader_javascript' => blockLoader_javascript(),
+        ];
+
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+        $data['productOptions'] = $this->productList();
+        $data['reservationOptions'] = $this->reservationList();
+        $data['js_to_load'] = array("amenitiesRequestForm.js");
+        
+        return view('Amenities/AmenitiesRequestView', $data);
+    }
+
+    public function getAmenitiesRequestList()
+    {
+        $_POST = filter_var($_POST, \FILTER_CALLBACK, ['options' => 'trim']);
+
+        //echo json_encode(print_r($_POST));
+        //exit;
+
+        $user_id = session()->get('USR_ID');
+        $user_role_id = session()->get('USR_ROLE_ID');
+        
+        $init_cond = $user_role_id == 1 ? array() : array('LAO_CREATED_BY' => $user_id);
+
+        $search_keys = [
+            'S_CUST_FULL_NAME', 'S_LAO_CREATED_AT', 'S_RESV_NO', 'S_RM_NO', 'S_LAO_TOTAL_PAYABLE',
+            'S_LAO_PAYMENT_STATUS', 'S_PRODUCTS'
+        ];
+
+        $init_cond = array();
+
+        if ($search_keys != NULL) {
+            foreach ($search_keys as $search_key) {
+                if (null !== $this->request->getPost($search_key) && !empty($this->request->getPost($search_key))) {
+                    $value = $this->request->getPost($search_key);
+
+                    switch ($search_key) {
+                        case 'S_CUST_FULL_NAME': 
+                            $init_cond["CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) LIKE "] = "'%$value%'"; 
+                            break;
+
+                        case 'S_LAO_CREATED_AT':
+                            $dates = explode(' to ', $value);
+                            $dateCond = isset($dates[1]) ? "LAO_CREATED_AT BETWEEN '".$dates[0]."' AND '".$dates[1]."'" : "FORMAT(LAO_CREATED_AT, 'dd-MMM-yyyy') = '".$dates[0]."'";
+                            $init_cond[$dateCond] = "";
+                            break;
+
+                        case 'S_LAO_TOTAL_PAYABLE':
+                            $init_cond["" . ltrim($search_key, "S_") . " <= "] = "'$value'";
+                            break;
+
+                        case 'S_CUST_FULL_NAME':
+                        case 'S_RESV_NO':
+                            
+                            $init_cond["" . ltrim($search_key, "S_") . " LIKE "] = "'%$value%'"; 
+                            break;
+
+                        case 'S_PRODUCTS':
+                            $init_cond["LAO_ID IN"] = "(SELECT LAOD_ORDER_ID 
+                                                        FROM FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS 
+                                                        WHERE LAOD_PRODUCT_ID IN (".implode(",", $value)."))";
+                            break;
+                        default:
+                            $init_cond["" . ltrim($search_key, "S_") . " = "] = "'$value'";
+                            break;
+                    }
+                }
+            }
+        }
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_LAUNDRY_AMENITIES_ORDERS 
+                      LEFT JOIN FLXY_CUSTOMER on FLXY_LAUNDRY_AMENITIES_ORDERS.LAO_CUSTOMER_ID = FLXY_CUSTOMER.CUST_ID
+                      LEFT JOIN FLXY_ROOM on FLXY_LAUNDRY_AMENITIES_ORDERS.LAO_ROOM_ID = FLXY_ROOM.RM_ID
+                      LEFT JOIN FLXY_RESERVATION on FLXY_LAUNDRY_AMENITIES_ORDERS.LAO_RESERVATION_ID = FLXY_RESERVATION.RESV_ID';
+
+        $columns = 'LAO_ID|LAO_ROOM_ID|RM_NO|LAO_RESERVATION_ID|RESV_NO|LAO_CUSTOMER_ID|CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME)CUST_FULL_NAME|FORMAT(LAO_TOTAL_PAYABLE, \'N2\')LAO_TOTAL_PAYABLE|LAO_PAYMENT_METHOD|LAO_PAYMENT_STATUS|FORMAT(LAO_CREATED_AT,\'dd-MMM-yyyy, hh:mm:ss tt\')LAO_CREATED_AT|LAO_CREATED_BY';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond, '|');
+        exit;
+    } 
+    
+    public function productList()
+    {
+        $sql = "SELECT PR_ID, PR_NAME, PC_CATEGORY
+                FROM FLXY_PRODUCTS PR
+                LEFT JOIN FLXY_PRODUCT_CATEGORIES PC ON PC.PC_ID = PR.PR_CATEGORY_ID
+                ORDER BY PC_CATEGORY, PR_NAME";
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '';
+        $numResults = count($response);
+
+        for ($i = 0; $i < $numResults; $i++) {
+            
+            if($i == 0)
+                $option .= '<optgroup label="' . $response[$i]['PC_CATEGORY'] . '">'; 
+            else if($response[$i-1]['PC_CATEGORY'] != $response[$i]['PC_CATEGORY'])
+            {
+                $option .= '</optgroup>
+                            <optgroup label="' . $response[$i]['PC_CATEGORY'] . '">'; 
+            }       
+            $option .= '<option value="' . $response[$i]['PR_ID'] . '">' . $response[$i]['PR_NAME'] . '</option>';
+        }
+        $option .= '</optgroup>';
+
+        return $option;
+    }
+
+    public function reservationList()
+    {
+        $sql = "SELECT RESV_ID, RESV_NO, RESV_STATUS, RESV_RM_TYPE, RESV_ROOM, RESV_ROOM_ID, 
+                       (SELECT RM_ID FROM FLXY_ROOM WHERE RM_NO = RESV_ROOM AND RM_TYPE = RESV_RM_TYPE) RM_ID
+                FROM FLXY_RESERVATION RESV
+                WHERE RESV_STATUS IN ('Checked-In','Checked-Out-Requested')
+                AND RESV_ROOM != ''
+                ORDER BY RESV_NO DESC";
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        $numResults = count($response);
+
+        for ($i = 0; $i < $numResults; $i++) {
+
+            $room_id = !empty($response[$i]['RESV_ROOM_ID']) ? $response[$i]['RESV_ROOM_ID'] : $response[$i]['RM_ID'];
+            
+            $option .= '<option value="' . $response[$i]['RESV_ID'] . '"
+                                data-room-type="' . $response[$i]['RESV_RM_TYPE'] . '"
+                                data-room-no="' . $response[$i]['RESV_ROOM'] . '"
+                                data-room-id="' . $room_id . '">' . $response[$i]['RESV_NO'] . ' - ' . $response[$i]['RESV_STATUS'] . '</option>';
+        }
+
+        return $option;
+    }
+
+    public function getReservationCustomers($resvId = 0)
+    {
+        $param = ['RESV_ID' => $resvId];
+
+        $sql = "SELECT  CUST_ID, 
+                        CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, 
+                        CONCAT_WS(' ', CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS,
+                        CUST_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC,
+                        CUST_STATE,(SELECT sname FROM STATE WHERE STATE_CODE=CUST_STATE AND COUNTRY_CODE=CUST_COUNTRY) CUST_STATE_DESC,
+                        CUST_CITY,(SELECT ctname FROM CITY WHERE ID=CUST_CITY) CUST_CITY_DESC,
+                        CUST_EMAIL,CUST_MOBILE,CUST_PHONE,CUST_POSTAL_CODE
+
+                FROM FLXY_CUSTOMER
+                WHERE CUST_ID IN (  SELECT RESV_NAME AS CUST_ID 
+                                    FROM FLXY_RESERVATION WHERE RESV_ID = :RESV_ID:
+                                        UNION 
+                                    SELECT ACCOMP_CUST_ID AS CUST_ID 
+                                    FROM FLXY_ACCOMPANY_PROFILE WHERE ACCOMP_REF_RESV_ID = :RESV_ID:)";
+        
+        $response = $this->Db->query($sql, $param)->getResultArray();
+
+        $options = array();
+
+        foreach ($response as $row) {
+            $options[] = array( "id" => $row['CUST_ID'], "text" => $row['FULLNAME'], 
+                                "address" => $row['CUST_ADDRESS'], "city" => $row['CUST_CITY_DESC'], "state" => $row['CUST_STATE_DESC'], 
+                                "country" => $row['CUST_COUNTRY_DESC'], "email" => $row['CUST_EMAIL'], "phone" => !empty($row['CUST_MOBILE']) ? $row['CUST_MOBILE'] : $row['CUST_PHONE'], 
+                                "postcode" => $row['CUST_POSTAL_CODE']);
+        }
+
+        return $options;
+    }
+
+    public function showReservationCustomers()
+    {
+        $customersList = $this->getReservationCustomers($this->request->getPost('sysid'));
+        echo json_encode($customersList);
+    }
+
+    public function searchRequestProducts()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+        $selectedProductDetails = null !== $this->request->getPost('selectedProductDetails') && $this->request->getPost('selectedProductDetails') != '' ? json_decode($this->request->getPost('selectedProductDetails'), true) : [];
+
+        $sql = "SELECT  PR_ID, PR_NAME, PC_CATEGORY, PR_IMAGE, PR_QUANTITY, PR_PRICE, 
+                        PR_ESCALATED_HOURS, PR_ESCALATED_MINS
+                FROM FLXY_PRODUCTS PR
+                LEFT JOIN FLXY_PRODUCT_CATEGORIES PC ON PC.PC_ID = PR.PR_CATEGORY_ID
+                WHERE 1 = 1";
+
+        if ($search != '') {
+            $sql .= " AND PR_NAME LIKE '%$search%'";
+        }
+
+        if($selectedProductDetails != NULL)
+        {
+            $sql .= " AND PR_ID NOT IN (";
+            foreach($selectedProductDetails as $selectedProductDetail)
+            {
+                $sql .= $selectedProductDetail['prodId'].",";
+            }
+            $sql = rtrim($sql, ",").")";            
+        }
+
+        $sql .= " ORDER BY PR_NAME";
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        //$option = $sql.'<br/>';
+        $option = '';
+        $numResults = count($response);
+
+        for ($i = 0; $i < $numResults; $i++) {
+
+            $option .= '<div class="col-md-12 mb-2">
+
+                            <div class="form-check custom-option custom-option-basic checkSelectProductDiv">
+                                <label class="form-check-label custom-option-content" for="checkSelectProduct' . $response[$i]['PR_ID'] . '">';
+
+            if($response[$i]['PR_QUANTITY'] > 0)
+            $option .= '            <input class="form-check-input checkSelectProduct" type="checkbox" 
+                                    data-product-name="' . $response[$i]['PR_NAME'] . '" 
+                                    data-product-price="' . $response[$i]['PR_PRICE'] . '" 
+                                    data-product-image="' . $response[$i]['PR_IMAGE'] . '" 
+                                    data-product-esc-hours="' . $response[$i]['PR_ESCALATED_HOURS'] . '" 
+                                    data-product-esc-mins="' . $response[$i]['PR_ESCALATED_MINS'] . '" 
+                                    value="' . $response[$i]['PR_ID'] . '" 
+                                    id="checkSelectProduct' . $response[$i]['PR_ID'] . '">';
+            
+            $option .= '            <div class="d-flex align-items-center cursor-pointer">';
+
+            if(file_exists($response[$i]['PR_IMAGE']))
+                $option .= '            <img src="' . base_url($response[$i]['PR_IMAGE']) . '" alt="' . $response[$i]['PR_NAME'] . '"
+                                            class="w-px-50 me-3">';
+            else {
+                        //file not exists
+                        $stateNum = rand(0,6);
+                        $states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
+                        $state = $states[$stateNum];
+                        $name = $response[$i]['PR_NAME'];
+                        $name_string = explode(" ", trim($name));
+                        $initials = count($name_string) >= 2 ? strtoupper(substr($name_string[0], 0, 1).substr($name_string[1], 0, 1)) : strtoupper(substr($name_string[0], 0, 2));
+
+                        $option .=
+                            '<div class="avatar avatar-lg me-2">
+                                <span class="avatar-initial bg-label-warning me-1">' . $initials . '</span>
+                             </div>';
+            }
+
+            $option .= '                <div class="w-100">
+                                            <div class="d-flex justify-content-between">
+                                                <div class="user-info w-50">
+                                                    <h6 class="mb-1">' . $response[$i]['PR_NAME'] . '</h6>
+                                                    <small>' . $response[$i]['PC_CATEGORY'] . '</small>
+                                                    <div class="mt-1">';
+
+            if($response[$i]['PR_QUANTITY'] > 0)
+            $option .= '                                <span class="badge bg-label-success">
+                                                            <span class="badge bg-success me-1">' . $response[$i]['PR_QUANTITY'] . '</span>
+                                                            &nbsp;In Stock
+                                                        </span>';
+            else
+            $option .= '                                <span class="badge bg-label-danger">
+                                                            &nbsp;Out of Stock
+                                                        </span>';                                                        
+
+            $option .= '                            </div>
+                                                </div>';
+
+            if($response[$i]['PR_QUANTITY'] > 0)
+            $option .= '                        <div class="w-25"><input type="number" class="form-control form-control-sm numSelectProduct" value="1"
+                                                        min="1" max="' . $response[$i]['PR_QUANTITY'] . '" style="width: 70px;">
+                                                </div>';
+            $option .= '                        <div class="w-25 text-end">
+                                                    <span class="text-primary" style="font-weight: bold;">' . number_format($response[$i]['PR_PRICE'], 2) . '</span>
+                                                </div>';
+
+            $option .= '                    </div>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                        </div>';
+        }
+
+        echo empty($option) ? '<h6 class="mb-1" align="center">There are no products that match your search</h6>' : $option;
+    }
+
+    public function showRequestProducts()
+    {
+        $selectedProductDetails = null !== $this->request->getPost('selectedProductDetails') && $this->request->getPost('selectedProductDetails') != '' ? json_decode($this->request->getPost('selectedProductDetails'), true) : [];
+        $displayType = null !== $this->request->getPost('displayType') ? $this->request->getPost('displayType') : 'cart';
+        //echo "<pre>"; print_r(json_decode($selectedProductDetails, true)); echo "</pre>";
+
+        $output = '';
+
+        if($selectedProductDetails != NULL)
+        {
+            foreach($selectedProductDetails as $selectedProductDetail)
+            {
+                $output .= '<li class="list-group-item p-4 selectedProduct">
+                                <div class="gap-3 d-flex">
+                                    <div class="flex-shrink-0">';
+
+                if(file_exists($selectedProductDetail['prodImg']))
+                    $output .= '        <img src="' . base_url($selectedProductDetail['prodImg']) . '" alt="' . $selectedProductDetail['prodName'] . '"
+                                                class="w-px-100">';
+                else {
+                            //file not exists
+                            $stateNum = rand(0,6);
+                            $states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
+                            $state = $states[$stateNum];
+                            $name = $selectedProductDetail['prodName'];
+                            $name_string = explode(" ", trim($name));
+                            $initials = count($name_string) >= 2 ? strtoupper(substr($name_string[0], 0, 1).substr($name_string[1], 0, 1)) : strtoupper(substr($name_string[0], 0, 2));
+
+                            $output .=  '<div class="avatar avatar-lg me-2">
+                                            <span class="avatar-initial bg-label-warning me-1">' . $initials . '</span>
+                                        </div>';
+                }
+                $output .= '        </div>
+                                    <div class="flex-grow-1">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <h6 class="fw-normal me-3 mb-2">
+                                                    <a href="javascript:void(0)"
+                                                        class="text-body"><b>' . $selectedProductDetail['prodName'] . '</b></a>
+                                                </h6>
+                                                <div class="d-flex flex-wrap text-muted mb-1">';
+
+                if($selectedProductDetail['maxVal'] > 0)
+                {
+                $output .= '                            <span class="badge bg-label-success">';
+                                                        if($displayType == 'cart')
+                $output .= '                                <span class="badge bg-success me-1">' . $selectedProductDetail['maxVal'] . '</span>&nbsp;';
+                $output .= '                                In Stock
+                                                        </span>';
+                }
+                else
+                $output .= '                            <span class="badge bg-label-danger">
+                                                            &nbsp;Out of Stock
+                                                        </span>';       
+                $output .= '                    </div>
+                                                <div class="row mb-3">';
+                                                if($displayType == 'cart')
+                $output .= '                                
+                                                    <div class="col-md-3">
+                                                        <input type="number"
+                                                            class="form-control form-control-sm w-px-75 selProdNum" 
+                                                            data-product-id="'.$selectedProductDetail['prodId'].'"
+                                                            data-product-name="' . $selectedProductDetail['prodName'] . '"
+                                                            data-product-price="' . $selectedProductDetail['prodPrice'] . '"
+                                                            value="' . $selectedProductDetail['prodNum'] . '" min="1" max="' . $selectedProductDetail['maxVal'] . '" />
+                                                    </div>';
+
+                $output .= '                        <label class="col-md-8 pt-1"><b>';
+                                                        if($displayType != 'cart')
+                                                            $output .= $selectedProductDetail['prodNum'];
+                $output .= '                        x ' . number_format($selectedProductDetail['prodPrice'], 2) . '</b></label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="text-md-end">';
+                                                if($displayType == 'cart')
+                                                $output .= '                            
+                                                    <button type="button"
+                                                        class="btn-close btn-pinned removeSelectedProduct" 
+                                                        data-product-id="' . $selectedProductDetail['prodId'] . '"
+                                                        data-product-name="' . $selectedProductDetail['prodName'] . '"
+                                                        aria-label="Close"></button>';
+                $output .= ' 
+                                                    <div class="my-2 my-md-4">
+                                                        <span class="text-primary selProdTotal" style="font-weight: bold;">' . number_format(($selectedProductDetail['prodNum'] * $selectedProductDetail['prodPrice']), 2) . '</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>';
+            }
+        }
+
+        echo empty($output) ? '<h6 class="mb-1" align="center">Please select some products</h6>' : $output;
+    }
+
+    public function AmenityOrderDetailsView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array( "LAOD_ORDER_ID = " => "'$sysid'"); // Add condition for Amenity Order
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS 
+                      LEFT JOIN FLXY_PRODUCTS PR ON PR.PR_ID = FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID
+                      LEFT JOIN FLXY_PRODUCT_CATEGORIES PC ON PC.PC_ID = PR.PR_CATEGORY_ID';
+        $columns = 'LAOD_ID|LAOD_ORDER_ID|LAOD_PRODUCT_ID|PR_NAME|PR_IMAGE|PC_CATEGORY|LAOD_QUANTITY|LAOD_AMOUNT|FORMAT(LAOD_AMOUNT/LAOD_QUANTITY, \'N2\')UNIT_PRICE|LAOD_DELIVERY_STATUS|LAOD_EXPIRY_DATETIME|PR_PRICE|PR_QUANTITY|PR_ESCALATED_HOURS|PR_ESCALATED_MINS';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond, '|');
+        exit;
+    }
+
+    public function updateAmenityOrder()
+    {
+        try {
+            $sysid = $this->request->getPost('sysid');
+            $new_status = $this->request->getPost('new_status');
+
+            $return = $this->LaundryAmenitiesOrder->update($sysid, ['LAO_PAYMENT_STATUS' => $new_status]);
+
+            echo json_encode($this->responseJson("1", "0", $return, $response = ''));
+        } catch (\Exception $e) {
+            echo json_encode($this->responseJson("-444", "db insert not successful", $return));
+        }
+    }
+
+    public function updateAmenityOrderDetails()
+    {
+        try {
+            $sysid = $this->request->getPost('sysid');
+            $new_status = $this->request->getPost('new_status');
+
+            $return = $this->LaundryAmenitiesOrderDetail->update($sysid, ['LAOD_DELIVERY_STATUS' => $new_status]);
+
+            echo json_encode($this->responseJson("1", "0", $return, $response = ''));
+        } catch (\Exception $e) {
+            echo json_encode($this->responseJson("-444", "db insert not successful", $return));
+        }
+    }
+
+    public function insertAmenityOrder()
+    {
+        $user_id = session()->get('USR_ID');
+        
+        try {
+            //echo json_encode(print_r($_POST)); exit;
+
+            $formFields = $this->request->getPost('formFields');
+            $selectedProductDetails = $this->request->getPost('selectedProductDetails');
+
+            $data = [];
+            foreach($formFields as $formField){
+                $data[$formField['name']] = $formField['value'];
+            }
+
+            if(!isset($data['LAO_PAYMENT_STATUS']))
+                $data['LAO_PAYMENT_STATUS'] = 'UnPaid';
+            
+            $data['LAO_CREATED_AT'] = date('Y-m-d H:i:s');
+            $data['LAO_UPDATED_AT'] = date('Y-m-d H:i:s');
+            $data['LAO_CREATED_BY'] = $user_id;
+            $data['LAO_UPDATED_BY'] = $user_id;
+
+            $ins = $this->LaundryAmenitiesOrder->insert($data);
+            if($ins){
+                $ordId = $this->Db->insertID();
+                
+                foreach($selectedProductDetails as $selectedProductDetail){
+
+                    $details = [];
+                    $details['LAOD_ORDER_ID'] = $ordId;
+                    $details['LAOD_PRODUCT_ID'] = $selectedProductDetail['prodId'];
+                    $details['LAOD_QUANTITY'] = $selectedProductDetail['prodNum'];
+                    $details['LAOD_AMOUNT'] = number_format((float)($selectedProductDetail['prodPrice'] * $selectedProductDetail['prodNum']), 2, '.', '');
+                    $details['LAOD_DELIVERY_STATUS'] = 'New';
+                    $details['LAOD_EXPIRY_DATETIME'] = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')) + ($selectedProductDetail['prodEscHrs'] * 60 * 60) + ($selectedProductDetail['prodEscMins'] * 60));
+                    $details['LAOD_CREATED_AT'] = date('Y-m-d H:i:s');
+                    $details['LAOD_UPDATED_AT'] = date('Y-m-d H:i:s');
+                    $details['LAOD_CREATED_BY'] = $user_id;
+                    $details['LAOD_UPDATED_BY'] = $user_id;
+
+                    $this->LaundryAmenitiesOrderDetail->insert($details);
+
+                    //Update Product Stock
+                    $pr = $this->Product->find($selectedProductDetail['prodId']);
+                    $pr['PR_QUANTITY'] = $pr['PR_QUANTITY'] - $selectedProductDetail['prodNum'];
+                    $this->Product->save($pr);
+                }
+            }
+
+            $result = $ins ? $this->responseJson("1", "0", $ins, "1") : $this->responseJson("-444", "db insert not successful", $ins);
+            echo json_encode($result);
+
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+
+
 }

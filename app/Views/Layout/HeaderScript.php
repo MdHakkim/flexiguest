@@ -52,6 +52,7 @@
 
 
 <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-datetimepicker.min.css')?>" />
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.css')?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/css/bootstrap-select.css')?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/select2/select2.css')?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/tagify/tagify.css')?>" />
