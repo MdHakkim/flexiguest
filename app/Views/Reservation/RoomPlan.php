@@ -4,11 +4,53 @@
 <?= $this->include('Layout/ErrorReport') ?>
 <style>
 
+/* .fc-scroller-canvas {
+    max-width: 100% !important;
+    min-width: 100% !important;
+} */
+
+.fc-resource-area .fc-rows table tr td:first-child:hover{
+  cursor: pointer;
+  color: #000;
+
+}
+.fc-time-area.fc-widget-header .fc-content table tr:nth-child(2){
+  display: none;
+}
+.fc-cell-text{
+  font-size: 14px !important;
+}
+.flxy_table_resp .table-bordered th{
+  padding-right: 12px !important;
+} 
+/* .fc-time-area  .fc-rows td.fc-widget-content {
+ 
+ padding: 0 25px !important;
+} */
+
+ .fc-time-area.fc-widget-header{
+  padding: 0 0px !important;
+}
+
+
+.fc-divider {
+  padding: 0 !important;
+}
+
+
+.fc-time-area .fc-rows td>div {
+    position: relative;
+    height: 37px !important;
+}
+
+.fc-rows table tr{
+  height: 37px !important;
+}
 #RoomStatisticsModal .fc-scroller, #calendarRoomPlan .fc-scroller {
     height: auto !important;
 }
   #calendar {
-    max-width: 1100px;
+    max-width: 1000px;
     margin: 40px auto;
     font-size: 14px;
   }
@@ -37,9 +79,9 @@
   }
 
   .fc-event-container .fc-timeline-event {
-    background-color: #405974 !important;
+    /* background-color: #405974 !important;
     border-color: #405974 !important;
-    color: rgb(255, 255, 255) !important;
+    color: rgb(255, 255, 255) !important; */
 
     top: 3px !important;
   }
@@ -56,6 +98,7 @@
 
   .tooltip {
     opacity: 1;
+    font-size: 13px !important;
   }
 
   #errorModal {
@@ -112,7 +155,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="popModalWindowlabel">Statistics</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
                 </div>
                 <div class="modal-body">
                <!-- Calendar Sidebar -->
@@ -271,12 +314,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="popModalWindowlabel">OOO / OOS </h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="OOS_Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="ooos-submit-form" onSubmit="return false">
                         <div id="OOOS_DIV" class="content">
                             <input type="hidden" name="OOOS_ID" id="OOOS_ID" class="form-control" />
+                            <input type="hidden" name="Room_ID" id="Room_ID" class="form-control" />
                             <div class="row g-3">
                                 <div class="border rounded p-4 mb-3">
                                     <div class="row">
@@ -369,7 +413,7 @@
                                 </div>
                                 <div class="d-flex col-12 justify-content-between">
                                     <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
+                                        data-bs-dismiss="modal" id="OOS_Close">Close</button>
                                 </div>
 
                             </div>
@@ -454,15 +498,17 @@ function roomPlanFunc(){
 
       defaultView: 'resourceTimelineWeek',
 
-      slotLabelFormat: [{
-        weekday: 'short',
-        month: 'numeric',
-        day: 'numeric',
-        omitCommas: true
-      }],
-      slotLabelInterval: {
-        days: 1
-      },
+    //   slotLabelFormat: [{
+    //     weekday: 'short',
+    //     month: 'numeric',
+    //     day: 'numeric',
+    //     omitCommas: true
+    //   }],
+    //   slotLabelInterval: {
+    //     days: 1
+    //   },
+      minTime:			'10:00:00',
+      maxTime:			'11:59:59',
 
       editable: true,
 
@@ -527,15 +573,20 @@ function roomPlanFunc(){
         <?php }
                   } ?>
       ],
+      resourceRender: function (renderInfo) {
+        renderInfo.el.addEventListener("click", function () {            
+            console.log('clicked:' + renderInfo.resource.id);
+           });
+      },
 
       events: [
         <?php
         if (!empty($RoomReservations)) {
           foreach ($RoomReservations as $row) {
-            $start = date("Y-m-d H:i:s", strtotime($row['RESV_ARRIVAL_DT']));
+            $start = date("Y-m-d 11:00:00", strtotime($row['RESV_ARRIVAL_DT']));
             //$startDate = '2022-08-15';
 
-            $end = date("Y-m-d 23:59:59", strtotime($row['RESV_DEPARTURE']));
+            $end = date("Y-m-d 11:00:00", strtotime($row['RESV_DEPARTURE']));
             //$endDate = '2022-08-18 23:00:00';
         ?> {
               id: '<?php echo $row['RESV_ID'] ?>',
@@ -543,27 +594,59 @@ function roomPlanFunc(){
               title: '<?php echo $row['FULLNAME'] . ' - ' . $row['RESV_STATUS']; ?>',
               start: '<?php echo $start; ?>',
               end: '<?php echo $end; ?>',
-              backgroundColor: "#ccc",
-              borderColor: "#ddd",
-              textColor: "#fff",
-              backgroundColor: "#ccc",
-              borderColor: "#ddd",
-              textColor: "#fff",
-              
+              backgroundColor: "#405974 ",
+              borderColor: "#405974",
+              textColor: "#fff",                           
             },
 
         <?php }
         } ?>
+<?php
+        if (!empty($RoomOOS)) {
+          foreach ($RoomOOS as $row) { ?>
+            {
+              id: '<?php echo $row['OOOS_ID'] ?>',
+              resourceId: '<?php echo $row['ROOMS'] ?>',
+              title: '<?php echo $row['REASON']; ?>',
+              start: '<?php echo date("Y-m-d 00:00:00", strtotime($row["STATUS_FROM_DATE"])); ?>',
+              end: '<?php echo date("Y-m-d 13:00:00", strtotime($row["STATUS_TO_DATE"])); ?>',
+              backgroundColor: 'rgb(195, 8, 8, 0.93)',
+              borderColor: "rgb(195, 8, 8, 0.93)",
+              textColor: "#fff",            
+              
+            },
+
+            <?php }
+          } ?>
+
+
        
       ],
       eventClick: function(info) {
-        info.jsEvent.preventDefault(); // don't let the browser navigate
+        console.log(info);
+        info.jsEvent.preventDefault(); 
 
-        if (info.event.id) {
-          var base_url = '<?php echo base_url()?>';
-          var url = '/reservation?RESV_ID='+info.event.id;
-          window.open(base_url+url);
-        }
+        $.ajax({
+          url: '<?php echo base_url('/checkReservationExists') ?>',
+          data: 'ID=' + info.event.id,
+          type: "POST",
+          dataType: 'json',
+          success: function(data) {
+            if (data.status == 1) {
+            var base_url = '<?php echo base_url()?>';
+            var url = '/reservation?RESV_ID='+info.event.id;
+              window.open(base_url+url);
+            }
+            else{
+              $("#showRoomOSModal").click()
+            }
+
+
+          }
+        });
+
+
+        
       },
      
       
@@ -667,6 +750,7 @@ function roomPlanFunc(){
               placement: 'top',
               trigger: 'hover',
               container: 'body',
+
         });
       },
     
@@ -675,8 +759,39 @@ function roomPlanFunc(){
         minute: '2-digit',
         second: '2-digit',
         hour12: false
+      },
+      dateClick: function(info) {
+        if (info.resource.id) {
+          let START = info.dateStr;
+          const STARTARRAY = START.split("T");
+          START = STARTARRAY[0];
+        $.ajax({
+          url: '<?php echo base_url('/checkArrivalExists') ?>',
+          data: 'ARRIVAL=' + START,
+          type: "POST",
+          dataType: 'json',
+          success: function(data) {
+            if (data.status_message != '') {
+              var mcontent = '';
+              mcontent += '<li>' + data.status_message + '</li>';
+
+              if (data.status == 1) {               
+                showModalAlert('error', mcontent);
+              } 
+              else{
+                var base_url = '<?php echo base_url()?>';
+                
+                var url = '/reservation?ROOM_ID='+info.resource.id+'&ARRIVAL_DATE='+START;
+                window.open(base_url+url);
+
+              }
+
+            }
+          }
+        });
       }
 
+      },
 
     });
 
@@ -936,7 +1051,7 @@ $(document).on('click', '.add-room-status', function() {
 });
 
 $(document).on('click', '.save-roomstatus-details', function() {
-
+  $('#ROOMS').prop("disabled", false);
     hideModalAlerts();
     var formSerialization = $('#ooos-submit-form').serializeArray();
     var url = '<?php echo base_url('/insertRoomOOS') ?>';
@@ -949,6 +1064,7 @@ $(document).on('click', '.save-roomstatus-details', function() {
         },
         dataType: 'json',
         success: function(respn) {
+          
             var response = respn['SUCCESS'];
             if (response == '2') {
                 mcontent = '<li>Something went wrong</li>';
@@ -973,6 +1089,7 @@ $(document).on('click', '.save-roomstatus-details', function() {
                   
                     $('#OOOS_ID').val(respn['RESPONSE']['OUTPUT']);
                     showRoomStatus();
+                    clearFormFields('#OOOSCharges');
                 }
             }
         }
@@ -1043,8 +1160,8 @@ function showRoomStatus() {
             $(row).attr('data-status_id', data['OOOS_ID']);
 
             if (dataIndex == 0) {
-                $(row).addClass('table-warning');
-                loadRoomStatusDetails(data['OOOS_ID']);
+                //$(row).addClass('table-warning');
+                //loadRoomStatusDetails(data['OOOS_ID']);
             }
         },
 
@@ -1060,6 +1177,7 @@ function showRoomStatus() {
 
 
 function loadRoomStatusDetails(OOOS_ID) {
+  $('#ROOMS').prop("disabled", true);
     var url = '<?php echo base_url('/showRoomStatusDetails') ?>';
     $.ajax({
         url: url,
@@ -1078,13 +1196,16 @@ function loadRoomStatusDetails(OOOS_ID) {
             $(respn).each(function(inx, data) {
                 $.each(data, function(fields, datavals) {                   
                     var field = $.trim(fields);
-                    var dataval = $.trim(datavals);                  
-
+                    var dataval = $.trim(datavals);                
+                    
+                  
                    if ( field == 'STATUS_FROM_DATE' || field == 'STATUS_TO_DATE' ){
                         $('#' + field).datepicker("setDate", new Date(dataval)); 
                     } 
                    else if (field == 'ROOMS' || field == 'ROOM_STATUS' || field == 'ROOM_RETURN_STATUS' || field == 'ROOM_CHANGE_REASON') {
                         $('#' + field).val(dataval).trigger('change');
+                        
+                        if(field == 'ROOMS')  $('#Room_ID').val(dataval);
                     } 
                    else {
                         $('#' + field).val(dataval);
@@ -1100,7 +1221,7 @@ $(document).on('click', '.delete-room-status', function() {
     hideModalAlerts();
     $('.dtr-bs-modal').modal('hide');
     var status_id = $('#Status_Details').find("tr.table-warning").data("status_id");
-
+if(status_id > 0){
     bootbox.confirm({
         message: "Status is active. Do you want to Delete?",
         buttons: {
@@ -1146,6 +1267,11 @@ $(document).on('click', '.delete-room-status', function() {
             }
         }
     });
+  }else{
+    showModalAlert('warning',
+            '<li>Please select a status</li>');
+        $('#warningModal').delay(2500).fadeOut(); 
+  }
 
 });
 
@@ -1161,6 +1287,10 @@ $(document).on('click', '#Status_Details > tbody > tr', function() {
         });
 });
 
+
+$(document).on('click', '#OOS_Close', function() {
+  location.reload();
+});
 
 
 

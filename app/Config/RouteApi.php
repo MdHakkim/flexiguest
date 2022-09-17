@@ -51,6 +51,8 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
         // API to fetch all requests
         $routes->get("listRequests", "APIController::listRequests");
     });
+
+    $routes->post('create-payment-intent', 'PaymentController::createPaymentIntent');
 });
 //  ------------------------------------ALEESHA CODES ENDS--------------------------------------- //
 

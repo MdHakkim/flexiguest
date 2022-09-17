@@ -90,7 +90,7 @@ if (!function_exists("clearFormFields_javascript")) {
                     var formSerialization = $(elem).find(\"input,select,textarea\").serialize();
                     // alert(formSerialization);
                 
-                    $(elem).find('input,select').each(function() {
+                    $(elem).find('input,select,textarea').each(function() {
                 
                         if ($(this).hasClass('dateField')) {
                             $(this).datepicker(\"setDate\", new Date('".date('d-M-Y')."'));

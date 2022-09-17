@@ -611,8 +611,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/roomsStatusList', 'ReservationController::roomsStatusList'); 
       $routes->match(['post'],'/roomsChangeReasonList', 'ReservationController::roomsChangeReasonList'); 
       $routes->match(['post'],'/insertRoomOOS', 'ReservationController::insertRoomOOS'); 
-      $routes->match(['post'],'/showRoomStatusDetails', 'ReservationController::showRoomStatusDetails');  
-      $routes->match(['post'],'/deleteRoomOOS', 'ReservationController::deleteRoomOOS');    
+      $routes->match(['post'],'/showRoomStatusDetails', 'ReservationController::showRoomStatusDetails'); 
+      $routes->match(['post'],'/deleteRoomOOS', 'ReservationController::deleteRoomOOS');   
+      $routes->match(['post'],'/checkArrivalExists', 'ReservationController::checkArrivalExists');
+      $routes->match(['post'],'/checkReservationExists', 'ReservationController::checkReservationExists');
+      
+      
 
       
     //Subina Code (END)  
@@ -757,3 +761,5 @@ $routes->group('laundry-amenities', function ($routes) {
 });
 
 $routes->get('evalet/qr/(:segment)', 'EValetController::qr/$1');
+
+$routes->post('webhook', 'PaymentController::webhook');
