@@ -155,12 +155,12 @@
                                 <th></th>
                                 <th>Order ID</th>
                                 <th class="all">Room No.</th>
-                                <th class="all">Reservation No</th>
-                                <th>Guest Name</th>
+                                <th>Reservation No</th>
+                                <th class="all">Guest Name</th>
                                 <th>Total</th>
                                 <th>Requested On</th>
-                                <th>Payment Status</th>
-                                <th>Action</th>
+                                <th class="all">Payment Status</th>
+                                <th class="all">Action</th>
                             </tr>
                         </thead>
 
