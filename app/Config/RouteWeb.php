@@ -615,11 +615,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/deleteRoomOOS', 'ReservationController::deleteRoomOOS');   
       $routes->match(['post'],'/checkArrivalExists', 'ReservationController::checkArrivalExists');
       $routes->match(['post'],'/checkReservationExists', 'ReservationController::checkReservationExists');
-      
-      
+      $routes->match(['post'],'/getAllVacantRooms', 'ReservationController::getAllVacantRooms');
+      $routes->match(['post'],'/updateRoomAssign', 'ReservationController::updateRoomAssign'); 
 
       
-    //Subina Code (END)  
+     //Subina Code (END)  
 
 
 
