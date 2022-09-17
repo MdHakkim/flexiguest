@@ -103,6 +103,8 @@
                                             class="form-select select2 dt-input dt-mem-type" data-allow-clear="true">
                                             <option value="">View All</option>
                                             <option value="UnPaid">UnPaid</option>
+                                            <option value="Payment Initiated">Payment Initiated</option>
+                                            <option value="Payment Processing">Payment Processing</option>
                                             <option value="Paid">Paid</option>
                                         </select>
                                     </div>
@@ -681,6 +683,12 @@ $(document).ready(function() {
                     },
                     'UnPaid': {
                         class: 'btn-label-danger'
+                    },
+                    'Payment Processing': {
+                        class: 'btn-label-info'
+                    },
+                    'Payment Initiated': {
+                        class: 'btn-label-secondary'
                     }
                 };
                 if (typeof $status[$status_name] === 'undefined') {
