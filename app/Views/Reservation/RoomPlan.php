@@ -112,6 +112,9 @@
     z-index: 10000;
     width: 500px;
   }
+  table tr{
+    cursor: pointer;
+  }
 
 </style>
 
@@ -123,7 +126,7 @@
    
       <div class="row g-0">
         <div class="row">
-          <div class="col-md-3 mt-3 mb-3">
+          <div class="col-md-6 mt-3 mb-3">
             <button type="button" class="btn btn-primary"  id="showRoomStatisticsModal" 
             > Statistics</button>
             <button type="button" class="btn btn-primary" id="showRoomOSModal"  > OOO / OOS</button>
@@ -308,7 +311,7 @@
     </div>
 
         <!-- OOO/OOS Modal window -->
-        <div class="modal fade" id="OOOSCharges" data-backdrop="static" data-keyboard="false"
+        <div class="modal fade" id="OOOSRoom" data-backdrop="static" data-keyboard="false"
         aria-labelledby="popModalWindowlabel">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -426,7 +429,205 @@
         </div>
     </div>
 
-    <!-- /Modal Fixed charges window --> 
+    <!-- /Modal OOS window --> 
+
+    <!-- Room Assign Modal window -->
+    <div class="modal fade" id="RoomAssign" data-backdrop="static" data-keyboard="false"
+        aria-labelledby="popModalWindowlabel">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="popModalWindowlabel">Room Assignment </h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="OOS_Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="roomassign-submit-form" onSubmit="return false">
+                        <div id="RoomAssign_DIV" class="content">
+                            <input type="hidden" name="Assign_ID" id="Assign_ID" class="form-control" />
+                            <input type="hidden" name="Room_ID" id="Room_ID" class="form-control" />
+                            <div class="row g-3">
+                                
+                                <div class="col-md-12">
+                                    <div class="border rounded p-4 mb-3">
+                                     
+                                        <p>Click on a row to see the available rooms</p>
+                                        <div class="table-responsive text-nowrap">
+                                            <table id="Room_Assign_Details" class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                      <th class="all">Room Type</th>
+                                                      <th class="all">Name</th>
+                                                      <th class="all">Arrival Date</th>
+                                                      <th class="all">Departure Date</th>
+                                                      <th class="all">Status</th>
+                                                      <th class="all">Adults</th>
+                                                      <th class="all">Kids</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 justify-content-between">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal" id="OOS_Close">Close</button>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /Modal RoomAssign window --> 
+
+
+        <!-- VacantRooms Modal window -->
+        <div class="modal fade" id="VacantRoomsModal" data-backdrop="static" data-keyboard="false"
+        aria-labelledby="popModalWindowlabel">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="popModalWindowlabel">Available Rooms </h4>
+                    <button type="button" class="btn-close roomAssignClose" data-bs-dismiss="modal" aria-label="Close" id="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="roomassign-submit-form" onSubmit="return false">
+                        <div id="VacantRooms_DIV" class="content">
+                            <input type="hidden" name="Resv_ID" id="Resv_ID" class="form-control" />
+                            <input type="hidden" name="Room_Type_ID" id="Room_Type_ID" class="form-control" />
+                            <div class="row g-3">                                
+                                <div class="col-md-12">
+                                    <div class="border rounded p-4 mb-3">  
+                                        <div class="table-responsive text-nowrap">
+                                            <table id="Vacant_Room_Details" class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                    <th class="all">Action</th>
+                                                      <th class="all">Room</th>
+                                                      <th class="all">Room Type</th>
+                                                      <th class="all">HK Status</th>
+                                                      <th class="all">Floor</th>
+                                                      <th class="all">Features</th>
+                                                      
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 justify-content-between">
+                                    <button type="button" class="btn btn-secondary roomAssignClose"
+                                        data-bs-dismiss="modal" id="Close">Close</button>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /Modal RoomAssign window --> 
+
+
+    <!-- Room Details Modal Window -->
+
+    <div class="modal fade" id="RoomDetailsModal" tabindex="-1" aria-lableledby="popModalWindowlable" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="popModalWindowlable">Room Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="submitForm">
+          <div class="row g-3">          
+            <div class="col-md-4">
+              <lable class="form-lable">Room No / Room Class</lable>
+                <div class="input-group mb-3">
+                    <div class="col-md-6">
+                      <input type="text" name="RM_NO" id="RM_NO" class="form-control" placeholder="room no" readonly />
+                    </div>
+                      <div class="col-md-6">
+                      <input type="text" readonly name="RM_CLASS" id="RM_CLASS" class="form-control" placeholder="room class" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+              <lable class="form-lable">Room Type</lable>
+              <input type="text" name="RM_DESC" id="RM_DESC" class="form-control" readonly/>
+              
+            </div>
+            <div class="col-md-4">
+              <lable class="form-lable">Pub. Rate Code</lable>
+              <input type="text" name="RM_PUBLIC_RATE_CODE" id="RM_PUBLIC_RATE_CODE" class="form-control" readonly/>
+             
+            </div>
+            <div class="col-md-4">
+              <lable class="form-lable">Floor Preference</lable>
+              <input type="text" name="RM_FLOOR_PREFERN" id="RM_FLOOR_PREFERN" class="form-control" readonly/>
+             
+            </div>
+            <div class="col-md-4">
+              <lable class="form-lable">Pub. Rate Amount</lable>
+              <input type="text" name="RM_PUBLIC_RATE_AMOUNT" id="RM_PUBLIC_RATE_AMOUNT" class="form-control" readonly/>
+            </div>  
+            <div class="col-md-4">
+              <lable class="form-lable">Smoking Preference</lable>
+              <input type="text" name="RM_SMOKING_PREFERN" id="RM_SMOKING_PREFERN" class="form-control" placeholder="rate amount" readonly />             
+            </div>
+            <div class="col-md-4">
+              <lable class="form-lable">Display Seq./Max Occupancy</lable>
+                <div class="input-group mb-3">
+                  <input type="text" name="RM_DISP_SEQ" id="RM_DISP_SEQ" class="form-control" readonly/>
+                  <input type="text" name="RM_MAX_OCCUPANCY" id="RM_MAX_OCCUPANCY" class="form-control" readonly />
+                </div>
+            </div>
+            <div class="col-md-4">
+              <lable class="form-lable">Measurement/Square Units</lable>
+                <div class="input-group mb-3">
+                  <input type="text" name="RM_MEASUREMENT" id="RM_MEASUREMENT" class="form-control" placeholder="measurement" readonly />
+                  <input type="text" name="RM_SQUARE_UNITS" id="RM_SQUARE_UNITS" class="form-control" placeholder="square units" readonly />
+                </div>
+            </div>
+            <div class="col-md-12">
+              <lable class="form-lable">Features</lable>
+              <input type="text" name="RM_FEATURE" id="RM_FEATURE" class="form-control" readonly />              
+            </div>
+           
+            <div class="col-md-4">
+              <lable class="form-lable">Phone No</lable>
+              <input type="text" name="RM_PHONE_NO" id="RM_PHONE_NO" class="form-control" readonly />
+            </div>
+            <div class="col-md-4">
+              <lable class="form-lable">Stayover/Departure Credits</lable>
+                <div class="input-group mb-3">
+                  <input type="text" name="RM_STAYOVER_CR" id="RM_STAYOVER_CR" class="form-control" readonly />
+                  <input type="text" name="RM_DEPARTURE_CR" id="RM_DEPARTURE_CR" class="form-control" readonly />
+                </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>        
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Room Details Modal window -->
 
     
     </div>
@@ -435,9 +636,6 @@
   <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
-
-<?php //print_r($RoomReservations);
-?>
 
 <script>
 
@@ -481,7 +679,7 @@ function roomPlanFunc(){
       timeZone: 'UTC',
       plugins: ['resourceTimeline', 'interaction'],
 
-      droppable: true,
+      
 
       header: {
 
@@ -492,52 +690,24 @@ function roomPlanFunc(){
         right: ''
 
       },
-
-
       aspectRatio: 1.5,
-
-      defaultView: 'resourceTimelineWeek',
-
-    //   slotLabelFormat: [{
-    //     weekday: 'short',
-    //     month: 'numeric',
-    //     day: 'numeric',
-    //     omitCommas: true
-    //   }],
-    //   slotLabelInterval: {
-    //     days: 1
-    //   },
+      defaultView: 'resourceTimelineWeek',   
       minTime:			'10:00:00',
       maxTime:			'11:59:59',
-
+      droppable: true,
       editable: true,
-
       resourceAreaWidth: '35%',
-
       resourceColumns: [
-
         {
-
           labelText: 'Room',
-
           field: 'room',
-
         },
-
         {
-
           labelText: 'Room Type',
-
           field: 'room_type'
-
         },
-
-        
-
         {
-
           labelText: 'Status',
-
           field: 'status',
           render: function(resource, el) {
             var extendedProps = resource.extendedProps;
@@ -576,6 +746,28 @@ function roomPlanFunc(){
       resourceRender: function (renderInfo) {
         renderInfo.el.addEventListener("click", function () {            
             console.log('clicked:' + renderInfo.resource.id);
+
+            $.ajax({
+              url: '<?php echo base_url('/editRoom') ?>',
+              data: {'sysid':renderInfo.resource.id},
+              type: "POST",
+              dataType: 'json',
+
+              success:function(respn){
+                alert(respn)
+                $(respn).each(function(inx,data){
+                  $.each(data,function(fields,datavals){
+                    var field = $.trim(fields);
+                    var dataval = $.trim(datavals);
+                    $('#'+field).val(dataval);
+                    $("#RoomDetailsModal").modal('show'); 
+                  });
+                });
+                
+              }
+              
+            });
+            
            });
       },
 
@@ -596,7 +788,8 @@ function roomPlanFunc(){
               end: '<?php echo $end; ?>',
               backgroundColor: "#405974 ",
               borderColor: "#405974",
-              textColor: "#fff",                           
+              textColor: "#fff",  
+                                       
             },
 
         <?php }
@@ -610,9 +803,13 @@ function roomPlanFunc(){
               title: '<?php echo $row['REASON']; ?>',
               start: '<?php echo date("Y-m-d 00:00:00", strtotime($row["STATUS_FROM_DATE"])); ?>',
               end: '<?php echo date("Y-m-d 13:00:00", strtotime($row["STATUS_TO_DATE"])); ?>',
-              backgroundColor: 'rgb(195, 8, 8, 0.93)',
-              borderColor: "rgb(195, 8, 8, 0.93)",
-              textColor: "#fff",            
+              backgroundColor: '#6c757da3',
+              borderColor: "#6c757da3",
+              textColor: "#fff",  
+              disableDragging: true,
+              editable: false,
+              eventStartEditable: false, 
+              eventDurationEditable: false                     
               
             },
 
@@ -652,8 +849,7 @@ function roomPlanFunc(){
       
 
       eventDrop: function(info) {
-        console.log(info);
-        // console.log(info.newResource.id)
+       console.log(info.newResource.extendedProps.status);
         //alert(info.event.title + " was dropped on " + info.event.start.toISOString()+"stop"+info.event.end.toISOString());
         let RESV_ID = info.event.id;
         let START = info.event.start;
@@ -666,8 +862,12 @@ function roomPlanFunc(){
         let NEW_ROOM_ID = (info.newResource != null) ? info.newResource.id : '';
         let OLD_ROOM = (info.oldResource != null) ? info.oldResource.extendedProps.room : '';
         let NEW_ROOM = (info.newResource != null) ? info.newResource.extendedProps.room : '';
+        if(info.newResource.extendedProps.status == 'Dirty')
+        var message = "Room status is Dirty. Are you sure about this change?";
+        else
+        var message = "Are you sure about this change?";
+        if (confirm(message)) {     
 
-        if (confirm("Are you sure about this change?")) {
           $.ajax({
             url: '<?php echo base_url('/updateRoomPlan') ?>',
             data: 'RESV_ID=' + RESV_ID + '&START=' + START + '&END=' + END + '&OLD_ROOM_ID=' + OLD_ROOM_ID + '&NEW_ROOM_ID=' + NEW_ROOM_ID + '&OLD_ROOM=' + OLD_ROOM + '&NEW_ROOM=' + NEW_ROOM,
@@ -767,7 +967,10 @@ function roomPlanFunc(){
           START = STARTARRAY[0];
         $.ajax({
           url: '<?php echo base_url('/checkArrivalExists') ?>',
-          data: 'ARRIVAL=' + START,
+          data: {
+                ARRIVAL: START,
+                ROOM_ID: info.resource.id
+            },
           type: "POST",
           dataType: 'json',
           success: function(data) {
@@ -775,8 +978,14 @@ function roomPlanFunc(){
               var mcontent = '';
               mcontent += '<li>' + data.status_message + '</li>';
 
-              if (data.status == 1) {               
-                showModalAlert('error', mcontent);
+              if (data.status == 1) {  
+
+                $('#Room_Assign_Details').DataTable().destroy();
+                $('#Room_Assign_Details > tbody').html(data.room_assign);
+                $('#Room_Assign_Details').DataTable({ paging: true});
+                
+                $('#RoomAssign').modal('show');            
+                //showModalAlert('error', mcontent);
               } 
               else{
                 var base_url = '<?php echo base_url()?>';
@@ -942,7 +1151,7 @@ function roomPlanFunc(){
     //////// OOO/OOS Functions
 
 $(document).on('click', '#showRoomOSModal', function() {
-    $('#OOOSCharges').modal('show');    
+    $('#OOOSRoom').modal('show');    
     roomsList();
     roomsStatus();
     roomsReturnStatus();
@@ -1089,7 +1298,7 @@ $(document).on('click', '.save-roomstatus-details', function() {
                   
                     $('#OOOS_ID').val(respn['RESPONSE']['OUTPUT']);
                     showRoomStatus();
-                    clearFormFields('#OOOSCharges');
+                    clearFormFields('#OOOSRoom');
                 }
             }
         }
@@ -1221,7 +1430,7 @@ $(document).on('click', '.delete-room-status', function() {
     hideModalAlerts();
     $('.dtr-bs-modal').modal('hide');
     var status_id = $('#Status_Details').find("tr.table-warning").data("status_id");
-if(status_id > 0){
+    if(status_id > 0){
     bootbox.confirm({
         message: "Status is active. Do you want to Delete?",
         buttons: {
@@ -1250,13 +1459,13 @@ if(status_id > 0){
                     success: function(respn) {
                         var response = respn['SUCCESS'];
                         if (response == '0') {
-                            clearFormFields('#OOOSCharges');
+                            clearFormFields('#OOOSRoom');
                             showModalAlert('error',
                                 '<li>The status cannot be deleted</li>');
                             $('#warningModal').delay(2500).fadeOut();
                         } else {
-                          clearFormFields('#OOOSCharges');
-                            blockLoader('#OOOSCharges');
+                          clearFormFields('#OOOSRoom');
+                            blockLoader('#OOOSRoom');
                             showModalAlert('warning',
                                 '<li>The status has been deleted</li>');
                             $('#warningModal').delay(2500).fadeOut(); 
@@ -1286,6 +1495,82 @@ $(document).on('click', '#Status_Details > tbody > tr', function() {
             blockLoader('#OOOS_DIV');
         });
 });
+
+$(document).on('click', '#Room_Assign_Details > tbody > tr', function() {
+ 
+    $('#Room_Assign_Details').find('tr.table-warning').removeClass('table-warning');
+    
+    $(this).addClass('table-warning');
+
+    loadRoomAssignDetails($(this).data('roomtype_id'),$(this).data('resv_id'),$(this).data('arrival_date'))
+   
+});
+
+
+function loadRoomAssignDetails(roomtype_id,resv_id,arrival_date){
+  $('#Resv_ID').val(resv_id);
+  $('#Room_Type_ID').val(roomtype_id);
+  $('#Arrival_Date').val(arrival_date);
+
+    $.ajax({
+        url: '<?php echo base_url('/getAllVacantRooms') ?>',
+        data: {
+            ROOM_TYPE_ID: roomtype_id,
+            ARRIVAL_DATE: arrival_date,
+          },
+        type: "POST",
+        dataType: 'json',
+        success: function(data) {           
+            if (data.status == 1) {  
+              $('#Vacant_Room_Details').DataTable().destroy();
+              $('#Vacant_Room_Details > tbody').html(data.vacant_rooms);
+              $('#Vacant_Room_Details').DataTable({ paging: true});                
+              $('#VacantRoomsModal').modal('show'); 
+            }
+        }
+      });
+}
+
+$(document).on('click', '#Vacant_Room_Details > tbody > tr', function() {
+ 
+ $('#Vacant_Room_Details').find('tr.table-warning').removeClass('table-warning');
+ 
+ $(this).addClass('table-warning');
+ var Resv_ID = $('#Resv_ID').val();
+ var Room_ID = $(this).data('room_id');
+ $.ajax({
+          url: '<?php echo base_url('/updateRoomAssign') ?>',
+          data: {
+            Resv_ID: Resv_ID,
+            Room_ID: Room_ID,
+            },
+          type: "POST",
+          dataType: 'json',
+          success: function(data) {           
+            if (data.status_message != '') {
+              var mcontent = '';
+              mcontent += '<li>' + data.status_message + '</li>';
+
+              if (data.status == 1) {                             
+                showModalAlert('success', mcontent);
+                $(".roomAssignClose").click();
+                $(".RoomID_"+Resv_ID).remove();
+              } 
+              else{                
+                showModalAlert('error', mcontent);
+              }
+
+            }
+          }
+        });
+
+
+
+ 
+
+});
+
+
 
 
 $(document).on('click', '#OOS_Close', function() {
