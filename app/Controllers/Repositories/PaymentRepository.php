@@ -67,7 +67,8 @@ class PaymentRepository extends BaseController
                     'model' => $data['model'],
                     'model_id' => $data['model_id'],
                     'user_id' => $user['USR_ID'],
-                ]
+                ],
+                'receipt_email' => $user['CUST_EMAIL']
             ]);
 
             $output = [

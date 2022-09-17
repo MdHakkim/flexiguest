@@ -99,11 +99,14 @@ class PaymentController extends BaseController
         $data = $this->request->getVar();
 
         // $this->PaymentRepository->webhook($data);
-        if ($data->type == 'payment_intent.succeeded') {
+        if ($data->type == 'payment_intent.processing') {
+        } else if ($data->type == 'payment_intent.succeeded') {
             $this->paymentSucceded($data);
         } else if ($data->type == 'payment_intent.canceled') {
             $this->paymentCancelled($data);
+        } else if ($data->type == 'payment_intent.payment_failed') {
         }
+
 
         return $this->response->setStatusCode(200);
     }
