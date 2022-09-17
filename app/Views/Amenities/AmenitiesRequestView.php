@@ -688,7 +688,7 @@ $(document).ready(function() {
                         class: 'btn-label-info'
                     },
                     'Payment Initiated': {
-                        class: 'btn-label-secondary'
+                        class: 'btn-label-warning'
                     }
                 };
                 if (typeof $status[$status_name] === 'undefined') {
