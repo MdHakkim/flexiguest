@@ -159,11 +159,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/deleteSourceGroup', 'ApplicatioController::deleteSourceGroup');
 
     $routes->get('/special', 'ApplicatioController::special');
-    $routes->match(['post'],'/specialView', 'ApplicatioController::SpecialView');
-    $routes->match(['post'],'/insertSpecial', 'ApplicatioController::insertSpecial');
-    $routes->match(['post'],'/editSpecial', 'ApplicatioController::editSpecial');
-    $routes->match(['post'],'/deleteSpecial', 'ApplicatioController::deleteSpecial');
-    $routes->match(['post'],'/specialsList', 'ApplicatioController::specialsList');
+    $routes->match(['post'], '/specialView', 'ApplicatioController::SpecialView');
+    $routes->match(['post'], '/insertSpecial', 'ApplicatioController::insertSpecial');
+    $routes->match(['post'], '/editSpecial', 'ApplicatioController::editSpecial');
+    $routes->match(['post'], '/deleteSpecial', 'ApplicatioController::deleteSpecial');
+    $routes->match(['post'], '/specialsList', 'ApplicatioController::specialsList');
 
     $routes->get('/reservationType', 'ApplicatioController::reservationType');
     $routes->match(['post'], '/reservationTypeView', 'ApplicatioController::ReservationTypeView');
@@ -220,23 +220,23 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/showColorBadges', 'MastersController::showColorBadges');
     $routes->get('/showRoomTypeList', 'MastersController::showRoomTypeList');
 
-    $routes->match(['post'],'/insertRateCode', 'MastersController::insertRateCode');
-    $routes->match(['post'],'/deleteRateCode', 'MastersController::deleteRateCode');
-    $routes->match(['post'],'/deleteRateCodeDetail', 'MastersController::deleteRateCodeDetail');
-    $routes->match(['post'],'/copyRateCode', 'MastersController::copyRateCode');
-    $routes->match(['post'],'/updateRateCodeDetail', 'MastersController::updateRateCodeDetail');
-    $routes->match(['post'],'/copyRateCodeDetail', 'MastersController::copyRateCodeDetail');
-    $routes->match(['post'],'/negotiatedRateView', 'MastersController::NegotiatedRateView');
-    $routes->match(['post'],'/combinedProfilesView', 'MastersController::CombinedProfilesView');
-    $routes->match(['post'],'/insertNegotiatedRate', 'MastersController::insertNegotiatedRate');
-    $routes->match(['post'],'/deleteNegotiatedRate', 'MastersController::deleteNegotiatedRate');   
-    $routes->match(['post'],'/checkRoomTypeinRateCodeDetail', 'MastersController::checkRoomTypeinRateCodeDetail');    
-    
-    $routes->match(['post'],'/customerNegotiatedRateView', 'ApplicatioController::CustomerNegotiatedRateView');
-    $routes->match(['post'],'/insertCustomerNegotiatedRate', 'ApplicatioController::insertCustomerNegotiatedRate');
-    $routes->match(['post'],'/deleteCustomerNegotiatedRate', 'ApplicatioController::deleteCustomerNegotiatedRate');    
-    
-    
+    $routes->match(['post'], '/insertRateCode', 'MastersController::insertRateCode');
+    $routes->match(['post'], '/deleteRateCode', 'MastersController::deleteRateCode');
+    $routes->match(['post'], '/deleteRateCodeDetail', 'MastersController::deleteRateCodeDetail');
+    $routes->match(['post'], '/copyRateCode', 'MastersController::copyRateCode');
+    $routes->match(['post'], '/updateRateCodeDetail', 'MastersController::updateRateCodeDetail');
+    $routes->match(['post'], '/copyRateCodeDetail', 'MastersController::copyRateCodeDetail');
+    $routes->match(['post'], '/negotiatedRateView', 'MastersController::NegotiatedRateView');
+    $routes->match(['post'], '/combinedProfilesView', 'MastersController::CombinedProfilesView');
+    $routes->match(['post'], '/insertNegotiatedRate', 'MastersController::insertNegotiatedRate');
+    $routes->match(['post'], '/deleteNegotiatedRate', 'MastersController::deleteNegotiatedRate');
+    $routes->match(['post'], '/checkRoomTypeinRateCodeDetail', 'MastersController::checkRoomTypeinRateCodeDetail');
+
+    $routes->match(['post'], '/customerNegotiatedRateView', 'ApplicatioController::CustomerNegotiatedRateView');
+    $routes->match(['post'], '/insertCustomerNegotiatedRate', 'ApplicatioController::insertCustomerNegotiatedRate');
+    $routes->match(['post'], '/deleteCustomerNegotiatedRate', 'ApplicatioController::deleteCustomerNegotiatedRate');
+
+
     $routes->get('/transactionCodeGroup', 'MastersController::transactionCodeGroup');
     $routes->match(['post'], '/transactionCodeGroupView', 'MastersController::TransactionCodeGroupView');
     $routes->match(['post'], '/insertTransactionCodeGroup', 'MastersController::insertTransactionCodeGroup');
@@ -337,10 +337,10 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/deleteProduct', 'AdditionalController::deleteProduct');
 
     $routes->get('/amenitiesRequests', 'FacilityController::amenitiesRequests');
-    $routes->match(['post'],'/getAmenitiesRequestList', 'FacilityController::getAmenitiesRequestList');
-    $routes->match(['post'],'/insertAmenitiesRequest', 'FacilityController::insertAmenitiesRequest');
-    $routes->match(['post'],'/editAmenitiesRequest', 'FacilityController::editAmenitiesRequest');
-    $routes->match(['post'],'/deleteAmenitiesRequest', 'FacilityController::deleteAmenitiesRequest');  
+    $routes->match(['post'], '/getAmenitiesRequestList', 'FacilityController::getAmenitiesRequestList');
+    $routes->match(['post'], '/insertAmenitiesRequest', 'FacilityController::insertAmenitiesRequest');
+    $routes->match(['post'], '/editAmenitiesRequest', 'FacilityController::editAmenitiesRequest');
+    $routes->match(['post'], '/deleteAmenitiesRequest', 'FacilityController::deleteAmenitiesRequest');
     $routes->match(['post'], '/updateAmenityOrder', 'FacilityController::updateAmenityOrder');
     $routes->match(['post'], '/amenityOrderDetailsView', 'FacilityController::AmenityOrderDetailsView');
     $routes->match(['post'], '/updateAmenityOrderDetails', 'FacilityController::updateAmenityOrderDetails');
@@ -349,17 +349,17 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/getReservationCustomers', 'FacilityController::getReservationCustomers');
     $routes->match(['post'], '/showReservationCustomers', 'FacilityController::showReservationCustomers');
     $routes->match(['post'], '/insertAmenityOrder', 'FacilityController::insertAmenityOrder');
-    
-    
+
+
     $routes->get('/cancellationReason', 'MastersController::cancellationReason');
-    $routes->match(['post'],'/cancellationReasonView', 'MastersController::CancellationReasonView');
-    $routes->match(['post'],'/insertCancellationReason', 'MastersController::insertCancellationReason');
-    $routes->match(['post'],'/editCancellationReason', 'MastersController::editCancellationReason');
-    $routes->match(['post'],'/deleteCancellationReason', 'MastersController::deleteCancellationReason'); 
-    
+    $routes->match(['post'], '/cancellationReasonView', 'MastersController::CancellationReasonView');
+    $routes->match(['post'], '/insertCancellationReason', 'MastersController::insertCancellationReason');
+    $routes->match(['post'], '/editCancellationReason', 'MastersController::editCancellationReason');
+    $routes->match(['post'], '/deleteCancellationReason', 'MastersController::deleteCancellationReason');
+
     $routes->match(['post'], '/insertResvCancelHistory', 'ApplicatioController::insertResvCancelHistory');
     $routes->match(['post'], '/reinstateReservation', 'ApplicatioController::reinstateReservation');
-    $routes->match(['post'],'/resvCancelHistoryView', 'ApplicatioController::ResvCancelHistoryView');
+    $routes->match(['post'], '/resvCancelHistoryView', 'ApplicatioController::ResvCancelHistoryView');
 
     // Code By ALEESHA 
     // Maintenance Request 
@@ -587,39 +587,39 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
 
 
-      $routes->match(['post'],'/updateTraces', 'ReservationController::updateTraces'); 
-      $routes->match(['post'],'/showTraces', 'ReservationController::showTraces'); 
-      $routes->match(['post'],'/deleteTraces', 'ReservationController::deleteTraces');
-      $routes->match(['post'],'/showTraceDetails', 'ReservationController::showTraceDetails');
-      $routes->match(['post'],'/resolveTraces', 'ReservationController::resolveTraces');
-      $routes->get('/roomPlan', 'ReservationController::roomPlan');
-      $routes->get('/roomPlanResource', 'ReservationController::roomPlanResource');
-    
-      $routes->match(['post'],'/roomplanResources', 'ReservationController::roomplanResources');
-      $routes->match(['post'],'/getReservations', 'ReservationController::getReservations');     
-      $routes->get('/pdfTest', 'AdditionalController::pdfTest');
-      $routes->match(['post'],'/updateRoomPlan', 'ReservationController::updateRoomPlan'); 
-      $routes->match(['post'],'/changeReservationDates', 'ReservationController::changeReservationDates');     
-      $routes->get('/roomPlanTest', 'ReservationController::roomPlanTest'); 
-      $routes->match(['post'],'/getInventoryCalendarData', 'ApplicatioController::getInventoryCalendarData');
-      $routes->match(['post'],'/getInventoryAllocatedData', 'ApplicatioController::getInventoryAllocatedData'); 
-      $routes->match(['post'],'/getRoomStatistics', 'ReservationController::getRoomStatistics');
+    $routes->match(['post'], '/updateTraces', 'ReservationController::updateTraces');
+    $routes->match(['post'], '/showTraces', 'ReservationController::showTraces');
+    $routes->match(['post'], '/deleteTraces', 'ReservationController::deleteTraces');
+    $routes->match(['post'], '/showTraceDetails', 'ReservationController::showTraceDetails');
+    $routes->match(['post'], '/resolveTraces', 'ReservationController::resolveTraces');
+    $routes->get('/roomPlan', 'ReservationController::roomPlan');
+    $routes->get('/roomPlanResource', 'ReservationController::roomPlanResource');
 
- 
-      $routes->match(['post'],'/roomOOSList', 'ReservationController::roomOOSList'); 
-      $routes->match(['post'],'/roomPlanList', 'ReservationController::roomPlanList'); 
-      $routes->match(['post'],'/roomsStatusList', 'ReservationController::roomsStatusList'); 
-      $routes->match(['post'],'/roomsChangeReasonList', 'ReservationController::roomsChangeReasonList'); 
-      $routes->match(['post'],'/insertRoomOOS', 'ReservationController::insertRoomOOS'); 
-      $routes->match(['post'],'/showRoomStatusDetails', 'ReservationController::showRoomStatusDetails'); 
-      $routes->match(['post'],'/deleteRoomOOS', 'ReservationController::deleteRoomOOS');   
-      $routes->match(['post'],'/checkArrivalExists', 'ReservationController::checkArrivalExists');
-      $routes->match(['post'],'/checkReservationExists', 'ReservationController::checkReservationExists');
-      $routes->match(['post'],'/getAllVacantRooms', 'ReservationController::getAllVacantRooms');
-      $routes->match(['post'],'/updateRoomAssign', 'ReservationController::updateRoomAssign'); 
+    $routes->match(['post'], '/roomplanResources', 'ReservationController::roomplanResources');
+    $routes->match(['post'], '/getReservations', 'ReservationController::getReservations');
+    $routes->get('/pdfTest', 'AdditionalController::pdfTest');
+    $routes->match(['post'], '/updateRoomPlan', 'ReservationController::updateRoomPlan');
+    $routes->match(['post'], '/changeReservationDates', 'ReservationController::changeReservationDates');
+    $routes->get('/roomPlanTest', 'ReservationController::roomPlanTest');
+    $routes->match(['post'], '/getInventoryCalendarData', 'ApplicatioController::getInventoryCalendarData');
+    $routes->match(['post'], '/getInventoryAllocatedData', 'ApplicatioController::getInventoryAllocatedData');
+    $routes->match(['post'], '/getRoomStatistics', 'ReservationController::getRoomStatistics');
 
-      
-     //Subina Code (END)  
+
+    $routes->match(['post'], '/roomOOSList', 'ReservationController::roomOOSList');
+    $routes->match(['post'], '/roomPlanList', 'ReservationController::roomPlanList');
+    $routes->match(['post'], '/roomsStatusList', 'ReservationController::roomsStatusList');
+    $routes->match(['post'], '/roomsChangeReasonList', 'ReservationController::roomsChangeReasonList');
+    $routes->match(['post'], '/insertRoomOOS', 'ReservationController::insertRoomOOS');
+    $routes->match(['post'], '/showRoomStatusDetails', 'ReservationController::showRoomStatusDetails');
+    $routes->match(['post'], '/deleteRoomOOS', 'ReservationController::deleteRoomOOS');
+    $routes->match(['post'], '/checkArrivalExists', 'ReservationController::checkArrivalExists');
+    $routes->match(['post'], '/checkReservationExists', 'ReservationController::checkReservationExists');
+    $routes->match(['post'], '/getAllVacantRooms', 'ReservationController::getAllVacantRooms');
+    $routes->match(['post'], '/updateRoomAssign', 'ReservationController::updateRoomAssign');
+
+
+    //Subina Code (END)  
 
 
 
@@ -733,6 +733,22 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('store', 'EValetController::submitForm');
         $routes->post('edit', 'EValetController::edit');
         $routes->delete('delete', 'EValetController::delete');
+    });
+
+    $routes->group('restaurant', function ($routes) {
+        $routes->get('', 'RestaurantController::restaurant');
+        $routes->post('all-restaurant', 'RestaurantController::allRestaurant');
+        $routes->post('store-restaurant', 'RestaurantController::storeRestaurant');
+        $routes->post('edit-restaurant', 'RestaurantController::editRestaurant');
+        $routes->delete('delete-restaurant', 'RestaurantController::deleteRestaurant');
+
+        $routes->group('menu-category', function ($routes) {
+            $routes->get('', 'RestaurantController::menuCategory');
+            $routes->post('all-menu-category', 'RestaurantController::allMenuCategory');
+            $routes->post('store-menu-category', 'RestaurantController::storeMenuCategory');
+            $routes->post('edit-menu-category', 'RestaurantController::editMenuCategory');
+            $routes->delete('delete-menu-category', 'RestaurantController::deleteMenuCategory');
+        });
     });
     // ABUBAKAR CODE (END)
 });
