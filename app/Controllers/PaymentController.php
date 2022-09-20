@@ -122,27 +122,24 @@ class PaymentController extends BaseController
         $payment_method = $obj_data->payment_method_types[0];
         $balance_transaction_id = $charge_data->balance_transaction;
 
-        $this->PaymentRepository->createUpdateTransaction([
-            'PT_RESERVATION_ID' => $meta_data->reservation_id,
-            'PT_CUSTOMER_ID' => $meta_data->customer_id,
-            'PT_PAYMENT_METHOD' => $payment_method,
-            'PT_PAYMENT_OBJECT_ID' => $payment_obj_id,
-            'PT_TRANSACTION_NO' => $balance_transaction_id,
-            'PT_AMOUNT' => $meta_data->amount,
-            'PT_MODEL' => $meta_data->model,
-            'PT_MODEL_ID' => $meta_data->model_id,
-            'PT_CREATED_BY' => $meta_data->user_id,
-            'PT_UPDATED_BY' => $meta_data->user_id
-        ]);
-
         if ($meta_data->model == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
-            if (!empty($this->LaundryAmenitiesRepository->orderById($meta_data->model_id)))
-                $this->LaundryAmenitiesRepository->updateOrderById([
-                    'LAO_ID' => $meta_data->model_id,
-                    'LAO_PAYMENT_STATUS' => 'Paid',
-                    'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
-                    'LAO_UPDATED_BY' => $meta_data->user_id,
+            $result = $this->LaundryAmenitiesRepository->placeOrder($meta_data->user, (array) $meta_data, true);
+            if($result['SUCCESS'] == 200) {
+                $order_id = $result['RESPONSE']['OUTPUT'] ? $result['RESPONSE']['OUTPUT']['order_id'] : 0;
+                
+                $this->PaymentRepository->createUpdateTransaction([
+                    'PT_RESERVATION_ID' => $meta_data->reservation_id,
+                    'PT_CUSTOMER_ID' => $meta_data->customer_id,
+                    'PT_PAYMENT_METHOD' => $payment_method,
+                    'PT_PAYMENT_OBJECT_ID' => $payment_obj_id,
+                    'PT_TRANSACTION_NO' => $balance_transaction_id,
+                    'PT_AMOUNT' => $meta_data->amount,
+                    'PT_MODEL' => $meta_data->model,
+                    'PT_MODEL_ID' => $order_id,
+                    'PT_CREATED_BY' => $meta_data->user->USR_ID,
+                    'PT_UPDATED_BY' => $meta_data->user->USR_ID
                 ]);
+            }
         }
     }
 

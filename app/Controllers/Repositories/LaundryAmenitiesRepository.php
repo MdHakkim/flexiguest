@@ -60,62 +60,60 @@ class LaundryAmenitiesRepository extends BaseController
         return $this->LaundryAmenitiesOrder->find($id);
     }
 
-    public function placeOrder($user, $data)
+    public function placeOrder($user, $data, $payment_successful = false)
     {
         $user_id = $user['USR_ID'];
         $customer_id = $user['USR_CUST_ID'];
-        $total_payable = 0;
 
-        foreach ($data['products'] as $product) {
-            $pr = $this->Product->find($product->id);
-            if (empty($pr))
-                return responseJson(404, true, ['msg' => 'Invalid Product']);
+        if (!$payment_successful) {
+            $data['amount'] = 0;
+            foreach ($data['products'] as $product) {
+                $pr = $this->Product->find($product->id);
+                if (empty($pr))
+                    return responseJson(404, true, ['msg' => 'Invalid Product']);
 
-            if ($pr['PR_QUANTITY'] == 0)
-                return responseJson(202, true, ['msg' => "{$pr['PR_NAME']} is out of stock."]);
-            else if ($product->quantity > $pr['PR_QUANTITY'])
-                return responseJson(202, true, ['msg' => "We have {$pr['PR_QUANTITY']} {$pr['PR_NAME']} left in stock. So you can order {$pr['PR_QUANTITY']} {$pr['PR_NAME']} only."]);
+                if ($pr['PR_QUANTITY'] == 0)
+                    return responseJson(202, true, ['msg' => "{$pr['PR_NAME']} is out of stock."]);
+                else if ($product->quantity > $pr['PR_QUANTITY'])
+                    return responseJson(202, true, ['msg' => "We have {$pr['PR_QUANTITY']} {$pr['PR_NAME']} left in stock. So you can order {$pr['PR_QUANTITY']} {$pr['PR_NAME']} only."]);
 
-            $pr['PR_QUANTITY'] = $pr['PR_QUANTITY'] - $product->quantity;
-            $this->Product->save($pr);
+                $pr['PR_QUANTITY'] = $pr['PR_QUANTITY'] - $product->quantity;
+                $this->Product->save($pr);
 
-            $product->expiry_date = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')) + ($pr['PR_ESCALATED_HOURS'] * 60 * 60) + ($pr['PR_ESCALATED_MINS'] * 60));
-            $product->amount = $product->quantity * $pr['PR_PRICE'];
-            $total_payable += ($product->quantity * $pr['PR_PRICE']);
+                $product->expiry_date = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')) + ($pr['PR_ESCALATED_HOURS'] * 60 * 60) + ($pr['PR_ESCALATED_MINS'] * 60));
+                $product->amount = $product->quantity * $pr['PR_PRICE'];
+                $data['amount'] += ($product->quantity * $pr['PR_PRICE']);
+            }
         }
 
-        $order_id = $this->LaundryAmenitiesOrder->insert([
-            'LAO_RESERVATION_ID' => $data['reservation_id'],
-            'LAO_CUSTOMER_ID' => $customer_id,
-            'LAO_ROOM_ID' => $data['room_id'],
-            'LAO_TOTAL_PAYABLE' => $total_payable,
-            'LAO_PAYMENT_METHOD' => $data['payment_method'], // Pay at Reception, Samsung Pay, Credit/Debit card
-            'LAO_CREATED_BY' => $user_id,
-            'LAO_UPDATED_BY' => $user_id
-        ]);
-
-        if (!$order_id)
-            return responseJson(500, true, ['msg' => 'Unable to place order.']);
-
-        foreach ($data['products'] as $product) {
-            $this->LaundryAmenitiesOrderDetail->insert([
-                'LAOD_ORDER_ID' => $order_id,
-                'LAOD_PRODUCT_ID' => $product->id,
-                'LAOD_QUANTITY' => $product->quantity,
-                'LAOD_AMOUNT' => $product->amount,
-                'LAOD_EXPIRY_DATETIME' => $product->expiry_date,
-                'LAOD_CREATED_BY' => $user_id,
-                'LAOD_UPDATED_BY' => $user_id
+        if (!$payment_successful && $data['payment_method'] == 'Credit/Debit card') {
+            $data['model'] = 'FLXY_LAUNDRY_AMENITIES_ORDERS';
+            $data['user'] = $user;
+        } else {
+            $data['order_id'] = $order_id = $this->LaundryAmenitiesOrder->insert([
+                'LAO_RESERVATION_ID' => $data['reservation_id'],
+                'LAO_CUSTOMER_ID' => $customer_id,
+                'LAO_ROOM_ID' => $data['room_id'],
+                'LAO_TOTAL_PAYABLE' => $data['amount'],
+                'LAO_PAYMENT_METHOD' => $data['payment_method'], // Pay at Reception, Samsung Pay, Credit/Debit card
+                'LAO_CREATED_BY' => $user_id,
+                'LAO_UPDATED_BY' => $user_id
             ]);
-        }
 
-        if ($data['payment_method'] == 'Credit/Debit card') {
-            $data = [
-                'amount' => $total_payable,
-                'model' => 'FLXY_LAUNDRY_AMENITIES_ORDERS',
-                'model_id' => $order_id,
-                'reservation_id' => $data['reservation_id'],
-            ];
+            if (!$order_id)
+                return responseJson(500, true, ['msg' => 'Unable to place order.']);
+
+            foreach ($data['products'] as $product) {
+                $this->LaundryAmenitiesOrderDetail->insert([
+                    'LAOD_ORDER_ID' => $order_id,
+                    'LAOD_PRODUCT_ID' => $product->id,
+                    'LAOD_QUANTITY' => $product->quantity,
+                    'LAOD_AMOUNT' => $product->amount,
+                    'LAOD_EXPIRY_DATETIME' => $product->expiry_date,
+                    'LAOD_CREATED_BY' => $user_id,
+                    'LAOD_UPDATED_BY' => $user_id
+                ]);
+            }
         }
 
         return responseJson(200, false, ['msg' => 'Order placed successfully.'], $data);
