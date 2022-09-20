@@ -20,6 +20,7 @@
                             <th></th>
                             <th>ID</th>
                             <th>Item</th>
+                            <th>Description</th>
                             <th>Category ID</th>
                             <th>Category Name</th>
                             <th>Restaurant ID</th>
@@ -86,6 +87,11 @@
                                 <label class="form-label">Sequence</label>
                                 <input type="number" name="MI_SEQUENCE" class="form-control" required />
                             </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label">Description</label>
+                                <textarea name="MI_DESCRIPTION" class="form-control" required></textarea>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -140,6 +146,12 @@
                 },
                 {
                     data: 'MI_ITEM'
+                },
+                {
+                    data: null,
+                    render: function(data) {
+                        return data['MI_DESCRIPTION'].substr(0, 30);
+                    }
                 },
                 {
                     data: 'MI_MENU_CATEGORY_ID'
@@ -210,7 +222,7 @@
                 width: "15%"
             }],
             "order": [
-                [3, "asc"]
+                [6, "asc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',

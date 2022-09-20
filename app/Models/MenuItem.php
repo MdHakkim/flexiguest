@@ -15,6 +15,7 @@ class MenuItem extends Model
         'MI_PRICE',
         'MI_QUANTITY',
         'MI_SEQUENCE',
+        'MI_DESCRIPTION',
         'MI_CREATED_BY',
         'MI_UPDATED_BY',
     ];

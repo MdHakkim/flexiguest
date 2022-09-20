@@ -145,7 +145,7 @@ class RestaurantRepository extends BaseController
     {
         $mine = new ServerSideDataTable();
         $tableName = 'FLXY_MENU_ITEMS left join FLXY_RESTAURANTS on MI_RESTAURANT_ID = RE_ID left join FLXY_MENU_CATEGORIES on MI_MENU_CATEGORY_ID = MC_ID';
-        $columns = 'MI_ID,MI_RESTAURANT_ID,MI_MENU_CATEGORY_ID,MI_ITEM,MI_PRICE,MI_QUANTITY,MI_SEQUENCE,MI_CREATED_AT,RE_RESTAURANT,MC_CATEGORY';
+        $columns = 'MI_ID,MI_RESTAURANT_ID,MI_MENU_CATEGORY_ID,MI_ITEM,MI_PRICE,MI_QUANTITY,MI_SEQUENCE,MI_DESCRIPTION,MI_CREATED_AT,RE_RESTAURANT,MC_CATEGORY';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
