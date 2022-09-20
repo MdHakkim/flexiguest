@@ -742,12 +742,22 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('edit-restaurant', 'RestaurantController::editRestaurant');
         $routes->delete('delete-restaurant', 'RestaurantController::deleteRestaurant');
 
+        $routes->post('menu-categories-by-restaurant', 'RestaurantController::menuCategoriesByRestaurant');
+
         $routes->group('menu-category', function ($routes) {
             $routes->get('', 'RestaurantController::menuCategory');
             $routes->post('all-menu-category', 'RestaurantController::allMenuCategory');
             $routes->post('store-menu-category', 'RestaurantController::storeMenuCategory');
             $routes->post('edit-menu-category', 'RestaurantController::editMenuCategory');
             $routes->delete('delete-menu-category', 'RestaurantController::deleteMenuCategory');
+        });
+
+        $routes->group('menu-item', function ($routes) {
+            $routes->get('', 'RestaurantController::menuItem');
+            $routes->post('all-menu-item', 'RestaurantController::allmenuItem');
+            $routes->post('store-menu-item', 'RestaurantController::storeMenuItem');
+            $routes->post('edit-menu-item', 'RestaurantController::editMenuItem');
+            $routes->delete('delete-menu-item', 'RestaurantController::deleteMenuItem');
         });
     });
     // ABUBAKAR CODE (END)

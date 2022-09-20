@@ -100,10 +100,10 @@ class RestaurantController extends BaseController
     {
         $id = $this->request->getPost('id');
 
-        $restaurant = $this->RestaurantRepository->menuCategoryById($id);
+        $menu_category = $this->RestaurantRepository->menuCategoryById($id);
 
-        if ($restaurant)
-            return $this->respond($restaurant);
+        if ($menu_category)
+            return $this->respond($menu_category);
 
         return $this->respond(responseJson(404, true, ['msg' => "Menu Category not found"]));
     }
@@ -119,5 +119,66 @@ class RestaurantController extends BaseController
             : responseJson(500, true, ['msg' => "Menu Category not deleted"]);
 
         return $this->respond($result);
+    }
+
+    public function menuItem()
+    {
+        $data['title'] = getMethodName();
+        $data['session'] = session();
+
+        $data['restaurants'] = $this->RestaurantRepository->allRestaurants();
+
+        return view('frontend/restaurant/menu_item', $data);
+    }
+
+    public function allMenuItem()
+    {
+        $this->RestaurantRepository->allMenuItem();
+    }
+
+    public function storeMenuItem()
+    {
+        $user_id = session('USR_ID');
+
+        if (!$this->validate($this->RestaurantRepository->menuItemValidationRules()))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
+        $data = $this->request->getPost();
+        
+        $result = $this->RestaurantRepository->storeMenuItem($user_id, $data);
+        return $this->respond($result);
+    }
+
+    public function editMenuItem()
+    {
+        $id = $this->request->getPost('id');
+
+        $restaurant = $this->RestaurantRepository->menuItemById($id);
+
+        if ($restaurant)
+            return $this->respond($restaurant);
+
+        return $this->respond(responseJson(404, true, ['msg' => "Menu Item not found"]));
+    }
+
+    public function deleteMenuItem()
+    {
+        $menu_item_id = $this->request->getPost('id');
+
+        $result = $this->RestaurantRepository->deleteMenuItem($menu_item_id);
+
+        $result = $result
+            ? responseJson(200, false, ['msg' => "Menu Item deleted successfully."])
+            : responseJson(500, true, ['msg' => "Menu Item not deleted"]);
+
+        return $this->respond($result);
+    }
+
+    public function menuCategoriesByRestaurant()
+    {
+        $restaurant_id = $this->request->getVar('restaurant_id');
+        $result = $this->RestaurantRepository->menuCategoriesByRestaurant($restaurant_id);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'list'], $result));
     }
 }

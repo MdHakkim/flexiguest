@@ -8,7 +8,7 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Menu Categories</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Menu Items</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -19,7 +19,9 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Category</th>
+                            <th>Item</th>
+                            <th>Category ID</th>
+                            <th>Category Name</th>
                             <th>Restaurant ID</th>
                             <th>Restaurant Name</th>
                             <th>Created At</th>
@@ -50,18 +52,39 @@
                         <div class="row g-3">
                             <input type="hidden" name="id" class="form-control" />
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label"><b>Restaurants *</b></label>
-                                <select name="MC_RESTAURANT_ID" class="select2 form-select">
+                                <select name="MI_RESTAURANT_ID" class="select2 form-select">
                                     <?php foreach ($restaurants as $restaurants) { ?>
                                         <option value="<?= $restaurants['RE_ID'] ?>"><?= $restaurants['RE_RESTAURANT'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label"><b>Category *</b></label>
-                                <input type="text" name="MC_CATEGORY" class="form-control" placeholder="Category" required />
+                                <select name="MI_MENU_CATEGORY_ID" class="select2 form-select">
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label"><b>Item *</b></label>
+                                <input type="text" name="MI_ITEM" class="form-control" placeholder="Item" required />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label"><b>Price *</b></label>
+                                <input type="number" name="MI_PRICE" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label"><b>Quantity *</b></label>
+                                <input type="number" name="MI_QUANTITY" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Sequence</label>
+                                <input type="number" name="MI_SEQUENCE" class="form-control" required />
                             </div>
                         </div>
                     </form>
@@ -107,25 +130,31 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('/restaurant/menu-category/all-menu-category') ?>'
+                'url': '<?php echo base_url('/restaurant/menu-item/all-menu-item') ?>'
             },
             'columns': [{
                     data: ''
                 },
                 {
-                    data: 'MC_ID'
+                    data: 'MI_ID'
+                },
+                {
+                    data: 'MI_ITEM'
+                },
+                {
+                    data: 'MI_MENU_CATEGORY_ID'
                 },
                 {
                     data: 'MC_CATEGORY'
                 },
                 {
-                    data: 'MC_RESTAURANT_ID'
+                    data: 'MI_RESTAURANT_ID'
                 },
                 {
                     data: 'RE_RESTAURANT'
                 },
                 {
-                    data: 'MC_CREATED_AT'
+                    data: 'MI_CREATED_AT'
                 },
                 {
                     data: null,
@@ -141,7 +170,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['MC_ID']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['MI_ID']}" data-restaurant_id="${data['MI_RESTAURANT_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -149,7 +178,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['MC_ID']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['MI_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -190,7 +219,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['MC_ID'];
+                            return 'Details of ' + data['MI_ID'];
                         }
                     }),
                     type: 'column',
@@ -239,7 +268,7 @@
         resetForm();
 
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add Restaurant');
+        $('#popModalWindowlabel').html('Add Menu Item');
 
         $('#popModalWindow').modal('show');
     }
@@ -250,7 +279,7 @@
         var fd = new FormData($(`${form_id}`)[0]);
 
         $.ajax({
-            url: '<?= base_url('/restaurant/menu-category/store-menu-category') ?>',
+            url: '<?= base_url('/restaurant/menu-item/store-menu-item') ?>',
             type: "post",
             data: fd,
             processData: false,
@@ -283,19 +312,21 @@
         resetForm();
 
         $('.dtr-bs-modal').modal('hide');
-        var menu_category_id = $(this).attr('data_id');
+        var menu_item_id = $(this).attr('data_id');
+        var restaurant_id = $(this).data('restaurant_id');
 
-        $(`${form_id} input[name='id']`).val(menu_category_id);
+        $(`${form_id} select[name='MI_RESTAURANT_ID']`).val(restaurant_id).trigger('change');
+        $(`${form_id} input[name='id']`).val(menu_item_id);
 
-        $('#popModalWindowlabel').html('Edit Menu Category');
+        $('#popModalWindowlabel').html('Edit Menu Item');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('/restaurant/menu-category/edit-menu-category') ?>';
+        var url = '<?php echo base_url('/restaurant/menu-item/edit-menu-item') ?>';
         $.ajax({
             url: url,
             type: "post",
             data: {
-                id: menu_category_id
+                id: menu_item_id
             },
             dataType: 'json',
             success: function(response) {
@@ -307,7 +338,12 @@
                         else if ($(`${form_id} textarea[name='${field}']`).length)
                             $(`${form_id} textarea[name='${field}']`).val(val);
 
-                        else if ($(`${form_id} select[name='${field}']`).length)
+                        else if (field == 'MI_MENU_CATEGORY_ID')
+                            window.setTimeout(function() {
+                                $(`${form_id} select[name='${field}']`).val(val).trigger('change');
+                            }, 500);
+
+                        else if (field != 'MI_RESTAURANT_ID' && $(`${form_id} select[name='${field}']`).length)
                             $(`${form_id} select[name='${field}']`).val(val).trigger('change');
                     });
                 });
@@ -338,7 +374,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('/restaurant/menu-category/delete-menu-category') ?>',
+                        url: '<?php echo base_url('/restaurant/menu-item/delete-menu-item') ?>',
                         type: "post",
                         data: {
                             id: id,
@@ -361,6 +397,36 @@
                 }
             }
         });
+    });
+
+    $(`${form_id} [name='MI_RESTAURANT_ID']`).change(function() {
+        let restaurant_id = $(this).val();
+
+        if (restaurant_id) {
+            $.ajax({
+                url: '<?= base_url('restaurant/menu-categories-by-restaurant') ?>',
+                type: "post",
+                data: {
+                    restaurant_id
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response['SUCCESS'] == 200) {
+                        let categories = response['RESPONSE']['OUTPUT'];
+
+                        let html = '';
+                        for (let category of categories) {
+                            html += `
+                            <option value="${category.MC_ID}">${category.MC_CATEGORY}</option>
+                        `;
+                        }
+
+                        $(`${form_id} select[name='MI_MENU_CATEGORY_ID']`).html(html);
+                        $(`${form_id} select[name='MI_MENU_CATEGORY_ID']`).trigger('change');
+                    }
+                }
+            });
+        }
     });
 
     // bootstrap-maxlength & repeater (jquery)
