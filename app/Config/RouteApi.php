@@ -10,14 +10,8 @@
 //-----------  FLEXI GUEST API ROUTES -----------------//
 // ---------------------------------------------------------------LOGIN/REGISTARTION -------------------------------------------------------------------------//
 $routes->group("api", function ($routes) {
-
     $routes->post("register", "APIController::registerAPI");
     $routes->post("login", "APIController::loginAPI");
-
-    $routes->get('lookup-api', 'APIController::lookupApi');
-
-    $routes->get('get-state', 'APIController::getState');
-    $routes->get('get-city', 'APIController::getCity');
 });
 
 $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
@@ -111,6 +105,10 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
         $routes->get('valet-list', 'EValetController::valetList');
         $routes->post('car-delivery-request', 'EValetController::carDeliveryRequest');
     });
+
+    $routes->get('lookup-api', 'APIController::lookupApi');
+    $routes->get('get-state', 'APIController::getState');
+    $routes->get('get-city', 'APIController::getCity');
 });
 
 /*****************************  ADMIN + GUEST *****************************/
@@ -178,6 +176,13 @@ $routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' =
         $routes->post("update-status", "MaintenanceController::updateStatus");
         $routes->post("add-comment", "MaintenanceController::addComment");
         $routes->get("get-comments", "MaintenanceController::getComments");
+    });
+});
+
+/*****************************  GUEST *****************************/
+$routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers'], function ($routes) {
+    $routes->group('restaurant', function ($routes) {
+        $routes->get("all-restaurants", "RestaurantController::allRestaurants");
     });
 });
 
