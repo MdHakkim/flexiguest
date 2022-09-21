@@ -37,7 +37,7 @@ class LaundryAmenitiesController extends BaseController
         if (!$validate)
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
-        $data = (array) $this->request->getVar();
+        $data = json_decode(json_encode($this->request->getVar()), true);
         $result = $this->LaundryAmenitiesRepository->placeOrder($user, $data);
 
         if ($result['SUCCESS'] == 200 && $data['payment_method'] == 'Credit/Debit card') {
