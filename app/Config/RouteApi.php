@@ -184,16 +184,16 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
     $routes->group('restaurant', function ($routes) {
         $routes->get("all-restaurants", "RestaurantController::allRestaurants");
     });
-});
-
-/*****************************  GUEST *****************************/
-$routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
 
     $routes->group('concierge', function ($routes) {
         $routes->get("concierge-offers", "ConciergeController::conciergeOffers");
         $routes->post("make-concierge-request", "ConciergeController::makeConciergeRequest");
         $routes->get("list-concierge-requests", "ConciergeController::listConciergeRequests");
     });
+});
+
+/*****************************  GUEST *****************************/
+$routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
 
     $routes->get("news", "NewsController::news");
     $routes->get("guideline", "GuidelineController::guideline");

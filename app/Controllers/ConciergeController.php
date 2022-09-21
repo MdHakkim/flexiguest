@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Controllers\Repositories\ConciergeRepository;
+use App\Controllers\Repositories\ReservationRepository;
 use App\Libraries\DataTables\ConciergeOfferDataTable;
 use App\Libraries\DataTables\ConciergeRequestDataTable;
 use App\Models\ConciergeOffer;
@@ -17,21 +18,23 @@ class ConciergeController extends BaseController
 {
     use ResponseTrait;
 
+    private $ConciergeRepository;
+    private $ReservationRepository;
     private $Currency;
     private $ConciergeOffer;
     private $ConciergeRequest;
     private $Room;
     private $Reservation;
-    private $ConciergeRepository;
 
     public function __construct()
     {
+        $this->ConciergeRepository = new ConciergeRepository();
+        $this->ReservationRepository = new ReservationRepository();
         $this->Currency = new Currency();
         $this->ConciergeOffer = new ConciergeOffer();
         $this->ConciergeRequest = new ConciergeRequest();
         $this->Room = new Room();
         $this->Reservation = new Reservation();
-        $this->ConciergeRepository = new ConciergeRepository();
     }
 
     public function conciergeOffer()
@@ -304,5 +307,61 @@ class ConciergeController extends BaseController
             return $this->respond(responseJson("200", false, "Concierge request deleted successfully", $response));
 
         return $this->respond(responseJson("-402", "Concierge request not deleted"));
+    }
+
+    // API Functions
+    public function conciergeOffers()
+    {
+        $concierge_offers = $this->ConciergeOffer->where('CO_STATUS', 'enabled')->findAll();
+        foreach ($concierge_offers as $index => $concierge_offer) {
+            $concierge_offers[$index]['CO_COVER_IMAGE'] = base_url($concierge_offer['CO_COVER_IMAGE']);
+        }
+
+        $result = responseJson(200, false, ['msg' => "Cocierge offers list"], $concierge_offers);
+        return $this->respond($result);
+    }
+
+    public function makeConciergeRequest()
+    {
+        $user = $this->request->user;
+        
+        $data = json_decode(json_encode($this->request->getVar()), true);
+
+        if(!isWeb()){
+            $current_reservations = $this->ReservationRepository->currentReservations();
+            if (empty($current_reservations))
+                return $this->respond(responseJson(200, false, ['msg' => 'Sorry, you can\'t make request without reservation.']));
+            $data['CR_RESERVATION_ID'] = $current_reservations[0]['RESV_ID'];
+        }
+
+        $offer_id = $this->request->getVar('CR_OFFER_ID');
+        $concierge_offer = $this->ConciergeRepository->getConciergeOffer("CO_STATUS = 'enabled' and CO_ID = $offer_id");
+        if (empty($concierge_offer))
+            return $this->respond(responseJson(200, false, ['msg' => 'Invalid Offer Selected.']));
+
+        $min_quantity = $concierge_offer['CO_MIN_QUANTITY'] ?? 1;
+        $max_quantity = $concierge_offer['CO_MAX_QUANTITY'] ?? 1;
+        if (!$this->validate($this->ConciergeRepository->validationRules($data, $min_quantity, $max_quantity)))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
+        $result = $this->ConciergeRepository->createOrUpdateConciergeRequest($user, $data, $concierge_offer);
+
+        return $this->respond($result);
+    }
+
+    public function listConciergeRequests()
+    {
+        $customer_id = $this->request->user['USR_CUST_ID'];
+        $concierge_requests = $this->ConciergeRequest
+            ->select('FLXY_CONCIERGE_REQUESTS.*, fco.CO_TITLE, fco.CO_DESCRIPTION, fco.CO_VALID_FROM_DATE, fco.CO_VALID_TO_DATE, fco.CO_COVER_IMAGE')
+            ->join('FLXY_CONCIERGE_OFFERS as fco', 'FLXY_CONCIERGE_REQUESTS.CR_OFFER_ID = fco.CO_ID')
+            ->where('CR_CUSTOMER_ID', $customer_id)
+            ->findAll();
+
+        foreach ($concierge_requests as $index => $request) {
+            $concierge_requests[$index]['CO_COVER_IMAGE'] = base_url($request['CO_COVER_IMAGE']);
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Concierge requests list'], $concierge_requests));
     }
 }

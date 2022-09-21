@@ -46,4 +46,14 @@ class ReservationRepository extends BaseController
             ->where($where_condition)
             ->findAll();
     }
+
+    public function currentReservations()
+    {
+        return $this->Reservation
+            ->where('RESV_STATUS', 'Due Pre Check-In')
+            ->orWhere('RESV_STATUS', 'Pre Checked-In')
+            ->orWhere('RESV_STATUS', 'Checked-In')
+            ->orderBy('RESV_ID', 'desc')
+            ->findAll();
+    }
 }

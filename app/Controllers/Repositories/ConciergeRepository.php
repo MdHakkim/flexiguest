@@ -20,6 +20,92 @@ class ConciergeRepository extends BaseController
         $this->ConciergeRequest = new ConciergeRequest();
     }
 
+    public function validationRules($data, $min_quantity, $max_quantity)
+    {
+        $rules = [
+            'CR_OFFER_ID' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select an offer.'
+                ]
+            ],
+            'CR_QUANTITY' => ['label' => 'Quantity', 'rules' => "required|greater_than_equal_to[$min_quantity]|less_than_equal_to[$max_quantity]"],
+            'CR_GUEST_NAME' => ['label' => 'Guest name', 'rules' => 'required'],
+            'CR_GUEST_EMAIL' => ['label' => 'Guest email', 'rules' => 'required|valid_email'],
+            'CR_GUEST_PHONE' => ['label' => 'Guest phone', 'rules' => 'required'],
+            'CR_PREFERRED_DATE' => ['label' => 'Preferred Date', 'rules' => 'required'],
+            'CR_PREFERRED_TIME' => ['label' => 'Preferred Time', 'rules' => 'required']
+        ];
+
+        if(isWeb()){
+            $rules = array_merge($rules, [
+                'CR_RESERVATION_ID' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Please select a reservation.'
+                    ]
+                ],
+                'CR_CUSTOMER_ID' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Guest field is required. Please select a reservation.'
+                    ]
+                ],
+                'CR_TOTAL_AMOUNT' => ['label' => 'Total amount', 'rules' => 'required'],
+                'CR_TAX_AMOUNT' => ['label' => 'Tax amount', 'rules' => 'required'],
+                'CR_NET_AMOUNT' => ['label' => 'Net amount', 'rules' => 'required'],
+                'CR_STATUS' => [
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Please select a status.'
+                    ]
+                ],
+            ]);
+        }
+
+        return $rules;
+    }
+
+    public function getConciergeOffer($where_condition)
+    {
+        return $this->ConciergeOffer->where($where_condition)->first();
+    }
+
+    public function createOrUpdateConciergeRequest($user, $data, $concierge_offer)
+    {
+        $user_id = $user['USR_ID'];
+        $customer_id = $user['USR_CUST_ID'];
+
+        $id = $data['id'];
+        unset($data['id']);
+
+        $quantity = $data['CR_QUANTITY'];
+        $data['CR_CUSTOMER_ID'] = $customer_id;
+        $data['CR_TOTAL_AMOUNT'] = $quantity * $concierge_offer['CO_OFFER_PRICE'];
+        $data['CR_TAX_AMOUNT'] = $quantity * $concierge_offer['CO_TAX_AMOUNT'];
+        $data['CR_NET_AMOUNT'] = $quantity * $concierge_offer['CO_NET_PRICE'];
+        $data['CR_CREATED_BY'] = $data['CR_UPDATED_BY'] = $user_id;
+
+        $concierge_request_id = !empty($id)
+            ? $this->ConciergeRequest->update($id, $data)
+            : $this->ConciergeRequest->insert($data);
+
+        if (!$concierge_request_id)
+            return $this->respond(responseJson(500, true, ['msg' => "db insert/update not successful"]));
+
+        if (empty($id)) {
+            $this->ConciergeRepository->sendConciergeRequestEmail([
+                'concierge_offer' => $concierge_offer,
+                'concierge_request' => $data,
+            ]);
+
+            $msg = 'Concierge request has been created.';
+        } else
+            $msg = 'Concierge request has been updated.';
+
+        return responseJson(200, false, ['msg' => $msg]);
+    }
+
     public function sendConciergeRequestEmail($data)
     {
         $data['from_email'] = 'notifications@farnek.com';
