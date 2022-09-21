@@ -22,8 +22,17 @@ class PaymentController extends BaseController
 
     public function createPaymentIntent()
     {
-        $data = $this->request->getVar();
+        $data = (array) $this->request->getVar();
         $user = $this->request->user;
+
+        if($data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
+            $order = $this->LaundryAmenitiesRepository->orderById($data['model_id']);
+            if(empty($order))
+                return $this->respond(responseJson(404, true, ['msg' => 'Order not found']));
+
+            $data['amount'] = $order['LAO_TOTAL_PAYABLE'];
+            $data['reservation_id'] = $order['LAO_RESERVATION_ID'];
+        }
 
         $result = $this->PaymentRepository->createPaymentIntent($user, $data);
         return $this->respond($result);
