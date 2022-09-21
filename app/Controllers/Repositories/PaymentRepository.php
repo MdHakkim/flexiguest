@@ -60,7 +60,14 @@ class PaymentRepository extends BaseController
                 'amount' => $amount,
                 'currency' => 'aed',
                 'customer' => $customer_id,
-                'metadata' => $data,
+                'metadata' => [
+                    'reservation_id' => $data['reservation_id'],
+                    'customer_id' => $user['CUST_ID'],
+                    'amount' => $original_amount,
+                    'model' => $data['model'],
+                    'model_id' => $data['model_id'],
+                    'user_id' => $user['USR_ID'],
+                ],
                 'receipt_email' => $user['CUST_EMAIL']
             ]);
 
