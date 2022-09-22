@@ -45,7 +45,10 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>ID</th>
                             <th>Status</th>
+                            <th>Payment Method</th>
+                            <th>Payment Status</th>
                             <th>Offer</th>
                             <th>Guest Name</th>
                             <th>Guest Phone</th>
@@ -175,10 +178,25 @@
                                 <input type="time" name="CR_PREFERRED_TIME" class="form-control" />
                             </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Payment Method *</b></label>
+                                <select class="select2" name="CR_PAYMENT_METHOD">
+                                    <option>Pay at Reception</option>
+                                    <option>Samsung Pay</option>
+                                    <option>Credit/Debit card</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Payment Status *</b></label>
+                                <select class="select2" name="CR_PAYMENT_STATUS">
+                                    <option>UnPaid</option>
+                                    <option>Paid</option>
+                                </select>
+                            </div>
+
                             <div class="col-md-12">
-
                                 <label class="form-label"><b>Remarks</b></label>
-
                                 <textarea name="CR_REMARKS" class="form-control" placeholder="Remarks..."></textarea>
                             </div>
 
@@ -232,6 +250,9 @@
                     data: ''
                 },
                 {
+                    data: 'CR_ID'
+                },
+                {
                     data: null,
                     render: function(data, type, row, meta) {
                         let class_name = 'badge rounded-pill';
@@ -252,6 +273,12 @@
                             <span class="${class_name}">${data['CR_STATUS']}</span>
                         `);
                     }
+                },
+                {
+                    data: 'CR_PAYMENT_STATUS'
+                },
+                {
+                    data: 'CR_PAYMENT_METHOD'
                 },
                 {
                     data: 'CO_TITLE'
@@ -329,26 +356,9 @@
                         return '';
                     }
                 },
-                // {
-                //     width: "13%"
-                // }, {
-                //     width: "10%"
-                // }, {
-                //     width: "10%"
-                // }, {
-                //     width: "5%"
-                // }, {
-                //     width: "35%"
-                // }, {
-                //     width: "5%"
-                // }, {
-                //     width: "5%"
-                // }, {
-                //     width: "5%"
-                // }
             ],
             "order": [
-                [12, "desc"]
+                [0, "desc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -432,68 +442,49 @@
         $('#popModalWindow').modal('show');
     }
 
-    // Delete Rate Class
+    function resetConciergeRequestForm() {
+        let id = "concierge-request-form";
 
-    $(document).on('click', '.delete-record', function() {
+        $(`#${id} input`).val('');
+        $(`#${id} select`).val('').trigger('change');
+        $(`#${id} #CR_QUANTITY`).val('1');
+
+        $(`#${id} select[name='CR_STATUS']`).val('in-progress').trigger('change');
+        $(`#${id} select[name='CR_PAYMENT_METHOD']`).val('Pay at Reception').trigger('change');
+        $(`#${id} select[name='CR_PAYMENT_STATUS']`).val('UnPaid').trigger('change');
+    }
+
+    // Add New or Edit Rate Class submit Function
+    function submitForm() {
+        let id = "concierge-request-form";
         hideModalAlerts();
-        $('.dtr-bs-modal').modal('hide');
 
-        var id = $(this).attr('data_id');
-        bootbox.confirm({
-            message: "Are you sure you want to delete this record?",
-            buttons: {
-                confirm: {
-                    label: 'Yes',
-                    className: 'btn-success'
-                },
-                cancel: {
-                    label: 'No',
-                    className: 'btn-danger'
-                }
-            },
-            callback: function(result) {
-                if (result) {
-                    $.ajax({
-                        url: '<?php echo base_url('/concierge/delete-concierge-request') ?>',
-                        type: "post",
-                        data: {
-                            id: id,
-                            '_method': 'delete'
-                        },
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        dataType: 'json',
-                        success: function(respn) {
-                            if (respn['SUCCESS'] != 200) {
-                                var ERROR = respn['RESPONSE']['ERROR'];
+        var fd = new FormData($(`#${id}`)[0]);
 
-                                var mcontent = '';
-                                $.each(ERROR, function(ind, data) {
-                                    mcontent += '<li>' + data + '</li>';
-                                });
+        $.ajax({
+            url: '<?= base_url('/concierge/store-concierge-request') ?>',
+            type: "post",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(response) {
+                var mcontent = '';
+                $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                    mcontent += '<li>' + data + '</li>';
+                });
 
-                                showModalAlert('error', mcontent);
-                            } else {
-                                showModalAlert('warning', respn['RESPONSE']['REPORT_RES']);
-                                $('#dataTable_view').dataTable().fnDraw();
-                            }
-                        }
-                    });
+                if (response['SUCCESS'] != 200) {
+                    showModalAlert('error', mcontent);
+                } else {
+                    showModalAlert('success', mcontent);
+
+                    $('#popModalWindow').modal('hide');
+                    $('#dataTable_view').dataTable().fnDraw();
                 }
             }
         });
-    });
-
-    // $(document).on('click','.flxCheckBox',function(){
-    //   var checked = $(this).is(':checked');
-    //   var parent = $(this).parent();
-    //   if(checked){
-    //     parent.find('input[type=hidden]').val('Y');
-    //   }else{
-    //     parent.find('input[type=hidden]').val('N');
-    //   }
-    // });
+    }
 
     // Show Edit Rate Class Form
     $(document).on('click', '.editWindow', function() {
@@ -540,52 +531,55 @@
         });
     });
 
-    function resetConciergeRequestForm() {
-        let id = "concierge-request-form";
-
-        $(`#${id} input`).val('');
-        $(`#${id} select`).val('').trigger('change');
-        $(`#${id} #CR_QUANTITY`).val('1');
-    }
-
-    // Add New or Edit Rate Class submit Function
-    function submitForm() {
-        let id = "concierge-request-form";
+    // Delete Rate Class
+    $(document).on('click', '.delete-record', function() {
         hideModalAlerts();
+        $('.dtr-bs-modal').modal('hide');
 
-        var fd = new FormData($(`#${id}`)[0]);
+        var id = $(this).attr('data_id');
+        bootbox.confirm({
+            message: "Are you sure you want to delete this record?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function(result) {
+                if (result) {
+                    $.ajax({
+                        url: '<?php echo base_url('/concierge/delete-concierge-request') ?>',
+                        type: "post",
+                        data: {
+                            id: id,
+                            '_method': 'delete'
+                        },
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            var mcontent = '';
+                            $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                                mcontent += '<li>' + data + '</li>';
+                            });
 
-        $.ajax({
-            url: '<?= base_url('/concierge/store-concierge-request') ?>',
-            type: "post",
-            data: fd,
-            processData: false,
-            contentType: false,
-            dataType: 'json',
-            success: function(respn) {
-
-                var response = respn['SUCCESS'];
-                if (response != '200') {
-
-                    var ERROR = respn['RESPONSE']['ERROR'];
-                    var mcontent = '';
-                    $.each(ERROR, function(ind, data) {
-                        mcontent += '<li>' + data + '</li>';
+                            if (response['SUCCESS'] != 200)
+                                showModalAlert('error', mcontent);
+                            else {
+                                showModalAlert('success', mcontent);
+                                $('#dataTable_view').dataTable().fnDraw();
+                            }
+                        }
                     });
-                    showModalAlert('error', mcontent);
-                } else {
-
-                    var alertText = respn['RESPONSE']['REPORT_RES'];
-
-                    showModalAlert('success', alertText);
-
-                    $('#popModalWindow').modal('hide');
-                    resetConciergeRequestForm();
-                    $('#dataTable_view').dataTable().fnDraw();
                 }
             }
         });
-    }
+    });
 
     // bootstrap-maxlength & repeater (jquery)
     $(function() {

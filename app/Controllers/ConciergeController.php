@@ -208,89 +208,73 @@ class ConciergeController extends BaseController
         exit;
     }
 
+    // public function storeConciergeRequest()
+    // {
+    // $user_id = session('USR_ID');
+
+    // $data = json_decode(json_encode($this->request->getVar()), true);
+    // $id = $this->request->getVar('id');
+
+    // $offer_id = $this->request->getVar('CR_OFFER_ID');
+    // $concierge_offer = $this->ConciergeRepository->getConciergeOffer("CO_STATUS = 'enabled' and CO_ID = $offer_id");
+    // if (empty($concierge_offer))
+    //     return $this->respond(responseJson(200, false, ['msg' => 'Invalid Offer Selected.']));
+
+    // $min_quantity = $concierge_offer['CO_MIN_QUANTITY'] ?? 1;
+    // $max_quantity = $concierge_offer['CO_MAX_QUANTITY'] ?? 1;
+
+    // if (!$this->validate($this->ConciergeRepository->validationRules($data, $min_quantity, $max_quantity)))
+    //     return $this->respond(responseJson("-402", $this->validator->getErrors()));
+
+    // if (empty($id)) {
+    //     $data['CR_CREATED_BY'] = $data['CR_UPDATED_BY'] = $user_id;
+    //     $this->ConciergeRequest->insert($data);
+
+    //     $this->ConciergeRepository->sendConciergeRequestEmail([
+    //         'concierge_offer' => $concierge_offer,
+    //         'concierge_request' => $data,
+    //     ]);
+
+    //     $msg = 'Concierge request has been created.';
+    // } else {
+    //     $data['CR_UPDATED_BY'] = $user_id;
+    //     $this->ConciergeRequest->update($id, $data);
+
+    //     $msg = 'Concierge request has been updated.';
+    // }
+
+    // return $this->respond(responseJson("200", false, $msg));
+    // }
+
     public function storeConciergeRequest()
     {
-        $user_id = session('USR_ID');
+        $user = $this->request->user ?? session('user');
+        $data = json_decode(json_encode($this->request->getVar()), true);
 
-        $id = $this->request->getPost('id');
+        if (!isWeb()) {
+            $current_reservations = $this->ReservationRepository->currentReservations();
+            if (empty($current_reservations))
+                return $this->respond(responseJson(202, false, ['msg' => 'Sorry, you can\'t make request without reservation.']));
+            $data['CR_RESERVATION_ID'] = $current_reservations[0]['RESV_ID'];
+        }
 
-        $min_quantity = $max_quantity = 1;
         $offer_id = $this->request->getVar('CR_OFFER_ID');
-        if (!empty($offer_id)) {
-            $concierge_offer = $this->ConciergeOffer->where('CO_ID', $offer_id)->first();
-            $min_quantity = $concierge_offer['CO_MIN_QUANTITY'] ?? 1;
-            $max_quantity = $concierge_offer['CO_MAX_QUANTITY'] ?? 1;
+        $concierge_offer = $this->ConciergeRepository->getConciergeOffer("CO_STATUS = 'enabled' and CO_ID = $offer_id");
+        if (empty($concierge_offer))
+            return $this->respond(responseJson(202, false, ['msg' => 'Invalid Offer Selected.']));
+
+        $min_quantity = $concierge_offer['CO_MIN_QUANTITY'] ?? 1;
+        $max_quantity = $concierge_offer['CO_MAX_QUANTITY'] ?? 1;
+        if (!$this->validate($this->ConciergeRepository->validationRules($data, $min_quantity, $max_quantity)))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
+        $result = $this->ConciergeRepository->createOrUpdateConciergeRequest($user, $data, $concierge_offer);
+        if (!isWeb() && $result['SUCCESS'] == 200 && $data['CR_PAYMENT_METHOD'] == 'Credit/Debit card') {
+            $data = $result['RESPONSE']['OUTPUT'];
+            $result = $this->PaymentRepository->createPaymentIntent($user, $data);
         }
 
-        $rules = [
-            'CR_OFFER_ID' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Please select an offer.'
-                ]
-            ],
-            'CR_QUANTITY' => ['label' => 'Quantity', 'rules' => "required|greater_than_equal_to[$min_quantity]|less_than_equal_to[$max_quantity]"],
-            'CR_GUEST_NAME' => ['label' => 'Guest name', 'rules' => 'required'],
-            'CR_GUEST_EMAIL' => ['label' => 'Guest email', 'rules' => 'required|valid_email'],
-            'CR_GUEST_PHONE' => ['label' => 'Guest phone', 'rules' => 'required'],
-            'CR_RESERVATION_ID' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Please select a reservation.'
-                ]
-            ],
-            'CR_CUSTOMER_ID' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Guest field is required. Please select a reservation.'
-                ]
-            ],
-            'CR_TOTAL_AMOUNT' => ['label' => 'Total amount', 'rules' => 'required'],
-            'CR_TAX_AMOUNT' => ['label' => 'Tax amount', 'rules' => 'required'],
-            'CR_NET_AMOUNT' => ['label' => 'Net amount', 'rules' => 'required'],
-            'CR_STATUS' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Please select a status.'
-                ]
-            ],
-            'CR_PREFERRED_DATE' => [
-                'label' => 'Preferred Date',
-                'rules' => 'required'
-            ],
-            'CR_PREFERRED_TIME' => [
-                'label' => 'Preferred Time',
-                'rules' => 'required'
-            ]
-        ];
-
-        if (!$this->validate($rules)) {
-            $errors = $this->validator->getErrors();
-            $result = responseJson("-402", $errors);
-
-            return $this->respond($result);
-        }
-
-        $data = $this->request->getPost();
-
-        $concierge_request_id = !empty($id)
-            ? $this->ConciergeRequest->update($id, $data)
-            : $this->ConciergeRequest->insert($data);
-
-        if (!$concierge_request_id)
-            return $this->respond(responseJson("-444", false, "db insert/update not successful", $concierge_request_id));
-
-        if (empty($id)) {
-            $this->ConciergeRepository->sendConciergeRequestEmail([
-                'concierge_offer' => $concierge_offer,
-                'concierge_request' => $data,
-            ]);
-
-            $msg = 'Concierge request has been created.';
-        } else
-            $msg = 'Concierge request has been updated.';
-
-        return $this->respond(responseJson("200", false, $msg));
+        return $this->respond($result);
     }
 
     public function editConciergeRequest()
@@ -321,38 +305,6 @@ class ConciergeController extends BaseController
         }
 
         $result = responseJson(200, false, ['msg' => "Cocierge offers list"], $concierge_offers);
-        return $this->respond($result);
-    }
-
-    public function makeConciergeRequest()
-    {
-        $user = $this->request->user;
-
-        $data = json_decode(json_encode($this->request->getVar()), true);
-
-        if (!isWeb()) {
-            $current_reservations = $this->ReservationRepository->currentReservations();
-            if (empty($current_reservations))
-                return $this->respond(responseJson(200, false, ['msg' => 'Sorry, you can\'t make request without reservation.']));
-            $data['CR_RESERVATION_ID'] = $current_reservations[0]['RESV_ID'];
-        }
-
-        $offer_id = $this->request->getVar('CR_OFFER_ID');
-        $concierge_offer = $this->ConciergeRepository->getConciergeOffer("CO_STATUS = 'enabled' and CO_ID = $offer_id");
-        if (empty($concierge_offer))
-            return $this->respond(responseJson(200, false, ['msg' => 'Invalid Offer Selected.']));
-
-        $min_quantity = $concierge_offer['CO_MIN_QUANTITY'] ?? 1;
-        $max_quantity = $concierge_offer['CO_MAX_QUANTITY'] ?? 1;
-        if (!$this->validate($this->ConciergeRepository->validationRules($data, $min_quantity, $max_quantity)))
-            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-
-        $result = $this->ConciergeRepository->createOrUpdateConciergeRequest($user, $data, $concierge_offer);
-        if (!isWeb() && $result['SUCCESS'] == 200 && $data['CR_PAYMENT_METHOD'] == 'Credit/Debit card') {
-            $data = $result['RESPONSE']['OUTPUT'];
-            $result = $this->PaymentRepository->createPaymentIntent($user, $data);
-        }
-
         return $this->respond($result);
     }
 

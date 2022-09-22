@@ -34,7 +34,14 @@ class ConciergeRepository extends BaseController
             'CR_GUEST_EMAIL' => ['label' => 'Guest email', 'rules' => 'required|valid_email'],
             'CR_GUEST_PHONE' => ['label' => 'Guest phone', 'rules' => 'required'],
             'CR_PREFERRED_DATE' => ['label' => 'Preferred Date', 'rules' => 'required'],
-            'CR_PREFERRED_TIME' => ['label' => 'Preferred Time', 'rules' => 'required']
+            'CR_PREFERRED_TIME' => ['label' => 'Preferred Time', 'rules' => 'required'],
+            'CR_PAYMENT_METHOD' => [
+                'label' => 'payment method', 
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select a payment method.'
+                ]
+            ]
         ];
 
         if (isWeb()) {
@@ -60,6 +67,13 @@ class ConciergeRepository extends BaseController
                         'required' => 'Please select a status.'
                     ]
                 ],
+                'CR_PAYMENT_STATUS' => [
+                    'label' => 'payment status',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => 'Please select a payment status.'
+                    ]
+                ],
             ]);
         }
 
@@ -74,7 +88,7 @@ class ConciergeRepository extends BaseController
     public function createOrUpdateConciergeRequest($user, $data, $concierge_offer)
     {
         $user_id = $user['USR_ID'];
-        $customer_id = $user['USR_CUST_ID'];
+        $customer_id = $data['CR_CUSTOMER_ID'] ?? $user['USR_CUST_ID'];
 
         $id = $data['id'] ?? null;
         unset($data['id']);
@@ -102,7 +116,7 @@ class ConciergeRepository extends BaseController
             $msg = 'Concierge request has been created.';
         } else
             $msg = 'Concierge request has been updated.';
-            
+
         if (empty($id) && !isWeb() && $data['CR_PAYMENT_METHOD'] == 'Credit/Debit card') {
             $data = [
                 'amount' => $data['CR_TOTAL_AMOUNT'],
@@ -116,7 +130,7 @@ class ConciergeRepository extends BaseController
     }
 
     public function updateConciergeRequestById($data)
-    {   
+    {
         return $this->ConciergeRequest->save($data);
     }
 

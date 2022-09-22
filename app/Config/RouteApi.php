@@ -187,7 +187,7 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
 
     $routes->group('concierge', function ($routes) {
         $routes->get("concierge-offers", "ConciergeController::conciergeOffers");
-        $routes->post("make-concierge-request", "ConciergeController::makeConciergeRequest");
+        $routes->post("store-concierge-request", "ConciergeController::storeConciergeRequest");
         $routes->get("list-concierge-requests", "ConciergeController::listConciergeRequests");
     });
 });

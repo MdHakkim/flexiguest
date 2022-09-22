@@ -74,6 +74,7 @@ class UserController extends BaseController
     private function setUserSession($user)
     {
         $data = [
+            'user' => $user,
             'USR_ID' => $user['USR_ID'],
             'USR_NAME' => $user['USR_NAME'],
             'USR_PHONE' => $user['USR_PHONE'],
