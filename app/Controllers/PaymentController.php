@@ -148,21 +148,19 @@ class PaymentController extends BaseController
         ]);
 
         if ($meta_data->model == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
-            if (!empty($this->LaundryAmenitiesRepository->orderById($meta_data->model_id)))
-                $this->LaundryAmenitiesRepository->updateOrderById([
-                    'LAO_ID' => $meta_data->model_id,
-                    'LAO_PAYMENT_STATUS' => 'Paid',
-                    'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
-                    'LAO_UPDATED_BY' => $meta_data->user_id,
-                ]);
+            $this->LaundryAmenitiesRepository->updateOrderById([
+                'LAO_ID' => $meta_data->model_id,
+                'LAO_PAYMENT_STATUS' => 'Paid',
+                'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
+                'LAO_UPDATED_BY' => $meta_data->user_id,
+            ]);
         } else if ($meta_data->model == 'FLXY_CONCIERGE_REQUESTS') {
-            if (!empty($this->ConciergeRepository->getConciergeOffer("CR_ID = {$meta_data->model_id}")))
-                $this->ConciergeRepository->updateConciergeRequestById([
-                    'CR_ID' => $meta_data->model_id,
-                    'CR_PAYMENT_STATUS' => 'Paid',
-                    'CR_UPDATED_AT' => date('Y-m-d H:i:s'),
-                    'CR_UPDATED_BY' => $meta_data->user_id,
-                ]);
+            $this->ConciergeRepository->updateConciergeRequestById([
+                'CR_ID' => $meta_data->model_id,
+                'CR_PAYMENT_STATUS' => 'Paid',
+                'CR_UPDATED_AT' => date('Y-m-d H:i:s'),
+                'CR_UPDATED_BY' => $meta_data->user_id,
+            ]);
         }
     }
 
