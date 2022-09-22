@@ -88,13 +88,12 @@ class ConciergeRepository extends BaseController
     public function createOrUpdateConciergeRequest($user, $data, $concierge_offer)
     {
         $user_id = $user['USR_ID'];
-        $customer_id = $data['CR_CUSTOMER_ID'] ?? $user['USR_CUST_ID'];
 
         $id = $data['id'] ?? null;
         unset($data['id']);
 
         $quantity = $data['CR_QUANTITY'];
-        $data['CR_CUSTOMER_ID'] = $customer_id;
+        $data['CR_CUSTOMER_ID'] = $data['CR_CUSTOMER_ID'] ?? $user['USR_CUST_ID'];
         $data['CR_TOTAL_AMOUNT'] = $quantity * $concierge_offer['CO_OFFER_PRICE'];
         $data['CR_TAX_AMOUNT'] = $quantity * $concierge_offer['CO_TAX_AMOUNT'];
         $data['CR_NET_AMOUNT'] = $quantity * $concierge_offer['CO_NET_PRICE'];
@@ -103,7 +102,7 @@ class ConciergeRepository extends BaseController
             $data['CR_CREATED_BY'] = $data['CR_UPDATED_BY'] = $user_id;
             $concierge_request_id = $this->ConciergeRequest->insert($data);
 
-            $this->ConciergeRepository->sendConciergeRequestEmail([
+            $this->sendConciergeRequestEmail([
                 'concierge_offer' => $concierge_offer,
                 'concierge_request' => $data,
             ]);
