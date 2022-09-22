@@ -13,6 +13,10 @@ class ConciergeRepository extends BaseController
 {
     use ResponseTrait;
 
+    private $Reservation;
+    private $ConciergeOffer;
+    private $ConciergeRequest;
+
     public function __construct()
     {
         $this->Reservation = new Reservation();
@@ -83,6 +87,11 @@ class ConciergeRepository extends BaseController
     public function getConciergeOffer($where_condition)
     {
         return $this->ConciergeOffer->where($where_condition)->first();
+    }
+
+    public function getConciergeRequest($where_condition)
+    {
+        return $this->ConciergeRequest->where($where_condition)->first();
     }
 
     public function createOrUpdateConciergeRequest($user, $data, $concierge_offer)
