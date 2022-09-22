@@ -36,7 +36,7 @@ class ConciergeRepository extends BaseController
             'CR_PREFERRED_DATE' => ['label' => 'Preferred Date', 'rules' => 'required'],
             'CR_PREFERRED_TIME' => ['label' => 'Preferred Time', 'rules' => 'required'],
             'CR_PAYMENT_METHOD' => [
-                'label' => 'payment method', 
+                'label' => 'payment method',
                 'rules' => 'required',
                 'errors' => [
                     'required' => 'Please select a payment method.'
@@ -98,24 +98,25 @@ class ConciergeRepository extends BaseController
         $data['CR_TOTAL_AMOUNT'] = $quantity * $concierge_offer['CO_OFFER_PRICE'];
         $data['CR_TAX_AMOUNT'] = $quantity * $concierge_offer['CO_TAX_AMOUNT'];
         $data['CR_NET_AMOUNT'] = $quantity * $concierge_offer['CO_NET_PRICE'];
-        $data['CR_CREATED_BY'] = $data['CR_UPDATED_BY'] = $user_id;
-
-        $concierge_request_id = !empty($id)
-            ? $this->ConciergeRequest->update($id, $data)
-            : $this->ConciergeRequest->insert($data);
-
-        if (!$concierge_request_id)
-            return $this->respond(responseJson(500, true, ['msg' => "db insert/update not successful"]));
 
         if (empty($id)) {
-            $this->sendConciergeRequestEmail([
+            $data['CR_CREATED_BY'] = $data['CR_UPDATED_BY'] = $user_id;
+            $concierge_request_id = $this->ConciergeRequest->insert($data);
+
+            $this->ConciergeRepository->sendConciergeRequestEmail([
                 'concierge_offer' => $concierge_offer,
                 'concierge_request' => $data,
             ]);
 
             $msg = 'Concierge request has been created.';
-        } else
+        } else {
+            $concierge_request_id = $id;
+            
+            $data['CR_UPDATED_BY'] = $user_id;
+            $this->ConciergeRequest->update($id, $data);
+
             $msg = 'Concierge request has been updated.';
+        }
 
         if (empty($id) && !isWeb() && $data['CR_PAYMENT_METHOD'] == 'Credit/Debit card') {
             $data = [
