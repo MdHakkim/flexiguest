@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Controllers\Repositories\ConciergeRepository;
+use App\Controllers\Repositories\PaymentRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use App\Libraries\DataTables\ConciergeOfferDataTable;
 use App\Libraries\DataTables\ConciergeRequestDataTable;
@@ -20,6 +21,7 @@ class ConciergeController extends BaseController
 
     private $ConciergeRepository;
     private $ReservationRepository;
+    private $PaymentRepository;
     private $Currency;
     private $ConciergeOffer;
     private $ConciergeRequest;
@@ -30,6 +32,7 @@ class ConciergeController extends BaseController
     {
         $this->ConciergeRepository = new ConciergeRepository();
         $this->ReservationRepository = new ReservationRepository();
+        $this->PaymentRepository = new PaymentRepository();
         $this->Currency = new Currency();
         $this->ConciergeOffer = new ConciergeOffer();
         $this->ConciergeRequest = new ConciergeRequest();
@@ -324,10 +327,10 @@ class ConciergeController extends BaseController
     public function makeConciergeRequest()
     {
         $user = $this->request->user;
-        
+
         $data = json_decode(json_encode($this->request->getVar()), true);
 
-        if(!isWeb()){
+        if (!isWeb()) {
             $current_reservations = $this->ReservationRepository->currentReservations();
             if (empty($current_reservations))
                 return $this->respond(responseJson(200, false, ['msg' => 'Sorry, you can\'t make request without reservation.']));
@@ -345,6 +348,10 @@ class ConciergeController extends BaseController
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
         $result = $this->ConciergeRepository->createOrUpdateConciergeRequest($user, $data, $concierge_offer);
+        if (!isWeb() && $result['SUCCESS'] == 200 && $data['CR_PAYMENT_METHOD'] == 'Credit/Debit card') {
+            $data = $result['RESPONSE']['OUTPUT'];
+            $result = $this->PaymentRepository->createPaymentIntent($user, $data);
+        }
 
         return $this->respond($result);
     }

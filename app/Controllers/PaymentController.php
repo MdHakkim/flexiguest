@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Controllers\Repositories\ConciergeRepository;
 use App\Controllers\Repositories\LaundryAmenitiesRepository;
 use App\Controllers\Repositories\PaymentRepository;
 use CodeIgniter\API\ResponseTrait;
@@ -13,11 +14,13 @@ class PaymentController extends BaseController
 
     private $PaymentRepository;
     private $LaundryAmenitiesRepository;
+    private $ConciergeRepository;
 
     public function __construct()
     {
         $this->PaymentRepository = new PaymentRepository();
         $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
+        $this->ConciergeRepository = new ConciergeRepository();
     }
 
     public function createPaymentIntent()
@@ -25,9 +28,9 @@ class PaymentController extends BaseController
         $data = (array) $this->request->getVar();
         $user = $this->request->user;
 
-        if($data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
+        if ($data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
             $order = $this->LaundryAmenitiesRepository->orderById($data['model_id']);
-            if(empty($order))
+            if (empty($order))
                 return $this->respond(responseJson(404, true, ['msg' => 'Order not found']));
 
             $data['amount'] = $order['LAO_TOTAL_PAYABLE'];
@@ -151,6 +154,14 @@ class PaymentController extends BaseController
                     'LAO_PAYMENT_STATUS' => 'Paid',
                     'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
                     'LAO_UPDATED_BY' => $meta_data->user_id,
+                ]);
+        } else if ($meta_data->model == 'FLXY_CONCIERGE_REQUESTS') {
+            if (!empty($this->ConciergeRepository->getConciergeOffer("CR_ID = {$meta_data->model_id}")))
+                $this->ConciergeRepository->updateConciergeRequestById([
+                    'CR_ID' => $meta_data->model_id,
+                    'CR_PAYMENT_STATUS' => 'Paid',
+                    'CR_UPDATED_AT' => date('Y-m-d H:i:s'),
+                    'CR_UPDATED_BY' => $meta_data->user_id,
                 ]);
         }
     }

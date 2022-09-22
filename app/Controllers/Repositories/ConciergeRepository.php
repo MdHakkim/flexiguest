@@ -37,7 +37,7 @@ class ConciergeRepository extends BaseController
             'CR_PREFERRED_TIME' => ['label' => 'Preferred Time', 'rules' => 'required']
         ];
 
-        if(isWeb()){
+        if (isWeb()) {
             $rules = array_merge($rules, [
                 'CR_RESERVATION_ID' => [
                     'rules' => 'required',
@@ -76,7 +76,7 @@ class ConciergeRepository extends BaseController
         $user_id = $user['USR_ID'];
         $customer_id = $user['USR_CUST_ID'];
 
-        $id = $data['id'];
+        $id = $data['id'] ?? null;
         unset($data['id']);
 
         $quantity = $data['CR_QUANTITY'];
@@ -94,7 +94,7 @@ class ConciergeRepository extends BaseController
             return $this->respond(responseJson(500, true, ['msg' => "db insert/update not successful"]));
 
         if (empty($id)) {
-            $this->ConciergeRepository->sendConciergeRequestEmail([
+            $this->sendConciergeRequestEmail([
                 'concierge_offer' => $concierge_offer,
                 'concierge_request' => $data,
             ]);
@@ -102,8 +102,22 @@ class ConciergeRepository extends BaseController
             $msg = 'Concierge request has been created.';
         } else
             $msg = 'Concierge request has been updated.';
+            
+        if (empty($id) && !isWeb() && $data['CR_PAYMENT_METHOD'] == 'Credit/Debit card') {
+            $data = [
+                'amount' => $data['CR_TOTAL_AMOUNT'],
+                'model' => 'FLXY_CONCIERGE_REQUESTS',
+                'model_id' => $concierge_request_id,
+                'reservation_id' => $data['CR_RESERVATION_ID'],
+            ];
+        }
 
-        return responseJson(200, false, ['msg' => $msg]);
+        return responseJson(200, false, ['msg' => $msg], $data);
+    }
+
+    public function updateConciergeRequestById($data)
+    {   
+        return $this->ConciergeRequest->save($data);
     }
 
     public function sendConciergeRequestEmail($data)
