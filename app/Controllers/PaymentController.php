@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\Repositories\ConciergeRepository;
 use App\Controllers\Repositories\LaundryAmenitiesRepository;
 use App\Controllers\Repositories\PaymentRepository;
+use App\Controllers\Repositories\TransportRequestRepository;
 use CodeIgniter\API\ResponseTrait;
 
 class PaymentController extends BaseController
@@ -15,12 +16,14 @@ class PaymentController extends BaseController
     private $PaymentRepository;
     private $LaundryAmenitiesRepository;
     private $ConciergeRepository;
+    private $TransportRequestRepository;
 
     public function __construct()
     {
         $this->PaymentRepository = new PaymentRepository();
         $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
         $this->ConciergeRepository = new ConciergeRepository();
+        $this->TransportRequestRepository = new TransportRequestRepository();
     }
 
     public function createPaymentIntent()
@@ -167,6 +170,13 @@ class PaymentController extends BaseController
                 'CR_PAYMENT_STATUS' => 'Paid',
                 'CR_UPDATED_AT' => date('Y-m-d H:i:s'),
                 'CR_UPDATED_BY' => $meta_data->user_id,
+            ]);
+        } else if ($meta_data->model == 'FLXY_TRANSPORT_REQUESTS') {
+            $this->TransportRequestRepository->updateTransportRequestById([
+                'TR_ID' => $meta_data->model_id,
+                'TR_PAYMENT_STATUS' => 'Paid',
+                'TR_UPDATED_AT' => date('Y-m-d H:i:s'),
+                'TR_UPDATED_BY' => $meta_data->user_id,
             ]);
         }
     }
