@@ -44,11 +44,23 @@ class TransportRequestRepository extends BaseController
             'TR_TRANSPORT_TYPE_ID' => ['label' => 'transport type', 'rules' => 'required', 'errors' => ['required' => 'Please select a transport type.']],
             'TR_ADULTS' => ['label' => 'adult', 'rules' => 'required|greater_than[0]'],
             'TR_TOTAL_PASSENGERS' => ['label' => 'total passenger', 'rules' => 'required|greater_than[0]'],
-            'TR_PICKUP_DATE' => ['label' => 'pickup date', 'rules' => 'required'],
             'TR_PICKUP_TIME' => ['label' => 'pickup time', 'rules' => 'required'],
+            'TR_PICKUP_DATE' => [
+                'label' => 'pickup date', 
+                'rules' => 'required|afterNow[TR_PICKUP_DATE,TR_PICKUP_TIME]',
+                'errors' => [
+                    'afterNow' => 'Pickup date & time should be after current date & time.'
+                ]
+            ],
             'TR_PICKUP_POINT_ID' => ['label' => 'pickup point', 'rules' => 'required', 'errors' => ['required' => 'Please select a pickup point.']],
-            'TR_DROPOFF_DATE' => ['label' => 'dropoff date', 'rules' => 'required'],
             'TR_DROPOFF_TIME' => ['label' => 'dropoff time', 'rules' => 'required'],
+            'TR_DROPOFF_DATE' => [
+                'label' => 'dropoff date', 
+                'rules' => 'required|afterDateTime[TR_PICKUP_DATE,TR_PICKUP_TIME,TR_DROPOFF_DATE,TR_DROPOFF_TIME]',
+                'errors' => [
+                    'afterDateTime' => 'Dropoff date & time should be after pickup date & time.'
+                ]
+            ],
             'TR_DROPOFF_POINT_ID' => ['label' => 'dropoff point', 'rules' => 'required', 'errors' => ['required' => 'Please select a dropoff point.']],
             'TR_FLIGHT_CARRIER_ID' => ['label' => 'flight carrier', 'rules' => 'required', 'errors' => ['required' => 'Please select a flight carrier.']],
             'TR_PAYMENT_METHOD' => ['label' => 'payment method', 'rules' => 'required', 'errors' => ['required' => 'Please select a payment method.']],
