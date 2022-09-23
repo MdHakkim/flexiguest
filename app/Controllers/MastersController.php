@@ -3157,4 +3157,194 @@ class MastersController extends BaseController
             return $this->respond($e->errors());
         }
     }
+
+    /**************      Block Status Code Functions      ***************/
+
+    public function blockStatusCode()
+    {
+        $colors = $this->colorList();
+        $reservationTypes = $this->reservationTypeList();
+        $roomStatusTypes = $this->roomStatusTypeList();
+        $cancelTypes = $this->cancelTypeList();
+
+        $data = [
+            'colorOptions' => $colors,
+            'reservationTypeOptions' => $reservationTypes,
+            'roomStatusTypeOptions' => $roomStatusTypes,
+            'cancelTypeOptions' => $cancelTypes,
+        ];
+
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+
+        return view('Master/BlockStatusCodeView', $data);
+    }
+
+    public function BlockStatusCodeView()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = '  FLXY_BLOCK_STATUS_CODE
+                        LEFT JOIN FLXY_RESERVATION_TYPE FRT ON FRT.RESV_TY_ID = FLXY_BLOCK_STATUS_CODE.RESV_TY_ID
+                        LEFT JOIN FLXY_ROOM_STATUS_TYPE FST ON FST.RM_STATUS_TY_ID = FLXY_BLOCK_STATUS_CODE.RM_STATUS_TY_ID
+                        LEFT JOIN FLXY_COLOR FC ON FC.CLR_ID = FLXY_BLOCK_STATUS_CODE.CLR_ID
+                        LEFT JOIN FLXY_BLOCK_CANCEL_TYPE FBCT ON FBCT.RM_CANCEL_TY_ID = FLXY_BLOCK_STATUS_CODE.RM_CANCEL_TY_ID';
+
+        $columns = 'BLK_STS_CD_ID,BLK_STS_CD_CODE,BLK_STS_CD_DESC,RESV_TY_CODE,RM_STATUS_TY_CODE,CLR_NAME,BLK_STS_CD_DIS_SEQ,BLK_STS_CD_ALLOW_PICKUP,BLK_STS_CD_RETURN_INVENTORY,BLK_STS_CD_STARTING_STATUS,BLK_STS_CD_LEAD_STATUS,RM_CANCEL_TY_DESC,BLK_STS_CD_STATUS';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+    public function reservationTypeList()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT RESV_TY_ID, RESV_TY_CODE, RESV_TY_DESC
+                FROM FLXY_RESERVATION_TYPE ";
+
+        if ($search != '') {
+            $sql .= " AND RESV_TY_CODE LIKE '%$search%'
+                      OR RESV_TY_DESC LIKE '%$search%'";
+        }
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['RESV_TY_ID'] . '">' . $row['RESV_TY_CODE'] . ' | ' . $row['RESV_TY_DESC'] . '</option>';
+        }
+
+        return $option;
+    }
+
+    public function roomStatusTypeList()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT RM_STATUS_TY_ID, RM_STATUS_TY_CODE
+                FROM FLXY_ROOM_STATUS_TYPE ";
+
+        if ($search != '') {
+            $sql .= " AND RM_STATUS_TY_CODE LIKE '%$search%'
+                      OR RM_STATUS_TY_DESC LIKE '%$search%'";
+        }
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['RM_STATUS_TY_ID'] . '">' . $row['RM_STATUS_TY_CODE'] . '</option>';
+        }
+
+        return $option;
+    }
+
+    public function cancelTypeList()
+    {
+        $sql = "SELECT RM_CANCEL_TY_ID, RM_CANCEL_TY_DESC
+                FROM FLXY_BLOCK_CANCEL_TYPE ";
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose an Option</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['RM_CANCEL_TY_ID'] . '">' . $row['RM_CANCEL_TY_DESC'] . '</option>';
+        }
+
+        return $option;
+    }
+
+    public function insertBlockStatusCode()
+    {
+        try {
+            $sysid = $this->request->getPost('BLK_STS_CD_ID');
+
+            $rules = [
+                'BLK_STS_CD_CODE' => ['label' => 'Block Status Code', 'rules' => 'required|is_unique[FLXY_BLOCK_STATUS_CODE.BLK_STS_CD_CODE,BLK_STS_CD_ID,' . $sysid . ']'],
+                'BLK_STS_CD_DESC' => ['label' => 'Description', 'rules' => 'required'],
+                'RM_STATUS_TY_ID' => ['label' => 'Room Status Type', 'rules' => 'required'],
+                'CLR_ID' => ['label' => 'Color', 'rules' => 'required'],
+                'BLK_STS_CD_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
+            ];
+
+            if(null !== $this->request->getPost('RM_STATUS_TY_ID') && $this->request->getPost('RM_STATUS_TY_ID') == '4'){
+                $rules['RM_CANCEL_TY_ID'] = [
+                    'label' => 'Cancel Type', 
+                    'rules' => 'required'
+                ];
+            }
+
+            $validate = $this->validate($rules);
+
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            //echo json_encode(print_r($_POST)); exit;
+
+            $data = [
+                "BLK_STS_CD_CODE" => trim($this->request->getPost('BLK_STS_CD_CODE')),
+                "BLK_STS_CD_DESC" => trim($this->request->getPost('BLK_STS_CD_DESC')),
+                "RM_STATUS_TY_ID" => trim($this->request->getPost('RM_STATUS_TY_ID')),
+                "RESV_TY_ID" => trim($this->request->getPost('RESV_TY_ID')),
+                "RM_CANCEL_TY_ID" => trim($this->request->getPost('RM_CANCEL_TY_ID')),
+                "CLR_ID" => trim($this->request->getPost('CLR_ID')),
+                "BLK_STS_CD_DIS_SEQ" => trim($this->request->getPost('BLK_STS_CD_DIS_SEQ')),
+                "BLK_STS_CD_ALLOW_PICKUP" => null !== $this->request->getPost('BLK_STS_CD_ALLOW_PICKUP') ? '1' : '0',
+                "BLK_STS_CD_RETURN_INVENTORY" => null !== $this->request->getPost('BLK_STS_CD_RETURN_INVENTORY') ? '1' : '0',
+                "BLK_STS_CD_STARTING_STATUS" => null !== $this->request->getPost('BLK_STS_CD_STARTING_STATUS') ? '1' : '0',
+                "BLK_STS_CD_LEAD_STATUS" => null !== $this->request->getPost('BLK_STS_CD_LEAD_STATUS') ? '1' : '0',
+                "BLK_STS_CD_LOG_CATERING_CHANGES" => null !== $this->request->getPost('BLK_STS_CD_LOG_CATERING_CHANGES') ? '1' : '0',
+                "BLK_STS_CD_STATUS" => null !== $this->request->getPost('BLK_STS_CD_STATUS') ? '1' : '0',
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_BLOCK_STATUS_CODE')->where('BLK_STS_CD_ID', $sysid)->update($data) : $this->Db->table('FLXY_BLOCK_STATUS_CODE')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function checkBlockStatusCode($rcCode)
+    {
+        $sql = "SELECT BLK_STS_CD_ID
+                FROM FLXY_BLOCK_STATUS_CODE
+                WHERE BLK_STS_CD_CODE = '" . $rcCode . "'";
+
+        $response = $this->Db->query($sql)->getNumRows();
+        return $rcCode == '' || strlen($rcCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
+    }
+
+    public function editBlockStatusCode()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT FBSC.*, FRT.RESV_TY_CODE, FC.CLR_NAME
+                FROM dbo.FLXY_BLOCK_STATUS_CODE AS FBSC
+                LEFT JOIN FLXY_RESERVATION_TYPE FRT ON FRT.RESV_TY_ID = FBSC.RESV_TY_ID
+                LEFT JOIN FLXY_COLOR FC ON FC.CLR_ID = FBSC.CLR_ID
+                WHERE BLK_STS_CD_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteBlockStatusCode()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_BLOCK_STATUS_CODE')->delete(['BLK_STS_CD_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
 }

@@ -103,6 +103,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/editBlock', 'ApplicatioController::editBlock');
     $routes->match(['post'], '/deleteBlock', 'ApplicatioController::deleteBlock');
 
+    $routes->get('/blockStatusCode', 'MastersController::blockStatusCode');
+    $routes->match(['post'], '/blockStatusCodeView', 'MastersController::BlockStatusCodeView');
+    $routes->match(['post'], '/insertBlockStatusCode', 'MastersController::insertBlockStatusCode');
+    $routes->match(['post'], '/editBlockStatusCode', 'MastersController::editBlockStatusCode');
+    $routes->match(['post'], '/deleteBlockStatusCode', 'MastersController::deleteBlockStatusCode');
+
     $routes->get('/room', 'ApplicatioController::room');
     $routes->match(['post'], '/roomView', 'ApplicatioController::RoomView');
     $routes->match(['post'], '/insertRoom', 'ApplicatioController::insertRoom');
