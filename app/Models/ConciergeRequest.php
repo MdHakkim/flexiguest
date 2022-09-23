@@ -23,6 +23,8 @@ class ConciergeRequest extends Model
         'CR_STATUS',
         'CR_PREFERRED_DATE',
         'CR_PREFERRED_TIME',
+        'CR_PAYMENT_METHOD',
+        'CR_PAYMENT_STATUS',
         'CR_CREATED_BY',
         'CR_UPDATED_BY',
     ];

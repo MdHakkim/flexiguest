@@ -10,14 +10,8 @@
 //-----------  FLEXI GUEST API ROUTES -----------------//
 // ---------------------------------------------------------------LOGIN/REGISTARTION -------------------------------------------------------------------------//
 $routes->group("api", function ($routes) {
-
     $routes->post("register", "APIController::registerAPI");
     $routes->post("login", "APIController::loginAPI");
-
-    $routes->get('lookup-api', 'APIController::lookupApi');
-
-    $routes->get('get-state', 'APIController::getState');
-    $routes->get('get-city', 'APIController::getCity');
 });
 
 $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
@@ -111,6 +105,10 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
         $routes->get('valet-list', 'EValetController::valetList');
         $routes->post('car-delivery-request', 'EValetController::carDeliveryRequest');
     });
+
+    $routes->get('lookup-api', 'APIController::lookupApi');
+    $routes->get('get-state', 'APIController::getState');
+    $routes->get('get-city', 'APIController::getCity');
 });
 
 /*****************************  ADMIN + GUEST *****************************/
@@ -182,13 +180,20 @@ $routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' =
 });
 
 /*****************************  GUEST *****************************/
-$routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
+$routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers'], function ($routes) {
+    $routes->group('restaurant', function ($routes) {
+        $routes->get("all-restaurants", "RestaurantController::allRestaurants");
+    });
 
     $routes->group('concierge', function ($routes) {
         $routes->get("concierge-offers", "ConciergeController::conciergeOffers");
-        $routes->post("make-concierge-request", "ConciergeController::makeConciergeRequest");
+        $routes->post("store-concierge-request", "ConciergeController::storeConciergeRequest");
         $routes->get("list-concierge-requests", "ConciergeController::listConciergeRequests");
     });
+});
+
+/*****************************  GUEST *****************************/
+$routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
 
     $routes->get("news", "NewsController::news");
     $routes->get("guideline", "GuidelineController::guideline");
