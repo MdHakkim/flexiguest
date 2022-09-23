@@ -135,7 +135,7 @@ class TransportRequestController extends BaseController
         $data['PICKUP_POINTS'] = $this->PickupPoint->select('PP_ID as id, PP_POINT as label')->orderBy('PP_SEQUENCE')->findAll();
         $data['DROPOFF_POINTS'] = $this->DropoffPoint->select('DP_ID as id, DP_POINT as label')->orderBy('DP_SEQUENCE')->findAll();
         $data['FLIGHT_CARRIERS'] = $this->FlightCarrier->select('FC_ID, FC_FLIGHT_CARRIER, FC_FLIGHT_CODE')->orderBy('FC_SEQUENCE')->findAll();
-        $data['TRANSPORT_TYPES'] = $this->TransportType->select('TT_ID as id, TT_LABEL as label')->orderBy('TT_DISPLAY_SEQUENCE')->findAll();
+        $data['TRANSPORT_TYPES'] = $this->TransportType->select('TT_ID as id, concat(TT_LABEL, " - ", TT_MAX_PRICE) as label')->orderBy('TT_DISPLAY_SEQUENCE')->findAll();
 
         return $this->respond(responseJson(200, false, ['msg' => 'lookup API'], $data));
     }
