@@ -14,7 +14,7 @@
                   <div class="nav-item navbar-search-wrapper mb-0">
                     <a class="nav-item nav-link search-toggler px-0" href="javascript:void(0);">
                       <i class="bx bx-search-alt bx-sm"></i>
-                      <span class="d-none d-md-inline-block text-muted">Search (Ctrl+/)</span>
+                      <span class="d-none d-md-inline-block text-muted">Search Here</span>
                     </a>
                   </div>
                 </div>
@@ -420,8 +420,8 @@
                 <input
                   type="text"
                   class="form-control search-input main-menu-search container-fluid border-0"
-                  placeholder="Search..."
-                  aria-label="Search..."
+                  placeholder="Enter 3 or more characters..."
+                  aria-label="Enter 3 or more characters..."
                 />
                 <i class="bx bx-x bx-sm search-toggler cursor-pointer"></i>
               </div>
