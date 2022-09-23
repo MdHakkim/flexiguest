@@ -419,7 +419,7 @@
               <div class="navbar-search-wrapper search-input-wrapper d-none">
                 <input
                   type="text"
-                  class="form-control search-input container-fluid border-0"
+                  class="form-control search-input main-menu-search container-fluid border-0"
                   placeholder="Search..."
                   aria-label="Search..."
                 />

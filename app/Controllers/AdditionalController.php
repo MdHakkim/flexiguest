@@ -1341,6 +1341,35 @@ class AdditionalController extends BaseController
             return $option;
         }
 
+
+        public function searchMenu()
+        {
+            $result = [];
+
+            $sql = "SELECT M.MENU_NAME, M.MENU_URL, PAR.MENU_NAME AS MENU_PARENT, PAR.MENU_ICON
+                    FROM FLXY_MENU M
+                    INNER JOIN FLXY_USER_ROLE_PERMISSION RP ON (RP.ROLE_MENU_ID = M.MENU_ID AND RP.ROLE_ID = '1' 
+                                                                AND RP.ROLE_PERM_STATUS = '1')
+                    LEFT JOIN FLXY_MENU PAR ON (PAR.MENU_ID = M.PARENT_MENU_ID AND PAR.PARENT_MENU_ID = '0' 
+                                                AND PAR.SHOW_IN_MENU = 1 AND PAR.MENU_STATUS = 1)
+                    WHERE M.PARENT_MENU_ID != 0 AND M.SHOW_IN_MENU = 1 AND M.MENU_STATUS = 1 
+                    ORDER BY M.PARENT_MENU_ID, M.MENU_ID ASC";
+
+            $response = $this->Db->query($sql)->getResultArray();
+
+            foreach($response as $row){
+                $result[] = ["name" => $row['MENU_PARENT'] .' - '. $row['MENU_NAME'],
+                             "icon" => $row['MENU_ICON'],
+                             "url"  => base_url($row['MENU_URL'])];
+            }
+
+            echo json_encode($result);
+        }
+
+
+
+        ///////////////////////////////////
+
         public function proformaFolio(){
           
             $_SESSION['PROFORMA_RESV_ID']  = $this->request->getPost('PROFORMA_RESV_ID');

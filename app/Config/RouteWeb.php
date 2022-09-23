@@ -544,6 +544,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/editRolePermission', 'UserController::editRolePermission');
     $routes->get('/checkRolePermission', 'UserController::checkRolePermission');
 
+    $routes->match(['post'], '/searchMenu', 'AdditionalController::searchMenu');
+
     /// Reservation - Fixed Charges 
     $routes->match(['post'], '/transactionList', 'ApplicatioController::transactionList');
     $routes->match(['post'], '/showFixedCharge', 'ApplicatioController::showFixedCharge');
