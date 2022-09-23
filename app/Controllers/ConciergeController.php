@@ -269,7 +269,7 @@ class ConciergeController extends BaseController
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
         $result = $this->ConciergeRepository->createOrUpdateConciergeRequest($user, $data, $concierge_offer);
-        if (!isWeb() && $result['SUCCESS'] == 200 && $data['CR_PAYMENT_METHOD'] == 'Credit/Debit card') {
+        if (!isWeb() && empty($data['id']) && $result['SUCCESS'] == 200 && $data['CR_PAYMENT_METHOD'] == 'Credit/Debit card') {
             $data = $result['RESPONSE']['OUTPUT'];
             $result = $this->PaymentRepository->createPaymentIntent($user, $data);
         }

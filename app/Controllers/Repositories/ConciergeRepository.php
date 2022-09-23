@@ -117,9 +117,7 @@ class ConciergeRepository extends BaseController
             ]);
 
             $msg = 'Concierge request has been created.';
-        } else {
-            $concierge_request_id = $id;
-            
+        } else {            
             $data['CR_UPDATED_BY'] = $user_id;
             $this->ConciergeRequest->update($id, $data);
 

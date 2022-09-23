@@ -40,8 +40,9 @@ class TransportRequest extends Model
         'TR_REMARKS',
         'TR_REMINDER_REQUIRED',
         'TR_STATUS',
-        'TR_PAYMENT_METHOD',
-        'TR_PAYMENT_STATUS',
+        'TR_TOTAL_AMOUNT',
+        'TR_PAYMENT_METHOD', // Pay at Reception, Samsung Pay, Credit/Debit card
+        'TR_PAYMENT_STATUS', // UnPaid, Paid
         'TR_CREATED_BY',
         'TR_UPDATED_BY',
     ];

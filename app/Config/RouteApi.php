@@ -190,6 +190,12 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
         $routes->post("store-concierge-request", "ConciergeController::storeConciergeRequest");
         $routes->get("list-concierge-requests", "ConciergeController::listConciergeRequests");
     });
+
+    $routes->group('transport-request', function ($routes) {
+        $routes->get('lookup-api', 'TransportRequestController::lookupApi');
+        $routes->post('create-request', 'TransportRequestController::store');
+        $routes->get('all-requests', 'TransportRequestController::allRequests');
+    });
 });
 
 /*****************************  GUEST *****************************/
@@ -216,12 +222,6 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
 
     $routes->group('profile', function ($routes) {
         $routes->get('all-documents', 'ProfileController::allDocuments');
-    });
-
-    $routes->group('transport-request', function ($routes) {
-        $routes->get('lookup-api', 'TransportRequestController::lookupApi');
-        $routes->post('create-request', 'TransportRequestController::createRequest');
-        $routes->get('all-requests', 'TransportRequestController::allRequests');
     });
 
     $routes->get("reservations-of-customer", "ReservationController::reservationsOfCustomer");
