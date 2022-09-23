@@ -618,10 +618,21 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'],'/getAllVacantRooms', 'ReservationController::getAllVacantRooms');
       $routes->match(['post'],'/updateRoomAssign', 'ReservationController::updateRoomAssign'); 
 
+      $routes->get('/Notifications', 'NotificationController::Notifications'); 
+      $routes->match(['post'], '/NotificationList', 'NotificationController::NotificationList');
+      $routes->match(['post'], '/insertNotification', 'NotificationController::insertNotification');
+      $routes->match(['post'], '/editNotification', 'NotificationController::editNotification');
+      $routes->match(['post'], '/deleteNotification', 'NotificationController::deleteNotification'); 
+      $routes->get('/notificationTypeList', 'NotificationController::notificationTypeList');
+      $routes->get('/usersList', 'NotificationController::usersList'); 
+      $routes->get('/allDepartmentList', 'NotificationController::allDepartmentList'); 
+      $routes->get('/reservationList', 'NotificationController::reservationList');
+      $routes->get('/getCustomers', 'NotificationController::getCustomers');
+
+      $routes->match(['post'], '/viewAllNotificationDetails', 'NotificationController::viewAllNotificationDetails');
       
+
      //Subina Code (END)  
-
-
 
     // ABUBAKAR CODE (START)
     $routes->group('news', function ($routes) {

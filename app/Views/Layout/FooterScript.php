@@ -72,6 +72,7 @@
     <script src="<?php echo base_url('assets/js/form-layouts.js') ?>"></script>
 
     <!-- text editor -->
+    <script src="<?= base_url('assets/vendor/libs/quill/katex.js') ?>"></script>
     <script src="<?= base_url('assets/vendor/libs/quill/quill.js') ?>"></script>
     <!--  -->
     <script src="<?= base_url('assets/vendor/libs/sortablejs/sortable.js') ?>"></script>

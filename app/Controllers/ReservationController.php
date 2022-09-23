@@ -1116,8 +1116,7 @@ public function showPackages()
                 "RSV_TRACE_ENTERED_BY"    => session()->get('USR_ID'),
                 "RSV_TRACE_RESOLVED_BY"   => 0,
                 "RSV_TRACE_TEXT"          => $RSV_TRACE_TEXT,
-                "RSV_TRACE_STATUS"        => '1'
-                              
+                "RSV_TRACE_STATUS"        => '1'                              
                 ];
 
             $rules = [  'RSV_TRACE_DEPARTMENT' => ['label' => 'Department code', 'rules' => 'required'],

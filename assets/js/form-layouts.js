@@ -10,7 +10,6 @@
     cvvMask = document.querySelector('.cvv-code-mask'),
     datepickerList = document.querySelectorAll('.dob-picker');
 
-    console.log(cvvMask,datepickerList,expiryDateMask,"TESGSG");
   // Phone Number
   if (phoneMaskList!=null) {
     phoneMaskList.forEach(function (phoneMask) {
