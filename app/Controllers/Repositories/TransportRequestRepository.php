@@ -125,4 +125,9 @@ class TransportRequestRepository extends BaseController
         $customer_id = $data['TR_CUSTOMER_ID'] ?? $user['USR_CUST_ID'];
         return $this->TransportRequest->where('TR_CUSTOMER_ID', $customer_id)->where("TR_STATUS = 'New' or TR_STATUS = 'In Progress'")->findAll();
     }
+
+    public function updateTransportRequestById($data)
+    {
+        return $this->TransportRequest->save($data);
+    }
 }
