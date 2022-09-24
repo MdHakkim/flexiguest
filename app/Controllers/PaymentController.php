@@ -38,6 +38,7 @@ class PaymentController extends BaseController
 
             $data['amount'] = $order['LAO_TOTAL_PAYABLE'];
             $data['reservation_id'] = $order['LAO_RESERVATION_ID'];
+
         } else if ($data['model'] == 'FLXY_CONCIERGE_REQUESTS') {
             $request = $this->ConciergeRepository->getConciergeRequest("CR_ID = {$data['model_id']}");
             if (empty($request))
@@ -45,6 +46,14 @@ class PaymentController extends BaseController
 
             $data['amount'] = $request['CR_TOTAL_AMOUNT'];
             $data['reservation_id'] = $request['CR_RESERVATION_ID'];
+
+        } else if ($data['model'] == 'FLXY_TRANSPORT_REQUESTS') {
+            $request = $this->TransportRequestRepository->getTransportRequest("TR_ID = {$data['model_id']}");
+            if (empty($request))
+                return $this->respond(responseJson(404, true, ['msg' => 'Transport Request not found.']));
+
+            $data['amount'] = $request['TR_TOTAL_AMOUNT'];
+            $data['reservation_id'] = $request['TR_RESERVATION_ID'];
         }
 
         $result = $this->PaymentRepository->createPaymentIntent($user, $data);
