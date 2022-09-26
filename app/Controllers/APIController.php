@@ -1259,7 +1259,7 @@ class APIController extends BaseController
 
     public function health()
     {
-        echo "ANY";
+        echo "OK";
         die();
     }
 }
