@@ -87,19 +87,19 @@ class CheckInOutController extends BaseController
         $where_condition = "LAO_RESERVATION_ID = $reservation_id and LAO_CUSTOMER_ID = $customer_id and LAO_PAYMENT_STATUS = 'UnPaid'";
         $pending_payments = $this->LaundryAmenitiesRepository->getLAOrders($where_condition);
         if (!empty($pending_payments))
-            return $this->respond(responseJson(202, false, ['msg' => 'Please clear payments of all laundry amenities orders.']));
+            return $this->respond(responseJson(202, true, ['msg' => 'Please clear payments of all laundry amenities orders.']));
 
         // pending Transport requests
         $where_condition = "TR_RESERVATION_ID = $reservation_id and TR_CUSTOMER_ID = $customer_id and TR_PAYMENT_STATUS = 'UnPaid'";
         $pending_requests = $this->TransportRequestRepository->getTransportRequests($where_condition);
         if (!empty($pending_requests))
-            return $this->respond(responseJson(202, false, ['msg' => 'Please clear payments of all transport requests.']));
+            return $this->respond(responseJson(202, true, ['msg' => 'Please clear payments of all transport requests.']));
 
         // pending Concierge requests
         $where_condition = "CR_RESERVATION_ID = $reservation_id and CR_CUSTOMER_ID = $customer_id and CR_PAYMENT_STATUS = 'UnPaid'";
         $pending_concierge_requests = $this->ConciergeRepository->getConciergeRequests($where_condition);
         if (!empty($pending_concierge_requests))
-            return $this->respond(responseJson(202, false, ['msg' => 'Please clear payments of all concierge requests.']));
+            return $this->respond(responseJson(202, true, ['msg' => 'Please clear payments of all concierge requests.']));
 
         $reservation = $this->ReservationRepository->reservationById($reservation_id);
         
