@@ -1256,4 +1256,9 @@ class APIController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'Cities List'], $cities));
     }
+
+    public function health()
+    {
+        return $this->respond('OK');
+    }
 }
