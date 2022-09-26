@@ -123,7 +123,7 @@ class LaundryAmenitiesController extends BaseController
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        $file_name = "assets/laundry-amenities-invoices/ORD{$order['LAO_ID']}-Invoice.pdf";
+        $file_name = "assets/laundry-amenities-invoices/LAO{$order['LAO_ID']}-Invoice.pdf";
         file_put_contents($file_name, $dompdf->output());
 
         return $this->respond(responseJson(200, false, ['msg' => 'Invoice'], ['invoice' => base_url($file_name)]));

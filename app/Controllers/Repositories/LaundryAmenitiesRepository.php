@@ -121,4 +121,11 @@ class LaundryAmenitiesRepository extends BaseController
 
         return responseJson(200, false, ['msg' => 'Order placed successfully.'], $data);
     }
+
+    public function getLAOrders($where_condition)
+    {
+        return $this->LaundryAmenitiesOrder
+            ->where($where_condition)
+            ->findAll();
+    }
 }

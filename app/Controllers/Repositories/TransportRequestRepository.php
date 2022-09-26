@@ -135,4 +135,9 @@ class TransportRequestRepository extends BaseController
     {
         return $this->TransportRequest->where($where_condition)->first();
     }
+
+    public function getTransportRequests($where_condition)
+    {
+        return $this->TransportRequest->where($where_condition)->findAll();
+    }
 }

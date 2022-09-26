@@ -94,6 +94,11 @@ class ConciergeRepository extends BaseController
         return $this->ConciergeRequest->where($where_condition)->first();
     }
 
+    public function getConciergeRequests($where_condition)
+    {
+        return $this->ConciergeRequest->where($where_condition)->findAll();
+    }
+
     public function createOrUpdateConciergeRequest($user, $data, $concierge_offer)
     {
         $user_id = $user['USR_ID'];

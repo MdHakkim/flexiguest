@@ -196,6 +196,10 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
         $routes->post('create-request', 'TransportRequestController::store');
         $routes->get('all-requests', 'TransportRequestController::allRequests');
     });
+
+    $routes->group('reservation', function ($routes) {
+        $routes->get("make-checkout-request/(:segment)", "CheckInOutController::makeCheckoutRequest/$1");
+    });
 });
 
 /*****************************  GUEST *****************************/
@@ -204,10 +208,6 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
     $routes->get("news", "NewsController::news");
     $routes->get("guideline", "GuidelineController::guideline");
     $routes->get("app-update", "AppUpdateController::appUpdate");
-
-    $routes->group('reservation', function ($routes) {
-        $routes->get("make-checkout-request/(:segment)", "ReservationController::makeCheckoutRequest/$1");
-    });
 
     $routes->group('laundry-amenities', function ($routes) {
         $routes->get("all-categories", "ProductCategoryController::allCategories");
