@@ -22,13 +22,13 @@ class CheckInOutRepository extends BaseController
         $customer_id = $user['USR_CUST_ID'];
 
         if ($reservation['RESV_NAME'] != $customer_id)
-            return $this->respond(responseJson(404, false, ['msg' => 'Invalid reservation.']));
+            return responseJson(404, true, ['msg' => 'Invalid reservation.']);
 
         if ($reservation['RESV_STATUS'] == 'Checked-Out')
-            return $this->respond(responseJson(202, false, ['msg' => 'This reservation is already checked-out.']));
+            return responseJson(202, true, ['msg' => 'This reservation is already checked-out.']);
 
         if ($reservation['RESV_STATUS'] == 'Checked-Out-Requested')
-            return $this->respond(responseJson(202, false, ['msg' => 'Check-Out already requested.']));
+            return responseJson(202, true, ['msg' => 'Check-Out already requested.']);
 
         $reservation['branding_logo'] = brandingLogo();
 
@@ -43,9 +43,6 @@ class CheckInOutRepository extends BaseController
         $file_name = "assets/reservation-invoices/RES{$reservation['RESV_ID']}-Invoice.pdf";
         file_put_contents($file_name, $dompdf->output());
 
-        $reservation['RESV_STATUS'] = 'Checked-Out-Requested';
-        $this->Reservation->save($reservation);
-
-        return responseJson(200, false, ['msg' => 'Checkout request has been submitted successfully.'], ['invoice' => base_url($file_name)]);
+        return responseJson(200, false, ['msg' => 'Checkout request has been submitted successfully.'], ['invoice' => base_url($file_name), 'reservation_charges' => $reservation['RESV_RATE']]);
     }
 }

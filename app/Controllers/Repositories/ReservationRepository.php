@@ -63,4 +63,9 @@ class ReservationRepository extends BaseController
             ->orderBy('RESV_ID', 'desc')
             ->findAll();
     }
+
+    public function updateReservation($data, $where_condition)
+    {
+        return $this->Reservation->where($where_condition)->set($data)->update();
+    }
 }

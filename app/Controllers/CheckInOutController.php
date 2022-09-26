@@ -104,6 +104,9 @@ class CheckInOutController extends BaseController
         $reservation = $this->ReservationRepository->reservationById($reservation_id);
         
         $result = $this->CheckInOutRepository->makeCheckoutRequest($user, $reservation);
+        if($result['SUCCESS'] == 200)
+            $this->ReservationRepository->updateReservation(['RESV_STATUS' => 'Checked-Out-Requested'], "RESV_ID = $reservation_id");
+
         return $this->respond($result);
     }
 }
