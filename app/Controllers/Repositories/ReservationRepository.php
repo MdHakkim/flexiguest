@@ -20,7 +20,7 @@ class ReservationRepository extends BaseController
     public function reservationById($reservation_id)
     {
         return $this->Reservation
-            ->select("FLXY_RESERVATION.*, fc.*, fr.*
+            ->select("FLXY_RESERVATION.*, fc.*, fr.*,
                         concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_LAST_NAME) as CUST_NAME,
                         co.cname as COUNTRY_NAME,
                         st.sname as STATE_NAME,
