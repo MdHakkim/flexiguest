@@ -1259,6 +1259,7 @@ class APIController extends BaseController
 
     public function health()
     {
-        return $this->respond('OK');
+        echo "ANY";
+        die();
     }
 }
