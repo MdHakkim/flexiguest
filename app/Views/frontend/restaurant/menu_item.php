@@ -2,6 +2,7 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<?= $this->include('Layout/image_modal') ?>
 
 <!-- Content wrapper -->
 <div class="content-wrapper">
@@ -19,7 +20,9 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
+                            <th>Available</th>
                             <th>Item</th>
+                            <th>Image</th>
                             <th>Description</th>
                             <th>Category ID</th>
                             <th>Category Name</th>
@@ -53,7 +56,7 @@
                         <div class="row g-3">
                             <input type="hidden" name="id" class="form-control" />
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="form-label"><b>Restaurants *</b></label>
                                 <select name="MI_RESTAURANT_ID" class="select2 form-select">
                                     <?php foreach ($restaurants as $restaurants) { ?>
@@ -62,7 +65,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="form-label"><b>Category *</b></label>
                                 <select name="MI_MENU_CATEGORY_ID" class="select2 form-select">
                                 </select>
@@ -73,14 +76,22 @@
                                 <input type="text" name="MI_ITEM" class="form-control" placeholder="Item" required />
                             </div>
 
+                            <div class="col-md-8">
+                                <label class="form-label" for="MI_IMAGE_URL"><b>Item Image *</b></label>
+                                <input type="file" name="MI_IMAGE_URL" id="MI_IMAGE_URL" class="form-control" />
+                            </div>
+
                             <div class="col-md-4">
                                 <label class="form-label"><b>Price *</b></label>
                                 <input type="number" name="MI_PRICE" class="form-control" required />
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label"><b>Quantity *</b></label>
-                                <input type="number" name="MI_QUANTITY" class="form-control" required />
+                                <label class="form-label"><b>Available *</b></label>
+                                <select name="MI_IS_AVAILABLE" class="form-select">
+                                    <option value="1" selected>Yes</option>
+                                    <option value="0">No</option>
+                                </select>
                             </div>
 
                             <div class="col-md-4">
@@ -145,7 +156,31 @@
                     data: 'MI_ID'
                 },
                 {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        let class_name = 'badge rounded-pill';
+
+                        if (data['MI_IS_AVAILABLE'] == 1) {
+                            class_name += ' bg-label-success';
+                            data['MI_IS_AVAILABLE'] = 'Yes';
+                        } else {
+                            class_name += ' bg-label-danger';
+                            data['MI_IS_AVAILABLE'] = 'No';
+                        }
+
+                        return (`
+                            <span class="${class_name}">${data['MI_IS_AVAILABLE']}</span>
+                        `);
+                    }
+                },
+                {
                     data: 'MI_ITEM'
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['MI_IMAGE_URL']}")' src='<?= base_url() ?>/${data['MI_IMAGE_URL']}' width='80' height='80'/>`);
+                    }
                 },
                 {
                     data: null,
@@ -273,6 +308,7 @@
         $(`${form_id} input`).val('');
         $(`${form_id} textarea`).val('');
         $(`${form_id} select`).val('').trigger('change');
+        $(`${form_id} select[name='MI_IS_AVAILABLE']`).val('1');
     }
 
     // Show Add Rate Class Form
@@ -289,6 +325,11 @@
     function submitForm() {
         hideModalAlerts();
         var fd = new FormData($(`${form_id}`)[0]);
+        fd.delete('MI_IMAGE_URL');
+
+        let files = $(`${form_id} input[name='MI_IMAGE_URL']`)[0].files;
+        if (files.length)
+            fd.append('MI_IMAGE_URL', files[0]);
 
         $.ajax({
             url: '<?= base_url('/restaurant/menu-item/store-menu-item') ?>',

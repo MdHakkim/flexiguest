@@ -10,6 +10,7 @@ class Restaurant extends Model
     protected $primaryKey = 'RE_ID';
     protected $allowedFields = [
         'RE_RESTAURANT',
+        'RE_IMAGE_URL',
         'RE_CREATED_BY',
         'RE_UPDATED_BY',
     ];

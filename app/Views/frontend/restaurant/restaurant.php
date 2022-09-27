@@ -2,6 +2,7 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<?= $this->include('Layout/image_modal') ?>
 
 <!-- Content wrapper -->
 <div class="content-wrapper">
@@ -20,6 +21,7 @@
                             <th></th>
                             <th>ID</th>
                             <th>Restaurant</th>
+                            <th>Image</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
@@ -48,9 +50,14 @@
                         <div class="row g-3">
                             <input type="hidden" name="id" class="form-control" />
 
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <label class="form-label"><b>Restaurant Name *</b></label>
                                 <input type="text" name="RE_RESTAURANT" class="form-control" placeholder="Restaurant Name" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="RE_IMAGE_URL"><b>Restaurant Image *</b></label>
+                                <input type="file" name="RE_IMAGE_URL" id="RE_IMAGE_URL" class="form-control" />
                             </div>
                         </div>
                     </form>
@@ -85,10 +92,10 @@
     var linkMode = '';
 
     $(document).ready(function() {
-        $(form_id).submit(function(e){
+        $(form_id).submit(function(e) {
             e.preventDefault();
         });
-        
+
         linkMode = 'EX';
 
         $('#dataTable_view').DataTable({
@@ -106,6 +113,12 @@
                 },
                 {
                     data: 'RE_RESTAURANT'
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['RE_IMAGE_URL']}")' src='<?= base_url() ?>/${data['RE_IMAGE_URL']}' width='80' height='80'/>`);
+                    }
                 },
                 {
                     data: 'RE_CREATED_AT'
@@ -231,6 +244,11 @@
     function submitForm() {
         hideModalAlerts();
         var fd = new FormData($(`${form_id}`)[0]);
+        fd.delete('RE_IMAGE_URL');
+
+        let files = $(`${form_id} input[name='RE_IMAGE_URL']`)[0].files;
+        if (files.length)
+            fd.append('RE_IMAGE_URL', files[0]);
 
         $.ajax({
             url: '<?= base_url('/restaurant/store-restaurant') ?>',

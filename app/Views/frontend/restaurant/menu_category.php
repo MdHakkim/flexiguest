@@ -2,6 +2,8 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<?= $this->include('Layout/image_modal') ?>
+
 
 <!-- Content wrapper -->
 <div class="content-wrapper">
@@ -20,6 +22,7 @@
                             <th></th>
                             <th>ID</th>
                             <th>Category</th>
+                            <th>Image</th>
                             <th>Restaurant ID</th>
                             <th>Restaurant Name</th>
                             <th>Created At</th>
@@ -62,6 +65,11 @@
                             <div class="col-md-6">
                                 <label class="form-label"><b>Category *</b></label>
                                 <input type="text" name="MC_CATEGORY" class="form-control" placeholder="Category" required />
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label" for="MC_IMAGE_URL"><b>Category Image *</b></label>
+                                <input type="file" name="MC_IMAGE_URL" id="MC_IMAGE_URL" class="form-control" />
                             </div>
                         </div>
                     </form>
@@ -117,6 +125,12 @@
                 },
                 {
                     data: 'MC_CATEGORY'
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['MC_IMAGE_URL']}")' src='<?= base_url() ?>/${data['MC_IMAGE_URL']}' width='80' height='80'/>`);
+                    }
                 },
                 {
                     data: 'MC_RESTAURANT_ID'
@@ -181,7 +195,7 @@
                 width: "15%"
             }],
             "order": [
-                [3, "asc"]
+                [1, "asc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -248,6 +262,11 @@
     function submitForm() {
         hideModalAlerts();
         var fd = new FormData($(`${form_id}`)[0]);
+        fd.delete('MC_IMAGE_URL');
+
+        let files = $(`${form_id} input[name='MC_IMAGE_URL']`)[0].files;
+        if (files.length)
+            fd.append('MC_IMAGE_URL', files[0]);
 
         $.ajax({
             url: '<?= base_url('/restaurant/menu-category/store-menu-category') ?>',

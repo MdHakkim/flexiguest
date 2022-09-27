@@ -24,18 +24,26 @@ class RestaurantRepository extends BaseController
         $this->MenuItem = new MenuItem();
     }
 
-    public function restaurantValidationRules()
+    public function restaurantValidationRules($data)
     {
-        return [
+        $rules = [
             'RE_RESTAURANT' => ['label' => 'restaurant name', 'rules' => 'required'],
         ];
+
+        if (empty($data['id']) || !empty($data['RE_IMAGE_URL']))
+            $rules['RE_IMAGE_URL'] = [
+                'label' => 'restaurant image',
+                'rules' => ['uploaded[RE_IMAGE_URL]', 'mime_in[RE_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[RE_IMAGE_URL,5048]']
+            ];
+
+        return $rules;
     }
 
     public function allRestaurant()
     {
         $mine = new ServerSideDataTable();
         $tableName = 'FLXY_RESTAURANTS';
-        $columns = 'RE_ID,RE_RESTAURANT,RE_CREATED_AT';
+        $columns = 'RE_ID,RE_RESTAURANT,RE_IMAGE_URL,RE_CREATED_AT';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -49,6 +57,20 @@ class RestaurantRepository extends BaseController
     {
         $id = $data['id'];
         unset($data['id']);
+
+        if (!empty($data['RE_IMAGE_URL'])) {
+            $image = $data['RE_IMAGE_URL'];
+            $image_name = $image->getName();
+            $directory = "assets/Uploads/restaurant/restaurant_images/";
+
+            $response = documentUpload($image, $image_name, $user_id, $directory);
+
+            if ($response['SUCCESS'] != 200)
+                return responseJson(500, true, ['msg' => 'image not uploaded']);
+
+            $data['RE_IMAGE_URL'] = $directory . $response['RESPONSE']['OUTPUT'];
+        }
+
 
         if (empty($id)) {
             $data['RE_CREATED_BY'] = $data['RE_UPDATED_BY'] = $user_id;
@@ -79,19 +101,27 @@ class RestaurantRepository extends BaseController
         return $this->Restaurant->findAll();
     }
 
-    public function menuCategoryValidationRules()
+    public function menuCategoryValidationRules($data)
     {
-        return [
+        $rules = [
             'MC_RESTAURANT_ID' => ['label' => 'restaurant', 'rules' => 'required', 'errors' => ['required' => 'Please select a restaurant.']],
             'MC_CATEGORY' => ['label' => 'category', 'rules' => 'required'],
         ];
+
+        if (empty($data['id']) || !empty($data['MC_IMAGE_URL']))
+            $rules['MC_IMAGE_URL'] = [
+                'label' => 'category image',
+                'rules' => ['uploaded[MC_IMAGE_URL]', 'mime_in[MC_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MC_IMAGE_URL,5048]']
+            ];
+
+        return $rules;
     }
 
     public function allMenuCategory()
     {
         $mine = new ServerSideDataTable();
         $tableName = 'FLXY_MENU_CATEGORIES left join FLXY_RESTAURANTS on MC_RESTAURANT_ID = RE_ID';
-        $columns = 'MC_ID,MC_CATEGORY,MC_RESTAURANT_ID,RE_RESTAURANT,MC_CREATED_AT';
+        $columns = 'MC_ID,MC_CATEGORY,MC_IMAGE_URL,MC_RESTAURANT_ID,RE_RESTAURANT,MC_CREATED_AT';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -106,11 +136,24 @@ class RestaurantRepository extends BaseController
         $id = $data['id'];
         unset($data['id']);
 
+        if (!empty($data['MC_IMAGE_URL'])) {
+            $image = $data['MC_IMAGE_URL'];
+            $image_name = $image->getName();
+            $directory = "assets/Uploads/restaurant/menu_category_images/";
+
+            $response = documentUpload($image, $image_name, $user_id, $directory);
+
+            if ($response['SUCCESS'] != 200)
+                return responseJson(500, true, ['msg' => 'image not uploaded']);
+
+            $data['MC_IMAGE_URL'] = $directory . $response['RESPONSE']['OUTPUT'];
+        }
+
         if (empty($id)) {
             $data['MC_CREATED_BY'] = $data['MC_UPDATED_BY'] = $user_id;
             $response = $this->MenuCategory->insert($data);
         } else {
-            $data['RE_UPDATED_BY'] = $user_id;
+            $data['MC_UPDATED_BY'] = $user_id;
             $response = $this->MenuCategory->update($id, $data);
         }
 
@@ -130,22 +173,30 @@ class RestaurantRepository extends BaseController
         return $this->MenuCategory->delete($menu_category_id);
     }
 
-    public function menuItemValidationRules()
+    public function menuItemValidationRules($data)
     {
-        return [
+        $rules = [
             'MI_RESTAURANT_ID' => ['label' => 'restaurant', 'rules' => 'required', 'errors' => ['required' => 'Please select a restaurant.']],
             'MI_MENU_CATEGORY_ID' => ['label' => 'category', 'rules' => 'required', 'errors' => ['required' => 'Please select a category.']],
             'MI_ITEM' => ['label' => 'item', 'rules' => 'required'],
             'MI_PRICE' => ['label' => 'price', 'rules' => 'required'],
-            'MI_QUANTITY' => ['label' => 'quantity', 'rules' => 'required'],
+            'MI_IS_AVAILABLE' => ['label' => 'available', 'rules' => 'required', 'errors' => ['required' => 'Please select availability.']],
         ];
+
+        if (empty($data['id']) || !empty($data['MI_IMAGE_URL']))
+            $rules['MI_IMAGE_URL'] = [
+                'label' => 'item image',
+                'rules' => ['uploaded[MI_IMAGE_URL]', 'mime_in[MI_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MI_IMAGE_URL,5048]']
+            ];
+
+        return $rules;
     }
 
     public function allMenuItem()
     {
         $mine = new ServerSideDataTable();
         $tableName = 'FLXY_MENU_ITEMS left join FLXY_RESTAURANTS on MI_RESTAURANT_ID = RE_ID left join FLXY_MENU_CATEGORIES on MI_MENU_CATEGORY_ID = MC_ID';
-        $columns = 'MI_ID,MI_RESTAURANT_ID,MI_MENU_CATEGORY_ID,MI_ITEM,MI_PRICE,MI_QUANTITY,MI_SEQUENCE,MI_DESCRIPTION,MI_CREATED_AT,RE_RESTAURANT,MC_CATEGORY';
+        $columns = 'MI_ID,MI_RESTAURANT_ID,MI_MENU_CATEGORY_ID,MI_ITEM,MI_IMAGE_URL,MI_PRICE,MI_IS_AVAILABLE,MI_SEQUENCE,MI_DESCRIPTION,MI_CREATED_AT,RE_RESTAURANT,MC_CATEGORY';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -159,6 +210,19 @@ class RestaurantRepository extends BaseController
     {
         $id = $data['id'];
         unset($data['id']);
+
+        if (!empty($data['MI_IMAGE_URL'])) {
+            $image = $data['MI_IMAGE_URL'];
+            $image_name = $image->getName();
+            $directory = "assets/Uploads/restaurant/menu_category_images/";
+
+            $response = documentUpload($image, $image_name, $user_id, $directory);
+
+            if ($response['SUCCESS'] != 200)
+                return responseJson(500, true, ['msg' => 'image not uploaded']);
+
+            $data['MI_IMAGE_URL'] = $directory . $response['RESPONSE']['OUTPUT'];
+        }
 
         if (empty($id)) {
             $data['MI_CREATED_BY'] = $data['MI_UPDATED_BY'] = $user_id;

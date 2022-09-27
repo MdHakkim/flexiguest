@@ -34,10 +34,13 @@ class RestaurantController extends BaseController
     {
         $user_id = session('USR_ID');
 
-        if (!$this->validate($this->RestaurantRepository->restaurantValidationRules()))
-            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-
         $data = $this->request->getPost();
+
+        if($this->request->getFile('RE_IMAGE_URL'))
+            $data['RE_IMAGE_URL'] = $this->request->getFile('RE_IMAGE_URL');
+
+        if (!$this->validate($this->RestaurantRepository->restaurantValidationRules($data)))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
         
         $result = $this->RestaurantRepository->storeRestaurant($user_id, $data);
         return $this->respond($result);
@@ -87,10 +90,12 @@ class RestaurantController extends BaseController
     {
         $user_id = session('USR_ID');
 
-        if (!$this->validate($this->RestaurantRepository->menuCategoryValidationRules()))
-            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-
         $data = $this->request->getPost();
+        if($this->request->getFile('MC_IMAGE_URL'))
+            $data['MC_IMAGE_URL'] = $this->request->getFile('MC_IMAGE_URL');
+
+        if (!$this->validate($this->RestaurantRepository->menuCategoryValidationRules($data)))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
         
         $result = $this->RestaurantRepository->storeMenuCategory($user_id, $data);
         return $this->respond($result);
@@ -140,10 +145,12 @@ class RestaurantController extends BaseController
     {
         $user_id = session('USR_ID');
 
-        if (!$this->validate($this->RestaurantRepository->menuItemValidationRules()))
-            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-
         $data = $this->request->getPost();
+        if($this->request->getFile('MI_IMAGE_URL'))
+            $data['MI_IMAGE_URL'] = $this->request->getFile('MI_IMAGE_URL');
+
+        if (!$this->validate($this->RestaurantRepository->menuItemValidationRules($data)))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
         
         $result = $this->RestaurantRepository->storeMenuItem($user_id, $data);
         return $this->respond($result);

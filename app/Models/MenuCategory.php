@@ -9,8 +9,9 @@ class MenuCategory extends Model
     protected $table      = 'FLXY_MENU_CATEGORIES';
     protected $primaryKey = 'MC_ID';
     protected $allowedFields = [
-        'MC_CATEGORY',
         'MC_RESTAURANT_ID',
+        'MC_CATEGORY',
+        'MC_IMAGE_URL',
         'MC_CREATED_BY',
         'MC_UPDATED_BY',
     ];
