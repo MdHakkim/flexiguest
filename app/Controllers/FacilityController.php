@@ -1003,7 +1003,7 @@ class FacilityController extends BaseController
         $sql = "SELECT RESV_ID, RESV_NO, RESV_STATUS, RESV_RM_TYPE, RESV_ROOM, RESV_ROOM_ID, 
                        (SELECT RM_ID FROM FLXY_ROOM WHERE RM_NO = RESV_ROOM AND RM_TYPE = RESV_RM_TYPE) RM_ID
                 FROM FLXY_RESERVATION RESV
-                WHERE RESV_STATUS IN ('Checked-In','Checked-Out-Requested')
+                WHERE RESV_STATUS IN ('Checked-In','Check-Out-Requested')
                 AND RESV_ROOM != ''
                 ORDER BY RESV_NO DESC";
 

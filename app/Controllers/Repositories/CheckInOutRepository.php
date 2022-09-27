@@ -27,7 +27,7 @@ class CheckInOutRepository extends BaseController
         if ($reservation['RESV_STATUS'] == 'Checked-Out')
             return responseJson(202, true, ['msg' => 'This reservation is already checked-out.']);
 
-        if ($reservation['RESV_STATUS'] == 'Checked-Out-Requested')
+        if ($reservation['RESV_STATUS'] == 'Check-Out-Requested')
             return responseJson(202, true, ['msg' => 'Check-Out already requested.']);
 
         $reservation['branding_logo'] = brandingLogo();
