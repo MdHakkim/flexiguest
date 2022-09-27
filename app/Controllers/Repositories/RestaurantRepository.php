@@ -252,4 +252,9 @@ class RestaurantRepository extends BaseController
     {
         return $this->MenuCategory->where('MC_RESTAURANT_ID', $restaurant_id)->findAll();
     }
+
+    public function menuCategories()
+    {
+        return $this->MenuCategory->findAll();
+    }
 }

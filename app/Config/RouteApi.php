@@ -184,6 +184,7 @@ $routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' =
 $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('restaurant', function ($routes) {
         $routes->get("all-restaurants", "RestaurantController::allRestaurants");
+        $routes->get("menu-categories", "RestaurantController::menuCategories");
     });
 
     $routes->group('concierge', function ($routes) {

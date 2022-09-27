@@ -189,11 +189,18 @@ class RestaurantController extends BaseController
         return $this->respond(responseJson(200, false, ['msg' => 'list'], $result));
     }
 
-    // API
+    /** ------------------------------API------------------------------ */ 
     public function allRestaurants()
     {
         $result = $this->RestaurantRepository->allRestaurants();
 
         return $this->respond(responseJson(200, false, ['msg' => 'restaurants'], $result));
+    }
+
+    public function menuCategories()
+    {
+        $result = $this->RestaurantRepository->menuCategories();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'categories'], $result));
     }
 }
