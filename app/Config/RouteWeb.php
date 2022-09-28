@@ -630,6 +630,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->get('/getCustomers', 'NotificationController::getCustomers');
 
       $routes->match(['post'], '/viewAllNotificationDetails', 'NotificationController::viewAllNotificationDetails');
+      $routes->match(['post'], '/guestByReservation', 'NotificationController::guestByReservation');
+      
       
 
      //Subina Code (END)  

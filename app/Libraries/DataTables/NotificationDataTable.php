@@ -81,7 +81,7 @@ class NotificationDataTable{
 
                 if($name == "NOTIFICATION_DEPARTMENT") {                    
                     if($row[$name] != '' ){
-                       $department_ids = implode(",",unserialize($row[$name]));  
+                       $department_ids = implode(',', json_decode($row[$name]));  
                        //echo "select DEPT_DESC from FLXY_DEPARTMENT where DEPT_ID in ($department_ids)";                                
                         $departments = $this->Db->query("select DEPT_DESC from FLXY_DEPARTMENT where DEPT_ID in ($department_ids)")->getResultArray();                        
                         $row[$name] = '';
@@ -96,7 +96,7 @@ class NotificationDataTable{
 
                 if($name == "NOTIFICATION_TO_ID") {
                     if($row[$name] != ''){                                        
-                        $user_ids = implode(",",unserialize($row[$name]));                                       
+                        $user_ids = implode(',', json_decode($row[$name]));                                        
                         $users = $this->Db->query("select concat(USR_FIRST_NAME, ' ', USR_LAST_NAME) as NAME from FlXY_USERS where USR_ID in ($user_ids)")->getResultArray();                       
                         
                         $row[$name] = '';
@@ -111,7 +111,7 @@ class NotificationDataTable{
 
                 if($name == "NOTIFICATION_RESERVATION_ID") {
                     if($row[$name] != ''){                                        
-                        $reservation_ids = implode(",",unserialize($row[$name]));                                       
+                        $reservation_ids = implode(',', json_decode($row[$name]));                                        
                         $reservations = $this->Db->query("select CONCAT_WS(' ', RESV_NO, RESV_STATUS) AS RESV_NAME FROM FLXY_RESERVATION where RESV_ID in ($reservation_ids)")->getResultArray();                       
                         
                         $row[$name] = '';
@@ -126,7 +126,7 @@ class NotificationDataTable{
 
                 if($name == "NOTIFICATION_GUEST_ID") {
                     if($row[$name] != ''){                                        
-                        $guest_ids = implode(",",unserialize($row[$name]));                                       
+                        $guest_ids = implode(',', json_decode($row[$name]));                                        
                         $reservationsGuests = $this->Db->query("select CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME FROM FLXY_CUSTOMER where CUST_ID in ($guest_ids)")->getResultArray();                       
                         
                         $row[$name] = '';

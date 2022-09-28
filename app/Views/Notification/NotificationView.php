@@ -30,7 +30,7 @@
                 <table id="dataTable_view" class="dt-responsive table table-striped display nowrap" style="width:100%">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>View</th>
                             <th>Notification ID</th> 
                             <th class="all">Notification Type</th>                            
                             <th class="all">Department</th>     
@@ -40,6 +40,7 @@
                             <th class="all">Message</th>
                             <th class="all">Date & Time</th>
                             <th class="all">Status</th>
+                            <th class="all">Action</th>
                         </tr>
                     </thead>
                 </table>
@@ -64,8 +65,9 @@
                 <form id="submitForm" class="needs-validation" novalidate>
                   <div class="row g-3">
                     <input type="hidden" name="NOTIFICATION_ID" id="NOTIFICATION_ID" class="form-control" />
+                    <input type="hidden" name="NOTIFICATION_OLD_TYPE" id="NOTIFICATION_OLD_TYPE" class="form-control" />
+                    
                     <div class="border rounded p-3">
-
                       <div class="col-md-12">
                         <div class="row mb-3">  
                         <label for="html5-text-input" class="col-form-label"><b>NOTIFICATION TYPE
@@ -75,10 +77,8 @@
 
                           <div class="col-md-6 Department">
                             <label for="html5-text-input" class="col-form-label"><b>ENTIRE DEPARTMENT</b></label>
-                                <select id="NOTIFICATION_DEPARTMENT" name="NOTIFICATION_DEPARTMENT[]" class="select2 form-select form-select-lg" data-allow-clear="true" multiple >
-                                  
-                                </select>
-                                
+                                <select id="NOTIFICATION_DEPARTMENT" name="NOTIFICATION_DEPARTMENT[]" class="select2 form-select form-select-lg" data-allow-clear="true" multiple >                                  
+                                </select>                                
                           </div> 
                         
                           <div class="col-md-6 Department">
@@ -92,7 +92,7 @@
                         <div class="row">
                           <div class="col-md-6 mb-3 Reservation">
                             <label for="html5-text-input" class="col-form-label"><b>ENTIRE RESERVATION
-                                *</b></label>
+                                </b></label>
                                 <select id="NOTIFICATION_RESERVATION_ID" name="NOTIFICATION_RESERVATION_ID[]" class="select2 form-select form-select-lg" data-allow-clear="true" multiple>
                                   
                                 </select>
@@ -128,11 +128,9 @@
                                             <i class="bx bx-x"></i>
                                         </span>
                                     </span>
-                                    <span class="switch-label"><b>Send Now</b></span>
-                                    
-                                </label>
-                          
-                          </div> 
+                                    <span class="switch-label"><b>Send Now</b></span>                                   
+                                </label>                          
+                          </div>
                         
                         </div>
                         <div class="row mb-3">
@@ -210,7 +208,12 @@ var compAgntMode = '';
 var linkMode = '';
 
 $(document).ready(function() {
-  
+  notificationTypeList();
+    departmentList();
+    usersList();
+    guestList();
+    reservationList();
+
   $("#NOTIFICATION_DATE_TIME").flatpickr({
       enableTime: true,
       dateFormat: 'Y-m-d H:i',
@@ -218,11 +221,7 @@ $(document).ready(function() {
       static: true
   });
 
-  notificationTypeList();
-  departmentList();
-  usersList();
-  guestList();
-  reservationList();
+  
 
   linkMode = 'EX';
 
@@ -280,7 +279,7 @@ $(document).ready(function() {
             data: 'NOTIFICATION_RESERVATION_ID',
             render: function(data, type, full, meta) {                                      
               if(full['NOTIFICATION_RESERVATION_ID'] != ''){
-                return '<a href="javascript:;" onclick="viewAll(\'Reservation\','+full['NOTIFICATION_ID']+')" title="View Reservations"  rel="">'+full['NOTIFICATION_RESERVATION_ID']+'<br><span class="btn btn-sm btn-label-info">View All</span></br></a>';
+                return '<a href="javascript:;" onclick="viewAll(\'Reservations\','+full['NOTIFICATION_ID']+')" title="View Reservations"  rel="">'+full['NOTIFICATION_RESERVATION_ID']+'<br><span class="btn btn-sm btn-label-info">View All</span></br></a>';
               }else return '';
             }
           },      
@@ -301,7 +300,33 @@ $(document).ready(function() {
           },
           {
             data: 'NOTIFICATION_READ_STATUS'
-          }
+          },
+          {
+                data: null,
+                className: "text-center",
+                "orderable": false,
+                render: function(data, type, full, meta) {
+                  if(full["NOTIFICATION_READ_STATUS"] == 0){
+                    var resvListButtons =
+                        '<div class="d-inline-block flxy_option_view dropend">' +
+                        '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
+                        '<ul class="dropdown-menu dropdown-menu-end">' +
+                        '<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
+                        '"  class="dropdown-item editNotification text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
+                        '<div class="dropdown-divider"></div>' +
+                        '<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
+                        '"  class="dropdown-item viewNotification text-success"><i class="fa-solid fa-align-justify"></i> View</a></li><div class="dropdown-divider"></div>' +
+                        '<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
+                        '" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>';
+
+                    
+                    resvListButtons += '</ul>' +
+                        '</div>';
+
+                    return resvListButtons;
+                  }else return '';
+                }
+            }
         ],
         columnDefs: [{
             width: "7%",
@@ -408,13 +433,20 @@ $(document).ready(function() {
 function addForm() {
     $( '#submitForm').not('[type="radio"],[type="checkbox"]').val('').prop('checked', false).prop('selected', false);
     $('.select2').val(null).trigger('change');
-
+    $("#NOTIFICATION_ID").val('');
+    $("#NOTIFICATION_DATE_TIME").val('');
+    $("#full-editor .ql-editor").html('');
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
     $('#popModalWindowlabel').html('Add Notification');
     $('#popModalWindow').modal('show');
 }
 
 // Delete Notification
+
+$(document).on('click', '.viewNotification', function() {
+
+  $(".control").click();
+});
 
 $(document).on('click', '.delete-record', function() {
     hideModalAlerts();
@@ -436,7 +468,7 @@ $(document).on('click', '.delete-record', function() {
         callback: function(result) {
             if (result) {
                 $.ajax({
-                    url: '<?php echo base_url('/deleteDepartment')?>',
+                    url: '<?php echo base_url('/deleteNotification')?>',
                     type: "post",
                     data: {
                         sysid: sysid
@@ -447,7 +479,7 @@ $(document).on('click', '.delete-record', function() {
                     dataType: 'json',
                     success: function(respn) {
                         showModalAlert('warning',
-                            '<li>The Department has been deleted</li>');
+                            '<li>The Notification has been deleted</li>');
                         $('#dataTable_view').dataTable().fnDraw();
                     }
                 });
@@ -458,15 +490,15 @@ $(document).on('click', '.delete-record', function() {
 
 // Show Edit Notification 
 
-$(document).on('click', '.editWindow', function() {
+$(document).on('click', '.editNotification', function() {
 
     $('.dtr-bs-modal').modal('hide');
     var sysid = $(this).attr('data_sysid');
-    $('#popModalWindowlabel').html('Edit Department');
+    $('#popModalWindowlabel').html('Edit Notification');
     $("#DEPT_CODE").prop("readonly", true);
     $('#popModalWindow').modal('show');
 
-    var url = '<?php echo base_url('/editDepartment')?>';
+    var url = '<?php echo base_url('/editNotification')?>';
     $.ajax({
         url: url,
         type: "post",
@@ -481,12 +513,51 @@ $(document).on('click', '.editWindow', function() {
             $(respn).each(function(inx, data) {
                 $.each(data, function(fields, datavals) {
                     var field = $.trim(fields); //fields.trim();
-                    var dataval = $.trim(datavals); //datavals.trim();
-                    if ($('#' + field).attr('type') == 'checkbox') {
-                        $('#' + field).prop('checked', dataval == 1 ? true : false);
-                    } else {
-                        $('#' + field).val(dataval);
+                    var dataval = $.trim(datavals); //datavals.trim();                   
+
+                    if( field == "NOTIFICATION_DEPARTMENT"){   
+                      if(dataval != ''){
+                        $("#submitForm select[name='NOTIFICATION_DEPARTMENT[]']").val(JSON.parse(dataval));
+                        $("#submitForm select[name='NOTIFICATION_DEPARTMENT[]']").trigger('change');
+                      }
                     }
+                    else if(field == "NOTIFICATION_TO_ID"){ 
+                      if(dataval != ''){                       
+                        $("#submitForm select[name='NOTIFICATION_TO_ID[]']").val(JSON.parse(dataval));
+                        $("#submitForm select[name='NOTIFICATION_TO_ID[]']").trigger('change');
+                      }
+                    }
+                    else if(field == "NOTIFICATION_RESERVATION_ID"){    
+                      if(dataval != ''){                 
+                        $("#submitForm select[name='NOTIFICATION_RESERVATION_ID[]']").val(JSON.parse(dataval));
+                        $("#submitForm select[name='NOTIFICATION_RESERVATION_ID[]']").trigger('change');
+                      }
+                    }
+                    else if(field == "NOTIFICATION_GUEST_ID"){   
+                      if(dataval != ''){                     
+                        $("#submitForm select[name='NOTIFICATION_GUEST_ID[]']").val(JSON.parse(dataval));
+                        $("#submitForm select[name='NOTIFICATION_GUEST_ID[]']").trigger('change');
+                      }
+                    }
+                    else if ($('#' + field).attr('type') == 'checkbox') {
+                        $('#' + field).prop('checked', dataval == 1 ? true : false);
+                    }
+                   
+                    else if ($("input[name="+field+"]").attr('type') == 'radio') {                      
+                        $('#' + field+'_'+dataval).prop('checked',true);
+                        $('#' + field+'_'+dataval).click();
+                        $('#NOTIFICATION_OLD_TYPE').val(dataval)
+                    }
+                    
+                    else if(field == "NOTIFICATION_TEXT") {
+                        $("#full-editor .ql-editor").html(dataval)
+                    }
+                   
+                    else {
+                        $('#' + field).val(dataval)
+                    }
+                    
+                    
                 });
             });
             $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
@@ -620,6 +691,44 @@ function notificationTypeList() {
         }
     });
 
+    $("#submitForm [name='NOTIFICATION_RESERVATION_ID[]']").change(function() {
+     
+        let reservation_ids = $(this).val();
+        if (reservation_ids.length) {
+            if (reservation_ids.includes('all')) {
+                $("#submitForm [name='NOTIFICATION_RESERVATION_ID[]']> option").prop("selected", true);
+                $("#submitForm [name='NOTIFICATION_RESERVATION_ID[]'] > option").first().prop("selected", false);
+                $("#submitForm [name='NOTIFICATION_RESERVATION_ID[]']").trigger("change");
+                return;
+            }
+
+            $.ajax({
+                url: '<?= base_url('/guestByReservation') ?>',
+                type: "post",
+                data: {
+                  reservation_ids: reservation_ids
+                },
+                dataType: 'json',
+                success: function(response) {                 
+                    if (response ) {                      
+                        let guests = response;
+                        let html = '';
+                        for (let guest of guests) {
+                            html += `
+                            <option value="${guest.CUST_ID}">${guest.FULLNAME} </option>
+                        `;
+                        }
+                        $("#submitForm select[name='NOTIFICATION_GUEST_ID[]']").html(html);
+                        $("#submitForm select[name='NOTIFICATION_GUEST_ID[]']").trigger('change');
+                    }
+                    else{
+
+                    }
+                }
+            });
+        }
+    });
+
   function reservationList(){
     $.ajax({
         url: '<?php echo base_url('/reservationList')?>',
@@ -649,7 +758,7 @@ function notificationTypeList() {
   $(document).on('click','[name=NOTIFICATION_TYPE]',function(){
     if($(this).val() === '4'){
       $(".Reservation").show(); 
-      $(".Department").hide(); 
+      $(".Department").show(); 
       $(".Guest").hide();  
       $('#NOTIFICATION_RESERVATION_ID').val(null).trigger('change');   
     }
@@ -703,8 +812,7 @@ function fillCustomerSelect(resvId) {
 }
 
 function viewAll(field, notificationId){
- // if(field == 'Department')
-
+ $(".showDetails").html('');
   $.ajax({
         url: '<?php echo base_url('/viewAllNotificationDetails') ?>',
         async: false,
