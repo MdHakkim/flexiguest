@@ -24,6 +24,8 @@ class ConciergeRequestDataTable
         $columns = [
             'CR_ID', 
             'CR_STATUS', 
+            'CR_PAYMENT_STATUS', 
+            'CR_PAYMENT_METHOD', 
             'CO_TITLE', 
             'CR_GUEST_NAME', 
             'CR_GUEST_PHONE', 
@@ -46,6 +48,9 @@ class ConciergeRequestDataTable
         $searchValue = isset($_POST['search']['value']) ? $_POST['search']['value'] : '';
         if ($searchValue != '') {
             $searchQuery .= " AND (CR_STATUS like '%$searchValue%' 
+                                    or CR_ID like '%$searchValue%' 
+                                    or CR_PAYMENT_METHOD like '%$searchValue%' 
+                                    or CR_PAYMENT_STATUS like '%$searchValue%' 
                                     or CO_TITLE like '%$searchValue%' 
                                     or CR_GUEST_NAME like '%$searchValue%' 
                                     or CR_GUEST_PHONE like '%$searchValue%' 

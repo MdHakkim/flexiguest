@@ -216,7 +216,7 @@
                                                 <select class="select2" name="TR_TRANSPORT_TYPE_ID">
                                                     <?php foreach ($transport_types as $transport_type) : ?>
                                                         <option value="<?= $transport_type['TT_ID'] ?>">
-                                                            <?= $transport_type['TT_LABEL'] ?>
+                                                            <?= $transport_type['TT_LABEL'] ?> - AED <?= $transport_type['TT_MAX_PRICE'] ?>
                                                         </option>
                                                     <?php endforeach ?>
                                                 </select>
@@ -804,6 +804,11 @@
 
             $(`#${id} input`).val('');
             $(`#${id} textarea`).val('');
+            $(`#${id} select`).val('').trigger('change');
+
+            $(`#${id} select[name='TR_STATUS']`).val('New').trigger('change');
+            $(`#${id} select[name='TR_PAYMENT_METHOD']`).val('Pay at Reception').trigger('change');
+            $(`#${id} select[name='TR_PAYMENT_STATUS']`).val('UnPaid').trigger('change');
 
             $(`#${id} input[name='TR_ADULTS']`).val(1);
             $(`#${id} input[name='TR_CHILDREN']`).val(0);

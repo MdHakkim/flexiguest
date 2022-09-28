@@ -3632,7 +3632,7 @@ function displayResvOptionButtons(ressysId) {
                 else {
                     $('.cancel-reservation').addClass('d-none').prop('disabled', true);
                     if (respn.RESV_STATUS == 'Checked-In' || respn.RESV_STATUS ==
-                        'Checked-Out-Requested') {
+                        'Check-Out-Requested') {
                         $('#Resv-Check-In').removeClass('d-none').prop('disabled', true);
                         $('.checkout-reservation').removeClass('d-none');
                         if (currentDate >= departureDate) {

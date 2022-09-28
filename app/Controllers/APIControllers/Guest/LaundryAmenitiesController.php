@@ -37,7 +37,7 @@ class LaundryAmenitiesController extends BaseController
         if (!$validate)
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
-        $data = (array) $this->request->getVar();
+        $data = json_decode(json_encode($this->request->getVar()), true);
         $result = $this->LaundryAmenitiesRepository->placeOrder($user, $data);
 
         if ($result['SUCCESS'] == 200 && $data['payment_method'] == 'Credit/Debit card') {
@@ -66,16 +66,21 @@ class LaundryAmenitiesController extends BaseController
                 ->where('LAOD_ORDER_ID', $order['LAO_ID'])
                 ->findAll();
 
-            $orders[$index]['LAO_DELIVERY_STATUS'] = 'Delivered';
-            foreach ($order_details as $order_detail) {
-                if ($order_detail['LAOD_DELIVERY_STATUS'] == 'New' || $order_detail['LAOD_DELIVERY_STATUS'] == 'Processing') {
-                    $orders[$index]['LAO_DELIVERY_STATUS'] = 'New';
-                    break;
-                }
+            if (count($order_details) == 1)
+                $orders[$index]['LAO_DELIVERY_STATUS'] = $order_details[0]['LAOD_DELIVERY_STATUS'];
+            else {
 
-                if ($order_detail['LAOD_DELIVERY_STATUS'] == 'Cancelled') {
-                    $orders[$index]['LAO_DELIVERY_STATUS'] = 'Cancelled';
-                    break;
+                $orders[$index]['LAO_DELIVERY_STATUS'] = 'Delivered';
+                foreach ($order_details as $order_detail) {
+                    if ($order_detail['LAOD_DELIVERY_STATUS'] == 'New' || $order_detail['LAOD_DELIVERY_STATUS'] == 'Processing') {
+                        $orders[$index]['LAO_DELIVERY_STATUS'] = 'New';
+                        break;
+                    }
+
+                    if ($order_detail['LAOD_DELIVERY_STATUS'] == 'Cancelled') {
+                        $orders[$index]['LAO_DELIVERY_STATUS'] = 'Cancelled';
+                        break;
+                    }
                 }
             }
 
@@ -123,7 +128,7 @@ class LaundryAmenitiesController extends BaseController
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        $file_name = "assets/laundry-amenities-invoices/ORD{$order['LAO_ID']}-Invoice.pdf";
+        $file_name = "assets/laundry-amenities-invoices/LAO{$order['LAO_ID']}-Invoice.pdf";
         file_put_contents($file_name, $dompdf->output());
 
         return $this->respond(responseJson(200, false, ['msg' => 'Invoice'], ['invoice' => base_url($file_name)]));

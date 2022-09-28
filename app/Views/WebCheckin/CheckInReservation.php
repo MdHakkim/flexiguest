@@ -1285,7 +1285,7 @@ function docUploadClik(param, customer_id) {
             setTimeout(() => {
                 $(`${id} select[name='CUST_CITY']`).val(customer_data.CUST_CITY).selectpicker(
                     'refresh');
-            }, 500);
+            }, 20000);
         }, 500);
 
         $.ajax({

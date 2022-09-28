@@ -83,7 +83,8 @@ class Reservation extends Model
         'RESV_PROFILE',
         'RESV_NAME_ON_CARD',
         'RESV_EXT_PRINT_RT',
-        'RESV_SHARE_RATE'
+        'RESV_SHARE_RATE',
+        'RESV_PAYMENT_STATUS'
     ];
 
     protected $useAutoIncrement = true;

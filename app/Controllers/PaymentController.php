@@ -2,8 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Controllers\Repositories\ConciergeRepository;
 use App\Controllers\Repositories\LaundryAmenitiesRepository;
 use App\Controllers\Repositories\PaymentRepository;
+use App\Controllers\Repositories\ReservationRepository;
+use App\Controllers\Repositories\TransportRequestRepository;
 use CodeIgniter\API\ResponseTrait;
 
 class PaymentController extends BaseController
@@ -13,17 +16,56 @@ class PaymentController extends BaseController
 
     private $PaymentRepository;
     private $LaundryAmenitiesRepository;
+    private $ConciergeRepository;
+    private $TransportRequestRepository;
+    private $ReservationRepository;
 
     public function __construct()
     {
         $this->PaymentRepository = new PaymentRepository();
         $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
+        $this->ConciergeRepository = new ConciergeRepository();
+        $this->TransportRequestRepository = new TransportRequestRepository();
+        $this->ReservationRepository = new ReservationRepository();
     }
 
     public function createPaymentIntent()
     {
-        $data = $this->request->getVar();
+        $data = (array) $this->request->getVar();
         $user = $this->request->user;
+
+        if ($data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
+            $order = $this->LaundryAmenitiesRepository->orderById($data['model_id']);
+            if (empty($order))
+                return $this->respond(responseJson(404, true, ['msg' => 'Order not found']));
+
+            $data['amount'] = $order['LAO_TOTAL_PAYABLE'];
+            $data['reservation_id'] = $order['LAO_RESERVATION_ID'];
+        } else if ($data['model'] == 'FLXY_CONCIERGE_REQUESTS') {
+
+            $request = $this->ConciergeRepository->getConciergeRequest("CR_ID = {$data['model_id']}");
+            if (empty($request))
+                return $this->respond(responseJson(404, true, ['msg' => 'Concierge Request not found']));
+
+            $data['amount'] = $request['CR_TOTAL_AMOUNT'];
+            $data['reservation_id'] = $request['CR_RESERVATION_ID'];
+        } else if ($data['model'] == 'FLXY_TRANSPORT_REQUESTS') {
+
+            $request = $this->TransportRequestRepository->getTransportRequest("TR_ID = {$data['model_id']}");
+            if (empty($request))
+                return $this->respond(responseJson(404, true, ['msg' => 'Transport Request not found.']));
+
+            $data['amount'] = $request['TR_TOTAL_AMOUNT'];
+            $data['reservation_id'] = $request['TR_RESERVATION_ID'];
+        } else if ($data['model'] == 'FLXY_RESERVATION') {
+
+            $request = $this->ReservationRepository->reservationById($data['model_id']);
+            if (empty($request))
+                return $this->respond(responseJson(404, true, ['msg' => 'Reservation not found.']));
+
+            $data['amount'] = $request['RESV_RATE'];
+            $data['reservation_id'] = $request['RESV_ID'];
+        }
 
         $result = $this->PaymentRepository->createPaymentIntent($user, $data);
         return $this->respond($result);
@@ -136,13 +178,32 @@ class PaymentController extends BaseController
         ]);
 
         if ($meta_data->model == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
-            if (!empty($this->LaundryAmenitiesRepository->orderById($meta_data->model_id)))
-                $this->LaundryAmenitiesRepository->updateOrderById([
-                    'LAO_ID' => $meta_data->model_id,
-                    'LAO_PAYMENT_STATUS' => 'Paid',
-                    'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
-                    'LAO_UPDATED_BY' => $meta_data->user_id,
-                ]);
+            $this->LaundryAmenitiesRepository->updateOrderById([
+                'LAO_ID' => $meta_data->model_id,
+                'LAO_PAYMENT_STATUS' => 'Paid',
+                'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
+                'LAO_UPDATED_BY' => $meta_data->user_id,
+            ]);
+        } else if ($meta_data->model == 'FLXY_CONCIERGE_REQUESTS') {
+            $this->ConciergeRepository->updateConciergeRequestById([
+                'CR_ID' => $meta_data->model_id,
+                'CR_PAYMENT_STATUS' => 'Paid',
+                'CR_UPDATED_AT' => date('Y-m-d H:i:s'),
+                'CR_UPDATED_BY' => $meta_data->user_id,
+            ]);
+        } else if ($meta_data->model == 'FLXY_TRANSPORT_REQUESTS') {
+            $this->TransportRequestRepository->updateTransportRequestById([
+                'TR_ID' => $meta_data->model_id,
+                'TR_PAYMENT_STATUS' => 'Paid',
+                'TR_UPDATED_AT' => date('Y-m-d H:i:s'),
+                'TR_UPDATED_BY' => $meta_data->user_id,
+            ]);
+        } else if ($meta_data->model == 'FLXY_RESERVATION') {
+            $this->ReservationRepository->updateReservation([
+                'RESV_PAYMENT_STATUS' => 'Paid',
+                'RESV_UPDATE_DT' => date('Y-m-d H:i:s'),
+                'RESV_UPDATE_UID' => $meta_data->user_id,
+            ], "RESV_ID = {$meta_data->model_id}");
         }
     }
 

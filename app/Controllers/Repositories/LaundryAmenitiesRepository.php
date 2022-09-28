@@ -66,22 +66,19 @@ class LaundryAmenitiesRepository extends BaseController
         $customer_id = $user['USR_CUST_ID'];
         $total_payable = 0;
 
-        foreach ($data['products'] as $product) {
-            $pr = $this->Product->find($product->id);
+        foreach ($data['products'] as $index => $product) {
+            $pr = $this->Product->find($product['id']);
             if (empty($pr))
                 return responseJson(404, true, ['msg' => 'Invalid Product']);
 
             if ($pr['PR_QUANTITY'] == 0)
                 return responseJson(202, true, ['msg' => "{$pr['PR_NAME']} is out of stock."]);
-            else if ($product->quantity > $pr['PR_QUANTITY'])
+            else if ($product['quantity'] > $pr['PR_QUANTITY'])
                 return responseJson(202, true, ['msg' => "We have {$pr['PR_QUANTITY']} {$pr['PR_NAME']} left in stock. So you can order {$pr['PR_QUANTITY']} {$pr['PR_NAME']} only."]);
 
-            $pr['PR_QUANTITY'] = $pr['PR_QUANTITY'] - $product->quantity;
-            $this->Product->save($pr);
-
-            $product->expiry_date = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')) + ($pr['PR_ESCALATED_HOURS'] * 60 * 60) + ($pr['PR_ESCALATED_MINS'] * 60));
-            $product->amount = $product->quantity * $pr['PR_PRICE'];
-            $total_payable += ($product->quantity * $pr['PR_PRICE']);
+            $data['products'][$index]['expiry_date'] = date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s')) + ($pr['PR_ESCALATED_HOURS'] * 60 * 60) + ($pr['PR_ESCALATED_MINS'] * 60));
+            $data['products'][$index]['amount'] = $product['quantity'] * $pr['PR_PRICE'];
+            $total_payable += ($product['quantity'] * $pr['PR_PRICE']);
         }
 
         $order_id = $this->LaundryAmenitiesOrder->insert([
@@ -98,12 +95,16 @@ class LaundryAmenitiesRepository extends BaseController
             return responseJson(500, true, ['msg' => 'Unable to place order.']);
 
         foreach ($data['products'] as $product) {
+            $pr = $this->Product->find($product['id']);
+            $pr['PR_QUANTITY'] = $pr['PR_QUANTITY'] - $product['quantity'];
+            $this->Product->save($pr);
+
             $this->LaundryAmenitiesOrderDetail->insert([
                 'LAOD_ORDER_ID' => $order_id,
-                'LAOD_PRODUCT_ID' => $product->id,
-                'LAOD_QUANTITY' => $product->quantity,
-                'LAOD_AMOUNT' => $product->amount,
-                'LAOD_EXPIRY_DATETIME' => $product->expiry_date,
+                'LAOD_PRODUCT_ID' => $product['id'],
+                'LAOD_QUANTITY' => $product['quantity'],
+                'LAOD_AMOUNT' => $product['amount'],
+                'LAOD_EXPIRY_DATETIME' => $product['expiry_date'],
                 'LAOD_CREATED_BY' => $user_id,
                 'LAOD_UPDATED_BY' => $user_id
             ]);
@@ -119,5 +120,12 @@ class LaundryAmenitiesRepository extends BaseController
         }
 
         return responseJson(200, false, ['msg' => 'Order placed successfully.'], $data);
+    }
+
+    public function getLAOrders($where_condition)
+    {
+        return $this->LaundryAmenitiesOrder
+            ->where($where_condition)
+            ->findAll();
     }
 }

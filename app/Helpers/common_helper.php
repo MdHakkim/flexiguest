@@ -417,3 +417,11 @@ function isWeb()
 {
     return !str_contains(current_url(), "/api/");
 }
+
+function checkFileExists($file_path)
+{
+    // $file_path = "{$_SERVER['DOCUMENT_ROOT']}/FLEXIGUEST/{$file_path}"; // local
+    $file_path = "{$_SERVER['DOCUMENT_ROOT']}/{$file_path}"; // live
+
+    return file_exists($file_path);
+}

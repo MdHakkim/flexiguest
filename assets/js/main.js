@@ -14,6 +14,8 @@ if (document.getElementById('layout-menu')) {
   isHorizontalLayout = document.getElementById('layout-menu').classList.contains('menu-horizontal');
 }
 
+var mainUrl = document.currentScript.getAttribute('mainUrl');
+
 (function () {
   // Initialize menu
   //-----------------
@@ -25,10 +27,14 @@ if (document.getElementById('layout-menu')) {
       closeChildren: isHorizontalLayout ? true : false,
       // ? This option only works with Horizontal menu
       showDropdownOnHover: localStorage.getItem('templateCustomizer-' + templateName + '--ShowDropdownOnHover') // If value(showDropdownOnHover) is set in local storage
-        ? localStorage.getItem('templateCustomizer-' + templateName + '--ShowDropdownOnHover') === 'true' // Use the local storage value
-        : window.templateCustomizer !== undefined // If value is set in config.js
-        ? window.templateCustomizer.settings.defaultShowDropdownOnHover // Use the config.js value
-        : true // Use this if you are not using the config.js and want to set value directly from here
+        ?
+        localStorage.getItem('templateCustomizer-' + templateName + '--ShowDropdownOnHover') === 'true' // Use the local storage value
+        :
+        window.templateCustomizer !== undefined // If value is set in config.js
+        ?
+        window.templateCustomizer.settings.defaultShowDropdownOnHover // Use the config.js value
+        :
+        true // Use this if you are not using the config.js and want to set value directly from here
     });
     // Change parameter to true if you want scroll animation
     window.Helpers.scrollToActive((animate = false));
@@ -349,7 +355,7 @@ if (typeof $ !== 'undefined') {
 
     var searchToggler = $('.search-toggler'),
       searchInputWrapper = $('.search-input-wrapper'),
-      searchInput = $('.search-input'),
+      searchInput = $('.main-menu-search'),
       contentBackdrop = $('.content-backdrop');
 
     // Open search input on click of search icon
@@ -412,21 +418,25 @@ if (typeof $ !== 'undefined') {
       }
       // Search API AJAX call
       var searchData = $.ajax({
-        url: assetsPath + 'json/' + searchJson, //? Use your own search api instead
+        //url: assetsPath + 'json/' + searchJson, //? Use your own search api instead
+        url: mainUrl + '/searchMenu', //? Use your own search api instead
         dataType: 'json',
+        type: "post",
         async: false
       }).responseJSON;
       // Init typeahead on searchInput
       searchInput.each(function () {
         var $this = $(this);
         searchInput
-          .typeahead(
-            {
+          .typeahead({
               hint: false,
+              minLength: 3,
+              highlight: true,
               classNames: {
                 menu: 'tt-menu navbar-search-suggestion',
                 cursor: 'active',
-                suggestion: 'suggestion d-flex justify-content-between px-3 py-2 w-100'
+                suggestion: 'suggestion d-flex justify-content-between px-3 py-2 w-100',
+                highlight: 'mark'
               }
             },
             // ? Add/Update blocks as per need
@@ -434,17 +444,21 @@ if (typeof $ !== 'undefined') {
             {
               name: 'pages',
               display: 'name',
-              limit: 5,
-              source: filterConfig(searchData.pages),
+              limit: 150,
+              source: filterConfig(searchData),
               templates: {
-                header: '<h6 class="suggestions-header text-primary mb-0 mx-3 mt-3 pb-2">Pages</h6>',
-                suggestion: function ({ url, icon, name }) {
+                header: '<h6 class="suggestions-header text-primary mb-0 mx-3 mt-3 pb-2">Sections</h6>',
+                suggestion: function ({
+                  url,
+                  icon,
+                  name
+                }) {
                   return (
                     '<a href="' +
                     url +
                     '">' +
                     '<div>' +
-                    '<i class="bx ' +
+                    '<i class="' +
                     icon +
                     ' me-2"></i>' +
                     '<span class="align-middle">' +
@@ -454,13 +468,13 @@ if (typeof $ !== 'undefined') {
                     '</a>'
                   );
                 },
-                notFound:
-                  '<div class="not-found px-3 py-2">' +
+                notFound: '<div class="not-found px-3 py-2">' +
                   '<h6 class="suggestions-header text-primary mb-2">Pages</h6>' +
                   '<p class="py-2 mb-0"><i class="bx bx-error-circle bx-xs me-2"></i> No Results Found</p>' +
                   '</div>'
               }
             },
+            /*
             // Files
             {
               name: 'files',
@@ -537,7 +551,7 @@ if (typeof $ !== 'undefined') {
                   '<p class="py-2 mb-0"><i class="bx bx-error-circle bx-xs me-2"></i> No Results Found</p>' +
                   '</div>'
               }
-            }
+            }*/
           )
           //On typeahead result render.
           .bind('typeahead:render', function () {
