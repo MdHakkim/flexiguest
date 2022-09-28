@@ -21,6 +21,7 @@
                             <th></th>
                             <th>ID</th>
                             <th>Available</th>
+                            <th>Meal Type</th>
                             <th>Item</th>
                             <th>Image</th>
                             <th>Description</th>
@@ -56,18 +57,27 @@
                         <div class="row g-3">
                             <input type="hidden" name="id" class="form-control" />
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label"><b>Restaurants *</b></label>
                                 <select name="MI_RESTAURANT_ID" class="select2 form-select">
-                                    <?php foreach ($restaurants as $restaurants) { ?>
-                                        <option value="<?= $restaurants['RE_ID'] ?>"><?= $restaurants['RE_RESTAURANT'] ?></option>
+                                    <?php foreach ($restaurants as $restaurant) { ?>
+                                        <option value="<?= $restaurant['RE_ID'] ?>"><?= $restaurant['RE_RESTAURANT'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label class="form-label"><b>Category *</b></label>
                                 <select name="MI_MENU_CATEGORY_ID" class="select2 form-select">
+                                </select>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label"><b>Meal Type *</b></label>
+                                <select name="MI_MEAL_TYPE_ID" class="select2 form-select">
+                                    <?php foreach ($meal_types as $meal_type) { ?>
+                                        <option value="<?= $meal_type['MT_ID'] ?>"><?= $meal_type['MT_TYPE'] ?></option>
+                                    <?php } ?>
                                 </select>
                             </div>
 
@@ -174,6 +184,9 @@
                     }
                 },
                 {
+                    data: 'MT_TYPE'
+                },
+                {
                     data: 'MI_ITEM'
                 },
                 {
@@ -257,7 +270,7 @@
                 width: "15%"
             }],
             "order": [
-                [6, "asc"]
+                [1, "desc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',

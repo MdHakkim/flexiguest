@@ -126,12 +126,15 @@ class RestaurantController extends BaseController
         return $this->respond($result);
     }
 
+    /** ------------------------------Menu Item------------------------------ */ 
+
     public function menuItem()
     {
         $data['title'] = getMethodName();
         $data['session'] = session();
 
         $data['restaurants'] = $this->RestaurantRepository->allRestaurants();
+        $data['meal_types'] = $this->RestaurantRepository->allMealTypes();
 
         return view('frontend/restaurant/menu_item', $data);
     }
@@ -187,6 +190,60 @@ class RestaurantController extends BaseController
         $result = $this->RestaurantRepository->menuCategoriesByRestaurant($restaurant_id);
 
         return $this->respond(responseJson(200, false, ['msg' => 'list'], $result));
+    }
+    
+    /** ------------------------------Meal Type------------------------------ */ 
+    public function mealType()
+    {
+        $data['title'] = getMethodName();
+        $data['session'] = session();
+
+        return view('frontend/restaurant/meal_type', $data);
+    }
+
+    public function allMealType()
+    {
+        $this->RestaurantRepository->allMealType();
+    }
+
+    public function storeMealType()
+    {
+        $user_id = session('USR_ID');
+
+        $data = $this->request->getPost();
+        if($this->request->getFile('MT_IMAGE_URL'))
+            $data['MT_IMAGE_URL'] = $this->request->getFile('MT_IMAGE_URL');
+
+        if (!$this->validate($this->RestaurantRepository->mealTypeValidationRules($data)))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+        
+        $result = $this->RestaurantRepository->storeMealType($user_id, $data);
+        return $this->respond($result);
+    }
+
+    public function editMealType()
+    {
+        $id = $this->request->getPost('id');
+
+        $meal_type = $this->RestaurantRepository->mealTypeById($id);
+
+        if ($meal_type)
+            return $this->respond($meal_type);
+
+        return $this->respond(responseJson(404, true, ['msg' => "Meal Type not found"]));
+    }
+
+    public function deleteMealType()
+    {
+        $meal_type_id = $this->request->getPost('id');
+
+        $result = $this->RestaurantRepository->deleteMealType($meal_type_id);
+
+        $result = $result
+            ? responseJson(200, false, ['msg' => "Meal Type deleted successfully."])
+            : responseJson(500, true, ['msg' => "Meal Type not deleted"]);
+
+        return $this->respond($result);
     }
 
     /** ------------------------------API------------------------------ */ 

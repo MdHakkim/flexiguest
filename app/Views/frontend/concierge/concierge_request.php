@@ -47,8 +47,8 @@
                             <th></th>
                             <th>ID</th>
                             <th>Status</th>
-                            <th>Payment Method</th>
                             <th>Payment Status</th>
+                            <th>Payment Method</th>
                             <th>Offer</th>
                             <th>Guest Name</th>
                             <th>Guest Phone</th>

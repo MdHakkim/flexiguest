@@ -4,6 +4,7 @@ namespace App\Controllers\Repositories;
 
 use App\Controllers\BaseController;
 use App\Libraries\ServerSideDataTable;
+use App\Models\MealType;
 use App\Models\MenuCategory;
 use App\Models\MenuItem;
 use App\Models\Restaurant;
@@ -16,12 +17,14 @@ class RestaurantRepository extends BaseController
     private $Restaurant;
     private $MenuCategory;
     private $MenuItem;
+    private $MealType;
 
     public function __construct()
     {
         $this->Restaurant = new Restaurant();
         $this->MenuCategory = new MenuCategory();
         $this->MenuItem = new MenuItem();
+        $this->MealType = new MealType();
     }
 
     public function restaurantValidationRules($data)
@@ -178,6 +181,7 @@ class RestaurantRepository extends BaseController
         $rules = [
             'MI_RESTAURANT_ID' => ['label' => 'restaurant', 'rules' => 'required', 'errors' => ['required' => 'Please select a restaurant.']],
             'MI_MENU_CATEGORY_ID' => ['label' => 'category', 'rules' => 'required', 'errors' => ['required' => 'Please select a category.']],
+            'MI_MEAL_TYPE_ID' => ['label' => 'meal type', 'rules' => 'required', 'errors' => ['required' => 'Please select a meal type.']],
             'MI_ITEM' => ['label' => 'item', 'rules' => 'required'],
             'MI_PRICE' => ['label' => 'price', 'rules' => 'required'],
             'MI_IS_AVAILABLE' => ['label' => 'available', 'rules' => 'required', 'errors' => ['required' => 'Please select availability.']],
@@ -195,8 +199,8 @@ class RestaurantRepository extends BaseController
     public function allMenuItem()
     {
         $mine = new ServerSideDataTable();
-        $tableName = 'FLXY_MENU_ITEMS left join FLXY_RESTAURANTS on MI_RESTAURANT_ID = RE_ID left join FLXY_MENU_CATEGORIES on MI_MENU_CATEGORY_ID = MC_ID';
-        $columns = 'MI_ID,MI_RESTAURANT_ID,MI_MENU_CATEGORY_ID,MI_ITEM,MI_IMAGE_URL,MI_PRICE,MI_IS_AVAILABLE,MI_SEQUENCE,MI_DESCRIPTION,MI_CREATED_AT,RE_RESTAURANT,MC_CATEGORY';
+        $tableName = 'FLXY_MENU_ITEMS left join FLXY_RESTAURANTS on MI_RESTAURANT_ID = RE_ID left join FLXY_MENU_CATEGORIES on MI_MENU_CATEGORY_ID = MC_ID left join FLXY_MEAL_TYPES on MI_MEAL_TYPE_ID = MT_ID';
+        $columns = 'MI_ID,MI_RESTAURANT_ID,MI_MENU_CATEGORY_ID,MI_MEAL_TYPE_ID,MI_ITEM,MI_IMAGE_URL,MI_PRICE,MI_IS_AVAILABLE,MI_SEQUENCE,MI_DESCRIPTION,MI_CREATED_AT,RE_RESTAURANT,MC_CATEGORY,MT_TYPE';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -253,6 +257,84 @@ class RestaurantRepository extends BaseController
         return $this->MenuCategory->where('MC_RESTAURANT_ID', $restaurant_id)->findAll();
     }
 
+    /** ------------------------------Meal Type------------------------------ */
+    public function mealTypeValidationRules($data)
+    {
+        $rules = [
+            'MT_TYPE' => ['label' => 'meal type', 'rules' => 'required'],
+        ];
+
+        if (empty($data['id']) || !empty($data['MT_IMAGE_URL']))
+            $rules['MT_IMAGE_URL'] = [
+                'label' => 'meal type image',
+                'rules' => ['uploaded[MT_IMAGE_URL]', 'mime_in[MT_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MT_IMAGE_URL,5048]']
+            ];
+
+        return $rules;
+    }
+
+    public function allMealType()
+    {
+        $mine = new ServerSideDataTable();
+        $tableName = 'FLXY_MEAL_TYPES';
+        $columns = 'MT_ID,MT_TYPE,MT_IMAGE_URL,MT_CREATED_AT';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+    public function mealTypeById($id)
+    {
+        return $this->MealType->find($id);
+    }
+
+    public function storeMealType($user_id, $data)
+    {
+        $id = $data['id'];
+        unset($data['id']);
+
+        if (!empty($data['MT_IMAGE_URL'])) {
+            $image = $data['MT_IMAGE_URL'];
+            $image_name = $image->getName();
+            $directory = "assets/Uploads/restaurant/menu_type_images/";
+
+            $response = documentUpload($image, $image_name, $user_id, $directory);
+
+            if ($response['SUCCESS'] != 200)
+                return responseJson(500, true, ['msg' => 'image not uploaded']);
+
+            $data['MT_IMAGE_URL'] = $directory . $response['RESPONSE']['OUTPUT'];
+        }
+
+        if (empty($id)) {
+            $data['MT_CREATED_BY'] = $data['MT_UPDATED_BY'] = $user_id;
+            $response = $this->MealType->insert($data);
+        } else {
+            $data['MT_UPDATED_BY'] = $user_id;
+            $response = $this->MealType->update($id, $data);
+        }
+
+        if (!$response)
+            return responseJson(500, false, ['msg' => "db insert/update not successful"]);
+
+        if (empty($id))
+            $msg = 'Meal Type has been created successflly.';
+        else
+            $msg = 'Meal Type has been updated successflly.';
+
+        return responseJson(200, false, ['msg' => $msg]);
+    }
+
+    public function deleteMealType($meal_type_id)
+    {
+        return $this->MealType->delete($meal_type_id);
+    }
+
+    public function allMealTypes()
+    {
+        return $this->MealType->findAll();
+    }
+
+    /** ------------------------------API------------------------------ */
     public function menuCategories()
     {
         return $this->MenuCategory->findAll();

@@ -759,6 +759,14 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('edit-menu-category', 'RestaurantController::editMenuCategory');
             $routes->delete('delete-menu-category', 'RestaurantController::deleteMenuCategory');
         });
+        
+        $routes->group('meal-type', function ($routes) {
+            $routes->get('', 'RestaurantController::mealType');
+            $routes->post('all-meal-type', 'RestaurantController::allMealType');
+            $routes->post('store-meal-type', 'RestaurantController::storeMealType');
+            $routes->post('edit-meal-type', 'RestaurantController::editMealType');
+            $routes->delete('delete-meal-type', 'RestaurantController::deleteMealType');
+        });
 
         $routes->group('menu-item', function ($routes) {
             $routes->get('', 'RestaurantController::menuItem');
