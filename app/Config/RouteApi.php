@@ -183,6 +183,7 @@ $routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' =
 /*****************************  GUEST *****************************/
 $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('restaurant', function ($routes) {
+        $routes->get("main-screen", "RestaurantController::mainScreen");
         $routes->get("all-restaurants", "RestaurantController::allRestaurants");
         $routes->get("menu-categories", "RestaurantController::menuCategories");
     });

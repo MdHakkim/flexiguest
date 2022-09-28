@@ -331,7 +331,9 @@ class RestaurantRepository extends BaseController
 
     public function allMealTypes()
     {
-        return $this->MealType->findAll();
+        return $this->MealType
+            ->select("FLXY_MEAL_TYPES.*, (select count(MI_ID) from FLXY_MENU_ITEMS where MI_MEAL_TYPE_ID = MT_ID) as TYPE_COUNT")
+            ->findAll();
     }
 
     /** ------------------------------API------------------------------ */

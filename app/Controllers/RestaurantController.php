@@ -260,4 +260,12 @@ class RestaurantController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'categories'], $result));
     }
+
+    public function mainScreen()
+    {
+        $data['meal_types'] = $this->RestaurantRepository->allMealTypes();
+        $data['menu_categories'] = $this->RestaurantRepository->menuCategories();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'main screen'], $data));
+    }
 }
