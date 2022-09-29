@@ -1369,7 +1369,8 @@ function docUploadClik(param, customer_id) {
                     if (filePath != '') {
                         var arrayPath = filePath.split(",");
                         $.each(arrayPath, function(i) {
-                            $('.previewClass').append(`
+                            if(arrayPath[i].includes('.jpg') || arrayPath[i].includes('.jpeg') || arrayPath[i].includes('.png')){
+                                $('.previewClass').append(`
                                     <span id="vaccinePreview">
                                         <span id="${arrayPath[i]}" class="vaccdelete">
                                             <i class="fa-solid fa-xmark"></i>
@@ -1377,6 +1378,18 @@ function docUploadClik(param, customer_id) {
                                         <img src="<?= $folderPath . '/UserDocuments/vaccination/' ?>${arrayPath[i]}" 
                                         onClick="displayImagePopup('<?= $folderPath . '/UserDocuments/vaccination/' ?>${arrayPath[i]}')" id="">
                                     </span>`);
+                            } else {
+                                $('.previewClass').append(`
+                                    <span id="vaccinePreview">
+                                        <span id="${arrayPath[i]}" class="vaccdelete">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </span>
+
+                                        <a href="<?= $folderPath . '/UserDocuments/vaccination/' ?>${arrayPath[i]}" target="_blank">
+                                            <img src="<?=base_url('assets/img/icons/misc/pdf.png')?>"/>
+                                        </a>
+                                    </span>`);
+                            }
                         });
                     }
                     $('#VACC_DOC_SAVED').val(filePath);
