@@ -265,6 +265,11 @@ class RestaurantController extends BaseController
     {
         $data['meal_types'] = $this->RestaurantRepository->allMealTypes();
         $data['menu_categories'] = $this->RestaurantRepository->menuCategories();
+        $data['restaurants'] = $this->RestaurantRepository->allRestaurants();
+
+        foreach($data['restaurants'] as $index => $restaurant) {
+            $data['restaurants'][$index]['menu_items'] = $this->RestaurantRepository->getMenuItem("MI_RESTAURANT_ID = {$restaurant['RE_ID']}");
+        }
 
         return $this->respond(responseJson(200, false, ['msg' => 'main screen'], $data));
     }
