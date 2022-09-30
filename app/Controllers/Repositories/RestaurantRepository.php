@@ -389,20 +389,20 @@ class RestaurantRepository extends BaseController
     {
         $data['RO_TOTAL_PAYABLE'] = 0;
         $data['RO_CUSTOMER_ID'] = $user['USR_CUST_ID'];
-        
+
         $items = $data['ITEMS'];
         unset($data['ITEMS']);
 
-        foreach($items as $index => $item) {
+        foreach ($items as $index => $item) {
             $menu_item = $this->menuItemById($item['MI_ID']);
-            
-            if(empty($menu_item))
+
+            if (empty($menu_item))
                 return responseJson(202, true, ['msg' => "Item is not available."]);
-                
-            if($menu_item['MI_IS_AVAILABLE'] == 0)
+
+            if ($menu_item['MI_IS_AVAILABLE'] == 0)
                 return responseJson(202, true, ['msg' => "{$menu_item['MI_ITEM']} is not available."]);
-            
-            if(empty($item['QUANTITY']) || $item['QUANTITY'] <= 0)
+
+            if (empty($item['QUANTITY']) || $item['QUANTITY'] <= 0)
                 return responseJson(202, true, ['msg' => "{$menu_item['MI_ITEM']}'s quantity should be greater than zero."]);
 
             $items[$index]['AMOUNT'] = $item['QUANTITY'] * $menu_item['MI_PRICE'];
@@ -411,10 +411,10 @@ class RestaurantRepository extends BaseController
 
         $data['RO_CREATED_BY'] = $data['RO_UPDATED_BY'] = $user['USR_ID'];
         $order_id = $this->createUpdateRestaurantOrder($data);
-        if(!$order_id) 
+        if (!$order_id)
             return responseJson(202, true, ['msg' => "Unable to create order"]);
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $item_data = [
                 'ROD_ORDER_ID' => $order_id,
                 'ROD_MENU_ITEM_ID' => $item['MI_ID'],
@@ -441,5 +441,19 @@ class RestaurantRepository extends BaseController
     public function restaurantOrderById($id)
     {
         return $this->RestaurantOrder->find($id);
+    }
+
+    public function orderList($user)
+    {
+        $customer_id = $user['USR_CUST_ID'];
+
+        $orders = $this->RestaurantOrder->where('RO_CUSTOMER_ID', $customer_id)->findAll();
+        foreach ($orders as $index => $order) {
+            $orders[$index]['order_details'] = $this->RestaurantOrderDetail
+                                                    ->join('FLXY_MENU_ITEMS', 'ROD_MENU_ITEM_ID = MI_ID', 'left')
+                                                    ->where('ROD_ORDER_ID', $order['RO_ID'])->findAll();
+        }
+
+        return $orders;
     }
 }

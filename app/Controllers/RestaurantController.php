@@ -294,4 +294,12 @@ class RestaurantController extends BaseController
 
         return $this->respond($result);
     }
+
+    public function orderList()
+    {
+        $user = $this->request->user;
+
+        $result = $this->RestaurantRepository->orderList($user);
+        return $this->respond(responseJson(200, false, ['msg' => 'order list'], $result));
+    }
 }
