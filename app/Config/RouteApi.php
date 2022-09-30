@@ -186,6 +186,7 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
         $routes->get("main-screen", "RestaurantController::mainScreen");
         $routes->get("all-restaurants", "RestaurantController::allRestaurants");
         $routes->get("menu-categories", "RestaurantController::menuCategories");
+        $routes->post("place-order", "RestaurantController::placeOrder");
     });
 
     $routes->group('concierge', function ($routes) {

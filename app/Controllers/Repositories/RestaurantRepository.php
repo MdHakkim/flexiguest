@@ -8,6 +8,8 @@ use App\Models\MealType;
 use App\Models\MenuCategory;
 use App\Models\MenuItem;
 use App\Models\Restaurant;
+use App\Models\RestaurantOrder;
+use App\Models\RestaurantOrderDetail;
 use CodeIgniter\API\ResponseTrait;
 
 class RestaurantRepository extends BaseController
@@ -18,6 +20,8 @@ class RestaurantRepository extends BaseController
     private $MenuCategory;
     private $MenuItem;
     private $MealType;
+    private $RestaurantOrder;
+    private $RestaurantOrderDetail;
 
     public function __construct()
     {
@@ -25,6 +29,8 @@ class RestaurantRepository extends BaseController
         $this->MenuCategory = new MenuCategory();
         $this->MenuItem = new MenuItem();
         $this->MealType = new MealType();
+        $this->RestaurantOrder = new RestaurantOrder();
+        $this->RestaurantOrderDetail = new RestaurantOrderDetail();
     }
 
     public function restaurantValidationRules($data)
@@ -345,5 +351,95 @@ class RestaurantRepository extends BaseController
     public function getMenuItem($where_condition)
     {
         return $this->MenuItem->where($where_condition)->findAll();
+    }
+
+    /** ***************Place Order*************** */
+    public function placeOrderValidationRules()
+    {
+        $rules = [
+            'ITEMS' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please add atleast one item',
+                ]
+            ],
+            'RO_PAYMENT_METHOD' => [
+                'label' => 'payment method',
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select a payment method.'
+                ]
+            ]
+        ];
+
+        return $rules;
+    }
+
+    public function createUpdateRestaurantOrder($data)
+    {
+        return $this->RestaurantOrder->save($data);
+    }
+
+    public function createUpdateOrderDetail($data)
+    {
+        return $this->RestaurantOrderDetail->save($data);
+    }
+
+    public function placeOrder($user, $data)
+    {
+        $data['RO_TOTAL_PAYABLE'] = 0;
+        $data['RO_CUSTOMER_ID'] = $user['USR_CUST_ID'];
+        
+        $items = $data['ITEMS'];
+        unset($data['ITEMS']);
+
+        foreach($items as $index => $item) {
+            $menu_item = $this->menuItemById($item['MI_ID']);
+            
+            if(empty($menu_item))
+                return responseJson(202, true, ['msg' => "Item is not available."]);
+                
+            if($menu_item['MI_IS_AVAILABLE'] == 0)
+                return responseJson(202, true, ['msg' => "{$menu_item['MI_ITEM']} is not available."]);
+            
+            if(empty($item['QUANTITY']) || $item['QUANTITY'] <= 0)
+                return responseJson(202, true, ['msg' => "{$menu_item['MI_ITEM']}'s quantity should be greater than zero."]);
+
+            $items[$index]['AMOUNT'] = $item['QUANTITY'] * $menu_item['MI_PRICE'];
+            $data['RO_TOTAL_PAYABLE'] += $item['QUANTITY'] * $menu_item['MI_PRICE'];
+        }
+
+        $data['RO_CREATED_BY'] = $data['RO_UPDATED_BY'] = $user['USR_ID'];
+        $order_id = $this->createUpdateRestaurantOrder($data);
+        if(!$order_id) 
+            return responseJson(202, true, ['msg' => "Unable to create order"]);
+
+        foreach($items as $item) {
+            $item_data = [
+                'ROD_ORDER_ID' => $order_id,
+                'ROD_MENU_ITEM_ID' => $item['MI_ID'],
+                'ROD_QUANTITY' => $item['QUANTITY'],
+                'ROD_AMOUNT' => $item['AMOUNT'],
+            ];
+
+            $item_data['ROD_CREATED_BY'] = $item_data['ROD_UPDATED_BY'] = $user['USR_ID'];
+            $this->createUpdateOrderDetail($item_data);
+        }
+
+        if ($data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
+            $data = [
+                'amount' => $data['RO_TOTAL_PAYABLE'],
+                'model' => 'FLXY_RESTAURANT_ORDERS',
+                'model_id' => $order_id,
+                'reservation_id' => null,
+            ];
+        }
+
+        return responseJson(200, false, ['msg' => 'Order Placed successfully.'], $data);
+    }
+
+    public function restaurantOrderById($id)
+    {
+        return $this->RestaurantOrder->find($id);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Controllers\Repositories\PaymentRepository;
 use App\Controllers\Repositories\RestaurantRepository;
 use CodeIgniter\API\ResponseTrait;
 
@@ -11,10 +12,12 @@ class RestaurantController extends BaseController
     use ResponseTrait;
 
     private $RestaurantRepository;
+    private $PaymentRepository;
 
     public function __construct()
     {
         $this->RestaurantRepository = new RestaurantRepository();
+        $this->PaymentRepository = new PaymentRepository();
     }
 
     public function Restaurant()
@@ -272,5 +275,23 @@ class RestaurantController extends BaseController
         }
 
         return $this->respond(responseJson(200, false, ['msg' => 'main screen'], $data));
+    }
+
+    public function placeOrder()
+    {
+        $user = $this->request->user;
+
+        $data = json_decode(json_encode($this->request->getVar()), true);
+
+        if (!$this->validate($this->RestaurantRepository->placeOrderValidationRules($data)))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
+        $result = $this->RestaurantRepository->placeOrder($user, $data);
+        if ($result['SUCCESS'] == 200 && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
+            $data = $result['RESPONSE']['OUTPUT'];
+            $result = $this->PaymentRepository->createPaymentIntent($user, $data);
+        }
+
+        return $this->respond($result);
     }
 }

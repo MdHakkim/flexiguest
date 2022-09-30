@@ -6,6 +6,7 @@ use App\Controllers\Repositories\ConciergeRepository;
 use App\Controllers\Repositories\LaundryAmenitiesRepository;
 use App\Controllers\Repositories\PaymentRepository;
 use App\Controllers\Repositories\ReservationRepository;
+use App\Controllers\Repositories\RestaurantRepository;
 use App\Controllers\Repositories\TransportRequestRepository;
 use CodeIgniter\API\ResponseTrait;
 
@@ -19,6 +20,7 @@ class PaymentController extends BaseController
     private $ConciergeRepository;
     private $TransportRequestRepository;
     private $ReservationRepository;
+    private $RestaurantRepository;
 
     public function __construct()
     {
@@ -27,6 +29,7 @@ class PaymentController extends BaseController
         $this->ConciergeRepository = new ConciergeRepository();
         $this->TransportRequestRepository = new TransportRequestRepository();
         $this->ReservationRepository = new ReservationRepository();
+        $this->RestaurantRepository = new RestaurantRepository();
     }
 
     public function createPaymentIntent()
@@ -65,6 +68,14 @@ class PaymentController extends BaseController
 
             $data['amount'] = $request['RESV_RATE'];
             $data['reservation_id'] = $request['RESV_ID'];
+        } else if ($data['model'] == 'FLXY_RESTAURANT_ORDERS') {
+
+            $request = $this->RestaurantRepository->restaurantOrderById($data['model_id']);
+            if (empty($request))
+                return $this->respond(responseJson(404, true, ['msg' => 'Order not found.']));
+
+            $data['amount'] = $request['RO_TOTAL_PAYABLE'];
+            $data['reservation_id'] = null;
         }
 
         $result = $this->PaymentRepository->createPaymentIntent($user, $data);
@@ -178,6 +189,7 @@ class PaymentController extends BaseController
         ]);
 
         if ($meta_data->model == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
+
             $this->LaundryAmenitiesRepository->updateOrderById([
                 'LAO_ID' => $meta_data->model_id,
                 'LAO_PAYMENT_STATUS' => 'Paid',
@@ -185,6 +197,7 @@ class PaymentController extends BaseController
                 'LAO_UPDATED_BY' => $meta_data->user_id,
             ]);
         } else if ($meta_data->model == 'FLXY_CONCIERGE_REQUESTS') {
+
             $this->ConciergeRepository->updateConciergeRequestById([
                 'CR_ID' => $meta_data->model_id,
                 'CR_PAYMENT_STATUS' => 'Paid',
@@ -192,6 +205,7 @@ class PaymentController extends BaseController
                 'CR_UPDATED_BY' => $meta_data->user_id,
             ]);
         } else if ($meta_data->model == 'FLXY_TRANSPORT_REQUESTS') {
+
             $this->TransportRequestRepository->updateTransportRequestById([
                 'TR_ID' => $meta_data->model_id,
                 'TR_PAYMENT_STATUS' => 'Paid',
@@ -199,11 +213,20 @@ class PaymentController extends BaseController
                 'TR_UPDATED_BY' => $meta_data->user_id,
             ]);
         } else if ($meta_data->model == 'FLXY_RESERVATION') {
+
             $this->ReservationRepository->updateReservation([
                 'RESV_PAYMENT_STATUS' => 'Paid',
                 'RESV_UPDATE_DT' => date('Y-m-d H:i:s'),
                 'RESV_UPDATE_UID' => $meta_data->user_id,
             ], "RESV_ID = {$meta_data->model_id}");
+        } else if ($meta_data->model == 'FLXY_RESTAURANT_ORDERS') {
+
+            $this->RestaurantRepository->createUpdateRestaurantOrder([
+                'RO_ID' => $meta_data->model_id,
+                'RO_PAYMENT_STATUS' => 'Paid',
+                'RO_UPDATED_AT' => date('Y-m-d H:i:s'),
+                'RO_UPDATED_BY' => $meta_data->user_id,
+            ]);
         }
     }
 
