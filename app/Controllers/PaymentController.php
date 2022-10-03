@@ -152,23 +152,6 @@ class PaymentController extends BaseController
         exit;
     }
 
-    // public function webhook()
-    // {
-    //     $data = $this->request->getVar();
-
-    //     // $this->PaymentRepository->webhook($data);
-    //     if ($data->type == 'payment_intent.processing') {
-    //     } else if ($data->type == 'payment_intent.succeeded') {
-    //         $this->paymentSucceded($data);
-    //     } else if ($data->type == 'payment_intent.canceled') {
-    //         $this->paymentCancelled($data);
-    //     } else if ($data->type == 'payment_intent.payment_failed') {
-    //     }
-
-
-    //     return $this->response->setStatusCode(200);
-    // }
-
     public function paymentSucceded($data)
     {
         $payment_obj_id = $data->id;
