@@ -89,7 +89,7 @@ class PaymentController extends BaseController
         // If you are using an endpoint defined with the API or dashboard, look in your webhook settings
         // at https://dashboard.stripe.com/webhooks
 
-        $endpoint_secret = 'whsec_KM4iN5MYtNp8DivaaTpc4qcIQKjnJjue';
+        $endpoint_secret = 'whsec_OyguR3eM6tN81b7PM3yxs8GO0LM14u3P';
         // whsec_8ea018b171cb3fbd22d77fe43124c15ac9676c9fa897a3694576aa21937a138d
 
         $payload = @file_get_contents('php://input');
