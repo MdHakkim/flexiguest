@@ -302,4 +302,14 @@ class RestaurantController extends BaseController
         $result = $this->RestaurantRepository->orderList($user);
         return $this->respond(responseJson(200, false, ['msg' => 'order list'], $result));
     }
+
+    public function addToCart()
+    {
+        $user = $this->request->user;
+
+        $data = json_decode(json_encode($this->request->getVar()), true);
+
+        $result = $this->RestaurantRepository->addToCart($user, $data);
+        return $this->respond($result);
+    }
 }
