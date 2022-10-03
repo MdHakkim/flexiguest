@@ -92,7 +92,7 @@ class PaymentController extends BaseController
         $endpoint_secret = 'whsec_KM4iN5MYtNp8DivaaTpc4qcIQKjnJjue';
 
         // $payload = @file_get_contents('php://input');
-        $payload = $this->request->getVar();
+        $payload = json_encode($this->request->getVar());
         $event = null;
 
         try {
