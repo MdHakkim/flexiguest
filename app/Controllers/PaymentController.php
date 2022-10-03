@@ -90,9 +90,10 @@ class PaymentController extends BaseController
         // at https://dashboard.stripe.com/webhooks
 
         $endpoint_secret = 'whsec_KM4iN5MYtNp8DivaaTpc4qcIQKjnJjue';
+        // whsec_8ea018b171cb3fbd22d77fe43124c15ac9676c9fa897a3694576aa21937a138d
 
-        // $payload = @file_get_contents('php://input');
-        $payload = json_encode($this->request->getVar());
+        $payload = @file_get_contents('php://input');
+        // $payload = json_encode($this->request->getVar());
         $event = null;
 
         try {
@@ -106,7 +107,7 @@ class PaymentController extends BaseController
             exit();
         }
 
-        if ($endpoint_secret) {
+        if ($endpoint_secret) { 
             // Only verify the event if there is an endpoint secret defined
             // Otherwise use the basic decoded event
             $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
