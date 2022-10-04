@@ -60,7 +60,7 @@
     <script src="<?php echo base_url('assets/vendor/libs/apex-charts/apexcharts.js') ?>"></script>
 
     <!-- Main JS -->
-    <script src="<?php echo base_url('assets/js/main.js') ?>"></script>
+    <script src="<?php echo base_url('assets/js/main.js') ?>" mainUrl="<?php echo base_url(); ?>"></script>
     <!-- Page JS -->
     <script src="<?php echo base_url('assets/js/dashboards-analytics.js') ?>"></script>
 

@@ -2852,8 +2852,10 @@ opacity: 1;
                                         <div class="col-md-4">
                                             <label for="RSV_TRACE_DEPARTMENT"
                                                 class="col-form-label col-md-5"><b>DEPARTMENT CODE *</b></label>
-                                            <select id="RSV_TRACE_DEPARTMENT" name="RSV_TRACE_DEPARTMENT"
-                                                class="select2 form-select form-select-lg"></select>
+                                                <select id="RSV_TRACE_DEPARTMENT" name="RSV_TRACE_DEPARTMENT[]" class="select2 form-select form-select-lg" data-allow-clear="true" multiple >                                  
+                                                </select> 
+                                            <!-- <select id="RSV_TRACE_DEPARTMENT" name="RSV_TRACE_DEPARTMENT"
+                                                class="select2 form-select form-select-lg"></select> -->
                                         </div>
 
                                     </div>
@@ -6807,14 +6809,14 @@ function showTraces(resvID) {
             },
 
             {
-                data: 'DEPT_CODE',
+                data: 'RSV_TRACE_DEPARTMENT',
+                
                 render: function(data, type, full, meta) {
-                    if (full['DEPT_CODE'] != null)
-                        return full['DEPT_CODE'] + ' | ' + full['DEPT_DESC'];
-                    else
-                        return '';
+                if(full['RSV_TRACE_DEPARTMENT'] != ''){
+                    return full['RSV_TRACE_DEPARTMENT'];
+                }else return '';
                 }
-            },
+            },  
             {
                 data: 'UE_FIRST_NAME',
                 render: function(data, type, full, meta) {
@@ -6840,10 +6842,12 @@ function showTraces(resvID) {
             {
                 data: 'RSV_TRACE_RESOLVED_ON',
                 render: function(data, type, full, meta) {
-                    if (full['RSV_TRACE_RESOLVED_ON'] != '1900-01-01')
+                    if(full['RSV_TRACE_RESOLVED_ON'] == null)
+                      return '';
+                    else if (full['RSV_TRACE_RESOLVED_ON'] != '1900-01-01' )
                         return full['RSV_TRACE_RESOLVED_ON']+' '+full['RSV_TRACE_RESOLVED_TIME'];
                     else
-                        return '';
+                        return "";
                 }
             },
 
@@ -6907,11 +6911,11 @@ function loadTraceDetails(TRACE_ID) {
                             '<i class="fa-solid fa-check"></i> Resolve');
                         $(".resolve-trace-detail").attr('data-rel', 1);
                     } else if (field == 'RSV_TRACE_DEPARTMENT') {
-                        $('#' + field).val(dataval).trigger('change');
+                        $("#trace-submit-form select[name='RSV_TRACE_DEPARTMENT[]']").val(JSON.parse(dataval));
+                        $("#trace-submit-form select[name='RSV_TRACE_DEPARTMENT[]']").trigger('change');
 
                     } else {
                         $('#' + field).val(dataval);
-
                     }
                 });
             });
@@ -6966,6 +6970,8 @@ $(document).on('click', '.delete-trace-detail', function() {
                             $('#RSV_TRACE_DEPARTMENT').val('');
                             $('#RSV_TRACE_TEXT').val('');
                             $('#RSV_TRACE_TIME').val('');
+                            $('#RSV_TRACE_DEPARTMENT').val('');
+                            
                             showTraces(resvID);
                         }
                     }

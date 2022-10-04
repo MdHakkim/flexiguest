@@ -642,7 +642,13 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/checkReservationExists', 'ReservationController::checkReservationExists');
     $routes->match(['post'], '/getAllVacantRooms', 'ReservationController::getAllVacantRooms');
     $routes->match(['post'], '/updateRoomAssign', 'ReservationController::updateRoomAssign');
+    $routes->get('/readNotifications', 'NotificationController::readNotifications');
+    $routes->match(['post'], '/updateNotification', 'NotificationController::updateNotification');
+    $routes->get('/showAllNotifications', 'NotificationController::showAllNotifications');
+    $routes->match(['post'], '/userNotifications', 'NotificationController::userNotifications');
+    $routes->match(['post'], '/viewAllNotification', 'NotificationController::viewAllNotification');
 
+    
 
     //Subina Code (END)  
 

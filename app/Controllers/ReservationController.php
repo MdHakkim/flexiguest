@@ -5,7 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\Reservation;
 use App\Models\ShareReservations;
-use App\Libraries\ServerSideDataTable;
+use App\Libraries\DataTables\TraceDataTable;
 
 use function PHPSTORM_META\map;
 
@@ -1058,7 +1058,7 @@ public function showPackages()
 
     public function showTraces()
     { 
-        $mine = new ServerSideDataTable(); // loads and creates instance
+        $mine = new TraceDataTable(); // loads and creates instance
         //Reservation ID 
         $RESV_ID = $this->request->getPost('TRACE_RESV_ID');
         $session_id = session_id();
@@ -1067,13 +1067,10 @@ public function showPackages()
         if($RESV_ID > 0)
         $init_cond = array("RSV_ID = " => $RESV_ID, "RSV_TRACE_STATUS = " => 1);   
         
-        $tableName = '( SELECT  RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_TIME,
-                                DEPT_CODE,DEPT_DESC,
-                                UE.USR_FIRST_NAME AS UE_FIRST_NAME,UE.USR_LAST_NAME AS UE_LAST_NAME, 
-                                UR.USR_FIRST_NAME AS UR_FIRST_NAME,UR.USR_LAST_NAME AS UR_LAST_NAME, RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_RESOLVED_TIME,RSV_TRACE_STATUS FROM
-                        FLXY_RESERVATION_TRACES INNER JOIN FLXY_DEPARTMENT ON RSV_TRACE_DEPARTMENT = DEPT_ID INNER JOIN FLXY_USERS UE ON UE.USR_ID = RSV_TRACE_ENTERED_BY LEFT JOIN FLXY_USERS UR ON UR.USR_ID = RSV_TRACE_RESOLVED_BY) TRACE_LIST';
+        $tableName = '( SELECT  RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_TIME,RSV_TRACE_DEPARTMENT,UE.USR_FIRST_NAME AS UE_FIRST_NAME,UE.USR_LAST_NAME AS UE_LAST_NAME,UR.USR_FIRST_NAME AS UR_FIRST_NAME,UR.USR_LAST_NAME AS UR_LAST_NAME, RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_RESOLVED_TIME,RSV_TRACE_STATUS FROM
+                        FLXY_RESERVATION_TRACES INNER JOIN FLXY_USERS UE ON UE.USR_ID = RSV_TRACE_ENTERED_BY LEFT JOIN FLXY_USERS UR ON UR.USR_ID = RSV_TRACE_RESOLVED_BY) TRACE_LIST';
 
-        $columns = 'RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_TIME,UE_FIRST_NAME,UE_LAST_NAME,UR_FIRST_NAME,UR_LAST_NAME,DEPT_CODE,DEPT_DESC,RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_RESOLVED_TIME,RSV_TRACE_STATUS';
+        $columns = 'RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_DEPARTMENT,RSV_TRACE_TIME,UE_FIRST_NAME,UE_LAST_NAME,UR_FIRST_NAME,UR_LAST_NAME,RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_RESOLVED_TIME,RSV_TRACE_STATUS';
         
         $mine->generate_DatatTable($tableName, $columns, $init_cond);  
         
@@ -1102,9 +1099,9 @@ public function showPackages()
         try {
             $RSV_TRACE_ID           =  $this->request->getPost('RSV_TRACE_ID');
             $RSV_ID                 =  $this->request->getPost('TRACE_RESV_ID');
-            $RSV_TRACE_DATE         =  $this->request->getPost('RSV_TRACE_DATE');
+            $RSV_TRACE_DATE         =  date('Y-m-d',strtotime($this->request->getPost('RSV_TRACE_DATE')));
             $RSV_TRACE_TIME         =  $this->request->getPost('RSV_TRACE_TIME');
-            $RSV_TRACE_DEPARTMENT   =  $this->request->getPost('RSV_TRACE_DEPARTMENT'); 
+            $RSV_TRACE_DEPARTMENT   =  json_encode($this->request->getPost('RSV_TRACE_DEPARTMENT')); 
             $RSV_TRACE_TEXT         =  $this->request->getPost('RSV_TRACE_TEXT');
                 
 

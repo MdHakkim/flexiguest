@@ -1,3 +1,10 @@
+          <style>
+
+.flex-grow-1.notification-text p{
+  margin-bottom:0px !important;padding-bottom:0px !important;
+  
+}
+          </style>
           <!-- Navbar -->
 
           <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
@@ -112,7 +119,7 @@
                       aria-expanded="false"
                     >
                       <i class="bx bx-bell bx-sm"></i>
-                      <span class="badge rounded-pill badge-notifications bg-danger">5</span>
+                      <span class="badge rounded-pill badge-notifications bg-danger"> <?= view_cell('\App\Libraries\Notification::NotificationCount') ?></span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end py-0">
                       <li class="dropdown-menu-header border-bottom">
@@ -120,7 +127,7 @@
                           <h5 class="text-body me-auto mb-0">Notification</h5>
                           <a
                             href="javascript:void(0)"
-                            class="dropdown-notifications-all text-body"
+                            class="dropdown-notifications-all text-body read-all"
                             data-bs-toggle="tooltip"
                             data-bs-placement="top"
                             title="Mark all as read"
@@ -128,219 +135,19 @@
                           ></a>
                         </div>
                       </li>
-                      <li class="dropdown-notifications-list scrollable-container">
+                      <!-- <li class="dropdown-notifications-list scrollable-container">
                         <ul class="list-group list-group-flush">
-                          <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                            <div class="d-flex">
-                              <div class="flex-shrink-0 me-3">
-                                <div class="avatar">
-                                  <img src="<?php echo base_url()?>/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
-                                </div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="mb-1">Congratulation Lettie 🎉</h6>
-                                <p class="mb-0">Won the monthly best seller gold badge</p>
-                                <small class="text-muted">1h ago</small>
-                              </div>
-                              <div class="dropdown-notifications-actions flex-shrink-0">
-                                <a href="javascript:void(0)" class="dropdown-notifications-read"
-                                  ><span class="badge badge-dot"></span
-                                ></a>
-                                <a href="javascript:void(0)" class="dropdown-notifications-archive"
-                                  ><span class="bx bx-x"></span
-                                ></a>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                            <div class="d-flex">
-                              <div class="flex-shrink-0 me-3">
-                                <div class="avatar">
-                                  <span class="avatar-initial bg-label-danger rounded-circle">CF</span>
-                                </div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="mb-1">Charles Franklin</h6>
-                                <p class="mb-0">Accepted your connection</p>
-                                <small class="text-muted">12hr ago</small>
-                              </div>
-                              <div class="dropdown-notifications-actions flex-shrink-0">
-                                <a href="javascript:void(0)" class="dropdown-notifications-read"
-                                  ><span class="badge badge-dot"></span
-                                ></a>
-                                <a href="javascript:void(0)" class="dropdown-notifications-archive"
-                                  ><span class="bx bx-x"></span
-                                ></a>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-                            <div class="d-flex">
-                              <div class="flex-shrink-0 me-3">
-                                <div class="avatar">
-                                  <img src="assets/img/avatars/2.png" alt class="w-px-40 h-auto rounded-circle" />
-                                </div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="mb-1">New Message ✉️</h6>
-                                <p class="mb-0">You have new message from Natalie</p>
-                                <small class="text-muted">1h ago</small>
-                              </div>
-                              <div class="dropdown-notifications-actions flex-shrink-0">
-                                <a href="javascript:void(0)" class="dropdown-notifications-read"
-                                  ><span class="badge badge-dot"></span
-                                ></a>
-                                <a href="javascript:void(0)" class="dropdown-notifications-archive"
-                                  ><span class="bx bx-x"></span
-                                ></a>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                            <div class="d-flex">
-                              <div class="flex-shrink-0 me-3">
-                                <div class="avatar">
-                                  <span class="avatar-initial bg-label-success rounded-circle"
-                                    ><i class="bx bx-cart"></i
-                                  ></span>
-                                </div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="mb-1">Whoo! You have new order 🛒</h6>
-                                <p class="mb-0">ACME Inc. made new order $1,154</p>
-                                <small class="text-muted">1 day ago</small>
-                              </div>
-                              <div class="dropdown-notifications-actions flex-shrink-0">
-                                <a href="javascript:void(0)" class="dropdown-notifications-read"
-                                  ><span class="badge badge-dot"></span
-                                ></a>
-                                <a href="javascript:void(0)" class="dropdown-notifications-archive"
-                                  ><span class="bx bx-x"></span
-                                ></a>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-                            <div class="d-flex">
-                              <div class="flex-shrink-0 me-3">
-                                <div class="avatar">
-                                  <img src="assets/img/avatars/9.png" alt class="w-px-40 h-auto rounded-circle" />
-                                </div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="mb-1">Application has been approved 🚀</h6>
-                                <p class="mb-0">Your ABC project application has been approved.</p>
-                                <small class="text-muted">2 days ago</small>
-                              </div>
-                              <div class="dropdown-notifications-actions flex-shrink-0">
-                                <a href="javascript:void(0)" class="dropdown-notifications-read"
-                                  ><span class="badge badge-dot"></span
-                                ></a>
-                                <a href="javascript:void(0)" class="dropdown-notifications-archive"
-                                  ><span class="bx bx-x"></span
-                                ></a>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-                            <div class="d-flex">
-                              <div class="flex-shrink-0 me-3">
-                                <div class="avatar">
-                                  <span class="avatar-initial bg-label-success rounded-circle"
-                                    ><i class="bx bx-pie-chart-alt"></i
-                                  ></span>
-                                </div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="mb-1">Monthly report is generated</h6>
-                                <p class="mb-0">July monthly financial report is generated</p>
-                                <small class="text-muted">3 days ago</small>
-                              </div>
-                              <div class="dropdown-notifications-actions flex-shrink-0">
-                                <a href="javascript:void(0)" class="dropdown-notifications-read"
-                                  ><span class="badge badge-dot"></span
-                                ></a>
-                                <a href="javascript:void(0)" class="dropdown-notifications-archive"
-                                  ><span class="bx bx-x"></span
-                                ></a>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-                            <div class="d-flex">
-                              <div class="flex-shrink-0 me-3">
-                                <div class="avatar">
-                                  <img src="assets/img/avatars/5.png" alt class="w-px-40 h-auto rounded-circle" />
-                                </div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="mb-1">Send connection request</h6>
-                                <p class="mb-0">Peter sent you connection request</p>
-                                <small class="text-muted">4 days ago</small>
-                              </div>
-                              <div class="dropdown-notifications-actions flex-shrink-0">
-                                <a href="javascript:void(0)" class="dropdown-notifications-read"
-                                  ><span class="badge badge-dot"></span
-                                ></a>
-                                <a href="javascript:void(0)" class="dropdown-notifications-archive"
-                                  ><span class="bx bx-x"></span
-                                ></a>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                            <div class="d-flex">
-                              <div class="flex-shrink-0 me-3">
-                                <div class="avatar">
-                                  <img src="assets/img/avatars/6.png" alt class="w-px-40 h-auto rounded-circle" />
-                                </div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="mb-1">New message from Jane</h6>
-                                <p class="mb-0">Your have new message from Jane</p>
-                                <small class="text-muted">5 days ago</small>
-                              </div>
-                              <div class="dropdown-notifications-actions flex-shrink-0">
-                                <a href="javascript:void(0)" class="dropdown-notifications-read"
-                                  ><span class="badge badge-dot"></span
-                                ></a>
-                                <a href="javascript:void(0)" class="dropdown-notifications-archive"
-                                  ><span class="bx bx-x"></span
-                                ></a>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-                            <div class="d-flex">
-                              <div class="flex-shrink-0 me-3">
-                                <div class="avatar">
-                                  <span class="avatar-initial bg-label-warning rounded-circle"
-                                    ><i class="bx bx-error"></i
-                                  ></span>
-                                </div>
-                              </div>
-                              <div class="flex-grow-1">
-                                <h6 class="mb-1">CPU is running high</h6>
-                                <p class="mb-0">CPU Utilization Percent is currently at 88.63%,</p>
-                                <small class="text-muted">5 days ago</small>
-                              </div>
-                              <div class="dropdown-notifications-actions flex-shrink-0">
-                                <a href="javascript:void(0)" class="dropdown-notifications-read"
-                                  ><span class="badge badge-dot"></span
-                                ></a>
-                                <a href="javascript:void(0)" class="dropdown-notifications-archive"
-                                  ><span class="bx bx-x"></span
-                                ></a>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
+                         -->
+                        
+                           <?= view_cell('\App\Libraries\Notification::ShowAll') ?>
+                        
+                        <!-- </ul>
                       </li>
                       <li class="dropdown-menu-footer border-top">
                         <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center p-3">
                           View all notifications
                         </a>
-                      </li>
+                      </li> -->
                     </ul>
                   </li>
                   <!--/ Notification -->
@@ -426,6 +233,334 @@
                 <i class="bx bx-x bx-sm search-toggler cursor-pointer"></i>
               </div>
             </div>
+           
           </nav>
 
           <!-- / Navbar -->
+          
+
+           <!-- Toast with Placements -->
+          <div class="bs-toast toast toast-placement-ex m-2"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+                data-delay="2000"
+              >
+                <div class="toast-header">
+                  <div class="fw-semibold me-auto" id="toast-header-title"></div>
+                  <small id="toast-body-time">11 mins ago</small>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="toast-body-message"></div>
+          </div>
+              <!-- Toast with Placements -->
+
+              <!-- Notification Modal window -->
+    <div class="modal fade" id="ViewAllNotificationsModal" data-backdrop="static" data-keyboard="false"
+        aria-labelledby="popModalWindowlabel">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="popModalWindowlabel">All Notifications</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="" onSubmit="return false">
+                        <div id="ViewAllNotifications" class="content">                            
+                            <div class="row g-3">                                
+                                <div class="col-md-12">
+                                    <div class="border rounded p-4 mb-3"> 
+                                        <div class="table-responsive text-nowrap">
+                                        <table id="dataTable_view1" class="dt-responsive table table-striped display nowrap" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                               
+                                                <th>Notification ID</th> 
+                                                <th>View</th> 
+                                                <th class="all">Notification Type</th>
+                                                <th>Reservation</th>    
+                                                <th class="all">Message</th>
+                                                <th class="all">Date & Time</th>
+                                                <th class="all">Status</th>
+                                            </tr>
+                                        </thead>
+                                        </table>
+                                        </div>
+                                        <br />
+                                    </div>
+                                </div>
+                                <div class="d-flex col-12 justify-content-between">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- /Modal  window -->
+
+        <!-- Modal -->
+  <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCenterTitle"></h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col mb-3 ">
+              <span class="showDetails"></span>
+             
+            </div>
+          </div>       
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+            Close
+          </button>          
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+
+  
+$(document).on('click', '#ViewAll', function() {
+ 
+
+
+  var dt_notification_table = $('#dataTable_view1'),
+      select2 = $('.select2'),
+      userView = '',
+      statusObj = {
+        1: {
+          title: 'Read',
+          class: 'bg-label-success'
+        },
+        0: {
+          title: 'Unread',
+          class: 'bg-label-secondary'
+        }
+      };
+
+  if (dt_notification_table.length) {
+    var dt_notification = dt_notification_table.DataTable({
+        'processing': true,
+        'serverSide': true,
+        'serverMethod': 'post',
+        'ajax': {
+            'url': '<?php echo base_url('/userNotifications')?>'
+        },
+        columns: [        
+          {
+            data: 'NOTIF_TRAIL_ID',
+            visible:false
+          },
+          {
+                data: null,
+                className: "text-center",
+                "orderable": false,
+                render: function(data, type, row, meta) {
+                
+                    if(data['NOTIF_TRAIL_ID'] != ''){
+                        return (
+                            '<div class="d-inline-block">' +
+                            '<a  href="javascript:;" data_sysid="' + data['NOTIF_TRAIL_ID'] +
+                            '" class="dropdown-item text-primary" onClick="viewAllNotif(' + data['NOTIF_TRAIL_ID'] +')"><i class="fa fa-eye" aria-hidden="true"></i></a>'+
+                            '</div>'
+                        );
+                    }
+                }
+            },
+          {
+            data: 'NOTIF_TY_DESC'
+          },            
+          
+          
+          {
+            data: 'NOTIFICATION_RESERVATION_ID',
+            render: function(data, type, full, meta) {                                      
+              if(full['NOTIFICATION_RESERVATION_ID'] != ''){
+                return full['NOTIFICATION_RESERVATION_ID'];
+               // return '<a href="javascript:;" onclick="viewAll(\'Reservations\','+full['NOTIFICATION_ID']+')" title="View Reservations"  rel="">'+full['NOTIFICATION_RESERVATION_ID']+'<br><span class="btn btn-sm btn-label-info">View All</span></br></a>';
+              }else return '';
+            }
+          },      
+          
+          {
+            data: 'NOTIFICATION_TEXT',
+            render: function(data, type, full, meta) {
+             if(full['NOTIFICATION_TEXT'] != ''){
+                return full['NOTIFICATION_TEXT'];
+                //return '<a href="javascript:;" onclick="viewAll(\'Messages\','+full['NOTIFICATION_ID']+')" title="View Message" rel="">'+full['NOTIFICATION_TEXT']+'<span class="btn btn-sm btn-label-info">View Message</span></a>';
+             }else return '';
+            }
+          },
+          
+          {
+            data: 'NOTIF_TRAIL_DATETIME'
+          },
+          {
+            data: 'NOTIF_TRAIL_READ_STATUS'
+          },
+         
+        ],
+        columnDefs: [{
+            width: "15%"
+        }, {
+            width: "15%"
+        },        
+        {
+            width: "10%"
+        },
+        {
+            width: "10%"
+        },
+        {
+            targets: 5,
+            width: "10%",
+            render: function(data, type, full, meta) {
+              if(full['NOTIF_TRAIL_DATETIME'] != ''){
+                var NOTIFICATION_DATE_TIME = full['NOTIF_TRAIL_DATETIME'].split(".");               
+              if(NOTIFICATION_DATE_TIME[0] == '1900-01-01 00:00:00'){
+                  return '';
+                }
+              else 
+                return NOTIFICATION_DATE_TIME[0];
+               }
+            }
+
+        },
+        {
+            targets: 6,
+            width: "10%",
+            render: function(data, type, full, meta) {
+              var $status = full['NOTIF_TRAIL_READ_STATUS'];
+              return '<span class="notifi-status-'+full['NOTIF_TRAIL_ID']+' badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';
+              
+            }
+        }],
+        "order": [
+            [0, "desc"]
+        ],
+        'createdRow': function(row, data, dataIndex) {
+          if(data['NOTIF_TRAIL_READ_STATUS'] == 0)
+            $(row).addClass('table-warning');
+
+            $(row).addClass('notifi-'+data['NOTIF_TRAIL_ID']);
+         
+        },
+
+        destroy: true,
+        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+
+    });
+  }
+  $('#ViewAllNotificationsModal').modal('show');
+  
+});
+
+
+$(document).on('click', '.read-all', function() {
+  $(".badge-notifications").html('0');
+  $(".notifi-icon-all").css('color','#ddd'); 
+  $(".dropdown-notifications-read").css('display','none'); 
+  $.ajax({
+        url: '<?php echo base_url('/readNotifications') ?>',       
+        type: "get",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },       
+        dataType: 'json',
+        success: function(respn) {
+           
+        }
+    });
+      
+});
+
+$(document).on('click', '.dropdown-notifications-item', function() {
+    var NOTIF_TRAIL_ID  = $(this).attr('rel'); 
+    $("#notifi-icon-"+ NOTIF_TRAIL_ID).css('color','#ddd'); 
+    $("#notifications-read-"+ NOTIF_TRAIL_ID).css('display','none'); 
+    $.ajax({
+        url: '<?php echo base_url('/updateNotification') ?>',       
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },   
+        data:{
+          NOTIF_TRAIL_ID:NOTIF_TRAIL_ID
+        },
+        dataType: 'json',
+        success: function(respn) {
+          if(respn != null){
+            $(".badge-notifications").html(respn.responseStatusCount);
+            $("#toast-header-title").html(respn.NOTIF_TY_ICON+ ' ' +respn.NOTIF_TY_DESC);
+            $("#toast-body-message").html(respn.NOTIFICATION_TEXT);
+            $("#toast-body-time").html(respn.NOTIFICATION_DATE_TIME);            
+            showMessage();
+          }
+
+        }
+    });
+
+  });
+function showMessage(){ 
+    // Placement Button click  
+      selectedType = "bg-secondary";
+      selectedPlacement = "top-1 end-0";
+      selectedPlacement = selectedPlacement.split(' '); 
+      toastPlacementExample = document.querySelector('.toast-placement-ex');
+      toastPlacementHeaderExample = document.querySelector('.toast-placement-ex .toast-header');
+      toastPlacementHeaderExample.classList.add(selectedType);
+      DOMTokenList.prototype.add.apply(toastPlacementExample.classList, selectedPlacement);
+      toastPlacement = new bootstrap.Toast(toastPlacementExample);
+      toastPlacement.show();
+
+    }
+
+function viewAllNotif(notificationTrailId){
+ $(".showDetails").html('');
+  $.ajax({
+        url: '<?php echo base_url('/viewAllNotification') ?>',
+        async: false,
+        type: "post",
+
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+          notificationTrailId: notificationTrailId,
+        },
+        dataType: 'json',
+        success: function(respn) {
+          $("#dataTable_view1 .notifi-"+notificationTrailId).removeClass('table-warning');
+          $(".notifi-status-"+notificationTrailId).html('Read');
+          $("#modalCenterTitle").html();
+          $(".showDetails").html(respn.reservation+' <br> '+respn.text);
+          $("#modalCenter").modal('show')
+        }
+    });
+    
+}
+
+      
+
+
+</script>
