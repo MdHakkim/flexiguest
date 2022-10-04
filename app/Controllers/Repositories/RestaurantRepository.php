@@ -351,7 +351,7 @@ class RestaurantRepository extends BaseController
         return $this->MenuCategory->findAll();
     }
 
-    public function getMenuItem($where_condition)
+    public function getMenuItems($where_condition)
     {
         return $this->MenuItem->where($where_condition)->findAll();
     }

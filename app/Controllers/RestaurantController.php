@@ -39,12 +39,12 @@ class RestaurantController extends BaseController
 
         $data = $this->request->getPost();
 
-        if($this->request->getFile('RE_IMAGE_URL'))
+        if ($this->request->getFile('RE_IMAGE_URL'))
             $data['RE_IMAGE_URL'] = $this->request->getFile('RE_IMAGE_URL');
 
         if (!$this->validate($this->RestaurantRepository->restaurantValidationRules($data)))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-        
+
         $result = $this->RestaurantRepository->storeRestaurant($user_id, $data);
         return $this->respond($result);
     }
@@ -94,12 +94,12 @@ class RestaurantController extends BaseController
         $user_id = session('USR_ID');
 
         $data = $this->request->getPost();
-        if($this->request->getFile('MC_IMAGE_URL'))
+        if ($this->request->getFile('MC_IMAGE_URL'))
             $data['MC_IMAGE_URL'] = $this->request->getFile('MC_IMAGE_URL');
 
         if (!$this->validate($this->RestaurantRepository->menuCategoryValidationRules($data)))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-        
+
         $result = $this->RestaurantRepository->storeMenuCategory($user_id, $data);
         return $this->respond($result);
     }
@@ -129,7 +129,7 @@ class RestaurantController extends BaseController
         return $this->respond($result);
     }
 
-    /** ------------------------------Menu Item------------------------------ */ 
+    /** ------------------------------Menu Item------------------------------ */
 
     public function menuItem()
     {
@@ -152,12 +152,12 @@ class RestaurantController extends BaseController
         $user_id = session('USR_ID');
 
         $data = $this->request->getPost();
-        if($this->request->getFile('MI_IMAGE_URL'))
+        if ($this->request->getFile('MI_IMAGE_URL'))
             $data['MI_IMAGE_URL'] = $this->request->getFile('MI_IMAGE_URL');
 
         if (!$this->validate($this->RestaurantRepository->menuItemValidationRules($data)))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-        
+
         $result = $this->RestaurantRepository->storeMenuItem($user_id, $data);
         return $this->respond($result);
     }
@@ -194,8 +194,8 @@ class RestaurantController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'list'], $result));
     }
-    
-    /** ------------------------------Meal Type------------------------------ */ 
+
+    /** ------------------------------Meal Type------------------------------ */
     public function mealType()
     {
         $data['title'] = getMethodName();
@@ -214,12 +214,12 @@ class RestaurantController extends BaseController
         $user_id = session('USR_ID');
 
         $data = $this->request->getPost();
-        if($this->request->getFile('MT_IMAGE_URL'))
+        if ($this->request->getFile('MT_IMAGE_URL'))
             $data['MT_IMAGE_URL'] = $this->request->getFile('MT_IMAGE_URL');
 
         if (!$this->validate($this->RestaurantRepository->mealTypeValidationRules($data)))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-        
+
         $result = $this->RestaurantRepository->storeMealType($user_id, $data);
         return $this->respond($result);
     }
@@ -249,7 +249,7 @@ class RestaurantController extends BaseController
         return $this->respond($result);
     }
 
-    /** ------------------------------API------------------------------ */ 
+    /** ------------------------------API------------------------------ */
     public function allRestaurants()
     {
         $result = $this->RestaurantRepository->allRestaurants();
@@ -270,8 +270,8 @@ class RestaurantController extends BaseController
         $data['menu_categories'] = $this->RestaurantRepository->menuCategories();
         $data['restaurants'] = $this->RestaurantRepository->allRestaurants();
 
-        foreach($data['restaurants'] as $index => $restaurant) {
-            $data['restaurants'][$index]['menu_items'] = $this->RestaurantRepository->getMenuItem("MI_RESTAURANT_ID = {$restaurant['RE_ID']}");
+        foreach ($data['restaurants'] as $index => $restaurant) {
+            $data['restaurants'][$index]['menu_items'] = $this->RestaurantRepository->getMenuItems("MI_RESTAURANT_ID = {$restaurant['RE_ID']}");
         }
 
         return $this->respond(responseJson(200, false, ['msg' => 'main screen'], $data));
@@ -311,5 +311,19 @@ class RestaurantController extends BaseController
 
         $result = $this->RestaurantRepository->addToCart($user, $data);
         return $this->respond($result);
+    }
+
+    public function getMenuItems()
+    {
+        $data = json_decode(json_encode($this->request->getVar()), true);
+
+        $where_condition = "1 = 1";
+        if (isset($data['item_ids'])) {
+            $ids = implode(",", $data['item_ids']);
+            $where_condition = "MI_ID in ($ids)";
+        }
+        $result = $this->RestaurantRepository->getMenuItems($where_condition);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'item list'], $result));
     }
 }
