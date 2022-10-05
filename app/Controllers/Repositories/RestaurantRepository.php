@@ -261,9 +261,9 @@ class RestaurantRepository extends BaseController
         return $this->MenuItem->delete($menu_item_id);
     }
 
-    public function menuCategoriesByRestaurant($restaurant_id)
+    public function menuCategoriesByRestaurant($restaurant_ids)
     {
-        return $this->MenuCategory->where('MC_RESTAURANT_ID', $restaurant_id)->findAll();
+        return $this->MenuCategory->whereIn('MC_RESTAURANT_ID', $restaurant_ids)->findAll();
     }
 
     /** ------------------------------Meal Type------------------------------ */

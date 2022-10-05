@@ -9,7 +9,7 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Menu Items</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Orders</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -56,10 +56,34 @@
                     <form id="submit-form" class="needs-validation" novalidate>
                         <div class="row g-3">
                             <input type="hidden" name="id" class="form-control" />
+                            <input type="hidden" name="RO_CUSTOMER_ID" class="form-control" />
+                            <input type="hidden" name="RO_ROOM_ID" class="form-control" />
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Reservation *</b></label>
+                                <select class="select2" name="RO_RESERVATION_ID" onchange="onChangeReservation()">
+                                    <option value="">Select Reservation</option>
+                                    <?php foreach ($reservations as $reservation) : ?>
+                                        <option value="<?= $reservation['RESV_ID'] ?>" data-customer_id="<?= $reservation['CUST_ID'] ?>" data-customer_name="<?= $reservation['CUST_FIRST_NAME'] . ' ' . $reservation['CUST_MIDDLE_NAME'] . ' ' . $reservation['CUST_LAST_NAME'] ?>" data-room_no="<?= $reservation['RESV_ROOM'] ?>" data-room_id="<?= $reservation['RM_ID'] ?>">
+
+                                            RES<?= $reservation['RESV_ID'] ?>
+                                            -
+                                            <?= $reservation['CUST_FIRST_NAME'] . ' ' . $reservation['CUST_LAST_NAME'] ?>
+                                            -
+                                            <?= $reservation['CUST_ID'] ?>
+                                        </option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Room No.</b></label>
+                                <input type="text" name="RO_ROOM_NO" class="form-control" placeholder="Room No" readonly />
+                            </div>
 
                             <div class="col-md-4">
                                 <label class="form-label"><b>Restaurants *</b></label>
-                                <select name="MI_RESTAURANT_ID" class="select2 form-select">
+                                <select name="RO_RESTAURANT_IDS[]" class="select2 form-select" multiple>
                                     <?php foreach ($restaurants as $restaurant) { ?>
                                         <option value="<?= $restaurant['RE_ID'] ?>"><?= $restaurant['RE_RESTAURANT'] ?></option>
                                     <?php } ?>
@@ -68,50 +92,62 @@
 
                             <div class="col-md-4">
                                 <label class="form-label"><b>Category *</b></label>
-                                <select name="MI_MENU_CATEGORY_ID" class="select2 form-select">
+                                <select name="RO_MENU_CATEGORY_IDS[]" class="select2 form-select" multiple>
                                 </select>
                             </div>
 
                             <div class="col-md-4">
                                 <label class="form-label"><b>Meal Type *</b></label>
-                                <select name="MI_MEAL_TYPE_ID" class="select2 form-select">
+                                <select name="RO_MEAL_TYPE_IDS[]" class="select2 form-select" multiple>
                                     <?php foreach ($meal_types as $meal_type) { ?>
                                         <option value="<?= $meal_type['MT_ID'] ?>"><?= $meal_type['MT_TYPE'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
-                                <label class="form-label"><b>Item *</b></label>
-                                <input type="text" name="MI_ITEM" class="form-control" placeholder="Item" required />
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Items *</b></label>
+                                <select name="RO_ITEMS[][id]" class="select2 form-select" multiple>
+                                </select>
                             </div>
 
-                            <div class="col-md-8">
-                                <label class="form-label" for="MI_IMAGE_URL"><b>Item Image *</b></label>
-                                <input type="file" name="MI_IMAGE_URL" id="MI_IMAGE_URL" class="form-control" />
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Total Payable *</b></label>
+                                <input type="number" name="RO_TOTAL_PAYABLE" class="form-control" required />
                             </div>
 
-                            <div class="col-md-4">
-                                <label class="form-label"><b>Price *</b></label>
-                                <input type="number" name="MI_PRICE" class="form-control" required />
+                            <div class="col-md-6 selected-items">
+                                <h5>Selected Items</h5>
+                                <div class="row items"></div>
                             </div>
 
+                            <div class="col-md-6"></div>
+
                             <div class="col-md-4">
-                                <label class="form-label"><b>Available *</b></label>
-                                <select name="MI_IS_AVAILABLE" class="form-select">
-                                    <option value="1" selected>Yes</option>
-                                    <option value="0">No</option>
+                                <label class="form-label"><b>Delivery Status</b></label>
+                                <select class="select2" name="RO_DELIVERY_STATUS">
+                                    <option>New</option>
+                                    <option>In Progress</option>
+                                    <option>Closed</option>
+                                    <option>Rejected</option>
                                 </select>
                             </div>
 
                             <div class="col-md-4">
-                                <label class="form-label">Sequence</label>
-                                <input type="number" name="MI_SEQUENCE" class="form-control" required />
+                                <label class="form-label"><b>Payment Method</b></label>
+                                <select class="select2" name="RO_PAYMENT_METHOD">
+                                    <option>Pay at Reception</option>
+                                    <option>Samsung Pay</option>
+                                    <option>Credit/Debit card</option>
+                                </select>
                             </div>
 
-                            <div class="col-md-12">
-                                <label class="form-label">Description</label>
-                                <textarea name="MI_DESCRIPTION" class="form-control" required></textarea>
+                            <div class="col-md-4">
+                                <label class="form-label"><b>Payment Status</b></label>
+                                <select class="select2" name="RO_PAYMENT_STATUS">
+                                    <option>UnPaid</option>
+                                    <option>Paid</option>
+                                </select>
                             </div>
                         </div>
                     </form>
@@ -140,15 +176,26 @@
 
 <?= $this->section("script") ?>
 <script>
+    function hideSelectedItems() {
+        $('.selected-items').hide();
+    }
+
+    function showSelectedItems() {
+        $('.selected-items').show();
+    }
+
     var form_id = "#submit-form";
 
     var compAgntMode = '';
     var linkMode = '';
 
     $(document).ready(function() {
+        hideSelectedItems();
+
         $(form_id).submit(function(e) {
             e.preventDefault();
         });
+
 
         linkMode = 'EX';
 
@@ -321,7 +368,11 @@
         $(`${form_id} input`).val('');
         $(`${form_id} textarea`).val('');
         $(`${form_id} select`).val('').trigger('change');
-        $(`${form_id} select[name='MI_IS_AVAILABLE']`).val('1');
+
+        $(`${form_id} select[name='RO_DELIVERY_STATUS']`).val('New').trigger('change');
+        $(`${form_id} select[name='RO_PAYMENT_METHOD']`).val('Pay at Reception').trigger('change');
+        $(`${form_id} select[name='RO_PAYMENT_STATUS']`).val('UnPaid').trigger('change');
+        $(`${form_id} [name='RO_TOTAL_PAYABLE']`).val(0);
     }
 
     // Show Add Rate Class Form
@@ -329,7 +380,7 @@
         resetForm();
 
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add Menu Item');
+        $('#popModalWindowlabel').html('Add Order');
 
         $('#popModalWindow').modal('show');
     }
@@ -338,14 +389,9 @@
     function submitForm() {
         hideModalAlerts();
         var fd = new FormData($(`${form_id}`)[0]);
-        fd.delete('MI_IMAGE_URL');
-
-        let files = $(`${form_id} input[name='MI_IMAGE_URL']`)[0].files;
-        if (files.length)
-            fd.append('MI_IMAGE_URL', files[0]);
 
         $.ajax({
-            url: '<?= base_url('/restaurant/menu-item/store-menu-item') ?>',
+            url: '<?= base_url('/restaurant/order/place-order') ?>',
             type: "post",
             data: fd,
             processData: false,
@@ -465,15 +511,15 @@
         });
     });
 
-    $(`${form_id} [name='MI_RESTAURANT_ID']`).change(function() {
-        let restaurant_id = $(this).val();
+    $(`${form_id} [name='RO_RESTAURANT_IDS[]']`).change(function() {
+        let restaurant_ids = $(this).val();
 
-        if (restaurant_id) {
+        if (restaurant_ids.length) {
             $.ajax({
                 url: '<?= base_url('restaurant/menu-categories-by-restaurant') ?>',
                 type: "post",
                 data: {
-                    restaurant_ids: [restaurant_id]
+                    restaurant_ids
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -487,16 +533,145 @@
                         `;
                         }
 
-                        $(`${form_id} select[name='MI_MENU_CATEGORY_ID']`).html(html);
-                        $(`${form_id} select[name='MI_MENU_CATEGORY_ID']`).trigger('change');
+                        $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).html(html);
+                        $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).trigger('change');
                     }
                 }
             });
         } else {
-            $(`${form_id} select[name='MI_MENU_CATEGORY_ID']`).html('');
-            $(`${form_id} select[name='MI_MENU_CATEGORY_ID']`).trigger('change');
+            $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).html('');
+            $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).trigger('change');
+        }
+
+    });
+
+    $(`${form_id} [name='RO_MENU_CATEGORY_IDS[]'], ${form_id} [name='RO_MEAL_TYPE_IDS[]']`).change(function() {
+        let category_ids = $(`${form_id} [name='RO_MENU_CATEGORY_IDS[]']`).val();
+        let meal_type_ids = $(`${form_id} [name='RO_MEAL_TYPE_IDS[]']`).val();
+
+        if (category_ids.length) {
+            $.ajax({
+                url: '<?= base_url('restaurant/get-menu-items') ?>',
+                type: "post",
+                data: {
+                    category_ids,
+                    meal_type_ids
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response['SUCCESS'] == 200) {
+                        let items = response['RESPONSE']['OUTPUT'];
+
+                        let html = '';
+                        for (let item of items) {
+                            html += `
+                            <option value="${item.MI_ID}" data-item="${item.MI_ITEM}" data-price="${item.MI_PRICE}" >${item.MI_ITEM} - AED ${item.MI_PRICE}</option>
+                        `;
+                        }
+
+                        $(`${form_id} select[name="RO_ITEMS[][id]"]`).html(html);
+                        $(`${form_id} select[name="RO_ITEMS[][id]"]`).trigger('change');
+                    }
+                }
+            });
+        } else {
+            $(`${form_id} select[name="RO_ITEMS[][id]"]`).html('');
+            $(`${form_id} select[name="RO_ITEMS[][id]"]`).trigger('change');
         }
     });
+
+    function calculateTotalPayable() {
+        let total_payable = 0;
+        let items = $(`${form_id} [name='RO_ITEMS[][id]'] option:selected`);
+
+        $.each(items, function(index, item) {
+            total_payable += parseFloat(item.getAttribute('data-price')) * $(`${form_id} [name='RO_ITEMS[${index}][quantity]']`).val();
+        });
+
+        $(`${form_id} [name='RO_TOTAL_PAYABLE']`).val(total_payable);
+    }
+
+    var selected_items = [];
+    var selected_item_ids = [];
+
+    $(`${form_id} [name='RO_ITEMS[][id]']`).change(function() {
+        let ids = $(this).val();
+
+        if (ids.length == 0) {
+            hideSelectedItems();
+            selected_items = [];
+            selected_item_ids = [];
+            return;
+        }
+
+        if (ids.length < selected_items.length) {
+            let remove_index = selected_item_ids.indexOf(selected_item_ids.filter(x => !ids.includes(x))[0]);
+            selected_items.splice(remove_index, 1);
+        } else {
+            showSelectedItems();
+
+            let items = $(`${form_id} [name='RO_ITEMS[][id]'] option:selected`);
+            $.each(items, function(index, item) {
+                selected_items.push({
+                    id: item.value,
+                    item: item.getAttribute('data-item'),
+                    price: item.getAttribute('data-price'),
+                    quantity: 1,
+                });
+            });
+        }
+
+        selected_item_ids = ids;
+
+        let html = '';
+        $.each(selected_items, function(index, item) {
+            html += `
+                <div class="col-md-6 mb-2">
+                    ${item.item}
+                </div>
+
+                <div class="col-md-6 mb-2">
+                    <div class="input-group">
+                        <button type="button" onclick="decreaseQuantity(${index})" class="btn btn-danger">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+
+                        <input type="text" name="RO_ITEMS[${index}][quantity]" class="form-control text-center" value="${item.quantity}" readonly />
+
+                        <button type="button" onclick="increaseQuantity(${index})" class="btn btn-success">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+        $('.selected-items .items').html(html);
+
+        calculateTotalPayable();
+    });
+
+    function decreaseQuantity(index) {
+
+    }
+
+    function increaseQuantity(index) {
+
+    }
+
+
+    function onChangeReservation() {
+        let customer_id = $(`${form_id} select[name="RO_RESERVATION_ID"]`).find(":selected").data('customer_id');
+        // let customer_name = $(`${form_id} select[name="RO_RESERVATION_ID"]`).find(":selected").data('customer_name');
+        let room_id = $(`${form_id} select[name="RO_RESERVATION_ID"]`).find(":selected").data('room_id');
+        let room_no = $(`${form_id} select[name="RO_RESERVATION_ID"]`).find(":selected").data('room_no');
+
+        $(`${form_id} input[name="RO_CUSTOMER_ID"]`).val(customer_id);
+        // $(`${form_id} input[name="RO_GUEST_NAME"]`).val(customer_name);
+        $(`${form_id} input[name="RO_ROOM_ID"]`).val(room_id);
+        $(`${form_id} input[name="RO_ROOM_NO"]`).val(room_no);
+    }
+
 
     // bootstrap-maxlength & repeater (jquery)
     $(function() {
