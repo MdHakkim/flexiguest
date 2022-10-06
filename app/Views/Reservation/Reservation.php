@@ -2792,12 +2792,10 @@ opacity: 1;
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
                     <form id="trace-submit-form" onSubmit="return false">
-                        <input type="hidden" name="TRACE_RESV_ID" id="TRACE_RESV_ID" class="form-control" />
-
+                        <input type="hidden" name="TRACE_RESV_ID" id="TRACE_RESV_ID" class="form-control" />                     
                         <div id="tracesDiv" class="content">
-
+                            <input type="hidden" name="RSV_TRACE_NOTIFICATION_ID" id="RSV_TRACE_NOTIFICATION_ID" class="form-control" />
                             <input type="hidden" name="RSV_TRACE_ID" id="RSV_TRACE_ID" class="form-control" />
                             <div class="row g-3">
                                 <div class="border rounded p-4 mb-3">
@@ -3176,11 +3174,7 @@ $(document).ready(function() {
         autoclose: true,
         
     });
-    $('#RSV_TRACE_DATE').datepicker({
-        format: 'd-M-yyyy',
-        autoclose: true,
-        
-    });
+ 
 
     //$('#RSV_TRACE_TIME').timepicker();
 
@@ -6633,10 +6627,6 @@ function getRateInfo() {
     });
 }
 
-
-
-
-
 ///////////////Traces/////////////
 
 $(document).on('click', '#traceButton', function() {
@@ -6646,7 +6636,12 @@ $(document).on('click', '#traceButton', function() {
     $("#TRACE_RESV_ID").val(reservID);
     departmentList();
     showTraces(reservID);
-    $('#RSV_TRACE_DATE').val($('#FIXD_ARRIVAL').val());
+   
+    $('#RSV_TRACE_DATE').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
+    }).datepicker("setDate", $('#FIXD_ARRIVAL').val());
+
     $.ajax({
         url: '<?php echo base_url('/getReservDetails') ?>',
         type: "post",
@@ -6664,18 +6659,21 @@ $(document).on('click', '#traceButton', function() {
             $('#TRACE_DEPARTURE').val(respn.RESV_DEPARTURE);
             $('#TRACE_ARRIVAL_DT').val(respn.RESV_ARRIVAL_DT);
             $('#TRACE_DEPARTURE_DT').val(respn.RESV_DEPARTURE);
-            $('#RESERVATION_STATUS').val(respn.RESV_STATUS);
-            $('#RSV_TRACE_DATE').val(respn.RESV_ARRIVAL_DT);
+            $('#RESERVATION_STATUS').val(respn.RESV_STATUS);  
+                  
+            $('#RSV_TRACE_DATE').datepicker({
+                format: 'd-M-yyyy',
+                autoclose: true
+            }).datepicker("setDate", respn.RESV_ARRIVAL_DT); 
+                 
+           
         }
     });
-
-
 });
-
 
 function departmentList() {
     $.ajax({
-        url: '<?php echo base_url('/departmentList') ?>',
+        url: '<?php echo base_url('/reservationDepartments') ?>',
         type: "post",
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -6691,13 +6689,13 @@ $(document).on('click', '.add-trace-detail', function() {
     departmentList();
     hideModalAlerts();
     $('.dtr-bs-modal').modal('hide');
+    
     $('#RSV_TRACE_DATE').val($('#TRACE_ARRIVAL_DT').val());
     $('#RSV_TRACE_DEPARTMENT').val('');
     $('#RSV_TRACE_TIME').val('');
     $('#RSV_TRACE_TEXT').val('');
     $('#RSV_TRACE_ID').val('');
-
-
+    $('#RSV_TRACE_DEPARTMENT').val(null).trigger('change');
 
     bootbox.dialog({
         message: "Do you want to add a new trace details?",
@@ -6754,7 +6752,6 @@ $(document).on('click', '.save-trace-detail', function() {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
                 $.each(ERROR, function(ind, data) {
-                    //console.log(data, "SDF");
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);
@@ -6764,7 +6761,6 @@ $(document).on('click', '.save-trace-detail', function() {
                     '<li>The trace has been updated</li>';
                 hideModalAlerts();
                 showModalAlert('success', alertText);
-
 
                 if (respn['RESPONSE']['OUTPUT'] != '') {
                     $('#RSV_TRACE_ID').val(respn['RESPONSE']['OUTPUT']);
@@ -6914,7 +6910,14 @@ function loadTraceDetails(TRACE_ID) {
                         $("#trace-submit-form select[name='RSV_TRACE_DEPARTMENT[]']").val(JSON.parse(dataval));
                         $("#trace-submit-form select[name='RSV_TRACE_DEPARTMENT[]']").trigger('change');
 
-                    } else {
+                    } else if(field == 'RSV_TRACE_DATE'){
+                        $('#RSV_TRACE_DATE').datepicker({
+                            format: 'd-M-yyyy',
+                            autoclose: true
+                        }).datepicker("setDate", new Date(dataval));
+                    }
+                    
+                    else {
                         $('#' + field).val(dataval);
                     }
                 });

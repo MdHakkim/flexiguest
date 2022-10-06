@@ -593,8 +593,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
 
 
-
-
+    $routes->match(['post'], '/reservationDepartments', 'ReservationController::reservationDepartments');
     $routes->match(['post'], '/updateTraces', 'ReservationController::updateTraces');
     $routes->match(['post'], '/showTraces', 'ReservationController::showTraces');
     $routes->match(['post'], '/deleteTraces', 'ReservationController::deleteTraces');

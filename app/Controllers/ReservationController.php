@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\Reservation;
 use App\Models\ShareReservations;
+use App\Libraries\ServerSideDataTable;
 use App\Libraries\DataTables\TraceDataTable;
 
 use function PHPSTORM_META\map;
@@ -1101,9 +1102,10 @@ public function showPackages()
             $RSV_ID                 =  $this->request->getPost('TRACE_RESV_ID');
             $RSV_TRACE_DATE         =  date('Y-m-d',strtotime($this->request->getPost('RSV_TRACE_DATE')));
             $RSV_TRACE_TIME         =  $this->request->getPost('RSV_TRACE_TIME');
+            $RSV_TRACE_DEPT_NOTIFI  =  $this->request->getPost('RSV_TRACE_DEPARTMENT'); 
             $RSV_TRACE_DEPARTMENT   =  json_encode($this->request->getPost('RSV_TRACE_DEPARTMENT')); 
-            $RSV_TRACE_TEXT         =  $this->request->getPost('RSV_TRACE_TEXT');
-                
+            $RSV_TRACE_TEXT         =  $this->request->getPost('RSV_TRACE_TEXT');   
+            $RSV_TRACE_NOTIFICATION_ID =  $this->request->getPost('RSV_TRACE_NOTIFICATION_ID');             
 
             $data = [
                 "RSV_ID"                  => $RSV_ID,
@@ -1136,9 +1138,51 @@ public function showPackages()
             }
            
             $return = !empty($RSV_TRACE_ID) ? $this->DB->table('FLXY_RESERVATION_TRACES')->where('RSV_TRACE_ID', $RSV_TRACE_ID)->update($data) : $this->DB->table('FLXY_RESERVATION_TRACES')->insert($data);
-
             $result = $return ? $this->responseJson("1", "0", $return, !empty($RSV_TRACE_ID) ? $RSV_TRACE_ID : $this->DB->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
+            $RSV_TRACE_ID = empty($RSV_TRACE_ID) ? $this->DB->insertID(): $RSV_TRACE_ID;
 
+            ////////  Notifications /////////////////
+
+            $data = [
+                "NOTIFICATION_TYPE"       => 4,
+                "NOTIFICATION_FROM_ID"    => session()->get('USR_ID'),
+                "NOTIFICATION_DEPARTMENT" => $RSV_TRACE_DEPARTMENT,
+                "NOTIFICATION_TO_ID"      => '',
+                "NOTIFICATION_GUEST_ID"   => '',
+                "NOTIFICATION_URL"        => '',                
+                "NOTIFICATION_RESERVATION_ID" => json_encode(array($RSV_ID)),
+                "NOTIFICATION_TEXT"       => $RSV_TRACE_TEXT,
+                "NOTIFICATION_DATE_TIME"  => $RSV_TRACE_DATE.' '.$RSV_TRACE_TIME,
+                "NOTIFICATION_READ_STATUS"=> 0,
+            ];           
+           
+            $NOTIFICATION    =  (!empty($RSV_TRACE_NOTIFICATION_ID)) ? $this->DB->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $RSV_TRACE_NOTIFICATION_ID)->update($data) : $this->DB->table('FLXY_NOTIFICATIONS')->insert($data);    
+
+            if(empty($RSV_TRACE_NOTIFICATION_ID)){
+                $NOTIFICATION_ID =  $this->DB->insertID(); 
+                $this->DB->table('FLXY_RESERVATION_TRACES')->where('RSV_TRACE_ID', $RSV_TRACE_ID)->update(['RSV_TRACE_NOTIFICATION_ID'=>$NOTIFICATION_ID]);
+            }
+            else{
+                $this->DB->table('FLXY_NOTIFICATION_TRAIL')->delete(['NOTIF_TRAIL_NOTIFICATION_ID'=>$RSV_TRACE_NOTIFICATION_ID]); 
+                $NOTIFICATION_ID = $RSV_TRACE_NOTIFICATION_ID;
+            }
+          
+
+            if((isset($RSV_TRACE_DEPT_NOTIFI) && !empty($RSV_TRACE_DEPT_NOTIFI))){
+                for($j=0; $j<count($RSV_TRACE_DEPT_NOTIFI);$j++){                       
+                    $NOTIFI['NOTIF_TRAIL_DEPARTMENT']      = $RSV_TRACE_DEPT_NOTIFI[$j];
+                    $DEPARTMENT_USERS = $this->getDepartmentUsers($RSV_TRACE_DEPT_NOTIFI[$j]);
+                    foreach($DEPARTMENT_USERS as $USERS){
+                        $NOTIFI['NOTIF_TRAIL_USER']            = $USERS['USR_ID'];
+                        $NOTIFI['NOTIF_TRAIL_NOTIFICATION_ID'] = $NOTIFICATION_ID;
+                        $NOTIFI['NOTIF_TRAIL_READ_STATUS']     = 0;
+                        $NOTIFI['NOTIF_TRAIL_DATETIME']        = $RSV_TRACE_DATE.' '.$RSV_TRACE_TIME;
+                        $return1 = $this->DB->table('FLXY_NOTIFICATION_TRAIL')->insert($NOTIFI);
+                    }                       
+                } 
+            } 
+
+            ////////  End Notifications /////////////////
 
             if(!$return)
                 $this->session->setFlashdata('error', 'There has been an error. Please try again.');
@@ -1186,6 +1230,17 @@ public function showPackages()
         }
         
     }
+
+    public function getDepartmentUsers($department){
+        $param = ['SYSID' => $department];
+        $sql = "SELECT USR_ID
+        FROM FLXY_USERS
+        WHERE USR_STATUS = '1' AND USR_DEPARTMENT=:SYSID:";
+        $response = $this->DB->query($sql, $param)->getResultArray();
+        return $response;
+    }
+
+
     public function roomPlan()
     {
         $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
@@ -1977,6 +2032,28 @@ public function getRoomStatistics(){
         } catch(\Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    public function reservationDepartments()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT DEPT_ID, DEPT_CODE, DEPT_DESC
+                FROM FLXY_DEPARTMENT";
+
+        if ($search != '') {
+            $sql .= " WHERE DEPT_DESC LIKE '%$search%'
+                    ";
+        }
+
+        $response = $this->DB->query($sql)->getResultArray();
+
+        $option = '';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['DEPT_ID'] . '">' . $row['DEPT_CODE'] . ' | ' . $row['DEPT_DESC']  . '</option>';
+        }
+
+        return $option;
     }
 
 

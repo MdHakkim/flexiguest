@@ -506,7 +506,7 @@ $(document).on('click', '.delete-record', function() {
 // Show Edit Notification 
 
 $(document).on('click', '.editNotification', function() {
-
+  $('#popModalWindowlabel').html('Edit Notification');
     $('.dtr-bs-modal').modal('hide');
     var sysid = $(this).attr('data_sysid');
     $('#popModalWindowlabel').html('Edit Notification');
