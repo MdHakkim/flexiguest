@@ -113,6 +113,8 @@ class NotificationController extends BaseController
 
             $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid;
 
+            !empty($sysid)? $this->Db->table('FLXY_NOTIFICATION_TRAIL')->delete(['NOTIF_TRAIL_NOTIFICATION_ID'=>$sysid]):''; 
+
             if(!empty($sysid) && ($NOTIFICATION_OLD_TYPE == 4 && $NOTIFICATION_TYPE != 4)){
                 $this->Db->table('FLXY_RESERVATION_TRACES')->delete(['RSV_TRACE_NOTIFICATION_ID'=>$RSV_TRACE_NOTIFICATION_ID]); 
             }
@@ -489,7 +491,6 @@ class NotificationController extends BaseController
     public  function readNotifications(){
         $UserID = session()->get('USR_ID');
         echo $response = $this->Db->table('FLXY_NOTIFICATION_TRAIL')->where('NOTIF_TRAIL_USER', $UserID)->update(['NOTIF_TRAIL_READ_STATUS'=>'1']);
-
         $this->checkAllNotificationRead($UserID);
     }
 
@@ -500,6 +501,8 @@ class NotificationController extends BaseController
         $NOTIF_TRAIL_ID = $this->request->getPost('NOTIF_TRAIL_ID');
         $response = $this->Db->table('FLXY_NOTIFICATION_TRAIL')->where('NOTIF_TRAIL_ID', $NOTIF_TRAIL_ID)->update(['NOTIF_TRAIL_READ_STATUS'=>'1']);
         $UserID = session()->get('USR_ID');
+        $this->checkAllNotificationRead($UserID);
+       
         $sqlStatusCount = "SELECT NOTIF_TRAIL_ID FROM FLXY_NOTIFICATION_TRAIL WHERE NOTIF_TRAIL_USER = $UserID AND NOTIF_TRAIL_READ_STATUS = '0'";
         $responseStatusCount = $this->Db->query($sqlStatusCount)->getNumRows();
 
@@ -600,14 +603,17 @@ class NotificationController extends BaseController
 
 
     public function checkAllNotificationRead($UserID){
-        $reservationsStatus = $this->Db->query("select NOTIF_TRAIL_READ_STATUS FROM FLXY_NOTIFICATION_TRAIL INNER JOIN FLXY_NOTIFICATIONS ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID WHERE NOTIF_TRAIL_READ_STATUS = 0 AND NOTIFICATION_FROM_ID = '$UserID'")->getNumRows();
-        if($reservationsStatus == 0)
-        $response = $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_FROM_ID', $UserID)->update(['NOTIFICATION_READ_STATUS'=>'1']);
+        $userNotifications = $this->Db->query("SELECT DISTINCT NOTIF_TRAIL_NOTIFICATION_ID FROM FLXY_NOTIFICATION_TRAIL INNER JOIN FLXY_NOTIFICATIONS ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID WHERE NOTIFICATION_FROM_ID = '$UserID'")->getResultArray(); 
+        foreach($userNotifications as $noti_id) {
+            $notification_id = $noti_id['NOTIF_TRAIL_NOTIFICATION_ID'];
+            $reservationsStatus = $this->Db->query("SELECT NOTIF_TRAIL_READ_STATUS FROM FLXY_NOTIFICATION_TRAIL INNER JOIN FLXY_NOTIFICATIONS ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID WHERE NOTIF_TRAIL_READ_STATUS = 0 AND NOTIFICATION_ID = $notification_id")->getNumRows();
+            if($reservationsStatus == 0)
+            $response = $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $notification_id)->update(['NOTIFICATION_READ_STATUS'=>'1']);
+
+        }
+       
+        
 
     }
-    
-
-
-
 
 }
