@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\Repositories\PaymentRepository;
+use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\RestaurantRepository;
 use CodeIgniter\API\ResponseTrait;
 
@@ -11,15 +12,18 @@ class RestaurantController extends BaseController
 
     use ResponseTrait;
 
+    private $ReservationRepository;
     private $RestaurantRepository;
     private $PaymentRepository;
 
     public function __construct()
     {
+        $this->ReservationRepository = new ReservationRepository();
         $this->RestaurantRepository = new RestaurantRepository();
         $this->PaymentRepository = new PaymentRepository();
     }
 
+    /** ------------------------------Restaurant------------------------------ */
     public function Restaurant()
     {
         $data['title'] = getMethodName();
@@ -74,6 +78,14 @@ class RestaurantController extends BaseController
         return $this->respond($result);
     }
 
+    public function allRestaurants()
+    {
+        $result = $this->RestaurantRepository->allRestaurants();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'restaurants'], $result));
+    }
+
+    /** ------------------------------Menu Category------------------------------ */
     public function menuCategory()
     {
         $data['title'] = getMethodName();
@@ -125,6 +137,75 @@ class RestaurantController extends BaseController
         $result = $result
             ? responseJson(200, false, ['msg' => "Menu Category deleted successfully."])
             : responseJson(500, true, ['msg' => "Menu Category not deleted"]);
+
+        return $this->respond($result);
+    }
+
+    public function menuCategoriesByRestaurant()
+    {
+        $restaurant_ids = $this->request->getVar('restaurant_ids');
+        $result = $this->RestaurantRepository->menuCategoriesByRestaurant($restaurant_ids);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'list'], $result));
+    }
+
+    public function menuCategories()
+    {
+        $result = $this->RestaurantRepository->menuCategories();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'categories'], $result));
+    }
+
+    /** ------------------------------Meal Type------------------------------ */
+    public function mealType()
+    {
+        $data['title'] = getMethodName();
+        $data['session'] = session();
+
+        return view('frontend/restaurant/meal_type', $data);
+    }
+
+    public function allMealType()
+    {
+        $this->RestaurantRepository->allMealType();
+    }
+
+    public function storeMealType()
+    {
+        $user_id = session('USR_ID');
+
+        $data = $this->request->getPost();
+        if ($this->request->getFile('MT_IMAGE_URL'))
+            $data['MT_IMAGE_URL'] = $this->request->getFile('MT_IMAGE_URL');
+
+        if (!$this->validate($this->RestaurantRepository->mealTypeValidationRules($data)))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
+        $result = $this->RestaurantRepository->storeMealType($user_id, $data);
+        return $this->respond($result);
+    }
+
+    public function editMealType()
+    {
+        $id = $this->request->getPost('id');
+
+        $meal_type = $this->RestaurantRepository->mealTypeById($id);
+
+        if ($meal_type)
+            return $this->respond($meal_type);
+
+        return $this->respond(responseJson(404, true, ['msg' => "Meal Type not found"]));
+    }
+
+    public function deleteMealType()
+    {
+        $meal_type_id = $this->request->getPost('id');
+
+        $result = $this->RestaurantRepository->deleteMealType($meal_type_id);
+
+        $result = $result
+            ? responseJson(200, false, ['msg' => "Meal Type deleted successfully."])
+            : responseJson(500, true, ['msg' => "Meal Type not deleted"]);
 
         return $this->respond($result);
     }
@@ -187,99 +268,53 @@ class RestaurantController extends BaseController
         return $this->respond($result);
     }
 
-    public function menuCategoriesByRestaurant()
+    public function getMenuItems()
     {
-        $restaurant_id = $this->request->getVar('restaurant_id');
-        $result = $this->RestaurantRepository->menuCategoriesByRestaurant($restaurant_id);
+        $data = json_decode(json_encode($this->request->getVar()), true);
 
-        return $this->respond(responseJson(200, false, ['msg' => 'list'], $result));
+        $where_condition = "1 = 1";
+        if (!empty($data['item_ids'])) {
+            $ids = implode(",", $data['item_ids']);
+            $where_condition .= " AND MI_ID in ($ids)";
+        }
+
+        if (!empty($data['category_ids'])) {
+            $ids = implode(",", $data['category_ids']);
+            $where_condition .= " AND MI_MENU_CATEGORY_ID in ($ids)";
+        }
+
+        if (!empty($data['meal_type_ids'])) {
+            $ids = implode(",", $data['meal_type_ids']);
+            $where_condition .= " AND MI_MEAL_TYPE_ID in ($ids)";
+        }
+
+        $result = $this->RestaurantRepository->getMenuItems($where_condition);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'item list'], $result));
     }
-
-    /** ------------------------------Meal Type------------------------------ */
-    public function mealType()
+    
+    /** ------------------------------Order------------------------------ */
+    public function order()
     {
         $data['title'] = getMethodName();
         $data['session'] = session();
 
-        return view('frontend/restaurant/meal_type', $data);
-    }
-
-    public function allMealType()
-    {
-        $this->RestaurantRepository->allMealType();
-    }
-
-    public function storeMealType()
-    {
-        $user_id = session('USR_ID');
-
-        $data = $this->request->getPost();
-        if ($this->request->getFile('MT_IMAGE_URL'))
-            $data['MT_IMAGE_URL'] = $this->request->getFile('MT_IMAGE_URL');
-
-        if (!$this->validate($this->RestaurantRepository->mealTypeValidationRules($data)))
-            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
-
-        $result = $this->RestaurantRepository->storeMealType($user_id, $data);
-        return $this->respond($result);
-    }
-
-    public function editMealType()
-    {
-        $id = $this->request->getPost('id');
-
-        $meal_type = $this->RestaurantRepository->mealTypeById($id);
-
-        if ($meal_type)
-            return $this->respond($meal_type);
-
-        return $this->respond(responseJson(404, true, ['msg' => "Meal Type not found"]));
-    }
-
-    public function deleteMealType()
-    {
-        $meal_type_id = $this->request->getPost('id');
-
-        $result = $this->RestaurantRepository->deleteMealType($meal_type_id);
-
-        $result = $result
-            ? responseJson(200, false, ['msg' => "Meal Type deleted successfully."])
-            : responseJson(500, true, ['msg' => "Meal Type not deleted"]);
-
-        return $this->respond($result);
-    }
-
-    /** ------------------------------API------------------------------ */
-    public function allRestaurants()
-    {
-        $result = $this->RestaurantRepository->allRestaurants();
-
-        return $this->respond(responseJson(200, false, ['msg' => 'restaurants'], $result));
-    }
-
-    public function menuCategories()
-    {
-        $result = $this->RestaurantRepository->menuCategories();
-
-        return $this->respond(responseJson(200, false, ['msg' => 'categories'], $result));
-    }
-
-    public function mainScreen()
-    {
-        $data['meal_types'] = $this->RestaurantRepository->allMealTypes();
-        $data['menu_categories'] = $this->RestaurantRepository->menuCategories();
+        $where_condition = "RESV_STATUS = 'Checked-In'";
+        $data['reservations'] = $this->ReservationRepository->allReservations($where_condition);
         $data['restaurants'] = $this->RestaurantRepository->allRestaurants();
+        $data['meal_types'] = $this->RestaurantRepository->allMealTypes();
 
-        foreach ($data['restaurants'] as $index => $restaurant) {
-            $data['restaurants'][$index]['menu_items'] = $this->RestaurantRepository->getMenuItems("MI_RESTAURANT_ID = {$restaurant['RE_ID']}");
-        }
+        return view('frontend/restaurant/order', $data);
+    }
 
-        return $this->respond(responseJson(200, false, ['msg' => 'main screen'], $data));
+    public function allOrder()
+    {
+        $this->RestaurantRepository->allOrder();
     }
 
     public function placeOrder()
     {
-        $user = $this->request->user;
+        $user = $this->request->user ?? session('user');
 
         $data = json_decode(json_encode($this->request->getVar()), true);
 
@@ -303,6 +338,46 @@ class RestaurantController extends BaseController
         return $this->respond(responseJson(200, false, ['msg' => 'order list'], $result));
     }
 
+    public function editOrder()
+    {
+        $id = $this->request->getPost('id');
+
+        $restaurant_order = $this->RestaurantRepository->restaurantOrderById($id, true);
+
+        if ($restaurant_order)
+            return $this->respond(responseJson(200, false, ['msg' => 'order'], $restaurant_order));
+
+        return $this->respond(responseJson(404, true, ['msg' => "Order not found"]));
+    }
+
+    public function deleteOrder()
+    {
+        $order_id = $this->request->getPost('id');
+
+        $result = $this->RestaurantRepository->deleteOrder($order_id);
+
+        $result = $result
+            ? responseJson(200, false, ['msg' => "Order deleted successfully."])
+            : responseJson(500, true, ['msg' => "Order not deleted"]);
+
+        return $this->respond($result);
+    }
+
+    /** ------------------------------Main Screen------------------------------ */
+    public function mainScreen()
+    {
+        $data['meal_types'] = $this->RestaurantRepository->allMealTypes();
+        $data['menu_categories'] = $this->RestaurantRepository->menuCategories();
+        $data['restaurants'] = $this->RestaurantRepository->allRestaurants();
+
+        foreach ($data['restaurants'] as $index => $restaurant) {
+            $data['restaurants'][$index]['menu_items'] = $this->RestaurantRepository->getMenuItems("MI_RESTAURANT_ID = {$restaurant['RE_ID']}");
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'main screen'], $data));
+    }
+
+    /** ------------------------------Cart------------------------------ */
     public function addToCart()
     {
         $user = $this->request->user;
@@ -311,19 +386,5 @@ class RestaurantController extends BaseController
 
         $result = $this->RestaurantRepository->addToCart($user, $data);
         return $this->respond($result);
-    }
-
-    public function getMenuItems()
-    {
-        $data = json_decode(json_encode($this->request->getVar()), true);
-
-        $where_condition = "1 = 1";
-        if (isset($data['item_ids'])) {
-            $ids = implode(",", $data['item_ids']);
-            $where_condition = "MI_ID in ($ids)";
-        }
-        $result = $this->RestaurantRepository->getMenuItems($where_condition);
-
-        return $this->respond(responseJson(200, false, ['msg' => 'item list'], $result));
     }
 }

@@ -36,6 +36,7 @@ class RestaurantRepository extends BaseController
         $this->RestaurantCart = new RestaurantCart();
     }
 
+    /** ------------------------------Restaurant------------------------------ */
     public function restaurantValidationRules($data)
     {
         $rules = [
@@ -113,6 +114,7 @@ class RestaurantRepository extends BaseController
         return $this->Restaurant->findAll();
     }
 
+    /** ------------------------------Menu Category------------------------------ */
     public function menuCategoryValidationRules($data)
     {
         $rules = [
@@ -185,6 +187,17 @@ class RestaurantRepository extends BaseController
         return $this->MenuCategory->delete($menu_category_id);
     }
 
+    public function menuCategoriesByRestaurant($restaurant_ids)
+    {
+        return $this->MenuCategory->whereIn('MC_RESTAURANT_ID', $restaurant_ids)->findAll();
+    }
+
+    public function menuCategories()
+    {
+        return $this->MenuCategory->findAll();
+    }
+
+    /** ------------------------------Menu Item------------------------------ */
     public function menuItemValidationRules($data)
     {
         $rules = [
@@ -261,9 +274,9 @@ class RestaurantRepository extends BaseController
         return $this->MenuItem->delete($menu_item_id);
     }
 
-    public function menuCategoriesByRestaurant($restaurant_id)
+    public function getMenuItems($where_condition)
     {
-        return $this->MenuCategory->where('MC_RESTAURANT_ID', $restaurant_id)->findAll();
+        return $this->MenuItem->where($where_condition)->findAll();
     }
 
     /** ------------------------------Meal Type------------------------------ */
@@ -345,22 +358,23 @@ class RestaurantRepository extends BaseController
             ->findAll();
     }
 
-    /** ------------------------------API------------------------------ */
-    public function menuCategories()
-    {
-        return $this->MenuCategory->findAll();
-    }
-
-    public function getMenuItems($where_condition)
-    {
-        return $this->MenuItem->where($where_condition)->findAll();
-    }
-
     /** ***************Place Order*************** */
     public function placeOrderValidationRules()
     {
         $rules = [
-            'ITEMS' => [
+            'RO_RESERVATION_ID' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select a reservation'
+                ]
+            ],
+            'RO_ROOM_ID' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select a reservation'
+                ]
+            ],
+            'RO_ITEMS' => [
                 'rules' => 'required',
                 'errors' => [
                     'required' => 'Please add atleast one item',
@@ -375,12 +389,25 @@ class RestaurantRepository extends BaseController
             ]
         ];
 
+        if (isWeb()) {
+            $rules['RO_CUSTOMER_ID'] = [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select a reservation'
+                ]
+            ];
+        }
+
         return $rules;
     }
 
     public function createUpdateRestaurantOrder($data)
     {
-        return $this->RestaurantOrder->save($data);
+        if (empty($data['RO_ID']))
+            return $this->RestaurantOrder->insert($data);
+
+        $this->RestaurantOrder->save($data);
+        return $data['RO_ID'];
     }
 
     public function createUpdateOrderDetail($data)
@@ -388,13 +415,18 @@ class RestaurantRepository extends BaseController
         return $this->RestaurantOrderDetail->save($data);
     }
 
+    public function deleteOrderDetails($where_condition)
+    {
+        return $this->RestaurantOrderDetail->where($where_condition)->delete();
+    }
+
     public function placeOrder($user, $data)
     {
         $data['RO_TOTAL_PAYABLE'] = 0;
-        $data['RO_CUSTOMER_ID'] = $user['USR_CUST_ID'];
+        $data['RO_CUSTOMER_ID'] = $data['RO_CUSTOMER_ID'] ?? $user['USR_CUST_ID'];
 
-        $items = $data['ITEMS'];
-        unset($data['ITEMS']);
+        $items = $data['RO_ITEMS'];
+        unset($data['RO_ITEMS']);
 
         foreach ($items as $index => $item) {
             $menu_item = $this->menuItemById($item['MI_ID']);
@@ -405,11 +437,11 @@ class RestaurantRepository extends BaseController
             if ($menu_item['MI_IS_AVAILABLE'] == 0)
                 return responseJson(202, true, ['msg' => "{$menu_item['MI_ITEM']} is not available."]);
 
-            if (empty($item['QUANTITY']) || $item['QUANTITY'] <= 0)
+            if (empty($item['MI_QUANTITY']) || $item['MI_QUANTITY'] <= 0)
                 return responseJson(202, true, ['msg' => "{$menu_item['MI_ITEM']}'s quantity should be greater than zero."]);
 
-            $items[$index]['AMOUNT'] = $item['QUANTITY'] * $menu_item['MI_PRICE'];
-            $data['RO_TOTAL_PAYABLE'] += $item['QUANTITY'] * $menu_item['MI_PRICE'];
+            $items[$index]['AMOUNT'] = $item['MI_QUANTITY'] * $menu_item['MI_PRICE'];
+            $data['RO_TOTAL_PAYABLE'] += $item['MI_QUANTITY'] * $menu_item['MI_PRICE'];
         }
 
         $data['RO_CREATED_BY'] = $data['RO_UPDATED_BY'] = $user['USR_ID'];
@@ -417,11 +449,14 @@ class RestaurantRepository extends BaseController
         if (!$order_id)
             return responseJson(202, true, ['msg' => "Unable to create order"]);
 
+        if (!empty($data['RO_ID']))
+            $this->deleteOrderDetails("ROD_ORDER_ID = {$data['RO_ID']}");
+
         foreach ($items as $item) {
             $item_data = [
                 'ROD_ORDER_ID' => $order_id,
                 'ROD_MENU_ITEM_ID' => $item['MI_ID'],
-                'ROD_QUANTITY' => $item['QUANTITY'],
+                'ROD_QUANTITY' => $item['MI_QUANTITY'],
                 'ROD_AMOUNT' => $item['AMOUNT'],
             ];
 
@@ -429,7 +464,7 @@ class RestaurantRepository extends BaseController
             $this->createUpdateOrderDetail($item_data);
         }
 
-        if ($data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
+        if (!isWeb() && empty($data['RO_ID']) && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
             $data = [
                 'amount' => $data['RO_TOTAL_PAYABLE'],
                 'model' => 'FLXY_RESTAURANT_ORDERS',
@@ -441,9 +476,44 @@ class RestaurantRepository extends BaseController
         return responseJson(200, false, ['msg' => 'Order Placed successfully.'], $data);
     }
 
-    public function restaurantOrderById($id)
+    public function restaurantOrderById($id, $with_details = false)
     {
-        return $this->RestaurantOrder->find($id);
+        $order = $this->RestaurantOrder->find($id);
+
+        if ($with_details) {
+            $order['restaurant_ids'] = [];
+            $order['category_ids'] = [];
+            $order['meal_type_ids'] = [];
+            $order['selected_item_ids'] = [];
+            $order['selected_items'] = [];
+
+            $order['order_details'] = $this->RestaurantOrderDetail
+                ->join('FLXY_MENU_ITEMS', 'ROD_MENU_ITEM_ID = MI_ID', 'left')
+                ->where('ROD_ORDER_ID', $id)
+                ->findAll();
+
+            foreach ($order['order_details'] as $detail) {
+                if (!in_array($detail['MI_RESTAURANT_ID'], $order['restaurant_ids']))
+                    $order['restaurant_ids'][] = $detail['MI_RESTAURANT_ID'];
+
+                if (!in_array($detail['MI_MENU_CATEGORY_ID'], $order['category_ids']))
+                    $order['category_ids'][] = $detail['MI_MENU_CATEGORY_ID'];
+
+                if (!in_array($detail['MI_MEAL_TYPE_ID'], $order['meal_type_ids']))
+                    $order['meal_type_ids'][] = $detail['MI_MEAL_TYPE_ID'];
+
+                $order['selected_item_ids'][] = strval($detail['ROD_MENU_ITEM_ID']);
+
+                $order['selected_items'][] = [
+                    'id' => strval($detail['ROD_MENU_ITEM_ID']),
+                    'item' => $detail['MI_ITEM'],
+                    'price' => $detail['MI_PRICE'],
+                    'quantity' => $detail['ROD_QUANTITY']
+                ];
+            }
+        }
+
+        return $order;
     }
 
     public function orderList($user)
@@ -460,8 +530,23 @@ class RestaurantRepository extends BaseController
         return $orders;
     }
 
+    public function allOrder()
+    {
+        $mine = new ServerSideDataTable();
+        $tableName = 'FLXY_RESTAURANT_ORDERS';
+        $columns = 'RO_ID,RO_DELIVERY_STATUS,RO_PAYMENT_STATUS,RO_PAYMENT_METHOD,RO_CREATED_AT';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+    public function deleteOrder($order_id)
+    {
+        $this->RestaurantOrderDetail->where('ROD_ORDER_ID', $order_id)->delete();
+        return $this->RestaurantOrder->delete($order_id);
+    }
+
+    /** ------------------------------Cart------------------------------ */
     public function addToCart($user, $data)
     {
-        
     }
 }
