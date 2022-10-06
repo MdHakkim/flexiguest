@@ -20,15 +20,9 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Available</th>
-                            <th>Meal Type</th>
-                            <th>Item</th>
-                            <th>Image</th>
-                            <th>Description</th>
-                            <th>Category ID</th>
-                            <th>Category Name</th>
-                            <th>Restaurant ID</th>
-                            <th>Restaurant Name</th>
+                            <th>Delivery Status</th>
+                            <th>Payment Status</th>
+                            <th>Payment Method</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
@@ -55,7 +49,7 @@
                 <div class="modal-body">
                     <form id="submit-form" class="needs-validation" novalidate>
                         <div class="row g-3">
-                            <input type="hidden" name="id" class="form-control" />
+                            <input type="hidden" name="RO_ID" class="form-control" />
                             <input type="hidden" name="RO_CUSTOMER_ID" class="form-control" />
                             <input type="hidden" name="RO_ROOM_ID" class="form-control" />
 
@@ -107,7 +101,7 @@
 
                             <div class="col-md-6">
                                 <label class="form-label"><b>Items *</b></label>
-                                <select name="RO_ITEMS[][id]" class="select2 form-select" multiple>
+                                <select name="RO_ITEMS[][MI_ID]" class="select2 form-select" multiple>
                                 </select>
                             </div>
 
@@ -116,12 +110,14 @@
                                 <input type="number" name="RO_TOTAL_PAYABLE" class="form-control" required />
                             </div>
 
-                            <div class="col-md-6 selected-items">
-                                <h5>Selected Items</h5>
-                                <div class="row items"></div>
+                            <div class="col-md-12 selected-items">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5>Selected Items</h5>
+                                        <div class="row items"></div>
+                                    </div>
+                                </div>
                             </div>
-
-                            <div class="col-md-6"></div>
 
                             <div class="col-md-4">
                                 <label class="form-label"><b>Delivery Status</b></label>
@@ -176,6 +172,9 @@
 
 <?= $this->section("script") ?>
 <script>
+    var selected_items = [];
+    var selected_item_ids = [];
+
     function hideSelectedItems() {
         $('.selected-items').hide();
     }
@@ -204,64 +203,25 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('/restaurant/menu-item/all-menu-item') ?>'
+                'url': '<?php echo base_url('/restaurant/order/all-order') ?>'
             },
             'columns': [{
                     data: ''
                 },
                 {
-                    data: 'MI_ID'
+                    data: 'RO_ID'
                 },
                 {
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        let class_name = 'badge rounded-pill';
-
-                        if (data['MI_IS_AVAILABLE'] == 1) {
-                            class_name += ' bg-label-success';
-                            data['MI_IS_AVAILABLE'] = 'Yes';
-                        } else {
-                            class_name += ' bg-label-danger';
-                            data['MI_IS_AVAILABLE'] = 'No';
-                        }
-
-                        return (`
-                            <span class="${class_name}">${data['MI_IS_AVAILABLE']}</span>
-                        `);
-                    }
+                    data: 'RO_DELIVERY_STATUS',
                 },
                 {
-                    data: 'MT_TYPE'
+                    data: 'RO_PAYMENT_STATUS'
                 },
                 {
-                    data: 'MI_ITEM'
+                    data: 'RO_PAYMENT_METHOD'
                 },
                 {
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['MI_IMAGE_URL']}")' src='<?= base_url() ?>/${data['MI_IMAGE_URL']}' width='80' height='80'/>`);
-                    }
-                },
-                {
-                    data: null,
-                    render: function(data) {
-                        return data['MI_DESCRIPTION'].substr(0, 30);
-                    }
-                },
-                {
-                    data: 'MI_MENU_CATEGORY_ID'
-                },
-                {
-                    data: 'MC_CATEGORY'
-                },
-                {
-                    data: 'MI_RESTAURANT_ID'
-                },
-                {
-                    data: 'RE_RESTAURANT'
-                },
-                {
-                    data: 'MI_CREATED_AT'
+                    data: 'RO_CREATED_AT'
                 },
                 {
                     data: null,
@@ -277,7 +237,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['MI_ID']}" data-restaurant_id="${data['MI_RESTAURANT_ID']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['RO_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -285,7 +245,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['MI_ID']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['RO_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -326,7 +286,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['MI_ID'];
+                            return 'Details of ' + data['RO_ID'];
                         }
                     }),
                     type: 'column',
@@ -424,41 +384,44 @@
         resetForm();
 
         $('.dtr-bs-modal').modal('hide');
-        var menu_item_id = $(this).attr('data_id');
-        var restaurant_id = $(this).data('restaurant_id');
 
-        $(`${form_id} select[name='MI_RESTAURANT_ID']`).val(restaurant_id).trigger('change');
-        $(`${form_id} input[name='id']`).val(menu_item_id);
+        var order_id = $(this).attr('data_id');
+        $(`${form_id} input[name='RO_ID']`).val(order_id);
 
         $('#popModalWindowlabel').html('Edit Menu Item');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('/restaurant/menu-item/edit-menu-item') ?>';
+        var url = '<?php echo base_url('/restaurant/order/edit-order') ?>';
         $.ajax({
             url: url,
             type: "post",
             data: {
-                id: menu_item_id
+                id: order_id
             },
             dataType: 'json',
             success: function(response) {
-                $(response).each(function(inx, data) {
-                    $.each(data, function(field, val) {
-                        if ($(`${form_id} input[name='${field}'][type!='file']`).length)
-                            $(`${form_id} input[name='${field}']`).val(val);
+                let data = response.RESPONSE.OUTPUT;
 
-                        else if ($(`${form_id} textarea[name='${field}']`).length)
-                            $(`${form_id} textarea[name='${field}']`).val(val);
+                if (data) {
+                    $(`${form_id} select[name='RO_RESERVATION_ID']`).val(data.RO_RESERVATION_ID).trigger('change');
+                    $(`${form_id} select[name='RO_RESTAURANT_IDS[]']`).val(data.restaurant_ids).trigger('change');
+                    $(`${form_id} select[name='RO_MEAL_TYPE_IDS[]']`).val(data.meal_type_ids).trigger('change');
 
-                        else if (field == 'MI_MENU_CATEGORY_ID')
-                            window.setTimeout(function() {
-                                $(`${form_id} select[name='${field}']`).val(val).trigger('change');
-                            }, 500);
+                    $(`${form_id} select[name='RO_DEILVERY_STATUS']`).val(data.RO_DEILVERY_STATUS).trigger('change');
+                    $(`${form_id} select[name='RO_PAYMENT_METHOD']`).val(data.RO_PAYMENT_METHOD).trigger('change');
+                    $(`${form_id} select[name='RO_PAYMENT_STATUS']`).val(data.RO_PAYMENT_STATUS).trigger('change');
 
-                        else if (field != 'MI_RESTAURANT_ID' && $(`${form_id} select[name='${field}']`).length)
-                            $(`${form_id} select[name='${field}']`).val(val).trigger('change');
-                    });
-                });
+                    selected_item_ids = data.selected_item_ids;
+                    selected_items = data.selected_items;
+
+                    setTimeout(function() {
+                        $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).val(data.category_ids).trigger('change');
+
+                        setTimeout(function() {
+                            $(`${form_id} select[name='RO_ITEMS[][MI_ID]']`).val(data.selected_item_ids).trigger('change');
+                        }, 500);
+                    }, 500);
+                }
 
                 $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
             }
@@ -486,7 +449,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('/restaurant/menu-item/delete-menu-item') ?>',
+                        url: '<?php echo base_url('/restaurant/order/delete-order') ?>',
                         type: "post",
                         data: {
                             id: id,
@@ -569,55 +532,59 @@
                         `;
                         }
 
-                        $(`${form_id} select[name="RO_ITEMS[][id]"]`).html(html);
-                        $(`${form_id} select[name="RO_ITEMS[][id]"]`).trigger('change');
+                        $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).html(html);
+                        $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).trigger('change');
                     }
                 }
             });
         } else {
-            $(`${form_id} select[name="RO_ITEMS[][id]"]`).html('');
-            $(`${form_id} select[name="RO_ITEMS[][id]"]`).trigger('change');
+            $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).html('');
+            $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).trigger('change');
         }
     });
 
     function calculateTotalPayable() {
         let total_payable = 0;
-        let items = $(`${form_id} [name='RO_ITEMS[][id]'] option:selected`);
+        let items = $(`${form_id} [name='RO_ITEMS[][MI_ID]'] option:selected`);
 
         $.each(items, function(index, item) {
-            total_payable += parseFloat(item.getAttribute('data-price')) * $(`${form_id} [name='RO_ITEMS[${index}][quantity]']`).val();
+            total_payable += parseFloat(item.getAttribute('data-price')) * $(`${form_id} [name='RO_ITEMS[${index}][MI_QUANTITY]']`).val();
         });
 
         $(`${form_id} [name='RO_TOTAL_PAYABLE']`).val(total_payable);
     }
 
-    var selected_items = [];
-    var selected_item_ids = [];
-
-    $(`${form_id} [name='RO_ITEMS[][id]']`).change(function() {
+    $(`${form_id} [name='RO_ITEMS[][MI_ID]']`).change(function() {
         let ids = $(this).val();
 
         if (ids.length == 0) {
             hideSelectedItems();
-            selected_items = [];
-            selected_item_ids = [];
             return;
         }
 
-        if (ids.length < selected_items.length) {
-            let remove_index = selected_item_ids.indexOf(selected_item_ids.filter(x => !ids.includes(x))[0]);
-            selected_items.splice(remove_index, 1);
+        if (ids.length < selected_item_ids.length) {
+            let remove_id = selected_item_ids.filter(x => !ids.includes(x))[0];
+
+            $.each(selected_items, function(index, item) {
+                if (item.id == remove_id) {
+                    selected_items.splice(index, 1);
+                    return false;
+                }
+            });
+
         } else {
             showSelectedItems();
 
-            let items = $(`${form_id} [name='RO_ITEMS[][id]'] option:selected`);
+            let items = $(`${form_id} [name='RO_ITEMS[][MI_ID]'] option:selected`);
+
             $.each(items, function(index, item) {
-                selected_items.push({
-                    id: item.value,
-                    item: item.getAttribute('data-item'),
-                    price: item.getAttribute('data-price'),
-                    quantity: 1,
-                });
+                if (!selected_item_ids.includes(item.value))
+                    selected_items.push({
+                        id: item.value,
+                        item: item.getAttribute('data-item'),
+                        price: item.getAttribute('data-price'),
+                        quantity: 1,
+                    });
             });
         }
 
@@ -632,13 +599,13 @@
 
                 <div class="col-md-6 mb-2">
                     <div class="input-group">
-                        <button type="button" onclick="decreaseQuantity(${index})" class="btn btn-danger">
+                        <button type="button" onclick="decreaseQuantity(${index}, ${item.id})" class="btn btn-danger">
                             <i class="fa-solid fa-minus"></i>
                         </button>
 
-                        <input type="text" name="RO_ITEMS[${index}][quantity]" class="form-control text-center" value="${item.quantity}" readonly />
+                        <input type="text" name="RO_ITEMS[${index}][MI_QUANTITY]" class="form-control text-center" value="${item.quantity}" readonly />
 
-                        <button type="button" onclick="increaseQuantity(${index})" class="btn btn-success">
+                        <button type="button" onclick="increaseQuantity(${index}, ${item.id})" class="btn btn-success">
                             <i class="fa-solid fa-plus"></i>
                         </button>
                     </div>
@@ -647,18 +614,33 @@
         });
 
         $('.selected-items .items').html(html);
-
         calculateTotalPayable();
     });
 
-    function decreaseQuantity(index) {
+    function updateItemQuantity(id, quantity) {
+        $.each(selected_items, function(index, item) {
+            if (item.id == id)
+                item.quantity = quantity;
+        });
 
+        calculateTotalPayable();
     }
 
-    function increaseQuantity(index) {
-
+    function decreaseQuantity(index, id) {
+        let el = $(`${form_id} input[name='RO_ITEMS[${index}][MI_QUANTITY]']`)[0];
+        let value = parseInt($(el).val());
+        if (value > 1) {
+            $(el).val(--value);
+            updateItemQuantity(id, value);
+        }
     }
 
+    function increaseQuantity(index, id) {
+        let el = $(`${form_id} input[name='RO_ITEMS[${index}][MI_QUANTITY]']`)[0];
+        let value = parseInt($(el).val());
+        $(el).val(++value);
+        updateItemQuantity(id, value);
+    }
 
     function onChangeReservation() {
         let customer_id = $(`${form_id} select[name="RO_RESERVATION_ID"]`).find(":selected").data('customer_id');

@@ -23,6 +23,7 @@ class RestaurantController extends BaseController
         $this->PaymentRepository = new PaymentRepository();
     }
 
+    /** ------------------------------Restaurant------------------------------ */
     public function Restaurant()
     {
         $data['title'] = getMethodName();
@@ -77,6 +78,14 @@ class RestaurantController extends BaseController
         return $this->respond($result);
     }
 
+    public function allRestaurants()
+    {
+        $result = $this->RestaurantRepository->allRestaurants();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'restaurants'], $result));
+    }
+
+    /** ------------------------------Menu Category------------------------------ */
     public function menuCategory()
     {
         $data['title'] = getMethodName();
@@ -138,6 +147,13 @@ class RestaurantController extends BaseController
         $result = $this->RestaurantRepository->menuCategoriesByRestaurant($restaurant_ids);
 
         return $this->respond(responseJson(200, false, ['msg' => 'list'], $result));
+    }
+
+    public function menuCategories()
+    {
+        $result = $this->RestaurantRepository->menuCategories();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'categories'], $result));
     }
 
     /** ------------------------------Meal Type------------------------------ */
@@ -252,6 +268,31 @@ class RestaurantController extends BaseController
         return $this->respond($result);
     }
 
+    public function getMenuItems()
+    {
+        $data = json_decode(json_encode($this->request->getVar()), true);
+
+        $where_condition = "1 = 1";
+        if (!empty($data['item_ids'])) {
+            $ids = implode(",", $data['item_ids']);
+            $where_condition .= " AND MI_ID in ($ids)";
+        }
+
+        if (!empty($data['category_ids'])) {
+            $ids = implode(",", $data['category_ids']);
+            $where_condition .= " AND MI_MENU_CATEGORY_ID in ($ids)";
+        }
+
+        if (!empty($data['meal_type_ids'])) {
+            $ids = implode(",", $data['meal_type_ids']);
+            $where_condition .= " AND MI_MEAL_TYPE_ID in ($ids)";
+        }
+
+        $result = $this->RestaurantRepository->getMenuItems($where_condition);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'item list'], $result));
+    }
+    
     /** ------------------------------Order------------------------------ */
     public function order()
     {
@@ -266,32 +307,9 @@ class RestaurantController extends BaseController
         return view('frontend/restaurant/order', $data);
     }
 
-    /** ------------------------------API------------------------------ */
-    public function allRestaurants()
+    public function allOrder()
     {
-        $result = $this->RestaurantRepository->allRestaurants();
-
-        return $this->respond(responseJson(200, false, ['msg' => 'restaurants'], $result));
-    }
-
-    public function menuCategories()
-    {
-        $result = $this->RestaurantRepository->menuCategories();
-
-        return $this->respond(responseJson(200, false, ['msg' => 'categories'], $result));
-    }
-
-    public function mainScreen()
-    {
-        $data['meal_types'] = $this->RestaurantRepository->allMealTypes();
-        $data['menu_categories'] = $this->RestaurantRepository->menuCategories();
-        $data['restaurants'] = $this->RestaurantRepository->allRestaurants();
-
-        foreach ($data['restaurants'] as $index => $restaurant) {
-            $data['restaurants'][$index]['menu_items'] = $this->RestaurantRepository->getMenuItems("MI_RESTAURANT_ID = {$restaurant['RE_ID']}");
-        }
-
-        return $this->respond(responseJson(200, false, ['msg' => 'main screen'], $data));
+        $this->RestaurantRepository->allOrder();
     }
 
     public function placeOrder()
@@ -320,6 +338,46 @@ class RestaurantController extends BaseController
         return $this->respond(responseJson(200, false, ['msg' => 'order list'], $result));
     }
 
+    public function editOrder()
+    {
+        $id = $this->request->getPost('id');
+
+        $restaurant_order = $this->RestaurantRepository->restaurantOrderById($id, true);
+
+        if ($restaurant_order)
+            return $this->respond(responseJson(200, false, ['msg' => 'order'], $restaurant_order));
+
+        return $this->respond(responseJson(404, true, ['msg' => "Order not found"]));
+    }
+
+    public function deleteOrder()
+    {
+        $order_id = $this->request->getPost('id');
+
+        $result = $this->RestaurantRepository->deleteOrder($order_id);
+
+        $result = $result
+            ? responseJson(200, false, ['msg' => "Order deleted successfully."])
+            : responseJson(500, true, ['msg' => "Order not deleted"]);
+
+        return $this->respond($result);
+    }
+
+    /** ------------------------------Main Screen------------------------------ */
+    public function mainScreen()
+    {
+        $data['meal_types'] = $this->RestaurantRepository->allMealTypes();
+        $data['menu_categories'] = $this->RestaurantRepository->menuCategories();
+        $data['restaurants'] = $this->RestaurantRepository->allRestaurants();
+
+        foreach ($data['restaurants'] as $index => $restaurant) {
+            $data['restaurants'][$index]['menu_items'] = $this->RestaurantRepository->getMenuItems("MI_RESTAURANT_ID = {$restaurant['RE_ID']}");
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'main screen'], $data));
+    }
+
+    /** ------------------------------Cart------------------------------ */
     public function addToCart()
     {
         $user = $this->request->user;
@@ -328,30 +386,5 @@ class RestaurantController extends BaseController
 
         $result = $this->RestaurantRepository->addToCart($user, $data);
         return $this->respond($result);
-    }
-
-    public function getMenuItems()
-    {
-        $data = json_decode(json_encode($this->request->getVar()), true);
-
-        $where_condition = "1 = 1";
-        if (!empty($data['item_ids'])) {
-            $ids = implode(",", $data['item_ids']);
-            $where_condition .= " AND MI_ID in ($ids)";
-        }
-
-        if (!empty($data['category_ids'])) {
-            $ids = implode(",", $data['category_ids']);
-            $where_condition .= " AND MI_MENU_CATEGORY_ID in ($ids)";
-        }
-
-        if (!empty($data['meal_type_ids'])) {
-            $ids = implode(",", $data['meal_type_ids']);
-            $where_condition .= " AND MI_MEAL_TYPE_ID in ($ids)";
-        }
-
-        $result = $this->RestaurantRepository->getMenuItems($where_condition);
-
-        return $this->respond(responseJson(200, false, ['msg' => 'item list'], $result));
     }
 }

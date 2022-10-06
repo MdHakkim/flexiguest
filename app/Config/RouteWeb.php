@@ -794,7 +794,10 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
         $routes->group('order', function ($routes) {
             $routes->get('', 'RestaurantController::order');
+            $routes->post('all-order', 'RestaurantController::allOrder');
             $routes->post('place-order', 'RestaurantController::placeOrder');
+            $routes->post('edit-order', 'RestaurantController::editOrder');
+            $routes->delete('delete-order', 'RestaurantController::deleteOrder');
         });
     });
     // ABUBAKAR CODE (END)
