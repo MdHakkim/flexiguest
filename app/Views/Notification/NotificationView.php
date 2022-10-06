@@ -36,8 +36,9 @@
                             <th class="all">Department</th>     
                             <th>To User</th> 
                             <th>Reservation</th>                                    
-                            <th>Guest</th>
+                            <th>Guest</th>                            
                             <th class="all">Message</th>
+                            <th>URL</th>
                             <th class="all">Date & Time</th>
                             <th class="all">Status</th>
                             <th class="all">Action</th>
@@ -89,7 +90,7 @@
                           </div> 
                         </div>
 
-                        <div class="row">
+                        <div class="row mb-3">
                           <div class="col-md-6 mb-3 Reservation">
                             <label for="html5-text-input" class="col-form-label"><b>ENTIRE RESERVATION
                                 </b></label>
@@ -105,12 +106,18 @@
                                   
                                 </select>
                           </div> 
+                          <div class="col-md-6 Guest">
+                            <label for="html5-text-input" class="col-form-label"><b>URL
+                                </b></label>
+                                <input type="text" id="NOTIFICATION_URL" name="NOTIFICATION_URL" class="form-control" placeholder="" 
+                           >                         
+                          </div> 
                         </div>
                         <div class="row mb-3">                         
                           <div class="col-md-6">
                             <label for="html5-text-input" class="col-form-label"><b>NOTIFICATION DATE & TIME
                               </b></label>
-                            <input type="text" id="NOTIFICATION_DATE_TIME" name="NOTIFICATION_DATE_TIME" class="form-control" placeholder="" placeholder="YYYY-MM-DD HH:MM"
+                            <input type="text" id="NOTIFICATION_DATE_TIME" name="NOTIFICATION_DATE_TIME" class="form-control"  placeholder="YYYY-MM-DD HH:MM"
                            >                         
                             
                           </div> 
@@ -170,7 +177,7 @@
 
     <!-- /Modal window -->
 
-      <!-- Modal -->
+    <!-- Modal -->
   <div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
@@ -287,13 +294,21 @@ $(document).ready(function() {
             data: 'NOTIFICATION_GUEST_ID',
             render: function(data, type, full, meta) {                                      
               if(full['NOTIFICATION_GUEST_ID'] != ''){
-                return '<a href="javascript:;" onclick="viewAll(\'Guests\','+full['NOTIFICATION_ID']+')" title="View Guests"  rel="">'+full['NOTIFICATION_GUEST_ID']+'<br><span class="btn btn-sm btn-label-info">View All</span></br></a>';
+                return '<a href="javascript:;" onclick="viewAll(\'Guests\','+full['NOTIFICATION_ID']+')" title="View Guests"  rel="">'+full['NOTIFICATION_GUEST_ID']+'<span class="btn btn-sm btn-label-info">View All</span></a>';
               }else return '';
             }
             
           },
           {
-            data: 'NOTIFICATION_TEXT'
+            data: 'NOTIFICATION_TEXT',
+            render: function(data, type, full, meta) {
+             if(full['NOTIFICATION_TEXT'] != ''){
+                return '<a href="javascript:;" onclick="viewAll(\'Messages\','+full['NOTIFICATION_ID']+')" title="View Message" rel="">'+full['NOTIFICATION_TEXT']+'<span class="btn btn-sm btn-label-info">View Message</span></a>';
+             }else return '';
+            }
+          },
+          {
+            data: 'NOTIFICATION_URL'
           },
           {
             data: 'NOTIFICATION_DATE_TIME'
@@ -357,7 +372,7 @@ $(document).ready(function() {
             width: "10%"
         },
         {
-            targets: 8,
+            targets: 9,
             width: "10%",
             render: function(data, type, full, meta) {
               if(full['NOTIFICATION_DATE_TIME'] != ''){
@@ -372,7 +387,7 @@ $(document).ready(function() {
 
         },
         {
-            targets: 9,
+            targets: 10,
             width: "10%",
             render: function(data, type, full, meta) {
               var $status = full['NOTIFICATION_READ_STATUS'];
@@ -491,7 +506,7 @@ $(document).on('click', '.delete-record', function() {
 // Show Edit Notification 
 
 $(document).on('click', '.editNotification', function() {
-
+  $('#popModalWindowlabel').html('Edit Notification');
     $('.dtr-bs-modal').modal('hide');
     var sysid = $(this).attr('data_sysid');
     $('#popModalWindowlabel').html('Edit Notification');
@@ -806,7 +821,7 @@ function fillCustomerSelect(resvId) {
                 customerSelect.append(newOption);
             });
             customerSelect.val(respn.length == 1 ? respn[0].id : null).trigger('change');
-            // if only 1 guest, select by default
+            // if only 1 guest, select one by default
         }
     });
 }
@@ -831,6 +846,8 @@ function viewAll(field, notificationId){
     });
     $("#modalCenter").modal('show')
 }
+
+
 
 </script>
 

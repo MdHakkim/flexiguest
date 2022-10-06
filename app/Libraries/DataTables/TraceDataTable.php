@@ -1,7 +1,7 @@
 <?php 
 namespace App\Libraries\DataTables;
 
-class NotificationDataTable{
+class TraceDataTable{
     public $Db;
     public function __construct(){
         $this->Db = \Config\Database::connect();
@@ -79,10 +79,9 @@ class NotificationDataTable{
                     }
                 }
 
-                if($name == "NOTIFICATION_DEPARTMENT") {                    
+                if($name == "RSV_TRACE_DEPARTMENT") {                    
                     if($row[$name] != '' ){
-                       $department_ids = implode(',', json_decode($row[$name]));  
-                       //echo "select DEPT_DESC from FLXY_DEPARTMENT where DEPT_ID in ($department_ids)";                                
+                       $department_ids = implode(',', json_decode($row[$name]));
                         $departments = $this->Db->query("select DEPT_DESC from FLXY_DEPARTMENT where DEPT_ID in ($department_ids)")->getResultArray();                        
                         $row[$name] = '';
                         if(!empty($departments)){
@@ -94,60 +93,7 @@ class NotificationDataTable{
                     }
                 }
 
-                if($name == "NOTIFICATION_TO_ID") {
-                    if($row[$name] != ''){                                        
-                        $user_ids = implode(',', json_decode($row[$name]));                                        
-                        $users = $this->Db->query("select concat(USR_FIRST_NAME, ' ', USR_LAST_NAME) as NAME from FlXY_USERS where USR_ID in ($user_ids)")->getResultArray();                       
-                        
-                        $row[$name] = '';
-                        if(!empty($users)){
-                            foreach($users as $user)
-                                $row[$name] .= $user['NAME'] . ', ';
-
-                            $row[$name] = substr($row[$name], 0, 20). '...';
-                        }
-                    }
-                }
-
-                if($name == "NOTIFICATION_RESERVATION_ID") {
-                    if($row[$name] != ''){                                        
-                        $reservation_ids = implode(',', json_decode($row[$name]));                                        
-                        $reservations = $this->Db->query("select CONCAT_WS(' ', RESV_NO, RESV_STATUS) AS RESV_NAME FROM FLXY_RESERVATION where RESV_ID in ($reservation_ids)")->getResultArray();                       
-                        
-                        $row[$name] = '';
-                        if(!empty($reservation_ids)){
-                            foreach($reservations as $reservation)
-                                $row[$name] .= $reservation['RESV_NAME'] . ', ';
-
-                            $row[$name] = substr($row[$name], 0, 20). '...';
-                        }
-                    }
-                }
-
-                if($name == "NOTIFICATION_GUEST_ID") {
-                    if($row[$name] != ''){                                        
-                        $guest_ids = implode(',', json_decode($row[$name]));                                        
-                        $reservationsGuests = $this->Db->query("select CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME FROM FLXY_CUSTOMER where CUST_ID in ($guest_ids)")->getResultArray();                       
-                        
-                        $row[$name] = '';
-                        if(!empty($guest_ids)){
-                            foreach($reservationsGuests as $reservation)
-                                $row[$name] .= $reservation['FULLNAME'] . ', ';
-
-                            $row[$name] = substr($row[$name], 0, 20). '...';
-                        }
-                    }
-                }
-               
-
-                if($name == "NOTIFICATION_TEXT") {
-                    if($row[$name] != '' ){                        
-                        $row[$name] = substr($row[$name], 0, 20);
-                        if(strlen($row[$name]) > 20 )
-                          $row[$name] .=   '...';                 
-                     }
-                }
-
+                
                $designArr[$name] = $row[$name];
                
             }

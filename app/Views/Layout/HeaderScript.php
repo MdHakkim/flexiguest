@@ -65,6 +65,7 @@
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/jquery-timepicker/jquery-timepicker.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/pickr/pickr-themes.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/css/pages/app-calendar.css')?>" >
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/toastr/toastr.css')?>" >
 
 
 <!-- Page CSS -->

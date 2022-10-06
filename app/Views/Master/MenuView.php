@@ -205,7 +205,7 @@ $(document).ready(function() {
                     if(data['MENU_CODE'] == "MASTR"){
                         return (
                             '<div class="d-inline-block">' +
-                            '<a class="disabled" href="javascript:;" data_sysid="' + data['MENU_ID'] +
+                            '<a  href="javascript:;" data_sysid="' + data['MENU_ID'] +
                             '" class="dropdown-item editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a>'+
                             '</div>'
                         );
