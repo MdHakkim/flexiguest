@@ -237,11 +237,11 @@ $(document).ready(function() {
       userView = '',
       statusObj = {
         1: {
-          title: 'Read',
+          title: 'Seen',
           class: 'bg-label-success'
         },
         0: {
-          title: 'Unread',
+          title: 'Unseen',
           class: 'bg-label-secondary'
         }
       };

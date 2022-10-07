@@ -24,6 +24,7 @@ class NotificationController extends BaseController
 
     public function Notifications()
     {
+        $data['title'] = getMethodName();
         $data['session'] = $this->session;
         $data['js_to_load'] = ["full-form-editor.js"];        
         return view('Notification/NotificationView', $data);
@@ -304,8 +305,10 @@ class NotificationController extends BaseController
     {
         $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
 
+        $UserID = session()->get('USR_ID');
+
         $sql = "SELECT USR_ID, CONCAT_WS(' ',USR_FIRST_NAME,USR_LAST_NAME) AS FULL_NAME
-                FROM FLXY_USERS";
+                FROM FLXY_USERS WHERE USR_ID != $UserID";
 
         if ($search != '') {
             $sql .= " WHERE USR_FIRST_NAME LIKE '%$search%' AND USR_LAST_NAME LIKE '%$search%'
