@@ -349,11 +349,11 @@ $(document).on('click', '#ViewAll', function() {
       userView = '',
       statusObj = {
         1: {
-          title: 'Read',
+          title: 'Seen',
           class: 'bg-label-success'
         },
         0: {
-          title: 'Unread',
+          title: 'Unseen',
           class: 'bg-label-secondary'
         }
       };
@@ -551,7 +551,7 @@ function viewAllNotif(notificationTrailId){
         dataType: 'json',
         success: function(respn) {
           $("#dataTable_view1 .notifi-"+notificationTrailId).removeClass('table-warning');
-          $(".notifi-status-"+notificationTrailId).html('Read');
+          $(".notifi-status-"+notificationTrailId).html('Seen');
           $("#modalCenterTitle").html();
           $(".showDetails").html(respn.reservation+' <br> '+respn.text);
           $("#modalCenter").modal('show')

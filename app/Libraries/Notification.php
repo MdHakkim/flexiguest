@@ -81,7 +81,7 @@ class Notification{
             
             <li class="dropdown-menu-footer border-top">
             <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center p-3">
-                No new Notification found
+                No new Notifications found
             </a>
             </li>
             EOD;  
