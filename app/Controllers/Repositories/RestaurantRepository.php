@@ -469,7 +469,7 @@ class RestaurantRepository extends BaseController
                 'amount' => $data['RO_TOTAL_PAYABLE'],
                 'model' => 'FLXY_RESTAURANT_ORDERS',
                 'model_id' => $order_id,
-                'reservation_id' => null,
+                'reservation_id' => $data['RO_RESERVATION_ID'],
             ];
         }
 
