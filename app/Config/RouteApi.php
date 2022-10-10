@@ -110,6 +110,10 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
     $routes->get('lookup-api', 'APIController::lookupApi');
     $routes->get('get-state', 'APIController::getState');
     $routes->get('get-city', 'APIController::getCity');
+
+    $routes->group('restaurant', function ($routes) {
+        $routes->get("order-list", "RestaurantController::orderList");
+    });
 });
 
 /*****************************  ADMIN + GUEST *****************************/
@@ -187,7 +191,6 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
         $routes->get("all-restaurants", "RestaurantController::allRestaurants");
         $routes->get("menu-categories", "RestaurantController::menuCategories");
         $routes->post("place-order", "RestaurantController::placeOrder");
-        $routes->get("order-list", "RestaurantController::orderList");
         $routes->post("add-to-cart", "RestaurantController::addToCart");
         $routes->post("get-menu-items", "RestaurantController::getMenuItems");
     });
