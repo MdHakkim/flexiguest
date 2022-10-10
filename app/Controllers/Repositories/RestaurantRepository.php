@@ -524,6 +524,7 @@ class RestaurantRepository extends BaseController
         foreach ($orders as $index => $order) {
             $orders[$index]['order_details'] = $this->RestaurantOrderDetail
                 ->join('FLXY_MENU_ITEMS', 'ROD_MENU_ITEM_ID = MI_ID', 'left')
+                ->join('FLXY_RESTAURANTS', 'MI_RESTAURANT_ID = RE_ID', 'left')
                 ->where('ROD_ORDER_ID', $order['RO_ID'])->findAll();
         }
 
