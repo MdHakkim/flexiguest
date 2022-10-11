@@ -38,43 +38,58 @@ class PaymentController extends BaseController
         $user = $this->request->user;
 
         if ($data['model'] == 'FLXY_LAUNDRY_AMENITIES_ORDERS') {
-            $order = $this->LaundryAmenitiesRepository->orderById($data['model_id']);
-            if (empty($order))
+            $response = $this->LaundryAmenitiesRepository->orderById($data['model_id']);
+            if (empty($response))
                 return $this->respond(responseJson(404, true, ['msg' => 'Order not found']));
 
-            $data['amount'] = $order['LAO_TOTAL_PAYABLE'];
-            $data['reservation_id'] = $order['LAO_RESERVATION_ID'];
+            if ($response['LAO_PAYMENT_STATUS'] == 'Paid')
+                return $this->respond(responseJson(202, true, ['msg' => 'Payment already done.']));
+
+            $data['amount'] = $response['LAO_TOTAL_PAYABLE'];
+            $data['reservation_id'] = $response['LAO_RESERVATION_ID'];
         } else if ($data['model'] == 'FLXY_CONCIERGE_REQUESTS') {
 
-            $request = $this->ConciergeRepository->getConciergeRequest("CR_ID = {$data['model_id']}");
-            if (empty($request))
+            $response = $this->ConciergeRepository->getConciergeRequest("CR_ID = {$data['model_id']}");
+            if (empty($response))
                 return $this->respond(responseJson(404, true, ['msg' => 'Concierge Request not found']));
 
-            $data['amount'] = $request['CR_TOTAL_AMOUNT'];
-            $data['reservation_id'] = $request['CR_RESERVATION_ID'];
+            if ($response['CR_PAYMENT_STATUS'] == 'Paid')
+                return $this->respond(responseJson(202, true, ['msg' => 'Payment already done.']));
+
+            $data['amount'] = $response['CR_TOTAL_AMOUNT'];
+            $data['reservation_id'] = $response['CR_RESERVATION_ID'];
         } else if ($data['model'] == 'FLXY_TRANSPORT_REQUESTS') {
 
-            $request = $this->TransportRequestRepository->getTransportRequest("TR_ID = {$data['model_id']}");
-            if (empty($request))
+            $response = $this->TransportRequestRepository->getTransportRequest("TR_ID = {$data['model_id']}");
+            if (empty($response))
                 return $this->respond(responseJson(404, true, ['msg' => 'Transport Request not found.']));
 
-            $data['amount'] = $request['TR_TOTAL_AMOUNT'];
-            $data['reservation_id'] = $request['TR_RESERVATION_ID'];
+            if ($response['TR_PAYMENT_STATUS'] == 'Paid')
+                return $this->respond(responseJson(202, true, ['msg' => 'Payment already done.']));
+
+            $data['amount'] = $response['TR_TOTAL_AMOUNT'];
+            $data['reservation_id'] = $response['TR_RESERVATION_ID'];
         } else if ($data['model'] == 'FLXY_RESERVATION') {
 
-            $request = $this->ReservationRepository->reservationById($data['model_id']);
-            if (empty($request))
+            $response = $this->ReservationRepository->reservationById($data['model_id']);
+            if (empty($response))
                 return $this->respond(responseJson(404, true, ['msg' => 'Reservation not found.']));
 
-            $data['amount'] = $request['RESV_RATE'];
-            $data['reservation_id'] = $request['RESV_ID'];
+            if ($response['RESV_PAYMENT_STATUS'] == 'Paid')
+                return $this->respond(responseJson(202, true, ['msg' => 'Payment already done.']));
+
+            $data['amount'] = $response['RESV_RATE'];
+            $data['reservation_id'] = $response['RESV_ID'];
         } else if ($data['model'] == 'FLXY_RESTAURANT_ORDERS') {
 
-            $request = $this->RestaurantRepository->restaurantOrderById($data['model_id']);
-            if (empty($request))
+            $response = $this->RestaurantRepository->restaurantOrderById($data['model_id']);
+            if (empty($response))
                 return $this->respond(responseJson(404, true, ['msg' => 'Order not found.']));
 
-            $data['amount'] = $request['RO_TOTAL_PAYABLE'];
+            if ($response['RO_PAYMENT_STATUS'] == 'Paid')
+                return $this->respond(responseJson(202, true, ['msg' => 'Payment already done.']));
+
+            $data['amount'] = $response['RO_TOTAL_PAYABLE'];
             $data['reservation_id'] = null;
         }
 
@@ -107,7 +122,7 @@ class PaymentController extends BaseController
             exit();
         }
 
-        if ($endpoint_secret) { 
+        if ($endpoint_secret) {
             // Only verify the event if there is an endpoint secret defined
             // Otherwise use the basic decoded event
             $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
@@ -133,14 +148,14 @@ class PaymentController extends BaseController
                 $this->paymentSucceded($event);
                 break;
 
-            case 'payment_intent.canceled': 
+            case 'payment_intent.canceled':
                 $this->paymentCancelled($event);
                 break;
 
             case 'payment_method.attached':
                 $paymentMethod = $event->data->object; // contains a \Stripe\PaymentMethod
                 // Then define and call a method to handle the successful attachment of a PaymentMethod.
-                
+
 
                 break;
             default:
