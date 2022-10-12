@@ -6,7 +6,7 @@ class NotificationDataTable{
     public function __construct(){
         $this->Db = \Config\Database::connect();
     }
-    public function generate_DatatTable($table,$columns,$init_cond=array(),$formatby=','){
+    public function generate_DataTable($table,$columns,$init_cond=array(),$formatby=','){
         $draw = $_POST['draw'];
         $row = $_POST['start'];
         $rowperpage = $_POST['length']; // Rows display per page

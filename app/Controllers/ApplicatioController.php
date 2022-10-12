@@ -3606,8 +3606,8 @@ class ApplicatioController extends BaseController
                 $result = $this->responseJson("-444",$message,$return);
                 echo json_encode($result);
             }
-        }catch (Exception $e){
-            return $this->respond($e->errors());
+        }catch (\Exception $e){
+            return $this->respond($e->getMessage());
         }
     }
     public function webLineReservation($resvid){

@@ -625,6 +625,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
       $routes->match(['post'], '/viewAllNotificationDetails', 'NotificationController::viewAllNotificationDetails');
       $routes->match(['post'], '/guestByReservation', 'NotificationController::guestByReservation');
+      $routes->match(['post'], '/loadNotification', 'NotificationController::loadNotification');
       
       
 

@@ -138,8 +138,9 @@
                       <!-- <li class="dropdown-notifications-list scrollable-container">
                         <ul class="list-group list-group-flush">
                          -->
-                        
+                          <li class="dropdown-notifications-list scrollable-container">
                            <?= view_cell('\App\Libraries\Notification::ShowAll') ?>
+                          </li>
                         
                         <!-- </ul>
                       </li>
@@ -533,7 +534,7 @@ function showMessage(){
       toastPlacement = new bootstrap.Toast(toastPlacementExample);
       toastPlacement.show();
 
-    }
+}
 
 function viewAllNotif(notificationTrailId){
  $(".showDetails").html('');
@@ -554,13 +555,38 @@ function viewAllNotif(notificationTrailId){
           $(".notifi-status-"+notificationTrailId).html('Seen');
           $("#modalCenterTitle").html();
           $(".showDetails").html(respn.reservation+' <br> '+respn.text);
+          $(".badge-notifications").html(respn.NotificationCount);
           $("#modalCenter").modal('show')
         }
     });
     
 }
 
-      
+function loadNotifications(){
+  $.ajax({
+        url: '<?php echo base_url('/loadNotification') ?>',
+        async: false,
+        type: "post",
+
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+          realtime: 1,
+        },
+        dataType: 'json',
+        success: function(respn) {
+          if(respn != null){
+            $(".dropdown-notifications-list").html(respn.notif_list);
+            $(".badge-notifications").html(respn.notif_count);
+           
+          }
+
+        }
+    });
+}
+
+setInterval(loadNotifications, 100000);      
 
 
 </script>

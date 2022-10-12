@@ -8,6 +8,9 @@
     max-width: 100% !important;
     min-width: 100% !important;
 } */
+#RoomStatisticsModal{
+
+}
 
 .fc-resource-area .fc-rows table tr td:first-child:hover{
   cursor: pointer;
@@ -1119,6 +1122,9 @@ function roomPlanFunc(){
                   title: evt.title,
                   start: evt.start,
                   end: evt.end,
+                  backgroundColor: "#405974 ",
+                  borderColor: "#405974",
+                  textColor: "#fff", 
                 });
               });
               successCallback(events);

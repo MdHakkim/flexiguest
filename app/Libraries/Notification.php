@@ -1,5 +1,7 @@
 <?php
 namespace App\Libraries;
+namespace App\Libraries;
+use App\Controllers\NotificationController;
 use \Firebase\JWT\JWT;
 
 class Notification{
@@ -7,31 +9,39 @@ class Notification{
 
     public function __construct()
     {
+        $this->flag = 0;
         $this->Db = \Config\Database::connect();
+        $this->NotificationEmail = new NotificationController();
         helper([ 'common']);
     }
         
-    public function ShowAll(){
+    public function ShowAll($realtime = 0){      
 
         $url  = "http" . (($_SERVER['SERVER_PORT'] == 443) ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
         
         $NotificationOutput = '';  
-        $time = 0;
+       
+        $cond = '';
+        $five_minutes_ago = '';
         $UserID = session()->get('USR_ID');
         $datetime = date('Y-m-d H:i:s');
+       
+         $cond = "AND NOTIFICATION_DATE_TIME <= '".$datetime."'";
 
-        $sql = "SELECT TOP(5) NOTIF_TRAIL_ID, NOTIF_TRAIL_DEPARTMENT, NOTIF_TRAIL_USER, NOTIF_TRAIL_NOTIFICATION_ID, NOTIF_TRAIL_RESERVATION, NOTIF_TRAIL_READ_STATUS, NOTIFICATION_TYPE,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME, NOTIF_TY_DESC,NOTIF_TY_ICON FROM FLXY_NOTIFICATION_TRAIL INNER JOIN FLXY_NOTIFICATIONS ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID INNER JOIN FLXY_NOTIFICATION_TYPE ON NOTIF_TY_ID = NOTIFICATION_TYPE WHERE NOTIF_TRAIL_USER = $UserID AND NOTIFICATION_DATE_TIME <= '$datetime' ORDER BY NOTIF_TRAIL_ID DESC";
-        $response = $this->Db->query($sql)->getResultArray();        
+         $sql = "SELECT TOP(5) NOTIF_TRAIL_ID, NOTIF_TRAIL_DEPARTMENT, NOTIF_TRAIL_USER, NOTIF_TRAIL_NOTIFICATION_ID, NOTIF_TRAIL_RESERVATION, NOTIF_TRAIL_READ_STATUS, NOTIFICATION_TYPE,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME, NOTIF_TY_DESC,NOTIF_TY_ICON,NOTIFICATION_TRAIL_SEND FROM FLXY_NOTIFICATION_TRAIL INNER JOIN FLXY_NOTIFICATIONS ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID INNER JOIN FLXY_NOTIFICATION_TYPE ON NOTIF_TY_ID = NOTIFICATION_TYPE WHERE NOTIF_TRAIL_USER = $UserID $cond ORDER BY NOTIF_TRAIL_ID DESC";
+         $response = $this->Db->query($sql)->getResultArray();
+         $responseCount = $this->Db->query($sql)->getNumRows(); 
         
-        
-        if(!empty($response)){
+        if($responseCount > 0){
 
             $NotificationOutput.= <<<EOD
             
-                <li class="dropdown-notifications-list scrollable-container">
+                
                 <ul class="list-group list-group-flush">
             EOD;            
             foreach($response as $notif){
+                if($notif['NOTIFICATION_TRAIL_SEND'] != 1)
+                $this->NotificationEmail->triggerNotificationEmail($notif['NOTIF_TRAIL_NOTIFICATION_ID']);
                 $NOTIFICATION_TEXT = substr(strip_tags($notif['NOTIFICATION_TEXT'],'<p>'),0,25).'...';
                 $color =  ($notif['NOTIF_TRAIL_READ_STATUS'] == 0) ? "color:#0d6efd": "color:#ddd";
                 $background_color = ($notif['NOTIF_TRAIL_READ_STATUS'] == 0) ? "#5a8dee": "#69809a";
@@ -63,11 +73,7 @@ class Notification{
               </li>
               EOD;
             }
-            $NotificationOutput.= <<<EOD
-            
-            </ul>
-            </li>
-            EOD;
+
             $NotificationOutput.= <<<EOD
             <li class="dropdown-menu-footer border-top">
             <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center p-3" id="ViewAll">
@@ -75,8 +81,22 @@ class Notification{
             </a>
             </li>
             EOD;
+
+            $NotificationOutput.= <<<EOD
+            
+            </ul>
+          
+            EOD;
+            
         }  
         else{
+
+            $NotificationOutput.= <<<EOD
+
+                    
+              <ul class="list-group list-group-flush">
+            EOD;  
+
             $NotificationOutput.= <<<EOD
             
             <li class="dropdown-menu-footer border-top">
@@ -85,7 +105,34 @@ class Notification{
             </a>
             </li>
             EOD;  
-        }   
+
+            $NotificationOutput.= <<<EOD
+              <li class="dropdown-menu-footer border-top">
+              <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center p-3" id="ViewAll">
+                  View all notifications
+              </a>
+              </li>
+            EOD;
+
+            $NotificationOutput.= <<<EOD
+            
+            </ul>
+          
+            EOD;
+        } 
+
+        
+        // if($this->flag == 0) 
+        // {        
+        //   $NotificationOutput.= <<<EOD
+        //       <li class="dropdown-menu-footer border-top">
+        //       <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center p-3" id="ViewAll">
+        //           View all notifications
+        //       </a>
+        //       </li>
+        //       EOD;
+        //       $this->flag = 1;
+        // }
 
         return $NotificationOutput;
        

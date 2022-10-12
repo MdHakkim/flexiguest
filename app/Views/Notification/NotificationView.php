@@ -270,7 +270,7 @@ $(document).ready(function() {
             
             render: function(data, type, full, meta) {
              if(full['NOTIFICATION_DEPARTMENT'] != ''){
-                return '<a href="javascript:;" onclick="viewAll(\'Departments\','+full['NOTIFICATION_ID']+')" title="View Department" id="viewDept" rel="">'+full['NOTIFICATION_DEPARTMENT']+'<br><span class="btn btn-sm btn-label-info">View All</span></br></a>';
+                return '<a href="javascript:;" onclick="viewAll(\'Departments\','+full['NOTIFICATION_ID']+')" title="View Department" id="viewDept" rel="">'+full['NOTIFICATION_DEPARTMENT']+'<br><span class="btn btn-sm btn-label-info">View</span></br></a>';
              }else return '';
             }
           },  
@@ -278,7 +278,7 @@ $(document).ready(function() {
             data: 'NOTIFICATION_TO_ID',
             render: function(data, type, full, meta) {                                      
               if(full['NOTIFICATION_TO_ID'] != ''){
-                return '<a href="javascript:;" onclick="viewAll(\'Users\','+full['NOTIFICATION_ID']+')" title="View Users" id="viewDept" rel="">'+full['NOTIFICATION_TO_ID']+'<br><span class="btn btn-sm btn-label-info">View All</span></br></a>';
+                return '<a href="javascript:;" onclick="viewAll(\'Users\','+full['NOTIFICATION_ID']+')" title="View Users" id="viewDept" rel="">'+full['NOTIFICATION_TO_ID']+'<br><span class="btn btn-sm btn-label-info">View</span></br></a>';
               }else return '';
             }
           },  
@@ -286,7 +286,7 @@ $(document).ready(function() {
             data: 'NOTIFICATION_RESERVATION_ID',
             render: function(data, type, full, meta) {                                      
               if(full['NOTIFICATION_RESERVATION_ID'] != ''){
-                return '<a href="javascript:;" onclick="viewAll(\'Reservations\','+full['NOTIFICATION_ID']+')" title="View Reservations"  rel="">'+full['NOTIFICATION_RESERVATION_ID']+'<br><span class="btn btn-sm btn-label-info">View All</span></br></a>';
+                return '<a href="javascript:;" onclick="viewAll(\'Reservations\','+full['NOTIFICATION_ID']+')" title="View Reservations"  rel="">'+full['NOTIFICATION_RESERVATION_ID']+'<br><span class="btn btn-sm btn-label-info">View</span></br></a>';
               }else return '';
             }
           },      
@@ -294,7 +294,7 @@ $(document).ready(function() {
             data: 'NOTIFICATION_GUEST_ID',
             render: function(data, type, full, meta) {                                      
               if(full['NOTIFICATION_GUEST_ID'] != ''){
-                return '<a href="javascript:;" onclick="viewAll(\'Guests\','+full['NOTIFICATION_ID']+')" title="View Guests"  rel="">'+full['NOTIFICATION_GUEST_ID']+'<span class="btn btn-sm btn-label-info">View All</span></a>';
+                return '<a href="javascript:;" onclick="viewAll(\'Guests\','+full['NOTIFICATION_ID']+')" title="View Guests"  rel="">'+full['NOTIFICATION_GUEST_ID']+'<span class="btn btn-sm btn-label-info">View</span></a>';
               }else return '';
             }
             
@@ -303,7 +303,7 @@ $(document).ready(function() {
             data: 'NOTIFICATION_TEXT',
             render: function(data, type, full, meta) {
              if(full['NOTIFICATION_TEXT'] != ''){
-                return '<a href="javascript:;" onclick="viewAll(\'Messages\','+full['NOTIFICATION_ID']+')" title="View Message" rel="">'+full['NOTIFICATION_TEXT']+'<span class="btn btn-sm btn-label-info">View Message</span></a>';
+                return '<a href="javascript:;" onclick="viewAll(\'Messages\','+full['NOTIFICATION_ID']+')" title="View Message" rel="">'+full['NOTIFICATION_TEXT']+'<span class="btn btn-sm btn-label-info">View</span></a>';
              }else return '';
             }
           },
@@ -842,6 +842,8 @@ function viewAll(field, notificationId){
         success: function(respn) {
           $("#modalCenterTitle").html(field);
           $(".showDetails").html(respn);
+
+          
         }
     });
     $("#modalCenter").modal('show')
