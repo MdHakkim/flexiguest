@@ -1983,5 +1983,11 @@ public function getRoomStatistics(){
         }
     }
 
+    public function uploadResvAttachments()
+    {
+        $fileArry = $_FILES['attachmentFile'];
+        echo "<pre>"; print_r($fileArry); echo "</pre>"; exit;
+    }
+
 
 }

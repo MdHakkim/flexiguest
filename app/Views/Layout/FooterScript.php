@@ -85,6 +85,7 @@
     <script src="<?php echo base_url('assets/vendor/libs/i18n/i18n.js') ?>"></script> 
     <!-- Vendors JS -->
 
+    <script src="<?php echo base_url('assets/vendor/libs/dropzone/dropzone.js') ?>"></script>
     
    
     <script src="<?php echo base_url('assets/vendor/libs/flatpickr/flatpickr.js') ?>"></script>  

@@ -93,7 +93,8 @@ if (!function_exists("clearFormFields_javascript")) {
                     $(elem).find('input,select,textarea').each(function() {
                 
                         if ($(this).hasClass('dateField')) {
-                            $(this).datepicker(\"setDate\", new Date('".date('d-M-Y')."'));
+                            $(this).datepicker(\"setDate\", new Date());
+                            return true;
                         }
                 
                         switch ($(this).attr('type')) {
@@ -105,11 +106,12 @@ if (!function_exists("clearFormFields_javascript")) {
                             case 'number':
                             case 'tel':
                             case 'date':
+                            case 'hidden':
                             case 'email':
-                                $(this).val('');
+                                    $(this).val('');
                                 break;
                             case 'checkbox':
-                                $(this).prop('checked', true);
+                                $(this).prop('checked', false);
                                 break;
                             case 'radio':
                                 //this.checked = false;

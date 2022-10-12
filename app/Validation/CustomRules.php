@@ -23,7 +23,8 @@ class CustomRules{
                           array('start' => 'RSV_ITM_BEGIN_DATE', 'end' => 'RSV_ITM_END_DATE'),
                           array('start' => 'CM_TODAY', 'end' => 'CM_EXPIRY_DATE'),
                           array('start' => 'FIXD_CHRG_BEGIN_DATE', 'end' => 'FIXD_DEPARTURE_UP'),
-                          array('start' => 'RSV_PCKG_BEGIN_DATE', 'end' => 'RSV_PCKG_END_DATE'));
+                          array('start' => 'RSV_PCKG_BEGIN_DATE', 'end' => 'RSV_PCKG_END_DATE'),
+                          array('start' => 'BLK_START_DT', 'end' => 'BLK_END_DT'));
 
                        
     foreach($date_fields as $date_field)

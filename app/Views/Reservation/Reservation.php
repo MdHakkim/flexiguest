@@ -6,23 +6,23 @@
 
 <style>
 /* style comparison */
-
-
 </style>
 
 
 
 <style>
-    .tooltip{
+.tooltip {
     z-index: 99999 !important;
 }
 
 .tooltip.top .tooltip-inner {
-    background-color:red !important;
+    background-color: red !important;
 }
+
 .tooltip.top .tooltip-arrow {
-      border-top-color: red !important;
+    border-top-color: red !important;
 }
+
 .active-tr {
     background-color: #d1e7ff !important;
     --bs-table-striped-bg: none;
@@ -108,56 +108,67 @@
 }
 
 #calendar {
-      max-width: 1100px;
-      margin: 40px auto;
-      font-size: 14px;
-    }
-.fc-time{ display : none !important; } 
-.fc-event-time { display: none }
-    
-    
-.fc-time-grid-event.fc-short .fc-time,.fc-time-grid-event .fc-time{
-    display: none !important;
-}
-    
-.fc-time-grid .fc-content-skeleton {
-  position: absolute;
-  z-index: 3;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%; 
+    max-width: 1100px;
+    margin: 40px auto;
+    font-size: 14px;
 }
 
-.fc-event-container .fc-timeline-event{
+.fc-time {
+    display: none !important;
+}
+
+.fc-event-time {
+    display: none
+}
+
+
+.fc-time-grid-event.fc-short .fc-time,
+.fc-time-grid-event .fc-time {
+    display: none !important;
+}
+
+.fc-time-grid .fc-content-skeleton {
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+}
+
+.fc-event-container .fc-timeline-event {
     background-color: #405974 !important;
     border-color: #405974 !important;
     color: rgb(255, 255, 255) !important;
-   
+
     top: 3px !important;
 }
-.fc-timeline-event .fc-time, .fc-timeline-event .fc-title{
+
+.fc-timeline-event .fc-time,
+.fc-timeline-event .fc-title {
     padding: 4px !important;
     font-size: 13px !important;
 }
-  .fc-resource-area col.fc-main-col {
+
+.fc-resource-area col.fc-main-col {
     width: 35% !important;
 }
-.tooltip
-{
-opacity: 1;
+
+.tooltip {
+    opacity: 1;
 }
-#errorModal{
-  display: none;
+
+#errorModal {
+    display: none;
 }
-#errorModal{
+
+#errorModal {
     position: fixed;
     top: 10px;
     right: 22px;
     z-index: 10000;
     width: 500px;
 }
-  
 </style>
 
 <!-- Content wrapper -->
@@ -174,7 +185,8 @@ opacity: 1;
 
                 <div class="row">
                     <div class="col-md-3 mt-1 mb-3"><button type="button" class="btn btn-primary"
-                            onClick="addResvation()" id="addReservation"><i class="fa-solid fa-plus fa-lg"></i> Add New</button></div>
+                            onClick="addResvation()" id="addReservation"><i class="fa-solid fa-plus fa-lg"></i> Add
+                            New</button></div>
                 </div>
                 <form class="dt_adv_search mb-2" method="POST">
                     <div class="border rounded p-3 mb-3">
@@ -435,13 +447,16 @@ opacity: 1;
                             <button type="button" class="btn btn-primary accompany-guests">Accompanying</button>
                             <button type="button" onClick="reservExtraOption('ADO')" class="btn btn-primary">Add
                                 On</button>
+                            <button type="button" class="btn btn-primary resv-attachments"
+                                data_sysid="">Attachments</button>
                             <button type="button" class="btn btn-primary cancel-reservation d-none" data_sysid=""
                                 data_custId="">Cancel</button>
                             <button type="button" class="btn btn-primary show-activity-log">Changes</button>
-                            <button type="button" class="btn btn-primary web-link-btn d-none" id="Resv-Check-In" > Check In</button>
+                            <button type="button" class="btn btn-primary web-link-btn d-none" id="Resv-Check-In"> Check
+                                In</button>
                             <button type="button" class="btn btn-primary checkout-reservation"
                                 onclick="reservationCheckout()">Checkout</button>
-                                
+
                             <button type="button" class="btn btn-primary web-link-btn">Docs</button>
                             <button type="button" class="btn btn-primary mt-2" id="fixedChargeButton" data_sysid=""
                                 style="width: 135px;">Fixed Charges</button>
@@ -455,7 +470,7 @@ opacity: 1;
                                 data_sysid="">Reinstate</button>
                             <button type="button" class="btn btn-primary shares-btn">Shares</button>
                             <button type="button" class="btn btn-primary" id="traceButton" data_sysid="">Traces</button>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -2028,15 +2043,15 @@ opacity: 1;
 
                     <div id="wizard-validation" class="bs-stepper mt-2">
                         <div class="bs-stepper-header">
-                            <div class="step" data-target="#select_items" >
+                            <div class="step" data-target="#select_items">
                                 <button type="button" class="step-trigger">
                                     <span class="bs-stepper-circle">1</span>
                                     <span class="bs-stepper-label">Items</span>
                                 </button>
                             </div>
                             <div class="line"></div>
-                            <div class="step" data-target="#item_availability"  onclick="showInventoryAvailability()" >
-                                <button type="button" class="step-trigger" >
+                            <div class="step" data-target="#item_availability" onclick="showInventoryAvailability()">
+                                <button type="button" class="step-trigger">
                                     <span class="bs-stepper-circle">2</span>
                                     <span class="bs-stepper-label">Inventory Availability</span>
                                 </button>
@@ -2164,13 +2179,14 @@ opacity: 1;
                                     </div>
 
                                 </div>
-                                </form>
+                            </form>
                             <div id="item_availability" class="content">
                                 <div class="card app-calendar-wrapper">
                                     <div class="row g-0">
 
                                         <!-- Calendar Sidebar -->
-                                        <div class="app-calendar-sidebar col" id="app-calendar-sidebar" style="display: none;">
+                                        <div class="app-calendar-sidebar col" id="app-calendar-sidebar"
+                                            style="display: none;">
                                             <div class="border-bottom p-4 my-sm-0 mb-3">
                                                 <div class="d-grid">
                                                     <button class="btn btn-primary btn-toggle-sidebar">
@@ -2212,13 +2228,13 @@ opacity: 1;
                                             </div>
                                             <div class="app-overlay"></div>
                                             <!-- FullCalendar Offcanvas -->
-                                            
+
                                         </div>
                                         <!-- /Calendar & Modal -->
                                     </div>
                                 </div>
                             </div>
-                           
+
                         </div>
                     </div>
                 </div>
@@ -2940,6 +2956,8 @@ opacity: 1;
 
     <?= $this->include('includes/CancelReservationPopup') ?>
 
+    <?= $this->include('includes/ReservationsAttachmentsPopup') ?>
+
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
@@ -2953,19 +2971,19 @@ var windowmode = '';
 //    // $('.editReserWindow[data_sysid="2061"]').trigger('click');
 // });
 
-$(document).ready(function() {   
+$(document).ready(function() {
     <?php
   
-    if(!empty($RESV_ID)) {  ?>    
-        $(".editReserWindow").attr('data_sysid','<?php echo $RESV_ID; ?>');
-        $(".editReserWindow").attr('data-reservation_customer_id','<?php echo $CUSTOMER_ID; ?>');
-        $(".editReserWindow").click();
+    if(!empty($RESV_ID)) {  ?>
+    $(".editReserWindow").attr('data_sysid', '<?php echo $RESV_ID; ?>');
+    $(".editReserWindow").attr('data-reservation_customer_id', '<?php echo $CUSTOMER_ID; ?>');
+    $(".editReserWindow").click();
     <?php
     }
 
-    if(!empty($ROOM_ID)) { ?>  
-       $("#addReservation").click();
-        
+    if(!empty($ROOM_ID)) { ?>
+    $("#addReservation").click();
+
     <?php
     }
     ?>
@@ -3136,48 +3154,48 @@ $(document).ready(function() {
     $('#RSV_ITM_BEGIN_DATE').datepicker({
         format: 'd-M-yyyy',
         autoclose: true,
-       
-       
+
+
     });
 
     $('#RSV_ITM_END_DATE').datepicker({
         format: 'd-M-yyyy',
         autoclose: true,
-       
-       
+
+
     });
 
     $('.dateFieldItem').datepicker({
         format: 'd-M-yyyy',
         autoclose: true,
-        
-       
+
+
     });
     $('#FIXD_CHRG_BEGIN_DATE').datepicker({
         format: 'd-M-yyyy',
         autoclose: true,
-       
+
     });
     $('#FIXD_CHRG_END_DATE').datepicker({
         format: 'd-M-yyyy',
         autoclose: true,
-      
+
     });
 
     $('#RSV_PCKG_BEGIN_DATE').datepicker({
         format: 'd-M-yyyy',
         autoclose: true,
-        
+
     });
     $('#RSV_PCKG_END_DATE').datepicker({
         format: 'd-M-yyyy',
         autoclose: true,
-        
+
     });
     $('#RSV_TRACE_DATE').datepicker({
         format: 'd-M-yyyy',
         autoclose: true,
-        
+
     });
 
     //$('#RSV_TRACE_TIME').timepicker();
@@ -3462,13 +3480,13 @@ function selectRate() {
                     '" value="' + dataSet['RM_TY_CODE'] + '">' + dataSet['RM_TY_DESC'] + '</option>';
                 $('#RESV_RTC').html(option).selectpicker('refresh');
                 $('#RESV_RM_TYPE').val(dataSet['RM_TY_CODE']).trigger('change');
-               <?php  if(!empty($ROOM_ID)) { ?>  
-                            
-                            $("#RESV_RM_TYPE").val('<?php echo $ROOM_TYPE; ?>');  
-                            $("#RESV_ROOM").val('<?php echo $ROOM_NO; ?>').trigger('change');             
-                            
-                            
-                        <?php
+                <?php  if(!empty($ROOM_ID)) { ?>
+
+                $("#RESV_RM_TYPE").val('<?php echo $ROOM_TYPE; ?>');
+                $("#RESV_ROOM").val('<?php echo $ROOM_NO; ?>').trigger('change');
+
+
+                <?php
                         }
                         ?>
             }
@@ -3577,6 +3595,7 @@ $(document).on('click', '.reserOption', function() {
     $('#proformaButton').attr('data_sysid', ressysId);
     $('#rateInfoButton').attr('data_sysid', ressysId);
     $('#traceButton').attr('data_sysid', ressysId);
+    $('.resv-attachments').attr('data_sysid', ressysId);
 
     $('.cancel-reservation,.reinstate-reservation').attr({
         'data_sysid': ressysId,
@@ -3609,7 +3628,7 @@ function displayResvOptionButtons(ressysId) {
             var departureDate = new Date(respn.RESV_DEPARTURE);
             var currentDate = new Date();
 
-            $('.cancel-reservation,.reinstate-reservation').attr({
+            $('.cancel-reservation,.reinstate-reservation,.resv-attachments').attr({
                 'data_resv_no': respn.RESV_NO
             });
 
@@ -3624,12 +3643,11 @@ function displayResvOptionButtons(ressysId) {
                 $('.reinstate-reservation').addClass('d-none').prop('disabled', true);
 
                 if (respn.RESV_STATUS == 'Due Pre Check-In' || respn.RESV_STATUS ==
-                    'Pre Checked-In'){
+                    'Pre Checked-In') {
                     $('.cancel-reservation').removeClass('d-none').prop('disabled', false);
                     $('#Resv-Check-In').removeClass('d-none').prop('disabled', false);
-                    
-                    }
-                else {
+
+                } else {
                     $('.cancel-reservation').addClass('d-none').prop('disabled', true);
                     if (respn.RESV_STATUS == 'Checked-In' || respn.RESV_STATUS ==
                         'Check-Out-Requested') {
@@ -3637,7 +3655,7 @@ function displayResvOptionButtons(ressysId) {
                         $('.checkout-reservation').removeClass('d-none');
                         if (currentDate >= departureDate) {
                             $('.checkout-reservation').prop('disabled', false);
-                            
+
                         }
                     } else if (respn.RESV_STATUS == 'Checked-Out') {
                         $('.accompany-guests,#proformaButton').prop(
@@ -3651,7 +3669,7 @@ function displayResvOptionButtons(ressysId) {
 }
 
 $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, param, paramArr, rmtype) {
-    
+
 
     var sysid = $(this).attr('data_sysid');
     reservation_customer_id = $(this).attr('data-reservation_customer_id');
@@ -3679,7 +3697,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 
     $('#reservationWlable').html('Edit Reservation');
 
-    
+
     $('#ITEM_RESV_ID').val(sysid);
     $('#FIXCHRG_RESV_ID').val(sysid);
     $('#PCKG_RESV_ID').val(sysid);
@@ -3807,8 +3825,8 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                 $('.RESV_NAME,#CUST_FIRST_NAME,#RESV_RESRV_TYPE,#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RM_TYPE,#RESV_ROOM')
                     .prop('readonly', true);
                 $('.RESV_ARRIVAL_DT').datepicker("destroy");
-            }
-            else if($('#RESV_STATUS').val() == 'Due Pre Check-In' || $('#RESV_STATUS').val() == 'Pre Checked-In'){
+            } else if ($('#RESV_STATUS').val() == 'Due Pre Check-In' || $('#RESV_STATUS').val() ==
+                'Pre Checked-In') {
 
             }
         }
@@ -3919,27 +3937,27 @@ function addResvation() {
     fillMembershipTypes('', 'add', '#RESV_MEMBER_TY_ADD');
 
 
-    <?php if(!empty($ROOM_ID)) { ?>      
-      
-        $(".RESV_ARRIVAL_DT").val('<?php echo $ARRIVAL_DATE ?>');
-        $(".RESV_DEPARTURE").val('<?php echo $DEPARTURE_DATE ?>');      
-     
-       
+    <?php if(!empty($ROOM_ID)) { ?>
+
+    $(".RESV_ARRIVAL_DT").val('<?php echo $ARRIVAL_DATE ?>');
+    $(".RESV_DEPARTURE").val('<?php echo $DEPARTURE_DATE ?>');
+
+
     <?php
     }else{
     ?>
-        var today = moment().format('DD-MM-YYYY');
-        var end = moment().add(1, 'days').format('DD-MM-YYYY');
-        $('.RESV_ARRIVAL_DT').datepicker({
-            format: 'd-M-yyyy',
-            autoclose: true
-        }).datepicker("setDate", today);
-        $('.RESV_DEPARTURE').datepicker({
-            format: 'd-M-yyyy',
-            autoclose: true
-        }).datepicker("setDate", end);
-        
-        <?php } ?>
+    var today = moment().format('DD-MM-YYYY');
+    var end = moment().add(1, 'days').format('DD-MM-YYYY');
+    $('.RESV_ARRIVAL_DT').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
+    }).datepicker("setDate", today);
+    $('.RESV_DEPARTURE').datepicker({
+        format: 'd-M-yyyy',
+        autoclose: true
+    }).datepicker("setDate", end);
+
+    <?php } ?>
 
 
 
@@ -4111,8 +4129,8 @@ function submitForm(id, mode, event) {
     $('#loader_flex_bg').show();
     $('#errorModal').hide();
     var formSerialization = $('#' + id).serializeArray();
-    var RESV_RM_TYPE_ID = $('.RESV_RM_TYPE').find(':selected').attr('data-room-type-id') ?? 0;    
-    
+    var RESV_RM_TYPE_ID = $('.RESV_RM_TYPE').find(':selected').attr('data-room-type-id') ?? 0;
+
     formSerialization.push({
         name: 'RESV_RM_TYPE_ID',
         value: RESV_RM_TYPE_ID
@@ -4278,7 +4296,7 @@ $(document).on('keyup', '.RESV_RTC .form-control', function() {
 });
 
 $(document).on('change', '#RESV_RM_TYPE,#RESV_RTC', function() {
-   
+
     var feature = $(this).find('option:selected').attr('data-feture');
     $('[name="RESV_FEATURE"]').val(feature);
 
@@ -5374,7 +5392,7 @@ function showInventoryItems(resvID) {
             },
             {
                 data: 'RSV_ITM_BEGIN_DATE'
-               
+
             },
             {
                 data: 'RSV_ITM_END_DATE'
@@ -5434,11 +5452,10 @@ function loadInventoryDetails(itemID) {
                         class_val = dataval;
                     } else if (field == 'RSV_ITM_CL_ID') {
                         $('#' + field).val(dataval).trigger('change', class_val);
-                    }
-                    else if(field == 'RSV_ITM_BEGIN_DATE' || field == 'RSV_ITM_END_DATE'){
+                    } else if (field == 'RSV_ITM_BEGIN_DATE' || field ==
+                        'RSV_ITM_END_DATE') {
                         $('#' + field).datepicker("setDate", new Date(dataval));
-                    }                    
-                    else {
+                    } else {
                         $('#' + field).val(dataval);
                     }
                 });
@@ -5521,149 +5538,155 @@ function itemInventoryClassSingle() {
 
 
 //document.addEventListener('DOMContentLoaded', function() {
-  function showInventoryAvailability()
- {    
+function showInventoryAvailability() {
     var output = '';
     $.ajax({
         url: '<?php echo base_url('/getInventoryCalendarData') ?>',
-        type: "post",       
-        async:false,
-        dataType:'json',
+        type: "post",
+        async: false,
+        dataType: 'json',
         success: function(respn) {
-            output = respn;            
+            output = respn;
         }
     });
 
     itemCalendarResources = output['itemResources'];
-    itemCalendarAvail     = output['itemAvail'];
+    itemCalendarAvail = output['itemAvail'];
 
-    if($('#calendar>*').length == 0) {
-        calendarRender(itemCalendarResources,itemCalendarAvail);
+    if ($('#calendar>*').length == 0) {
+        calendarRender(itemCalendarResources, itemCalendarAvail);
     }
-    console.log( itemCalendarAvail )
- }
+    console.log(itemCalendarAvail)
+}
 
 
-function calendarRender(itemCalendarResources, itemCalendarAvail){
-   
-let date = new Date();
-let nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-// prettier-ignore
-let nextMonth = date.getMonth() === 11 ? new Date(date.getFullYear() + 1, 0, 1) : new Date(date.getFullYear(), date.getMonth() + 1, 1);
-// prettier-ignore
-let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) : new Date(date.getFullYear(), date.getMonth() - 1, 1);
+function calendarRender(itemCalendarResources, itemCalendarAvail) {
 
-var calendarEl = document.getElementById('calendar');
+    let date = new Date();
+    let nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+    // prettier-ignore
+    let nextMonth = date.getMonth() === 11 ? new Date(date.getFullYear() + 1, 0, 1) : new Date(date.getFullYear(), date
+        .getMonth() + 1, 1);
+    // prettier-ignore
+    let prevMonth = date.getMonth() === 11 ? new Date(date.getFullYear() - 1, 0, 1) : new Date(date.getFullYear(), date
+        .getMonth() - 1, 1);
 
-var calendar = new FullCalendar.Calendar(calendarEl, {
-//schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-//schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
-//titleFormat: 'YYYY-MM-DD',
-timeZone: 'UTC',
-plugins: [ 'resourceTimeline', 'interaction' ],
+    var calendarEl = document.getElementById('calendar');
 
-droppable: true,
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        //schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+        //schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+        //titleFormat: 'YYYY-MM-DD',
+        timeZone: 'UTC',
+        plugins: ['resourceTimeline', 'interaction'],
 
-header: {
+        droppable: true,
 
-left: 'today prev,next',
+        header: {
 
-center: 'title',
+            left: 'today prev,next',
 
-right: ''
+            center: 'title',
 
-},
+            right: ''
 
-
-aspectRatio: 1.5,
-
-defaultView: 'resourceTimelineWeek',
-
-slotLabelFormat: [{ weekday: 'short', month: 'numeric', day: 'numeric', omitCommas: true }],
-
-slotLabelInterval: { days: 1 },
-
-editable: true,
-
-resourceAreaWidth: '35%',
-
-resourceColumns: [
-{
-labelText: 'Item',
-
-field: 'item',
-
-},
-],
-validRange: {
-    start: '2022-01-01',
-    end: '2040-12-31'
-},
-
-resources: itemCalendarResources,
-//events: itemCalendarAvail,
-events: function(info, successCallback, failureCallback) {  
-    //console.log(info.start)
-        let START = info.start;
-        let s = new Date(START);
-        START = s.toISOString(START);
-        let END = info.end;
-        let e = new Date(END);
-        END = e.toISOString(END);
-    $.ajax({
-        url: '<?php echo base_url('/getInventoryAllocatedData') ?>',
-        type: "post",  
-        dataType: 'json',
-        data: {
-            start: START,
-            end: END
         },
-        success: function(res) {
-         
-          var events = [];
-          res.forEach(function (evt) {
-            events.push({
-              id:evt.id,
-              resourceId:evt.resourceId,
-              title: evt.title,
-              start: evt.start,
-              end: evt.end,
+
+
+        aspectRatio: 1.5,
+
+        defaultView: 'resourceTimelineWeek',
+
+        slotLabelFormat: [{
+            weekday: 'short',
+            month: 'numeric',
+            day: 'numeric',
+            omitCommas: true
+        }],
+
+        slotLabelInterval: {
+            days: 1
+        },
+
+        editable: true,
+
+        resourceAreaWidth: '35%',
+
+        resourceColumns: [{
+            labelText: 'Item',
+
+            field: 'item',
+
+        }, ],
+        validRange: {
+            start: '2022-01-01',
+            end: '2040-12-31'
+        },
+
+        resources: itemCalendarResources,
+        //events: itemCalendarAvail,
+        events: function(info, successCallback, failureCallback) {
+            //console.log(info.start)
+            let START = info.start;
+            let s = new Date(START);
+            START = s.toISOString(START);
+            let END = info.end;
+            let e = new Date(END);
+            END = e.toISOString(END);
+            $.ajax({
+                url: '<?php echo base_url('/getInventoryAllocatedData') ?>',
+                type: "post",
+                dataType: 'json',
+                data: {
+                    start: START,
+                    end: END
+                },
+                success: function(res) {
+
+                    var events = [];
+                    res.forEach(function(evt) {
+                        events.push({
+                            id: evt.id,
+                            resourceId: evt.resourceId,
+                            title: evt.title,
+                            start: evt.start,
+                            end: evt.end,
+                        });
+                    });
+                    successCallback(events);
+                },
+
             });
-          });
-          successCallback(events);
         },
-        
+        eventMouseEnter: function(info) {
+            var titleText = info.event.title;
+            var myarr = titleText.split("|");
+            var title = 'Available Quantity : ' + myarr[0] + ", Total Quantity: " + myarr[1];
+            var title =
+                $(info.el).tooltip({
+                    title: title,
+                    html: true,
+                    placement: 'top',
+                    trigger: 'hover',
+                    container: 'body',
+
+                });
+        },
+
+        eventDidMount: function(info) {
+            var tooltip = new Tooltip(info.el, {
+                title: 'titlesdasd',
+                placement: 'top',
+                trigger: 'hover',
+                container: 'body',
+            });
+        },
+
+
     });
-},
-eventMouseEnter: function (info) {
-    var titleText = info.event.title;
-    var myarr = titleText.split("|");
-    var title = 'Available Quantity : '+ myarr[0] + ", Total Quantity: " + myarr[1];
-    var title = 
-        $(info.el).tooltip({
-              title: title,
-              html: true,
-              placement: 'top',
-              trigger: 'hover',
-              container: 'body',
-              
-        });
-},
 
-eventDidMount: function(info) {
-      var tooltip = new Tooltip(info.el, {
-        title: 'titlesdasd',
-        placement: 'top',
-        trigger: 'hover',
-        container: 'body',
-      });
-    },
- 
-    
-});
-
-calendar.render();
-//console.log(itemCalendarAvail);
+    calendar.render();
+    //console.log(itemCalendarAvail);
 }
 //});
 
@@ -5696,8 +5719,10 @@ $(document).on('click', '#fixedChargeButton', function() {
             $('#FIXD_NIGHTS').val(respn.RESV_NIGHT);
             $('#FIXD_DEPARTURE').val(respn.RESV_DEPARTURE);
             $('#FIXD_DEPARTURE_UP').val(respn.RESV_DEPARTURE);
-            $('#FIXD_CHRG_BEGIN_DATE').datepicker("setDate", $('.window-1').find('.RESV_ARRIVAL_DT').val());
-            $('#FIXD_CHRG_END_DATE').datepicker("setDate", $('.window-1').find('.RESV_DEPARTURE').val());
+            $('#FIXD_CHRG_BEGIN_DATE').datepicker("setDate", $('.window-1').find('.RESV_ARRIVAL_DT')
+                .val());
+            $('#FIXD_CHRG_END_DATE').datepicker("setDate", $('.window-1').find('.RESV_DEPARTURE')
+                .val());
             //alert($('#FIXD_CHRG_BEGIN_DATE').val());
             $('#FIXD_CHRG_FREQUENCY4').prop('disabled', false);
             $('#FIXD_CHRG_FREQUENCY5').prop('disabled', false);
@@ -5967,12 +5992,10 @@ function loadFixedchargeDetails(fixedChargeID) {
                     } else if (FIXD_CHRG_FREQUENCY == 3 && field ==
                         'FIXD_CHRG_WEEKLY') {
                         $('#' + field).val(dataval).trigger('change');
-                    } 
-
-                    else if (field == 'FIXD_CHRG_BEGIN_DATE' || field == 'FIXD_CHRG_END_DATE' || field == 'FIXD_CHRG_YEARLY'){
-                        $('#' + field).datepicker("setDate", new Date(dataval)); 
-                    } 
-                    else {
+                    } else if (field == 'FIXD_CHRG_BEGIN_DATE' || field ==
+                        'FIXD_CHRG_END_DATE' || field == 'FIXD_CHRG_YEARLY') {
+                        $('#' + field).datepicker("setDate", new Date(dataval));
+                    } else {
                         $('#' + field).val(dataval);
                     }
                 });
@@ -6334,7 +6357,7 @@ $(document).on('click', '.save-package-detail', function() {
 $(document).on('click', '.add-package-detail', function() {
     hideModalAlerts();
     $('.dtr-bs-modal').modal('hide');
-    
+
     bootbox.dialog({
         message: "Do you want to add a new Package Detail?",
         buttons: {
@@ -6347,8 +6370,10 @@ $(document).on('click', '.add-package-detail', function() {
                         $("#RSV_PCKG_ID").val('');
                         $('#Package_Details').find('tr.table-warning').removeClass(
                             'table-warning');
-                            $('#RSV_PCKG_BEGIN_DATE').datepicker("setDate", $('.window-1').find('.RESV_ARRIVAL_DT').val());
-                            $('#RSV_PCKG_END_DATE').datepicker("setDate", $('.window-1').find('.RESV_DEPARTURE').val());
+                        $('#RSV_PCKG_BEGIN_DATE').datepicker("setDate", $('.window-1').find(
+                            '.RESV_ARRIVAL_DT').val());
+                        $('#RSV_PCKG_END_DATE').datepicker("setDate", $('.window-1').find(
+                            '.RESV_DEPARTURE').val());
 
                         //Disable Delete button
                         toggleButton('.delete-package-detail', 'btn-danger', 'btn-dark', true);
@@ -6544,8 +6569,10 @@ $(document).on('click', '#Package_Details > tbody > tr', function() {
         success: function(respn) {
             $('#Each_Package_Details').DataTable().destroy();
             $('#Each_Package_Details > tbody').html(respn);
-            $('#Each_Package_Details').DataTable({ paging: true});
-            
+            $('#Each_Package_Details').DataTable({
+                paging: true
+            });
+
         }
     });
 
@@ -6575,11 +6602,10 @@ function loadPackageDetails(packageID) {
                     var dataval = $.trim(datavals);
                     if (field == 'PCKG_ID') {
                         $('#' + field).val(dataval).trigger('change');
-                    }
-                    else if(field == 'RSV_PCKG_BEGIN_DATE' || field == 'RSV_PCKG_END_DATE'){
+                    } else if (field == 'RSV_PCKG_BEGIN_DATE' || field ==
+                        'RSV_PCKG_END_DATE') {
                         $('#' + field).datepicker("setDate", new Date(dataval));
-                    } 
-                    else {
+                    } else {
                         $('#' + field).val(dataval);
                     }
                 });
@@ -6602,7 +6628,9 @@ function loadPackageDetails(packageID) {
         success: function(respn) {
             $('#Each_Package_Details').DataTable().destroy();
             $('#Each_Package_Details > tbody').html(respn);
-            $('#Each_Package_Details').DataTable({ paging: true});
+            $('#Each_Package_Details').DataTable({
+                paging: true
+            });
         }
     });
 }
@@ -6841,7 +6869,7 @@ function showTraces(resvID) {
                 data: 'RSV_TRACE_RESOLVED_ON',
                 render: function(data, type, full, meta) {
                     if (full['RSV_TRACE_RESOLVED_ON'] != '1900-01-01')
-                        return full['RSV_TRACE_RESOLVED_ON']+' '+full['RSV_TRACE_RESOLVED_TIME'];
+                        return full['RSV_TRACE_RESOLVED_ON'] + ' ' + full['RSV_TRACE_RESOLVED_TIME'];
                     else
                         return '';
                 }

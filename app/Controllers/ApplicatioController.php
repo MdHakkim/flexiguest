@@ -53,8 +53,13 @@ class ApplicatioController extends BaseController
 
         $data['userList'] = geUsersList(); 
 
-        $data['js_to_load'] = array("inventoryFormWizardNumbered.js","RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
-        $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
+        $data['js_to_load'] = array("inventoryFormWizardNumbered.js","RoomPlan/FullCalendar/Core/main.min.js",
+                                    "RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", 
+                                    "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js",
+                                    "resv-attachment-file-upload.js");
+
+        $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", 
+                                     "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
         
         $data['RoomReservations'] = $this->getReservations(); 
         $data['RoomResources'] = $this->roomplanResources();
@@ -227,7 +232,7 @@ class ApplicatioController extends BaseController
         $sql = "SELECT $addColumnCopty,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_MEMBER_TY,RESV_CUST_MEMBERSHIP,
         RESV_COMPANY,(SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY)RESV_COMPANY_DESC,
         RESV_AGENT,(SELECT AGN_ACCOUNT FROM FLXY_AGENT_PROFILE WHERE AGN_ID=RESV_AGENT)RESV_AGENT_DESC,
-        RESV_BLOCK,(SELECT BLK_NAME+' - '+BLK_CODE+' - '+BLK_START_DT+' - '+BLK_END_DT AS BLOCKDESC FROM FLXY_BLOCK WHERE BLK_ID=RESV_BLOCK)RESV_BLOCK_DESC,RESV_MEMBER_NO,RESV_CORP_NO,RESV_IATA_NO,RESV_CLOSED,RESV_DAY_USE,
+        RESV_BLOCK,(SELECT CONCAT_WS(' - ', BLK_NAME, BLK_CODE, BLK_START_DT, BLK_END_DT) AS BLOCKDESC FROM FLXY_BLOCK WHERE BLK_ID=RESV_BLOCK)RESV_BLOCK_DESC,RESV_MEMBER_NO,RESV_CORP_NO,RESV_IATA_NO,RESV_CLOSED,RESV_DAY_USE,
         RESV_PSEUDO,RESV_RATE_CLASS,RESV_RATE_CATEGORY,RESV_RATE_CODE,RESV_ROOM_CLASS,RESV_FEATURE,RESV_PURPOSE_STAY,RESV_STATUS,RESV_RM_TYPE,RESV_C_O_TIME,RESV_TAX_TYPE,RESV_EXEMPT_NO,RESV_PICKUP_YN,RESV_TRANSPORT_TYP,RESV_STATION_CD,RESV_CARRIER_CD,RESV_TRANSPORT_NO,FORMAT(RESV_ARRIVAL_DT_PK,'dd-MMM-yyyy')RESV_ARRIVAL_DT_PK,RESV_PICKUP_TIME,RESV_DROPOFF_YN,RESV_TRANSPORT_TYP_DO,RESV_STATION_CD_DO,RESV_CARRIER_CD_DO,RESV_TRANSPORT_NO_DO,FORMAT(RESV_ARRIVAL_DT_DO,'dd-MMM-yyyy')RESV_ARRIVAL_DT_DO,RESV_DROPOFF_TIME,RESV_GUST_TY,RESV_EXT_PURP_STAY,RESV_ENTRY_PONT,RESV_PROFILE,RESV_NAME_ON_CARD,RESV_EXT_PRINT_RT,
         (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RESV_RM_TYPE_DESC,
         (SELECT RM_DESC FROM FLXY_ROOM WHERE RM_NO=RESV_ROOM)RESV_ROOM_DESC,(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RTC) RESV_RTC_DESC,
@@ -268,7 +273,7 @@ class ApplicatioController extends BaseController
         $sql = "SELECT $addColumnCopty,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_MEMBER_TY,RESV_CUST_MEMBERSHIP,
         RESV_COMPANY,(SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY)RESV_COMPANY_DESC,
         RESV_AGENT,(SELECT AGN_ACCOUNT FROM FLXY_AGENT_PROFILE WHERE AGN_ID=RESV_AGENT)RESV_AGENT_DESC,
-        RESV_BLOCK,(SELECT BLK_NAME+' - '+BLK_CODE+' - '+BLK_START_DT+' - '+BLK_END_DT AS BLOCKDESC FROM FLXY_BLOCK WHERE BLK_ID=RESV_BLOCK)RESV_BLOCK_DESC,RESV_MEMBER_NO,RESV_CORP_NO,RESV_IATA_NO,RESV_CLOSED,RESV_DAY_USE,
+        RESV_BLOCK,(SELECT CONCAT_WS(' - ', BLK_NAME, BLK_CODE, BLK_START_DT, BLK_END_DT) AS BLOCKDESC FROM FLXY_BLOCK WHERE BLK_ID=RESV_BLOCK)RESV_BLOCK_DESC,RESV_MEMBER_NO,RESV_CORP_NO,RESV_IATA_NO,RESV_CLOSED,RESV_DAY_USE,
         RESV_PSEUDO,RESV_RATE_CLASS,RESV_RATE_CATEGORY,RESV_RATE_CODE,RESV_ROOM_CLASS,RESV_FEATURE,RESV_PURPOSE_STAY,RESV_STATUS,RESV_RM_TYPE,RESV_C_O_TIME,RESV_TAX_TYPE,RESV_EXEMPT_NO,RESV_PICKUP_YN,RESV_TRANSPORT_TYP,RESV_STATION_CD,RESV_CARRIER_CD,RESV_TRANSPORT_NO,FORMAT(RESV_ARRIVAL_DT_PK,'dd-MMM-yyyy')RESV_ARRIVAL_DT_PK,RESV_PICKUP_TIME,RESV_DROPOFF_YN,RESV_TRANSPORT_TYP_DO,RESV_STATION_CD_DO,RESV_CARRIER_CD_DO,RESV_TRANSPORT_NO_DO,FORMAT(RESV_ARRIVAL_DT_DO,'dd-MMM-yyyy')RESV_ARRIVAL_DT_DO,RESV_DROPOFF_TIME,RESV_GUST_TY,RESV_EXT_PURP_STAY,RESV_ENTRY_PONT,RESV_PROFILE,RESV_NAME_ON_CARD,RESV_EXT_PRINT_RT,
         (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RESV_RM_TYPE_DESC,
         (SELECT RM_DESC FROM FLXY_ROOM WHERE RM_NO=RESV_ROOM)RESV_ROOM_DESC,(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RTC) RESV_RTC_DESC,
@@ -1312,7 +1317,12 @@ class ApplicatioController extends BaseController
     function customerList(){
         try{
             $search = $this->request->getPost("search");
-            $sql = "SELECT CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME,CUST_ID FROM FLXY_CUSTOMER WHERE (CUST_FIRST_NAME LIKE '%$search%' OR CUST_MIDDLE_NAME LIKE '%$search%' OR CUST_LAST_NAME LIKE '%$search%')";
+            $sql = "SELECT CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME,CUST_ID 
+                    FROM FLXY_CUSTOMER 
+                    WHERE ( CUST_FIRST_NAME LIKE '%$search%' 
+                            OR CUST_MIDDLE_NAME LIKE '%$search%' 
+                            OR CUST_LAST_NAME LIKE '%$search%')
+                    ORDER BY CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) ASC";
             $response = $this->Db->query($sql)->getResultArray();
             $option='<option value="">Select Guest</option>';
             foreach($response as $row){
@@ -1818,17 +1828,83 @@ class ApplicatioController extends BaseController
         }
     }
     // Group modal
+    
     // Block modal
     public function block(){
+
+        $data['userList'] = geUsersList(); 
+        $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['title'] = getMethodName();
         return view('Reservation/BlockView', $data);
     }
+
     public function BlockView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_BLOCK';
         $columns = 'BLK_ID,BLK_CODE,BLK_NAME,BLK_START_DT,BLK_END_DT,BLK_STATUS,BLK_RESER_TYPE,BLK_RESER_METHOD';
         $mine->generate_DatatTable($tableName,$columns);
         exit;
+    }
+
+    public function BlockReservationView(){
+
+        $_POST = filter_var($_POST, \FILTER_CALLBACK, ['options' => 'trim']);
+
+        $postValues = $this->request->getPost('columns');
+        $blkId = null !== $this->request->getPost('RESV_BLOCK') && !empty(trim($this->request->getPost('RESV_BLOCK'))) ? 
+                 $this->request->getPost('RESV_BLOCK') : '0';
+
+        $search_keys = ['S_GUEST_NAME', 'S_CUST_FIRST_NAME', 'S_GUEST_PHONE', 'S_CUST_EMAIL', 
+                        'S_COMPNAME', 'S_AGENTNAME', 'S_RESV_ROOM', 'S_RESV_RM_TYPE', 'S_RESV_NO', 
+                        'S_ARRIVAL_FROM', 'S_ARRIVAL_TO', 'S_DEPARTURE_FROM', 'S_DEPARTURE_TO', 'S_ROOM_NO', 
+                        'S_SEARCH_TYPE', 'S_RESV_CREATE_DT', 'S_RESV_CREATE_UID'];
+
+        $init_cond = array("RESV_BLOCK = " => $blkId);
+
+        if($search_keys != NULL){
+            foreach($search_keys as $search_key)
+            {
+                if(null !== $this->request->getPost($search_key) && !empty(trim($this->request->getPost($search_key))))
+                {
+                    $value = trim($this->request->getPost($search_key));
+
+                    switch($search_key)
+                    {
+                        case 'S_GUEST_NAME': $init_cond["CONCAT_WS(' ', CUST_FIRST_NAME, CUST_LAST_NAME) LIKE "] = "'%$value%'"; break;
+                        //case 'S_GUEST_FIRST_NAME': $init_cond["SUBSTRING(FULLNAME,1,(CHARINDEX(' ',FULLNAME + ' ')-1)) LIKE "] = "'%$value%'"; break;
+                        case 'S_GUEST_PHONE': $init_cond["(CUST_MOBILE LIKE '%$value%' OR CUST_PHONE LIKE '%$value%')"] = ""; break;
+                        case 'S_ARRIVAL_FROM': $init_cond["RESV_ARRIVAL_DT >= "] = "'$value'"; break;
+                        case 'S_ARRIVAL_TO': $init_cond["RESV_ARRIVAL_DT <= "] = "'$value'"; break;
+                        case 'S_DEPARTURE_FROM': $init_cond["RESV_DEPARTURE >= "] = "'$value'"; break;
+                        case 'S_DEPARTURE_TO': $init_cond["RESV_DEPARTURE <= "] = "'$value'"; break;
+                        case 'S_RESV_CREATE_DT': $init_cond["RESV_CREATE_DT = "] = "'$value'"; break;
+                        
+                        case 'S_SEARCH_TYPE': { switch($value)
+                                                {
+                                                    case '1': $init_cond["RESV_ARRIVAL_DT = "] = "'".date('Y-m-d')."'"; break;
+                                                    case '2': $init_cond["RESV_DEPARTURE = "]  = "'".date('Y-m-d')."'"; break;
+                                                    case '3': $init_cond["RESV_ARRIVAL_DT = "] = "RESV_DEPARTURE"; break;
+                                                    case '4': $init_cond["RESV_STATUS = "] = "'Checked-In'"; break;
+                                                    case '5': $init_cond["RESV_STATUS = "] = "'Checked-Out'"; break;
+                                                    case '7': $init_cond["RESV_STATUS = "] = "'Cancelled'"; break;
+                                                    default: break;
+                                                }
+                                              } break;
+
+                        default: $init_cond["".ltrim($search_key, "S_")." LIKE "] = "'%$value%'"; break;
+                        
+                    }
+                    
+                }
+            }
+        }
+        
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_RESERVATION_VIEW LEFT JOIN FLXY_CUSTOMER C ON C.CUST_ID = FLXY_RESERVATION_VIEW.RESV_NAME';
+        $columns = 'RESV_ID|RESV_NO|RESV_BLOCK|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_STATUS|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|RESV_ROOM|(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC|RESV_NO_F_ROOM|CUST_ID|CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME)CUST_FIRST_NAME|CUST_MIDDLE_NAME|CUST_LAST_NAME|CUST_EMAIL|CUST_MOBILE|CUST_PHONE|RESV_FEATURE|FORMAT(RESV_CREATE_DT,\'dd-MMM-yyyy\')RESV_CREATE_DT|RESV_PURPOSE_STAY';
+        $mine->generate_DatatTable($tableName,$columns,$init_cond,'|');
+        exit;
+        // return view('Dashboard');
     }
 
     public function companyList(){
@@ -1864,23 +1940,86 @@ class ApplicatioController extends BaseController
         echo $option;
     }
 
+    public function numRooms(){
+        $rmtype = $this->request->getPost("rmtype");
+        $sql = "SELECT RM_ID, RM_NO, RM_TYPE, RM_TYPE_REF_ID, SM.RM_STATUS_CODE, SM.RM_STATUS_ID, RL.RM_STAT_UPDATED      
+                FROM FLXY_ROOM 
+                LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
+                            FROM FLXY_ROOM_STATUS_LOG
+                            GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+                
+                INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                
+                INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
+                WHERE RM_TYPE_REF_ID = '".$rmtype."' AND (RM_STATUS_ID != 4 AND RM_STATUS_ID != 5)
+                GROUP BY RM_ID,RM_NO,RM_TYPE_REF_ID,RM_STATUS_CODE,RM_STATUS_ID,RM_TYPE,RM_STAT_UPDATED		
+                ORDER BY RM_ID ASC";
+
+        $response = $this->Db->query($sql)->getNumRows();
+        echo $response;
+    }
+
+    public function getRateCodesByRoomType(){
+        $rmtype = $this->request->getPost("rmtype");
+        $arr_date = date('Y-m-d', strtotime(trim($this->request->getPost('arr_date'))));
+        $dep_date = date('Y-m-d', strtotime(trim($this->request->getPost('dep_date'))));
+        
+        $sql = "SELECT  RC.RT_CD_ID, RC.RT_CD_CODE, RC.RT_CD_DESC, 
+                        CAST(RCD.RT_CD_DT_1_ADULT AS DECIMAL(10, 2)) AS ACTUAL_ADULT_PRICE 
+                FROM FLXY_RATE_CODE_DETAIL RCD
+                LEFT JOIN FLXY_RATE_CODE RC ON RC.RT_CD_ID = RCD.RT_CD_ID
+                WHERE CONCAT(',', RCD.RT_CD_DT_ROOM_TYPES, ',') LIKE '%,".$rmtype.",%' 
+                AND ( '".$arr_date."' BETWEEN RT_CD_START_DT AND RT_CD_END_DT 
+                      AND '".$dep_date."' BETWEEN RT_CD_START_DT AND RT_CD_END_DT)";
+        
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '<option value="">Choose a Rate Code</option>';
+        foreach ($response as $row) {
+            $option .= '<option value="' . $row['RT_CD_CODE'] . '" data-rtcode-price="'.$row['ACTUAL_ADULT_PRICE'].'">' . $row['RT_CD_CODE'] . ' | ' . $row['RT_CD_DESC'] . '</option>';
+        }
+
+        echo $option;        
+    }
+
     public function getSupportingblkLov(){
-        $sql = "SELECT MK_CD_CODE CODE,MK_CD_DESC DESCS FROM FLXY_MARKET_CODE";
+        $sql = "SELECT MK_CD_ID CODE,MK_CD_DESC DESCS FROM FLXY_MARKET_CODE";
         $respon1 = $this->Db->query($sql)->getResultArray();
-        $sql = "SELECT SOR_CODE CODE,SOR_DESC DESCS FROM FLXY_SOURCE";
+        
+        $sql = "SELECT SOR_ID CODE,SOR_DESC DESCS FROM FLXY_SOURCE";
         $respon2 = $this->Db->query($sql)->getResultArray();
-        $data = [$respon1,$respon2];
+        
+        $sql = "SELECT RM_ID CODE,RM_DESC DESCS FROM FLXY_RESERVATION_METHOD";
+        $respon3 = $this->Db->query($sql)->getResultArray();
+        
+        $sql = "SELECT BLK_STS_CD_ID CODE,BLK_STS_CD_DESC DESCS, BLK_STS_CD_RETURN_INVENTORY RET_INV 
+                FROM FLXY_BLOCK_STATUS_CODE WHERE BLK_STS_CD_STARTING_STATUS = 1";
+        $respon4 = $this->Db->query($sql)->getResultArray();
+        
+        $sql = "SELECT BLK_STS_CD_ID CODE,BLK_STS_CD_DESC DESCS, BLK_STS_CD_RETURN_INVENTORY RET_INV 
+                FROM FLXY_BLOCK_STATUS_CODE";
+        $respon5 = $this->Db->query($sql)->getResultArray();
+
+        $sql = "SELECT RESV_TY_ID CODE,RESV_TY_DESC DESCS FROM FLXY_RESERVATION_TYPE";
+        $respon6 = $this->Db->query($sql)->getResultArray();
+        
+                
+        $data = [$respon1,$respon2,$respon3,$respon4,$respon5,$respon6];
         echo json_encode($data);
     }
 
     function insertBlock(){
         try{
+            $sysid = $this->request->getPost("BLK_ID");
+
             $validate = $this->validate([
-                'BLK_GROUP' => ['label' => 'Block Group', 'rules' => 'required'],
                 'BLK_NAME' => ['label' => 'Block Name', 'rules' => 'required'],
-                'BLK_CODE' => ['label' => 'Block Code', 'rules' => 'required'],
+                'BLK_CODE' => ['label' => 'Block Code', 'rules' => 'required|is_unique[FLXY_BLOCK.BLK_CODE,BLK_ID,' . $sysid . ']'],
                 'BLK_START_DT' => ['label' => 'Start Date', 'rules' => 'required'],
-                'BLK_END_DT' => ['label' => 'End Date', 'rules' => 'required']
+                'BLK_END_DT' => ['label' => 'End Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Date should be after Begin Date']],
+                'BLK_STATUS' => ['label' => 'Block Status', 'rules' => 'required'],
+                'BLK_RESER_TYPE' => ['label' => 'Reservation Type', 'rules' => 'required'],
+                'BLK_MARKET' => ['label' => 'Market', 'rules' => 'required'],
+                'BLK_SOURCE' => ['label' => 'Source', 'rules' => 'required'],
             ]);
             if(!$validate){
                 $validate = $this->validator->getErrors();
@@ -1890,7 +2029,6 @@ class ApplicatioController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            $sysid = $this->request->getPost("BLK_ID");
             if(!empty($sysid)){
                 $data = ["BLK_COMP" => $this->request->getPost("BLK_COMP"),
                     "BLK_AGENT" => $this->request->getPost("BLK_AGENT"),
@@ -1960,10 +2098,12 @@ class ApplicatioController extends BaseController
     function editBlock(){
         $param = ['SYSID'=> $this->request->getPost("sysid")];
         $sql = "SELECT BLK_ID,
-        BLK_COMP,(SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE BLK_COMP=COM_ID)BLK_COMP_DESC,
-        BLK_AGENT,(SELECT AGN_ACCOUNT FROM FLXY_AGENT_PROFILE WHERE BLK_AGENT=AGN_ID)BLK_AGENT_DESC,
-        BLK_GROUP,(SELECT GRP_NAME FROM FLXY_GROUP WHERE BLK_GROUP=GRP_ID)BLK_GROUP_DESC,
-        BLK_NAME,BLK_START_DT,BLK_NIGHT,BLK_CODE,BLK_END_DT,BLK_STATUS,BLK_RESER_TYPE,BLK_MARKET,BLK_SOURCE,BLK_ELASTIC,BLK_CUTOFF_DAYS,BLK_CUTOFF_DT,BLK_RESER_METHOD,BLK_RATE_CODE,BLK_PACKAGE FROM FLXY_BLOCK WHERE BLK_ID=:SYSID:";
+                BLK_COMP,(SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE BLK_COMP=COM_ID)BLK_COMP_DESC,
+                BLK_AGENT,(SELECT AGN_ACCOUNT FROM FLXY_AGENT_PROFILE WHERE BLK_AGENT=AGN_ID)BLK_AGENT_DESC,
+                BLK_GROUP,(SELECT GRP_NAME FROM FLXY_GROUP WHERE BLK_GROUP=GRP_ID)BLK_GROUP_DESC,
+                BLK_NAME,BLK_START_DT,BLK_NIGHT,BLK_CODE,BLK_END_DT,BLK_STATUS,BLK_RESER_TYPE,BLK_MARKET,BLK_SOURCE,
+                BLK_ELASTIC,BLK_CUTOFF_DAYS,BLK_CUTOFF_DT,BLK_RESER_METHOD,BLK_RATE_CODE,BLK_PACKAGE 
+                FROM FLXY_BLOCK WHERE BLK_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
@@ -1982,6 +2122,94 @@ class ApplicatioController extends BaseController
         }catch (Exception $e){
             return $this->respond($e->errors());
         }
+    }
+
+    public function insertBlockReservation()
+    {
+        $addResvFields = $this->request->getPost('ADD_RESV');
+        //echo "<pre>"; print_r($this->request->getPost()); echo "</pre>"; exit;
+
+        $validate = $this->validate([
+            'ADD_RESV.*.RESV_NAME' => ['label' => 'Guest Name', 'rules' => 'required'],
+            'ADD_RESV.*.RESV_ARRIVAL_DT' => ['label' => 'Arrival Date', 'rules' => 'required|valid_date[j-M-Y]', 'errors' => ['required' => 'Please enter a valid Arrival Date']],
+            'ADD_RESV.*.RESV_DEPARTURE' => ['label' => 'Departure Date', 'rules' => 'required|valid_date[j-M-Y]', 'errors' => ['required' => 'Please enter a valid Departure Date']],
+            'ADD_RESV.*.RESV_RM_TYPE' => ['label' => 'Room Type', 'rules' => 'required'],
+            'ADD_RESV.*.RESV_NO_F_ROOM' => ['label' => 'No of Rooms', 'rules' => 'required|is_natural_no_zero', 'errors' => ['required' => 'Please enter the number of rooms']],
+            'ADD_RESV.*.RESV_RATE_CODE' => ['label' => 'Rate Code', 'rules' => 'required', 'errors' => ['required' => 'Please select a Rate Code or try another room type']],
+        ]);
+
+        if (!$validate) {
+            $validate = $this->validator->getErrors();
+            $result["SUCCESS"] = "-402";
+            $result[]["ERROR"] = $validate;
+            $result = $this->responseJson("-402", $validate);
+            echo json_encode($result);
+            exit;
+        }
+
+        $tot_new_resv = 0;
+        $all_new_resv = [];
+
+        foreach($addResvFields as $addResvField)
+        {
+            //echo "<pre>"; print_r($addResvField); echo "</pre>";   
+            $no_of_resv = $addResvField['RESV_NO_F_ROOM'] > $addResvField['MAX_NO_F_ROOM'] ? $addResvField['MAX_NO_F_ROOM'] : $addResvField['RESV_NO_F_ROOM'];
+
+            // Split no of rooms into separate reservations
+            while($no_of_resv > 0)
+            {
+                $data = [   "RESV_ARRIVAL_DT" => $addResvField["RESV_ARRIVAL_DT"],
+                            "RESV_DEPARTURE" => $addResvField["RESV_DEPARTURE"],
+                            "RESV_NIGHT" => abs(round(  (strtotime($addResvField["RESV_DEPARTURE"]) - 
+                                                         strtotime($addResvField["RESV_ARRIVAL_DT"])) / (24 * 60 * 60))),
+                            "RESV_ADULTS" => "1",
+                            "RESV_CHILDREN" => "0",
+                            "RESV_NO_F_ROOM" => "1",
+                            "RESV_NAME" => $addResvField["RESV_NAME"],
+                            "RESV_COMPANY" => $this->request->getPost('main_BLK_COMPANY'),
+                            "RESV_AGENT" => $this->request->getPost('main_BLK_AGENT'),
+                            "RESV_BLOCK" => $this->request->getPost('main_BLK_ID'),
+                            "RESV_DAY_USE" => $addResvField["RESV_ARRIVAL_DT"] == $addResvField["RESV_DEPARTURE"] ? 'Y' : 'N',
+                            "RESV_RATE_CODE" => $addResvField["RESV_RATE_CODE"],
+                            "RESV_ROOM_CLASS" => $addResvField["RESV_ROOM_CLASS"],
+                            "RESV_FEATURE" => $addResvField["RESV_FEATURE"],
+                            "RESV_STATUS" => "Due Pre Check-In",
+                            "RESV_RM_TYPE" => $addResvField["RESV_RM_TYPE"],
+                            "RESV_RM_TYPE_ID" => $addResvField["RESV_RM_TYPE_ID"],
+                            "RESV_RATE" => $addResvField["RESV_RATE"],
+                            "RESV_MARKET" => $this->request->getPost('main_BLK_MARKET'),
+                            "RESV_SOURCE" => $this->request->getPost('main_BLK_SOURCE'),
+                            "RESV_NO_POST" => "N",
+                            "RESV_CREATE_UID" => session()->get('USR_ID'),
+                            "RESV_CREATE_DT" => date("d-M-Y")
+                        ];
+
+                $all_new_resv[] = $data;
+
+                $return = $this->Db->table('FLXY_RESERVATION')->insert($data); 
+                $sysid = $this->Db->insertID();
+                
+                $log_action_desc = "";
+                foreach($data as $dkey => $dvalue)
+                {
+                    // Save changes in log description if data is not empty
+                    if(!empty(trim($dvalue)))
+                    {
+                        $log_action_desc .= "<b>".str_replace('RESV_', '', $dkey) . ": </b> '" . $dvalue ."'<br/>";
+                    }
+                }
+
+                $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update(array('RESV_NO' => 'RES'.$sysid));
+                addActivityLog(1, 10, $sysid, $log_action_desc);
+                //$this->triggerReservationEmail($sysid,'');
+
+                $no_of_resv--; 
+                $tot_new_resv++;
+            }
+        }
+
+        $result = $this->responseJson("1", "0", $all_new_resv, $tot_new_resv);
+        echo json_encode($result);
     }
 
     public function room(){

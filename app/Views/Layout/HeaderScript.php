@@ -64,6 +64,7 @@
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/flatpickr/flatpickr.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/css/pages/app-calendar.css')?>" >
 
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/dropzone/dropzone.css')?>" />
 
 <!-- Page CSS -->
 <script src="<?php echo base_url('assets/js/jquery-3.6.0.min.js')?>"></script>

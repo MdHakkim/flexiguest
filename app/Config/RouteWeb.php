@@ -95,6 +95,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/agentList', 'ApplicatioController::agentList');
     $routes->match(['post'], '/groupList', 'ApplicatioController::groupList');
     $routes->match(['post'], '/getSupportingblkLov', 'ApplicatioController::getSupportingblkLov');
+    $routes->match(['post'], '/numRooms', 'ApplicatioController::numRooms');
+    $routes->match(['post'], '/getRateCodesByRoomType', 'ApplicatioController::getRateCodesByRoomType');
 
     $routes->get('/block', 'ApplicatioController::block');
     $routes->match(['post'], '/blockList', 'ApplicatioController::blockList');
@@ -102,12 +104,16 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/insertBlock', 'ApplicatioController::insertBlock');
     $routes->match(['post'], '/editBlock', 'ApplicatioController::editBlock');
     $routes->match(['post'], '/deleteBlock', 'ApplicatioController::deleteBlock');
+    $routes->match(['post'], '/insertBlockReservation', 'ApplicatioController::insertBlockReservation');
 
     $routes->get('/blockStatusCode', 'MastersController::blockStatusCode');
     $routes->match(['post'], '/blockStatusCodeView', 'MastersController::BlockStatusCodeView');
     $routes->match(['post'], '/insertBlockStatusCode', 'MastersController::insertBlockStatusCode');
     $routes->match(['post'], '/editBlockStatusCode', 'MastersController::editBlockStatusCode');
     $routes->match(['post'], '/deleteBlockStatusCode', 'MastersController::deleteBlockStatusCode');
+
+    $routes->match(['post'], '/blockReservationView', 'ApplicatioController::BlockReservationView');
+
 
     $routes->get('/room', 'ApplicatioController::room');
     $routes->match(['post'], '/roomView', 'ApplicatioController::RoomView');
@@ -366,6 +372,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/insertResvCancelHistory', 'ApplicatioController::insertResvCancelHistory');
     $routes->match(['post'], '/reinstateReservation', 'ApplicatioController::reinstateReservation');
     $routes->match(['post'], '/resvCancelHistoryView', 'ApplicatioController::ResvCancelHistoryView');
+
+    $routes->match(['post'], '/uploadResvAttachments', 'ReservationController::uploadResvAttachments');
+
 
     // Code By ALEESHA 
     // Maintenance Request 
