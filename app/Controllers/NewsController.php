@@ -51,7 +51,7 @@ class NewsController extends BaseController
             $rules = array_merge($rules, [
                 'NS_COVER_IMAGE' => [
                     'label' => 'Cover Image',
-                    'rules' => ['uploaded[NS_COVER_IMAGE]', 'mime_in[NS_COVER_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[NS_COVER_IMAGE,2048]']
+                    'rules' => ['uploaded[NS_COVER_IMAGE]', 'mime_in[NS_COVER_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[NS_COVER_IMAGE,5048]']
                 ],
             ]);
 

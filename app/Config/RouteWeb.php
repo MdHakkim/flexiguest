@@ -602,8 +602,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
 
 
-
-
+    $routes->match(['post'], '/reservationDepartments', 'ReservationController::reservationDepartments');
     $routes->match(['post'], '/updateTraces', 'ReservationController::updateTraces');
     $routes->match(['post'], '/showTraces', 'ReservationController::showTraces');
     $routes->match(['post'], '/deleteTraces', 'ReservationController::deleteTraces');
@@ -622,6 +621,23 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/getInventoryAllocatedData', 'ApplicatioController::getInventoryAllocatedData');
     $routes->match(['post'], '/getRoomStatistics', 'ReservationController::getRoomStatistics');
 
+      $routes->get('/Notifications', 'NotificationController::Notifications'); 
+      $routes->match(['post'], '/NotificationList', 'NotificationController::NotificationList');
+      $routes->match(['post'], '/insertNotification', 'NotificationController::insertNotification');
+      $routes->match(['post'], '/editNotification', 'NotificationController::editNotification');
+      $routes->match(['post'], '/deleteNotification', 'NotificationController::deleteNotification'); 
+      $routes->get('/notificationTypeList', 'NotificationController::notificationTypeList');
+      $routes->get('/usersList', 'NotificationController::usersList'); 
+      $routes->get('/allDepartmentList', 'NotificationController::allDepartmentList'); 
+      $routes->get('/reservationList', 'NotificationController::reservationList');
+      $routes->get('/getCustomers', 'NotificationController::getCustomers');
+
+      $routes->match(['post'], '/viewAllNotificationDetails', 'NotificationController::viewAllNotificationDetails');
+      $routes->match(['post'], '/guestByReservation', 'NotificationController::guestByReservation');
+      
+      
+
+     //Subina Code (END)  
 
     $routes->match(['post'], '/roomOOSList', 'ReservationController::roomOOSList');
     $routes->match(['post'], '/roomPlanList', 'ReservationController::roomPlanList');
@@ -634,11 +650,15 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/checkReservationExists', 'ReservationController::checkReservationExists');
     $routes->match(['post'], '/getAllVacantRooms', 'ReservationController::getAllVacantRooms');
     $routes->match(['post'], '/updateRoomAssign', 'ReservationController::updateRoomAssign');
+    $routes->get('/readNotifications', 'NotificationController::readNotifications');
+    $routes->match(['post'], '/updateNotification', 'NotificationController::updateNotification');
+    $routes->get('/showAllNotifications', 'NotificationController::showAllNotifications');
+    $routes->match(['post'], '/userNotifications', 'NotificationController::userNotifications');
+    $routes->match(['post'], '/viewAllNotification', 'NotificationController::viewAllNotification');
 
+    
 
     //Subina Code (END)  
-
-
 
     // ABUBAKAR CODE (START)
     $routes->group('news', function ($routes) {
@@ -760,6 +780,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->delete('delete-restaurant', 'RestaurantController::deleteRestaurant');
 
         $routes->post('menu-categories-by-restaurant', 'RestaurantController::menuCategoriesByRestaurant');
+        $routes->post('get-menu-items', 'RestaurantController::getMenuItems');
 
         $routes->group('menu-category', function ($routes) {
             $routes->get('', 'RestaurantController::menuCategory');
@@ -768,6 +789,14 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('edit-menu-category', 'RestaurantController::editMenuCategory');
             $routes->delete('delete-menu-category', 'RestaurantController::deleteMenuCategory');
         });
+        
+        $routes->group('meal-type', function ($routes) {
+            $routes->get('', 'RestaurantController::mealType');
+            $routes->post('all-meal-type', 'RestaurantController::allMealType');
+            $routes->post('store-meal-type', 'RestaurantController::storeMealType');
+            $routes->post('edit-meal-type', 'RestaurantController::editMealType');
+            $routes->delete('delete-meal-type', 'RestaurantController::deleteMealType');
+        });
 
         $routes->group('menu-item', function ($routes) {
             $routes->get('', 'RestaurantController::menuItem');
@@ -775,6 +804,14 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('store-menu-item', 'RestaurantController::storeMenuItem');
             $routes->post('edit-menu-item', 'RestaurantController::editMenuItem');
             $routes->delete('delete-menu-item', 'RestaurantController::deleteMenuItem');
+        });
+
+        $routes->group('order', function ($routes) {
+            $routes->get('', 'RestaurantController::order');
+            $routes->post('all-order', 'RestaurantController::allOrder');
+            $routes->post('place-order', 'RestaurantController::placeOrder');
+            $routes->post('edit-order', 'RestaurantController::editOrder');
+            $routes->delete('delete-order', 'RestaurantController::deleteOrder');
         });
     });
     // ABUBAKAR CODE (END)

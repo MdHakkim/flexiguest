@@ -4139,7 +4139,7 @@ class ApplicatioController extends BaseController
             if(empty($this->request->getPost("VACC_DOC_SAVED"))){
                 $rules['files'] = [
                     'label' => 'vaccine certificate', 
-                    'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg]', 'max_size[files,5000]'
+                    'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg,application/pdf]', 'max_size[files,50000]'
                 ];
             }
 
@@ -4733,8 +4733,8 @@ class ApplicatioController extends BaseController
             }
             echo json_encode($result);
 
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch (\Exception $e) {
+            return $this->respond($e->getMessage());
         }
     }
 
@@ -4748,7 +4748,7 @@ class ApplicatioController extends BaseController
             $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
             echo json_encode($result);
         } catch (\Exception $e) {
-            return $this->respond($e->errors());
+            return $this->respond($e->getMessage());
         }
         
     }
@@ -4764,7 +4764,7 @@ class ApplicatioController extends BaseController
             if($responseCount > 0) {
                 $response = $this->Db->query($sql)->getResultArray(); 
                 foreach($response as $row){            
-                    $result = ['RESV_ARRIVAL_DT' => $row['RESV_ARRIVAL_DT'],'RESV_NIGHT' => $row['RESV_NIGHT'],'RESV_DEPARTURE' => $row['RESV_DEPARTURE'],'FULL_NAME' => $row['FULL_NAME'], 'RESV_NO' => $row['RESV_NO'], 'RESV_STATUS' => $row['RESV_STATUS'] ];
+                    $result = ['RESV_ARRIVAL_DT' => date('d-m-Y',strtotime($row['RESV_ARRIVAL_DT'])),'RESV_NIGHT' => $row['RESV_NIGHT'],'RESV_DEPARTURE' => $row['RESV_DEPARTURE'],'FULL_NAME' => $row['FULL_NAME'], 'RESV_NO' => $row['RESV_NO'], 'RESV_STATUS' => $row['RESV_STATUS'] ];
                 }
             }
           

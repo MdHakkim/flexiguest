@@ -10,7 +10,7 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Menu Categories</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Menu Types</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -21,10 +21,8 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Category</th>
+                            <th>Meal Type</th>
                             <th>Image</th>
-                            <th>Restaurant ID</th>
-                            <th>Restaurant Name</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
@@ -54,22 +52,13 @@
                             <input type="hidden" name="id" class="form-control" />
 
                             <div class="col-md-6">
-                                <label class="form-label"><b>Restaurants *</b></label>
-                                <select name="MC_RESTAURANT_ID" class="select2 form-select">
-                                    <?php foreach ($restaurants as $restaurants) { ?>
-                                        <option value="<?= $restaurants['RE_ID'] ?>"><?= $restaurants['RE_RESTAURANT'] ?></option>
-                                    <?php } ?>
-                                </select>
+                                <label class="form-label"><b>Meal Type *</b></label>
+                                <input type="text" name="MT_TYPE" class="form-control" placeholder="Meal Type" required />
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label"><b>Category *</b></label>
-                                <input type="text" name="MC_CATEGORY" class="form-control" placeholder="Category" required />
-                            </div>
-
-                            <div class="col-md-12">
-                                <label class="form-label" for="MC_IMAGE_URL"><b>Category Image *</b></label>
-                                <input type="file" name="MC_IMAGE_URL" id="MC_IMAGE_URL" class="form-control" />
+                                <label class="form-label" for="MC_IMAGE_URL"><b>Meal Type Image *</b></label>
+                                <input type="file" name="MT_IMAGE_URL" id="MT_IMAGE_URL" class="form-control" />
                             </div>
                         </div>
                     </form>
@@ -115,31 +104,25 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('/restaurant/menu-category/all-menu-category') ?>'
+                'url': '<?php echo base_url('/restaurant/meal-type/all-meal-type') ?>'
             },
             'columns': [{
                     data: ''
                 },
                 {
-                    data: 'MC_ID'
+                    data: 'MT_ID'
                 },
                 {
-                    data: 'MC_CATEGORY'
+                    data: 'MT_TYPE'
                 },
                 {
                     data: null,
                     render: function(data, type, row, meta) {
-                        return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['MC_IMAGE_URL']}")' src='<?= base_url() ?>/${data['MC_IMAGE_URL']}' width='80' height='80'/>`);
+                        return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['MT_IMAGE_URL']}")' src='<?= base_url() ?>/${data['MT_IMAGE_URL']}' width='80' height='80'/>`);
                     }
                 },
                 {
-                    data: 'MC_RESTAURANT_ID'
-                },
-                {
-                    data: 'RE_RESTAURANT'
-                },
-                {
-                    data: 'MC_CREATED_AT'
+                    data: 'MT_CREATED_AT'
                 },
                 {
                     data: null,
@@ -155,7 +138,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['MC_ID']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['MT_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -163,7 +146,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['MC_ID']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['MT_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -204,7 +187,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['MC_ID'];
+                            return 'Details of ' + data['MT_ID'];
                         }
                     }),
                     type: 'column',
@@ -253,7 +236,7 @@
         resetForm();
 
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add Menu Category');
+        $('#popModalWindowlabel').html('Add Meal Type');
 
         $('#popModalWindow').modal('show');
     }
@@ -262,14 +245,14 @@
     function submitForm() {
         hideModalAlerts();
         var fd = new FormData($(`${form_id}`)[0]);
-        fd.delete('MC_IMAGE_URL');
+        fd.delete('MT_IMAGE_URL');
 
-        let files = $(`${form_id} input[name='MC_IMAGE_URL']`)[0].files;
+        let files = $(`${form_id} input[name='MT_IMAGE_URL']`)[0].files;
         if (files.length)
-            fd.append('MC_IMAGE_URL', files[0]);
+            fd.append('MT_IMAGE_URL', files[0]);
 
         $.ajax({
-            url: '<?= base_url('/restaurant/menu-category/store-menu-category') ?>',
+            url: '<?= base_url('/restaurant/meal-type/store-meal-type') ?>',
             type: "post",
             data: fd,
             processData: false,
@@ -302,19 +285,19 @@
         resetForm();
 
         $('.dtr-bs-modal').modal('hide');
-        var menu_category_id = $(this).attr('data_id');
+        var meal_type_id = $(this).attr('data_id');
 
-        $(`${form_id} input[name='id']`).val(menu_category_id);
+        $(`${form_id} input[name='id']`).val(meal_type_id);
 
-        $('#popModalWindowlabel').html('Edit Menu Category');
+        $('#popModalWindowlabel').html('Edit Meal Type');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('/restaurant/menu-category/edit-menu-category') ?>';
+        var url = '<?php echo base_url('/restaurant/meal-type/edit-meal-type') ?>';
         $.ajax({
             url: url,
             type: "post",
             data: {
-                id: menu_category_id
+                id: meal_type_id
             },
             dataType: 'json',
             success: function(response) {
@@ -357,7 +340,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('/restaurant/menu-category/delete-menu-category') ?>',
+                        url: '<?php echo base_url('/restaurant/meal-type/delete-meal-type') ?>',
                         type: "post",
                         data: {
                             id: id,

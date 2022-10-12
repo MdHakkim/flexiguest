@@ -11,6 +11,7 @@ class MenuItem extends Model
     protected $allowedFields = [
         'MI_RESTAURANT_ID',
         'MI_MENU_CATEGORY_ID',
+        'MI_MEAL_TYPE_ID',
         'MI_ITEM',
         'MI_IMAGE_URL',
         'MI_PRICE',
