@@ -522,7 +522,7 @@ class RestaurantRepository extends BaseController
         if ($user['USR_ROLE'] == "GUEST")
             $where_condition = "RO_CUSTOMER_ID = {$user['USR_CUST_ID']}";
 
-        $orders = $this->RestaurantOrder->where($where_condition)->findAll();
+        $orders = $this->RestaurantOrder->where($where_condition)->orderBy('RO_ID', 'desc')->findAll();
         foreach ($orders as $index => $order) {
             $orders[$index]['order_details'] = $this->RestaurantOrderDetail
                 ->join('FLXY_MENU_ITEMS', 'ROD_MENU_ITEM_ID = MI_ID', 'left')
