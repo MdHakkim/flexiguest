@@ -13,7 +13,7 @@ class LaundryAmenitiesOrderDetail extends Model
         'LAOD_PRODUCT_ID',
         'LAOD_QUANTITY',
         'LAOD_AMOUNT',
-        'LAOD_DELIVERY_STATUS',
+        'LAOD_DELIVERY_STATUS', // 'New','Processing','Delivered','Acknowledged','Cancelled'
         'LAOD_EXPIRY_DATETIME',
         'LAOD_IS_REQUEST_ESCALATED',
         'LAOD_CREATED_BY',

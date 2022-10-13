@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\Repositories\PaymentRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\RestaurantRepository;
+use App\Controllers\Repositories\UserRepository;
 use CodeIgniter\API\ResponseTrait;
 
 class RestaurantController extends BaseController
@@ -15,12 +16,14 @@ class RestaurantController extends BaseController
     private $ReservationRepository;
     private $RestaurantRepository;
     private $PaymentRepository;
+    private $UserRepository;
 
     public function __construct()
     {
         $this->ReservationRepository = new ReservationRepository();
         $this->RestaurantRepository = new RestaurantRepository();
         $this->PaymentRepository = new PaymentRepository();
+        $this->UserRepository = new UserRepository();
     }
 
     /** ------------------------------Restaurant------------------------------ */
@@ -361,6 +364,29 @@ class RestaurantController extends BaseController
             : responseJson(500, true, ['msg' => "Order not deleted"]);
 
         return $this->respond($result);
+    }
+
+    public function updateRestaurantOrder()
+    {
+        $data = json_decode(json_encode($this->request->getVar()), true);
+
+        //  validate order
+        $order = $this->RestaurantRepository->restaurantOrderById($data['RO_ID']);
+        if(empty($order))
+            return $this->respond(responseJson(404, true, ['msg' => "Order not found"]));
+
+        // validate attendant id
+        if(!empty($data['RO_ATTENDANT_ID'])) {
+            $attendee = $this->UserRepository->userById($data['RO_ATTENDANT_ID']);
+            if(empty($attendee))
+                return $this->respond(responseJson(404, true, ['msg' => "Attendee not found"]));
+        }
+
+        $result = $this->RestaurantRepository->createUpdateRestaurantOrder($data);
+        if(!$result)
+            return $this->respond(responseJson(500, true, ['msg' => "Unable to assign"]));
+
+        return $this->respond(responseJson(200, true, ['msg' => "Order updated successfully."]));
     }
 
     /** ------------------------------Main Screen------------------------------ */

@@ -12,10 +12,11 @@ class RestaurantOrder extends Model
         'RO_RESERVATION_ID',
         'RO_ROOM_ID',
         'RO_CUSTOMER_ID',
+        'RO_ATTENDANT_ID',
         'RO_TOTAL_PAYABLE',
-        'RO_PAYMENT_METHOD',
-        'RO_PAYMENT_STATUS',
-        'RO_DELIVERY_STATUS',
+        'RO_PAYMENT_METHOD', // Pay at Reception, Samsung Pay, Credit/Debit card
+        'RO_PAYMENT_STATUS', // UnPaid, Paid
+        'RO_DELIVERY_STATUS', // New, Processing, Delivered, Cancelled
         'RO_CREATED_BY',
         'RO_UPDATED_BY',
     ];

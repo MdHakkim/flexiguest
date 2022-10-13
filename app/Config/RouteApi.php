@@ -64,6 +64,10 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
         $routes->post('assign-driver', 'EValetController::assignDriver');
         $routes->post('ready-to-collect', 'EValetController::readyToCollect');
     });
+
+    $routes->group('restaurant', function ($routes) {
+        $routes->post("update-restaurant-order", "RestaurantController::updateRestaurantOrder");
+    });
 });
 
 /*****************************  ADMIN + GUEST *****************************/
