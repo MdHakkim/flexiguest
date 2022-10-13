@@ -55,4 +55,30 @@ class EmailLibrary{
             return $data;
         }
     }
+
+
+    public function notificationEmail($details, $basicInfo){
+        $toEmail               = $details['USR_EMAIL'];
+        $paramraw['FULL_NAME'] = $details['FULL_NAME'];
+        $paramraw['NOTIFICATION_TYPE']      = $basicInfo['NOTIFICATION_TYPE'];
+        $paramraw['NOTIFICATION_TEXT']      = $basicInfo['NOTIFICATION_TEXT'];
+        $paramraw['NOTIFICATION_URL']       = $basicInfo['NOTIFICATION_URL'];
+        $paramraw['NOTIFICATION_TYPE_ID']   = $basicInfo['NOTIFICATION_TYPE_ID'];
+        $paramraw['HEADING']                = $basicInfo['HEADING'];
+        $paramraw['RESERVATION']            = !empty($basicInfo['RESERVATION'])?$basicInfo['RESERVATION']:'';
+
+        $html = view('EmailTemplates/NotificationEmail',$paramraw);
+        $this->email->setFrom('notifications@farnek.com', 'FLEXIGUEST | HITEK');
+        $this->email->setTo('subina.kk@farnek.com');
+        //$this->email->setTo($toEmail);
+        //$this->email->setCC('deleep.bose@farnek.com');
+        $this->email->setSubject($paramraw['NOTIFICATION_TYPE']);
+        $this->email->setMessage($html);//your message here
+        if ($this->email->send()) {
+            return true;
+        } else {
+            $data = $this->email->printDebugger(['headers']);
+            return false;
+        }
+    }
 }
