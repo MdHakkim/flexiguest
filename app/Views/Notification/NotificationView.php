@@ -294,7 +294,7 @@ $(document).ready(function() {
             data: 'NOTIFICATION_GUEST_ID',
             render: function(data, type, full, meta) {                                      
               if(full['NOTIFICATION_GUEST_ID'] != ''){
-                return '<a href="javascript:;" onclick="viewAll(\'Guests\','+full['NOTIFICATION_ID']+')" title="View Guests"  rel="">'+full['NOTIFICATION_GUEST_ID']+'<span class="btn btn-sm btn-label-info">View</span></a>';
+                return '<a href="javascript:;" onclick="viewAll(\'Guests\','+full['NOTIFICATION_ID']+')" title="View Guests"  rel="">'+full['NOTIFICATION_GUEST_ID']+'<br><span class="btn btn-sm btn-label-info">View</span></a>';
               }else return '';
             }
             
@@ -303,7 +303,7 @@ $(document).ready(function() {
             data: 'NOTIFICATION_TEXT',
             render: function(data, type, full, meta) {
              if(full['NOTIFICATION_TEXT'] != ''){
-                return '<a href="javascript:;" onclick="viewAll(\'Messages\','+full['NOTIFICATION_ID']+')" title="View Message" rel="">'+full['NOTIFICATION_TEXT']+'<span class="btn btn-sm btn-label-info">View</span></a>';
+                return '<a href="javascript:;" onclick="viewAll(\'Messages\','+full['NOTIFICATION_ID']+')" title="View Message" rel="">'+full['NOTIFICATION_TEXT']+'<br><span class="btn btn-sm btn-label-info">View</span></a>';
              }else return '';
             }
           },
@@ -330,10 +330,11 @@ $(document).ready(function() {
                         '"  class="dropdown-item editNotification text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
                         '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
-                        '"  class="dropdown-item viewNotification text-success"><i class="fa-solid fa-align-justify"></i> View</a></li><div class="dropdown-divider"></div>' +
+                        '" data-row-ind="'+meta.row+'"  class="dropdown-item viewNotification text-success"><i class="fa-solid fa-align-justify"></i> View</a></li><div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
                         '" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>';
-
+                    
+                    //console.log("metaObj", meta);
                     
                     resvListButtons += '</ul>' +
                         '</div>';
@@ -459,8 +460,9 @@ function addForm() {
 // Delete Notification
 
 $(document).on('click', '.viewNotification', function() {
-
-  $(".control").click();
+  //alert($(this).data('row-ind'))
+  var rowInd = $(this).data('row-ind');
+  $("td.control").eq(rowInd).click();
 });
 
 $(document).on('click', '.delete-record', function() {
