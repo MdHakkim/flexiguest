@@ -339,6 +339,29 @@ class NotificationController extends BaseController
         return $option;
     }
 
+    public function usersByDepartmentList()
+    {
+       
+        $department_ids = implode(',',$this->request->getPost('department_ids'));
+
+        $UserID = session()->get('USR_ID');
+
+        $sql = "SELECT USR_ID, CONCAT_WS(' ',USR_FIRST_NAME,USR_LAST_NAME) AS FULL_NAME
+                FROM FLXY_USERS WHERE USR_ID != $UserID AND USR_DEPARTMENT IN ($department_ids)";
+
+       
+        $response = $this->Db->query($sql)->getResultArray();
+
+        $option = '';
+        if(!empty($response)){
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['USR_ID'] . '">' . $row['FULL_NAME'] . '</option>';
+            }
+        }
+
+        echo json_encode($option);
+    }
+
     public function allDepartmentList()
     {
         $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';

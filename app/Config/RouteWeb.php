@@ -656,7 +656,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/showAllNotifications', 'NotificationController::showAllNotifications');
     $routes->match(['post'], '/userNotifications', 'NotificationController::userNotifications');
     $routes->match(['post'], '/viewAllNotification', 'NotificationController::viewAllNotification');
-
+    $routes->match(['post'], '/usersByDepartmentList', 'NotificationController::usersByDepartmentList');
+    
+    
     
 
     //Subina Code (END)  

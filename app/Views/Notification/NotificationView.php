@@ -674,25 +674,15 @@ function notificationTypeList() {
             }
 
             $.ajax({
-                url: '<?= base_url('/user-by-department') ?>',
+                url: '<?= base_url('/usersByDepartmentList') ?>',
                 type: "post",
                 data: {
                     department_ids: department_ids
                 },
                 dataType: 'json',
-                success: function(response) {
-                    if (response['SUCCESS'] == 200) {
-                        let users = response['RESPONSE']['OUTPUT'];
-
-                        let html = `<option value='all'>All</option>`;
-                        for (let user of users) {
-                            html += `
-                            <option value="${user.USR_ID}">${user.USR_FIRST_NAME} ${user.USR_LAST_NAME}</option>
-                        `;
-                        }
-                        $("#submitForm select[name='NOTIFICATION_TO_ID[]']").html(html);
-                        $("#submitForm select[name='NOTIFICATION_TO_ID[]']").trigger('change');
-                    }
+                success: function(response) {               
+                        $("#submitForm select[name='NOTIFICATION_TO_ID[]']").html(response);
+                         $("#submitForm select[name='NOTIFICATION_TO_ID[]']").trigger('change');                    
                 }
             });
         }
