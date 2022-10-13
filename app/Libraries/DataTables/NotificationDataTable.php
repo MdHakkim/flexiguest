@@ -142,7 +142,7 @@ class NotificationDataTable{
 
                 if($name == "NOTIFICATION_TEXT") {
                     if($row[$name] != '' ){                        
-                        $row[$name] = substr($row[$name], 0, 20);
+                        $row[$name] = substr(strip_tags($row[$name]), 0, 20);
                         if(strlen($row[$name]) > 20 )
                           $row[$name] .=   '...';                 
                      }
