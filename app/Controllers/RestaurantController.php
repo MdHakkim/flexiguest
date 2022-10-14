@@ -294,6 +294,10 @@ class RestaurantController extends BaseController
             $where_condition .= " AND MI_MEAL_TYPE_ID in ($ids)";
         }
 
+        if (!empty($data['item'])) {
+            $where_condition .= " AND MI_ITEM like '%{$data['item']}%'";
+        }
+
         $result = $this->RestaurantRepository->getMenuItems($where_condition);
 
         return $this->respond(responseJson(200, false, ['msg' => 'item list'], $result));
@@ -385,7 +389,7 @@ class RestaurantController extends BaseController
         $order = $this->RestaurantRepository->restaurantOrderById($data['RO_ID']);
         if (empty($order))
             return $this->respond(responseJson(404, true, ['msg' => "Order not found"]));
-        
+
         //  for guest
         if ($user['USR_ROLE'] == 'GUEST') {
             unset($data['RO_ATTENDANT_ID']);
@@ -393,7 +397,7 @@ class RestaurantController extends BaseController
             if ($data['RO_DELIVERY_STATUS'] != 'Cancelled')
                 return $this->respond(responseJson(202, true, ['msg' => "Invalid request."]));
 
-            if($order['RO_DELIVERY_STATUS'] != 'New' || $order['RO_DELIVERY_STATUS'] != 'Cancelled' || $order['RO_PAYMENT_STATUS'] == 'Paid')
+            if ($order['RO_DELIVERY_STATUS'] != 'New' || $order['RO_DELIVERY_STATUS'] != 'Cancelled' || $order['RO_PAYMENT_STATUS'] == 'Paid')
                 return $this->respond(responseJson(202, true, ['msg' => "Can't cancel the order."]));
         }
 
