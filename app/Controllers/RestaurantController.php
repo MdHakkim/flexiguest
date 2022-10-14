@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Controllers\Repositories\DepartmentRepository;
 use App\Controllers\Repositories\PaymentRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\RestaurantRepository;
@@ -17,6 +18,7 @@ class RestaurantController extends BaseController
     private $RestaurantRepository;
     private $PaymentRepository;
     private $UserRepository;
+    private $DepartmentRepository;
 
     public function __construct()
     {
@@ -24,6 +26,7 @@ class RestaurantController extends BaseController
         $this->RestaurantRepository = new RestaurantRepository();
         $this->PaymentRepository = new PaymentRepository();
         $this->UserRepository = new UserRepository();
+        $this->DepartmentRepository = new DepartmentRepository();
     }
 
     /** ------------------------------Restaurant------------------------------ */
@@ -291,11 +294,15 @@ class RestaurantController extends BaseController
             $where_condition .= " AND MI_MEAL_TYPE_ID in ($ids)";
         }
 
+        if (!empty($data['item'])) {
+            $where_condition .= " AND MI_ITEM like '%{$data['item']}%'";
+        }
+
         $result = $this->RestaurantRepository->getMenuItems($where_condition);
 
         return $this->respond(responseJson(200, false, ['msg' => 'item list'], $result));
     }
-    
+
     /** ------------------------------Order------------------------------ */
     public function order()
     {
@@ -306,6 +313,7 @@ class RestaurantController extends BaseController
         $data['reservations'] = $this->ReservationRepository->allReservations($where_condition);
         $data['restaurants'] = $this->RestaurantRepository->allRestaurants();
         $data['meal_types'] = $this->RestaurantRepository->allMealTypes();
+        $data['departments'] = $this->DepartmentRepository->allDepartments();
 
         return view('frontend/restaurant/order', $data);
     }
@@ -325,7 +333,7 @@ class RestaurantController extends BaseController
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
         $result = $this->RestaurantRepository->placeOrder($user, $data);
-        if ($result['SUCCESS'] == 200 && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
+        if (!isWeb() && empty($data['RO_ID']) && $result['SUCCESS'] == 200 && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
             $data = $result['RESPONSE']['OUTPUT'];
             $result = $this->PaymentRepository->createPaymentIntent($user, $data);
         }
@@ -366,24 +374,47 @@ class RestaurantController extends BaseController
         return $this->respond($result);
     }
 
-    public function updateRestaurantOrder()
+    public function updateRestaurantOrderStatus()
     {
+        $user = $this->request->user;
         $data = json_decode(json_encode($this->request->getVar()), true);
+
+        $data = [
+            'RO_ID' => $data['RO_ID'],
+            'RO_ATTENDANT_ID' => $data['RO_ATTENDANT_ID'] ?? null,
+            'RO_DELIVERY_STATUS' => $data['RO_DELIVERY_STATUS'],
+        ];
 
         //  validate order
         $order = $this->RestaurantRepository->restaurantOrderById($data['RO_ID']);
-        if(empty($order))
+        if (empty($order))
             return $this->respond(responseJson(404, true, ['msg' => "Order not found"]));
 
-        // validate attendant id
-        if(!empty($data['RO_ATTENDANT_ID'])) {
-            $attendee = $this->UserRepository->userById($data['RO_ATTENDANT_ID']);
-            if(empty($attendee))
-                return $this->respond(responseJson(404, true, ['msg' => "Attendee not found"]));
+        //  for guest
+        if ($user['USR_ROLE'] == 'GUEST') {
+            unset($data['RO_ATTENDANT_ID']);
+
+            if ($data['RO_DELIVERY_STATUS'] != 'Cancelled')
+                return $this->respond(responseJson(202, true, ['msg' => "Invalid request."]));
+
+            if ($order['RO_DELIVERY_STATUS'] != 'New' || $order['RO_DELIVERY_STATUS'] != 'Cancelled' || $order['RO_PAYMENT_STATUS'] == 'Paid')
+                return $this->respond(responseJson(202, true, ['msg' => "Can't cancel the order."]));
         }
 
+        // validate attendant id
+        if (!empty($data['RO_ATTENDANT_ID'])) {
+            $attendee = $this->UserRepository->userById($data['RO_ATTENDANT_ID']);
+            if (empty($attendee))
+                return $this->respond(responseJson(404, true, ['msg' => "Attendee not found"]));
+        } else {
+            unset($data['RO_ATTENDANT_ID']);
+        }
+
+        if ($order['RO_DELIVERY_STATUS'] == 'New' && $data['RO_DELIVERY_STATUS'] == 'Delivered')
+            return $this->respond(responseJson(202, true, ['msg' => "First assign an attendee to the order."]));
+
         $result = $this->RestaurantRepository->createUpdateRestaurantOrder($data);
-        if(!$result)
+        if (!$result)
             return $this->respond(responseJson(500, true, ['msg' => "Unable to assign"]));
 
         return $this->respond(responseJson(200, true, ['msg' => "Order updated successfully."]));

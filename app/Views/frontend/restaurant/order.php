@@ -119,13 +119,28 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Department</b></label>
+                                <select name="RO_DEPARTMENT_ID" class="select2 form-select">
+                                    <?php foreach ($departments as $department) { ?>
+                                        <option value="<?= $department['DEPT_ID'] ?>"><?= $department['DEPT_DESC'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Attendee</b></label>
+                                <select name="RO_ATTENDANT_ID" class="select2 form-select">
+                                </select>
+                            </div>
+
                             <div class="col-md-4">
                                 <label class="form-label"><b>Delivery Status</b></label>
                                 <select class="select2" name="RO_DELIVERY_STATUS">
                                     <option>New</option>
-                                    <option>In Progress</option>
-                                    <option>Closed</option>
-                                    <option>Rejected</option>
+                                    <option>Processing</option>
+                                    <option>Delivered</option>
+                                    <option>Cancelled</option>
                                 </select>
                             </div>
 
@@ -407,7 +422,7 @@
                     $(`${form_id} select[name='RO_RESTAURANT_IDS[]']`).val(data.restaurant_ids).trigger('change');
                     $(`${form_id} select[name='RO_MEAL_TYPE_IDS[]']`).val(data.meal_type_ids).trigger('change');
 
-                    $(`${form_id} select[name='RO_DEILVERY_STATUS']`).val(data.RO_DEILVERY_STATUS).trigger('change');
+                    $(`${form_id} select[name='RO_DELIVERY_STATUS']`).val(data.RO_DELIVERY_STATUS).trigger('change');
                     $(`${form_id} select[name='RO_PAYMENT_METHOD']`).val(data.RO_PAYMENT_METHOD).trigger('change');
                     $(`${form_id} select[name='RO_PAYMENT_STATUS']`).val(data.RO_PAYMENT_STATUS).trigger('change');
 
@@ -416,11 +431,15 @@
 
                     setTimeout(function() {
                         $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).val(data.category_ids).trigger('change');
+                        $(`${form_id} select[name='RO_DEPARTMENT_ID']`).val(data.RO_DEPARTMENT_ID).trigger('change');
 
                         setTimeout(function() {
                             $(`${form_id} select[name='RO_ITEMS[][MI_ID]']`).val(data.selected_item_ids).trigger('change');
+                            $(`${form_id} select[name='RO_ATTENDANT_ID']`).val(data.RO_ATTENDANT_ID).trigger('change');
                         }, 500);
                     }, 500);
+
+
                 }
 
                 $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
@@ -472,6 +491,36 @@
                 }
             }
         });
+    });
+
+    $(`${form_id} [name='RO_DEPARTMENT_ID']`).change(function() {
+        let department_id = $(this).val();
+
+        if (department_id) {
+            $.ajax({
+                url: '<?= base_url('/user-by-department') ?>',
+                type: "post",
+                data: {
+                    department_ids: [department_id]
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response['SUCCESS'] == 200) {
+                        let users = response['RESPONSE']['OUTPUT'];
+
+                        let html = '';
+                        for (let user of users) {
+                            html += `
+                            <option value="${user.USR_ID}">${user.USR_FIRST_NAME} ${user.USR_LAST_NAME}</option>
+                        `;
+                        }
+
+                        $(`${form_id} select[name='RO_ATTENDANT_ID']`).html(html);
+                        $(`${form_id} select[name='RO_ATTENDANT_ID']`).trigger('change');
+                    }
+                }
+            });
+        }
     });
 
     $(`${form_id} [name='RO_RESTAURANT_IDS[]']`).change(function() {

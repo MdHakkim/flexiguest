@@ -478,7 +478,10 @@ class RestaurantRepository extends BaseController
 
     public function restaurantOrderById($id, $with_details = false)
     {
-        $order = $this->RestaurantOrder->find($id);
+        $order = $this->RestaurantOrder
+        ->select('FLXY_RESTAURANT_ORDERS.*, USR_DEPARTMENT as RO_DEPARTMENT_ID')
+        ->join('FlXY_USERS', 'RO_ATTENDANT_ID = USR_ID', 'left')
+        ->find($id);
 
         if ($with_details) {
             $order['restaurant_ids'] = [];

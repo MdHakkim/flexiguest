@@ -120,7 +120,7 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST,attendee", 'namespace' =
 
     $routes->group('restaurant', function ($routes) {
         $routes->get("order-list", "RestaurantController::orderList");
-        $routes->post("update-restaurant-order", "RestaurantController::updateRestaurantOrder");
+        $routes->post("update-restaurant-order-status", "RestaurantController::updateRestaurantOrderStatus");
     });
 });
 
