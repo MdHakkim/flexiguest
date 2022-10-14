@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Controllers\Repositories\DepartmentRepository;
 use App\Controllers\Repositories\PaymentRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\RestaurantRepository;
@@ -17,6 +18,7 @@ class RestaurantController extends BaseController
     private $RestaurantRepository;
     private $PaymentRepository;
     private $UserRepository;
+    private $DepartmentRepository;
 
     public function __construct()
     {
@@ -24,6 +26,7 @@ class RestaurantController extends BaseController
         $this->RestaurantRepository = new RestaurantRepository();
         $this->PaymentRepository = new PaymentRepository();
         $this->UserRepository = new UserRepository();
+        $this->DepartmentRepository = new DepartmentRepository();
     }
 
     /** ------------------------------Restaurant------------------------------ */
@@ -306,6 +309,7 @@ class RestaurantController extends BaseController
         $data['reservations'] = $this->ReservationRepository->allReservations($where_condition);
         $data['restaurants'] = $this->RestaurantRepository->allRestaurants();
         $data['meal_types'] = $this->RestaurantRepository->allMealTypes();
+        $data['departments'] = $this->DepartmentRepository->allDepartments();
 
         return view('frontend/restaurant/order', $data);
     }
@@ -325,7 +329,7 @@ class RestaurantController extends BaseController
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
         $result = $this->RestaurantRepository->placeOrder($user, $data);
-        if ($result['SUCCESS'] == 200 && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
+        if (!isWeb() && empty($data['RO_ID']) && $result['SUCCESS'] == 200 && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
             $data = $result['RESPONSE']['OUTPUT'];
             $result = $this->PaymentRepository->createPaymentIntent($user, $data);
         }
