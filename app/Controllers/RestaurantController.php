@@ -382,11 +382,15 @@ class RestaurantController extends BaseController
         if (empty($order))
             return $this->respond(responseJson(404, true, ['msg' => "Order not found"]));
         
+        //  for guest
         if ($user['USR_ROLE'] == 'GUEST') {
             unset($data['RO_ATTENDANT_ID']);
 
             if ($data['RO_DELIVERY_STATUS'] != 'Cancelled')
                 return $this->respond(responseJson(202, true, ['msg' => "Invalid request."]));
+
+            if($order['RO_DELIVERY_STATUS'] != 'New' || $order['RO_DELIVERY_STATUS'] != 'Cancelled' || $order['RO_PAYMENT_STATUS'] == 'Paid')
+                return $this->respond(responseJson(202, true, ['msg' => "Can't cancel the order."]));
         }
 
         // validate attendant id
