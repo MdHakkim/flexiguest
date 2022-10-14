@@ -295,7 +295,7 @@ class RestaurantController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'item list'], $result));
     }
-    
+
     /** ------------------------------Order------------------------------ */
     public function order()
     {
@@ -366,24 +366,43 @@ class RestaurantController extends BaseController
         return $this->respond($result);
     }
 
-    public function updateRestaurantOrder()
+    public function updateRestaurantOrderStatus()
     {
+        $user = $this->request->user;
         $data = json_decode(json_encode($this->request->getVar()), true);
+
+        $data = [
+            'RO_ID' => $data['RO_ID'],
+            'RO_ATTENDANT_ID' => $data['RO_ATTENDANT_ID'] ?? null,
+            'RO_DELIVERY_STATUS' => $data['RO_DELIVERY_STATUS'],
+        ];
 
         //  validate order
         $order = $this->RestaurantRepository->restaurantOrderById($data['RO_ID']);
-        if(empty($order))
+        if (empty($order))
             return $this->respond(responseJson(404, true, ['msg' => "Order not found"]));
+        
+        if ($user['USR_ROLE'] == 'GUEST') {
+            unset($data['RO_ATTENDANT_ID']);
 
-        // validate attendant id
-        if(!empty($data['RO_ATTENDANT_ID'])) {
-            $attendee = $this->UserRepository->userById($data['RO_ATTENDANT_ID']);
-            if(empty($attendee))
-                return $this->respond(responseJson(404, true, ['msg' => "Attendee not found"]));
+            if ($data['RO_DELIVERY_STATUS'] != 'Cancelled')
+                return $this->respond(responseJson(202, true, ['msg' => "Invalid request."]));
         }
 
+        // validate attendant id
+        if (!empty($data['RO_ATTENDANT_ID'])) {
+            $attendee = $this->UserRepository->userById($data['RO_ATTENDANT_ID']);
+            if (empty($attendee))
+                return $this->respond(responseJson(404, true, ['msg' => "Attendee not found"]));
+        } else {
+            unset($data['RO_ATTENDANT_ID']);
+        }
+
+        if ($order['RO_DELIVERY_STATUS'] == 'New' && $data['RO_DELIVERY_STATUS'] == 'Delivered')
+            return $this->respond(responseJson(202, true, ['msg' => "First assign an attendee to the order."]));
+
         $result = $this->RestaurantRepository->createUpdateRestaurantOrder($data);
-        if(!$result)
+        if (!$result)
             return $this->respond(responseJson(500, true, ['msg' => "Unable to assign"]));
 
         return $this->respond(responseJson(200, true, ['msg' => "Order updated successfully."]));
