@@ -1957,6 +1957,89 @@ class ApplicatioController extends BaseController
         $response = $this->Db->query($sql)->getNumRows();
         echo $response;
     }
+    
+    public function getFreeRooms($date)
+    {
+        $sql = "SELECT RM_TYPE, (COUNT(*)-COUNT(RESV_ROOM)) AS NUM_ROOMS      
+                FROM FLXY_ROOM 
+                LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
+                            FROM FLXY_ROOM_STATUS_LOG
+                            GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+                
+                INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                
+                INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
+
+                LEFT JOIN (SELECT RESV_ROOM_ID AS RESV_ROOM     
+                            FROM FLXY_RESERVATION
+                            WHERE RESV_ROOM_ID > 0 
+                            AND '$date' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE
+                            AND RESV_STATUS NOT IN ('Checked-Out','Cancelled')
+                            GROUP BY RESV_ROOM_ID) RESV_ROOMS ON RESV_ROOMS.RESV_ROOM = RM_ID
+
+                WHERE RM_STATUS_ID NOT IN (4,5)
+                GROUP BY RM_TYPE
+                ORDER BY RM_TYPE ASC";
+
+        $response = $this->Db->query($sql)->getResultArray();
+        $roomtype_rooms = [];
+
+        foreach ($response as $roomtype_room) {
+            $roomtype_rooms[$roomtype_room['RM_TYPE']] = $roomtype_room['NUM_ROOMS'];
+        }
+
+        return $roomtype_rooms;
+    }
+
+    public function showBlockRoomPool()
+    {
+        $block_id = $this->request->getPost("blkId");
+        
+        $block_sql = "SELECT BLK_ID,BLK_NAME,BLK_START_DT,BLK_END_DT FROM FLXY_BLOCK WHERE BLK_ID=:SYSID:";                                      
+        $block_data = empty($block_id) ? [] : $this->Db->query($block_sql,['SYSID'=> $block_id])->getRowArray();
+
+        $rmtype_sql = "SELECT RM_TY_ID,RM_TY_CODE FROM FLXY_ROOM_TYPE ORDER BY RM_TY_CODE ASC";
+        $rmtype_data = $this->Db->query($rmtype_sql)->getResultArray();
+
+        $room_pool_html = '<table id="room_pool" class="table table-hover table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>';
+
+        foreach ($rmtype_data as $rmtype_row) {
+            $room_pool_html .= '<th>' . $rmtype_row['RM_TY_CODE'] . '</th>';
+        }
+        
+        $room_pool_html .= '    </tr>
+                            </thead>';
+
+        $start_date = empty($block_id) ? date('Y-m-d') : $block_data['BLK_START_DT'];
+        $end_date   = empty($block_id) ? date('Y-m-d', strtotime("+7 day")) : $block_data['BLK_END_DT'];
+
+        $BEGIN_DATE_SEC     = strtotime($start_date);
+        $END_DATE_SEC       = strtotime($end_date);
+        $DATEDIFF       = (int)$END_DATE_SEC-(int)$BEGIN_DATE_SEC;
+        $AVAILABLE_DAYS = round($DATEDIFF / (60 * 60 * 24));
+
+        for($j = 1; $j <= ($AVAILABLE_DAYS + 1); $j++ ){
+
+            $room_pool_html .= ' <tr>';
+
+            $sCurrentDate = gmdate("Y-m-d", strtotime("+$j day", $BEGIN_DATE_SEC));
+            $room_pool_html .= '<td>' . date('d/m/y D', strtotime($sCurrentDate)) . '</td>';
+
+            $rmtype_rooms = $this->getFreeRooms($sCurrentDate);
+
+            foreach ($rmtype_data as $rmtype_row) {
+                $room_pool_html .= '<td>' . $rmtype_rooms[$rmtype_row['RM_TY_CODE']] . '</td>';
+            }
+
+            $room_pool_html .= ' </tr>';
+        }
+
+        $room_pool_html .= '</table>';
+        
+        echo $room_pool_html;        
+    }
 
     public function getRateCodesByRoomType(){
         $rmtype = $this->request->getPost("rmtype");

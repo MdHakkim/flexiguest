@@ -86,6 +86,13 @@
                                         Reservations
                                     </button>
                                 </li>
+                                <li class="nav-item">
+                                    <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                                        data-bs-target="#navs-room-pool" aria-controls="navs-room-pool"
+                                        aria-selected="false">
+                                        Room Pool
+                                    </button>
+                                </li>
                             </ul>
 
                         </div>
@@ -500,6 +507,14 @@
 
                             </div>
 
+                            <div class="tab-pane fade" id="navs-room-pool" role="tabpanel">
+
+                                <div class="room_pool_div table-responsive text-nowrap">
+                                    
+                                </div>
+
+                            </div>
+
 
                         </div>
                     </div>
@@ -758,6 +773,8 @@ function addBlockResvation() {
     // runSupportingResevationLov();
     runSupportingLov();
 
+    showBlockRoomPool();
+
     $('[data-bs-target="#navs-block-details"]').trigger('click');
     $('[data-bs-target="#navs-block-reservations"]').addClass('disabled');
 
@@ -783,6 +800,8 @@ $(document).on('click', '.editWindow', function() {
     runSupportingLov();
 
     showBlockReservations(sysid); // List Reservations in 2nd Tab
+    
+    showBlockRoomPool(sysid); // Show Room Pool in 3rd Tab
 
     var url = '<?php echo base_url('/editBlock') ?>';
     $.ajax({
@@ -1163,7 +1182,8 @@ function showBlockReservations(blkId) {
                     if ($.inArray(data['RESV_STATUS'], ["Checked-In", "Checked-Out"]) == -1)
                         resvListButtons += '<div class="dropdown-divider"></div>' +
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
-                        '" data_blkId="' + blkId + '" class="dropdown-item text-danger deleteResv"><i class="fas fa-trash"></i> Delete</a></li>';
+                        '" data_blkId="' + blkId +
+                        '" class="dropdown-item text-danger deleteResv"><i class="fas fa-trash"></i> Delete</a></li>';
 
                     resvListButtons += '</ul>' +
                         '</div>';
@@ -1235,6 +1255,28 @@ function showBlockReservations(blkId) {
             emptyTable: 'There are no reservations to display'
         }
     });
+}
+
+function showBlockRoomPool(blkId = '') {
+
+    $.ajax({
+        url: '<?php echo base_url('/showBlockRoomPool') ?>',
+        type: 'POST',
+        async: false,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            blkId: blkId
+        },
+        dataType: 'html',
+        success: function(respn) {
+
+            $(".room_pool_div").html(respn);
+
+        }
+    });
+
 }
 
 
@@ -1545,7 +1587,8 @@ $(document).on('click', '.deleteResv', function() {
                     dataType: 'json',
                     success: function(respn) {
 
-                        showModalAlert('warning', '<li>The Reservation has been deleted</li>');
+                        showModalAlert('warning',
+                            '<li>The Reservation has been deleted</li>');
                         showBlockReservations(blkId);
                     }
                 });
