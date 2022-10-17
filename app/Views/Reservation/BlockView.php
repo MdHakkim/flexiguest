@@ -215,20 +215,6 @@
                                             <input type="number" name="BLK_CUTOFF_DAYS" id="BLK_CUTOFF_DAYS"
                                                 class="form-control" placeholder="member no" />
                                         </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Rate Code</label>
-                                            <select name="BLK_RATE_CODE" id="BLK_RATE_CODE" class=" select2 form-select"
-                                                data-allow-clear="true">
-                                                <option value="">Select</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Packages</label>
-                                            <select name="BLK_PACKAGE" id="BLK_PACKAGE" class=" select2 form-select"
-                                                data-allow-clear="true">
-                                                <option value="">Select</option>
-                                            </select>
-                                        </div>
                                     </div>
 
                                 </form>
@@ -1465,7 +1451,9 @@ function loadNumRooms(elem) {
             'X-Requested-With': 'XMLHttpRequest'
         },
         data: {
-            rmtype: $(elem).find(':selected').attr('data-room-type-id')
+            rmtype: $(elem).find(':selected').attr('data-room-type-id'),
+            arr_date: $(elem).closest('.addResvRow').find('.RESV_ARRIVAL_DT').val(),
+            dep_date: $(elem).closest('.addResvRow').find('.RESV_DEPARTURE').val()
         },
         // dataType:'json',
         success: function(respn) {

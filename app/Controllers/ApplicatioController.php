@@ -1942,25 +1942,17 @@ class ApplicatioController extends BaseController
 
     public function numRooms(){
         $rmtype = $this->request->getPost("rmtype");
-        $sql = "SELECT RM_ID, RM_NO, RM_TYPE, RM_TYPE_REF_ID, SM.RM_STATUS_CODE, SM.RM_STATUS_ID, RL.RM_STAT_UPDATED      
-                FROM FLXY_ROOM 
-                LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
-                            FROM FLXY_ROOM_STATUS_LOG
-                            GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
-                
-                INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                
-                INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
-                WHERE RM_TYPE_REF_ID = '".$rmtype."' AND (RM_STATUS_ID != 4 AND RM_STATUS_ID != 5)
-                GROUP BY RM_ID,RM_NO,RM_TYPE_REF_ID,RM_STATUS_CODE,RM_STATUS_ID,RM_TYPE,RM_STAT_UPDATED		
-                ORDER BY RM_ID ASC";
+        $start_date = $this->request->getPost("arr_date");
+        $end_date = $this->request->getPost("dep_date");
 
-        $response = $this->Db->query($sql)->getNumRows();
-        echo $response;
+        $free_rooms = $this->getFreeRooms($start_date, $end_date, $rmtype);
+
+        echo isset($free_rooms[$rmtype]) ? $free_rooms[$rmtype] : 0;
     }
     
-    public function getFreeRooms($date)
+    public function getFreeRooms($date1, $date2 = '', $rmtype_id = '')
     {
-        $sql = "SELECT RM_TYPE, (COUNT(*)-COUNT(RESV_ROOM)) AS NUM_ROOMS      
+        $sql = "SELECT RM_TYPE_REF_ID, RM_TYPE, (COUNT(*)-COUNT(RESV_ROOM)) AS NUM_ROOMS      
                 FROM FLXY_ROOM 
                 LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
                             FROM FLXY_ROOM_STATUS_LOG
@@ -1971,20 +1963,28 @@ class ApplicatioController extends BaseController
 
                 LEFT JOIN (SELECT RESV_ROOM_ID AS RESV_ROOM     
                             FROM FLXY_RESERVATION
-                            WHERE RESV_ROOM_ID > 0 
-                            AND '$date' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE
-                            AND RESV_STATUS NOT IN ('Checked-Out','Cancelled')
+                            WHERE RESV_ROOM_ID > 0";
+        if($date2 != '')
+            $sql .= "       AND ('$date1' <= RESV_DEPARTURE AND '$date2' >= RESV_ARRIVAL_DT)";
+        else        
+            $sql .= "       AND '$date1' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE";
+
+        $sql .= "           AND RESV_STATUS NOT IN ('Checked-Out','Cancelled')
                             GROUP BY RESV_ROOM_ID) RESV_ROOMS ON RESV_ROOMS.RESV_ROOM = RM_ID
 
-                WHERE RM_STATUS_ID NOT IN (4,5)
-                GROUP BY RM_TYPE
+                WHERE RM_STATUS_ID NOT IN (4,5)";
+        
+        if($rmtype_id != '')
+        $sql .= "AND RM_TYPE_REF_ID = '".$rmtype_id."'";
+        
+        $sql .= "GROUP BY RM_TYPE_REF_ID, RM_TYPE
                 ORDER BY RM_TYPE ASC";
 
         $response = $this->Db->query($sql)->getResultArray();
         $roomtype_rooms = [];
 
         foreach ($response as $roomtype_room) {
-            $roomtype_rooms[$roomtype_room['RM_TYPE']] = $roomtype_room['NUM_ROOMS'];
+            $roomtype_rooms[$roomtype_room['RM_TYPE_REF_ID']] = $roomtype_room['NUM_ROOMS'];
         }
 
         return $roomtype_rooms;
@@ -2030,7 +2030,7 @@ class ApplicatioController extends BaseController
             $rmtype_rooms = $this->getFreeRooms($sCurrentDate);
 
             foreach ($rmtype_data as $rmtype_row) {
-                $room_pool_html .= '<td>' . $rmtype_rooms[$rmtype_row['RM_TY_CODE']] . '</td>';
+                $room_pool_html .= '<td>' . $rmtype_rooms[$rmtype_row['RM_TY_ID']] . '</td>';
             }
 
             $room_pool_html .= ' </tr>';
@@ -2129,8 +2129,6 @@ class ApplicatioController extends BaseController
                     "BLK_CUTOFF_DAYS" => $this->request->getPost("BLK_CUTOFF_DAYS"),
                     "BLK_CUTOFF_DT" => $this->request->getPost("BLK_CUTOFF_DT"),
                     "BLK_RESER_METHOD" => $this->request->getPost("BLK_RESER_METHOD"),
-                    "BLK_RATE_CODE" => $this->request->getPost("BLK_RATE_CODE"),
-                    "BLK_PACKAGE" => $this->request->getPost("BLK_PACKAGE"),
                     "BLK_UPDATE_UID" => session()->get('USR_ID'),
                     "BLK_UPDATE_DT" => date("d-M-Y")
                  ];
@@ -2152,8 +2150,6 @@ class ApplicatioController extends BaseController
                     "BLK_CUTOFF_DAYS" => $this->request->getPost("BLK_CUTOFF_DAYS"),
                     "BLK_CUTOFF_DT" => $this->request->getPost("BLK_CUTOFF_DT"),
                     "BLK_RESER_METHOD" => $this->request->getPost("BLK_RESER_METHOD"),
-                    "BLK_RATE_CODE" => $this->request->getPost("BLK_RATE_CODE"),
-                    "BLK_PACKAGE" => $this->request->getPost("BLK_PACKAGE"),
                     "BLK_CREATE_UID" => session()->get('USR_ID'),
                     "BLK_CREATE_DT" => date("d-M-Y")
                  ];
@@ -2185,7 +2181,7 @@ class ApplicatioController extends BaseController
                 BLK_AGENT,(SELECT AGN_ACCOUNT FROM FLXY_AGENT_PROFILE WHERE BLK_AGENT=AGN_ID)BLK_AGENT_DESC,
                 BLK_GROUP,(SELECT GRP_NAME FROM FLXY_GROUP WHERE BLK_GROUP=GRP_ID)BLK_GROUP_DESC,
                 BLK_NAME,BLK_START_DT,BLK_NIGHT,BLK_CODE,BLK_END_DT,BLK_STATUS,BLK_RESER_TYPE,BLK_MARKET,BLK_SOURCE,
-                BLK_ELASTIC,BLK_CUTOFF_DAYS,BLK_CUTOFF_DT,BLK_RESER_METHOD,BLK_RATE_CODE,BLK_PACKAGE 
+                BLK_ELASTIC,BLK_CUTOFF_DAYS,BLK_CUTOFF_DT,BLK_RESER_METHOD 
                 FROM FLXY_BLOCK WHERE BLK_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
@@ -2329,6 +2325,7 @@ class ApplicatioController extends BaseController
                     "RM_CLASS" => $this->request->getPost("RM_CLASS"),
                     "RM_DESC" => $this->request->getPost("RM_DESC"),
                     "RM_TYPE" => $this->request->getPost("RM_TYPE"),
+                    "RM_TYPE_REF_ID" => $this->request->getPost("RM_TYPE_REF_ID"),
                     "RM_FEATURE" => $RM_FEATURE,
                     "RM_PUBLIC_RATE_CODE" => $this->request->getPost("RM_PUBLIC_RATE_CODE"),
                     "RM_PUBLIC_RATE_AMOUNT" => $this->request->getPost("RM_PUBLIC_RATE_AMOUNT"),
@@ -2354,6 +2351,7 @@ class ApplicatioController extends BaseController
                     "RM_CLASS" => $this->request->getPost("RM_CLASS"),
                     "RM_DESC" => $this->request->getPost("RM_DESC"),
                     "RM_TYPE" => $this->request->getPost("RM_TYPE"),
+                    "RM_TYPE_REF_ID" => $this->request->getPost("RM_TYPE_REF_ID"),
                     "RM_FEATURE" => $RM_FEATURE,
                     "RM_PUBLIC_RATE_CODE" => $this->request->getPost("RM_PUBLIC_RATE_CODE"),
                     "RM_PUBLIC_RATE_AMOUNT" => $this->request->getPost("RM_PUBLIC_RATE_AMOUNT"),

@@ -63,6 +63,7 @@
                         <div class="col-md-6">
                           <lable class="form-lable">Room Type</lable>
                           <input type="hidden" name="RM_DESC" id="RM_DESC" class="form-control"/>
+                          <input type="hidden" name="RM_TYPE_REF_ID" id="RM_TYPE_REF_ID" class="form-control"/>
                           <select name="RM_TYPE"  id="RM_TYPE" data-width="100%" class="selectpicker RM_TYPE" data-live-search="true">
                               <option value="">Select</option>
                           </select>
@@ -268,8 +269,11 @@
 
   $(document).on('change','#RM_TYPE',function(){
     var value = $(this).find('option:selected').attr('data-rmclass');
+    var room_type_id = $(this).find('option:selected').data('room-type-id');
     var desc = $(this).find('option:selected').attr('data-desc');
+
     $('#RM_DESC').val(desc);
+    $('#RM_TYPE_REF_ID').val(room_type_id);
     $('#RM_CLASS').val(value);
   });
 
@@ -332,7 +336,7 @@
                 var field = $.trim(fields);//fields.trim();
                 var dataval = $.trim(datavals);//datavals.trim();
                 if(field=='RM_TYPE'){
-                  var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
+                  var option = '<option value="'+dataval+'" data-room-type-id="'+data[field+'_REF_ID']+'">'+data[field+'_DESC']+'</option>';
                   $('#'+field).html(option).selectpicker('refresh');
                 }else if(field=='RM_FEATURE'){
                   var feture = dataval.split(',');
