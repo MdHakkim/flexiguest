@@ -397,7 +397,7 @@ class RestaurantController extends BaseController
             if ($data['RO_DELIVERY_STATUS'] != 'Cancelled')
                 return $this->respond(responseJson(202, true, ['msg' => "Invalid request."]));
 
-            if ($order['RO_DELIVERY_STATUS'] != 'New' || $order['RO_DELIVERY_STATUS'] != 'Cancelled' || $order['RO_PAYMENT_STATUS'] == 'Paid')
+            if (($order['RO_DELIVERY_STATUS'] != 'New' && $order['RO_DELIVERY_STATUS'] != 'Cancelled') || $order['RO_PAYMENT_STATUS'] == 'Paid')
                 return $this->respond(responseJson(202, true, ['msg' => "Can't cancel the order."]));
         }
 
