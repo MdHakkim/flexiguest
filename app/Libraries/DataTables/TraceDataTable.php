@@ -92,6 +92,12 @@ class TraceDataTable{
                         }
                     }
                 }
+                if($name == "RSV_TRACE_TEXT") {                    
+                    if($row[$name] != '' ){                   
+                            $row[$name] = strip_tags($row[$name]);
+                        }
+                    
+                }
 
                 
                $designArr[$name] = $row[$name];

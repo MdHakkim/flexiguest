@@ -1068,7 +1068,7 @@ public function showPackages()
         if($RESV_ID > 0)
         $init_cond = array("RSV_ID = " => $RESV_ID, "RSV_TRACE_STATUS = " => 1);   
         
-        $tableName = '( SELECT  RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_TIME,RSV_TRACE_DEPARTMENT,UE.USR_FIRST_NAME AS UE_FIRST_NAME,UE.USR_LAST_NAME AS UE_LAST_NAME,UR.USR_FIRST_NAME AS UR_FIRST_NAME,UR.USR_LAST_NAME AS UR_LAST_NAME, RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_RESOLVED_TIME,RSV_TRACE_STATUS FROM
+        $tableName = '( SELECT  RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_TIME,RSV_TRACE_DEPARTMENT,UE.USR_FIRST_NAME AS UE_FIRST_NAME,UE.USR_LAST_NAME AS UE_LAST_NAME,UR.USR_FIRST_NAME AS UR_FIRST_NAME,UR.USR_LAST_NAME AS UR_LAST_NAME,RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_RESOLVED_TIME,RSV_TRACE_STATUS FROM
                         FLXY_RESERVATION_TRACES INNER JOIN FLXY_USERS UE ON UE.USR_ID = RSV_TRACE_ENTERED_BY LEFT JOIN FLXY_USERS UR ON UR.USR_ID = RSV_TRACE_RESOLVED_BY) TRACE_LIST';
 
         $columns = 'RSV_TRACE_ID,RSV_ID,RSV_TRACE_DATE,RSV_TRACE_DEPARTMENT,RSV_TRACE_TIME,UE_FIRST_NAME,UE_LAST_NAME,UR_FIRST_NAME,UR_LAST_NAME,RSV_TRACE_RESOLVED_BY,RSV_TRACE_RESOLVED_ON,RSV_TRACE_RESOLVED_TIME,RSV_TRACE_STATUS';
@@ -1437,19 +1437,22 @@ public function checkItemReserved($item_id, $sCurrentDate){
         $data = [];
 
         $reservationExists = $this->checkReservations($RESV_ID, $START, $END);
-        if($reservationExists > 0){
+        if($reservationExists == 0){
             $reservations = $this->getAllReservations($RESV_ID);
             if(!empty($reservations)){
                 foreach($reservations as $resv){
                     $ALL_RESV_ARRIVAL_DT[] = strtotime($resv['RESV_ARRIVAL_DT']);
-                    $ALL_RESV_DEPARTURE[]      = strtotime($resv['RESV_DEPARTURE']);
+                    $ALL_RESV_DEPARTURE[]  = strtotime($resv['RESV_DEPARTURE']);
                     $RESV_ROOM_ID[]        = $resv['RESV_ROOM_ID'];
-                }
-            
+                }  
+            if($NEW_ROOM_ID != '' || $OLD_ROOM_ID != '')  {
+                $NEW_ROOM_TYPE = $this->getRoomType($NEW_ROOM_ID);
+                $OLD_ROOM_TYPE = $this->getRoomType($OLD_ROOM_ID);
+            }
 
             //// FIRST CASE
-            ///// IF THE RESERVATION IS Checked-In THEN WE CAN'T CHANGE THE DATES
-            $sql = "SELECT RESV_STATUS, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, RESV_ROOM_ID, RESV_ROOM FROM FLXY_RESERVATION WHERE RESV_ID = ".$RESV_ID;       
+           ///// IF THE RESERVATION IS Checked-In THEN WE CAN'T CHANGE THE DATES
+            $sql = "SELECT RESV_STATUS, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, RESV_ROOM_ID, RESV_ROOM, RESV_RM_TYPE_ID FROM FLXY_RESERVATION WHERE RESV_ID = ".$RESV_ID;       
             $responseCount = $this->DB->query($sql)->getNumRows();
             if($responseCount > 0){
                 $row = $this->DB->query($sql)->getRow();
@@ -1459,6 +1462,7 @@ public function checkItemReserved($item_id, $sCurrentDate){
                 $RESV_DEPARTURE  = strtotime(date("Y-m-d", strtotime($row->RESV_DEPARTURE)));
                 $RESV_STATUS     = $row->RESV_STATUS;
                 $RESV_ROOM_ID    = $row->RESV_ROOM_ID;
+                $RESV_RM_TYPE_ID    = $row->RESV_RM_TYPE_ID;
                 $RESV_ROOM       = $row->RESV_ROOM;
                 $START           = strtotime($START_DATE[0]);
                 $END             = strtotime($END_DATE[0]);
@@ -1473,13 +1477,12 @@ public function checkItemReserved($item_id, $sCurrentDate){
                 else{
                     $ROOM_ID = $NEW_ROOM_ID;
                     $ROOM_NO = $NEW_ROOM;
-
                 }
     
             $overlappedResv = $this->dateExistsOverlap($RESV_ID,$START_OVERLAP,$END_OVERLAP, $ROOM_ID );
             $RoomStatusOOS = $this->roomStatusOOSOverlap($START_OVERLAP, $END_OVERLAP, $ROOM_ID);
 
-                if($RESV_STATUS === "Checked-In" )
+                if($RESV_STATUS === "Checked-In" ){
                     if($START != $RESV_ARRIVAL_DT && $END != $RESV_DEPARTURE){
                         $data['status_message'] = "Can't change the dates. Already checked-in";
                         $data['status'] = 1;
@@ -1497,6 +1500,7 @@ public function checkItemReserved($item_id, $sCurrentDate){
                         $data['status_message'] = "Successfully moved to new room";
                         $data['status'] = 0;
                     }
+                }
                 else if($row->RESV_STATUS === "Due Pre Check-In" || $row->RESV_STATUS === "Pre Checked-In"){
                     if($overlappedResv > 0){
                         $data['status_message'] = "Can't change the room. Already Booked";
@@ -1506,10 +1510,24 @@ public function checkItemReserved($item_id, $sCurrentDate){
                         $data['status_message'] = "Can't change the room. Room is Out of Service/Out of Order";
                         $data['status'] = 1;
                     }
+                    else if($OLD_ROOM !='' && ($OLD_ROOM != $NEW_ROOM)){
+                        $data['status_message'] = "Do you want to change the room no from ".$OLD_ROOM." to ".$NEW_ROOM." ?";
+                        $data['status'] = 2;
+                        $data['status_type'] = "room_no_type";
+                        $data['OLD_ROOM_TYPE']   = $OLD_ROOM_TYPE;
+                        $data['NEW_ROOM_TYPE']   = $NEW_ROOM_TYPE;
+                        $data['RESV_RM_TYPE_ID'] = $RESV_RM_TYPE_ID;
+                        
+                    }
+                    // else if($OLD_ROOM_TYPE != $NEW_ROOM_TYPE){
+                    //     $data['status_message'] = "Room type changed to  ".$NEW_ROOM_TYPE.". Do you want to continue?";
+                    //     $data['status'] = 2;
+                    //     $data['status_type'] = "room_type";
+                    // }
                     else{
                         $output = $this->updateRoomReservation($RESV_ID,$ROOM_ID,$ROOM_NO,$START_OVERLAP,$END_OVERLAP);
                         if($output){
-                        $data['status_message'] = "Successfully moved to new room";
+                        $data['status_message'] = "Successfully moved to new room: ".$NEW_ROOM;
                         $data['status'] = 0;
                         }else{
                             $data['status_message'] = "Error";
@@ -1524,7 +1542,7 @@ public function checkItemReserved($item_id, $sCurrentDate){
         }
     }
         else{
-            $data['status_message'] = "Can't change the room. Room is Out of Service/Out of Order";
+            $data['status_message'] = "Can't change the room. already booked";
             $data['status'] = 1;
         }
 
@@ -1726,7 +1744,7 @@ public function checkReservationExists(){
 
 public function checkReservations($RESV_ID, $START, $END){
     $status = 0;
-    $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE RESV_ID = '".$RESV_ID."' AND RESV_ARRIVAL_DT = '".$START."' AND RESV_DEPARTURE = '".$END."'";       
+    $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE RESV_ID != '".$RESV_ID."' AND RESV_ARRIVAL_DT = '".$START."' AND RESV_DEPARTURE = '".$END."'";       
     $responseCount = $this->DB->query($sql)->getNumRows();
     if($responseCount > 0)       
         $status = 1;
@@ -1759,7 +1777,7 @@ public function dateExistsOverlap($RESV_ID,$START,$END,$NEW_ROOM_ID){
 }
 
 public function roomStatusOOSOverlap($START_OVERLAP, $END_OVERLAP, $ROOM_ID){    
-    $sql = "SELECT OOOS_ID FROM FLXY_ROOM_OOOS WHERE ((STATUS_FROM_DATE BETWEEN '$START_OVERLAP' AND '$END_OVERLAP') OR (STATUS_TO_DATE BETWEEN '$START_OVERLAP' AND '$END_OVERLAP')) AND ROOMS = '$ROOM_ID'";
+  $sql = "SELECT OOOS_ID FROM FLXY_ROOM_OOOS WHERE (('$START_OVERLAP' BETWEEN STATUS_FROM_DATE AND STATUS_TO_DATE) OR ('$END_OVERLAP' BETWEEN STATUS_FROM_DATE AND STATUS_TO_DATE )) AND ROOMS = '$ROOM_ID'";
    $responseCount = $this->DB->query($sql)->getNumRows();
    return $responseCount;
 }
@@ -2060,6 +2078,33 @@ public function getRoomStatistics(){
     {
         $fileArry = $_FILES['attachmentFile'];
         echo "<pre>"; print_r($fileArry); echo "</pre>"; exit;
+    }
+
+
+    public function getRoomType($NEW_ROOM_ID){
+        $param = ['SYSID' => $NEW_ROOM_ID];
+        $sql = "SELECT RM_TY_CODE           
+                FROM dbo.FLXY_ROOM INNER JOIN FLXY_ROOM_TYPE ON RM_TY_ID = RM_TYPE_REF_ID
+                WHERE RM_ID=:SYSID:";       
+
+        $RM_TY_CODE = $this->DB->query($sql, $param)->getRow()->RM_TY_CODE;
+        return $RM_TY_CODE;
+    }
+
+    public function updateRoomPlanDetails(){
+        $resv_id      = $this->request->getPost('resv_id');
+        $room_id         = $this->request->getPost('room_id');
+        $room_no         = $this->request->getPost('room_no');
+        $room_type    = $this->request->getPost('room_type');
+        $room_type_id    = $this->request->getPost('room_type_id');
+
+              
+        $return = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resv_id)->update(['RESV_RM_TYPE_ID'=>$room_type_id, 'RESV_RM_TYPE' => $room_type,'RESV_ROOM_ID' => $room_id,'RESV_ROOM' => $room_no ]);
+
+        $data['status'] = ($return == 1) ? '1': '2';  
+        $data['status_message'] = ($return == 1) ? 'Successfully moved': 'Failed';    
+        echo json_encode($data);  
+ 
     }
 
 
