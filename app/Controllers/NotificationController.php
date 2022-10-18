@@ -39,14 +39,15 @@ class NotificationController extends BaseController
 
         $UserID = session()->get('USR_ID');
         $mine = new NotificationDataTable();
-        $tableName = "( SELECT NOTIFICATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIF_TY_DESC,CONCAT_WS(' ',USR_FROM.USR_FIRST_NAME,USR_FROM.USR_LAST_NAME) AS NOTIFICATION_FROM_NAME,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_RESERVATION_ID,NOTIFICATION_URL,NOTIFICATION_FROM_ID FROM FLXY_NOTIFICATIONS
+        $tableName = "( SELECT NOTIFICATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIF_TY_DESC,CONCAT_WS(' ',USR_FROM.USR_FIRST_NAME,USR_FROM.USR_LAST_NAME) AS NOTIFICATION_FROM_NAME,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_RESERVATION_ID,NOTIFICATION_URL,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY FROM FLXY_NOTIFICATIONS
         INNER JOIN FLXY_NOTIFICATION_TYPE ON NOTIFICATION_TYPE = NOTIF_TY_ID        
         LEFT JOIN FLXY_USERS USR_FROM ON USR_FROM.USR_ID = NOTIFICATION_FROM_ID 
+        LEFT JOIN FLXY_RESERVATION_TRACES ON RSV_TRACE_NOTIFICATION_ID = NOTIFICATION_ID 
         ) AS NOTIFICATION";
 
         $init_cond = array("NOTIFICATION_FROM_ID = "=> $UserID);
     
-        $columns = 'NOTIFICATION_ID,NOTIF_TY_DESC,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_FROM_NAME,NOTIFICATION_RESERVATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_URL,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIFICATION_FROM_ID';
+        $columns = 'NOTIFICATION_ID,NOTIF_TY_DESC,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_FROM_NAME,NOTIFICATION_RESERVATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_URL,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY';
         $mine->generate_DataTable($tableName, $columns, $init_cond);
         exit;
     }
@@ -78,7 +79,7 @@ class NotificationController extends BaseController
             }
             else if($NOTIFICATION_TYPE == 4 && ($NOTIFICATION_RESERVATION_ID == '' || ((!isset($NOTIFICATION_DEPARTMENT) && empty($NOTIFICATION_DEPARTMENT)) && empty($NOTIFICATION_TO_ID)))){
                 $rules['NOTIFICATION_RESERVATION_ID'] = ['label' => 'Reservation', 'rules' => 'required'];
-                $rules['NOTIFICATION_DEPARTMENT'] = ['label' => 'Department/User', 'rules' => 'required'];
+                $rules['NOTIFICATION_DEPARTMENT'] = ['label' => 'Department', 'rules' => 'required'];
             }
             if($NOTIFICATION_TEXT  == ''){
                 $rules['NOTIFICATION_TEXT'] = ['label' => 'Message', 'rules' => 'required'];
@@ -148,9 +149,7 @@ class NotificationController extends BaseController
                 
             }
 
-            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
-
-            
+            $result = $return ? $this->responseJson("1", "0", $return, $response = $Notification_ID) : $this->responseJson("-444", "db insert not successful", $return);            
 
             if($NOTIFICATION_TYPE == 1 || $NOTIFICATION_TYPE == 2 || $NOTIFICATION_TYPE == 4 )
             {
