@@ -20,6 +20,9 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
+                            <th>Room</th>
+                            <th>Guest Name</th>
+                            <th>Reservation</th>
                             <th>Delivery Status</th>
                             <th>Payment Status</th>
                             <th>Payment Method</th>
@@ -227,7 +230,19 @@
                     data: 'RO_ID'
                 },
                 {
-                    data: 'RO_DELIVERY_STATUS',
+                    data: 'RM_NO'
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        return `${data['CUST_FIRST_NAME']} ${data['CUST_LAST_NAME']}`;
+                    }
+                },
+                {
+                    data: 'RO_RESERVATION_ID'
+                },
+                {
+                    data: 'RO_DELIVERY_STATUS'
                 },
                 {
                     data: 'RO_PAYMENT_STATUS'
