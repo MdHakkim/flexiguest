@@ -548,8 +548,8 @@ class RestaurantRepository extends BaseController
     public function allOrder()
     {
         $mine = new ServerSideDataTable();
-        $tableName = 'FLXY_RESTAURANT_ORDERS';
-        $columns = 'RO_ID,RO_DELIVERY_STATUS,RO_PAYMENT_STATUS,RO_PAYMENT_METHOD,RO_CREATED_AT';
+        $tableName = 'FLXY_RESTAURANT_ORDERS left join FLXY_ROOM on RO_ROOM_ID = RM_ID left join FLXY_CUSTOMER on RO_CUSTOMER_ID = CUST_ID';
+        $columns = 'RO_ID,RO_RESERVATION_ID,RO_ROOM_ID,RO_CUSTOMER_ID,RO_TOTAL_PAYABLE,RO_DELIVERY_STATUS,RO_PAYMENT_STATUS,RO_PAYMENT_METHOD,RO_CREATED_AT,RM_NO,CUST_FIRST_NAME,CUST_LAST_NAME';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
