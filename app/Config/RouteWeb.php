@@ -637,7 +637,19 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'], '/viewAllNotificationDetails', 'NotificationController::viewAllNotificationDetails');
       $routes->match(['post'], '/guestByReservation', 'NotificationController::guestByReservation');
       $routes->match(['post'], '/loadNotification', 'NotificationController::loadNotification');
-      
+
+      $routes->get('/taskcode', 'HousekeepingController::taskcode');
+      $routes->match(['post'], '/taskcodeView', 'HousekeepingController::taskcodeView');
+      $routes->match(['post'], '/insertTaskcode', 'HousekeepingController::insertTaskcode');
+      $routes->match(['post'], '/editTaskcode', 'HousekeepingController::editTaskcode');
+      $routes->match(['post'], '/deleteTaskcode', 'HousekeepingController::deleteTaskcode');
+
+      $routes->get('/tasks', 'HousekeepingController::tasks');
+      $routes->match(['post'], '/tasksView', 'HousekeepingController::tasksView');
+      $routes->match(['post'], '/insertTask', 'HousekeepingController::insertTask');
+      $routes->match(['post'], '/editTask', 'HousekeepingController::editTask');
+      $routes->match(['post'], '/deleteTask', 'HousekeepingController::deleteTask');
+      $routes->get('/taskcodeList', 'HousekeepingController::taskcodeList');     
       
 
      //Subina Code (END)  

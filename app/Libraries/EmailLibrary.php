@@ -69,9 +69,9 @@ class EmailLibrary{
 
         $html = view('EmailTemplates/NotificationEmail',$paramraw);
         $this->email->setFrom('notifications@farnek.com', 'FLEXIGUEST | HITEK');
-        $this->email->setTo('aamir.sohail@farnek.com');
-        $this->email->setCC('aamir.sohail@hitekservices.com');
-        //$this->email->setTo($toEmail);
+        // $this->email->setTo('aamir.sohail@farnek.com');
+        // $this->email->setCC('aamir.sohail@hitekservices.com');
+        $this->email->setTo('subina.kk@farnek.com');
         //$this->email->setCC('deleep.bose@farnek.com');
         $this->email->setSubject($paramraw['NOTIFICATION_TYPE']);
         $this->email->setMessage($html);//your message here
