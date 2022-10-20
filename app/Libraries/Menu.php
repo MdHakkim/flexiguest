@@ -63,6 +63,8 @@ class Menu{
                     $rolesSubmenuOutput.='</ul>';
 
                 }
+                else
+                    $submenu_url_array[] = base_url().'/'.$menu_url;
 
                 ///END SUBMENU 
             

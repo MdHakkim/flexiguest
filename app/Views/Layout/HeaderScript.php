@@ -69,6 +69,9 @@
 
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/dropzone/dropzone.css')?>" />
 
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/css/pages/page-help-center.css')?>" />
+
+
 <!-- Page CSS -->
 <script src="<?php echo base_url('assets/js/jquery-3.6.0.min.js')?>"></script>
 <!-- Helpers -->

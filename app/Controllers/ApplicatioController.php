@@ -38,7 +38,7 @@ class ApplicatioController extends BaseController
     }
 
     public function Reservation(){   
-        $data['title'] = getMethodName();
+        $data['title'] = null !== $this->request->getGet("SHOW_ARRIVALS") ? 'Arrivals' : (null !== $this->request->getGet("SHOW_IN_HOUSE") ? 'In House Guests' : 'Reservation List');
         $data['session'] = $this->session;
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $itemLists = $this->itemList();    
@@ -75,7 +75,9 @@ class ApplicatioController extends BaseController
         $data['DEPARTURE_DATE'] = null !== $this->request->getGet("ARRIVAL_DATE") ? date("d-M-Y", strtotime("+1 day", strtotime($this->request->getGet("ARRIVAL_DATE")))): null; 
         $cond = "RESV_ID = '".$this->request->getGet("RESV_ID")."'";
         $data['CUSTOMER_ID'] = null !== $this->request->getGet("RESV_ID") ? getValueFromTable('RESV_NAME',$cond,'FLXY_RESERVATION') : null;
-
+        
+        $data['show_arrivals'] = null !== $this->request->getGet("SHOW_ARRIVALS") ? '1' : null;
+        $data['show_in_house'] = null !== $this->request->getGet("SHOW_IN_HOUSE") ? '1' : null;
 
         //Check if RESV_ID exists in Customer table
         if($data['RESV_ID'] && !checkValueinTable('RESV_ID', $data['RESV_ID'], 'FLXY_RESERVATION'))
@@ -176,6 +178,11 @@ class ApplicatioController extends BaseController
 
         $init_cond = array();
 
+        if(null !== $this->request->getPost('SHOW_IN_HOUSE')){
+            $init_cond["'".date('Y-m-d')."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE"] = "";
+            $init_cond["RESV_STATUS IN ('Checked-In','Check-Out-Requested')"] = "";
+        }
+
         if($search_keys != NULL){
             foreach($search_keys as $search_key)
             {
@@ -196,20 +203,28 @@ class ApplicatioController extends BaseController
                         
                         case 'S_SEARCH_TYPE': { switch($value)
                                                 {
-                                                    case '1': $init_cond["RESV_ARRIVAL_DT = "] = "'".date('Y-m-d')."'"; break;
-                                                    case '2': $init_cond["RESV_DEPARTURE = "]  = "'".date('Y-m-d')."'"; break;
+                                                    //Due In
+                                                    case '1': $init_cond["RESV_ARRIVAL_DT = "] = "'".date('Y-m-d')."'"; 
+                                                              $init_cond["RESV_STATUS IN ('Due Pre Check-In','Pre Checked-In')"] = "";
+                                                              break;
+                                                    
+                                                    //Due Out          
+                                                    case '2': $init_cond["RESV_DEPARTURE = "]  = "'".date('Y-m-d')."'"; 
+                                                              $init_cond["RESV_STATUS IN ('Checked-In','Check-Out-Requested')"] = "";
+                                                              break;
+
                                                     case '3': $init_cond["RESV_ARRIVAL_DT = "] = "RESV_DEPARTURE"; break;
                                                     case '4': $init_cond["RESV_STATUS = "] = "'Checked-In'"; break;
                                                     case '5': $init_cond["RESV_STATUS = "] = "'Checked-Out'"; break;
+                                                    case '6': $init_cond["RESV_STATUS = "] = "'No Show'"; break;
                                                     case '7': $init_cond["RESV_STATUS = "] = "'Cancelled'"; break;
+                                                    case '8': $init_cond["RESV_STATUS = "] = "'Check-Out-Requested'"; break;
                                                     default: break;
                                                 }
                                               } break;
 
-                        default: $init_cond["".ltrim($search_key, "S_")." LIKE "] = "'%$value%'"; break;
-                        
-                    }
-                    
+                        default: $init_cond["".ltrim($search_key, "S_")." LIKE "] = "'%$value%'"; break;                        
+                    }                    
                 }
             }
         }
@@ -361,7 +376,8 @@ class ApplicatioController extends BaseController
                 "RESV_RATE" => $this->request->getPost("RESV_RATE"),
                 "RESV_ETA" => $this->request->getPost("RESV_ETA"),
                 "RESV_CO_TIME" => $this->request->getPost("RESV_CO_TIME"),
-                "RESV_RTC" => $this->request->getPost("RESV_RTC"),
+                "RESV_RTC" => null !== $this->request->getPost("RESV_RTC") ? $this->request->getPost("RESV_RTC") : $this->request->getPost("RESV_RM_TYPE"),
+                "RESV_RTC_ID" => $this->request->getPost("RESV_RTC_ID"),
                 "RESV_FIXED_RATE" => (empty($this->request->getPost("RESV_FIXED_RATE")) ? '' : $this->request->getPost("RESV_FIXED_RATE")),
                 "RESV_RESRV_TYPE" => $this->request->getPost("RESV_RESRV_TYPE"),
                 "RESV_MARKET" => $this->request->getPost("RESV_MARKET"),
@@ -468,7 +484,8 @@ class ApplicatioController extends BaseController
                     "RESV_RATE" => $this->request->getPost("RESV_RATE"),
                     "RESV_ETA" => $this->request->getPost("RESV_ETA"),
                     "RESV_CO_TIME" => $this->request->getPost("RESV_CO_TIME"),
-                    "RESV_RTC" => $this->request->getPost("RESV_RTC"),
+                    "RESV_RTC" => null !== $this->request->getPost("RESV_RTC") ? $this->request->getPost("RESV_RTC") : $this->request->getPost("RESV_RM_TYPE"),
+                    "RESV_RTC_ID" => $this->request->getPost("RESV_RTC_ID"),
                     "RESV_FIXED_RATE" => (empty($this->request->getPost("RESV_FIXED_RATE")) ? '' : $this->request->getPost("RESV_FIXED_RATE")),
                     "RESV_RESRV_TYPE" => $this->request->getPost("RESV_RESRV_TYPE"),
                     "RESV_MARKET" => $this->request->getPost("RESV_MARKET"),

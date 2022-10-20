@@ -399,6 +399,7 @@
                                                             <option value="3">Day Use</option>
                                                             <option value="4">Checked In</option>
                                                             <option value="5">Checked Out</option>
+                                                            <option value="8">Check-Out Requested</option>
                                                             <option value="6">No Shows</option>
                                                             <option value="7">Cancelled</option>
                                                         </select>

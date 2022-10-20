@@ -19,6 +19,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('logout', 'UserController::logout');
     $routes->get("/editor", "EditorController::index");
 
+    $routes->get('/frontDesk', 'DashboardController::frontDesk');
+
     $routes->get('/reservation', 'ApplicatioController::Reservation');
     $routes->match(['post'], '/reservationView', 'ApplicatioController::reservationView');
     $routes->match(['post'], '/insertReservation', 'ApplicatioController::insertReservation');

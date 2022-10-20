@@ -1,7 +1,7 @@
 .help-center-header {
   position: relative;
   background-color: rgba(90, 141, 238, 0.08);
-  min-height: 270px !important;
+  min-height: 200px !important;
   overflow: hidden;
 }
 .help-center-header:before {

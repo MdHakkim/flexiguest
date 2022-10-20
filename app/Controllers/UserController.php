@@ -101,6 +101,11 @@ class UserController extends BaseController
 
     public function Users()
     {
+        $data['editId'] = null !== $this->request->getGet("editId") ? $this->request->getGet("editId") : null;
+        //Check if edit ID exists in Customer table
+        if($data['editId'] && !checkValueinTable('USR_ID', $data['editId'], 'FlXY_USERS'))
+            return redirect()->to(base_url('Users'));
+
         $data['title'] = getMethodName();
         $data['session'] = $this->session;
         $data['roleList'] = $this->roleList();

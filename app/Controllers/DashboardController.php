@@ -18,4 +18,10 @@ class DashboardController extends BaseController
     {
         return view("login/Dashboard");
     }
+
+    public function frontDesk()
+    {
+        $data['user_id'] = session()->get('USR_ID');
+        return view('login/FrontDesk', $data);
+    }
 }

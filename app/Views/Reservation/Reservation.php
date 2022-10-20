@@ -176,8 +176,8 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Reservation
-            List</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> <?=$title?>
+        </h4>
         <!-- DataTable with Buttons -->
         <div class="card">
             <!-- <h5 class="card-header">Responsive Datatable</h5> -->
@@ -229,7 +229,8 @@
                                             From:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_ARRIVAL_FROM" name="S_ARRIVAL_FROM"
-                                            class="form-control dt-date" placeholder="" />
+                                            class="form-control dt-date" placeholder=""
+                                            value="<?php echo ($show_arrivals) ? date('d-M-Y') : '';?>" />
                                     </div>
                                 </div>
 
@@ -259,7 +260,8 @@
                                             To:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_ARRIVAL_TO" name="S_ARRIVAL_TO"
-                                            class="form-control dt-date" data-column="16" placeholder="" />
+                                            class="form-control dt-date" data-column="16" placeholder=""
+                                            value="<?php echo ($show_arrivals) ? date('d-M-Y') : '';?>" />
                                     </div>
                                 </div>
 
@@ -270,11 +272,12 @@
                                         <select id="S_SEARCH_TYPE" name="S_SEARCH_TYPE" class="form-select dt-select"
                                             data-column="1">
                                             <option value="">View All</option>
-                                            <option value="1">Due In</option>
+                                            <option value="1" <?php echo ($show_arrivals) ? 'selected' : '';?>>Due In</option>
                                             <option value="2">Due Out</option>
                                             <option value="3">Day Use</option>
                                             <option value="4">Checked In</option>
                                             <option value="5">Checked Out</option>
+                                            <option value="8">Check-Out Requested</option>
                                             <option value="6">No Shows</option>
                                             <option value="7">Cancelled</option>
                                         </select>
@@ -1046,6 +1049,7 @@
                                                     class="select2 form-select RESV_RM_TYPE" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
+                                                <div class="invalid-feedback"> Room Type is required & can't be empty.</div>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Room</label>
@@ -1119,7 +1123,7 @@
                                             <div class="col-md-3">
                                                 <label class="form-label">RTC</label>
                                                 <select name="RESV_RTC" id="RESV_RTC" data-width="100%"
-                                                    class="selectpicker RESV_RTC" data-live-search="true">
+                                                    class="select2 RESV_RTC" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
@@ -2809,9 +2813,10 @@
                 </div>
                 <div class="modal-body">
                     <form id="trace-submit-form" onSubmit="return false">
-                        <input type="hidden" name="TRACE_RESV_ID" id="TRACE_RESV_ID" class="form-control" />                     
+                        <input type="hidden" name="TRACE_RESV_ID" id="TRACE_RESV_ID" class="form-control" />
                         <div id="tracesDiv" class="content">
-                            <input type="hidden" name="RSV_TRACE_NOTIFICATION_ID" id="RSV_TRACE_NOTIFICATION_ID" class="form-control" />
+                            <input type="hidden" name="RSV_TRACE_NOTIFICATION_ID" id="RSV_TRACE_NOTIFICATION_ID"
+                                class="form-control" />
                             <input type="hidden" name="RSV_TRACE_ID" id="RSV_TRACE_ID" class="form-control" />
                             <div class="row g-3">
                                 <div class="border rounded p-4 mb-3">
@@ -2866,8 +2871,10 @@
                                         <div class="col-md-4">
                                             <label for="RSV_TRACE_DEPARTMENT"
                                                 class="col-form-label col-md-5"><b>DEPARTMENT CODE *</b></label>
-                                                <select id="RSV_TRACE_DEPARTMENT" name="RSV_TRACE_DEPARTMENT[]" class="select2 form-select form-select-lg" data-allow-clear="true" multiple >                                  
-                                                </select> 
+                                            <select id="RSV_TRACE_DEPARTMENT" name="RSV_TRACE_DEPARTMENT[]"
+                                                class="select2 form-select form-select-lg" data-allow-clear="true"
+                                                multiple>
+                                            </select>
                                             <!-- <select id="RSV_TRACE_DEPARTMENT" name="RSV_TRACE_DEPARTMENT"
                                                 class="select2 form-select form-select-lg"></select> -->
                                         </div>
@@ -3018,7 +3025,15 @@ $(document).ready(function() {
                 var formSerialization = $('.dt_adv_search').serializeArray();
                 $(formSerialization).each(function(i, field) {
                     d[field.name] = field.value;
-                });
+                });                
+
+                <?php if($show_arrivals){ ?>
+                    d['SHOW_ARRIVALS'] = '1';
+                <?php } ?>
+
+                <?php if($show_in_house){ ?>
+                    d['SHOW_IN_HOUSE'] = '1';
+                <?php } ?>
             },
         },
         'columns': [{
@@ -3209,7 +3224,7 @@ $(document).ready(function() {
         // dataType:'json',
         success: function(respn) {
             $('#S_RESV_RM_TYPE').html(respn);
-            $('.RESV_RM_TYPE').html(respn);
+            $('.RESV_RM_TYPE,#RESV_RTC').html(respn);
         }
     });
 
@@ -3478,13 +3493,12 @@ function selectRate() {
                     .trim(dataSet['RM_TY_DESC']) + '" data-rmclass="' + $.trim(dataSet[
                         'RM_TY_ROOM_CLASS']) +
                     '" value="' + dataSet['RM_TY_CODE'] + '">' + dataSet['RM_TY_DESC'] + '</option>';
-                $('#RESV_RTC').html(option).selectpicker('refresh');
-                $('#RESV_RM_TYPE').val(dataSet['RM_TY_CODE']).trigger('change');
+                //$('#RESV_RTC').html(option).selectpicker('refresh');
+                $('#RESV_RM_TYPE,#RESV_RTC').val(dataSet['RM_TY_CODE']).trigger('change');
                 <?php  if(!empty($ROOM_ID)) { ?>
 
-                $("#RESV_RM_TYPE").val('<?php echo $ROOM_TYPE; ?>');
+                $("#RESV_RM_TYPE,#RESV_RTC").val('<?php echo $ROOM_TYPE; ?>');
                 $("#RESV_ROOM").val('<?php echo $ROOM_NO; ?>').trigger('change');
-
 
                 <?php
                         }
@@ -3747,7 +3761,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                         field == 'RESV_AGENT_DESC' || field == 'RESV_BLOCK_DESC') {
                         return true;
                     };
-                    if (field == 'RESV_NAME' || field == 'RESV_RTC') {
+                    if (field == 'RESV_NAME') {
                         var option = '<option value="' + dataval + '">' + data[
                             field + '_DESC'] + '</option>';
                         $('*#' + field).html(option).selectpicker('refresh');
@@ -4047,13 +4061,13 @@ function reservationValidate(event, id, mode) {
     var condition = (mode == 'R' ? !form.checkValidity() || !checkArrivalDate() || !checkDeparturDate() : !form
         .checkValidity());
     if (mode == 'R') {
-        var additionValid = checkPaymentValid();
+        var additionValid = checkSelectInvalid($('#RESV_PAYMENT_TYPE'));
     } else {
         var additionValid = false;
     }
     form.classList.add('was-validated');
 
-    if (condition || additionValid) { // -- customize validate user validUsername
+    if (condition || additionValid || checkSelectInvalid($('#RESV_RM_TYPE'))) { // -- customize validate user validUsername
         return false;
     } else {
         return true;
@@ -4067,6 +4081,17 @@ function checkPaymentValid() {
         return true;
     } else {
         $('#RESV_PAYMENT_TYPE').parent('div').removeClass('is-invalid').addClass('is-valid');
+        return false;
+    }
+}
+
+function checkSelectInvalid(elem){
+    var selVal = elem.val();
+    if (selVal == '') {
+        elem.parent('div').removeClass('is-valid').addClass('is-invalid');
+        return true;
+    } else {
+        elem.parent('div').removeClass('is-invalid').addClass('is-valid');
         return false;
     }
 }
@@ -4130,10 +4155,14 @@ function submitForm(id, mode, event) {
     $('#errorModal').hide();
     var formSerialization = $('#' + id).serializeArray();
     var RESV_RM_TYPE_ID = $('.RESV_RM_TYPE').find(':selected').attr('data-room-type-id') ?? 0;
+    var RESV_RTC_ID = $('#RESV_RTC').find(':selected').attr('data-room-type-id') ?? RESV_RM_TYPE_ID;
 
     formSerialization.push({
         name: 'RESV_RM_TYPE_ID',
         value: RESV_RM_TYPE_ID
+    },{
+        name: 'RESV_RTC_ID',
+        value: RESV_RTC_ID
     });
 
 
@@ -4276,24 +4305,24 @@ $(document).on('keyup', '.COPY_RM_TYPE .form-control', function() {
     });
 });
 
-$(document).on('keyup', '.RESV_RTC .form-control', function() {
-    var search = $(this).val();
-    $.ajax({
-        url: '<?php echo base_url('/roomTypeList') ?>',
-        type: "post",
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        data: {
-            search: search
-        },
-        // dataType:'json',
-        success: function(respn) {
+// $(document).on('keyup', '.RESV_RTC .form-control', function() {
+//     var search = $(this).val();
+//     $.ajax({
+//         url: '<?php echo base_url('/roomTypeList') ?>',
+//         type: "post",
+//         headers: {
+//             'X-Requested-With': 'XMLHttpRequest'
+//         },
+//         data: {
+//             search: search
+//         },
+//         // dataType:'json',
+//         success: function(respn) {
 
-            $('#RESV_RTC').html(respn).selectpicker('refresh');
-        }
-    });
-});
+//             $('#RESV_RTC').html(respn).selectpicker('refresh');
+//         }
+//     });
+// });
 
 $(document).on('change', '#RESV_RM_TYPE,#RESV_RTC', function() {
 
@@ -4302,8 +4331,11 @@ $(document).on('change', '#RESV_RM_TYPE,#RESV_RTC', function() {
 
     if ($(this).attr('id') == 'RESV_RM_TYPE') {
 
-        var room_type = $(this).find('option:selected').data('room-type-id');
+        if($('#RESV_RTC').val() == '')
+            $('#RESV_RTC').val($(this).val()).trigger('change');
 
+        var room_type = $(this).find('option:selected').data('room-type-id');
+        
         $.ajax({
             url: '<?php echo base_url('/roomList') ?>',
             async: false,
@@ -6668,7 +6700,7 @@ $(document).on('click', '#traceButton', function() {
     $("#TRACE_RESV_ID").val(reservID);
     departmentList();
     showTraces(reservID);
-   
+
     $('#RSV_TRACE_DATE').datepicker({
         format: 'd-M-yyyy',
         autoclose: true
@@ -6691,14 +6723,14 @@ $(document).on('click', '#traceButton', function() {
             $('#TRACE_DEPARTURE').val(respn.RESV_DEPARTURE);
             $('#TRACE_ARRIVAL_DT').val(respn.RESV_ARRIVAL_DT);
             $('#TRACE_DEPARTURE_DT').val(respn.RESV_DEPARTURE);
-            $('#RESERVATION_STATUS').val(respn.RESV_STATUS);  
-                  
+            $('#RESERVATION_STATUS').val(respn.RESV_STATUS);
+
             $('#RSV_TRACE_DATE').datepicker({
                 format: 'd-M-yyyy',
                 autoclose: true
-            }).datepicker("setDate", respn.RESV_ARRIVAL_DT); 
-                 
-           
+            }).datepicker("setDate", respn.RESV_ARRIVAL_DT);
+
+
         }
     });
 });
@@ -6721,7 +6753,7 @@ $(document).on('click', '.add-trace-detail', function() {
     departmentList();
     hideModalAlerts();
     $('.dtr-bs-modal').modal('hide');
-    
+
     $('#RSV_TRACE_DATE').val($('#TRACE_ARRIVAL_DT').val());
     $('#RSV_TRACE_DEPARTMENT').val('');
     $('#RSV_TRACE_TIME').val('');
@@ -6838,13 +6870,13 @@ function showTraces(resvID) {
 
             {
                 data: 'RSV_TRACE_DEPARTMENT',
-                
+
                 render: function(data, type, full, meta) {
-                if(full['RSV_TRACE_DEPARTMENT'] != ''){
-                    return full['RSV_TRACE_DEPARTMENT'];
-                }else return '';
+                    if (full['RSV_TRACE_DEPARTMENT'] != '') {
+                        return full['RSV_TRACE_DEPARTMENT'];
+                    } else return '';
                 }
-            },  
+            },
             {
                 data: 'UE_FIRST_NAME',
                 render: function(data, type, full, meta) {
@@ -6870,10 +6902,10 @@ function showTraces(resvID) {
             {
                 data: 'RSV_TRACE_RESOLVED_ON',
                 render: function(data, type, full, meta) {
-                    if(full['RSV_TRACE_RESOLVED_ON'] == null)
-                      return '';
-                    else if (full['RSV_TRACE_RESOLVED_ON'] != '1900-01-01' )
-                        return full['RSV_TRACE_RESOLVED_ON']+' '+full['RSV_TRACE_RESOLVED_TIME'];
+                    if (full['RSV_TRACE_RESOLVED_ON'] == null)
+                        return '';
+                    else if (full['RSV_TRACE_RESOLVED_ON'] != '1900-01-01')
+                        return full['RSV_TRACE_RESOLVED_ON'] + ' ' + full['RSV_TRACE_RESOLVED_TIME'];
                     else
                         return "";
                 }
@@ -6939,17 +6971,17 @@ function loadTraceDetails(TRACE_ID) {
                             '<i class="fa-solid fa-check"></i> Resolve');
                         $(".resolve-trace-detail").attr('data-rel', 1);
                     } else if (field == 'RSV_TRACE_DEPARTMENT') {
-                        $("#trace-submit-form select[name='RSV_TRACE_DEPARTMENT[]']").val(JSON.parse(dataval));
-                        $("#trace-submit-form select[name='RSV_TRACE_DEPARTMENT[]']").trigger('change');
+                        $("#trace-submit-form select[name='RSV_TRACE_DEPARTMENT[]']").val(
+                            JSON.parse(dataval));
+                        $("#trace-submit-form select[name='RSV_TRACE_DEPARTMENT[]']")
+                            .trigger('change');
 
-                    } else if(field == 'RSV_TRACE_DATE'){
+                    } else if (field == 'RSV_TRACE_DATE') {
                         $('#RSV_TRACE_DATE').datepicker({
                             format: 'd-M-yyyy',
                             autoclose: true
                         }).datepicker("setDate", new Date(dataval));
-                    }
-                    
-                    else {
+                    } else {
                         $('#' + field).val(dataval);
                     }
                 });
@@ -7006,7 +7038,7 @@ $(document).on('click', '.delete-trace-detail', function() {
                             $('#RSV_TRACE_TEXT').val('');
                             $('#RSV_TRACE_TIME').val('');
                             $('#RSV_TRACE_DEPARTMENT').val('');
-                            
+
                             showTraces(resvID);
                         }
                     }
