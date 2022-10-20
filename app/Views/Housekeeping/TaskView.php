@@ -314,13 +314,14 @@ function submitForm(id) {
                 showModalAlert('success', alertText);
                 $('#popModalWindow').modal('hide');
                 $('#dataTable_view').dataTable().fnDraw();
+                $('#HKST_ID').val(''); 
+                $('#HKST_DESCRIPTION').val('');    
+                $('#HKST_TASK_ID').val(null).trigger('change');
+                toggleButton('.delete-task', 'btn-danger', 'btn-dark', false);
+                $('.delete-task').prop('disabled',true);
             }
 
-            $('#HKST_ID').val(''); 
-            $('#HKST_DESCRIPTION').val('');    
-            $('#HKST_TASK_ID').val(null).trigger('change');
-            toggleButton('.delete-task', 'btn-danger', 'btn-dark', false);
-            $('.delete-task').prop('disabled',true);
+            
         }
     });
 }

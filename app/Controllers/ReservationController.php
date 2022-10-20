@@ -1446,8 +1446,10 @@ public function checkItemReserved($item_id, $sCurrentDate){
                     $RESV_ROOM_ID[]        = $resv['RESV_ROOM_ID'];
                 }  
             if($NEW_ROOM_ID != '' || $OLD_ROOM_ID != '')  {
-                $NEW_ROOM_TYPE = $this->getRoomType($NEW_ROOM_ID);
-                $OLD_ROOM_TYPE = $this->getRoomType($OLD_ROOM_ID);
+                $NEW_ROOM_TYPE_DATA = $this->getRoomType($NEW_ROOM_ID);
+                $OLD_ROOM_TYPE      = $this->getRoomType($OLD_ROOM_ID);
+                $NEW_ROOM_TYPE      = $NEW_ROOM_TYPE_DATA['RM_TY_CODE'];
+                $NEW_ROOM_TYPE_ID   = $NEW_ROOM_TYPE_DATA['RM_TY_ID'];   
             }
 
             //// FIRST CASE
@@ -1462,12 +1464,12 @@ public function checkItemReserved($item_id, $sCurrentDate){
                 $RESV_DEPARTURE  = strtotime(date("Y-m-d", strtotime($row->RESV_DEPARTURE)));
                 $RESV_STATUS     = $row->RESV_STATUS;
                 $RESV_ROOM_ID    = $row->RESV_ROOM_ID;
-                $RESV_RM_TYPE_ID    = $row->RESV_RM_TYPE_ID;
+                $RESV_RM_TYPE_ID = $row->RESV_RM_TYPE_ID;
                 $RESV_ROOM       = $row->RESV_ROOM;
                 $START           = strtotime($START_DATE[0]);
                 $END             = strtotime($END_DATE[0]);
 
-                $START_OVERLAP   = date('Y-m-d',  $START );
+                $START_OVERLAP   = date('Y-m-d',  $START);
                 $END_OVERLAP     = date('Y-m-d', $END);
 
                 if($NEW_ROOM_ID == ''){
@@ -1516,7 +1518,8 @@ public function checkItemReserved($item_id, $sCurrentDate){
                         $data['status_type'] = "room_no_type";
                         $data['OLD_ROOM_TYPE']   = $OLD_ROOM_TYPE;
                         $data['NEW_ROOM_TYPE']   = $NEW_ROOM_TYPE;
-                        $data['RESV_RM_TYPE_ID'] = $RESV_RM_TYPE_ID;
+                        $data['OLD_RESV_RM_TYPE_ID'] = $RESV_RM_TYPE_ID;
+                        $data['NEW_RESV_RM_TYPE_ID'] = $NEW_ROOM_TYPE_ID;
                         
                     }
                     // else if($OLD_ROOM_TYPE != $NEW_ROOM_TYPE){
@@ -2083,23 +2086,38 @@ public function getRoomStatistics(){
 
     public function getRoomType($NEW_ROOM_ID){
         $param = ['SYSID' => $NEW_ROOM_ID];
-        $sql = "SELECT RM_TY_CODE           
+        $sql = "SELECT RM_TY_CODE, RM_TY_ID           
                 FROM dbo.FLXY_ROOM INNER JOIN FLXY_ROOM_TYPE ON RM_TY_ID = RM_TYPE_REF_ID
                 WHERE RM_ID=:SYSID:";       
 
-        $RM_TY_CODE = $this->DB->query($sql, $param)->getRow()->RM_TY_CODE;
-        return $RM_TY_CODE;
+        $data['RM_TY_CODE'] = $this->DB->query($sql, $param)->getRow()->RM_TY_CODE;
+        $data['RM_TY_ID'] = $this->DB->query($sql, $param)->getRow()->RM_TY_ID;
+        return $data;
     }
 
     public function updateRoomPlanDetails(){
-        $resv_id      = $this->request->getPost('resv_id');
+        $resv_id         = $this->request->getPost('resv_id');
         $room_id         = $this->request->getPost('room_id');
         $room_no         = $this->request->getPost('room_no');
-        $room_type    = $this->request->getPost('room_type');
+        $room_type       = $this->request->getPost('room_type');
         $room_type_id    = $this->request->getPost('room_type_id');
 
               
         $return = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resv_id)->update(['RESV_RM_TYPE_ID'=>$room_type_id, 'RESV_RM_TYPE' => $room_type,'RESV_ROOM_ID' => $room_id,'RESV_ROOM' => $room_no ]);
+
+        $data['status'] = ($return == 1) ? '1': '2';  
+        $data['status_message'] = ($return == 1) ? 'Successfully moved': 'Failed';    
+        echo json_encode($data);  
+ 
+    }
+
+    public function updateRoomRTC(){
+        $resv_id         = $this->request->getPost('resv_id');
+        $room_type       = $this->request->getPost('room_type');
+        $room_type_id    = $this->request->getPost('room_type_id');
+
+              
+        $return = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resv_id)->update(['RESV_RTC_ID'=>$room_type_id, 'RESV_RTC' => $room_type ]);
 
         $data['status'] = ($return == 1) ? '1': '2';  
         $data['status_message'] = ($return == 1) ? 'Successfully moved': 'Failed';    
