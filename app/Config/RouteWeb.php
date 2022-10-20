@@ -622,6 +622,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/getInventoryCalendarData', 'ApplicatioController::getInventoryCalendarData');
     $routes->match(['post'], '/getInventoryAllocatedData', 'ApplicatioController::getInventoryAllocatedData');
     $routes->match(['post'], '/getRoomStatistics', 'ReservationController::getRoomStatistics');
+    $routes->match(['post'], '/updateRoomRTC', 'ReservationController::updateRoomRTC');
+
+    
 
       $routes->get('/Notifications', 'NotificationController::Notifications'); 
       $routes->match(['post'], '/NotificationList', 'NotificationController::NotificationList');
