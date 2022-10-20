@@ -231,9 +231,14 @@ $(document).on('click', '.delete-record', function() {
                     },
                     dataType: 'json',
                     success: function(respn) {
+                        if(respn['SUCCESS'] == 1){
                         showModalAlert('warning',
                             '<li>The Taskcode has been deleted</li>');
                         $('#dataTable_view').dataTable().fnDraw();
+                        }else{
+                            showModalAlert('error',
+                            '<li>The Taskcode cannot be deleted</li>');
+                        }
                     }
                 });
             }

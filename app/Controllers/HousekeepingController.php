@@ -95,9 +95,19 @@ class HousekeepingController extends BaseController
         $sysid = $this->request->getPost('sysid');
 
         try {
-           
-            $return = $this->Db->table('FLXY_HK_TASKS')->delete(['HKT_ID' => $sysid]);
-            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            $param = ['SYSID' => $sysid];
+            $sql = "SELECT HKST_ID
+                FROM FLXY_HK_SUBTASKS
+                WHERE HKST_TASK_ID=:SYSID: ";
+
+            $response = $this->Db->query($sql, $param)->getNumRows();
+            if($response > 0 )
+            {
+                $result = $this->responseJson("0");
+            }else{
+                $return = $this->Db->table('FLXY_HK_TASKS')->delete(['HKT_ID' => $sysid]);
+                $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            }
             echo json_encode($result);
         } catch (\Exception $e) {
             return $e->getMessage();
@@ -206,8 +216,22 @@ class HousekeepingController extends BaseController
 
         try {
            
-            $return = $this->Db->table('FLXY_HK_SUBTASKS')->delete(['HKST_ID' => $sysid]);
-            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            $param = ['SYSID' => $sysid];
+            $sql = "SELECT HKATD_ID
+                FROM FLXY_HK_ASSIGNED_TASK_DETAILS
+                WHERE HKATD_SUBTASK_ID=:SYSID: ";
+
+            $response = $this->Db->query($sql, $param)->getNumRows();
+            if($response > 0 )
+            {
+                $result = $this->responseJson("0");
+            }else{
+                $return = $this->Db->table('FLXY_HK_SUBTASKS')->delete(['HKST_ID' => $sysid]);
+                $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            }
+
+
+          
             echo json_encode($result);
         } catch (\Exception $e) {
             return $e->getMessage();

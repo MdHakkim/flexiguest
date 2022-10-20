@@ -84,6 +84,7 @@ $(document).ready(function() {
     linkMode = 'EX';
     getTasksCodes();
     toggleButton('.delete-task', 'btn-danger', 'btn-dark', false);
+    $('.delete-task').prop('disabled',true);
 
     $('#dataTable_view').DataTable({
         'processing': true,
@@ -195,7 +196,7 @@ $(document).on('click', '.add-new-task', function() {
     $('#HKST_TASK_ID').val(null).trigger('change');
 
     bootbox.dialog({
-        message: "Do you want to add a new task details?",
+        message: "Do you want to add a new task?",
         buttons: {
             ok: {
                 label: 'Yes',
@@ -208,6 +209,7 @@ $(document).on('click', '.add-new-task', function() {
 
                         //Disable Delete button
                         toggleButton('.delete-task', 'btn-danger', 'btn-dark', true);
+                        $('.delete-task').prop('disabled',false);
 
                         showModalAlert('info',
                             'Fill in the form and click the \'Save\' button to add the new task'
@@ -263,45 +265,21 @@ $(document).on('click', '.delete-task', function() {
                         clearFormFields('.task_div');
                         $('#HKST_TASK_ID').val(null).trigger('change');
                         toggleButton('.delete-task', 'btn-danger', 'btn-dark', false);
-
-                        showModalAlert('warning',
+                        $('.delete-task').prop('disabled',true);
+                        $('.task_div').find('tr.table-warning').removeClass(
+                            'table-warning');
+                        if(respn['SUCCESS'] == 1){
+                            showModalAlert('warning',
                             '<li>The Task has been deleted</li>');
-                        $('#dataTable_view').dataTable().fnDraw();
+                            $('#dataTable_view').dataTable().fnDraw();
+                        }else{
+                            showModalAlert('error',
+                            '<li>The Task cannot be deleted</li>');
+                        }
+                        
                     }
                 });
             }
-        }
-    });
-});
-
-
-// Show Edit taskcode Form
-
-$(document).on('click', '.editWindow', function() {
-
-    $('.dtr-bs-modal').modal('hide');
-    var sysid = $(this).attr('data_sysid');   
-
-    var url = '<?php echo base_url('/editTask')?>';
-    $.ajax({
-        url: url,
-        type: "post",
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        data: {
-            sysid: sysid
-        },
-        dataType: 'json',
-        success: function(respn) {
-            $(respn).each(function(inx, data) {
-                $.each(data, function(fields, datavals) {
-                    var field = $.trim(fields); //fields.trim();
-                    var dataval = $.trim(datavals); //datavals.trim();                    
-                    $('#' + field).val(dataval);
-                });
-            });
-            $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
         }
     });
 });
@@ -337,11 +315,12 @@ function submitForm(id) {
                 $('#popModalWindow').modal('hide');
                 $('#dataTable_view').dataTable().fnDraw();
             }
+
             $('#HKST_ID').val(''); 
             $('#HKST_DESCRIPTION').val('');    
             $('#HKST_TASK_ID').val(null).trigger('change');
             toggleButton('.delete-task', 'btn-danger', 'btn-dark', false);
-
+            $('.delete-task').prop('disabled',true);
         }
     });
 }
@@ -362,6 +341,7 @@ $.ajax({
     dataType: 'json',
     success: function(respn) {
         toggleButton('.delete-task', 'btn-dark', 'btn-danger', false);
+        $('.delete-task').prop('disabled',false);
         $(respn).each(function(inx, data) {
             $.each(data, function(fields, datavals) {
                 var field = $.trim(fields);
