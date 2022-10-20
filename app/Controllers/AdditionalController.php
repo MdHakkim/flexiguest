@@ -272,9 +272,9 @@ class AdditionalController extends BaseController
                 $return = !empty($sysid) ? $this->Db->table('FLXY_EXCHANGE_RATES')->where('EXCH_RATE_ID', $sysid)->update($data) : $this->Db->table('FLXY_EXCHANGE_RATES')->insert($data);
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
                 echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
+            } catch (\Exception $e) {
+            return $e->getMessage();
+        }
         }    
 
         public function editExchangeRates()
@@ -298,9 +298,9 @@ class AdditionalController extends BaseController
                 $return = $this->Db->table('FLXY_EXCHANGE_RATES')->delete(['EXCH_RATE_ID' => $sysid]);
                 $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
                 echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
+            } catch (\Exception $e) {
+            return $e->getMessage();
+        }
         }
         
        
@@ -493,9 +493,9 @@ class AdditionalController extends BaseController
                 $return = !empty($sysid) ? $this->Db->table('FLXY_ITEM_CLASS')->where('IT_CL_ID', $sysid)->update($data) : $this->Db->table('FLXY_ITEM_CLASS')->insert($data);
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
                 echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
+            } catch (\Exception $e) {
+            return $e->getMessage();
+        }
         }
     
         public function editItemClass()
@@ -522,9 +522,9 @@ class AdditionalController extends BaseController
                 $return = $this->Db->table('FLXY_ITEM_CLASS')->delete(['IT_CL_ID' => $sysid]);
                 $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
                 echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
+            } catch (\Exception $e) {
+            return $e->getMessage();
+        }
         }
 
         
@@ -630,7 +630,7 @@ class AdditionalController extends BaseController
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
                 echo json_encode($result);
             } catch (\Exception $e) {
-                return $this->respond($e->errors());
+                return $e->getMessage();
             }
         }    
 
@@ -654,9 +654,9 @@ class AdditionalController extends BaseController
                 $return = $this->Db->table('FLXY_ITEM')->delete(['ITM_ID' => $sysid]);
                 $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
                 echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
+            } catch (\Exception $e) {
+            return $e->getMessage();
+        }
         }
         
         
@@ -775,9 +775,9 @@ class AdditionalController extends BaseController
                 $return = !empty($sysid) ? $this->Db->table('FLXY_DAILY_INVENTORY')->where('ITM_DLY_ID', $sysid)->update($data) : $this->Db->table('FLXY_DAILY_INVENTORY')->insert($data);
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
                 echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
+            } catch (\Exception $e) {
+            return $e->getMessage();
+        }
         }    
 
         public function editDailyInventory()
@@ -800,9 +800,9 @@ class AdditionalController extends BaseController
                 $return = $this->Db->table('FLXY_DAILY_INVENTORY')->delete(['ITM_DLY_ID' => $sysid]);
                 $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
                 echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
+            } catch (\Exception $e) {
+            return $e->getMessage();
+        }
         }
         
 
@@ -1223,9 +1223,9 @@ class AdditionalController extends BaseController
                
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
                 echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
+            } catch (\Exception $e) {
+            return $e->getMessage();
+        }
         }
 
         
@@ -1289,9 +1289,9 @@ class AdditionalController extends BaseController
                 echo $no_of_added;
                 exit;
     
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
+            } catch (\Exception $e) {
+            return $e->getMessage();
+        }
         }
 
 
@@ -1314,9 +1314,9 @@ class AdditionalController extends BaseController
                     $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
                 }               
                 echo json_encode($result);
-            } catch (Exception $e) {
-                return $this->respond($e->errors());
-            }
+            } catch (\Exception $e) {
+            return $e->getMessage();
+        }
         }
     
 
