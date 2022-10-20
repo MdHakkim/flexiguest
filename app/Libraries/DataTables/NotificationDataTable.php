@@ -140,17 +140,22 @@ class NotificationDataTable{
                 }
                
 
-                if($name == "NOTIFICATION_TEXT") {
+                if($name == "RSV_TRACE_RESOLVED_BY") {
                     if($row[$name] != '' ){                        
-                        $row[$name] = substr(strip_tags($row[$name]), 0, 20);
-                        if(strlen($row[$name]) > 20 )
-                          $row[$name] .=   '...';                 
+                        $RESOLVED_BY = $this->Db->query("select concat(USR_FIRST_NAME, ' ', USR_LAST_NAME) as NAME from FlXY_USERS where USR_ID = '".$row[$name]."'")->getResultArray(); 
+                        $row[$name] = '';
+                        if(!empty($RESOLVED_BY)){
+                            foreach($RESOLVED_BY as $user)
+                                $row[$name] = $user['NAME'];                            
+                        }             
                      }
                 }
+
 
                $designArr[$name] = $row[$name];
                
             }
+            
             $return[]=$designArr;
         }
         ##print_r($return);

@@ -39,6 +39,7 @@
                             <th>Guest</th>                            
                             <th class="all">Message</th>
                             <th>URL</th>
+                            <th class="all">Resolved By</th>
                             <th class="all">Date & Time</th>
                             <th class="all">Status</th>
                             <th class="all">Action</th>
@@ -82,7 +83,7 @@
                                 </select>                                
                           </div> 
                         
-                          <div class="col-md-6 Department">
+                          <div class="col-md-6 Users">
                             <label for="html5-text-input" class="col-form-label"><b>SPECIFIC USER
                                 </b></label>
                                 <select id="NOTIFICATION_TO_ID" name="NOTIFICATION_TO_ID[]" class="select2 form-select form-select-lg" data-allow-clear="true" multiple>                                    
@@ -311,17 +312,25 @@ $(document).ready(function() {
             data: 'NOTIFICATION_URL'
           },
           {
+            data: 'RSV_TRACE_RESOLVED_BY'
+          },
+          {
             data: 'NOTIFICATION_DATE_TIME'
           },
           {
-            data: 'NOTIFICATION_READ_STATUS'
+            data: 'NOTIFICATION_READ_STATUS',
+            render: function(data, type, full, meta) {
+             if(full["RSV_TRACE_RESOLVED_BY"] != ''){
+                return '';
+             }else return full["NOTIFICATION_READ_STATUS"];
+            }
           },
           {
                 data: null,
                 className: "text-center",
                 "orderable": false,
                 render: function(data, type, full, meta) {
-                  if(full["NOTIFICATION_READ_STATUS"] == 0){
+                  if(full["RSV_TRACE_RESOLVED_BY"] == '' && full["NOTIFICATION_READ_STATUS"] == 0  ){
                     var resvListButtons =
                         '<div class="d-inline-block flxy_option_view dropend">' +
                         '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
@@ -373,7 +382,7 @@ $(document).ready(function() {
             width: "10%"
         },
         {
-            targets: 9,
+            targets: 10,
             width: "10%",
             render: function(data, type, full, meta) {
               if(full['NOTIFICATION_DATE_TIME'] != ''){
@@ -388,7 +397,7 @@ $(document).ready(function() {
 
         },
         {
-            targets: 10,
+            targets: 11,
             width: "10%",
             render: function(data, type, full, meta) {
               var $status = full['NOTIFICATION_READ_STATUS'];
@@ -588,7 +597,7 @@ $(document).on('click', '.editNotification', function() {
 function submitForm(id) {
 
     hideModalAlerts();
-
+    $('#loader_flex_bg').show();
     $(`#${id} textarea[name='NOTIFICATION_TEXT']`).val($("#full-editor .ql-editor").html());
         if ($("#full-editor .ql-editor").html() == "<p><br></p>")
             $(`#${id} textarea[name='NOTIFICATION_TEXT']`).val('');
@@ -613,10 +622,12 @@ function submitForm(id) {
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);
+                $('#loader_flex_bg').hide();
             } else {
                 var alertText = $('#NOTIFICATION_ID').val() == '' ? '<li>The notification has been created</li>' : '<li>The notification has been updated</li>';
                 showModalAlert('success', alertText);
                 $('#popModalWindow').modal('hide');
+                $('#loader_flex_bg').hide();
                 $('#dataTable_view').dataTable().fnDraw();
             }
         }
@@ -766,17 +777,20 @@ function notificationTypeList() {
     if($(this).val() === '4'){
       $(".Reservation").show(); 
       $(".Department").show(); 
+      $(".Users").hide();
       $(".Guest").hide();  
       $('#NOTIFICATION_RESERVATION_ID').val(null).trigger('change');   
     }
     else if($(this).val() === '3'){
       $(".Department").hide();
+      $(".Users").hide();
       $(".Reservation").show();
       $(".Guest").show(); 
       guestList();
     }
     else if($(this).val() === '1' || $(this).val() === '2' ){
       $(".Department").show();
+      $(".Users").show();
       $(".Reservation").hide();
       $(".Guest").hide(); 
      

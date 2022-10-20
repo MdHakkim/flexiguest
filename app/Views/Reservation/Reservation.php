@@ -6902,10 +6902,13 @@ function showTraces(resvID) {
             {
                 data: 'RSV_TRACE_RESOLVED_ON',
                 render: function(data, type, full, meta) {
-                    if (full['RSV_TRACE_RESOLVED_ON'] == null)
-                        return '';
-                    else if (full['RSV_TRACE_RESOLVED_ON'] != '1900-01-01')
-                        return full['RSV_TRACE_RESOLVED_ON'] + ' ' + full['RSV_TRACE_RESOLVED_TIME'];
+                    if(full['RSV_TRACE_RESOLVED_ON'] == null)
+                      return '';
+                    else if (full['RSV_TRACE_RESOLVED_ON'] != '1900-01-01 00:00:00.000' )
+                    {
+                        var RSV_TRACE_RESOLVED_ON = full['RSV_TRACE_RESOLVED_ON'].split(' ');
+                        return (RSV_TRACE_RESOLVED_ON[0])+' '+full['RSV_TRACE_RESOLVED_TIME'];
+                    }
                     else
                         return "";
                 }
@@ -6917,10 +6920,7 @@ function showTraces(resvID) {
             [1, "asc"]
         ],
         'createdRow': function(row, data, dataIndex) {
-
             $(row).attr('data-trace_id', data['RSV_TRACE_ID']);
-
-
             if (dataIndex == 0) {
                 $(row).addClass('table-warning');
                 loadTraceDetails(data['RSV_TRACE_ID']);
@@ -6981,9 +6981,19 @@ function loadTraceDetails(TRACE_ID) {
                             format: 'd-M-yyyy',
                             autoclose: true
                         }).datepicker("setDate", new Date(dataval));
-                    } else {
-                        $('#' + field).val(dataval);
                     }
+                    
+                    else if(field == 'RSV_TRACE_TEXT'){
+                        if(dataval!='')
+                         { 
+                            dataval1 = dataval;
+                            dataval1 = dataval1.replace( /(<([^>]+)>)/ig, '');
+                            $('#' + field).val(dataval1);}
+                    }
+
+                    else 
+                        $('#' + field).val(dataval);
+                    
                 });
             });
         }

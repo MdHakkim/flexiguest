@@ -749,7 +749,6 @@ function roomPlanFunc(){
       resourceRender: function (renderInfo) {
         renderInfo.el.addEventListener("click", function () {            
             console.log('clicked:' + renderInfo.resource.id);
-
             $.ajax({
               url: '<?php echo base_url('/editRoom') ?>',
               data: {'sysid':renderInfo.resource.id},
@@ -852,8 +851,8 @@ function roomPlanFunc(){
       
 
       eventDrop: function(info) {
-       console.log(info.newResource.extendedProps.status);
-        //alert(info.event.title + " was dropped on " + info.event.start.toISOString()+"stop"+info.event.end.toISOString());
+       console.log(info);
+        // alert(info.event.title + " was dropped on " + info.event.start.toISOString()+"stop"+info.event.end.toISOString());
         let RESV_ID = info.event.id;
         let START = info.event.start;
         let s = new Date(START);
@@ -861,16 +860,16 @@ function roomPlanFunc(){
         let END = info.event.end;
         let e = new Date(END);
         END = e.toISOString(END);
+        message = '';
         let OLD_ROOM_ID = (info.oldResource != null) ? info.oldResource.id : '';
         let NEW_ROOM_ID = (info.newResource != null) ? info.newResource.id : '';
         let OLD_ROOM = (info.oldResource != null) ? info.oldResource.extendedProps.room : '';
         let NEW_ROOM = (info.newResource != null) ? info.newResource.extendedProps.room : '';
-        if(info.newResource.extendedProps.status == 'Dirty')
+        if(info.oldResource != null && info.newResource.extendedProps.status == 'Dirty')
         var message = "Room status is Dirty. Are you sure about this change?";
         else
         var message = "Are you sure about this change?";
-        if (confirm(message)) {     
-
+        if (confirm(message)) {
           $.ajax({
             url: '<?php echo base_url('/updateRoomPlan') ?>',
             data: 'RESV_ID=' + RESV_ID + '&START=' + START + '&END=' + END + '&OLD_ROOM_ID=' + OLD_ROOM_ID + '&NEW_ROOM_ID=' + NEW_ROOM_ID + '&OLD_ROOM=' + OLD_ROOM + '&NEW_ROOM=' + NEW_ROOM,
@@ -887,12 +886,24 @@ function roomPlanFunc(){
                 } else if (data.status == 0) {
                   showModalAlert('success', mcontent);
                 }
-                //   else if( data.status == 2 )  
-                //   {
-                //     alert("Can't change the dates. Already checked-in");
-                //     info.revert();
-                //   }
-                // }
+                else if(data.status == 2)  
+                {
+                  if(confirm(data.status_message)){
+                    if((data.OLD_ROOM_TYPE != data.NEW_ROOM_TYPE)){
+                      if(confirm("Room type changed to  "+data.NEW_ROOM_TYPE+". Do you want to continue?")){
+                        updateRoomDetails(RESV_ID,NEW_ROOM_ID,NEW_ROOM,data.RESV_RM_TYPE_ID,data.NEW_ROOM_TYPE);
+                      }
+                      else{
+                        info.revert();
+                      }                       
+                    }else
+                       updateRoomDetails(RESV_ID,NEW_ROOM_ID,NEW_ROOM,data.RESV_RM_TYPE_ID,data.NEW_ROOM_TYPE);
+                                   
+                  }else{
+                       info.revert();
+                  }
+                }
+                
               }
             }
 
@@ -1008,7 +1019,32 @@ function roomPlanFunc(){
     });
 
     calendarRoom.render();
+  }
 
+  function updateRoomDetails(resv_id,room_id,room_no,room_type_id,room_type){   
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo base_url('/updateRoomPlanDetails') ?>',
+        data: {
+                resv_id: resv_id,
+                room_no: room_no,
+                room_id: room_id,
+                room_type:room_type,
+                room_type_id:room_type_id
+            },
+        dataType: 'json',
+        success:function(data) {
+              var mcontent = '';
+              mcontent += '<li>' + data.status_message + '</li>';
+              if (data.status == "1") {
+                showModalAlert('success', mcontent);
+              } else if (data.status == "2") {
+                showModalAlert('error', mcontent);
+              }
+
+        }
+        
+    });  
   }
 
   function roomStatistics(){
