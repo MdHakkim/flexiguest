@@ -42,8 +42,9 @@ function validateJWTFromRequest(string $encodedToken)
                     CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_MIDDLE_NAME, b.CUST_LAST_NAME) as NAME,
                     ur.*
                     FROM FLXY_USERS u
-                        LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = u.USR_CUST_ID WHERE USR_EMAIL=:USR_EMAIL:
-                        left join FLXY_USER_ROLE as ur on u.USR_ROLE_ID = ur.ROLE_ID";
+                        LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = u.USR_CUST_ID
+                        left join FLXY_USER_ROLE as ur on u.USR_ROLE_ID = ur.ROLE_ID
+                        WHERE u.USR_EMAIL=:USR_EMAIL:";
 
     $data = $Db->query($sql,$param)->getRowArray();
     return ["token_info"=> $decodedToken,"table_info"=>  $data ];
