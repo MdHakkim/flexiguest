@@ -522,10 +522,10 @@ class RestaurantRepository extends BaseController
     public function orderList($user)
     {
         $where_condition = "1 = 1";
-        if ($user['USR_ROLE'] == "GUEST")
+        if ($user['USR_ROLE_ID'] == "2")
             $where_condition = "RO_CUSTOMER_ID = {$user['USR_CUST_ID']}";
 
-        else if ($user['USR_ROLE'] == "attendee")
+        else if ($user['USR_ROLE_ID'] == "3")
             $where_condition = "RO_ATTENDANT_ID = {$user['USR_ID']}";
 
         $orders = $this->RestaurantOrder

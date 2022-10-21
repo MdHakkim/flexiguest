@@ -82,8 +82,8 @@ class APIController extends BaseController
                 "USR_EMAIL" => $email,
                 "USR_PHONE" => $this->request->getVar("phone_no"),
                 "USR_PASSWORD" => password_hash($this->request->getVar("password"), PASSWORD_DEFAULT),
-                "USR_ROLE" => "GUEST",
-                "USR_ROLE_ID" => "3",
+                "USR_ROLE" => "Guest",
+                "USR_ROLE_ID" => "2",
                 "USR_CUST_ID" => $isCustomer_data['CUST_ID'],
                 "USR_CREATED_DT" =>  date("d-M-Y"),
                 "USR_UPDATED_DT" => date("d-M-Y")
@@ -121,7 +121,7 @@ class APIController extends BaseController
             $result = responseJson(403, true, $this->validator->getErrors());
             return $this->respond($result);
         } else {
-            $sql = "SELECT u.*, fc.*, concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_LAST_NAME) as NAME  FROM FLXY_USERS as u LEFT JOIN FLXY_CUSTOMER fc ON fc.CUST_ID = u.USR_CUST_ID WHERE u.USR_EMAIL = :email:";
+            $sql = "SELECT u.*, fc.*, concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_LAST_NAME) as NAME, ur.*  FROM FLXY_USERS as u LEFT JOIN FLXY_CUSTOMER fc ON fc.CUST_ID = u.USR_CUST_ID left join FLXY_USER_ROLE as ur on u.USR_ROLE_ID = ur.ROLE_ID WHERE u.USR_EMAIL = :email:";
             $param = ['email' => $this->request->getVar("email")];
             $userdata = $this->DB->query($sql, $param)->getRowArray();
 
@@ -842,7 +842,7 @@ class APIController extends BaseController
         ]);
 
         $reservation_status = 'Pre Checked-In';
-        if ($user['USR_ROLE'] == 'admin')
+        if ($user['USR_ROLE_ID'] == '1')
             $reservation_status = 'Checked-In';
 
         if (!$validate) {
@@ -891,7 +891,7 @@ class APIController extends BaseController
             $res_data = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resID)->update($dataRes);
 
             if ($update_data &&  $res_data) {
-                if ($user['USR_ROLE'] == 'admin')
+                if ($user['USR_ROLE_ID'] == '1')
                     $this->ApplicatioController->attachAssetList($USR_ID, $resID);
 
                 $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT'])]);
@@ -1081,7 +1081,7 @@ class APIController extends BaseController
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
 
-        if ($this->request->user['USR_ROLE'] == 'admin') {
+        if ($this->request->user['USR_ROLE_ID'] == '1') {
             $room_list = $this->DB->table('FLXY_ROOM')
                 ->select("RM_NO as RESV_ROOM, RM_ID, RESV_ID, (CASE WHEN RESV_ID is not null THEN concat(RESV_ID, '-', CUST_FIRST_NAME, ' ', CUST_LAST_NAME) ELSE NULL END) as ID_NAME")
                 ->join('FLXY_RESERVATION', "RM_NO = RESV_ROOM and RESV_STATUS = 'Checked-In'", 'left')
