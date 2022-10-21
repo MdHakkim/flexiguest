@@ -114,7 +114,7 @@
 
                                         <div class="col-md-4">
                                             <label for="html5-text-input" class="col-form-label"><b>Employee Number
-                                                    *</b></label>
+                                                    </b></label>
                                             <input type="text" id="USR_NUMBER" name="USR_NUMBER" class="form-control"
                                                 placeholder="Employee Number">
                                             </select>
@@ -133,7 +133,7 @@
 
                                         <div class="col-md-4">
                                             <label for="html5-text-input" class="col-form-label"><b>Department
-                                                    *</b></label>
+                                                    </b></label>
                                             <select id="USR_DEPARTMENT" name="USR_DEPARTMENT"
                                                 class="select2 form-select form-select-lg" data-allow-clear="true"
                                                 required>
@@ -145,7 +145,7 @@
                                     <div class="row mb-3">
                                         <div class="col-md-4">
                                             <label for="html5-text-input" class="col-form-label"><b>DOJ
-                                                    *</b></label>
+                                                    </b></label>
                                             <div class="col-md-12">
                                                 <div class="input-group">
                                                     <input type="text" id="USR_DOJ" name="USR_DOJ" class="form-control"
@@ -161,7 +161,7 @@
 
                                         <div class="col-md-4">
                                             <label for="html5-text-input" class="col-form-label"><b>COUNTRY
-                                                    *</b></label>
+                                                    </b></label>
                                             <select id="USR_COUNTRY" name="USR_COUNTRY"
                                                 class="select2 form-select form-select-lg" data-allow-clear="true"
                                                 required>
@@ -170,7 +170,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <label for="html5-text-input" class="col-form-label"><b>STATE
-                                                    *</b></label>
+                                                    </b></label>
                                             <select id="USR_STATE" name="USR_STATE"
                                                 class="select2 form-select form-select-lg" data-allow-clear="true"
                                                 required>
@@ -185,7 +185,7 @@
 
                                         <div class="col-md-4">
                                             <label for="html5-text-input" class="col-form-label"><b>CITY
-                                                    *</b></label>
+                                                    </b></label>
                                             <select id="USR_CITY" name="USR_CITY"
                                                 class="select2 form-select form-select-lg" data-allow-clear="true"
                                                 required>
@@ -194,7 +194,7 @@
 
                                         <div class="col-md-4">
                                             <label for="html5-text-input" class="col-form-label"><b>ADDRESS
-                                                    *</b></label>
+                                                    </b></label>
                                             <textarea class="form-control" name="USR_ADDRESS" id="USR_ADDRESS"
                                                 rows="1"></textarea>
                                         </div>
@@ -221,7 +221,7 @@
 
                                         <div class="col-md-4">
                                             <label for="html5-text-input" class="col-form-label"><b>Phone Number
-                                                    *</b></label>
+                                                    </b></label>
                                             <input type="text" id="USR_PHONE" name="USR_PHONE" class="form-control"
                                                 placeholder="Phone Number">
                                             </select>
@@ -229,7 +229,7 @@
 
                                         <div class="col-md-4">
                                             <label for="html5-text-input" class="col-form-label"><b>Extension
-                                                    *</b></label>
+                                                    </b></label>
                                             <input type="text" id="USR_TEL_EXT" name="USR_TEL_EXT" class="form-control"
                                                 placeholder="Extension">
                                             </select>
@@ -484,10 +484,10 @@ $(document).ready(function() {
                                 //   Admin: '<span class="badge badge-center rounded-pill bg-label-secondary w-px-30 h-px-30 me-2"><i class="bx bx-mobile-alt bx-xs"></i></span>'
                             };
                             roleBadge = roleBadgeObj[$role] ?? '';
-                            return "<span class='text-truncate d-flex align-items-center'>" +
+                            return "<span class='fw-semibold text-truncate d-flex align-items-center'>" +
                                 roleBadge + $role + '</span>';
                         } else {
-                            return "<span class='text-truncate d-flex align-items-center'>" +
+                            return "<span class='fw-semibold text-truncate d-flex align-items-center'>" +
                                 $role + '</span>';
                         }
                     }
@@ -498,6 +498,14 @@ $(document).ready(function() {
                     render: function(data, type, full, meta) {
                         var $DEPT_CODE = (full['DEPT_DESC'] ?? "");
                         return '<span class="fw-semibold">' + $DEPT_CODE + '</span>';
+                    }
+                },
+                {
+                    // DOJ
+                    targets: 5,
+                    render: function(data, type, full, meta) {
+                        var $USR_DOJ = (full['USR_DOJ'] == '1970-01-01') ? '' : full['USR_DOJ'];
+                        return '<span class="fw-semibold">' + $USR_DOJ;+ '</span>';
                     }
                 },
                 {
@@ -868,9 +876,20 @@ function editUser(sysid) {
                         // $('#USR_PASSWORD').val(dataval);
                         // $('#USR_CONFIRM_PASSWORD').val($('#USR_PASSWORD').val());
                     } else if (field == 'USR_DOB' || field == 'USR_DOJ') {
-                        $('#' + field).datepicker("setDate", new Date(dataval));
-                    } else {
-
+                        //alert(dataval);
+                        if(dataval == '01-Jan-1970')
+                            $('#' + field).val('');
+                        else
+                            $('#' + field).datepicker("setDate", new Date(dataval));
+                    }else if(field == 'USR_NUMBER' || field == 'USR_TEL_EXT'){
+                        if(dataval == 0){
+                            $('#' + field).val('');
+                        }
+                        else 
+                            $('#' + field).val(dataval);
+                    }
+                    
+                    else {
                         $('#' + field).val(dataval);
                     }
 
