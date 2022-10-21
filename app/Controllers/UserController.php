@@ -411,7 +411,7 @@ class UserController extends BaseController
 
             $rules = [
                 'USR_NAME' => ['label' => 'User Name', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NAME,USR_ID,' . $sysid . ']'],
-                'USR_NUMBER' => ['label' => 'User Number', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NUMBER,USR_ID,' . $sysid . ']'],
+                'USR_NUMBER' => ['label' => 'Employee Number', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NUMBER,USR_ID,' . $sysid . ']'],
                 'USR_EMAIL' => ['label' => 'User Email', 'rules' => 'trim|required|valid_email|is_unique[FLXY_USERS.USR_EMAIL,USR_ID,' . $sysid . ']'],            
                 'USR_FIRST_NAME' => ['label' => 'First Name', 'rules' => 'trim|required'],
                 'USR_LAST_NAME' => ['label' => 'Last Name', 'rules' => 'trim|required'],
@@ -465,7 +465,7 @@ class UserController extends BaseController
                 "USR_FIRST_NAME" => trim($this->request->getPost('USR_FIRST_NAME')),
                 "USR_LAST_NAME" => trim($this->request->getPost('USR_LAST_NAME')),
                 "USR_EMAIL" => trim($this->request->getPost('USR_EMAIL')),                
-                "USR_ROLE" => trim($this->request->getPost('USR_ROLE')),
+                "USR_ROLE" => trim(strtoupper($this->request->getPost('USR_ROLE'))),
                 "USR_ROLE_ID" => trim($this->request->getPost('USR_ROLE_ID')),
                 "USR_JOB_TITLE" => trim($this->request->getPost('USR_ROLE_ID')),
                 "USR_DEPARTMENT" => trim($this->request->getPost('USR_DEPARTMENT')),
