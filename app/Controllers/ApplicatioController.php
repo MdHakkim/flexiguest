@@ -4436,7 +4436,7 @@ class ApplicatioController extends BaseController
         $sysid = $this->request->getPost("DOC_RESV_ID");
 
         $reservation_status = 'Pre Checked-In';
-        if(isset($this->session->USR_ROLE) && $this->session->USR_ROLE == 'admin')
+        if(isset($this->session->USR_ROLE_ID) && $this->session->USR_ROLE_ID == '1')
             $reservation_status = 'Checked-In';
 
         $data = [
@@ -4448,7 +4448,7 @@ class ApplicatioController extends BaseController
         $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
         $result = $this->responseJson("1","0",$return,$response='');
 
-        if(isset($this->session->USR_ROLE) && $this->session->USR_ROLE == 'admin')
+        if(isset($this->session->USR_ROLE_ID) && $this->session->USR_ROLE_ID == '1')
             $this->attachAssetList(session('USR_ID'), $sysid);
 
         $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, 

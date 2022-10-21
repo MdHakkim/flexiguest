@@ -37,11 +37,13 @@ function validateJWTFromRequest(string $encodedToken)
     $Db = \Config\Database::connect();
     $param =['USR_EMAIL'=>$decodedToken->data->USR_EMAIL];
         
-    $sql = "SELECT u.USR_NAME, u.USR_ID, u.USR_EMAIL, u.USR_PHONE, u.USR_ROLE, u.USR_CUST_ID, 
+    $sql = "SELECT u.USR_NAME, u.USR_ID, u.USR_EMAIL, u.USR_PHONE, u.USR_ROLE, u.USR_ROLE_ID, u.USR_CUST_ID, 
                     b.*,
-                    CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_MIDDLE_NAME, b.CUST_LAST_NAME) as NAME
+                    CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_MIDDLE_NAME, b.CUST_LAST_NAME) as NAME,
+                    ur.*
                     FROM FLXY_USERS u
-                        LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = u.USR_CUST_ID WHERE USR_EMAIL=:USR_EMAIL:";
+                        LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = u.USR_CUST_ID WHERE USR_EMAIL=:USR_EMAIL:
+                        left join FLXY_USER_ROLE as ur on u.USR_ROLE_ID = ur.ROLE_ID";
 
     $data = $Db->query($sql,$param)->getRowArray();
     return ["token_info"=> $decodedToken,"table_info"=>  $data ];

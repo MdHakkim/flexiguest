@@ -15,7 +15,7 @@ $routes->group("api", function ($routes) {
     $routes->get("health", "APIController::health");
 });
 
-$routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
+$routes->group("api", ["filter" => "authapi:Guest"], function ($routes) {
 
     $routes->get("profile", "APIController::profileAPI"); // user profile 
     //----------------------------------------------------------------------------- CHECK-IN --------------------------------------------------------------------//
@@ -54,8 +54,8 @@ $routes->group("api", ["filter" => "authapi:GUEST"], function ($routes) {
 
 //  ----------------------------------- ABUBAKAR CODE (START) --------------------------------------- //
 
-/*****************************  ADMIN *****************************/
-$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers'], function ($routes) {
+/*****************************  Admin *****************************/
+$routes->group("api/admin", ["filter" => "authapi:Admin", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->get("profile", "APIController::profileAPI");
     $routes->post('checkin/verify-documents', 'APIController::verifyDocuments');
     $routes->post('checkin/guest-checked-in', 'APIController::guestCheckedIn');
@@ -66,8 +66,8 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
     });
 });
 
-/*****************************  ADMIN + GUEST *****************************/
-$routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Controllers'], function ($routes) {
+/*****************************  Admin + Guest *****************************/
+$routes->group("api", ["filter" => "authapi:Admin,Guest", 'namespace' => 'App\Controllers'], function ($routes) {
 
     $routes->group('maintenance', function ($routes) {
         // API to get category list of maintenance
@@ -112,8 +112,8 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
     $routes->get('get-city', 'APIController::getCity');
 });
 
-/*****************************  ADMIN + GUEST *****************************/
-$routes->group("api", ["filter" => "authapi:admin,GUEST,attendee", 'namespace' => 'App\Controllers'], function ($routes) {
+/*****************************  Admin + Guest + Attendee *****************************/
+$routes->group("api", ["filter" => "authapi:Admin,Guest,Attendee", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('evalet', function ($routes) {
         $routes->post('guest-collected', 'EValetController::guestCollected');
     });
@@ -124,15 +124,15 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST,attendee", 'namespace' =
     });
 });
 
-/***************************** ADMIN + ATTENDEE *****************************/
-$routes->group("api", ["filter" => "authapi:admin,attendee", 'namespace' => 'App\Controllers'], function ($routes) {
+/***************************** Admin + Attendee *****************************/
+$routes->group("api", ["filter" => "authapi:Admin,Attendee", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('evalet', function ($routes) {
         $routes->post('parked', 'EValetController::parked');
     });
 });
 
-/*****************************  ADMIN + GUEST *****************************/
-$routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Controllers\APIControllers'], function ($routes) {
+/*****************************  Admin + Guest *****************************/
+$routes->group("api", ["filter" => "authapi:Admin,Guest", 'namespace' => 'App\Controllers\APIControllers'], function ($routes) {
     $routes->group('asset-handover', function ($routes) {
         $routes->get('', 'ReceivingFormController::assetHandover');
         $routes->get('get-assets-list', 'ReceivingFormController::getAssetsList');
@@ -142,8 +142,8 @@ $routes->group("api", ["filter" => "authapi:admin,GUEST", 'namespace' => 'App\Co
     $routes->get('reservation-by-id', 'ReservationController::reservationById');
 });
 
-/*****************************  ADMIN *****************************/
-$routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
+/*****************************  Admin *****************************/
+$routes->group("api/admin", ["filter" => "authapi:Admin", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
 
     $routes->get("reservation/get-reservations-list", "ReservationController::getReservationsList");
 
@@ -161,8 +161,8 @@ $routes->group("api/admin", ["filter" => "authapi:admin", 'namespace' => 'App\Co
     });
 });
 
-/*****************************  ADMIN + ATTENDEE *****************************/
-$routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
+/*****************************  Admin + Attendee *****************************/
+$routes->group("api/admin", ["filter" => "authapi:Admin,Attendee", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
     $routes->group('housekeeping', function ($routes) {
         $routes->get("all-tasks", "HouseKeepingController::allTasks");
         $routes->get("task-details/(:segment)", "HouseKeepingController::taskDetails/$1");
@@ -185,8 +185,8 @@ $routes->group("api/admin", ["filter" => "authapi:admin,attendee", 'namespace' =
     });
 });
 
-/*****************************  GUEST *****************************/
-$routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers'], function ($routes) {
+/*****************************  Guest *****************************/
+$routes->group("api", ["filter" => "authapi:Guest", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('restaurant', function ($routes) {
         $routes->get("main-screen", "RestaurantController::mainScreen");
         $routes->get("all-restaurants", "RestaurantController::allRestaurants");
@@ -213,8 +213,8 @@ $routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controll
     });
 });
 
-/*****************************  GUEST *****************************/
-$routes->group("api", ["filter" => "authapi:GUEST", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
+/*****************************  Guest *****************************/
+$routes->group("api", ["filter" => "authapi:Guest", 'namespace' => 'App\Controllers\APIControllers\Guest'], function ($routes) {
 
     $routes->get("news", "NewsController::news");
     $routes->get("guideline", "GuidelineController::guideline");

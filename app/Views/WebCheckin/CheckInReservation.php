@@ -482,7 +482,7 @@
                                             Document Images
 
                                             <?php
-                                                if ($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' || (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin')) {
+                                                if ($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' || (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1')) {
                                                 ?>
                                             <span class="deleteUploadImage">
                                                 <i class="fa-solid fa-trash-can"></i>
@@ -498,7 +498,7 @@
                                                 <ul id="listImagePresentDb"></ul>
 
                                                 <?php
-                                                    if ($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' || (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin')) {
+                                                    if ($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' || (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1')) {
                                                     ?>
                                                         <input class="form-control" type="file" onchange="loadFile(event,this)" style="display:none" id="formFile">
                                                         <button type="button" onClick="browseFile()" class="btn btn-secondary flxy_brows btn-sm"><i class="fa-solid fa-upload"></i> Browse</button>
@@ -836,12 +836,12 @@
                             <button type="button" onClick="sliderWebWid('P')" class="btn btn-blue btn-primary"><i class="fa-solid fa-chevron-left"></i> Back</button>
                             <button type="button" onClick="sliderWebWid('N')" class="btn continueDefult btn-blue btn-primary">Continue <i class="fa-solid fa-chevron-right"></i></button>
                         <?php
-                            if ($data['RESV_STATUS'] == 'Due Pre Check-In' || (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin' && $data['RESV_STATUS'] == 'Pre Checked-In')) {
+                            if ($data['RESV_STATUS'] == 'Due Pre Check-In' || (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1' && $data['RESV_STATUS'] == 'Pre Checked-In')) {
                             ?>
                                 <button type="button" onClick="updateSignature('<?= $data['RESV_STATUS'] ?>')" class="btn btn-success updateSignature signHideClass">Continue <i class="fa-solid fa-chevron-right"></i></button>
                         <?php
                             }
-                            if ($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' || (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin')) {
+                            if ($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' || (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1')) {
                             ?>
                                 <button type="button" onClick="updateCustomer()" class="btn saveContinue btn-success hideSaveCont">Save & Continue <i class="fa-solid fa-chevron-right"></i></button>
                         <?php
@@ -857,7 +857,7 @@
                 <p style="font-size: 40px;color: green;"><i class="fa-solid fa-circle-check"></i></p>
 
                 <?php
-                if (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin') {
+                if (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1') {
                 ?>
                 <h2>You have successfully completed Check-In Process.</h2>
                 <?php
@@ -1040,7 +1040,7 @@
             </div>
 
             <?php
-                if ($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' || (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin')) {
+                if ($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' || (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1')) {
                 ?>
             <div class="modal-footer flxy_modClass">
                 <button type="button" id="updateVaccine" class="btn btn-primary btn-sm"><i
@@ -1090,7 +1090,7 @@
                 <div class="row">
                     <div class="d-grid gap-2">
                         <button class="btn btn-primary" onClick="confirmPrecheckin()" type="button">
-                            <?= (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin')  ? 'Check-In Now' : 'Pre Check-In Now' ?>
+                            <?= (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1')  ? 'Check-In Now' : 'Pre Check-In Now' ?>
                         </button>
                     </div>
                 </div>
@@ -1182,7 +1182,7 @@ function sliderWebWid(param) {
             }
 
             <?php
-                if (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin') {
+                if (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1') {
                 ?>
             if ($('.document-verified-status:contains(Document not verified)').length) {
                 alert('All Documents are not verified.');
@@ -1199,7 +1199,7 @@ function sliderWebWid(param) {
         }
 
         <?php
-            if (empty($condition) && $data['RESV_STATUS'] != 'Due Pre Check-In' && (empty($session->USR_ROLE) || $session->USR_ROLE != 'admin')) {
+            if (empty($condition) && $data['RESV_STATUS'] != 'Due Pre Check-In' && (empty($session->USR_ROLE_ID) || $session->USR_ROLE_ID != '1')) {
             ?>
         $('.continueDefult').hide();
         <?php
@@ -1750,7 +1750,7 @@ function checkStatusUploadFiles() {
                 let text = '<i class="fa-solid fa-circle-xmark me-1"></i> Document not verified';
 
                 <?php
-                    if (isset($session->USR_ROLE) && $session->USR_ROLE == 'admin') {
+                    if (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1') {
                     ?>
                 text +=
                     `&nbsp<a href="#" class="text-info" onclick="verifyDocuments(${row.CUST_ID}, ${row.RESV_ID})"><u>click here to verify</u></a>`;

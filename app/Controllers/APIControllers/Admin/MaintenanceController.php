@@ -33,7 +33,7 @@ class MaintenanceController extends BaseController
         $user = $this->request->user;
 
         $where_condition = '1 = 1';
-        if($user['USR_ROLE'] == 'attendee')
+        if($user['USR_ROLE_ID'] == '3')
             $where_condition = "MAINT_ATTENDANT_ID = {$user['USR_ID']}";
 
         $maintenace_list = $this->Maintenance

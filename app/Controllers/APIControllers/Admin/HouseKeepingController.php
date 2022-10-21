@@ -42,10 +42,10 @@ class HouseKeepingController extends BaseController
     {
         $user = $this->request->user;
         $user_id = $user['USR_ID'];
-        $user_role = $user['USR_ROLE'];
+        $user_role_id = $user['USR_ROLE_ID'];
         
         $where_condition = '1 = 1';
-        if($user_role == 'attendee')
+        if($user_role_id == '3')
             $where_condition = "HKAT_ATTENDANT_ID = $user_id";
 
         $all_tasks = $this->HKAssignedTask
@@ -128,7 +128,7 @@ class HouseKeepingController extends BaseController
                 return $this->respond(responseJson(202, true, ['msg' => 'Not All tasks are completed.']));
         }
 
-        if ($user['USR_ROLE'] == 'attendee') {
+        if ($user['USR_ROLE_ID'] == '3') {
             $data = [
                 'HKATD_STATUS' => 'Completed',
                 'HKATD_COMPLETION_TIME' => date('Y-m-d H:i:s')
@@ -217,7 +217,7 @@ class HouseKeepingController extends BaseController
         $this->HKAssignedTaskDetailNote->insert($data);
 
         $status = $this->request->getVar('status');
-        if ($user['USR_ROLE'] == 'attendee')
+        if ($user['USR_ROLE_ID'] == '3')
             $subtask['HKATD_STATUS'] = $status;
         else {
             if ($subtask['HKATD_STATUS'] == 'In Progress')

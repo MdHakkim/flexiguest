@@ -22,7 +22,7 @@ class AuthAPI implements FilterInterface
             $decoded  = validateJWTFromRequest($token);
 
             if (!empty($decoded)) {
-                if (isset($decoded['token_info']->data->USR_ROLE) && isset($arguments) && (in_array($decoded['token_info']->data->USR_ROLE, $arguments))) {
+                if (isset($decoded['token_info']->data->ROLE_NAME) && isset($arguments) && (in_array($decoded['token_info']->data->ROLE_NAME, $arguments))) {
 
                     $request->user = $decoded['table_info'];
                     return $request;
