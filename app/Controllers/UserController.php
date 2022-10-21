@@ -411,19 +411,19 @@ class UserController extends BaseController
 
             $rules = [
                 'USR_NAME' => ['label' => 'User Name', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NAME,USR_ID,' . $sysid . ']'],
-                'USR_NUMBER' => ['label' => 'Employee Number', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NUMBER,USR_ID,' . $sysid . ']'],
+                'USR_NUMBER' => ['label' => 'Employee Number', 'rules' => 'trim'],
                 'USR_EMAIL' => ['label' => 'User Email', 'rules' => 'trim|required|valid_email|is_unique[FLXY_USERS.USR_EMAIL,USR_ID,' . $sysid . ']'],            
                 'USR_FIRST_NAME' => ['label' => 'First Name', 'rules' => 'trim|required'],
                 'USR_LAST_NAME' => ['label' => 'Last Name', 'rules' => 'trim|required'],
                 'USR_ROLE_ID' => ['label' => 'Role', 'rules' => 'trim|required'],
                 'USR_DOB' => ['label' => 'Date of Birth', 'rules' => 'trim|required'],
-                'USR_ADDRESS' => ['label' => 'Address', 'rules' => 'trim|required'],
-                'USR_COUNTRY' => ['label' => 'Country', 'rules' => 'trim|required'],
-                'USR_STATE' => ['label' => 'State', 'rules' => 'trim|required'],
-                'USR_CITY' => ['label' => 'City', 'rules' => 'trim|required'],
-                'USR_DOJ' => ['label' => 'Date of Joining', 'rules' => 'trim|required'],
-                'USR_PHONE' => ['label' => 'Phone', 'rules' => 'trim|required'],
-                'USR_DEPARTMENT' => ['label' => 'Department', 'rules' => 'trim|required'],
+                'USR_ADDRESS' => ['label' => 'Address', 'rules' => 'trim'],
+                'USR_COUNTRY' => ['label' => 'Country', 'rules' => 'trim'],
+                'USR_STATE' => ['label' => 'State', 'rules' => 'trim'],
+                'USR_CITY' => ['label' => 'City', 'rules' => 'trim'],
+                'USR_DOJ' => ['label' => 'Date of Joining', 'rules' => 'trim'],
+                'USR_PHONE' => ['label' => 'Phone', 'rules' => 'trim'],
+                'USR_DEPARTMENT' => ['label' => 'Department', 'rules' => 'trim'],
                 'USR_GENDER' => ['label' => 'Gender', 'rules' => 'trim|required']
             ];
 
@@ -484,7 +484,6 @@ class UserController extends BaseController
             ];
            if($this->request->getPost("USR_PASSWORD") != '')
             $data["USR_PASSWORD"] =  password_hash($this->request->getPost("USR_PASSWORD"), PASSWORD_DEFAULT);
-
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
@@ -612,8 +611,8 @@ class UserController extends BaseController
                 'ROLE_NAME' => ['label' => 'Role', 'rules' => 'required|is_unique[FLXY_USER_ROLE.ROLE_NAME,ROLE_ID,' . $sysid . ']',],
                 'MENU_ID' => ['label' => 'Permission', 'rules' => 'required']
 
-
             ]);
+            
             if (!$validate) {
                 $validate = $this->validator->getErrors();
                 $result["SUCCESS"] = "-402";
