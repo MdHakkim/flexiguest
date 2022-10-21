@@ -2979,22 +2979,7 @@ var windowmode = '';
 // });
 
 $(document).ready(function() {
-    <?php
-  
-    if(!empty($RESV_ID)) {  ?>
-    $(".editReserWindow").attr('data_sysid', '<?php echo $RESV_ID; ?>');
-    $(".editReserWindow").attr('data-reservation_customer_id', '<?php echo $CUSTOMER_ID; ?>');
-    $(".editReserWindow").click();
-    <?php
-    }
-
-    if(!empty($ROOM_ID)) { ?>
-    $("#addReservation").click();
-
-    <?php
-    }
-    ?>
-
+    
     $('#Rate_info').DataTable({
         "ordering": false,
         "searching": false,
@@ -3246,6 +3231,24 @@ $(document).ready(function() {
             $('#RESV_SPECIALS').html(respn).selectpicker('refresh');
         }
     });
+
+    <?php
+  
+    if(!empty($RESV_ID)) {  ?>
+    var clickResv = $(".editReserWindow");
+
+    clickResv.attr('data_sysid', '<?php echo $RESV_ID; ?>');
+    clickResv.attr('data-reservation_customer_id', '<?php echo $CUSTOMER_ID; ?>');
+    clickResv.click();
+    <?php
+    }
+
+    if(!empty($ROOM_ID)) { ?>
+    $("#addReservation").click();
+
+    <?php
+    }
+    ?>
 
 });
 
@@ -3758,7 +3761,10 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                     var field = $.trim(fields); //fields.trim();
                     var dataval = $.trim(datavals); //datavals.trim();
                     if (field == 'RESV_NAME_DESC' || field == 'RESV_COMPANY_DESC' ||
-                        field == 'RESV_AGENT_DESC' || field == 'RESV_BLOCK_DESC') {
+                        field == 'RESV_AGENT_DESC' || field == 'RESV_BLOCK_DESC' || field == 'RESV_NO') {
+                        if(field == 'RESV_NO')
+                            $('#reservationWlable').html('Edit Reservation ' + dataval);    
+                        
                         return true;
                     };
                     if (field == 'RESV_NAME') {
@@ -3796,6 +3802,10 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                     } else {
                         if (field == 'RESV_SPECIALS') {
                             var dataval = dataval.split(',');
+                        }
+
+                        if (field == 'RESV_STATUS') {
+                            $('#reservationWlable').append(' - ' + dataval);
                         }
 
                         $('*#' + field).val(dataval).trigger('change');
