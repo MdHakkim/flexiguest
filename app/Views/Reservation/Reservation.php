@@ -272,7 +272,8 @@
                                         <select id="S_SEARCH_TYPE" name="S_SEARCH_TYPE" class="form-select dt-select"
                                             data-column="1">
                                             <option value="">View All</option>
-                                            <option value="1" <?php echo ($show_arrivals) ? 'selected' : '';?>>Due In</option>
+                                            <option value="1" <?php echo ($show_arrivals) ? 'selected' : '';?>>Due In
+                                            </option>
                                             <option value="2">Due Out</option>
                                             <option value="3">Day Use</option>
                                             <option value="4">Checked In</option>
@@ -1049,7 +1050,8 @@
                                                     class="select2 form-select RESV_RM_TYPE" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
-                                                <div class="invalid-feedback"> Room Type is required & can't be empty.</div>
+                                                <div class="invalid-feedback"> Room Type is required & can't be empty.
+                                                </div>
                                             </div>
                                             <div class="col-md-3">
                                                 <label class="form-label">Room</label>
@@ -2979,7 +2981,7 @@ var windowmode = '';
 // });
 
 $(document).ready(function() {
-    
+
     $('#Rate_info').DataTable({
         "ordering": false,
         "searching": false,
@@ -3010,14 +3012,14 @@ $(document).ready(function() {
                 var formSerialization = $('.dt_adv_search').serializeArray();
                 $(formSerialization).each(function(i, field) {
                     d[field.name] = field.value;
-                });                
+                });
 
                 <?php if($show_arrivals){ ?>
-                    d['SHOW_ARRIVALS'] = '1';
+                d['SHOW_ARRIVALS'] = '1';
                 <?php } ?>
 
                 <?php if($show_in_house){ ?>
-                    d['SHOW_IN_HOUSE'] = '1';
+                d['SHOW_IN_HOUSE'] = '1';
                 <?php } ?>
             },
         },
@@ -3061,7 +3063,10 @@ $(document).ready(function() {
                 data: 'CUST_FIRST_NAME',
                 render: function(data, type, row, meta) {
                     return (
-                        '<a href="javascript:;" class="text-truncate editcustomer" data_sysid="'+row['RESV_NAME']+'"><span class="fw-semibold">' + data + '</span></a>'
+                        '<a href="<?php echo base_url('/customer') ?>?editId=' + row[
+                            'RESV_NAME'] +
+                        '" title="View/Edit Profile" target="_blank" class="text-truncate"><span class="fw-semibold">' +
+                        data + '</span></a>'
                     );
                 }
             },
@@ -3766,10 +3771,12 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                     var field = $.trim(fields); //fields.trim();
                     var dataval = $.trim(datavals); //datavals.trim();
                     if (field == 'RESV_NAME_DESC' || field == 'RESV_COMPANY_DESC' ||
-                        field == 'RESV_AGENT_DESC' || field == 'RESV_BLOCK_DESC' || field == 'RESV_NO') {
-                        if(field == 'RESV_NO')
-                            $('#reservationWlable').html('Edit Reservation ' + dataval);    
-                        
+                        field == 'RESV_AGENT_DESC' || field == 'RESV_BLOCK_DESC' ||
+                        field == 'RESV_NO') {
+                        if (field == 'RESV_NO')
+                            $('#reservationWlable').html('Edit Reservation ' +
+                                dataval);
+
                         return true;
                     };
                     if (field == 'RESV_NAME') {
@@ -4082,7 +4089,8 @@ function reservationValidate(event, id, mode) {
     }
     form.classList.add('was-validated');
 
-    if (condition || additionValid || checkSelectInvalid($('#RESV_RM_TYPE'))) { // -- customize validate user validUsername
+    if (condition || additionValid || checkSelectInvalid($(
+        '#RESV_RM_TYPE'))) { // -- customize validate user validUsername
         return false;
     } else {
         return true;
@@ -4100,7 +4108,7 @@ function checkPaymentValid() {
     }
 }
 
-function checkSelectInvalid(elem){
+function checkSelectInvalid(elem) {
     var selVal = elem.val();
     if (selVal == '') {
         elem.parent('div').removeClass('is-valid').addClass('is-invalid');
@@ -4175,7 +4183,7 @@ function submitForm(id, mode, event) {
     formSerialization.push({
         name: 'RESV_RM_TYPE_ID',
         value: RESV_RM_TYPE_ID
-    },{
+    }, {
         name: 'RESV_RTC_ID',
         value: RESV_RTC_ID
     });
@@ -4346,11 +4354,11 @@ $(document).on('change', '#RESV_RM_TYPE,#RESV_RTC', function() {
 
     if ($(this).attr('id') == 'RESV_RM_TYPE') {
 
-        if($('#RESV_RTC').val() == '')
+        if ($('#RESV_RTC').val() == '')
             $('#RESV_RTC').val($(this).val()).trigger('change');
 
         var room_type = $(this).find('option:selected').data('room-type-id');
-        
+
         $.ajax({
             url: '<?php echo base_url('/roomList') ?>',
             async: false,
@@ -6917,14 +6925,12 @@ function showTraces(resvID) {
             {
                 data: 'RSV_TRACE_RESOLVED_ON',
                 render: function(data, type, full, meta) {
-                    if(full['RSV_TRACE_RESOLVED_ON'] == null)
-                      return '';
-                    else if (full['RSV_TRACE_RESOLVED_ON'] != '1900-01-01 00:00:00.000' )
-                    {
+                    if (full['RSV_TRACE_RESOLVED_ON'] == null)
+                        return '';
+                    else if (full['RSV_TRACE_RESOLVED_ON'] != '1900-01-01 00:00:00.000') {
                         var RSV_TRACE_RESOLVED_ON = full['RSV_TRACE_RESOLVED_ON'].split(' ');
-                        return (RSV_TRACE_RESOLVED_ON[0])+' '+full['RSV_TRACE_RESOLVED_TIME'];
-                    }
-                    else
+                        return (RSV_TRACE_RESOLVED_ON[0]) + ' ' + full['RSV_TRACE_RESOLVED_TIME'];
+                    } else
                         return "";
                 }
             },
@@ -6996,19 +7002,15 @@ function loadTraceDetails(TRACE_ID) {
                             format: 'd-M-yyyy',
                             autoclose: true
                         }).datepicker("setDate", new Date(dataval));
-                    }
-                    
-                    else if(field == 'RSV_TRACE_TEXT'){
-                        if(dataval!='')
-                         { 
+                    } else if (field == 'RSV_TRACE_TEXT') {
+                        if (dataval != '') {
                             dataval1 = dataval;
-                            dataval1 = dataval1.replace( /(<([^>]+)>)/ig, '');
-                            $('#' + field).val(dataval1);}
-                    }
-
-                    else 
+                            dataval1 = dataval1.replace(/(<([^>]+)>)/ig, '');
+                            $('#' + field).val(dataval1);
+                        }
+                    } else
                         $('#' + field).val(dataval);
-                    
+
                 });
             });
         }
