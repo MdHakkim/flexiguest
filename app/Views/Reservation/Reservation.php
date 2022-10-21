@@ -3058,7 +3058,12 @@ $(document).ready(function() {
                 className: "text-center"
             },
             {
-                data: 'CUST_FIRST_NAME'
+                data: 'CUST_FIRST_NAME',
+                render: function(data, type, row, meta) {
+                    return (
+                        '<a href="javascript:;" class="text-truncate editcustomer" data_sysid="'+row['RESV_NAME']+'"><span class="fw-semibold">' + data + '</span></a>'
+                    );
+                }
             },
             {
                 data: 'RESV_ROOM',
