@@ -451,7 +451,7 @@
                         setTimeout(function() {
                             $(`${form_id} select[name='RO_ITEMS[][MI_ID]']`).val(data.selected_item_ids).trigger('change');
                             $(`${form_id} select[name='RO_ATTENDANT_ID']`).val(data.RO_ATTENDANT_ID).trigger('change');
-                        }, 500);
+                        }, 1000);
                     }, 500);
 
 

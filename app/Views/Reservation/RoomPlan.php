@@ -890,14 +890,17 @@ function roomPlanFunc(){
                 {
                   if(confirm(data.status_message)){
                     if((data.OLD_ROOM_TYPE != data.NEW_ROOM_TYPE)){
-                      if(confirm("Room type changed to  "+data.NEW_ROOM_TYPE+". Do you want to continue?")){
-                        updateRoomDetails(RESV_ID,NEW_ROOM_ID,NEW_ROOM,data.RESV_RM_TYPE_ID,data.NEW_ROOM_TYPE);
+                      if(confirm("Room type has been changed to  "+data.NEW_ROOM_TYPE+". Do you want to continue?")){                        
+                        if(confirm("Room type has been changed to  "+data.NEW_ROOM_TYPE+". Do you want to change RTC to "+data.NEW_ROOM_TYPE+"?")){
+                          updateRoomRTC(RESV_ID,data.NEW_RESV_RM_TYPE_ID,data.NEW_ROOM_TYPE);
+                        }
+                          updateRoomDetails(RESV_ID,NEW_ROOM_ID,NEW_ROOM,data.NEW_RESV_RM_TYPE_ID,data.NEW_ROOM_TYPE);
                       }
                       else{
                         info.revert();
                       }                       
                     }else
-                       updateRoomDetails(RESV_ID,NEW_ROOM_ID,NEW_ROOM,data.RESV_RM_TYPE_ID,data.NEW_ROOM_TYPE);
+                       updateRoomDetails(RESV_ID,NEW_ROOM_ID,NEW_ROOM,data.NEW_RESV_RM_TYPE_ID,data.NEW_ROOM_TYPE);
                                    
                   }else{
                        info.revert();
@@ -1041,6 +1044,31 @@ function roomPlanFunc(){
               } else if (data.status == "2") {
                 showModalAlert('error', mcontent);
               }
+
+        }
+        
+    });  
+  }
+
+  function updateRoomRTC(RESV_ID, RESV_RM_TYPE_ID, NEW_ROOM_TYPE){
+alert(RESV_ID);
+    $.ajax({
+        type: 'POST',
+        url: '<?php echo base_url('/updateRoomRTC') ?>',
+        data: {
+                resv_id: RESV_ID,               
+                room_type:NEW_ROOM_TYPE,
+                room_type_id:RESV_RM_TYPE_ID
+            },
+        dataType: 'json',
+        success:function(data) {
+              // var mcontent = '';
+              // mcontent += '<li>' + data.status_message + '</li>';
+              // if (data.status == "1") {
+              //   showModalAlert('success', mcontent);
+              // } else if (data.status == "2") {
+              //   showModalAlert('error', mcontent);
+              // }
 
         }
         
