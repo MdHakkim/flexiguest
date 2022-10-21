@@ -100,9 +100,9 @@ class EValetRepository extends BaseController
     public function valetList($user)
     {
         $where_condtion = "1 = 1";
-        if ($user['USR_ROLE'] == 'GUEST') {
+        if ($user['USR_ROLE_ID'] == '2') {
             $where_condtion = "EV_CUSTOMER_ID = {$user['USR_CUST_ID']}";
-        } else if ($user['USR_ROLE'] != 'admin' && $user['USR_ROLE'] != 'supervisor') {
+        } else if ($user['USR_ROLE_ID'] != '1' && $user['USR_ROLE_ID'] != '5') {
             $where_condtion = "EV_DRIVER_ID = {$user['USR_ID']}";
         }
 

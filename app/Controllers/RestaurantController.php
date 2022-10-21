@@ -391,7 +391,7 @@ class RestaurantController extends BaseController
             return $this->respond(responseJson(404, true, ['msg' => "Order not found"]));
 
         //  for guest
-        if ($user['USR_ROLE'] == 'GUEST') {
+        if ($user['USR_ROLE_ID'] == '2') {
             unset($data['RO_ATTENDANT_ID']);
 
             if ($data['RO_DELIVERY_STATUS'] != 'Cancelled')
