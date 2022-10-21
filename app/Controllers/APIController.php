@@ -307,6 +307,9 @@ class APIController extends BaseController
         $reservationInfo[0]['CUST_EMAIL'] = $email;
         $reservationInfo[0]['CUST_FIRST_NAME'] = $first_name;
         $reservationInfo[0]['CUST_LAST_NAME'] = $last_name;
+        
+        $reservationInfo[0]['BASE_URL'] = base_url();
+        
 
         $emailCall = new EmailLibrary();
         $emailResp = $emailCall->requestDocUploadEmail($reservationInfo, $email, $first_name . " " . $last_name);

@@ -74,7 +74,7 @@
                                             </div>
                                           </td>
                                           <td>
-                                            <div style="background: black;padding: 10px;text-align: center;width: 160px;color: white;border-radius: 7px;position: relative;top: -3px;"><a style="color: white;text-decoration: none;" href="https://keysuite.farnek.com:9021//Navigate/Guest/MzA2NTQ=">Click Pre Check-In</a></div>
+                                            <div style="background: black;padding: 10px;text-align: center;width: 160px;color: white;border-radius: 7px;position: relative;top: -3px;"><a style="color: white;text-decoration: none;" href="<?php echo $data['BASE_URL'];?>/webline/ReservationDetail/<?php echo $data['RESV_ID'];?>">Click Pre Check-In</a></div>
                                           </td>
                                         </tr>
                                         </tbody>
