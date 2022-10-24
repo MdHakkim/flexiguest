@@ -39,13 +39,47 @@ class NotificationController extends BaseController
 
         $UserID = session()->get('USR_ID');
         $mine = new NotificationDataTable();
-        $tableName = "( SELECT NOTIFICATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIF_TY_DESC,CONCAT_WS(' ',USR_FROM.USR_FIRST_NAME,USR_FROM.USR_LAST_NAME) AS NOTIFICATION_FROM_NAME,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_RESERVATION_ID,NOTIFICATION_URL,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY FROM FLXY_NOTIFICATIONS
+        $tableName = "( SELECT NOTIFICATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIF_TY_DESC,CONCAT_WS(' ',USR_FROM.USR_FIRST_NAME,USR_FROM.USR_LAST_NAME) AS NOTIFICATION_FROM_NAME,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_RESERVATION_ID,NOTIFICATION_URL,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY,NOTIFICATION_TYPE FROM FLXY_NOTIFICATIONS
         INNER JOIN FLXY_NOTIFICATION_TYPE ON NOTIFICATION_TYPE = NOTIF_TY_ID        
         LEFT JOIN FLXY_USERS USR_FROM ON USR_FROM.USR_ID = NOTIFICATION_FROM_ID 
         LEFT JOIN FLXY_RESERVATION_TRACES ON RSV_TRACE_NOTIFICATION_ID = NOTIFICATION_ID 
         ) AS NOTIFICATION";
 
         $init_cond = array("NOTIFICATION_FROM_ID = "=> $UserID);
+
+        // search filters
+        $data = $this->request->getPost();
+        if(isset($data['notification_type']))
+            $init_cond['NOTIFICATION_TYPE IN '] = '('. implode(',', $data['notification_type']) . ')';
+
+        if(isset($data['notification_department'])) {
+                $str = '';
+
+            foreach($data['notification_department'] as $department) {
+                if(strlen($str))
+                    $str .= " OR ";
+
+                $str .= "NOTIFICATION_DEPARTMENT like '%$department%'";       
+            }
+
+            $init_cond['NOTIFICATION_DEPARTMENT'] = "(" . $str . ")";
+        }
+
+        if(isset($data['notification_reservation_id'])) {
+            $str = '';
+
+            foreach($data['notification_reservation_id'] as $reservation_id) {
+                if(strlen($str))
+                    $str .= " OR ";
+
+                $str .= "NOTIFICATION_RESERVATION_ID like '%$reservation_id%'";
+            }
+
+            $init_cond['NOTIFICATION_RESERVATION_ID'] = "(" . $str . ")";
+        }
+
+        if(isset($data['notification_text']))
+            $init_cond['NOTIFICATION_TEXT like '] = "'%{$data['notification_text']}%'";
     
         $columns = 'NOTIFICATION_ID,NOTIF_TY_DESC,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_FROM_NAME,NOTIFICATION_RESERVATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_URL,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY';
         $mine->generate_DataTable($tableName, $columns, $init_cond);
@@ -299,19 +333,24 @@ class NotificationController extends BaseController
 
         $response = $this->Db->query($sql)->getResultArray();
 
-        $option = '';
+        $data['option1'] = '';
+        $data['option2'] = '';
+
         $checked = 'checked="checked"';
         foreach ($response as $row) {
            // $option .= '<option value="' . $row['NOTIF_TY_ID'] . '">' . $row['NOTIF_TY_DESC'] . '</option>';
             
-            $option.= '<div class="col-md-2 form-check mb-2" style="float:left;margin-right:10px">
+            $data['option1'] .= '<div class="col-md-2 form-check mb-2" style="float:left;margin-right:10px">
             <input type="radio" id="NOTIFICATION_TYPE_'.$row["NOTIF_TY_ID"].'" name="NOTIFICATION_TYPE" value="'.$row["NOTIF_TY_ID"].'" class="form-check-input" required="" '.$checked.'>
             <label class="form-check-label" for="NOTIFICATION_TYPE_'.$row["NOTIF_TY_ID"].'">'.$row["NOTIF_TY_DESC"].'</label>
             </div>';
             $checked = '';
+
+            $data['option2'] .= "<option value='{$row['NOTIF_TY_ID']}'>{$row['NOTIF_TY_DESC']}</option>";
         }
 
-        return $option;
+        echo json_encode($data);
+        die();
     }
 
     public function usersList()

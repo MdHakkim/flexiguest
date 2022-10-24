@@ -28,7 +28,10 @@ class NotificationDataTable{
         if($init_cond != NULL)
         {
             foreach($init_cond as $fieldNameCond => $fieldValue)
-                $table .= " AND " . $fieldNameCond . " " . $fieldValue."";
+                if(in_array($fieldNameCond, ['NOTIFICATION_DEPARTMENT', 'NOTIFICATION_RESERVATION_ID']))
+                    $table .= " AND " . $fieldValue."";
+                else 
+                    $table .= " AND " . $fieldNameCond . " " . $fieldValue."";
         }
 
         $searchQuery = "";
