@@ -30,7 +30,7 @@ class NotificationController extends BaseController
 
     public function Notifications()
     {
-        $this->NotificationRepository->sendNotification();
+        // $this->NotificationRepository->sendNotification();
 
         $data['title'] = getMethodName();
         $data['session'] = $this->session;
