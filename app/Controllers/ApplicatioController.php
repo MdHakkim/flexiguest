@@ -78,6 +78,7 @@ class ApplicatioController extends BaseController
         
         $data['show_arrivals'] = null !== $this->request->getGet("SHOW_ARRIVALS") ? '1' : null;
         $data['show_in_house'] = null !== $this->request->getGet("SHOW_IN_HOUSE") ? '1' : null;
+        $data['create_walkin'] = null !== $this->request->getGet("CREATE_WALKIN") ? '1' : null;
 
         //Check if RESV_ID exists in Customer table
         if($data['RESV_ID'] && !checkValueinTable('RESV_ID', $data['RESV_ID'], 'FLXY_RESERVATION'))

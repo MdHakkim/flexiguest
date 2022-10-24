@@ -27,7 +27,9 @@
                                         <h5>Arrivals</h5>
                                         <p>View all the arrivals at the hotel today...</p>
                                         <a class="btn btn-label-primary" target="_blank"
-                                            href="<?php echo base_url() ?>/reservation?SHOW_ARRIVALS=1">View</a>
+                                            href="<?php echo base_url() ?>/reservation?SHOW_ARRIVALS=1">View</a>&nbsp;
+                                        <a class="btn rounded-pill btn-primary" target="_blank"
+                                            href="<?php echo base_url() ?>/reservation?CREATE_WALKIN=1">Create Walk-In</a>    
                                     </div>
                                 </div>
                             </div>

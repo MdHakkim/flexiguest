@@ -3244,18 +3244,17 @@ $(document).ready(function() {
 
     <?php
   
-    if(!empty($RESV_ID)) {  ?>
-    var clickResv = $(".editReserWindow");
+    if(!empty($RESV_ID)) {  ?>        
+        var clickResv = $(".editReserWindow");
 
-    clickResv.attr('data_sysid', '<?php echo $RESV_ID; ?>');
-    clickResv.attr('data-reservation_customer_id', '<?php echo $CUSTOMER_ID; ?>');
-    clickResv.click();
+        clickResv.attr('data_sysid', '<?php echo $RESV_ID; ?>');
+        clickResv.attr('data-reservation_customer_id', '<?php echo $CUSTOMER_ID; ?>');
+        clickResv.click();
     <?php
     }
 
-    if(!empty($ROOM_ID)) { ?>
-    $("#addReservation").click();
-
+    if(!empty($ROOM_ID) || $create_walkin) { ?>
+        addResvation();
     <?php
     }
     ?>
@@ -3960,7 +3959,8 @@ function addResvation() {
     $('#reservationForm').removeClass('was-validated');
     $('#ITEM_RESV_ID', '#RSV_ID').val('');
 
-    $('#reservationWlable').html('Add New Reservation');
+    $('#reservationWlable').html('<?php echo $create_walkin ? 'Create a Walk In Reservation' : 'Add New Reservation';?>');
+    
     runSupportingResevationLov();
     $('.window-1,#nextbtn').show();
     //$('.flxyFooter').addClass('flxy_space');
