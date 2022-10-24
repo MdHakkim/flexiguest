@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Controllers;
+
+use App\Controllers\Repositories\NotificationRepository;
 use CodeIgniter\API\ResponseTrait;
 use App\Libraries\DataTables\NotificationDataTable;
 use App\Libraries\EmailLibrary;
@@ -12,20 +14,24 @@ class NotificationController extends BaseController
     public $Db;
     public $request;
     public $session;
+    private $NotificationRepository;
     
-
     public function __construct()
     {
         $this->Db = \Config\Database::connect();
         $this->request = \Config\Services::request();
         $this->session = \Config\Services::session();
         helper(['form', 'url', 'custom', 'common', 'upload']);
+
+        $this->NotificationRepository = new NotificationRepository();
     }
 
     /**************      Notification Functions      ***************/
 
     public function Notifications()
     {
+        $this->NotificationRepository->sendNotification();
+
         $data['title'] = getMethodName();
         $data['session'] = $this->session;
         $data['js_to_load'] = ["full-form-editor.js"]; 
