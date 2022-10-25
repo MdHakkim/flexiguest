@@ -4,6 +4,9 @@
 <?=$this->endSection()?>
 <?=$this->section("contentRender")?>
 
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/css/pages/page-help-center.css')?>" />
+
+
 <div class="container-xxl flex-grow-1 container-p-y">
     <div class="card overflow-hidden">
         <!-- Help Center Header -->
@@ -26,9 +29,9 @@
                                             height="48" alt="Arrivals" />
                                         <h5>Arrivals</h5>
                                         <p>View all the arrivals at the hotel today...</p>
-                                        <a class="btn btn-label-primary" target="_blank"
+                                        <a class="btn rounded-pill btn-label-primary" target="_blank"
                                             href="<?php echo base_url() ?>/reservation?SHOW_ARRIVALS=1">View</a>&nbsp;
-                                        <a class="btn rounded-pill btn-primary" target="_blank"
+                                        <a class="btn rounded-pill btn-label-primary" target="_blank"
                                             href="<?php echo base_url() ?>/reservation?CREATE_WALKIN=1">Create Walk-In</a>    
                                     </div>
                                 </div>
@@ -101,7 +104,7 @@
                                         <h5>Profile Settings</h5>
                                         <p>Update your profile details and settings...</p>
                                         <a class="btn btn-label-info" target="_blank"
-                                            href="<?php echo base_url() ?>/Users?editId=<?=$user_id?>">View</a>
+                                            href="<?php echo base_url() ?>/my-profile">View</a>
                                     </div>
                                 </div>
                             </div>

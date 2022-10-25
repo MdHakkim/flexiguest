@@ -18,10 +18,13 @@ class UserModel extends Model
 		"USR_NAME",
 		"USR_EMAIL",
 		"USR_PHONE",
+		"USR_FIRST_NAME",
+		"USR_LAST_NAME",
 		"USR_PASSWORD",
 		"USR_ROLE",
 		"USR_ROLE_ID",
 		"USR_CUST_ID",
+		"USR_IMAGE",
 		"USR_DEPARTMENT"
 	];
 

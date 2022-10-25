@@ -157,21 +157,25 @@
                   <li class="nav-item navbar-dropdown dropdown-user dropdown">
                     <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                       <div class="avatar avatar-online">
-                        <img src="<?php echo base_url()?>/assets/img/avatars/1.png" alt class="rounded-circle" />
+                        <?php
+                          $user_img = session()->get('USR_IMAGE');
+                          $user_img = file_exists($user_img) ? base_url().'/'.$user_img : base_url().'/assets/img/avatars/avatar-generic.jpg';
+                        ?>
+                        <img src="<?=$user_img?>" alt class="rounded-circle" />
                       </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                       <li>
-                        <a class="dropdown-item" href="javascript:void(0)">
+                        <a class="dropdown-item" href="<?php echo base_url('/my-profile') ?>">
                           <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
-                              <div class="avatar avatar-online">
-                                <img src="<?php echo base_url()?>/assets/img/avatars/1.png" alt class="rounded-circle" />
+                              <div class="avatar avatar-online">  
+                                <img src="<?=$user_img?>" alt class="rounded-circle" />
                               </div>
                             </div>
                             <div class="flex-grow-1">
-                              <span class="lh-1 d-block fw-semibold"><?php echo session()->get('name'); ?></span>
-                              <small><?php echo session()->get('role'); ?></small>
+                              <span class="lh-1 d-block fw-semibold"><?php echo session()->get('USR_FIRST_NAME').' '.session()->get('USR_LAST_NAME'); ?></span>
+                              <small><?php echo session()->get('USR_ROLE'); ?></small>
                             </div>
                           </div>
                         </a>
@@ -180,7 +184,7 @@
                         <div class="dropdown-divider"></div>
                       </li>
                       <li>
-                        <a class="dropdown-item" href="javascript:void(0);">
+                        <a class="dropdown-item" href="<?php echo base_url('/my-profile') ?>">
                           <i class="bx bx-user me-2"></i>
                           <span class="align-middle">My Profile</span>
                         </a>
@@ -220,7 +224,6 @@
                     </ul>
                   </li>
                   <!--/ User -->
-                </ul>
               </div>
 
               <!-- Search Small Screens -->
