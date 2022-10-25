@@ -130,7 +130,7 @@ class APIController extends BaseController
 
             if (!empty($userdata)) {
                 if (password_verify($this->request->getVar("password"), $userdata['USR_PASSWORD'])) {
-                    if($registration_id = $this->request->getVar('registration_id')) {
+                    if ($registration_id = $this->request->getVar('registration_id')) {
                         $userdata['UD_REGISTRATION_ID'] = $registration_id;
                         $this->UserRepository->storeUserDevice($userdata['USR_ID'], $registration_id);
                     }
@@ -160,10 +160,11 @@ class APIController extends BaseController
     // for Logout Just delete the token from session or anystorage
     public function logout()
     {
-        $registration_id = $this->request->getVar('registration_id');
+        if ($registration_id = $this->request->getVar('registration_id')) {
+            $where_condition = "UD_REGISTRATION_ID = '$registration_id'";
+            $this->UserRepository->removeUserDevice($where_condition);
+        }
 
-        $where_condition = "UD_REGISTRATION_ID = '$registration_id'";
-        $this->UserRepository->removeUserDevice($where_condition);
         return $this->respond(responseJson(200, false, ['msg' => 'logout']));
     }
 
@@ -318,9 +319,9 @@ class APIController extends BaseController
         $reservationInfo[0]['CUST_EMAIL'] = $email;
         $reservationInfo[0]['CUST_FIRST_NAME'] = $first_name;
         $reservationInfo[0]['CUST_LAST_NAME'] = $last_name;
-        
+
         $reservationInfo[0]['BASE_URL'] = base_url();
-        
+
 
         $emailCall = new EmailLibrary();
         $emailResp = $emailCall->requestDocUploadEmail($reservationInfo, $email, $first_name . " " . $last_name);

@@ -49,7 +49,7 @@ function validateJWTFromRequest(string $encodedToken)
 
     $data = $Db->query($sql,$param)->getRowArray();
 
-    $decodedToken['UD_REGISTRATION_ID'] = $data['UD_REGISTRATION_ID'];
+    $decodedToken->UD_REGISTRATION_ID = $data['UD_REGISTRATION_ID'];
     return ["token_info"=> $decodedToken,"table_info"=>  $data ];
 }
 
