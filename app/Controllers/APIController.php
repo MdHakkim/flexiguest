@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\UserRepository;
 use CodeIgniter\API\ResponseTrait;
 use  App\Libraries\EmailLibrary;
 use App\Models\City;
@@ -20,6 +21,7 @@ class APIController extends BaseController
     private $City;
     private $ApplicatioController;
     private $PropertyInfo;
+    private $UserRepository;
 
     public function __construct()
     {
@@ -29,6 +31,7 @@ class APIController extends BaseController
         $this->City = new City();
         $this->ApplicatioController = new ApplicatioController();
         $this->PropertyInfo = new PropertyInfo();
+        $this->UserRepository = new UserRepository();
     }
 
     // ----------- START API FOR FLEXI GUEST --------------//
@@ -127,6 +130,9 @@ class APIController extends BaseController
 
             if (!empty($userdata)) {
                 if (password_verify($this->request->getVar("password"), $userdata['USR_PASSWORD'])) {
+                    $registration_id = $this->request->getVar('registration_id');
+                    $this->UserRepository->storeUserDevice($userdata['USR_ID'], $registration_id);
+
                     // Token created  
                     $token =   getSignedJWTForUser($userdata);
                     $result = responseJson(200, false, ["msg" => 'User logged In successfully'], ['token' => $token, 'user' => $userdata]);
@@ -150,10 +156,13 @@ class APIController extends BaseController
     }
 
     // for Logout Just delete the token from session or anystorage
-    public function logoutApi()
+    public function logout()
     {
-        session()->destroy();
-        return true;
+        $registration_id = $this->request->getVar('registration_id');
+
+        $where_condition = "UD_REGISTRATION_ID = '$registration_id'";
+        $this->UserRepository->removeUserDevice($where_condition);
+        return $this->respond(responseJson(200, false, ['msg' => 'logout']));
     }
 
     // -----------------------------------------------------------------------CHECKIN API START -------------------------------------------//

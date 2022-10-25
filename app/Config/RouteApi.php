@@ -16,6 +16,7 @@ $routes->group("api", function ($routes) {
 });
 
 $routes->group("api", ["filter" => "authapi:Guest"], function ($routes) {
+    $routes->post("logout", "APIController::logout");
 
     $routes->get("profile", "APIController::profileAPI"); // user profile 
     //----------------------------------------------------------------------------- CHECK-IN --------------------------------------------------------------------//

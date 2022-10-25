@@ -30,8 +30,6 @@ class NotificationController extends BaseController
 
     public function Notifications()
     {
-        // $this->NotificationRepository->sendNotification();
-
         $data['title'] = getMethodName();
         $data['session'] = $this->session;
         $data['js_to_load'] = ["full-form-editor.js"]; 
