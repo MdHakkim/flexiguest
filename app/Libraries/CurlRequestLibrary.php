@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Libraries;
 
 class CurlRequestLibrary
@@ -12,6 +13,12 @@ class CurlRequestLibrary
 
     public function makeRequest($data)
     {
-        return $this->Client->request($data['method'], $data['url'], $data['body']);
+        try {
+            return $this->Client->request($data['method'], $data['url'], $data['body']);
+        } catch (\Exception $e) {
+            // $e->getMessage();
+        }
+
+        return false;
     }
 }

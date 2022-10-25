@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\Repositories\NotificationRepository;
+use App\Controllers\Repositories\UserRepository;
 use CodeIgniter\API\ResponseTrait;
 use App\Libraries\DataTables\NotificationDataTable;
 use App\Libraries\EmailLibrary;
@@ -14,6 +15,7 @@ class NotificationController extends BaseController
     public $Db;
     public $request;
     public $session;
+    private $UserRepository;
     private $NotificationRepository;
     
     public function __construct()
@@ -23,6 +25,7 @@ class NotificationController extends BaseController
         $this->session = \Config\Services::session();
         helper(['form', 'url', 'custom', 'common', 'upload']);
 
+        $this->UserRepository = new UserRepository();
         $this->NotificationRepository = new NotificationRepository();
     }
 
@@ -94,6 +97,8 @@ class NotificationController extends BaseController
     public function insertNotification()
     {
         try {
+            $user = session('user');
+
             $rules = [];
             $NOTIFI = [];
             $sysid = $this->request->getPost('NOTIFICATION_ID');
@@ -154,7 +159,17 @@ class NotificationController extends BaseController
            
            
             $return = !empty($sysid) ? $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $sysid)->update($data) : $this->Db->table('FLXY_NOTIFICATIONS')->insert($data);
+            if(!empty($NOTIFICATION_TO_ID)) {
+                $registration_ids = $this->UserRepository->getRegistrationIds($NOTIFICATION_TO_ID);
 
+                if(!empty($registration_ids))
+                    $this->NotificationRepository->sendNotification($user, [
+                        'registration_ids' => $registration_ids,
+                        'title' => 'Notification',
+                        'body' => $data['NOTIFICATION_TEXT'],
+                        'screen' => '',
+                    ]);
+            }
             
             $Notification_ID = $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid; 
 

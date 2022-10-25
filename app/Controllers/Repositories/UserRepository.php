@@ -40,9 +40,9 @@ class UserRepository extends BaseController
         ]);
     }
 
-    public function getUserDevices($user_ids)
+    public function getRegistrationIds($user_ids)
     {
-        return $this->UserDevice->whereIn('UD_USER_ID', $user_ids)->findAll();
+        return $this->UserDevice->select('UD_REGISTRATION_ID')->whereIn('UD_USER_ID', $user_ids)->findAll();
     }
 
     public function removeUserDevice($where_condition)

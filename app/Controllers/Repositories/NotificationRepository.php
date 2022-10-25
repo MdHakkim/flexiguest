@@ -3,20 +3,21 @@
 namespace App\Controllers\Repositories;
 
 use App\Controllers\BaseController;
+use App\Libraries\CurlRequestLibrary;
 use CodeIgniter\API\ResponseTrait;
 
 class NotificationRepository extends BaseController
 {
 	use ResponseTrait;
 
-	private $Client;
+	private $CurlRequestLibrary;
 
 	public function __construct()
 	{
-		$this->Client = \Config\Services::curlrequest();
+		$this->CurlRequestLibrary = new CurlRequestLibrary();
 	}
 
-	public function sendNotification()
+	public function sendNotification($user, $data)
 	{
 		$data['method'] = 'POST';
 		$data['url'] = 'https://fcm.googleapis.com/fcm/send';
@@ -26,25 +27,20 @@ class NotificationRepository extends BaseController
 				'Content-Type' => 'application/json'
 			],
 			'json' => [
-				"priority" => "HIGH",
-				"registration_ids" => ["fWrB40jNSG-hmSFLR0PQMx:APA91bFZBax526Ww53rQviLSvwDZykMxbUJ05rNi8nbFJtlwajHh8wsEXwbeqseI2WRCFzmpPhX6pOLHNvSB5668K_cxSc9I9cxl2ZsMb7N_s_DNg2Hz4mvool1WesTLR6xrrB6vbBX5"],
-				"data" => [
-					"badge" => "1",
-					"content_available" => true,
-					
-					"title" => "my-data-item",
-					"body" => "Portal",
-					"screen" => "heelo"
+				'priority' => 'HIGH',
+				'registration_ids' => $data['registration_ids'],
+				'data' => [
+					'badge' => '1',
+					'content_available' => true,
+
+					'title' => $data['title'],
+					'body' => $data['body'],
+					'screen' => $data['screen'],
+					'user_id' => $user['USR_ID']
 				]
 			]
 		];
 
-		try {
-			$response = $this->Client->request($data['method'], $data['url'], $data['body']);
-		} catch(\Exception $e) {
-			$e->getMessage();
-		}
-
-		return true;
+		return $this->CurlRequestLibrary->makeRequest($data);
 	}
 }
