@@ -77,8 +77,11 @@ class UserController extends BaseController
             'user' => $user,
             'USR_ID' => $user['USR_ID'],
             'USR_NAME' => $user['USR_NAME'],
+            'USR_FIRST_NAME' => $user['USR_FIRST_NAME'],
+            'USR_LAST_NAME' => $user['USR_LAST_NAME'],
             'USR_PHONE' => $user['USR_PHONE'],
             'USR_EMAIL' => $user['USR_EMAIL'],
+            'USR_IMAGE' => $user['USR_IMAGE'],
             'isLoggedIn' => true,
             "USR_ROLE" => $user['USR_ROLE'],
             'USR_ROLE_ID' => $user['USR_ROLE_ID']
@@ -103,7 +106,7 @@ class UserController extends BaseController
     {
         $data['editId'] = null !== $this->request->getGet("editId") ? $this->request->getGet("editId") : null;
         //Check if edit ID exists in Customer table
-        if($data['editId'] && !checkValueinTable('USR_ID', $data['editId'], 'FlXY_USERS'))
+        if ($data['editId'] && !checkValueinTable('USR_ID', $data['editId'], 'FlXY_USERS'))
             return redirect()->to(base_url('Users'));
 
         $data['title'] = getMethodName();
@@ -124,9 +127,46 @@ class UserController extends BaseController
         exit;
     }
 
+    public function getUserDetails($user_id)
+    {
+        $param = ['SYSID' => $user_id];
 
+        $sql = "SELECT  USR_NAME,USR_NUMBER,USR_FIRST_NAME,USR_LAST_NAME,USR_EMAIL,USR_PASSWORD,USR_ROLE_ID,USR_DEPARTMENT,USR_IMAGE,
+                        FORMAT(USR_DOB, 'dd-MMM-yyyy') as USR_DOB,USR_ADDRESS,USR_CITY,USR_STATE,USR_COUNTRY,
+                        FORMAT(USR_DOJ, 'dd-MMM-yyyy') as USR_DOJ,USR_PHONE,USR_GENDER,USR_TEL_EXT,USR_STATUS,ROLE_NAME 
+                FROM FLXY_USERS 
+                LEFT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID 
+                LEFT JOIN COUNTRY ON FLXY_USERS.USR_COUNTRY = COUNTRY.id 
+                LEFT JOIN FLXY_DEPARTMENT ON USR_DEPARTMENT = DEPT_ID 
+                LEFT JOIN STATE ON FLXY_USERS.USR_STATE = STATE.id 
+                WHERE USR_ID=:SYSID:";
 
+        $profile_data = $this->Db->query($sql, $param)->getRowArray();
+        return $profile_data;
+    }
 
+    public function myProfile()
+    {
+        $data['title'] = getMethodName();
+        $user_id = session()->get('USR_ID');
+
+        $data['profile_data'] = $this->getUserDetails($user_id);
+
+        return view('Users/Profile', $data);
+    }
+
+    public function editProfile()
+    {
+        $data['title'] = getMethodName();
+        $user_id = session()->get('USR_ID');
+
+        $data['roleList'] = $this->roleList();
+        $data['departmentList'] = $this->departmentList();
+
+        $data['editId'] = $user_id;
+        $data['profile_data'] = $this->getUserDetails($user_id);
+        return view('Users/editProfile', $data);
+    }
 
     public function UserRole()
     {
@@ -412,7 +452,7 @@ class UserController extends BaseController
             $rules = [
                 'USR_NAME' => ['label' => 'User Name', 'rules' => 'trim|required|is_unique[FLXY_USERS.USR_NAME,USR_ID,' . $sysid . ']'],
                 'USR_NUMBER' => ['label' => 'Employee Number', 'rules' => 'trim'],
-                'USR_EMAIL' => ['label' => 'User Email', 'rules' => 'trim|required|valid_email|is_unique[FLXY_USERS.USR_EMAIL,USR_ID,' . $sysid . ']'],            
+                'USR_EMAIL' => ['label' => 'User Email', 'rules' => 'trim|required|valid_email|is_unique[FLXY_USERS.USR_EMAIL,USR_ID,' . $sysid . ']'],
                 'USR_FIRST_NAME' => ['label' => 'First Name', 'rules' => 'trim|required'],
                 'USR_LAST_NAME' => ['label' => 'Last Name', 'rules' => 'trim|required'],
                 'USR_ROLE_ID' => ['label' => 'Role', 'rules' => 'trim|required'],
@@ -427,25 +467,34 @@ class UserController extends BaseController
                 'USR_GENDER' => ['label' => 'Gender', 'rules' => 'trim|required']
             ];
 
-            if (!empty($sysid) && $this->request->getPost("USR_PASSWORD") == '' && $this->request->getPost("USR_CONFIRM_PASSWORD") == ''){
-            }
-
-            else if(empty($sysid) || (!empty($sysid) && (null !== $this->request->getPost("USR_PASSWORD") || null !== $this->request->getPost("USR_CONFIRM_PASSWORD")))){
+            if (!empty($sysid) && $this->request->getPost("USR_PASSWORD") == '' && $this->request->getPost("USR_CONFIRM_PASSWORD") == '') {
+            } else if (empty($sysid) || (!empty($sysid) && (null !== $this->request->getPost("USR_PASSWORD") || null !== $this->request->getPost("USR_CONFIRM_PASSWORD")))) {
                 $rules['USR_PASSWORD'] = [
                     'label' => 'Password', 'rules' => 'trim|required|min_length[8]|is_password_strong[USR_PASSWORD]',
                     'errors' => [
                         'is_password_strong' => 'The password field must be contains at least one letter and one digit'
                     ]
-                    ];
-                    $rules['USR_CONFIRM_PASSWORD'] = [
+                ];
+                $rules['USR_CONFIRM_PASSWORD'] = [
                     'label' => 'Confirm Password', 'rules' => 'trim|required|matches[USR_PASSWORD]|min_length[8]|is_password_strong[USR_CONFIRM_PASSWORD]',
                     'errors' => [
                         'is_password_strong' => 'The confirm-password field must be contains at least one letter and one digit'
                     ]
                 ];
             }
-           
 
+            $submitted_image = $this->request->getFile('USR_IMAGE');
+
+            if (empty($sysid) || ($submitted_image->isValid() &&  !$submitted_image->hasMoved()))
+
+               //echo "<pre>"; print_r($this->request->getFile('USR_IMAGE')); echo "</pre>";
+
+                $rules = array_merge($rules, [
+                    'USR_IMAGE' => [
+                        'label' => 'User Avatar',
+                        'rules' => ['uploaded[USR_IMAGE]', 'mime_in[USR_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[USR_IMAGE,2048]']
+                    ],
+                ]);
 
 
             $validate = $this->validate($rules);
@@ -464,7 +513,7 @@ class UserController extends BaseController
                 "USR_NUMBER" => trim($this->request->getPost('USR_NUMBER')),
                 "USR_FIRST_NAME" => trim($this->request->getPost('USR_FIRST_NAME')),
                 "USR_LAST_NAME" => trim($this->request->getPost('USR_LAST_NAME')),
-                "USR_EMAIL" => trim($this->request->getPost('USR_EMAIL')),                
+                "USR_EMAIL" => trim($this->request->getPost('USR_EMAIL')),
                 "USR_ROLE" => trim(strtoupper($this->request->getPost('USR_ROLE'))),
                 "USR_ROLE_ID" => trim($this->request->getPost('USR_ROLE_ID')),
                 "USR_JOB_TITLE" => trim($this->request->getPost('USR_ROLE_ID')),
@@ -482,11 +531,32 @@ class UserController extends BaseController
                 "USR_STATUS" => trim(!($this->request->getPost('USR_STATUS')) ? 0 : 1)
 
             ];
-           if($this->request->getPost("USR_PASSWORD") != '')
-            $data["USR_PASSWORD"] =  password_hash($this->request->getPost("USR_PASSWORD"), PASSWORD_DEFAULT);
+            if ($this->request->getPost("USR_PASSWORD") != '')
+                $data["USR_PASSWORD"] =  password_hash($this->request->getPost("USR_PASSWORD"), PASSWORD_DEFAULT);
+
+            if ($submitted_image->isValid()) {
+                $image = $this->request->getFile('USR_IMAGE');
+                $image_name = $image->getRandomName();
+                $directory = "assets/img/avatars/";
+
+                $response = documentUpload($image, $image_name, $sysid, $directory);
+
+                if ($response['SUCCESS'] != 200)
+                    return $this->respond(responseJson("500", true, "Product Image not uploaded"));
+
+                $data['USR_IMAGE'] = $directory . $response['RESPONSE']['OUTPUT'];
+            }
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            if($return)
+            {
+                $model = new UserModel();
+                $user = $model->where('USR_ID', $sysid)->first();
+
+                // Stroing session values
+                $this->setUserSession($user);
+            }
             echo json_encode($result);
         } catch (Exception $e) {
             return $this->respond($e->errors());
@@ -512,6 +582,7 @@ class UserController extends BaseController
         $option = '<option value="">Select State</option>';
         $selected = "";
         foreach ($response as $row) {
+            $selected = "";
             if ($row['id'] == $state_id) {
                 $selected = "selected";
             }
@@ -530,6 +601,7 @@ class UserController extends BaseController
         $option = '<option value="">Select City</option>';
         $selected = "";
         foreach ($response as $row) {
+            $selected = "";
             if ($row['id'] == $cityid) {
                 $selected = "selected";
             }
@@ -612,7 +684,7 @@ class UserController extends BaseController
                 'MENU_ID' => ['label' => 'Permission', 'rules' => 'required']
 
             ]);
-            
+
             if (!$validate) {
                 $validate = $this->validator->getErrors();
                 $result["SUCCESS"] = "-402";

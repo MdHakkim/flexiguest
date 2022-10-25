@@ -531,6 +531,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/userCityList', 'UserController::userCityList');
     $routes->match(['post'], '/user-by-department', 'UserController::userByDepartment');
 
+    $routes->group('my-profile', function ($routes) {
+        $routes->get('', 'UserController::myProfile');
+        $routes->get('edit', 'UserController::editProfile');
+    });
+
     //User Role
     $routes->get('/UserRole', 'UserController::UserRole');
     $routes->match(['post'], '/userRoleView', 'UserController::userRoleView');
