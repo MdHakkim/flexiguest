@@ -42,7 +42,14 @@ class UserRepository extends BaseController
 
     public function getRegistrationIds($user_ids)
     {
-        return $this->UserDevice->select('UD_REGISTRATION_ID')->whereIn('UD_USER_ID', $user_ids)->findAll();
+        $registration_ids = [];
+
+        $devices = $this->UserDevice->whereIn('UD_USER_ID', $user_ids)->findAll();
+        foreach($devices as $device) {
+            $registration_ids[] = $device['UD_REGISTRATION_ID'];
+        }
+
+        return $registration_ids;
     }
 
     public function removeUserDevice($where_condition)
