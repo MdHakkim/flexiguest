@@ -130,10 +130,12 @@ class APIController extends BaseController
 
             if (!empty($userdata)) {
                 if (password_verify($this->request->getVar("password"), $userdata['USR_PASSWORD'])) {
-                    $registration_id = $this->request->getVar('registration_id');
-                    $this->UserRepository->storeUserDevice($userdata['USR_ID'], $registration_id);
+                    if($registration_id = $this->request->getVar('registration_id')) {
+                        $userdata['UD_REGISTRATION_ID'] = $registration_id;
+                        $this->UserRepository->storeUserDevice($userdata['USR_ID'], $registration_id);
+                    }
 
-                    // Token created  
+                    // Token created
                     $token =   getSignedJWTForUser($userdata);
                     $result = responseJson(200, false, ["msg" => 'User logged In successfully'], ['token' => $token, 'user' => $userdata]);
                 } else {
