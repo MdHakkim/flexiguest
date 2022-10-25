@@ -14,11 +14,10 @@ class CurlRequestLibrary
     public function makeRequest($data)
     {
         try {
-            return $this->Client->request($data['method'], $data['url'], $data['body']);
+            $response = $this->Client->request($data['method'], $data['url'], $data['body']);
+            return $response->getBody();
         } catch (\Exception $e) {
-            // $e->getMessage();
+            return $e->getMessage();
         }
-
-        return false;
     }
 }
