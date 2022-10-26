@@ -166,12 +166,14 @@ class NotificationController extends BaseController
 
             $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
             if(!empty($registration_ids)) {
-                $this->NotificationRepository->sendNotification([
+                $response = $this->NotificationRepository->sendNotification([
                     'registration_ids' => $registration_ids,
                     'title' => 'Notification',
                     'body' => $data['NOTIFICATION_TEXT'],
                     'screen' => '',
                 ]);
+
+                error_log("Notification => $response");
             }
             
             $Notification_ID = $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid; 
