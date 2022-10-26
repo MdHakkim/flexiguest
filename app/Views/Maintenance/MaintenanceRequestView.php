@@ -125,6 +125,21 @@
                                     <input type="file" name="MAINT_ATTACHMENT[]" id="MAINT_ATTACHMENT" class="form-control" multiple />
                                 </div>
 
+                                <div class="col-md-6">
+                                    <label class="form-label"><b>Department</b></label>
+                                    <select name="MAINT_DEPARTMENT_ID" class="select2 form-select">
+                                        <?php foreach ($departments as $department) { ?>
+                                            <option value="<?= $department['DEPT_ID'] ?>"><?= $department['DEPT_DESC'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label"><b>Attendee</b></label>
+                                    <select name="MAINT_ATTENDANT_ID" class="select2 form-select">
+                                    </select>
+                                </div>
+
                                 <div class="col-md-4">
                                     <label class="form-label">Status</label>
                                     <select name="MAINT_STATUS" class="form-select" data-allow-clear="true">
@@ -142,7 +157,6 @@
                                     <label class="form-label">Comment</label>
                                     <textarea class="form-control" name="MAINT_COMMENT"></textarea>
                                 </div>
-
 
                                 <input type="hidden" name="sysid" id="sysid" class="form-control" />
                                 <div class="modal-footer profileCreate">
@@ -164,6 +178,7 @@
 </div>
 <!-- Content wrapper -->
 <script>
+    var form_id = "#maintenanceForm";
     var reservation_id = 0;
 
     $(document).ready(function() {
@@ -185,17 +200,17 @@
                 },
                 {
                     data: null,
-                    render: function(data, type, row, meta){
+                    render: function(data, type, row, meta) {
                         let name = '';
-                        if(data['CUST_FIRST_NAME'])
+                        if (data['CUST_FIRST_NAME'])
                             name += data['CUST_FIRST_NAME'] + ' ';
 
-                        if(data['CUST_MIDDLE_NAME'])
+                        if (data['CUST_MIDDLE_NAME'])
                             name += data['CUST_MIDDLE_NAME'] + ' ';
-                        
-                        if(data['CUST_LAST_NAME'])
+
+                        if (data['CUST_LAST_NAME'])
                             name += data['CUST_LAST_NAME'];
-                        
+
                         return name;
                     }
                 },
@@ -264,7 +279,7 @@
                 render: function(data, type, full, meta) {
                     return '';
                 }
-            },{
+            }, {
                 targets: 11,
                 responsivePriority: 1,
             }],
@@ -319,10 +334,10 @@
     });
 
     function resetForm() {
-        $('input [type!="radio"]').val('');
-        $('select2').val('').trigger('change');
-        $('textarea').val('');
-        $('.maint-comment-div').hide();
+        $(`${form_id} input[type!="radio"]`).val('');
+        $(`${form_id} select`).val('').trigger('change');
+        $(`${form_id} textarea`).val('');
+        $(`${form_id} .maint-comment-div`).hide();
     }
 
     function addForm() {
@@ -502,10 +517,9 @@
     });
 
     $(document).on('change', 'select[name="MAINT_STATUS"]', function() {
-        if($(this).val() == 'Rejected'){
+        if ($(this).val() == 'Rejected') {
             $('.maint-comment-div').show();
-        }
-        else{
+        } else {
             $('.maint-comment-div').hide();
         }
     });
@@ -580,11 +594,49 @@
                     $('select[name="MAINT_STATUS"]').val(data.MAINT_STATUS).trigger('change');
                     $('textarea[name="MAINT_COMMENT"]').val(data.MAINT_COMMENT);
 
+                    setTimeout(function() {
+                        $(`${form_id} select[name='MAINT_DEPARTMENT_ID']`).val(data.MAINT_DEPARTMENT_ID).trigger('change');
+
+                        setTimeout(function() {
+                            $(`${form_id} select[name='MAINT_ATTENDANT_ID']`).val(data.MAINT_ATTENDANT_ID).trigger('change');
+                        }, 1000);
+                    }, 500);
+
                     $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
                 }
             });
         }, 500);
 
+    });
+
+    $(`${form_id} [name='MAINT_DEPARTMENT_ID']`).change(function() {
+        let department_id = $(this).val();
+
+        if (department_id) {
+            $.ajax({
+                url: '<?= base_url('/user-by-department') ?>',
+                type: "post",
+                data: {
+                    department_ids: [department_id]
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response['SUCCESS'] == 200) {
+                        let users = response['RESPONSE']['OUTPUT'];
+
+                        let html = '';
+                        for (let user of users) {
+                            html += `
+                            <option value="${user.USR_ID}">${user.USR_FIRST_NAME} ${user.USR_LAST_NAME}</option>
+                        `;
+                        }
+
+                        $(`${form_id} select[name='MAINT_ATTENDANT_ID']`).html(html);
+                        $(`${form_id} select[name='MAINT_ATTENDANT_ID']`).trigger('change');
+                    }
+                }
+            });
+        }
     });
 </script>
 <script src="<?php //echo base_url('assets/js/bootstrap.bundle.js')

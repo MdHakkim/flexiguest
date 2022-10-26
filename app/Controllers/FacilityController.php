@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Controllers\Repositories\DepartmentRepository;
 use  App\Libraries\ServerSideDataTable;
 use  App\Libraries\EmailLibrary;
 use App\Models\ShutlStages;
@@ -25,6 +26,7 @@ class FacilityController extends BaseController
     private $Shuttle;
     private $ShuttleRoute;
     private $ShutlStages;
+    private $DepartmentRepository;
 
     public function __construct()
     {
@@ -41,11 +43,14 @@ class FacilityController extends BaseController
         $this->Product = new Product();
         $this->LaundryAmenitiesOrder = new LaundryAmenitiesOrder();
         $this->LaundryAmenitiesOrderDetail = new LaundryAmenitiesOrderDetail();
+        $this->DepartmentRepository = new DepartmentRepository();
     }
     // CODE BY ALEESHA  - Maintenance Request
     public function maintenanceRequest()
     {
-        return view('Maintenance/MaintenanceRequestView');
+        $data['departments'] = $this->DepartmentRepository->allDepartments();
+
+        return view('Maintenance/MaintenanceRequestView', $data);
     }
 
     public function getRequestList()
@@ -153,6 +158,7 @@ class FacilityController extends BaseController
             $data =
                 [
                     "CUST_NAME" => $this->request->getPost("CUST_NAME"),
+                    "MAINT_ATTENDANT_ID" => $this->request->getPost("MAINT_ATTENDANT_ID"),
                     "MAINT_RESV_ID" => $this->request->getPost("MAINT_RESV_ID"),
                     "MAINT_TYPE" => $this->request->getPost("MAINT_TYPE"),
                     "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
@@ -175,6 +181,7 @@ class FacilityController extends BaseController
             $data =
                 [
                     "CUST_NAME" => $this->request->getPost("CUST_NAME"),
+                    "MAINT_ATTENDANT_ID" => $this->request->getPost("MAINT_ATTENDANT_ID"),
                     "MAINT_RESV_ID" => $this->request->getPost("MAINT_RESV_ID"),
                     "MAINT_TYPE" => $this->request->getPost("MAINT_TYPE"),
                     "MAINT_CATEGORY" => $this->request->getPost("MAINT_CATEGORY"),
@@ -224,7 +231,10 @@ class FacilityController extends BaseController
     function editMaintenanceRequest()
     {
         $param = ['MAINT_ID' => $this->request->getPost("sysid")];
-        $sql = "SELECT *,(SELECT RM_DESC FROM FLXY_ROOM WHERE RM_NO = MAINT_ROOM_NO) RM_DESC FROM FLXY_MAINTENANCE WHERE MAINT_ID =:MAINT_ID:";
+        $sql = "SELECT *, (SELECT RM_DESC FROM FLXY_ROOM WHERE RM_NO = MAINT_ROOM_NO) RM_DESC, USR_DEPARTMENT as MAINT_DEPARTMENT_ID
+                    FROM FLXY_MAINTENANCE 
+                    left join FlXY_USERS on MAINT_ATTENDANT_ID = USR_ID
+                    WHERE MAINT_ID =:MAINT_ID:";
         $response = $this->Db->query($sql, $param)->getResultArray();
         echo json_encode($response);
     }
