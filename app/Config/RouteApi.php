@@ -16,8 +16,6 @@ $routes->group("api", function ($routes) {
 });
 
 $routes->group("api", ["filter" => "authapi:Guest"], function ($routes) {
-    $routes->post("logout", "APIController::logout");
-
     $routes->get("profile", "APIController::profileAPI"); // user profile 
     //----------------------------------------------------------------------------- CHECK-IN --------------------------------------------------------------------//
     // API to list ALL reservations of the loggined user
@@ -115,6 +113,8 @@ $routes->group("api", ["filter" => "authapi:Admin,Guest", 'namespace' => 'App\Co
 
 /*****************************  Admin + Guest + Attendee *****************************/
 $routes->group("api", ["filter" => "authapi:Admin,Guest,Attendee", 'namespace' => 'App\Controllers'], function ($routes) {
+    $routes->post("logout", "APIController::logout");
+
     $routes->group('evalet', function ($routes) {
         $routes->post('guest-collected', 'EValetController::guestCollected');
     });
