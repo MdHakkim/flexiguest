@@ -173,7 +173,23 @@ class NotificationController extends BaseController
                     'screen' => '',
                 ]);
 
-                error_log("Notification => $response");
+                error_log("Notification => " . json_encode($response));
+
+                $remove_registration_ids = [];
+                if(!empty($response['failure']) && $response['failure'] > 0) {
+                    foreach($response['results'] as $index => $res) {
+                        if(!empty($res['error']) && $res['error'] == 'NotRegistered' || $res['error'] == 'InvalidRegistration') {
+                            $remove_registration_ids[] = $registration_ids[$index];
+                        }
+                    }
+                }
+
+                error_log("remove_registration_ids => " . json_encode($remove_registration_ids));
+                if(!empty($remove_registration_ids)) {
+                    $remove_registration_ids = implode(",", $remove_registration_ids);
+                    $where_condition = "UD_REGISTRATION_ID IN ($remove_registration_ids)";
+                    $this->UserRepository->removeUserDevice($where_condition);
+                }
             }
             
             $Notification_ID = $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid; 
