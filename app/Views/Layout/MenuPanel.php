@@ -54,15 +54,7 @@
                     <div class="dropdown-menu dropdown-menu-end py-0">
                       <div class="dropdown-menu-header border-bottom">
                         <div class="dropdown-header d-flex align-items-center py-3">
-                          <h5 class="text-body me-auto mb-0">Shortcuts</h5>
-                          <a
-                            href="javascript:void(0)"
-                            class="dropdown-shortcuts-add text-body"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="top"
-                            title="Add shortcuts"
-                            ><i class="bx bx-sm bx-plus-circle"></i
-                          ></a>
+                          <h5 class="text-body me-auto mb-0">Shortcuts</h5>                          
                         </div>
                       </div>
                       <div class="dropdown-shortcuts-list scrollable-container">
@@ -73,33 +65,33 @@
                             <span class="dropdown-shortcuts-icon bg-label-secondary rounded-circle mb-2">
                               <i class="bx bx-pie-chart-alt-2 fs-4"></i>
                             </span>
-                            <a href="javascript:void(0);" class="stretched-link">Dashboard</a>
-                            <small class="text-muted mb-0">User Profile</small>
+                            <a href="<?php echo base_url() ?>" class="stretched-link">Dashboard</a>
+                            <small class="text-muted mb-0">Display all Info</small>
                           </div>
                           <div class="dropdown-shortcuts-item col">
                             <span class="dropdown-shortcuts-icon bg-label-secondary rounded-circle mb-2">
-                              <i class="bx bx-cog fs-4"></i>
+                              <i class="bx bx-desktop fs-4"></i>
                             </span>
-                            <a href="javascript:void(0);" class="stretched-link">Settings</a>
-                            <small class="text-muted mb-0">Account Settings</small>
+                            <a href="<?php echo base_url('/frontDesk') ?>" class="stretched-link">Front Desk</a>
+                            <small class="text-muted mb-0">Arrivals, Guests etc</small>
                           </div>
                         </div>
 
                         <div class="row row-bordered overflow-visible g-0">
                           <div class="dropdown-shortcuts-item col">
                             <span class="dropdown-shortcuts-icon bg-label-secondary rounded-circle mb-2">
-                              <i class="bx bx-calendar fs-4"></i>
+                              <i class="fa fa-cart-flatbed-suitcase fs-4"></i>
                             </span>
-                            <a href="javascript:void(0);" class="stretched-link">Calendar</a>
-                            <small class="text-muted mb-0">Appointments</small>
+                            <a href="<?php echo base_url('/reservation') ?>" class="stretched-link">Reservations</a>
+                            <small class="text-muted mb-0">View All & Add New</small>
                           </div>
 
                           <div class="dropdown-shortcuts-item col">
                             <span class="dropdown-shortcuts-icon bg-label-secondary rounded-circle mb-2">
-                              <i class="bx bx-help-circle fs-4"></i>
+                              <i class="bx bx-cog fs-4"></i>
                             </span>
-                            <a href="javascript:void(0);" class="stretched-link">Help Center</a>
-                            <small class="text-muted mb-0">FAQs & Articles</small>
+                            <a href="<?php echo base_url('/my-profile/edit') ?>" class="stretched-link">Settings</a>
+                            <small class="text-muted mb-0">Profile Settings</small>
                           </div>
                      
                         </div>
@@ -124,7 +116,7 @@
                     <ul class="dropdown-menu dropdown-menu-end py-0">
                       <li class="dropdown-menu-header border-bottom">
                         <div class="dropdown-header d-flex align-items-center py-3">
-                          <h5 class="text-body me-auto mb-0">Notification</h5>
+                          <h5 class="text-body me-auto mb-0">Notifications</h5>
                           <a
                             href="javascript:void(0)"
                             class="dropdown-notifications-all text-body read-all"
