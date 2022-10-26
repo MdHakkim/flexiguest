@@ -159,16 +159,21 @@ class NotificationController extends BaseController
            
            
             $return = !empty($sysid) ? $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $sysid)->update($data) : $this->Db->table('FLXY_NOTIFICATIONS')->insert($data);
-            if(!empty($NOTIFICATION_TO_ID)) {
-                $registration_ids = $this->UserRepository->getRegistrationIds($NOTIFICATION_TO_ID);
 
-                if(!empty($registration_ids))
-                    $this->NotificationRepository->sendNotification($user, [
-                        'registration_ids' => $registration_ids,
-                        'title' => 'Notification',
-                        'body' => $data['NOTIFICATION_TEXT'],
-                        'screen' => '',
-                    ]);
+            if(!empty($NOTIFICATION_GUEST_ID))
+                $user_ids = $this->UserRepository->getUserIdsByCustomerIds($NOTIFICATION_GUEST_ID);
+
+            else if(!empty($NOTIFICATION_TO_ID))
+                $user_ids = $NOTIFICATION_TO_ID;
+
+            $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
+            if(!empty($registration_ids)) {
+                $this->NotificationRepository->sendNotification($user, [
+                    'registration_ids' => $registration_ids,
+                    'title' => 'Notification',
+                    'body' => $data['NOTIFICATION_TEXT'],
+                    'screen' => '',
+                ]);
             }
             
             $Notification_ID = $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid; 

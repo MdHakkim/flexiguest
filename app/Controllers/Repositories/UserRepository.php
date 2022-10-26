@@ -27,6 +27,17 @@ class UserRepository extends BaseController
         return $this->User->find($user_id);
     }
 
+    public function getUserIdsByCustomerIds($customer_id)
+    {
+        $users = $this->User->whereIn('USR_CUST_ID', $customer_id)->findAll();
+        $user_ids = [];
+        foreach($users as $user) {
+            $user_ids[] = $user['USR_ID'];
+        }
+        
+        return $user_ids;
+    }
+
     public function storeUserDevice($user_id, $registration_id)
     {
         $where_condition = "UD_REGISTRATION_ID = '$registration_id'";
