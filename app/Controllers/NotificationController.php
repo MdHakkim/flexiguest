@@ -158,11 +158,14 @@ class NotificationController extends BaseController
            
             $return = !empty($sysid) ? $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $sysid)->update($data) : $this->Db->table('FLXY_NOTIFICATIONS')->insert($data);
 
-            if(!empty($NOTIFICATION_GUEST_ID))
+            if(!empty($NOTIFICATION_GUEST_ID)) {
+                $notification_type = 'guest';
                 $user_ids = $this->UserRepository->getUserIdsByCustomerIds($NOTIFICATION_GUEST_ID);
+            } else if(!empty($NOTIFICATION_TO_ID)) {
 
-            else if(!empty($NOTIFICATION_TO_ID))
+                $notification_type = 'admin';
                 $user_ids = $NOTIFICATION_TO_ID;
+            }
 
             $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
             if(!empty($registration_ids)) {
@@ -171,7 +174,7 @@ class NotificationController extends BaseController
                     'title' => 'Notification',
                     'body' => $data['NOTIFICATION_TEXT'],
                     'screen' => '',
-                ]);
+                ], $notification_type);
 
                 error_log("Notification => " . json_encode($response));
 
