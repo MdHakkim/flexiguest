@@ -67,4 +67,9 @@ class UserRepository extends BaseController
     {
         return $this->UserDevice->where($where_condition)->delete();
     }
+
+    public function removeByRegistrationIds($registration_ids)
+    {
+        return $this->UserDevice->whereIn('UD_REGISTRATION_ID', $registration_ids)->delete();
+    }
 }

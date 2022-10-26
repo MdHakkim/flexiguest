@@ -185,11 +185,8 @@ class NotificationController extends BaseController
                 }
 
                 error_log("remove_registration_ids => " . json_encode($remove_registration_ids));
-                if(!empty($remove_registration_ids)) {
-                    $remove_registration_ids = implode(",", $remove_registration_ids);
-                    $where_condition = "UD_REGISTRATION_ID IN ($remove_registration_ids)";
-                    $this->UserRepository->removeUserDevice($where_condition);
-                }
+                if(!empty($remove_registration_ids))
+                    $this->UserRepository->removeByRegistrationIds($remove_registration_ids);
             }
             
             $Notification_ID = $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid; 
