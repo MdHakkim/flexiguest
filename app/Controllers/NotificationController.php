@@ -97,8 +97,6 @@ class NotificationController extends BaseController
     public function insertNotification()
     {
         try {
-            $user = session('user');
-
             $rules = [];
             $NOTIFI = [];
             $sysid = $this->request->getPost('NOTIFICATION_ID');
@@ -168,7 +166,7 @@ class NotificationController extends BaseController
 
             $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
             if(!empty($registration_ids)) {
-                $this->NotificationRepository->sendNotification($user, [
+                $this->NotificationRepository->sendNotification([
                     'registration_ids' => $registration_ids,
                     'title' => 'Notification',
                     'body' => $data['NOTIFICATION_TEXT'],

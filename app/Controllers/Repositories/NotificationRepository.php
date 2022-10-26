@@ -17,7 +17,7 @@ class NotificationRepository extends BaseController
 		$this->CurlRequestLibrary = new CurlRequestLibrary();
 	}
 
-	public function sendNotification($user, $data)
+	public function sendNotification($data)
 	{
 		$data['method'] = 'POST';
 		$data['url'] = 'https://fcm.googleapis.com/fcm/send';
@@ -36,7 +36,6 @@ class NotificationRepository extends BaseController
 					'title' => $data['title'],
 					'body' => $data['body'],
 					'screen' => $data['screen'],
-					'user_id' => $user['USR_ID']
 				]
 			]
 		];
