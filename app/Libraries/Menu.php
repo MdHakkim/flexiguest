@@ -29,19 +29,22 @@ class Menu{
 
                 //SUBMENU
 
-                $sql = "SELECT MENU_ID,MENU_NAME, MENU_URL FROM FLXY_MENU WHERE MENU_STATUS = 1 AND SHOW_IN_MENU = 1 AND PARENT_MENU_ID = ".$menu['MENU_ID']." AND  PARENT_MENU_ID > 0"; 
+                $sql = "SELECT MENU_ID, MENU_NAME, MENU_URL FROM FLXY_MENU WHERE MENU_STATUS = 1 AND SHOW_IN_MENU = 1 AND PARENT_MENU_ID = ".$menu['MENU_ID']." AND PARENT_MENU_ID > 0 ORDER BY MENU_DIS_SEQ ASC"; 
                 $subMenu = $this->Db->query($sql)->getResultArray();
                 $subMenuCount = $this->Db->query($sql)->getNumRows();
                 $menu_url = $menu['MENU_URL'];
                 if($menu_url == ''){
-                    $menu_url =  ($menu['MENU_NAME'] == 'Dashboard')?base_url('/'):'javascript:void(0)';                   
-                }            
+                    $menu_url =  ($menu['MENU_NAME'] == 'Dashboard') ? base_url('/'):'javascript:void(0)';                   
+                }
+                else
+                    $menu_url = base_url().'/'.$menu_url;
+                
+                $rolesSubmenuOutput = '';
                     
                 if($subMenuCount > 0){
                     $addToggle = 'menu-toggle';
                     $submenu_item_active = '';
-                    $rolesSubmenuOutput = '';
-                      
+                                          
                     $rolesSubmenuOutput.='<ul class="menu-sub">';
                     foreach($subMenu as $smenu){
                         $submenu_item_active = (isset($url) && ($url == base_url().'/'.$smenu['MENU_URL'])) ? 'active' : '' ; 
@@ -64,14 +67,15 @@ class Menu{
 
                 }
                 else
-                    $submenu_url_array[] = base_url().'/'.$menu_url;
+                    $submenu_url_array[] = $menu_url;
 
                 ///END SUBMENU 
             
 
                 $menu_item_active = '';               
                 
-               $menu_item_active = (isset($url) && (in_array($url, $submenu_url_array))) ? 'active open' : '' ;        
+               $menu_item_active = (isset($url) && (in_array($url, $submenu_url_array))) ? 'active open' : '' ;   
+
                 $menu_icon = $menu['MENU_ICON'];
                 if($menu['MENU_NAME'] == 'Support')
                 $misc = '<!-- Misc -->
