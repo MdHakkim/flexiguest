@@ -3,6 +3,7 @@
 namespace App\Controllers\Repositories;
 
 use App\Controllers\BaseController;
+use App\Models\ForgetPasswordToken;
 use App\Models\UserDevice;
 use App\Models\UserModel;
 
@@ -10,11 +11,13 @@ class UserRepository extends BaseController
 {
     private $User;
     private $UserDevice;
+    private $ForgetPasswordToken;
 
     public function __construct()
     {
         $this->User = new UserModel();
         $this->UserDevice = new UserDevice();
+        $this->ForgetPasswordToken = new ForgetPasswordToken();
     }
 
     public function userByDepartment($department_ids)
@@ -25,6 +28,17 @@ class UserRepository extends BaseController
     public function userById($user_id)
     {
         return $this->User->find($user_id);
+    }
+
+    public function userByEmail($email)
+    {
+        return $this->User->where('USR_EMAIL', $email)->first();
+    }
+
+    public function insertForgetPasswordToken($data) {
+        $this->ForgetPasswordToken->where('FPT_USER_ID', $data['FPT_USER_ID'])->delete();
+
+        return $this->ForgetPasswordToken->insert($data);
     }
 
     public function getUserIdsByCustomerIds($customer_id)

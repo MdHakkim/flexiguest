@@ -13,6 +13,8 @@ $routes->group("api", function ($routes) {
     $routes->post("register", "APIController::registerAPI");
     $routes->post("login", "APIController::loginAPI");
     $routes->get("health", "APIController::health");
+
+    $routes->post("forget-password", "UserController::forgetPassword");
 });
 
 $routes->group("api", ["filter" => "authapi:Guest"], function ($routes) {

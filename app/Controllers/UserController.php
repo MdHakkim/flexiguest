@@ -20,6 +20,7 @@ class UserController extends BaseController
     public $session;
     public $request;
     public $todayDate;
+    public $EmailLibrary;
 
     public function __construct()
     {
@@ -29,6 +30,8 @@ class UserController extends BaseController
         helper(['form', 'common', 'custom']);
         $this->request = \Config\Services::request();
         $this->todayDate = new DateTime("now", new DateTimeZone('Asia/Dubai'));
+
+        $this->EmailLibrary = new EmailLibrary();
     }
 
     public function login()
@@ -870,5 +873,43 @@ class UserController extends BaseController
 
         $result = $this->UserRepository->userByDepartment($department_ids);
         return $this->respond(responseJson(200, false, ['msg' => 'users'], $result));
+    }
+
+    public function forgetPassword()
+    {
+        $data = json_decode(json_encode($this->request->getVar()), true);
+
+        $user = $this->UserRepository->userByEmail($data['email']);
+        if(empty($user))
+            return $this->respond(responseJson(404, true, ['msg' => 'There is no account with this email.']));
+
+        $bytes = random_bytes(40);
+        $random_token = bin2hex($bytes);       
+
+        $data['user'] = $user;
+        $data['from_email'] = 'notifications@farnek.com';
+        $data['from_name'] = 'FlexiGuest | Hitek';
+
+        $data['to_email'] = $user['USR_EMAIL'];
+        $data['to_name'] = $user['USR_FIRST_NAME'] . ' ' . $user['USR_LAST_NAME'];
+
+        $data['subject'] = 'Reset Password';
+        $data['branding_logo'] = brandingLogo();
+        $data['reset_url'] = base_url("reset_form/$random_token");
+        $data['html'] = view('EmailTemplates/reset_password', $data);
+        
+        $response = $this->EmailLibrary->commonEmail($data);
+        if($response != true)
+            return $this->respond(responseJson(500, true, ['msg' => 'Unable to send mail.']));       
+
+        $this->UserRepository->insertForgetPasswordToken([
+            'FPT_USER_ID' => $user['USR_ID'],
+            'FPT_TOKEN' => $random_token,
+            'FPT_EXPIRE_AT' => date('Y-m-d H:i:s', strtotime('+1 day')),
+            'FPT_CREATED_BY' => $user['USR_ID'],
+            'FPT_UPDATED_BY' => $user['USR_ID']
+        ]);
+        
+        return $this->respond(responseJson(200, false, ['msg' => 'Please check your mail to reset password.']));
     }
 }
