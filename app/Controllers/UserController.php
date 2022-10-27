@@ -876,7 +876,14 @@ class UserController extends BaseController
     }
 
     public function forgetPassword()
-    {
+    {   
+        $rules = [
+            'email' => 'required'
+        ];
+
+        if(!$this->validate($rules))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
         $data = json_decode(json_encode($this->request->getVar()), true);
 
         $user = $this->UserRepository->userByEmail($data['email']);
