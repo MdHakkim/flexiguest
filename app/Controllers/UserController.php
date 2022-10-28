@@ -965,6 +965,6 @@ class UserController extends BaseController
         
         $this->UserRepository->removeForgetPasswordToken($user['USR_ID']);
 
-        return view('frontend/reset_password_form', array_merge($data, ['success' => 'Password updated successfully.']));
+        return view('frontend/reset_password_form', array_merge($data, ['type' => 'success', 'messages' => ['Password updated successfully.']]));
     }
 }
