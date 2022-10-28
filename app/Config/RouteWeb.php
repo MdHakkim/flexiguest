@@ -11,7 +11,8 @@ $routes->match(['post'], '/stateList', 'ApplicatioController::stateList');
 $routes->match(['post'], '/cityList', 'ApplicatioController::cityList');
 $routes->match(['get'], '/accessDenied', 'UserController::accessDenied');
 
-
+$routes->get("reset-password-form/(:segment)", "UserController::resetPasswordForm/$1");
+$routes->post("reset-password/(:segment)", "UserController::resetPassword/$1");
 
 // Admin routes
 $routes->get('/', 'DashboardController::index', ["filter" => "auth"]);

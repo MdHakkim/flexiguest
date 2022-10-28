@@ -490,7 +490,7 @@ class UserController extends BaseController
 
             if (empty($sysid) || ($submitted_image->isValid() &&  !$submitted_image->hasMoved()))
 
-               //echo "<pre>"; print_r($this->request->getFile('USR_IMAGE')); echo "</pre>";
+                //echo "<pre>"; print_r($this->request->getFile('USR_IMAGE')); echo "</pre>";
 
                 $rules = array_merge($rules, [
                     'USR_IMAGE' => [
@@ -552,8 +552,7 @@ class UserController extends BaseController
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
-            if($return)
-            {
+            if ($return) {
                 $model = new UserModel();
                 $user = $model->where('USR_ID', $sysid)->first();
 
@@ -880,11 +879,11 @@ class UserController extends BaseController
         $data = json_decode(json_encode($this->request->getVar()), true);
 
         $user = $this->UserRepository->userByEmail($data['email']);
-        if(empty($user))
+        if (empty($user))
             return $this->respond(responseJson(404, true, ['msg' => 'There is no account with this email.']));
 
         $bytes = random_bytes(40);
-        $random_token = bin2hex($bytes);       
+        $random_token = bin2hex($bytes);
 
         $data['user'] = $user;
         $data['from_email'] = 'notifications@farnek.com';
@@ -895,12 +894,12 @@ class UserController extends BaseController
 
         $data['subject'] = 'Reset Password';
         $data['branding_logo'] = brandingLogo();
-        $data['reset_url'] = base_url("reset_form/$random_token");
+        $data['reset_url'] = base_url("reset-password-form/$random_token");
         $data['html'] = view('EmailTemplates/reset_password', $data);
-        
+
         $response = $this->EmailLibrary->commonEmail($data);
-        if($response != true)
-            return $this->respond(responseJson(500, true, ['msg' => 'Unable to send mail.']));       
+        if ($response != true)
+            return $this->respond(responseJson(500, true, ['msg' => 'Unable to send mail.']));
 
         $this->UserRepository->insertForgetPasswordToken([
             'FPT_USER_ID' => $user['USR_ID'],
@@ -909,7 +908,56 @@ class UserController extends BaseController
             'FPT_CREATED_BY' => $user['USR_ID'],
             'FPT_UPDATED_BY' => $user['USR_ID']
         ]);
-        
+
         return $this->respond(responseJson(200, false, ['msg' => 'Please check your mail to reset password.']));
+    }
+
+    public function resetPasswordForm($token)
+    {
+        $data['token'] = $token;
+        $user = $this->UserRepository->getUserByToken($token);
+        if (empty($user)) {
+            $data ['type'] = 'error'; 
+            $data['messages'] = ['Token is expired or invalid!'];
+        }
+
+        return view('frontend/reset_password_form', $data);
+    }
+
+    public function resetPassword($token)
+    {
+        $data = $this->request->getPost();
+        $data['token'] = $token;
+
+        $user = $this->UserRepository->getUserByToken($token);
+        if (empty($user))
+            return view('frontend/reset_password_form', array_merge($data, ['type' => 'error', 'messages' => ['Token is expired or invalid!']]));
+
+        $rules = [
+            'email' => 'required|valid_email',
+            'new_password' => 'required|min_length[8]|max_length[255]|strongPassword[new_password]',
+            'confirm_password' => 'required|matches[new_password]',
+        ];
+
+        $messages = [
+            'new_password' => [
+                'strongPassword' => 'Password is not strong. It should contain at least one digit, one capital letter, one small letter, and one special character. (white spaces are not allowed).'
+            ],
+        ];
+
+        if (!$this->validate($rules, $messages))
+            return view('frontend/reset_password_form', array_merge($data, ['type' => 'error', 'messages' => $this->validator->getErrors()]));
+
+        if($user['USR_EMAIL'] != $data['email'])
+            return view('frontend/reset_password_form', array_merge($data, ['type' => 'error', 'messages' => ['Invalid Email.']]));
+
+        $this->UserRepository->updateUserById([
+            'USR_ID' => $user['USR_ID'],
+            'USR_PASSWORD' => password_hash($data['new_password'], PASSWORD_DEFAULT),
+        ]);
+        
+        $this->UserRepository->removeForgetPasswordToken($user['USR_ID']);
+
+        return view('frontend/reset_password_form', array_merge($data, ['success' => 'Password updated successfully.']));
     }
 }

@@ -477,7 +477,7 @@
                                     <td class="content-cell">
                                         <div class="f-fallback">
                                             <h1>Hi <?= $user['USR_FIRST_NAME'] . ' ' . $user['USR_LAST_NAME'] ?>,</h1>
-                                            <p>You recently requested to reset your password for your flexiguest account. Use the button below to reset it. <strong>This password reset is only valid for the next 24 hours.</strong></p>
+                                            <p>You recently requested to reset your password for your flexiguest account. Use the button below to reset it. <strong>There will be a 24-hour expiration date for this password reset, and you may only use it once in that timeframe.</strong></p>
                                             <!-- Action -->
                                             <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
                                                 <tr>

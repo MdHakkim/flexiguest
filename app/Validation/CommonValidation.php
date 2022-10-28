@@ -19,7 +19,8 @@ class CommonValidation{
 
     public function strongPassword(string $str, string $field, array $data)
     {
-        if (preg_match('/\d/', $data['password']) && preg_match('/[a-zA-Z]/', $data['password']) && preg_match('/\W/', $data['password']) && !preg_match("/\s/", $data['password'])) {
+        $fields = explode(',', $field);
+        if (preg_match('/\d/', $data[$fields[0]]) && preg_match('/[a-zA-Z]/', $data[$fields[0]]) && preg_match('/\W/', $data[$fields[0]]) && !preg_match("/\s/", $data[$fields[0]])) {
             return true;
         }
 
