@@ -132,6 +132,19 @@ $routes->group("api", ["filter" => "authapi:Admin,Attendee", 'namespace' => 'App
     $routes->group('evalet', function ($routes) {
         $routes->post('parked', 'EValetController::parked');
     });
+
+    $routes->group('maintenance', function ($routes) {
+        $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
+        $routes->get("get-room-list", "MaintenanceController::getRoomList");
+        $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
+        $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
+
+        // work order
+        $routes->post("assign-task", "MaintenanceController::assignTask");
+        $routes->post("update-status", "MaintenanceController::updateStatus");
+        $routes->post("add-comment", "MaintenanceController::addComment");
+        $routes->get("get-comments", "MaintenanceController::getComments");
+    });
 });
 
 /*****************************  Admin + Guest *****************************/
@@ -172,19 +185,6 @@ $routes->group("api/admin", ["filter" => "authapi:Admin,Attendee", 'namespace' =
         $routes->post("mark-subtask-completed-inspected", "HouseKeepingController::markSubtaskCompletedInspected");
         $routes->post("submit-task-note", "HouseKeepingController::submitTaskNote");
         $routes->post("submit-subtask-note", "HouseKeepingController::submitSubtaskNote");
-    });
-
-    $routes->group('maintenance', function ($routes) {
-        $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
-        $routes->get("get-room-list", "MaintenanceController::getRoomList");
-        $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
-        $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
-
-        // work order
-        $routes->post("assign-task", "MaintenanceController::assignTask");
-        $routes->post("update-status", "MaintenanceController::updateStatus");
-        $routes->post("add-comment", "MaintenanceController::addComment");
-        $routes->get("get-comments", "MaintenanceController::getComments");
     });
 });
 

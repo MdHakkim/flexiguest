@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controllers\APIControllers\Admin;
+namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\MaintenanceRepository;
 use App\Models\Maintenance;
 use App\Models\MaintenanceRequestComment;
 use App\Models\Room;
@@ -18,6 +19,7 @@ class MaintenanceController extends BaseController
     private $Room;
     private $User;
     private $MaintenanceRequestComment;
+    private $MaintenanceRepository;
 
     public function __construct()
     {
@@ -26,6 +28,7 @@ class MaintenanceController extends BaseController
         $this->Room = new Room();
         $this->User = new UserModel();
         $this->MaintenanceRequestComment = new MaintenanceRequestComment();
+        $this->MaintenanceRepository = new MaintenanceRepository();
     }
 
     public function maintenanceList()
@@ -250,13 +253,8 @@ class MaintenanceController extends BaseController
     public function getComments()
     {
         $maintenance_request_id = $this->request->getVar('maintenance_request_id');
-
-        $comments = $this->MaintenanceRequestComment
-            ->select('FLXY_MAINTENANCE_REQUEST_COMMENTS.*, USR_NAME')
-            ->join('FLXY_USERS', 'MRC_USER_ID = USR_ID', 'left')
-            ->where('MRC_MAINTENANCE_REQUEST_ID', $maintenance_request_id)
-            ->findAll();
-
+        $comments = $this->MaintenanceRepository->getComments($maintenance_request_id);
+        
         return $this->respond(responseJson(200, false, ['msg' => 'comments'], $comments));
     }
 }
