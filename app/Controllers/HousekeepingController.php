@@ -238,6 +238,68 @@ class HousekeepingController extends BaseController
         }
     }
 
+    public function housekeeping(){
+        $data['title'] = getMethodName();
+        $data['room_status_list'] = $this->Db->table('FLXY_ROOM_STATUS_MASTER')->select('RM_STATUS_ID,RM_STATUS_CODE,RM_STATUS_COLOR_CLASS')->get()->getResultArray();
 
+        return view('Housekeeping/HKRoomView', $data);
+    }
+
+    public function HkRoomView(){
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $TODAYDATE = date('Y-m-d');
+
+        $tableName = "  (SELECT RM_ID,RM_NO,RM_DESC,RM_TYPE,RM_CLASS,RM_FEATURE,RM_FLOOR_PREFERN,
+                        ISNULL(SM.RM_STATUS_ID, 2) AS RM_STATUS_ID,ISNULL(SM.RM_STATUS_CODE, 'Dirty') AS RM_STATUS_CODE,
+                        ISNULL(RVN.RESV_STATUS, 'Not Reserved') AS RESV_STATUS,
+                        (CASE
+                            WHEN RVN.RESV_STATUS IN ('Due Pre Check-In','Pre Checked-In','Checked-Out') 
+                                 OR RVN.RESV_STATUS IS NULL  THEN 'VAC'
+                            ELSE 'OCC'
+                         END) AS FO_STATUS                        
+                        
+                        FROM FLXY_ROOM RM
+                        LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
+                                    FROM FLXY_ROOM_STATUS_LOG
+                                    GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+                        LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                
+                        LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
+
+                        LEFT JOIN ( SELECT MAX(RESV_ID) AS RESV_MAX_ID, RESV_ROOM_ID AS RESV_ROOM
+                                    FROM FLXY_RESERVATION
+                                    WHERE '".$TODAYDATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE
+                                    AND RESV_STATUS NOT IN ('Cancelled')
+                                    GROUP BY RESV_ROOM_ID ) RESV ON RESV.RESV_ROOM = RM.RM_ID
+                        LEFT JOIN FLXY_RESERVATION RVN ON RVN.RESV_ID = RESV.RESV_MAX_ID
+                        ) ROOM_STATS";
+                        
+        $columns = 'RM_ID,RM_NO,RM_DESC,RM_TYPE,RM_CLASS,RM_FEATURE,RM_STATUS_ID,RM_STATUS_CODE,RM_FLOOR_PREFERN,RESV_STATUS,FO_STATUS';
+        $mine->generate_DatatTable($tableName,$columns);
+        exit;
+    }
+
+    public function showFeaturesDesc()
+    {
+        $comma_list = $this->request->getPost('comma_list');
+        echo getFeaturesDesc($comma_list);
+    }
+
+    public function updateRoomStatus()
+    {
+        try {
+            $roomId = $this->request->getPost('roomId');
+            $new_status = $this->request->getPost('new_status');
+            $user_id = session()->get('USR_ID');
+
+            $logdata = ["RM_STAT_ROOM_ID" => $roomId, "RM_STAT_ROOM_STATUS" => $new_status, 
+                        "RM_STAT_UPDATED_BY" => $user_id, "RM_STAT_UPDATED"=> date("Y-m-d H:i:s")];
+                        
+            $return = $this->Db->table('FLXY_ROOM_STATUS_LOG')->insert($logdata);
+
+            echo json_encode($this->responseJson("1", "0", $return, $response = ''));
+        } catch (\Exception $e) {
+            echo json_encode($this->responseJson("-444", "db insert not successful", $return));
+        }
+    }
 
 }

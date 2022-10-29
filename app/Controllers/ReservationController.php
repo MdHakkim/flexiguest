@@ -2014,7 +2014,8 @@ public function getRoomStatistics(){
 
            $return = !empty($sysid) ? $this->DB->table('FLXY_ROOM_OOOS')->where('OOOS_ID', $sysid)->update($data) : $this->DB->table('FLXY_ROOM_OOOS')->insert($data);
 
-           $statusData = ['RM_STAT_ROOM_ID' => $this->request->getPost('ROOMS'), 'RM_STAT_ROOM_STATUS'=> trim($this->request->getPost('ROOM_RETURN_STATUS')), 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
+           $statusData = ['RM_STAT_ROOM_ID' => $this->request->getPost('ROOMS'), 'RM_STAT_ROOM_STATUS'=> trim($this->request->getPost('ROOM_RETURN_STATUS')), 
+                          'RM_STAT_UPDATED_BY' => session()->get('USR_ID'), 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
 
            $roomStatus = $this->DB->table('FLXY_ROOM_STATUS_LOG')->insert($statusData);          
 
@@ -2045,7 +2046,8 @@ public function getRoomStatistics(){
                 $ROOMS =  getValueFromTable('ROOMS',$cond,'FLXY_ROOM_OOOS');                
                 $ROOM_RETURN_STATUS =  getValueFromTable('ROOM_RETURN_STATUS',$cond,'FLXY_ROOM_OOOS');
                
-                $statusData = ['RM_STAT_ROOM_ID' => $ROOMS, 'RM_STAT_ROOM_STATUS'=> $ROOM_RETURN_STATUS, 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
+                $statusData = [ 'RM_STAT_ROOM_ID' => $ROOMS, 'RM_STAT_ROOM_STATUS'=> $ROOM_RETURN_STATUS, 
+                                'RM_STAT_UPDATED_BY' => session()->get('USR_ID'), 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
                 $roomStatus = $this->DB->table('FLXY_ROOM_STATUS_LOG')->insert($statusData);            
                 $return = $this->DB->table('FLXY_ROOM_OOOS')->delete(['OOOS_ID' => $sysid]);          
                 $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");

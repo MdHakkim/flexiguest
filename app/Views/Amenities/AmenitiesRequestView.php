@@ -679,23 +679,23 @@ $(document).ready(function() {
                 var $status_name = full['LAO_PAYMENT_STATUS'];
                 var $status = {
                     'Paid': {
-                        class: 'btn-label-success'
+                        class: 'btn-success'
                     },
                     'UnPaid': {
-                        class: 'btn-label-danger'
+                        class: 'btn-danger'
                     },
                     'Payment Processing': {
-                        class: 'btn-label-info'
+                        class: 'btn-info'
                     },
                     'Payment Initiated': {
-                        class: 'btn-label-warning'
+                        class: 'btn-warning'
                     }
                 };
                 if (typeof $status[$status_name] === 'undefined') {
                     return data;
                 }
 
-                var $statButton = '<button type="button" class="btn ' + $status[
+                var $statButton = '<button type="button" class="btn btn-sm ' + $status[
                         $status_name]
                     .class + ' dropdown-toggle"' +
                     'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
@@ -718,29 +718,7 @@ $(document).ready(function() {
 
                 $statButton += '  </ul>';
                 return $statButton;
-            },
-            // render: function(data, type, full, meta) {
-            //     var $status_name = full['LAO_PAYMENT_STATUS'];
-
-            //     var $status = {
-            //         'UnPaid': {
-            //             class: 'bg-label-danger'
-            //         },
-            //         'Paid': {
-            //             class: 'bg-label-success'
-            //         }
-            //     };
-            //     if (typeof $status[$status_name] === 'undefined') {
-            //         return data;
-            //     }
-            //     return (
-            //         '<span class="badge rounded-pill ' +
-            //         $status[$status_name].class +
-            //         '">' +
-            //         $status_name +
-            //         '</span>'
-            //     );
-            // }
+            }
         }, {
             width: "25%"
         }],
@@ -786,31 +764,6 @@ $(document).ready(function() {
                     return data ? $('<table class="table"/><tbody />').append(data) : false;
                 }
             }
-        },
-        initComplete: function() {
-            // Adding role filter once table initialized
-            this.api()
-                .columns(6)
-                .every(function() {
-                    var column = this;
-                    var select = $(
-                            '<select id="UserRole" class="form-select"><option value=""> Select Status </option></select>'
-                        )
-                        .appendTo('.invoice_status')
-                        .on('change', function() {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                            column.search(val ? val : '', true, false).draw();
-                        });
-
-                    column
-                        .data()
-                        .unique()
-                        .sort()
-                        .each(function(d, j) {
-                            select.append('<option value="' + d +
-                                '" class="text-capitalize">' + d + '</option>');
-                        });
-                });
         }
     });
 });

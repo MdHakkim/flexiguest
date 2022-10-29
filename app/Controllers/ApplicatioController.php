@@ -1976,8 +1976,8 @@ class ApplicatioController extends BaseController
                             FROM FLXY_ROOM_STATUS_LOG
                             GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
                 
-                INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                
-                INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
+                LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                
+                LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
 
                 LEFT JOIN (SELECT RESV_ROOM_ID AS RESV_ROOM     
                             FROM FLXY_RESERVATION
@@ -1990,7 +1990,7 @@ class ApplicatioController extends BaseController
         $sql .= "           AND RESV_STATUS NOT IN ('Checked-Out','Cancelled')
                             GROUP BY RESV_ROOM_ID) RESV_ROOMS ON RESV_ROOMS.RESV_ROOM = RM_ID
 
-                WHERE RM_STATUS_ID NOT IN (4,5)";
+                WHERE RM_STATUS_ID IS NULL OR RM_STATUS_ID NOT IN (4,5)";
         
         if($rmtype_id != '')
         $sql .= "AND RM_TYPE_REF_ID = '".$rmtype_id."'";
@@ -2048,7 +2048,8 @@ class ApplicatioController extends BaseController
             $rmtype_rooms = $this->getFreeRooms($sCurrentDate);
 
             foreach ($rmtype_data as $rmtype_row) {
-                $room_pool_html .= '<td>' . $rmtype_rooms[$rmtype_row['RM_TY_ID']] . '</td>';
+                $numRooms = !array_key_exists($rmtype_row['RM_TY_ID'], $rmtype_rooms) ? 0 : $rmtype_rooms[$rmtype_row['RM_TY_ID']];
+                $room_pool_html .= '<td>' . $numRooms . '</td>';
             }
 
             $room_pool_html .= ' </tr>';

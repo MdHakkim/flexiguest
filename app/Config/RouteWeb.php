@@ -682,10 +682,16 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/viewAllNotification', 'NotificationController::viewAllNotification');
     $routes->match(['post'], '/usersByDepartmentList', 'NotificationController::usersByDepartmentList');
     
-    
-    
-
     //Subina Code (END)  
+
+
+    $routes->group('housekeeping', function ($routes) {
+        $routes->get('rooms', 'HousekeepingController::housekeeping');
+    });
+    $routes->match(['post'], '/hkroomView', 'HousekeepingController::HkRoomView');
+    $routes->match(['post'], '/showFeaturesDesc', 'HousekeepingController::showFeaturesDesc');
+    $routes->match(['post'], '/updateRoomStatus', 'HousekeepingController::updateRoomStatus');
+    
 
     // ABUBAKAR CODE (START)
     $routes->group('news', function ($routes) {

@@ -425,3 +425,16 @@ function checkFileExists($file_path)
 
     return file_exists($file_path);
 }
+
+function getFeaturesDesc($comma_list)
+{
+    $Db = \Config\Database::connect();
+
+    $sql = "SELECT STRING_AGG(CONCAT_WS(' -> ', RM_FT_CODE, RM_FT_DESC), '<br/>') AS FEATURE_DESC
+            FROM FLXY_ROOM_FEATURE
+            WHERE RM_FT_CODE IN ('".str_replace(",", "','", $comma_list)."')";
+
+    $features_details = $Db->query($sql)->getRowArray();
+
+    return $features_details['FEATURE_DESC'];
+}
