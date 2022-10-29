@@ -139,9 +139,104 @@
         <!-- Calendar & Modal -->
         <div class="app-calendar-content col">
           <div class="card shadow-none border-0">
-            <div class="card-body">
+
+          <div class="card-body"> 
+                  <form class="dt_adv_search" method="POST" action="<?php echo base_url();?>/roomPlan" >
+                  <input type="hidden" id="SEARCH_CLEAR" name="SEARCH_CLEAR" value="0"/>
+                  <div class="border rounded p-3 mb-3">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="row g-3">
+                          <div class="col-12 col-sm-6 col-lg-4">
+                            <label class="form-label"><b>Date:</b></label>
+                            <input type="text" id="SEARCH_DATE" name="SEARCH_DATE" class="form-control dt-date" data-column="0" placeholder="" value="<?php echo set_value('SEARCH_DATE',!empty($SEARCH_DATE)?$SEARCH_DATE:'')?>" />
+
+                          </div>
+                          <div class="col-12 col-sm-6 col-lg-4">
+                            <label class="form-label"><b>Room Type:</b></label>                            
+                            <select id="SEARCH_ROOM_TYPE" name="SEARCH_ROOM_TYPE" class="select2 form-select" data-allow-clear="true"  >                                       
+                            </select>   
+                          </div>
+                          <div class="col-12 col-sm-6 col-lg-4">
+                            <label class="form-label"><b>Room Class:</b></label>
+                            <select id="SEARCH_ROOM_CLASS" name="SEARCH_ROOM_CLASS" class="select2 form-select" data-allow-clear="true" >                                       
+                            </select>  
+                            
+                          </div>
+
+                          <div class="col-12 col-sm-6 col-lg-4">
+                            <label class="form-label"><b>Floor:</b></label>
+                            <select id="SEARCH_ROOM_FLOOR" name="SEARCH_ROOM_FLOOR" class="select2 form-select" data-allow-clear="true" >                                       
+                            </select>                            
+                          </div>
+
+                          <div class="col-12 col-sm-6 col-lg-4">
+                            <label class="form-label"><b>Room Status:</b></label>
+                            <select id="SEARCH_ROOM_STATUS" name="SEARCH_ROOM_STATUS" class="select2 form-select" data-allow-clear="true" >                                       
+                            </select>  
+                            
+                          </div>
+                  
+                          <div class="col-12 col-sm-6 col-lg-4">
+                            <label class="form-label"><b>Room:</b></label>
+                            <select id="SEARCH_ROOM" name="SEARCH_ROOM" class="select2 form-select" data-allow-clear="true" >                                       
+                            </select>  
+                            
+                          </div>                         
+                         
+
+                          <div class="col-12 col-sm-6 col-lg-4">
+                          <label class="switch switch-md">
+                              <input id="SEARCH_ASSIGNED_ROOMS" name="SEARCH_ASSIGNED_ROOMS" type="checkbox" 
+                                  class="switch-input"  />
+                              <span class="switch-toggle-slider">
+                                  <span class="switch-on">
+                                      <i class="bx bx-check"></i>
+                                  </span>
+                                  <span class="switch-off">
+                                      <i class="bx bx-x"></i>
+                                  </span>
+                              </span>
+                              <span class="switch-label"><b>Assigned rooms </b></span>
+                          </label>
+                          </div>
+                          <div class="col-12 col-sm-6 col-lg-4">
+                          <label class="switch switch-md">
+                            <input id="SEARCH_UNASSIGNED_ROOMS" name="SEARCH_UNASSIGNED_ROOMS" type="checkbox" 
+                                class="switch-input"  />
+                            <span class="switch-toggle-slider">
+                                <span class="switch-on">
+                                    <i class="bx bx-check"></i>
+                                </span>
+                                <span class="switch-off">
+                                    <i class="bx bx-x"></i>
+                                </span>
+                            </span>
+                            <span class="switch-label"><b>Unassigned rooms </b></span>
+                        </label>
+                          </div>
+                          <div class="col-12 col-sm-6 col-lg-4">
+                            <button type="submit" class="btn btn-primary submitAdvSearch" name="Search" id="Search" >
+                                <i class='bx bx-search'></i>&nbsp;
+                                Search
+                            </button>
+                                                                
+                            <button type="button" class="btn btn-secondary clearAdvSearch">Clear</button>
+                            <button type="button" class="empty_rooms" style="display: none;"></button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  </form>
+                </div>
+          <div class="card-body">
+                   
               <!-- FullCalendar -->
-              <div id="calendarRoomPlan"></div>
+          <div id="calendarRoomPlan"></div>
+<?php if(empty($RoomResources) || empty($RoomReservations)){?>
+          <div class="alert alert-danger mt-3" role="alert">Sorry. No Records Found!!</div>
+          <?php } ?>
             </div>
           </div>
           <div class="app-overlay"></div>
@@ -512,13 +607,12 @@
                                             <table id="Vacant_Room_Details" class="table table-bordered table-hover">
                                                 <thead>
                                                     <tr>
-                                                    <th class="all">Action</th>
+                                                      <th class="all">Action</th>
                                                       <th class="all">Room</th>
                                                       <th class="all">Room Type</th>
                                                       <th class="all">HK Status</th>
                                                       <th class="all">Floor</th>
                                                       <th class="all">Features</th>
-                                                      
                                                     </tr>
                                                 </thead>
                                                 <tbody></tbody>
@@ -644,6 +738,26 @@
 
 $( document ).ready(function() {
 
+    roomType();
+    roomClass();
+    rooms();
+    roomsStatusList();
+    roomFloor();
+    roomAssigned();  
+  
+   
+
+    $('.dt-date').datepicker({
+        format: 'dd-M-yyyy',
+        autoclose: true,
+        onSelect: function() {
+            $(this).change();
+        },
+        
+    });
+
+    $('.dt-date').datepicker('setDate', '<?php echo (isset($SEARCH_DATE)?$SEARCH_DATE:date('d-M-Y',strtotime("now")))?>');
+
     $('#RoomStatisticsModal').on('shown.bs.modal', function () {
       if($('#calendarStatistics1>*').length == 0)
         roomStatistics()
@@ -681,10 +795,8 @@ function roomPlanFunc(){
       //titleFormat: 'YYYY-MM-DD',
       timeZone: 'UTC',
       plugins: ['resourceTimeline', 'interaction'],
-
       
-
-      header: {
+        header: {
 
         left: 'today prev,next',
 
@@ -736,7 +848,7 @@ function roomPlanFunc(){
       ],
       
       resources: [<?php
-                  if (!empty($RoomResources)) {
+                  if (!empty($RoomResources) && !empty($RoomReservations)) {
                     foreach ($RoomResources as $resources) { ?> {
               id: '<?php echo $resources['RM_ID'] ?>',
               room: '<?php echo $resources['RM_NO'] ?>',
@@ -744,7 +856,8 @@ function roomPlanFunc(){
               status: '<?php echo $resources['RM_STATUS_CODE'] ?>'
             },
         <?php }
-                  } ?>
+                  } 
+                 ?>
       ],
       resourceRender: function (renderInfo) {
         renderInfo.el.addEventListener("click", function () {            
@@ -756,7 +869,6 @@ function roomPlanFunc(){
               dataType: 'json',
 
               success:function(respn){
-                alert(respn)
                 $(respn).each(function(inx,data){
                   $.each(data,function(fields,datavals){
                     var field = $.trim(fields);
@@ -764,8 +876,7 @@ function roomPlanFunc(){
                     $('#'+field).val(dataval);
                     $("#RoomDetailsModal").modal('show'); 
                   });
-                });
-                
+                });                
               }
               
             });
@@ -811,7 +922,8 @@ function roomPlanFunc(){
               disableDragging: true,
               editable: false,
               eventStartEditable: false, 
-              eventDurationEditable: false                     
+              eventDurationEditable: false,
+              My_Custom_Value: 'OOS',                    
               
             },
 
@@ -851,9 +963,11 @@ function roomPlanFunc(){
       
 
       eventDrop: function(info) {
-       console.log(info);
+       console.log(info.event.extendedProps.My_Custom_Value);
         // alert(info.event.title + " was dropped on " + info.event.start.toISOString()+"stop"+info.event.end.toISOString());
+        if(info.event.extendedProps.My_Custom_Value !='OOS'){
         let RESV_ID = info.event.id;
+        console.log(RESV_ID)
         let START = info.event.start;
         let s = new Date(START);
         START = s.toISOString(START);
@@ -916,6 +1030,13 @@ function roomPlanFunc(){
         else{
           info.revert();
         }
+      }
+      else{
+        var mcontent = '';
+          mcontent += "<li>Error. The room is out of service</li>";       
+          showModalAlert('error', mcontent);
+          info.revert();        
+      }
       },
       eventResize: function(info) {
         //if (confirm("Change the dates?")) {
@@ -1020,7 +1141,9 @@ function roomPlanFunc(){
       },
 
     });
-
+   <?php  if(isset($SEARCH_DATE) && $SEARCH_DATE != ''){ ?>
+    calendarRoom.gotoDate('<?php echo date('Y-m-d',strtotime($SEARCH_DATE))?>');
+  <?php } ?>
     calendarRoom.render();
   }
 
@@ -1051,7 +1174,6 @@ function roomPlanFunc(){
   }
 
   function updateRoomRTC(RESV_ID, RESV_RM_TYPE_ID, NEW_ROOM_TYPE){
-alert(RESV_ID);
     $.ajax({
         type: 'POST',
         url: '<?php echo base_url('/updateRoomRTC') ?>',
@@ -1364,8 +1486,7 @@ $(document).on('click', '.save-roomstatus-details', function() {
                 showModalAlert('success', alertText);
 
 
-                if (respn['RESPONSE']['OUTPUT'] != '') {
-                  
+                if (respn['RESPONSE']['OUTPUT'] != '') {                  
                     $('#OOOS_ID').val(respn['RESPONSE']['OUTPUT']);
                     showRoomStatus();
                     clearFormFields('#OOOSRoom');
@@ -1648,6 +1769,204 @@ $(document).on('click', '#OOS_Close', function() {
 });
 
 
+
+
+
+//////////// Search /////////////
+
+
+function roomType() {
+  var roomType = '<?php echo isset($SEARCH_ROOM_TYPE)?$SEARCH_ROOM_TYPE:null?>';
+    $.ajax({
+        url: '<?php echo base_url('/roomTypeSearchList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        async: false,
+        success: function(respn) {
+            $('#SEARCH_ROOM_TYPE').html(respn);
+            $('#SEARCH_ROOM_TYPE').val(roomType).change();
+        }
+    });
+}
+
+$(document).on('change', '#SEARCH_ROOM_TYPE', function() { 
+   $("#SEARCH_ROOM_CLASS").val($(this).find(':selected').data('rmclass')).change();
+   rooms($('#SEARCH_ROOM_TYPE').find(':selected').data('room-type-id'));   
+});
+
+function roomClass() {
+  var roomClass = '<?php echo isset($SEARCH_ROOM_CLASS)? $SEARCH_ROOM_CLASS: null; ?>';
+
+    $.ajax({
+        url: '<?php echo base_url('/roomClassSearchList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        async: false,
+        success: function(respn) {
+            $('#SEARCH_ROOM_CLASS').html(respn);
+            $('#SEARCH_ROOM_CLASS').val(roomClass).change();
+        }
+    });
+}
+
+function rooms(room_type = '',room_floor = '', room_status = '') { 
+
+  var room = '<?php echo isset($SEARCH_ROOM)?$SEARCH_ROOM:null; ?>';
+    $.ajax({
+        url: '<?php echo base_url('/roomSearchList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data:{room_type:room_type,room_floor:room_floor,room_status:room_status},
+        async: false,
+        success: function(respn) {
+            $('#SEARCH_ROOM').html(respn);
+            $('#SEARCH_ROOM').val(room).change();
+        }
+    });
+}
+
+function roomsStatusList() {
+  var roomStatus = '<?php echo isset($SEARCH_ROOM_STATUS)?$SEARCH_ROOM_STATUS:null; ?>';
+    $.ajax({
+        url: '<?php echo base_url('/roomStatusList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        async: false,
+        success: function(respn) {
+            $('#SEARCH_ROOM_STATUS').html(respn);
+            $('#SEARCH_ROOM_STATUS').val(roomStatus).change();
+        }
+    });
+    
+}
+
+function roomFloor() {
+    var roomFloor = '<?php echo isset($SEARCH_ROOM_FLOOR)?$SEARCH_ROOM_FLOOR:null; ?>';
+    $.ajax({
+        url: '<?php echo base_url('/roomFloorList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        async: false,
+        success: function(respn) {
+            $('#SEARCH_ROOM_FLOOR').html(respn);
+            $('#SEARCH_ROOM_FLOOR').val(roomFloor).change();
+        }
+    });
+}
+
+$(document).on('change', '#SEARCH_ROOM_FLOOR', function() {
+  var room_type  = $('#SEARCH_ROOM_TYPE').find(':selected').data('room-type-id');
+  var room_floor = $('#SEARCH_ROOM_FLOOR').find(':selected').data('rm-pref');
+  rooms(room_type,room_floor);
+});
+
+$(document).on('change', '#SEARCH_ROOM_STATUS', function() {
+  var room_type  = $('#SEARCH_ROOM_TYPE').find(':selected').data('room-type-id');
+  var room_floor = $('#SEARCH_ROOM_FLOOR').find(':selected').data('rm-pref');
+  var room_status = $(this).val();
+  rooms(room_type,room_floor,room_status);
+});
+
+function roomAssigned(){
+
+  <?php // if(isset($SEARCH_CLEAR) && $SEARCH_CLEAR == 1){ ?>
+    $('#SEARCH_ASSIGNED_ROOMS').prop('checked', true);
+    $('#SEARCH_UNASSIGNED_ROOMS').prop('checked', true );
+    var assigned_rooms = '<?php echo isset($SEARCH_ASSIGNED_ROOMS)?$SEARCH_ASSIGNED_ROOMS:''; ?>';
+    var unassigned_rooms = '<?php echo isset($SEARCH_UNASSIGNED_ROOMS)?$SEARCH_UNASSIGNED_ROOMS:''; ?>'; 
+
+    if(assigned_rooms != '' || unassigned_rooms !=''){
+      $('#SEARCH_ASSIGNED_ROOMS').prop('checked', (assigned_rooms == 'on') ? true : false);
+      $('#SEARCH_UNASSIGNED_ROOMS').prop('checked', (unassigned_rooms == 'on') ? true : false);
+    }
+    <?PHP //} ?>
+}
+
+
+
+
+// $(document).on('click', '.submitAdvSearch', function() {
+//     hideModalAlerts();
+//     var formSerialization = $('.dt_adv_search').serializeArray();
+//     console.log(formSerialization);
+//     var url = '<?php //echo base_url('/searchRooms') ?>';
+//     $.ajax({
+//         url: url,
+//         type: "post",
+//         data: formSerialization,
+//         headers: {
+//             'X-Requested-With': 'XMLHttpRequest'
+//         },
+//         dataType: 'json',
+//         success: function(respn) {
+          
+//             // var response = respn['SUCCESS'];
+//             // if (response == '2') {
+//             //     mcontent = '<li>Something went wrong</li>';
+//             //     showModalAlert('error', mcontent);
+//             // } else if (response != '1') {
+//             //     var ERROR = respn['RESPONSE']['ERROR'];
+//             //     var mcontent = '';
+//             //     $.each(ERROR, function(ind, data) {
+//             //         //console.log(data, "SDF");
+//             //         mcontent += '<li>' + data + '</li>';
+//             //     });
+//             //     showModalAlert('error', mcontent);
+//             // } else {
+//             //     var alertText = $('#OOOS_ID').val() == '' ?
+//             //         '<li>Successfully added</li>' :
+//             //         '<li>Successfully updated</li>';
+//             //     hideModalAlerts();
+//             //     showModalAlert('success', alertText);
+
+
+//             //     if (respn['RESPONSE']['OUTPUT'] != '') {
+                  
+//             //         $('#OOOS_ID').val(respn['RESPONSE']['OUTPUT']);
+//             //         showRoomStatus();
+//             //         clearFormFields('#OOOSRoom');
+//             //     }
+//             // }
+//         }
+//     });
+// });
+
+
+$(document).on('click', '.clearAdvSearch', function() {
+  clearFormFields('.dt_adv_search');
+  $("#SEARCH_CLEAR").val('1');
+  $(".dt_adv_search").submit();    
+});
+
+
+
+// $(document).on('change', '#SEARCH_ASSIGNED_ROOMS', function() {
+
+//       if ($('#SEARCH_ASSIGNED_ROOMS').prop('checked') == true) 
+//       {
+//         $('#SEARCH_UNASSIGNED_ROOMS').prop('checked', false);
+//       }
+     
+// });
+
+// $(document).on('change', '#SEARCH_UNASSIGNED_ROOMS', function() {
+
+//     if ($('#SEARCH_UNASSIGNED_ROOMS').prop('checked') == true) 
+//     {
+//       $('#SEARCH_ASSIGNED_ROOMS').prop('checked', false);
+//     }
+
+// });
 
 
   // Display function toggleButton

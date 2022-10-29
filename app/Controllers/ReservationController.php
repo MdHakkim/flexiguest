@@ -7,6 +7,7 @@ use App\Models\Reservation;
 use App\Models\ShareReservations;
 use App\Libraries\ServerSideDataTable;
 use App\Libraries\DataTables\TraceDataTable;
+use PhpParser\Node\Stmt\Else_;
 
 use function PHPSTORM_META\map;
 
@@ -448,10 +449,6 @@ class ReservationController extends BaseController
         $responseCount =   $response['count']; 
         echo json_encode($responseCount);
     }
-
-    
-
-    
 
     public function roomClassLists()
         {
@@ -1243,16 +1240,29 @@ public function showPackages()
 
     public function roomPlan()
     {
+        $data = [];
         $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
-        $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
-        $data['toggleButton_javascript'] = toggleButton_javascript();
+        $data['js_to_load']  = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
+        $data['toggleButton_javascript']    = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
-        $data['blockLoader_javascript'] = blockLoader_javascript();
+        $data['blockLoader_javascript']     = blockLoader_javascript();
 
-        $data['RoomReservations']  = $this->getReservations(); 
-        $data['RoomResources']     = $this->roomplanResources();
-        $data['RoomOOS']           = $this->getRoomOOS(); 
-        $data['title']             =  'Room Plan';
+       $clear = $this->request->getPost('SEARCH_CLEAR');
+        if(isset($clear) && $clear == '0'){
+            $data['SEARCH_DATE']        = $this->request->getPost('SEARCH_DATE');
+            $data['SEARCH_ROOM_TYPE']   = $this->request->getPost('SEARCH_ROOM_TYPE');
+            $data['SEARCH_ROOM_CLASS']  = $this->request->getPost('SEARCH_ROOM_CLASS');
+            $data['SEARCH_ROOM']        = $this->request->getPost('SEARCH_ROOM');
+            $data['SEARCH_ROOM_STATUS'] = $this->request->getPost('SEARCH_ROOM_STATUS');
+            $data['SEARCH_ROOM_FLOOR']  = $this->request->getPost('SEARCH_ROOM_FLOOR');
+            $data['SEARCH_ASSIGNED_ROOMS'] = $this->request->getPost('SEARCH_ASSIGNED_ROOMS');
+            $data['SEARCH_UNASSIGNED_ROOMS'] = $this->request->getPost('SEARCH_UNASSIGNED_ROOMS');
+        }
+
+        $data['RoomReservations']   = $this->getReservations(); 
+        $data['RoomResources']      = $this->roomplanResources();
+        $data['RoomOOS']            = $this->getRoomOOS(); 
+        $data['title']              =  'Room Plan';
         
         return view('Reservation/RoomPlan',$data);
     }
@@ -1281,77 +1291,110 @@ public function showPackages()
         return $response;
     }
 
-public function ItemCalendar(){
-    $response = NULL;
-    
-    $sql = "SELECT ITM_ID, ITM_QTY_IN_STOCK         
-            FROM FLXY_ITEM ORDER BY ITM_ID ASC";       
-    $responseCount = $this->DB->query($sql)->getNumRows();
-    if($responseCount > 0){
-        $response = $this->DB->query($sql)->getResultArray();
-        $j=0;
-        foreach($response as $row){
-            $ITM_BEGIN_DATE    = strtotime('2022-01-01');
-            $ITM_END_DATE      = strtotime('2032-12-31'); 
-            $DATEDIFF = $ITM_END_DATE - $ITM_BEGIN_DATE;
-            $AVAILABLE_DAYS = round($DATEDIFF / (60 * 60 * 24));
-            $ITM_DLY_QTY = 0;
-            $ITEM_RESERVED = 0;
-            for($i = 1; $i <= ($AVAILABLE_DAYS+1); $i++ ){
-                $sCurrentDate = gmdate("Y-m-d", strtotime("+$i day", $ITM_BEGIN_DATE)); 
-                $CurrentDate = strtotime($sCurrentDate); 
-                $items[$j][$i]['ITM_ID'] = $row['ITM_ID'];
-                //$ITM_DLY_QTY = $this->checkItemDailyInventory($row['ITM_ID'],$sCurrentDate );
-                $ITEM_RESERVED = $this->checkItemReserved($row['ITM_ID'],$sCurrentDate );
+    public function ItemCalendar(){
+        $response = NULL;
+        
+        $sql = "SELECT ITM_ID, ITM_QTY_IN_STOCK         
+                FROM FLXY_ITEM ORDER BY ITM_ID ASC";       
+        $responseCount = $this->DB->query($sql)->getNumRows();
+        if($responseCount > 0){
+            $response = $this->DB->query($sql)->getResultArray();
+            $j=0;
+            foreach($response as $row){
+                $ITM_BEGIN_DATE    = strtotime('2022-01-01');
+                $ITM_END_DATE      = strtotime('2032-12-31'); 
+                $DATEDIFF = $ITM_END_DATE - $ITM_BEGIN_DATE;
+                $AVAILABLE_DAYS = round($DATEDIFF / (60 * 60 * 24));
+                $ITM_DLY_QTY = 0;
+                $ITEM_RESERVED = 0;
+                for($i = 1; $i <= ($AVAILABLE_DAYS+1); $i++ ){
+                    $sCurrentDate = gmdate("Y-m-d", strtotime("+$i day", $ITM_BEGIN_DATE)); 
+                    $CurrentDate = strtotime($sCurrentDate); 
+                    $items[$j][$i]['ITM_ID'] = $row['ITM_ID'];
+                    //$ITM_DLY_QTY = $this->checkItemDailyInventory($row['ITM_ID'],$sCurrentDate );
+                    $ITEM_RESERVED = $this->checkItemReserved($row['ITM_ID'],$sCurrentDate );
 
-                /////// Item Total quantity and Item Available quantity are depends on the Items table and Daily inventory table
+                    /////// Item Total quantity and Item Available quantity are depends on the Items table and Daily inventory table
 
 
-                // if($ITM_DLY_QTY > 0){
-                //     $ITM_REMAINING_STOCK = $ITM_DLY_QTY - $ITEM_RESERVED;
-                //     $ITM_QTY_IN_STOCK    = $ITM_DLY_QTY;
+                    // if($ITM_DLY_QTY > 0){
+                    //     $ITM_REMAINING_STOCK = $ITM_DLY_QTY - $ITEM_RESERVED;
+                    //     $ITM_QTY_IN_STOCK    = $ITM_DLY_QTY;
 
-                // }
-                // else{
-                    $ITM_REMAINING_STOCK = $row['ITM_QTY_IN_STOCK'] - $ITEM_RESERVED;
-                    $ITM_QTY_IN_STOCK    = $row['ITM_QTY_IN_STOCK'];
-                //}
-                                  
-                $items[$j][$i]['ITM_REMAINING_STOCK'] = $ITM_REMAINING_STOCK;
-                $items[$j][$i]['ITM_QTY_IN_STOCK']    = $ITM_QTY_IN_STOCK;
-                $items[$j][$i]['START'] = $sCurrentDate;
-                $items[$j][$i]['END'] = $sCurrentDate;
+                    // }
+                    // else{
+                        $ITM_REMAINING_STOCK = $row['ITM_QTY_IN_STOCK'] - $ITEM_RESERVED;
+                        $ITM_QTY_IN_STOCK    = $row['ITM_QTY_IN_STOCK'];
+                    //}
+                                    
+                    $items[$j][$i]['ITM_REMAINING_STOCK'] = $ITM_REMAINING_STOCK;
+                    $items[$j][$i]['ITM_QTY_IN_STOCK']    = $ITM_QTY_IN_STOCK;
+                    $items[$j][$i]['START'] = $sCurrentDate;
+                    $items[$j][$i]['END'] = $sCurrentDate;
+                }
+                $j++;
+
             }
-            $j++;
-
         }
+    return $items;
     }
-  return $items;
-}
 
-public function checkItemReserved($item_id, $sCurrentDate){
-    $response = NULL;
-    $total_qty = 0;
-    $sql = "SELECT RSV_ITM_QTY FROM FLXY_RESERVATION_ITEM WHERE RSV_ITM_ID = '$item_id' AND '$sCurrentDate' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE";                 
-    $responseCount = $this->DB->query($sql)->getNumRows();
-    if($responseCount > 0) {
-        $response = $this->DB->query($sql)->getResultArray(); 
-        foreach($response as $resp){
-            $total_qty += $resp['RSV_ITM_QTY'];
+    public function checkItemReserved($item_id, $sCurrentDate){
+        $response = NULL;
+        $total_qty = 0;
+        $sql = "SELECT RSV_ITM_QTY FROM FLXY_RESERVATION_ITEM WHERE RSV_ITM_ID = '$item_id' AND '$sCurrentDate' BETWEEN RSV_ITM_BEGIN_DATE AND RSV_ITM_END_DATE";                 
+        $responseCount = $this->DB->query($sql)->getNumRows();
+        if($responseCount > 0) {
+            $response = $this->DB->query($sql)->getResultArray(); 
+            foreach($response as $resp){
+                $total_qty += $resp['RSV_ITM_QTY'];
+            }
         }
+        return $total_qty;   
     }
-    return $total_qty;
-    
-
-}
 
    
     public function roomplanResources()
     {
+        $cond = $where = $join = '';
+        $clear = $this->request->getPost('SEARCH_CLEAR');
+        if(isset($clear) && $clear == '0'){
+            $SEARCH_DATE             =  date("Y-m-d",strtotime($this->request->getPost('SEARCH_DATE')));                    
+            $SEARCH_DATE_WEEK        = date("Y-m-d",strtotime($SEARCH_DATE."+7 day"));              
+            $SEARCH_ROOM_TYPE   = $this->request->getPost('SEARCH_ROOM_TYPE');
+            $SEARCH_ROOM        = $this->request->getPost('SEARCH_ROOM');
+            $SEARCH_ROOM_STATUS = $this->request->getPost('SEARCH_ROOM_STATUS');
+            $SEARCH_ROOM_FLOOR  = $this->request->getPost('SEARCH_ROOM_FLOOR');
+            $SEARCH_ASSIGNED_ROOMS   = $this->request->getPost('SEARCH_ASSIGNED_ROOMS');
+            $SEARCH_UNASSIGNED_ROOMS = $this->request->getPost('SEARCH_UNASSIGNED_ROOMS');
+            $cond .= " WHERE 1=1 ";
+            if($SEARCH_ROOM_TYPE != '' || $SEARCH_ROOM != '' || $SEARCH_ROOM_STATUS != '' || $SEARCH_ROOM_FLOOR != '')
+            {            
+                $cond .= ($SEARCH_ROOM_TYPE != '')?" AND RM_TYPE_REF_ID = '".$SEARCH_ROOM_TYPE."'":'';
+                $cond .= ($SEARCH_ROOM_STATUS != '')?" AND RM_STATUS_ID = '".$SEARCH_ROOM_STATUS."'":'';
+                $cond .= ($SEARCH_ROOM != '')?" AND RM_ID = '".$SEARCH_ROOM."'":'';
+                $cond .= ($SEARCH_ROOM_FLOOR != '')?" AND RM.RM_FL_ID = '".$SEARCH_ROOM_FLOOR."'":'';
+            } 
+
+            if($SEARCH_ASSIGNED_ROOMS != '' && $SEARCH_UNASSIGNED_ROOMS != '') {
+                
+            }
+            else if($SEARCH_ASSIGNED_ROOMS != '' ){
+                    $join = "LEFT JOIN FLXY_RESERVATION ON RESV_ROOM_ID = RM_ID"; 
+                    $where = ($SEARCH_DATE != '')?" AND ('".$SEARCH_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE)":"";
+            } 
+            else if($SEARCH_UNASSIGNED_ROOMS != '' ){            
+                $where .= " AND RM_ID NOT IN (SELECT RM_ID  FROM FLXY_ROOM
+                INNER JOIN FLXY_RESERVATION ON RESV_ROOM_ID = RM_ID WHERE 1=1  AND ('".$SEARCH_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE))";
+            }
+        
+        }      
+
         $data = $response = NULL;
+
         $sql = "SELECT RM_ID, RM_NO, RM_TYPE, SM.RM_STATUS_CODE, RL.RM_STAT_UPDATED      
-        FROM FLXY_ROOM 
-        LEFT JOIN (SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID
+         FROM FLXY_ROOM 
+         LEFT JOIN (SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID
                       ,RM_STAT_ROOM_ID
                   FROM FLXY_ROOM_STATUS_LOG
                   GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
@@ -1359,6 +1402,9 @@ public function checkItemReserved($item_id, $sCurrentDate){
         INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
         
         INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
+
+        INNER JOIN FLXY_ROOM_FLOOR RM ON RM.RM_FL_CODE = RM_FLOOR_PREFERN 
+         ".$join.$cond.$where."
 
         GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
 
@@ -1394,13 +1440,37 @@ public function checkItemReserved($item_id, $sCurrentDate){
 
 
     public function getReservations(){
+        // $clear = $this->request->getPost('SEARCH_CLEAR');
+        // $cond = '';
+        // $SEARCH_ASSIGNED_ROOMS   = $this->request->getPost('SEARCH_ASSIGNED_ROOMS');
+        // $SEARCH_UNASSIGNED_ROOMS = $this->request->getPost('SEARCH_UNASSIGNED_ROOMS');
+        // if(isset($clear) && $clear == '0'){
+        //     $SEARCH_DATE             =  date("Y-m-d",strtotime($this->request->getPost('SEARCH_DATE')));
+                    
+        //     $SEARCH_DATE_WEEK        = date("Y-m-d",strtotime($SEARCH_DATE."+7 day"));
+        //     $SEARCH_ROOM_TYPE        = $this->request->getPost('SEARCH_ROOM_TYPE');           
+            
+        //     $cond .= ($SEARCH_DATE != date("Y-m-d",time()))?" AND '".$SEARCH_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE":" AND RESV_ARRIVAL_DT >= '".date('Y-m-d',time())."'";
+
+        //     $cond .= ($SEARCH_ROOM_TYPE != '')?" AND RM_TYPE_REF_ID = '".$SEARCH_ROOM_TYPE."'":'';
+
+        //     if($SEARCH_ASSIGNED_ROOMS != '' && $SEARCH_UNASSIGNED_ROOMS != '') {}
+        //     else{
+        //         $cond .= ($SEARCH_ASSIGNED_ROOMS != '')?" AND (RESV_ROOM_ID != '0' OR RESV_ROOM_ID != NULL)":'';
+        //         $cond .= ($SEARCH_UNASSIGNED_ROOMS != '')?" AND (RESV_ROOM_ID = '0' OR RESV_ROOM_ID = NULL OR RESV_ROOM_ID = '')":'';
+        //             if($SEARCH_ASSIGNED_ROOMS !='' && $SEARCH_DATE == '' ){
+        //                 $cond .= " AND RESV_ARRIVAL_DT >= '".date('Y-m-d',time())."'";
+        //             }
+        //     }
+        // }
+
         $response = NULL;
-        $sql = "SELECT RESV_ID, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, RESV_ROOM, RESV_STATUS, RM_ID FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID INNER JOIN FLXY_ROOM ON RM_ID = RESV_ROOM_ID WHERE RESV_STATUS != 'Checked-Out' ORDER BY RM_ID ASC";       
+        $sql = "SELECT RESV_ID, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, RESV_ROOM, RESV_STATUS, RM_ID FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID LEFT JOIN FLXY_ROOM ON RM_ID = RESV_ROOM_ID WHERE RESV_STATUS != 'Cancelled' ORDER BY RM_ID ASC";    
         $responseCount = $this->DB->query($sql)->getNumRows();
         if($responseCount > 0){
             $response = $this->DB->query($sql)->getResultArray();           
         }
-      return $response;
+        return $response;
     }
 
     public function getRoomOOS(){
@@ -1415,15 +1485,13 @@ public function checkItemReserved($item_id, $sCurrentDate){
 
     public function getAllReservations($RESV_ID){
         $response = NULL;
-        $sql = "SELECT RESV_ID, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, RESV_ROOM, RESV_STATUS, RM_ID,RESV_ROOM_ID FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID INNER JOIN FLXY_ROOM ON RM_ID = RESV_ROOM_ID WHERE RESV_STATUS != 'Checked-Out' AND RESV_ID !=".$RESV_ID;       
+        $sql = "SELECT RESV_ID, RESV_ARRIVAL_DT, RESV_NIGHT, RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, RESV_ROOM, RESV_STATUS, RM_ID,RESV_ROOM_ID FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID INNER JOIN FLXY_ROOM ON RM_ID = RESV_ROOM_ID WHERE RESV_STATUS != 'Cancelled' AND RESV_ID !=".$RESV_ID;       
         $responseCount = $this->DB->query($sql)->getNumRows();
         if($responseCount > 0){
             $response = $this->DB->query($sql)->getResultArray();           
         }
-      return $response;
-    }
-
-    
+        return $response;
+    }   
 
 
     public function updateRoomPlan(){
@@ -1530,7 +1598,7 @@ public function checkItemReserved($item_id, $sCurrentDate){
                     else{
                         $output = $this->updateRoomReservation($RESV_ID,$ROOM_ID,$ROOM_NO,$START_OVERLAP,$END_OVERLAP);
                         if($output){
-                        $data['status_message'] = "Successfully moved to new room: ".$NEW_ROOM;
+                        $data['status_message'] = "Successfully moved to new room: ".$ROOM_NO;
                         $data['status'] = 0;
                         }else{
                             $data['status_message'] = "Error";
@@ -2115,7 +2183,6 @@ public function getRoomStatistics(){
         $resv_id         = $this->request->getPost('resv_id');
         $room_type       = $this->request->getPost('room_type');
         $room_type_id    = $this->request->getPost('room_type_id');
-
               
         $return = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resv_id)->update(['RESV_RTC_ID'=>$room_type_id, 'RESV_RTC' => $room_type ]);
 
@@ -2124,6 +2191,127 @@ public function getRoomStatistics(){
         echo json_encode($data);  
  
     }
+
+
+    //////////////// Room Plan Search //////////////
+
+
+    public function roomStatusList(){
+        $search = $this->request->getPost("search");
+        $sql = "SELECT RM_STATUS_ID,RM_STATUS_CODE FROM FLXY_ROOM_STATUS_MASTER WHERE RM_STATUS_CODE like '%$search%'";
+        $response = $this->DB->query($sql)->getResultArray();
+        $option='<option value="">Select Room Status</option>';
+        foreach($response as $row){
+            $option.= '<option value="'.$row['RM_STATUS_ID'].'">'.$row['RM_STATUS_CODE'].'</option>';
+        }
+        echo $option;  
+    }
+
+    public function roomFloorList(){
+        $search = $this->request->getPost("search");
+        $sql = "SELECT RM_FL_ID,RM_FL_CODE, RM_FL_DESC FROM FLXY_ROOM_FLOOR WHERE RM_FL_CODE like '%$search%'";
+        $response = $this->DB->query($sql)->getResultArray();
+        $option='<option value="">Select Room Floor</option>';
+        foreach($response as $row){
+            $option.= '<option value="'.$row['RM_FL_ID'].'" data-rm-pref="'.$row['RM_FL_CODE'].'">'.$row['RM_FL_CODE'].' - '.$row['RM_FL_DESC'].'</option>';
+        }
+        echo $option;  
+    }
+
+    
+
+    public function roomClassSearchList(){
+        $search = $this->request->getPost("search");
+        $sql = "SELECT RM_CL_CODE,RM_CL_DESC FROM FLXY_ROOM_CLASS WHERE RM_CL_DESC like '%$search%'";
+        $response = $this->DB->query($sql)->getResultArray();
+        $option='<option value="">Select RoomClass</option>';
+        foreach($response as $row){
+            $option.= '<option value="'.trim($row['RM_CL_CODE']).'">'.$row['RM_CL_CODE'].'</option>';
+        }
+        echo $option;
+    }
+  
+
+    public function roomSearchList(){
+        $search      = $this->request->getPost("search");
+        $room_type   = $this->request->getPost("room_type");
+        $room_floor  = $this->request->getPost("room_floor");
+        $room_status = $this->request->getPost("room_status");
+        $COND = '';
+
+        if(!empty($search))
+            $COND .= " AND RM_DESC like '%$search%'";
+
+        if(!empty($room_type))
+            $COND .= " AND RM_TYPE_REF_ID = '$room_type'";
+
+        if(!empty($room_floor))
+            $COND .= " AND RM_FLOOR_PREFERN = '$room_floor'";
+           
+        if(!empty($room_status)){
+            $COND .= " AND RM_STATUS_ID = '$room_status'";
+
+            $sql = 'SELECT RM_ID, RM_NO      
+            FROM FLXY_ROOM 
+            LEFT JOIN (SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID
+                        ,RM_STAT_ROOM_ID
+                    FROM FLXY_ROOM_STATUS_LOG
+                    GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+            
+            INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
+            
+            INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
+
+            WHERE  1 = 1 '.$COND.'
+
+            GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
+
+            ORDER BY RM_ID ASC';
+        }
+        else{
+             $sql = "SELECT RM_ID, RM_NO FROM FLXY_ROOM WHERE 1 = 1 $COND"; 
+        }
+        
+        $response = $this->DB->query($sql)->getResultArray();
+
+        if($response != NULL)
+        {
+            $option='<option value="">Select Room</option>';
+            foreach($response as $row){
+                $option.= '<option value="'.$row['RM_ID'].'" data-room-id="'.$row['RM_ID'].'">'.$row['RM_NO'].'</option>';
+            }
+        }
+        else
+            $option='<option value="">No Rooms</option>';
+
+        echo $option;
+    }
+
+
+    public function searchRoomPlan(){
+        //echo json_encode('test');  
+       echo $search = $this->request->getPost("search");
+        // $search = $this->request->getPost("search");
+        // $search = $this->request->getPost("search");
+        // $search = $this->request->getPost("search");
+        // $search = $this->request->getPost("search");
+        // $search = $this->request->getPost("search");
+        // $search = $this->request->getPost("search");
+ 
+    }
+
+    public function roomTypeSearchList(){
+        $search = $this->request->getPost("search");
+        $sql = "SELECT RM_TY_ID,RM_TY_CODE,RM_TY_DESC,RM_TY_ROOM_CLASS,RM_TY_FEATURE FROM FLXY_ROOM_TYPE WHERE RM_TY_DESC like '%$search%'";
+        $response = $this->DB->query($sql)->getResultArray();
+        $option='<option value="">Select Room Type</option>';
+        foreach($response as $row){
+            $option.= '<option data-room-type-id="'.trim($row['RM_TY_ID']).'" data-feture="'.trim($row['RM_TY_FEATURE']).'" data-desc="'.trim($row['RM_TY_DESC']).'" data-rmclass="'.trim($row['RM_TY_ROOM_CLASS']).'" value="'.trim($row['RM_TY_ID']).'"'.set_select('SEARCH_ROOM_TYPE', $row['RM_TY_ID'], False).'>'.$row['RM_TY_DESC'].'</option>';
+        }
+        echo $option;
+    }
+
+
 
 
 }
