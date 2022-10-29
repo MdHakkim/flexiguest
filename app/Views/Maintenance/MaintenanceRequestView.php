@@ -174,6 +174,26 @@
     </div>
     <!-- /Modal window -->
 
+    <div class="modal fade" id="comment-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Comments</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <b>Admin (2022-05-18 12:00 AM)</b></br>
+                    <span class="">Comments</span></br> -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
@@ -260,6 +280,8 @@
                             '<div class="d-inline-block">' +
                             '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                             '<ul class="dropdown-menu dropdown-menu-end">' +
+                            '<li><a href="javascript:;" data-maintenance_request_id="' + data['MAINT_ID'] + '" class="dropdown-item get-comments">Comments</a></li>' +
+                            '<div class="dropdown-divider"></div>' +
                             '<li><a href="javascript:;" data_sysid="' + data['MAINT_ID'] + '" class="dropdown-item editWindow">Edit</a></li>' +
                             '<div class="dropdown-divider"></div>' +
                             '<li><a href="javascript:;" data_sysid="' + data['MAINT_ID'] + '" class="dropdown-item text-danger delete-record">Delete</a></li>' +
@@ -637,6 +659,39 @@
                 }
             });
         }
+    });
+
+    $(document).on('click', '.get-comments', function() {
+        let maintenance_request_id = $(this).data('maintenance_request_id');
+
+        $.ajax({
+            url: '<?= base_url('maintenance/get-comments') ?>',
+            type: "post",
+            data: {
+                maintenance_request_id
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response['SUCCESS'] == 200) {
+                    let comments = response['RESPONSE']['OUTPUT'];
+                    
+                    let html = '';
+                    for (let comment of comments) {
+                        html += `
+                            <b>${comment.USR_NAME} (${comment.MRC_CREATED_AT})</b></br>
+                            <span class="">${comment.MRC_COMMENT}</span></br>
+                        `;
+                    }
+
+                    if(!html)
+                        html = `<b>No Comments!</b>`;
+
+                    $('#comment-modal .modal-title').html(`Comments of Request# ${maintenance_request_id}`);
+                    $('#comment-modal .modal-body').html(html);
+                    $('#comment-modal').modal('show');
+                }
+            }
+        });
     });
 </script>
 <script src="<?php //echo base_url('assets/js/bootstrap.bundle.js')

@@ -11,7 +11,8 @@ $routes->match(['post'], '/stateList', 'ApplicatioController::stateList');
 $routes->match(['post'], '/cityList', 'ApplicatioController::cityList');
 $routes->match(['get'], '/accessDenied', 'UserController::accessDenied');
 
-
+$routes->get("reset-password-form/(:segment)", "UserController::resetPasswordForm/$1");
+$routes->post("reset-password/(:segment)", "UserController::resetPassword/$1");
 
 // Admin routes
 $routes->get('/', 'DashboardController::index', ["filter" => "auth"]);
@@ -389,6 +390,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/getCustomerFromRoomNo', 'FacilityController::getCustomerFromRoomNo');
     $routes->match(['post'], '/getCategory', 'FacilityController::maintenanceCategoryList');
     $routes->match(['post'], '/getSubCategory', 'FacilityController::maintenanceSubCatByCategoryID');
+
+    $routes->group('maintenance', function ($routes) {
+        $routes->post("get-comments", "MaintenanceController::getComments");
+    });
+
     // Maintenance Category
     $routes->get('/maintenanceCategory', 'FacilityController::maintenanceRequestCategory');
     $routes->match(['post'], '/insertCategory', 'FacilityController::insertCategory');
@@ -599,7 +605,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/deleteTraces', 'ReservationController::deleteTraces');
     $routes->match(['post'], '/showTraceDetails', 'ReservationController::showTraceDetails');
     $routes->match(['post'], '/resolveTraces', 'ReservationController::resolveTraces');
-    $routes->get('/roomPlan', 'ReservationController::roomPlan');
+
+    $routes->match(['get', 'post'], 'roomPlan', 'ReservationController::roomPlan');
+   // $routes->get('/roomPlan', 'ReservationController::roomPlan');
     $routes->get('/roomPlanResource', 'ReservationController::roomPlanResource');
 
     $routes->match(['post'], '/roomplanResources', 'ReservationController::roomplanResources');
@@ -659,7 +667,19 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'], '/insertTask', 'HousekeepingController::insertTask');
       $routes->match(['post'], '/editTask', 'HousekeepingController::editTask');
       $routes->match(['post'], '/deleteTask', 'HousekeepingController::deleteTask');
-      $routes->get('/taskcodeList', 'HousekeepingController::taskcodeList');     
+      $routes->get('/taskcodeList', 'HousekeepingController::taskcodeList'); 
+      $routes->match(['post'], '/searchRooms', 'ReservationController::searchRooms');
+
+
+      $routes->match(['post'], '/floorsList', 'ReservationController::floorsList');
+
+      $routes->match(['post'], '/roomTypeSearchList', 'ReservationController::roomTypeSearchList');
+      $routes->match(['post'], '/roomClassSearchList', 'ReservationController::roomClassSearchList'); 
+      $routes->match(['post'], '/roomSearchList', 'ReservationController::roomSearchList'); 
+      
+      
+      
+      
       
 
      //Subina Code (END)  
@@ -681,6 +701,10 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/userNotifications', 'NotificationController::userNotifications');
     $routes->match(['post'], '/viewAllNotification', 'NotificationController::viewAllNotification');
     $routes->match(['post'], '/usersByDepartmentList', 'NotificationController::usersByDepartmentList');
+
+    $routes->match(['post'], '/roomStatusList', 'ReservationController::roomStatusList');
+    $routes->match(['post'], '/roomFloorList', 'ReservationController::roomFloorList');
+    
     
     //Subina Code (END)  
 

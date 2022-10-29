@@ -97,8 +97,6 @@ class NotificationController extends BaseController
     public function insertNotification()
     {
         try {
-            $user = session('user');
-
             $rules = [];
             $NOTIFI = [];
             $sysid = $this->request->getPost('NOTIFICATION_ID');
@@ -160,20 +158,38 @@ class NotificationController extends BaseController
            
             $return = !empty($sysid) ? $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $sysid)->update($data) : $this->Db->table('FLXY_NOTIFICATIONS')->insert($data);
 
-            if(!empty($NOTIFICATION_GUEST_ID))
+            if(!empty($NOTIFICATION_GUEST_ID)) {
+                $notification_type = 'guest';
                 $user_ids = $this->UserRepository->getUserIdsByCustomerIds($NOTIFICATION_GUEST_ID);
+            } else if(!empty($NOTIFICATION_TO_ID)) {
 
-            else if(!empty($NOTIFICATION_TO_ID))
+                $notification_type = 'admin';
                 $user_ids = $NOTIFICATION_TO_ID;
+            }
 
             $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
             if(!empty($registration_ids)) {
-                $this->NotificationRepository->sendNotification($user, [
+                $response = $this->NotificationRepository->sendNotification([
                     'registration_ids' => $registration_ids,
                     'title' => 'Notification',
                     'body' => $data['NOTIFICATION_TEXT'],
                     'screen' => '',
-                ]);
+                ], $notification_type);
+
+                error_log("Notification => " . json_encode($response));
+
+                $remove_registration_ids = [];
+                if(!empty($response['failure']) && $response['failure'] > 0) {
+                    foreach($response['results'] as $index => $res) {
+                        if(!empty($res['error']) && $res['error'] == 'NotRegistered' || $res['error'] == 'InvalidRegistration') {
+                            $remove_registration_ids[] = $registration_ids[$index];
+                        }
+                    }
+                }
+
+                error_log("remove_registration_ids => " . json_encode($remove_registration_ids));
+                if(!empty($remove_registration_ids))
+                    $this->UserRepository->removeByRegistrationIds($remove_registration_ids);
             }
             
             $Notification_ID = $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid; 

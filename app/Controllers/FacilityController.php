@@ -177,6 +177,10 @@ class FacilityController extends BaseController
                 ];
             $ins = $this->Db->table('FLXY_MAINTENANCE')->insert($data);
         } else {
+            $prev_maint = $this->Db->table('FLXY_MAINTENANCE')->where('MAINT_ID', $sysid)->get()->getRowArray();
+            if(!empty($prev_maint['MAINT_ATTACHMENT']))
+                $attached_path = $prev_maint['MAINT_ATTACHMENT'] . (!empty($attached_path) ? ",$attached_path" : '');
+            
             // UPDATE
             $data =
                 [

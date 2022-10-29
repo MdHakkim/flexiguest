@@ -15,7 +15,7 @@ class CurlRequestLibrary
     {
         try {
             $response = $this->Client->request($data['method'], $data['url'], $data['body']);
-            return $response->getBody();
+            return json_decode($response->getBody(), true);
         } catch (\Exception $e) {
             return $e->getMessage();
         }

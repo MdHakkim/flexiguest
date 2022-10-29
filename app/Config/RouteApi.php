@@ -13,11 +13,11 @@ $routes->group("api", function ($routes) {
     $routes->post("register", "APIController::registerAPI");
     $routes->post("login", "APIController::loginAPI");
     $routes->get("health", "APIController::health");
+
+    $routes->post("forget-password", "UserController::forgetPassword");
 });
 
 $routes->group("api", ["filter" => "authapi:Guest"], function ($routes) {
-    $routes->post("logout", "APIController::logout");
-
     $routes->get("profile", "APIController::profileAPI"); // user profile 
     //----------------------------------------------------------------------------- CHECK-IN --------------------------------------------------------------------//
     // API to list ALL reservations of the loggined user
@@ -115,6 +115,8 @@ $routes->group("api", ["filter" => "authapi:Admin,Guest", 'namespace' => 'App\Co
 
 /*****************************  Admin + Guest + Attendee *****************************/
 $routes->group("api", ["filter" => "authapi:Admin,Guest,Attendee", 'namespace' => 'App\Controllers'], function ($routes) {
+    $routes->post("logout", "APIController::logout");
+
     $routes->group('evalet', function ($routes) {
         $routes->post('guest-collected', 'EValetController::guestCollected');
     });
@@ -129,6 +131,19 @@ $routes->group("api", ["filter" => "authapi:Admin,Guest,Attendee", 'namespace' =
 $routes->group("api", ["filter" => "authapi:Admin,Attendee", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->group('evalet', function ($routes) {
         $routes->post('parked', 'EValetController::parked');
+    });
+
+    $routes->group('maintenance', function ($routes) {
+        $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
+        $routes->get("get-room-list", "MaintenanceController::getRoomList");
+        $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
+        $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
+
+        // work order
+        $routes->post("assign-task", "MaintenanceController::assignTask");
+        $routes->post("update-status", "MaintenanceController::updateStatus");
+        $routes->post("add-comment", "MaintenanceController::addComment");
+        $routes->get("get-comments", "MaintenanceController::getComments");
     });
 });
 
@@ -170,19 +185,6 @@ $routes->group("api/admin", ["filter" => "authapi:Admin,Attendee", 'namespace' =
         $routes->post("mark-subtask-completed-inspected", "HouseKeepingController::markSubtaskCompletedInspected");
         $routes->post("submit-task-note", "HouseKeepingController::submitTaskNote");
         $routes->post("submit-subtask-note", "HouseKeepingController::submitSubtaskNote");
-    });
-
-    $routes->group('maintenance', function ($routes) {
-        $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
-        $routes->get("get-room-list", "MaintenanceController::getRoomList");
-        $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
-        $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
-
-        // work order
-        $routes->post("assign-task", "MaintenanceController::assignTask");
-        $routes->post("update-status", "MaintenanceController::updateStatus");
-        $routes->post("add-comment", "MaintenanceController::addComment");
-        $routes->get("get-comments", "MaintenanceController::getComments");
     });
 });
 

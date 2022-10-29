@@ -116,6 +116,8 @@ if (!function_exists("clearFormFields_javascript")) {
                             case 'radio':
                                 //this.checked = false;
                                 break;
+                            case 'submit':
+                                    break;
                             default:
                                 if (!$(this).closest(\".table-responsive\").length)
                                     $(this).val(null).trigger('change');
