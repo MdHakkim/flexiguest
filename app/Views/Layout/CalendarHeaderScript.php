@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/typeahead-js/typeahead.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/animate-css/animate.css') ?>" />
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/sweetalert2/sweetalert2.css') ?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/css/flexiguest.css')?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/fontawesome/css/all.min.css')?>" />
 <link rel="stylesheet" href="<?php echo base_url('assets/fontawesome/css/fontawesome.min.css')?>" />

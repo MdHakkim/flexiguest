@@ -250,7 +250,6 @@ $(document).on('click', '.delete-record', function() {
 // Show Edit taskcode Form
 
 $(document).on('click', '.editWindow', function() {
-
     $('.dtr-bs-modal').modal('hide');
     var sysid = $(this).attr('data_sysid');
     $('#popModalWindowlabel').html('Edit Taskcode');

@@ -3895,7 +3895,7 @@ $(document).on('click', '.delete-record', function() {
                     },
                     dataType: 'json',
                     success: function(respn) {
-
+                        
                         $('#dataTable_view').dataTable().fnDraw();
                     }
                 });
@@ -5165,7 +5165,6 @@ $(document).on('click', '.toggleAdvSearch', function() {
 });
 
 $(document).on('click', '.clearAdvSearch', function() {
-
     clearFormFields('.dt_adv_search');
     dt_adv_filter_table.dataTable().fnDraw();
 });

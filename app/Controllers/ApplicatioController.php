@@ -2632,7 +2632,7 @@ class ApplicatioController extends BaseController
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select RoomClass</option>';
         foreach($response as $row){
-            $option.= '<option value="'.$row['RM_CL_CODE'].'">'.$row['RM_CL_DESC'].'</option>';
+            $option.= '<option value="'.trim($row['RM_CL_CODE']).'">'.$row['RM_CL_DESC'].'</option>';
         }
         echo $option;
     }
@@ -2695,7 +2695,7 @@ class ApplicatioController extends BaseController
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select Room Type</option>';
         foreach($response as $row){
-            $option.= '<option data-room-type-id="'.trim($row['RM_TY_ID']).'" data-feture="'.trim($row['RM_TY_FEATURE']).'" data-desc="'.trim($row['RM_TY_DESC']).'" data-rmclass="'.trim($row['RM_TY_ROOM_CLASS']).'" value="'.$row['RM_TY_CODE'].'">'.$row['RM_TY_DESC'].'</option>';
+            $option.= '<option data-room-type-id="'.trim($row['RM_TY_ID']).'" data-feture="'.trim($row['RM_TY_FEATURE']).'" data-desc="'.trim($row['RM_TY_DESC']).'" data-rmclass="'.trim($row['RM_TY_ROOM_CLASS']).'" value="'.$row['RM_TY_CODE'].'"'.set_select('SEARCH_ROOM_TYPE', $row['RM_TY_ID'], False).'>'.$row['RM_TY_DESC'].'</option>';
         }
         echo $option;
     }
@@ -5049,10 +5049,5 @@ class ApplicatioController extends BaseController
             return redirect()->to(base_url('reservation')); 
 
         return view('Reservation/RoomPlanTest', $data);
-    }
-
-
-
-
-   
+    }   
 }
