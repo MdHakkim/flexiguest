@@ -46,7 +46,7 @@ class TransportRequestRepository extends BaseController
             'TR_TOTAL_PASSENGERS' => ['label' => 'total passenger', 'rules' => 'required|greater_than[0]'],
             'TR_PICKUP_TIME' => ['label' => 'pickup time', 'rules' => 'required'],
             'TR_PICKUP_DATE' => [
-                'label' => 'pickup date', 
+                'label' => 'pickup date',
                 'rules' => 'required|afterNow[TR_PICKUP_DATE,TR_PICKUP_TIME]',
                 'errors' => [
                     'afterNow' => 'Pickup date & time should be after current date & time.'
@@ -55,7 +55,7 @@ class TransportRequestRepository extends BaseController
             'TR_PICKUP_POINT_ID' => ['label' => 'pickup point', 'rules' => 'required', 'errors' => ['required' => 'Please select a pickup point.']],
             'TR_DROPOFF_TIME' => ['label' => 'dropoff time', 'rules' => 'required'],
             'TR_DROPOFF_DATE' => [
-                'label' => 'dropoff date', 
+                'label' => 'dropoff date',
                 'rules' => 'required|afterDateTime[TR_PICKUP_DATE,TR_PICKUP_TIME,TR_DROPOFF_DATE,TR_DROPOFF_TIME]',
                 'errors' => [
                     'afterDateTime' => 'Dropoff date & time should be after pickup date & time.'
@@ -86,12 +86,23 @@ class TransportRequestRepository extends BaseController
     {
         $user_id = $user['USR_ID'];
         $data['TR_CUSTOMER_ID'] = $data['TR_CUSTOMER_ID'] ?? $user['USR_CUST_ID'];
-        
+
         $transport_type = $this->transportTypeById($data['TR_TRANSPORT_TYPE_ID'] ?? null);
-        if(empty($transport_type))
+        if (empty($transport_type))
             return responseJson(404, true, ['msg' => 'Invalid transport type'], $data);
-        
-        $data['TR_TOTAL_AMOUNT'] = $transport_type['TT_MAX_PRICE'];
+
+        $data['TR_TOTAL_AMOUNT'] = $transport_type['TT_PRICE'];
+
+        if (!empty($image = $data['TR_GUEST_IMAGE'])) {
+            $image_name = $image->getName();
+            $directory = "assets/Uploads/transport_requests/guest_images/";
+            $response = documentUpload($image, $image_name, $user_id, $directory);
+
+            if ($response['SUCCESS'] != 200)
+                return responseJson(500, true, ['msg' => "Guest image not uploaded"]);
+
+            $data['TR_GUEST_IMAGE'] = $directory . $response['RESPONSE']['OUTPUT'];
+        }
 
         foreach ($data as $index => $row) {
             if (empty($row))
@@ -117,7 +128,7 @@ class TransportRequestRepository extends BaseController
             ];
         }
 
-        return responseJson(200, false, ['msg' => $msg], $data); 
+        return responseJson(200, false, ['msg' => $msg], $data);
     }
 
     public function checkExistingRequest($user, $data)

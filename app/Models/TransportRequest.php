@@ -13,6 +13,7 @@ class TransportRequest extends Model
         'TR_RESERVATION_ID',
         'TR_ROOM_ID',
         'TR_GUEST_NAME',
+        'TR_GUEST_IMAGE',
         'TR_TRAVEL_TYPE',
         'TR_TRANSPORT_TYPE_ID',
         'TR_TRAVEL_PURPOSE',
