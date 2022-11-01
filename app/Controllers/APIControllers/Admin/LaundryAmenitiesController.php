@@ -25,14 +25,21 @@ class LaundryAmenitiesController extends BaseController
 
     public function ordersList()
     {
-        $orders = $this->LaundryAmenitiesOrderDetail
-            ->join('FLXY_LAUNDRY_AMENITIES_ORDERS as lao', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_ORDER_ID = lao.LAO_ID')
-            ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
-            ->orderBy('LAOD_ID', 'desc')
-            ->findAll();
+        $user = $this->request->user;
 
-        foreach ($orders as $index => $order) {
-            $orders[$index]['PR_IMAGE'] = base_url($order['PR_IMAGE']);
+        if ($user['USR_ROLE_ID'] == '3') {
+            $orders = $this->LaundryAmenitiesOrderDetail
+                ->join('FLXY_LAUNDRY_AMENITIES_ORDERS as lao', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_ORDER_ID = lao.LAO_ID')
+                ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
+                ->where('LAOD_ATTENDANT_ID', $user['USR_ID'])
+                ->orderBy('LAOD_ID', 'desc')
+                ->findAll();
+        } else {
+            $orders = $this->LaundryAmenitiesOrderDetail
+                ->join('FLXY_LAUNDRY_AMENITIES_ORDERS as lao', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_ORDER_ID = lao.LAO_ID')
+                ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
+                ->orderBy('LAOD_ID', 'desc')
+                ->findAll();
         }
 
         return $this->respond(responseJson(200, false, ['msg' => 'Orders list'], $orders));
@@ -42,19 +49,35 @@ class LaundryAmenitiesController extends BaseController
     {
         $order_detail_id = $this->request->getVar('order_detail_id');
         $delivery_status = $this->request->getVar('delivery_status'); // status => New, Processing, Delivered, Rejected, Acknowledged
+        $attendant_id = $this->request->getVar('attendant_id');
+
+        $rules = ['delivery_status' => ['label' => 'delivery status', 'rules' => 'required']];
+        if ($delivery_status == 'Processing')
+            $rules['attendant_id'] = ['label' => 'attendant', 'rules' => 'required'];
+
+        if (!$this->validate($rules))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
         $order_detail = $this->LaundryAmenitiesOrderDetail->find($order_detail_id);
-        if(empty($order_detail))
-            return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
-        
-        $payment_status = $this->LaundryAmenitiesOrder->find($order_detail['LAOD_ORDER_ID']);
-        if(empty($payment_status))
+        if (empty($order_detail))
             return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
 
-        if($payment_status['LAO_PAYMENT_STATUS'] == 'UnPaid')
+        $payment_status = $this->LaundryAmenitiesOrder->find($order_detail['LAOD_ORDER_ID']);
+        if (empty($payment_status))
+            return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
+
+        if ($payment_status['LAO_PAYMENT_STATUS'] == 'UnPaid')
             return $this->respond(responseJson(202, true, ['msg' => 'Can\'t change status becasue payment is still pending for this order.']));
-        
-        $this->LaundryAmenitiesOrderDetail->update($order_detail_id, ['LAOD_DELIVERY_STATUS' => $delivery_status]);
+
+        $data = ['LAOD_DELIVERY_STATUS' => $delivery_status];
+        if ($delivery_status == 'Processing')
+            $data = [
+                'LAOD_DELIVERY_STATUS' => $delivery_status,
+                'LAOD_ATTENDANT_ID' => $attendant_id,
+                'LAOD_ASSIGNED_AT'  => date('Y-m-d H:i:s')
+            ];
+
+        $this->LaundryAmenitiesOrderDetail->update($order_detail_id, $data);
         return $this->respond(responseJson(200, false, ['msg' => 'Status updated successfully.']));
     }
 }
