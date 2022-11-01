@@ -48,7 +48,7 @@ class CommonValidation{
             return false;
     }
 
-    public function customInArray($str)
+    public function customInArray(string $str)
     {
         $possible_values = ['Processing', 'Delivered', 'Rejected'];
         if(in_array($str, $possible_values))

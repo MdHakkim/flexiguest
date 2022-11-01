@@ -51,11 +51,17 @@ class LaundryAmenitiesController extends BaseController
         $delivery_status = $this->request->getVar('delivery_status'); // status => New, Processing, Delivered, Rejected, Acknowledged
         $attendant_id = $this->request->getVar('attendant_id');
 
-        $rules = ['delivery_status' => ['label' => 'delivery status', 'rules' => 'required|callback_customInArray']];
+        $rules = ['delivery_status' => ['label' => 'delivery status', 'rules' => 'required|customInArray']];
         if ($delivery_status == 'Processing')
             $rules['attendant_id'] = ['label' => 'attendant', 'rules' => 'required'];
 
-        if (!$this->validate($rules))
+        $messages = [
+            'delivery_status' => [
+                'customInArray' => 'invalid status'
+            ]
+        ];
+
+        if (!$this->validate($rules, $messages))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
         $order_detail = $this->LaundryAmenitiesOrderDetail->find($order_detail_id);
