@@ -47,4 +47,13 @@ class CommonValidation{
         if($datetime >= $datetime2)
             return false;
     }
+
+    public function customInArray($str)
+    {
+        $possible_values = ['Processing', 'Delivered', 'Rejected'];
+        if(in_array($str, $possible_values))
+            return true;
+
+        return false;
+    }
 }
