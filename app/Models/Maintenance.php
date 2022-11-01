@@ -21,10 +21,11 @@ class Maintenance extends Model
         'MAINT_PREFERRED_TIME',
         'MAINT_ATTACHMENT',
         'MAINT_ACKNOWEDGE_TIME',
-        'MAINT_STATUS',
+        'MAINT_STATUS', // New, Assigned, In Progress, Completed, Acknowledged, Rejected
         'MAINT_CREATE_UID',
         'MAINT_UPDATE_UID',
         'MAINT_ASSIGNED_AT',
+        'MAINT_COMPLETED_AT'
     ];
 
     protected $useAutoIncrement = true;

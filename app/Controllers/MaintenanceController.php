@@ -223,6 +223,9 @@ class MaintenanceController extends BaseController
 
         $maintenance_request['MAINT_STATUS'] = $status;
         $maintenance_request['MAINT_UPDATE_UID'] = $user_id;
+        if($status == 'Completed')
+            $maintenance_request['MAINT_COMPLETED_AT'] = date('Y-m-d H:i:s');
+
         $this->Maintenance->save($maintenance_request);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Status updated']));
