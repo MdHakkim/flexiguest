@@ -12,7 +12,7 @@
   margin:8px auto !important;
 }
 .dataTables_filter input,.dataTables_length select,.dataTables_filter button { height: 35px !important }
-.dataTables_wrapper .pagination,.previous a, .next a{
+.dataTables_wrapper .pagination,.dataTables_wrapper .pagination .previous a,.dataTables_wrapper .pagination .next a{
   padding:10px !important;
 }
 .flxi_ds_flx{
