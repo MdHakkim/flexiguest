@@ -67,6 +67,7 @@ class LaundryAmenitiesController extends BaseController
         $order_detail = $this->LaundryAmenitiesOrderDetail->find($order_detail_id);
         if (empty($order_detail))
             return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
+        $old_delivery_status = $order_detail['LAOD_DELIVERY_STATUS'];
 
         $payment_status = $this->LaundryAmenitiesOrder->find($order_detail['LAOD_ORDER_ID']);
         if (empty($payment_status))
@@ -74,6 +75,15 @@ class LaundryAmenitiesController extends BaseController
 
         if ($payment_status['LAO_PAYMENT_STATUS'] == 'UnPaid')
             return $this->respond(responseJson(202, true, ['msg' => 'Can\'t change status becasue payment is still pending for this order.']));
+
+        if ($old_delivery_status == 'New' && $delivery_status != 'Processing' && $delivery_status != 'Rejected')
+            return $this->respond(responseJson(202, true, ['msg' => 'Can\'t change status, becasue order is not in processing.']));
+
+        if ($old_delivery_status == 'Processing' && $delivery_status != 'Delivered')
+            return $this->respond(responseJson(202, true, ['msg' => 'Can\'t change status, becasue order is not delivered yet.']));
+
+        if ($old_delivery_status == 'Delivered' || $old_delivery_status == 'Rejected')
+            return $this->respond(responseJson(202, true, ['msg' => 'Can\'t change status, becasue this order is already Delivered or Rejected.']));
 
         $data = ['LAOD_DELIVERY_STATUS' => $delivery_status];
         if ($delivery_status == 'Processing')
