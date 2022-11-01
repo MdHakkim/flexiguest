@@ -606,8 +606,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/showTraceDetails', 'ReservationController::showTraceDetails');
     $routes->match(['post'], '/resolveTraces', 'ReservationController::resolveTraces');
 
-    $routes->match(['get', 'post'], 'roomPlan', 'ReservationController::roomPlan');
-   // $routes->get('/roomPlan', 'ReservationController::roomPlan');
+    $routes->match(['get'], 'roomPlan/(:segment)', 'ReservationController::roomPlan/$1');
+    $routes->match(['post'], '/roomPlan', 'ReservationController::roomPlan');
+    //$routes->get('/roomPlan', 'ReservationController::roomPlan');
     $routes->get('/roomPlanResource', 'ReservationController::roomPlanResource');
 
     $routes->match(['post'], '/roomplanResources', 'ReservationController::roomplanResources');
@@ -626,7 +627,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/showTraceDetails', 'ReservationController::showTraceDetails');
     $routes->match(['post'], '/resolveTraces', 'ReservationController::resolveTraces');
     $routes->get('/roomPlan', 'ReservationController::roomPlan');
-    $routes->get('/roomPlanResource', 'ReservationController::roomPlanResource');
+    //$routes->get('/roomPlanResource', 'ReservationController::roomPlanResource');
 
     $routes->match(['post'], '/roomplanResources', 'ReservationController::roomplanResources');
     $routes->match(['post'], '/getReservations', 'ReservationController::getReservations');
@@ -676,10 +677,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'], '/roomTypeSearchList', 'ReservationController::roomTypeSearchList');
       $routes->match(['post'], '/roomClassSearchList', 'ReservationController::roomClassSearchList'); 
       $routes->match(['post'], '/roomSearchList', 'ReservationController::roomSearchList'); 
-      
-      
-      
-      
+      $routes->match(['post'], '/roomplanResourcesJson', 'ReservationController::roomplanResourcesJson');       
+      $routes->match(['post'], '/roomPlan/(:segment)', 'ReservationController::roomPlan/$1'); 
+         
       
 
      //Subina Code (END)  

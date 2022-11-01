@@ -119,6 +119,9 @@
     cursor: pointer;
   }
 
+
+
+
 </style>
 
 <!-- Content wrapper -->
@@ -234,9 +237,15 @@
                    
               <!-- FullCalendar -->
           <div id="calendarRoomPlan"></div>
-<?php if(empty($RoomResources) || empty($RoomReservations)){?>
+          <?php if(empty($RoomResources) || empty($RoomReservations)){?>
           <div class="alert alert-danger mt-3" role="alert">Sorry. No Records Found!!</div>
-          <?php } ?>
+          <?php } else{ ?>
+                <div class="col-lg-8">                      
+                  <div class="demo-inline-spacing">
+                    <?php echo $pager_links;?>                                        
+                  </div>
+                </div>
+              <?php } ?>              
             </div>
           </div>
           <div class="app-overlay"></div>
@@ -737,6 +746,8 @@
 <script>
 
 $( document ).ready(function() {
+  
+
 
     roomType();
     roomClass();
