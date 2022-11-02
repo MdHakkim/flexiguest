@@ -398,7 +398,7 @@ class RestaurantController extends BaseController
                 return $this->respond(responseJson(202, true, ['msg' => "Invalid request."]));
 
             if (($order['RO_DELIVERY_STATUS'] != 'New' && $order['RO_DELIVERY_STATUS'] != 'Cancelled') || $order['RO_PAYMENT_STATUS'] == 'Paid')
-                return $this->respond(responseJson(202, true, ['msg' => "Can't cancel the order."]));
+                return $this->respond(responseJson(202, true, ['msg' => "Can't cancel the order since it has already been paid/cancelled."]));
         }
 
         // validate attendant id
