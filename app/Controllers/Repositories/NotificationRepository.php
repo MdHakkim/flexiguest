@@ -66,6 +66,7 @@ class NotificationRepository extends BaseController
 		return $this->Notification
 			->join('FLXY_NOTIFICATION_USERS', "NOTIFICATION_ID = NU_NOTIFICATION_ID AND NU_USER_ID = {$user['USR_ID']}", 'left')
 			->where($where_condition)
+			->orderBy('NOTIFICATION_ID', 'desc')
 			->findAll();
 	}
 
