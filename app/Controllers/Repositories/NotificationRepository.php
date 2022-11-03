@@ -74,7 +74,7 @@ class NotificationRepository extends BaseController
 	public function getUserNotifications($user)
 	{
 		return $this->Notification
-			->join('FLXY_NOTIFICATION_USERS', "NU_USER_ID = {$user['USR_ID']}")
+			->join('FLXY_NOTIFICATION_USERS', "NOTIFICATION_ID = NU_NOTIFICATION_ID AND NU_USER_ID = {$user['USR_ID']}")
 			->orderBy('NOTIFICATION_ID', 'desc')
 			->findAll();
 	}
