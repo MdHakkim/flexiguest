@@ -97,6 +97,8 @@ class NotificationController extends BaseController
     public function insertNotification()
     {
         try {
+            $user = session('user');
+            
             $rules = [];
             $NOTIFI = [];
             $sysid = $this->request->getPost('NOTIFICATION_ID');
@@ -107,7 +109,7 @@ class NotificationController extends BaseController
             $NOTIFICATION_GUEST_ID       = ($NOTIFICATION_TYPE == 3 ) ? $this->request->getPost('NOTIFICATION_GUEST_ID'):'';
             $NOTIFICATION_URL            = ($NOTIFICATION_TYPE == 3 ) ? $this->request->getPost('NOTIFICATION_URL'):'';
             $NOTIFICATION_DATE_TIME      = $this->request->getPost('NOTIFICATION_DATE_TIME');            
-            $NOTIFICATION_TEXT           = $this->request->getPost('NOTIFICATION_TEXT');
+            $NOTIFICATION_TEXT           = strip_tags($this->request->getPost('NOTIFICATION_TEXT'));
             $NOTIFICATION_SEND_NOW       = $this->request->getPost('NOTIFICATION_SEND_NOW');
             $NOTIFICATION_OLD_TYPE       = $this->request->getPost('NOTIFICATION_OLD_TYPE');           
 
@@ -155,8 +157,9 @@ class NotificationController extends BaseController
 
             $NOTIFICATION_DATE_TIME = isset($NOTIFICATION_SEND_NOW) ? date('Y-m-d H:i:s'):$NOTIFICATION_DATE_TIME;           
            
-           
+
             $return = !empty($sysid) ? $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $sysid)->update($data) : $this->Db->table('FLXY_NOTIFICATIONS')->insert($data);
+            $Notification_ID = $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid; 
 
             if(!empty($NOTIFICATION_GUEST_ID)) {
                 $notification_type = 'guest';
@@ -166,6 +169,8 @@ class NotificationController extends BaseController
                 $notification_type = 'admin';
                 $user_ids = $NOTIFICATION_TO_ID;
             }
+            
+            $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $Notification_ID);
 
             $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
             if(!empty($registration_ids)) {
@@ -192,8 +197,6 @@ class NotificationController extends BaseController
                     $this->UserRepository->removeByRegistrationIds($remove_registration_ids);
             }
             
-            $Notification_ID = $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid; 
-
             !empty($sysid)? $this->Db->table('FLXY_NOTIFICATION_TRAIL')->delete(['NOTIF_TRAIL_NOTIFICATION_ID'=>$sysid]):''; 
 
             if(!empty($sysid) && ($NOTIFICATION_OLD_TYPE == 4 && $NOTIFICATION_TYPE != 4)){
@@ -830,4 +833,20 @@ class NotificationController extends BaseController
         echo json_encode($output);
     }
 
+    public function getUserNotifications()
+    {
+        $user = $this->request->user;
+        $results = $this->NotificationRepository->getUserNotifications($user);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Notifications'], $results));
+    }
+
+    public function userReadNotifications()
+    {
+        $user = $this->request->user;
+        $notification_ids = $this->request->getVar('notification_ids');
+        $this->NotificationRepository->userReadNotifications($user, $notification_ids);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Success']));
+    }
 }

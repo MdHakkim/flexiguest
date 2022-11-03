@@ -4,16 +4,22 @@ namespace App\Controllers\Repositories;
 
 use App\Controllers\BaseController;
 use App\Libraries\CurlRequestLibrary;
+use App\Models\Notification;
+use App\Models\NotificationUser;
 use CodeIgniter\API\ResponseTrait;
 
 class NotificationRepository extends BaseController
 {
 	use ResponseTrait;
 
+	private $Notification;
+	private $NotificationUser;
 	private $CurlRequestLibrary;
 
 	public function __construct()
 	{
+		$this->Notification = new Notification();
+		$this->NotificationUser = new NotificationUser();
 		$this->CurlRequestLibrary = new CurlRequestLibrary();
 	}
 
@@ -23,7 +29,7 @@ class NotificationRepository extends BaseController
 		$guest_auth_key = 'AAAALuDGtcc:APA91bFFR2x43CDH4k0UIsI66cargBrQ0rfOHpqC0CZ_CsDCR26OQZBfULr_PFEj0rCONqrweqgUNKvV6SAey_iTFowwPaxyyEYedCAQ_b9USF4h4K9jqP9QNIUXTM8awL5T5a_OF8Ri';
 
 		$auth_key = $admin_auth_key;
-		if($type == 'guest')
+		if ($type == 'guest')
 			$auth_key = $guest_auth_key;
 
 		$data['method'] = 'POST';
@@ -48,5 +54,43 @@ class NotificationRepository extends BaseController
 		];
 
 		return $this->CurlRequestLibrary->makeRequest($data);
+	}
+
+	public function storeNotificationUsers($user, $user_ids, $notification_id)
+	{
+		foreach ($user_ids as $user_id) {
+			$this->NotificationUser->insert([
+				'NU_USER_ID' => $user_id,
+				'NU_NOTIFICATION_ID' => $notification_id,
+				'NU_READ_STATUS' => 0,
+				'NU_CREATED_BY' => $user['USR_ID'],
+				'NU_UPDATED_BY' => $user['USR_ID'],
+			]);
+		}
+
+		return true;
+	}
+
+	public function getUserNotifications($user)
+	{
+		return $this->Notification
+			->join('FLXY_NOTIFICATION_USERS', "NOTIFICATION_ID = NU_NOTIFICATION_ID AND NU_USER_ID = {$user['USR_ID']}")
+			->orderBy('NOTIFICATION_ID', 'desc')
+			->findAll();
+	}
+
+	public function userReadNotifications($user, $notification_ids)
+	{
+		foreach ($notification_ids as $notification_id) {
+			$this->NotificationUser
+				->set([
+					'NU_READ_STATUS' => 1,
+					'NU_UPDATED_BY' => $user['USR_ID'],
+				])
+				->where(['NU_USER_ID' => $user['USR_ID'], 'NU_NOTIFICATION_ID' => $notification_id])
+				->update();
+		}
+
+		return true;
 	}
 }
