@@ -159,7 +159,10 @@ class NotificationController extends BaseController
            
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $sysid)->update($data) : $this->Db->table('FLXY_NOTIFICATIONS')->insert($data);
-            $notification_id = $sysid ?? $return;
+            
+            $notification_id = $sysid;
+            if(empty($sysid))
+                $notification_id = $this->Db->insertID();
 
             if(!empty($NOTIFICATION_GUEST_ID)) {
                 $notification_type = 'guest';
