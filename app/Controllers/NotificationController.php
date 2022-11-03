@@ -159,10 +159,7 @@ class NotificationController extends BaseController
            
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $sysid)->update($data) : $this->Db->table('FLXY_NOTIFICATIONS')->insert($data);
-            
-            $notification_id = $sysid;
-            if(empty($sysid))
-                $notification_id = $this->Db->insertID();
+            $Notification_ID = $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid; 
 
             if(!empty($NOTIFICATION_GUEST_ID)) {
                 $notification_type = 'guest';
@@ -173,7 +170,7 @@ class NotificationController extends BaseController
                 $user_ids = $NOTIFICATION_TO_ID;
             }
             
-            $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $notification_id);
+            $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $Notification_ID);
 
             $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
             if(!empty($registration_ids)) {
@@ -200,8 +197,6 @@ class NotificationController extends BaseController
                     $this->UserRepository->removeByRegistrationIds($remove_registration_ids);
             }
             
-            $Notification_ID = $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid; 
-
             !empty($sysid)? $this->Db->table('FLXY_NOTIFICATION_TRAIL')->delete(['NOTIF_TRAIL_NOTIFICATION_ID'=>$sysid]):''; 
 
             if(!empty($sysid) && ($NOTIFICATION_OLD_TYPE == 4 && $NOTIFICATION_TYPE != 4)){
