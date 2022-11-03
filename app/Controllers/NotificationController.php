@@ -837,4 +837,13 @@ class NotificationController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'Notifications'], $results));
     }
+
+    public function userReadNotifications()
+    {
+        $user = $this->request->user;
+        $notification_ids = $this->request->getVar('notification_ids');
+        $this->NotificationRepository->userReadNotifications($user, $notification_ids);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Success']));
+    }
 }
