@@ -125,6 +125,10 @@ $routes->group("api", ["filter" => "authapi:Admin,Guest,Attendee", 'namespace' =
         $routes->get("order-list", "RestaurantController::orderList");
         $routes->post("update-restaurant-order-status", "RestaurantController::updateRestaurantOrderStatus");
     });
+
+    $routes->group('notification', function ($routes) {
+        $routes->get("get-user-notifications", "NotificationController::getUserNotifications");
+    });
 });
 
 /***************************** Admin + Attendee *****************************/

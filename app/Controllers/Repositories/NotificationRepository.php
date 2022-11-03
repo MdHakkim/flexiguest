@@ -4,16 +4,19 @@ namespace App\Controllers\Repositories;
 
 use App\Controllers\BaseController;
 use App\Libraries\CurlRequestLibrary;
+use App\Models\Notification;
 use CodeIgniter\API\ResponseTrait;
 
 class NotificationRepository extends BaseController
 {
 	use ResponseTrait;
 
+	private $Notification;
 	private $CurlRequestLibrary;
 
 	public function __construct()
 	{
+		$this->Notification = new Notification();
 		$this->CurlRequestLibrary = new CurlRequestLibrary();
 	}
 
@@ -48,5 +51,13 @@ class NotificationRepository extends BaseController
 		];
 
 		return $this->CurlRequestLibrary->makeRequest($data);
+	}
+
+	public function getUserNotifications($user)
+	{
+		if($user['USR_ROLE_ID'] == 2)
+			return $this->Notification->where("NOTIFICATION_GUEST_ID like '%\"{$user['USR_CUST_ID']}\"%'")->findAll();
+		else
+			return $this->Notification->where("NOTIFICATION_TO_ID like '%\"{$user['USR_ID']}\"%'")->findAll();
 	}
 }

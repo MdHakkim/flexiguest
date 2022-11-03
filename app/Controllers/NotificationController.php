@@ -107,7 +107,7 @@ class NotificationController extends BaseController
             $NOTIFICATION_GUEST_ID       = ($NOTIFICATION_TYPE == 3 ) ? $this->request->getPost('NOTIFICATION_GUEST_ID'):'';
             $NOTIFICATION_URL            = ($NOTIFICATION_TYPE == 3 ) ? $this->request->getPost('NOTIFICATION_URL'):'';
             $NOTIFICATION_DATE_TIME      = $this->request->getPost('NOTIFICATION_DATE_TIME');            
-            $NOTIFICATION_TEXT           = $this->request->getPost('NOTIFICATION_TEXT');
+            $NOTIFICATION_TEXT           = strip_tags($this->request->getPost('NOTIFICATION_TEXT'));
             $NOTIFICATION_SEND_NOW       = $this->request->getPost('NOTIFICATION_SEND_NOW');
             $NOTIFICATION_OLD_TYPE       = $this->request->getPost('NOTIFICATION_OLD_TYPE');           
 
@@ -830,4 +830,11 @@ class NotificationController extends BaseController
         echo json_encode($output);
     }
 
+    public function getUserNotifications()
+    {
+        $user = $this->request->user;
+        $results = $this->NotificationRepository->getUserNotifications($user);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Notifications'], $results));
+    }
 }
