@@ -97,6 +97,8 @@ class NotificationController extends BaseController
     public function insertNotification()
     {
         try {
+            $user = session('user');
+            
             $rules = [];
             $NOTIFI = [];
             $sysid = $this->request->getPost('NOTIFICATION_ID');
@@ -155,8 +157,9 @@ class NotificationController extends BaseController
 
             $NOTIFICATION_DATE_TIME = isset($NOTIFICATION_SEND_NOW) ? date('Y-m-d H:i:s'):$NOTIFICATION_DATE_TIME;           
            
-           
+
             $return = !empty($sysid) ? $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $sysid)->update($data) : $this->Db->table('FLXY_NOTIFICATIONS')->insert($data);
+            $notification_id = $sysid ?? $return;
 
             if(!empty($NOTIFICATION_GUEST_ID)) {
                 $notification_type = 'guest';
@@ -166,6 +169,8 @@ class NotificationController extends BaseController
                 $notification_type = 'admin';
                 $user_ids = $NOTIFICATION_TO_ID;
             }
+            
+            $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $notification_id);
 
             $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
             if(!empty($registration_ids)) {

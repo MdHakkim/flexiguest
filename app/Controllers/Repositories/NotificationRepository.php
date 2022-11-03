@@ -56,16 +56,25 @@ class NotificationRepository extends BaseController
 		return $this->CurlRequestLibrary->makeRequest($data);
 	}
 
+	public function storeNotificationUsers($user, $user_ids, $notification_id)
+	{
+		foreach ($user_ids as $user_id) {
+			$this->NotificationUser->insert([
+				'NU_USER_ID' => $user_id,
+				'NU_NOTIFICATION_ID' => $notification_id,
+				'NU_READ_STATUS' => 0,
+				'NU_CREATED_BY' => $user['USR_ID'],
+				'NU_UPDATED_BY' => $user['USR_ID'],
+			]);
+		}
+
+		return true;
+	}
+
 	public function getUserNotifications($user)
 	{
-		if ($user['USR_ROLE_ID'] == 2)
-			$where_condition = "NOTIFICATION_GUEST_ID like '%\"{$user['USR_CUST_ID']}\"%'";
-		else
-			$where_condition = "NOTIFICATION_TO_ID like '%\"{$user['USR_ID']}\"%'";
-
 		return $this->Notification
-			->join('FLXY_NOTIFICATION_USERS', "NOTIFICATION_ID = NU_NOTIFICATION_ID AND NU_USER_ID = {$user['USR_ID']}", 'left')
-			->where($where_condition)
+			->join('FLXY_NOTIFICATION_USERS', "NU_USER_ID = {$user['USR_ID']}")
 			->orderBy('NOTIFICATION_ID', 'desc')
 			->findAll();
 	}
@@ -73,13 +82,12 @@ class NotificationRepository extends BaseController
 	public function userReadNotifications($user, $notification_ids)
 	{
 		foreach ($notification_ids as $notification_id) {
-			$this->NotificationUser->insert([
-				'NU_USER_ID' => $user['USR_ID'],
-				'NU_NOTIFICATION_ID' => $notification_id,
-				'NU_READ_STATUS' => 1,
-				'NU_CREATED_BY' => $user['USR_ID'],
-				'NU_UPDATED_BY' => $user['USR_ID'],
-			]);
+			$this->NotificationUser
+				->where('NU_NOTIFICATION_ID', $notification_id)
+				->update([
+					'NU_READ_STATUS' => 1,
+					'NU_UPDATED_BY' => $user['USR_ID'],
+				]);
 		}
 
 		return true;
