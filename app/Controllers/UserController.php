@@ -486,19 +486,21 @@ class UserController extends BaseController
                 ];
             }
 
-            // $submitted_image = $this->request->getFile('USR_IMAGE');
+            /*
+
+            $submitted_image = $this->request->getFile('USR_IMAGE');
 
             // if ( (NULL !== $submitted_image) && ($submitted_image->isValid() &&  !$submitted_image->hasMoved()))
 
             //     //echo "<pre>"; print_r($this->request->getFile('USR_IMAGE')); echo "</pre>";
 
-            //     $rules = array_merge($rules, [
-            //         'USR_IMAGE' => [
-            //             'label' => 'User Avatar',
-            //             'rules' => ['uploaded[USR_IMAGE]', 'mime_in[USR_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[USR_IMAGE,2048]']
-            //         ],
-            //     ]);
-
+                $rules = array_merge($rules, [
+                    'USR_IMAGE' => [
+                        'label' => 'User Avatar',
+                        'rules' => ['uploaded[USR_IMAGE]', 'mime_in[USR_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[USR_IMAGE,2048]']
+                    ],
+                ]);
+            */
 
             $validate = $this->validate($rules);
 
@@ -537,18 +539,20 @@ class UserController extends BaseController
             if ($this->request->getPost("USR_PASSWORD") != '')
                 $data["USR_PASSWORD"] =  password_hash($this->request->getPost("USR_PASSWORD"), PASSWORD_DEFAULT);
 
-            // if ($submitted_image->isValid()) {
-            //     $image = $this->request->getFile('USR_IMAGE');
-            //     $image_name = $image->getRandomName();
-            //     $directory = "assets/img/avatars/";
+            /*
+            if ($submitted_image->isValid()) {
+                $image = $this->request->getFile('USR_IMAGE');
+                $image_name = $image->getRandomName();
+                $directory = "assets/img/avatars/";
 
             //     $response = documentUpload($image, $image_name, $sysid, $directory);
 
             //     if ($response['SUCCESS'] != 200)
             //         return $this->respond(responseJson("500", true, "Product Image not uploaded"));
 
-            //     $data['USR_IMAGE'] = $directory . $response['RESPONSE']['OUTPUT'];
-            // }
+                $data['USR_IMAGE'] = $directory . $response['RESPONSE']['OUTPUT'];
+            }
+            */
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
