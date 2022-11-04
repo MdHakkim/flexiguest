@@ -172,29 +172,32 @@ class NotificationController extends BaseController
             
             $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $Notification_ID);
 
-            $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
-            if(!empty($registration_ids)) {
-                $response = $this->NotificationRepository->sendNotification([
-                    'registration_ids' => $registration_ids,
-                    'title' => 'Notification',
-                    'body' => $data['NOTIFICATION_TEXT'],
-                    'screen' => '',
-                ], $notification_type);
+            if(!empty($user_ids)){
 
-                error_log("Notification => " . json_encode($response));
+                $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
+                if(!empty($registration_ids)) {
+                    $response = $this->NotificationRepository->sendNotification([
+                        'registration_ids' => $registration_ids,
+                        'title' => 'Notification',
+                        'body' => $data['NOTIFICATION_TEXT'],
+                        'screen' => '',
+                    ], $notification_type);
 
-                $remove_registration_ids = [];
-                if(!empty($response['failure']) && $response['failure'] > 0) {
-                    foreach($response['results'] as $index => $res) {
-                        if(!empty($res['error']) && $res['error'] == 'NotRegistered' || $res['error'] == 'InvalidRegistration') {
-                            $remove_registration_ids[] = $registration_ids[$index];
+                    error_log("Notification => " . json_encode($response));
+
+                    $remove_registration_ids = [];
+                    if(!empty($response['failure']) && $response['failure'] > 0) {
+                        foreach($response['results'] as $index => $res) {
+                            if(!empty($res['error']) && $res['error'] == 'NotRegistered' || $res['error'] == 'InvalidRegistration') {
+                                $remove_registration_ids[] = $registration_ids[$index];
+                            }
                         }
                     }
-                }
 
-                error_log("remove_registration_ids => " . json_encode($remove_registration_ids));
-                if(!empty($remove_registration_ids))
-                    $this->UserRepository->removeByRegistrationIds($remove_registration_ids);
+                    error_log("remove_registration_ids => " . json_encode($remove_registration_ids));
+                    if(!empty($remove_registration_ids))
+                        $this->UserRepository->removeByRegistrationIds($remove_registration_ids);
+                }
             }
             
             !empty($sysid)? $this->Db->table('FLXY_NOTIFICATION_TRAIL')->delete(['NOTIF_TRAIL_NOTIFICATION_ID'=>$sysid]):''; 

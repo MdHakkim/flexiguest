@@ -292,7 +292,7 @@ class HousekeepingController extends BaseController
             $user_id = session()->get('USR_ID');
 
             $logdata = ["RM_STAT_ROOM_ID" => $roomId, "RM_STAT_ROOM_STATUS" => $new_status, 
-                        "RM_STAT_UPDATED_BY" => $user_id, "RM_STAT_UPDATED"=> date("Y-m-d H:i:s")];
+                        "RM_STAT_UPDATED_BY" => $user_id, "RM_STAT_UPDATED" => date("Y-m-d H:i:s")];
                         
             $return = $this->Db->table('FLXY_ROOM_STATUS_LOG')->insert($logdata);
 
