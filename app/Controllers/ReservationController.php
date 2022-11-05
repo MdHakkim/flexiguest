@@ -21,7 +21,9 @@ class ReservationController extends BaseController
 
     public function __construct()
     {
-        $this->DB = \Config\Database::connect();
+        $this->DB    = \Config\Database::connect();
+        $this->pager = \Config\Services::pager();
+        $this->uri   = \Config\Services::uri();
         $this->Reservation = new Reservation();
         $this->ShareReservations = new ShareReservations();
         $this->session = \Config\Services::session();
@@ -1240,45 +1242,56 @@ public function showPackages()
 
     public function roomPlan()
     {
-        $data = [];
+        $data = $roomPlanSearch = [];
         $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
         $data['js_to_load']  = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
         $data['toggleButton_javascript']    = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['blockLoader_javascript']     = blockLoader_javascript();
+        $perPage = 20;
+        $start = 0;    
+        $segment = $this->uri->getSegment(2);    
+        $page = $segment =='' ? 1:$segment; 
+        $offset = (int)($page - 1) * $perPage;  
 
-       $clear = $this->request->getPost('SEARCH_CLEAR');
-        if(isset($clear) && $clear == '0'){
-            $data['SEARCH_DATE']        = $this->request->getPost('SEARCH_DATE');
-            $data['SEARCH_ROOM_TYPE']   = $this->request->getPost('SEARCH_ROOM_TYPE');
-            $data['SEARCH_ROOM_CLASS']  = $this->request->getPost('SEARCH_ROOM_CLASS');
-            $data['SEARCH_ROOM']        = $this->request->getPost('SEARCH_ROOM');
-            $data['SEARCH_ROOM_STATUS'] = $this->request->getPost('SEARCH_ROOM_STATUS');
-            $data['SEARCH_ROOM_FLOOR']  = $this->request->getPost('SEARCH_ROOM_FLOOR');
-            $data['SEARCH_ASSIGNED_ROOMS'] = $this->request->getPost('SEARCH_ASSIGNED_ROOMS');
-            $data['SEARCH_UNASSIGNED_ROOMS'] = $this->request->getPost('SEARCH_UNASSIGNED_ROOMS');
+        $clear = $this->request->getPost('SEARCH_CLEAR');
+        if($clear == 1){
+            $this->session->remove('roomPlanSearch');
         }
+            
+        $roomPlanSearch = $this->session->get('roomPlanSearch');
+
+        $data['SEARCH_DATE']             = ($this->request->getPost('SEARCH_DATE') == '' && $page > 1)? ((isset($roomPlanSearch['SEARCH_DATE']) && $roomPlanSearch['SEARCH_DATE'] !='') ? $roomPlanSearch['SEARCH_DATE']:'') : $this->request->getPost('SEARCH_DATE');            
+
+        $data['SEARCH_ROOM_TYPE']        = ($this->request->getPost('SEARCH_ROOM_TYPE') == '' && $page > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_TYPE']) && $roomPlanSearch['SEARCH_ROOM_TYPE'] != '') ? $roomPlanSearch['SEARCH_ROOM_TYPE'] :'') : $this->request->getPost('SEARCH_ROOM_TYPE');
+
+        $data['SEARCH_ROOM_CLASS']       = ($this->request->getPost('SEARCH_ROOM_CLASS') == '' && $page > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_CLASS']) && $roomPlanSearch['SEARCH_ROOM_CLASS'] != '') ? $roomPlanSearch['SEARCH_ROOM_CLASS'] :'') : $this->request->getPost('SEARCH_ROOM_CLASS');
+
+        $data['SEARCH_ROOM']             =  ($this->request->getPost('SEARCH_ROOM') == '' && $page > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM']) && $roomPlanSearch['SEARCH_ROOM'] != '') ? $roomPlanSearch['SEARCH_ROOM'] :'') : $this->request->getPost('SEARCH_ROOM');
+
+        $data['SEARCH_ROOM_STATUS']      = ($this->request->getPost('SEARCH_ROOM_STATUS') == '' && $page > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_STATUS']) && $roomPlanSearch['SEARCH_ROOM_STATUS'] != '') ? $roomPlanSearch['SEARCH_ROOM_STATUS'] : '') :$this->request->getPost('SEARCH_ROOM_STATUS');
+        
+        $data['SEARCH_ROOM_FLOOR']       = ($this->request->getPost('SEARCH_ROOM_FLOOR') == '' && $page > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_FLOOR']) && $roomPlanSearch['SEARCH_ROOM_FLOOR'] != '') ? $roomPlanSearch['SEARCH_ROOM_FLOOR'] :'') : $this->request->getPost('SEARCH_ROOM_FLOOR');   
+
+        $data['SEARCH_ASSIGNED_ROOMS']       = (NULL == $this->request->getPost('SEARCH_ASSIGNED_ROOMS') && $page > 1 ) ? ((isset($roomPlanSearch['SEARCH_ASSIGNED_ROOMS']) && $roomPlanSearch['SEARCH_ASSIGNED_ROOMS'] != '') ? $roomPlanSearch['SEARCH_ASSIGNED_ROOMS'] :'') : $this->request->getPost('SEARCH_ASSIGNED_ROOMS'); 
+
+        $data['SEARCH_UNASSIGNED_ROOMS']       = (NULL == $this->request->getPost('SEARCH_UNASSIGNED_ROOMS') && $page > 1) ? ((isset($roomPlanSearch['SEARCH_UNASSIGNED_ROOMS']) && $roomPlanSearch['SEARCH_UNASSIGNED_ROOMS'] != '') ? $roomPlanSearch['SEARCH_UNASSIGNED_ROOMS'] :'') : $this->request->getPost('SEARCH_UNASSIGNED_ROOMS');    
+        
+        $this->session->set('roomPlanSearch', $data); 
+        $roomPlanSearch = $this->session->get('roomPlanSearch');           
 
         $data['RoomReservations']   = $this->getReservations(); 
-        $data['RoomResources']      = $this->roomplanResources();
+        $response                   = $this->roomplanResources($offset, $perPage);
+        $data['RoomResources']      = $response['response'];
+        $totalResources             = $response['responseCount'];
+        $data['pager_links']        = $this->pager->makeLinks($page, $perPage, $totalResources,'custom_pagination_full',3);
         $data['RoomOOS']            = $this->getRoomOOS(); 
-        $data['title']              =  'Room Plan';
+        $data['title']              = 'Room Plan';
         
-        return view('Reservation/RoomPlan',$data);
+        return view('Reservation/RoomPlan', $data);
+
     }
 
-    // public function roomPlanTest()
-    // {
-    //     $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
-    //     $data['js_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.js","RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js");
-
-    //     $data['RoomReservations']  = $this->getReservations(); 
-        
-    //     $data['RoomResources']     = $this->roomplanResources();
-    //     $data['title']             =  'Room Plan';
-        
-    //     return view('Reservation/RoomPlanTest',$data);
-    // }
 
     public function ItemResources(){
         $response = NULL;
@@ -1287,7 +1300,6 @@ public function showPackages()
         $responseCount = $this->DB->query($sql)->getNumRows();
         if($responseCount > 0)
         $response = $this->DB->query($sql)->getResultArray();
-
         return $response;
     }
 
@@ -1354,65 +1366,105 @@ public function showPackages()
     }
 
    
-    public function roomplanResources()
-    {
+    public function roomplanResources($PAGE, $TOTAL)
+    { 
+        
         $cond = $where = $join = '';
         $clear = $this->request->getPost('SEARCH_CLEAR');
-        if(isset($clear) && $clear == '0'){
-            $SEARCH_DATE             =  date("Y-m-d",strtotime($this->request->getPost('SEARCH_DATE')));                    
-            $SEARCH_DATE_WEEK        = date("Y-m-d",strtotime($SEARCH_DATE."+7 day"));              
-            $SEARCH_ROOM_TYPE   = $this->request->getPost('SEARCH_ROOM_TYPE');
-            $SEARCH_ROOM        = $this->request->getPost('SEARCH_ROOM');
-            $SEARCH_ROOM_STATUS = $this->request->getPost('SEARCH_ROOM_STATUS');
-            $SEARCH_ROOM_FLOOR  = $this->request->getPost('SEARCH_ROOM_FLOOR');
-            $SEARCH_ASSIGNED_ROOMS   = $this->request->getPost('SEARCH_ASSIGNED_ROOMS');
-            $SEARCH_UNASSIGNED_ROOMS = $this->request->getPost('SEARCH_UNASSIGNED_ROOMS');
-            $cond .= " WHERE 1=1 ";
-            if($SEARCH_ROOM_TYPE != '' || $SEARCH_ROOM != '' || $SEARCH_ROOM_STATUS != '' || $SEARCH_ROOM_FLOOR != '')
-            {            
-                $cond .= ($SEARCH_ROOM_TYPE != '')?" AND RM_TYPE_REF_ID = '".$SEARCH_ROOM_TYPE."'":'';
-                $cond .= ($SEARCH_ROOM_STATUS != '')?" AND RM_STATUS_ID = '".$SEARCH_ROOM_STATUS."'":'';
-                $cond .= ($SEARCH_ROOM != '')?" AND RM_ID = '".$SEARCH_ROOM."'":'';
-                $cond .= ($SEARCH_ROOM_FLOOR != '')?" AND RM.RM_FL_ID = '".$SEARCH_ROOM_FLOOR."'":'';
-            } 
 
-            if($SEARCH_ASSIGNED_ROOMS != '' && $SEARCH_UNASSIGNED_ROOMS != '') {
-                
-            }
-            else if($SEARCH_ASSIGNED_ROOMS != '' ){
-                    $join = "LEFT JOIN FLXY_RESERVATION ON RESV_ROOM_ID = RM_ID"; 
-                    $where = ($SEARCH_DATE != '')?" AND ('".$SEARCH_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE)":"";
-            } 
-            else if($SEARCH_UNASSIGNED_ROOMS != '' ){            
-                $where .= " AND RM_ID NOT IN (SELECT RM_ID  FROM FLXY_ROOM
-                INNER JOIN FLXY_RESERVATION ON RESV_ROOM_ID = RM_ID WHERE 1=1  AND ('".$SEARCH_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE))";
-            }
+        $roomPlanSearch = $this->session->get('roomPlanSearch');
+
+         $SEARCH_DATE  = (date("Y-m-d",strtotime($this->request->getPost('SEARCH_DATE'))) == '')? ((isset($roomPlanSearch['SEARCH_DATE']) && $roomPlanSearch['SEARCH_DATE'] !='') ? $roomPlanSearch['SEARCH_DATE']:'') : date("Y-m-d",strtotime($this->request->getPost('SEARCH_DATE')));        
         
-        }      
+        if((isset($clear) && $clear == '0') || $SEARCH_DATE != ''){ 
 
-        $data = $response = NULL;
+            $SEARCH_ROOM_TYPE        = ($this->request->getPost('SEARCH_ROOM_TYPE') == '' && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_TYPE']) && $roomPlanSearch['SEARCH_ROOM_TYPE'] != '') ? $roomPlanSearch['SEARCH_ROOM_TYPE'] :'') : $this->request->getPost('SEARCH_ROOM_TYPE');
 
-        $sql = "SELECT RM_ID, RM_NO, RM_TYPE, SM.RM_STATUS_CODE, RL.RM_STAT_UPDATED      
+            $SEARCH_ROOM_CLASS      = ($this->request->getPost('SEARCH_ROOM_CLASS') == '' && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_CLASS']) && $roomPlanSearch['SEARCH_ROOM_CLASS'] != '') ? $roomPlanSearch['SEARCH_ROOM_CLASS'] :'') : $this->request->getPost('SEARCH_ROOM_CLASS');
+
+            $SEARCH_ROOM            =  ($this->request->getPost('SEARCH_ROOM') == '' && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM']) && $roomPlanSearch['SEARCH_ROOM'] != '') ? $roomPlanSearch['SEARCH_ROOM'] :'') : $this->request->getPost('SEARCH_ROOM');
+
+            $SEARCH_ROOM_STATUS      = ($this->request->getPost('SEARCH_ROOM_STATUS') == '' && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_STATUS']) && $roomPlanSearch['SEARCH_ROOM_STATUS'] != '') ? $roomPlanSearch['SEARCH_ROOM_STATUS'] : '') :$this->request->getPost('SEARCH_ROOM_STATUS');
+            
+            $SEARCH_ROOM_FLOOR       = ($this->request->getPost('SEARCH_ROOM_FLOOR') == '' && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_FLOOR']) && $roomPlanSearch['SEARCH_ROOM_FLOOR'] != '') ? $roomPlanSearch['SEARCH_ROOM_FLOOR'] :'') : $this->request->getPost('SEARCH_ROOM_FLOOR');
+
+            $SEARCH_ASSIGNED_ROOMS       = (NULL == $this->request->getPost('SEARCH_ASSIGNED_ROOMS') && $PAGE > 1 ) ? ((isset($roomPlanSearch['SEARCH_ASSIGNED_ROOMS']) && $roomPlanSearch['SEARCH_ASSIGNED_ROOMS'] != '') ? $roomPlanSearch['SEARCH_ASSIGNED_ROOMS'] :'') : $this->request->getPost('SEARCH_ASSIGNED_ROOMS'); 
+
+            $SEARCH_UNASSIGNED_ROOMS       = (NULL == $this->request->getPost('SEARCH_UNASSIGNED_ROOMS') && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_UNASSIGNED_ROOMS']) && $roomPlanSearch['SEARCH_UNASSIGNED_ROOMS'] != '') ? $roomPlanSearch['SEARCH_UNASSIGNED_ROOMS'] :'') : $this->request->getPost('SEARCH_UNASSIGNED_ROOMS'); 
+    
+            
+            
+        $cond .= " WHERE 1=1 ";
+
+        if($SEARCH_ROOM_TYPE != '' || $SEARCH_ROOM != '' || $SEARCH_ROOM_STATUS != '' || $SEARCH_ROOM_FLOOR != '')
+        {            
+            $cond .= ($SEARCH_ROOM_TYPE != '') ?" AND RM_TYPE_REF_ID = '".$SEARCH_ROOM_TYPE."'":'';
+            $cond .= ($SEARCH_ROOM_STATUS != '')?" AND RM_STATUS_ID = '".$SEARCH_ROOM_STATUS."'":'';
+            $cond .= ($SEARCH_ROOM != '')?" AND RM_ID = '".$SEARCH_ROOM."'":'';
+            $cond .= ($SEARCH_ROOM_FLOOR != '')?" AND RM.RM_FL_ID = '".$SEARCH_ROOM_FLOOR."'":'';
+        } 
+       
+
+        if((isset($SEARCH_ASSIGNED_ROOMS) && ($SEARCH_ASSIGNED_ROOMS == 'on' || $SEARCH_ASSIGNED_ROOMS == 'off')) && (isset($SEARCH_UNASSIGNED_ROOMS) && ($SEARCH_UNASSIGNED_ROOMS == 'on' || $SEARCH_ASSIGNED_ROOMS == 'off')) ){
+            
+        }
+        else if(isset($SEARCH_ASSIGNED_ROOMS) && $SEARCH_ASSIGNED_ROOMS == 'on'){
+                
+                $join = "LEFT JOIN FLXY_RESERVATION ON RESV_ROOM_ID = RM_ID"; 
+                $where = ($SEARCH_DATE != '')?" AND ('".$SEARCH_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE)":"";
+        } 
+        else if(isset($SEARCH_UNASSIGNED_ROOMS) && $SEARCH_UNASSIGNED_ROOMS == 'on'){  
+            $where .= " AND RM_ID NOT IN (SELECT RM_ID  FROM FLXY_ROOM
+            INNER JOIN FLXY_RESERVATION ON RESV_ROOM_ID = RM_ID WHERE 1=1  AND ('".$SEARCH_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE))";
+        }            
+        
+      } 
+    
+        $data['responseCount'] = 0;
+        $data['response'] = NULL;
+
+        $sql1 = "SELECT RM_ID, RM_NO, RM_TYPE, SM.RM_STATUS_CODE, RL.RM_STAT_UPDATED      
          FROM FLXY_ROOM 
          LEFT JOIN (SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID
                       ,RM_STAT_ROOM_ID
                   FROM FLXY_ROOM_STATUS_LOG
                   GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
         
-        INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
+        LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
         
-        INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
+        LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
 
-        INNER JOIN FLXY_ROOM_FLOOR RM ON RM.RM_FL_CODE = RM_FLOOR_PREFERN 
+        LEFT JOIN FLXY_ROOM_FLOOR RM ON RM.RM_FL_CODE = RM_FLOOR_PREFERN 
          ".$join.$cond.$where."
 
         GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
 
-        ORDER BY RM_ID ASC";       
-        $responseCount = $this->DB->query($sql)->getNumRows();
-        if($responseCount > 0)
-        $response = $this->DB->query($sql)->getResultArray();
-        return $response;
+        ORDER BY RM_ID ASC OFFSET $PAGE ROWS FETCH NEXT $TOTAL ROWS ONLY";   
+
+
+        $sql2 = "SELECT RM_ID, RM_NO, RM_TYPE, SM.RM_STATUS_CODE, RL.RM_STAT_UPDATED      
+         FROM FLXY_ROOM 
+         LEFT JOIN (SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID
+                      ,RM_STAT_ROOM_ID
+                  FROM FLXY_ROOM_STATUS_LOG
+                  GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+        
+        LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
+        
+        LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
+
+        LEFT JOIN FLXY_ROOM_FLOOR RM ON RM.RM_FL_CODE = RM_FLOOR_PREFERN 
+         ".$join.$cond.$where."
+
+        GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
+
+        ORDER BY RM_ID ASC"; 
+
+        $data['responseCount'] = $this->DB->query($sql2)->getNumRows();
+
+        if($data['responseCount'] > 0)
+        $data['response'] = $this->DB->query($sql1)->getResultArray();
+        return $data;
     }
 
     public function roomplanResourceStatus($firstStatus, $secondStatus)
@@ -1420,7 +1472,7 @@ public function showPackages()
         $data = $response = NULL;
         $sql = "SELECT RM_ID, RM_NO, RM_TYPE, SM.RM_STATUS_CODE, RL.RM_STAT_UPDATED      
         FROM FLXY_ROOM 
-        LEFT JOIN (SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID
+        INNER JOIN (SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID
                       ,RM_STAT_ROOM_ID
                   FROM FLXY_ROOM_STATUS_LOG WHERE (RM_STAT_ROOM_STATUS = '$firstStatus' OR RM_STAT_ROOM_STATUS = '$secondStatus')
                   GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
@@ -1727,13 +1779,13 @@ public function getAllVacantRooms(){
                   FROM FLXY_ROOM_STATUS_LOG
                   GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
         
-        INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
+        LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
 
-        INNER JOIN FLXY_ROOM_FLOOR RF ON RF.RM_FL_CODE = FLXY_ROOM.RM_FLOOR_PREFERN
+        LEFT JOIN FLXY_ROOM_FLOOR RF ON RF.RM_FL_CODE = FLXY_ROOM.RM_FLOOR_PREFERN
 
-        INNER JOIN FLXY_ROOM_TYPE RT ON RT.RM_TY_ID = FLXY_ROOM.RM_TYPE_REF_ID
+        LEFT JOIN FLXY_ROOM_TYPE RT ON RT.RM_TY_ID = FLXY_ROOM.RM_TYPE_REF_ID
         
-        INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS WHERE RM_TYPE_REF_ID = ".$ROOM_TYPE_ID."
+        LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS WHERE RM_TYPE_REF_ID = ".$ROOM_TYPE_ID."
 
         GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_DESC,RM_FL_DESC,RM_FEATURE,RM_TY_CODE,RM_STATUS_CODE,RM_STAT_UPDATED 
 
@@ -1755,12 +1807,13 @@ public function getAllVacantRooms(){
 
             foreach($response as $value){
                 if(!in_array($value['RM_ID'],$roomsArray)){
+                    $RM_STATUS_CODE = ($value['RM_STATUS_CODE'] == NULL) ? 'Dirty': $value['RM_STATUS_CODE'];
                     $vacant_rooms.= <<<EOD
                     <tr data-room_id="{$value['RM_ID']}" > 
                         <td><a href="javascript:;" data_roomid="{$value['RM_ID']}"  class"btn btn-primary"><i class="fa-solid fa-list-check"></i> Assign</a></td>
                         <td>{$value['RM_NO']}</td>
                         <td>{$value['RM_TY_CODE']}</td>
-                        <td>{$value['RM_STATUS_CODE']}</td>
+                        <td>{$RM_STATUS_CODE}</td>
                         <td>{$value['RM_FL_DESC']}</td>
                         <td>{$value['RM_FEATURE']}</td>                                    
                     </tr>
@@ -1911,12 +1964,15 @@ public function getRoomStatistics(){
         else if($value == 2){
             $sql = "SELECT RESV_ID FROM FLXY_RESERVATION WHERE ('$sCurrentDate' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE) AND (RESV_ROOM_ID !='' OR RESV_ROOM_ID != '0')";     
             $reservedRoomsCount = $this->DB->query($sql)->getNumRows();
-
-            $sql = "SELECT count(RM_ID) as COUNT FROM FLXY_ROOM";     
-            $roomsCount = $this->DB->query($sql)->getRow()->COUNT;
-            $OOO_OOS = $this->roomplanResourceStatus(4,5);
-            $roomsCount = $roomsCount - $OOO_OOS;
-            $responseCount = number_format(($reservedRoomsCount/$roomsCount)*100,2);
+            if($reservedRoomsCount > 0 ){
+                //echo $reservedRoomsCount;
+                $sql = "SELECT count(RM_ID) as COUNT FROM FLXY_ROOM";     
+                $roomsCount = $this->DB->query($sql)->getRow()->COUNT;
+                $OOO_OOS = $this->roomplanResourceStatus(4,5);
+                $roomsCount = (int)$roomsCount-(int)$OOO_OOS;
+                
+                $responseCount = (number_format(@((int)$reservedRoomsCount/(int)$roomsCount)*100,2));
+            }
         }
 
         else if($value == 3){
@@ -2082,8 +2138,7 @@ public function getRoomStatistics(){
 
            $return = !empty($sysid) ? $this->DB->table('FLXY_ROOM_OOOS')->where('OOOS_ID', $sysid)->update($data) : $this->DB->table('FLXY_ROOM_OOOS')->insert($data);
 
-           $statusData = ['RM_STAT_ROOM_ID' => $this->request->getPost('ROOMS'), 'RM_STAT_ROOM_STATUS'=> trim($this->request->getPost('ROOM_RETURN_STATUS')), 
-                          'RM_STAT_UPDATED_BY' => session()->get('USR_ID'), 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
+           $statusData = ['RM_STAT_ROOM_ID' => $this->request->getPost('ROOMS'), 'RM_STAT_ROOM_STATUS'=> trim($this->request->getPost('ROOM_RETURN_STATUS')),'RM_STAT_UPDATED_BY' => session()->get('USR_ID'), 'RM_STAT_UPDATED' => date("Y-m-d H:i:s") ];
 
            $roomStatus = $this->DB->table('FLXY_ROOM_STATUS_LOG')->insert($statusData);          
 
@@ -2260,9 +2315,9 @@ public function getRoomStatistics(){
                     FROM FLXY_ROOM_STATUS_LOG
                     GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
             
-            INNER JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
+            LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
             
-            INNER JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
+            LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
 
             WHERE  1 = 1 '.$COND.'
 
@@ -2290,17 +2345,6 @@ public function getRoomStatistics(){
     }
 
 
-    public function searchRoomPlan(){
-        //echo json_encode('test');  
-       echo $search = $this->request->getPost("search");
-        // $search = $this->request->getPost("search");
-        // $search = $this->request->getPost("search");
-        // $search = $this->request->getPost("search");
-        // $search = $this->request->getPost("search");
-        // $search = $this->request->getPost("search");
-        // $search = $this->request->getPost("search");
- 
-    }
 
     public function roomTypeSearchList(){
         $search = $this->request->getPost("search");
@@ -2313,7 +2357,81 @@ public function getRoomStatistics(){
         echo $option;
     }
 
+    ///////////////////////// dsfsdfsdf/dfgb///////////////////
 
+    public function roomplanResourcesJson()
+    {
+        $cond = $where = $join = '';
+        // $clear = $this->request->getPost('SEARCH_CLEAR');
+        // if(isset($clear) && $clear == '0'){
+        //     $SEARCH_DATE             =  date("Y-m-d",strtotime($this->request->getPost('SEARCH_DATE')));                    
+        //     $SEARCH_DATE_WEEK        = date("Y-m-d",strtotime($SEARCH_DATE."+7 day"));              
+        //     $SEARCH_ROOM_TYPE   = $this->request->getPost('SEARCH_ROOM_TYPE');
+        //     $SEARCH_ROOM        = $this->request->getPost('SEARCH_ROOM');
+        //     $SEARCH_ROOM_STATUS = $this->request->getPost('SEARCH_ROOM_STATUS');
+        //     $SEARCH_ROOM_FLOOR  = $this->request->getPost('SEARCH_ROOM_FLOOR');
+        //     $SEARCH_ASSIGNED_ROOMS   = $this->request->getPost('SEARCH_ASSIGNED_ROOMS');
+        //     $SEARCH_UNASSIGNED_ROOMS = $this->request->getPost('SEARCH_UNASSIGNED_ROOMS');
+        //     $cond .= " WHERE 1=1 ";
+        //     if($SEARCH_ROOM_TYPE != '' || $SEARCH_ROOM != '' || $SEARCH_ROOM_STATUS != '' || $SEARCH_ROOM_FLOOR != '')
+        //     {            
+        //         $cond .= ($SEARCH_ROOM_TYPE != '')?" AND RM_TYPE_REF_ID = '".$SEARCH_ROOM_TYPE."'":'';
+        //         $cond .= ($SEARCH_ROOM_STATUS != '')?" AND RM_STATUS_ID = '".$SEARCH_ROOM_STATUS."'":'';
+        //         $cond .= ($SEARCH_ROOM != '')?" AND RM_ID = '".$SEARCH_ROOM."'":'';
+        //         $cond .= ($SEARCH_ROOM_FLOOR != '')?" AND RM.RM_FL_ID = '".$SEARCH_ROOM_FLOOR."'":'';
+        //     } 
 
+        //     if($SEARCH_ASSIGNED_ROOMS != '' && $SEARCH_UNASSIGNED_ROOMS != '') {
+                
+        //     }
+        //     else if($SEARCH_ASSIGNED_ROOMS != '' ){
+        //             $join = "LEFT JOIN FLXY_RESERVATION ON RESV_ROOM_ID = RM_ID"; 
+        //             $where = ($SEARCH_DATE != '')?" AND ('".$SEARCH_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE)":"";
+        //     } 
+        //     else if($SEARCH_UNASSIGNED_ROOMS != '' ){            
+        //         $where .= " AND RM_ID NOT IN (SELECT RM_ID  FROM FLXY_ROOM
+        //         INNER JOIN FLXY_RESERVATION ON RESV_ROOM_ID = RM_ID WHERE 1=1  AND ('".$SEARCH_DATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE))";
+        //     }
+        
+        // }      
+
+        $data = $response = NULL;
+
+        $sql = "SELECT RM_ID, RM_NO, RM_TYPE, SM.RM_STATUS_CODE, RL.RM_STAT_UPDATED      
+         FROM FLXY_ROOM 
+         LEFT JOIN (SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID
+                      ,RM_STAT_ROOM_ID
+                  FROM FLXY_ROOM_STATUS_LOG
+                  GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG  ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+        
+        LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID
+        
+        LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
+
+        LEFT JOIN FLXY_ROOM_FLOOR RM ON RM.RM_FL_CODE = RM_FLOOR_PREFERN 
+         ".$join.$cond.$where."
+
+        GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
+
+        ORDER BY RM_ID ASC";       
+        $responseCount = $this->DB->query($sql)->getNumRows();
+        if($responseCount > 0)
+        $response = $this->DB->query($sql)->getResultArray();
+        return $response;
+    }
+
+    function itemAvailability(){
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;  
+        $data['js_to_load'] = array("inventoryFormWizardNumbered.js","RoomPlan/FullCalendar/Core/main.min.js",
+        "RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", 
+        "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js",
+        "resv-attachment-file-upload.js");
+
+        $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", 
+         "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
+
+        return view('Reservation/itemAvailability', $data);
+    }
 
 }

@@ -18,14 +18,11 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>ID</th>
                             <th>Transport Code</th>
                             <th>Label</th>
                             <th>Description</th>
-                            <th>Phone</th>
-                            <th>Distance</th>
-                            <th>Min Price</th>
-                            <th>Max Price</th>
-                            <th>Comments</th>
+                            <th>Price</th>
                             <th>Display Sequence</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
@@ -66,49 +63,19 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label class="form-label"><b>Description *</b></label>
+                                <label class="form-label"><b>Description</b></label>
                                 <textarea name="TT_DESCRIPTION" class="form-control" placeholder="Description..."></textarea>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label"><b>Phone *</b></label>
-                                <input type="text" name="TT_PHONE" class="form-control" placeholder="Phone" required />
+                                <label class="form-label"><b>Price *</b></label>
+                                <input type="number" name="TT_PRICE" class="form-control" placeholder="Price" required />
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label"><b>Display Sequence *</b></label>
+                                <label class="form-label"><b>Display Sequence</b></label>
                                 <input type="number" name="TT_DISPLAY_SEQUENCE" class="form-control" placeholder="Display Sequence" required />
                             </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label"><b>Distance *</b></label>
-                                <input type="number" name="TT_DISTANCE" class="form-control" placeholder="Distance" required />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label"><b>Distance Unit *</b></label>
-                                <select class="select2" name="TT_DISTANCE_UNIT">
-                                    <option value="">Select Distance Unit</option>
-                                    <option value="miles">Miles</option>
-                                    <option value="km">KM</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label"><b>Min Price *</b></label>
-                                <input type="number" name="TT_MIN_PRICE" class="form-control" placeholder="Min Price" required />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label"><b>Max Price *</b></label>
-                                <input type="number" name="TT_MAX_PRICE" class="form-control" placeholder="Max Price" required />
-                            </div>
-
-                            <div class="col-md-12">
-                                <label class="form-label"><b>Comments *</b></label>
-                                <textarea name="TT_COMMENTS" class="form-control" placeholder="Comments..."></textarea>
-                            </div>
-
                         </div>
                     </form>
                 </div>
@@ -153,6 +120,9 @@
                     data: ''
                 },
                 {
+                    data: 'TT_ID'
+                },
+                {
                     data: 'TT_TRANSPORT_CODE'
                 },
                 {
@@ -162,22 +132,7 @@
                     data: 'TT_DESCRIPTION'
                 },
                 {
-                    data: 'TT_PHONE'
-                },
-                {
-                    data: null,
-                    render: function(data, type, row, meta) {
-                        return (`${data['TT_DISTANCE']} ${data['TT_DISTANCE_UNIT']}`);
-                    }
-                },
-                {
-                    data: 'TT_MIN_PRICE'
-                },
-                {
-                    data: 'TT_MAX_PRICE'
-                },
-                {
-                    data: 'TT_COMMENTS'
+                    data: 'TT_PRICE'
                 },
                 {
                     data: 'TT_DISPLAY_SEQUENCE'
@@ -241,7 +196,7 @@
                 // }
             ],
             "order": [
-                [10, "desc"]
+                [1, "desc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',

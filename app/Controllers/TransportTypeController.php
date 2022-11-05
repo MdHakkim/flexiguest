@@ -30,7 +30,7 @@ class TransportTypeController extends BaseController
     {
         $mine = new ServerSideDataTable();
         $tableName = 'FLXY_TRANSPORT_TYPES';
-        $columns = 'TT_ID,TT_TRANSPORT_CODE,TT_LABEL,TT_DESCRIPTION,TT_PHONE,TT_DISTANCE,TT_DISTANCE_UNIT,TT_MIN_PRICE,TT_MAX_PRICE,TT_COMMENTS,TT_DISPLAY_SEQUENCE,TT_CREATED_AT';
+        $columns = 'TT_ID,TT_TRANSPORT_CODE,TT_LABEL,TT_DESCRIPTION,TT_PRICE,TT_DISPLAY_SEQUENCE,TT_CREATED_AT';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -44,12 +44,8 @@ class TransportTypeController extends BaseController
         $rules = [
             'TT_TRANSPORT_CODE' => ['label' => 'Transport code', 'rules' => 'required'],
             'TT_LABEL' => ['label' => 'Label', 'rules' => 'required'],
-            'TT_DESCRIPTION' => ['label' => 'Description', 'rules' => 'required'],
-            'TT_PHONE' => ['label' => 'Phone', 'rules' => 'required'],
-            'TT_DISTANCE' => ['label' => 'Distance', 'rules' => 'required'],
-            'TT_DISTANCE_UNIT' => ['label' => 'Distance unit', 'rules' => 'required'],
-            'TT_MIN_PRICE' => ['label' => 'Min price', 'rules' => 'required'],
-            'TT_MAX_PRICE' => ['label' => 'Max price', 'rules' => 'required'],
+            // 'TT_DESCRIPTION' => ['label' => 'Description', 'rules' => 'required'],
+            'TT_PRICE' => ['label' => 'Price', 'rules' => 'required'],
         ];
 
         if (!$this->validate($rules)) {

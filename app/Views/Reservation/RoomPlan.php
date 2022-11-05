@@ -119,6 +119,9 @@
     cursor: pointer;
   }
 
+
+
+
 </style>
 
 <!-- Content wrapper -->
@@ -149,7 +152,7 @@
                         <div class="row g-3">
                           <div class="col-12 col-sm-6 col-lg-4">
                             <label class="form-label"><b>Date:</b></label>
-                            <input type="text" id="SEARCH_DATE" name="SEARCH_DATE" class="form-control dt-date" data-column="0" placeholder="" value="<?php echo set_value('SEARCH_DATE',!empty($SEARCH_DATE)?$SEARCH_DATE:'')?>" />
+                            <input type="text" id="SEARCH_DATE" name="SEARCH_DATE" class="form-control dt-date" data-column="0" placeholder="" value="" />
 
                           </div>
                           <div class="col-12 col-sm-6 col-lg-4">
@@ -169,21 +172,20 @@
                             <select id="SEARCH_ROOM_FLOOR" name="SEARCH_ROOM_FLOOR" class="select2 form-select" data-allow-clear="true" >                                       
                             </select>                            
                           </div>
-
                           <div class="col-12 col-sm-6 col-lg-4">
                             <label class="form-label"><b>Room Status:</b></label>
                             <select id="SEARCH_ROOM_STATUS" name="SEARCH_ROOM_STATUS" class="select2 form-select" data-allow-clear="true" >                                       
                             </select>  
                             
                           </div>
-                  
+
                           <div class="col-12 col-sm-6 col-lg-4">
                             <label class="form-label"><b>Room:</b></label>
                             <select id="SEARCH_ROOM" name="SEARCH_ROOM" class="select2 form-select" data-allow-clear="true" >                                       
                             </select>  
                             
-                          </div>                         
-                         
+                          </div>
+                                
 
                           <div class="col-12 col-sm-6 col-lg-4">
                           <label class="switch switch-md">
@@ -234,9 +236,15 @@
                    
               <!-- FullCalendar -->
           <div id="calendarRoomPlan"></div>
-<?php if(empty($RoomResources) || empty($RoomReservations)){?>
+          <?php if(empty($RoomResources) || empty($RoomReservations)){?>
           <div class="alert alert-danger mt-3" role="alert">Sorry. No Records Found!!</div>
-          <?php } ?>
+          <?php } else{ ?>
+                <div class="col-lg-8">                      
+                  <div class="demo-inline-spacing">
+                    <?php echo $pager_links;?>                                        
+                  </div>
+                </div>
+              <?php } ?>              
             </div>
           </div>
           <div class="app-overlay"></div>
@@ -737,6 +745,7 @@
 <script>
 
 $( document ).ready(function() {
+  
 
     roomType();
     roomClass();
@@ -756,7 +765,7 @@ $( document ).ready(function() {
         
     });
 
-    $('.dt-date').datepicker('setDate', '<?php echo (isset($SEARCH_DATE)?$SEARCH_DATE:date('d-M-Y',strtotime("now")))?>');
+    $('.dt-date').datepicker('setDate', '<?php echo (isset($SEARCH_DATE) && $SEARCH_DATE != '')?date('d-M-Y',strtotime($SEARCH_DATE)):date('d-M-Y',strtotime("now"))?>');
 
     $('#RoomStatisticsModal').on('shown.bs.modal', function () {
       if($('#calendarStatistics1>*').length == 0)
@@ -853,7 +862,7 @@ function roomPlanFunc(){
               id: '<?php echo $resources['RM_ID'] ?>',
               room: '<?php echo $resources['RM_NO'] ?>',
               room_type: '<?php echo $resources['RM_TYPE'] ?>',
-              status: '<?php echo $resources['RM_STATUS_CODE'] ?>'
+              status: '<?php echo ($resources['RM_STATUS_CODE'] == NULL) ? 'Dirty': $resources['RM_STATUS_CODE']; ?>'
             },
         <?php }
                   } 
@@ -1284,7 +1293,8 @@ function roomPlanFunc(){
            
       ],
 
-      events: function(info, successCallback, failureCallback) { 
+      events: function(info, successCallback, failureCallback) {
+        console.log(info) 
             let START = info.start;
             let s = new Date(START);
             START = s.toISOString(START);
@@ -1776,7 +1786,7 @@ $(document).on('click', '#OOS_Close', function() {
 
 
 function roomType() {
-  var roomType = '<?php echo isset($SEARCH_ROOM_TYPE)?$SEARCH_ROOM_TYPE:null?>';
+  var roomType = '<?php echo isset($SEARCH_ROOM_TYPE) ? $SEARCH_ROOM_TYPE : null ?>';
     $.ajax({
         url: '<?php echo base_url('/roomTypeSearchList') ?>',
         type: "post",
@@ -1809,6 +1819,7 @@ function roomClass() {
         success: function(respn) {
             $('#SEARCH_ROOM_CLASS').html(respn);
             $('#SEARCH_ROOM_CLASS').val(roomClass).change();
+            $('#SEARCH_ROOM_CLASS').attr('disabled','disabled'); 
         }
     });
 }

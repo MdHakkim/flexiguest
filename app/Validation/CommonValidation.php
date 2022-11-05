@@ -30,7 +30,7 @@ class CommonValidation{
     public function afterNow(string $str, string $field, array $data)
     {
         $fields = explode(',', $field);
-        $datetime = $data[$fields[0]] . " " . $data[$fields[1]];
+        $datetime = date("Y-m-d H:i:s", strtotime($data[$fields[0]] . " " . $data[$fields[1]]));
 
         $date_now = date("Y-m-d H:i:s"); // this format is string comparable
         if($date_now >= $datetime)
@@ -46,5 +46,14 @@ class CommonValidation{
 
         if($datetime >= $datetime2)
             return false;
+    }
+
+    public function customInArray(string $str)
+    {
+        $possible_values = ['Processing', 'Delivered', 'Rejected'];
+        if(in_array($str, $possible_values))
+            return true;
+
+        return false;
     }
 }

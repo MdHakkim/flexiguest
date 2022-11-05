@@ -2,6 +2,7 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<?= $this->include('Layout/image_modal') ?>
 
 <style>
     .light-style .bs-stepper .step.crossed .bs-stepper-label {
@@ -59,6 +60,7 @@
                             <th>Reservation</th>
                             <th>Room</th>
                             <th>Guest Name</th>
+                            <th>Guest Image</th>
                             <th>Transport Type</th>
                             <th>Payment Status</th>
                             <th>Pickup Date & Time</th>
@@ -203,7 +205,7 @@
                                     <div id="transfer-details" class="content">
                                         <div class="row g-3">
 
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label class="form-label"><b>Travel Type *</b></label>
                                                 <select class="select2" name="TR_TRAVEL_TYPE">
                                                     <option>One Way</option>
@@ -211,18 +213,7 @@
                                                 </select>
                                             </div>
 
-                                            <div class="col-md-6">
-                                                <label class="form-label"><b>Transport Type *</b></label>
-                                                <select class="select2" name="TR_TRANSPORT_TYPE_ID">
-                                                    <?php foreach ($transport_types as $transport_type) : ?>
-                                                        <option value="<?= $transport_type['TT_ID'] ?>">
-                                                            <?= $transport_type['TT_LABEL'] ?> - AED <?= $transport_type['TT_MAX_PRICE'] ?>
-                                                        </option>
-                                                    <?php endforeach ?>
-                                                </select>
-                                            </div>
-
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label class="form-label"><b>Travel Purpose *</b></label>
                                                 <select class="select2" name="TR_TRAVEL_PURPOSE">
                                                     <option>Drop Off</option>
@@ -230,24 +221,40 @@
                                                 </select>
                                             </div>
 
+                                            <div class="col-md-4">
+                                                <label class="form-label"><b>Transport Type *</b></label>
+                                                <select class="select2" name="TR_TRANSPORT_TYPE_ID">
+                                                    <?php foreach ($transport_types as $transport_type) : ?>
+                                                        <option value="<?= $transport_type['TT_ID'] ?>">
+                                                            <?= $transport_type['TT_LABEL'] ?> - AED <?= $transport_type['TT_PRICE'] ?>
+                                                        </option>
+                                                    <?php endforeach ?>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="col-md-4">
+                                                <label class="form-label"><b>Adults *</b></label>
+                                                <input type="number" name="TR_ADULTS" class="form-control" value=1 oninput="updateTotalPassengers()" />
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label class="form-label"><b>Children</b></label>
+                                                <input type="number" name="TR_CHILDREN" class="form-control" oninput="updateTotalPassengers()" />
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label class="form-label"><b>Total Passengers *</b></label>
+                                                <input type="number" name="TR_TOTAL_PASSENGERS" class="form-control" value="0" readonly />
+                                            </div>
+                                            
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Guest Name *</b></label>
                                                 <input type="text" name="TR_GUEST_NAME" class="form-control" placeholder="Guest name" />
                                             </div>
 
                                             <div class="col-md-6">
-                                                <label class="form-label"><b>Adults *</b></label>
-                                                <input type="number" name="TR_ADULTS" class="form-control" value=1 oninput="updateTotalPassengers()" />
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label"><b>Children</b></label>
-                                                <input type="number" name="TR_CHILDREN" class="form-control" oninput="updateTotalPassengers()" />
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label class="form-label"><b>Total Passengers *</b></label>
-                                                <input type="number" name="TR_TOTAL_PASSENGERS" class="form-control" value="0" readonly />
+                                                <label class="form-label"><b>Guest Image</b></label>
+                                                <input type="file" name="TR_GUEST_IMAGE" class="form-control" />
                                             </div>
 
                                             <!-- <div class="col-md-6">
@@ -665,6 +672,12 @@
                     },
                     {
                         data: 'TR_GUEST_NAME'
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row, meta) {
+                            return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['TR_GUEST_IMAGE']}")' src='<?= base_url() ?>/${data['TR_GUEST_IMAGE']}' width='80' height='80'/>`);
+                        }
                     },
                     {
                         data: 'TT_LABEL'

@@ -13,6 +13,7 @@ class PaymentRepository extends BaseController
 
     private $PaymentTransaction;
     private $Customer;
+    private $publishable_key;
 
     public function __construct()
     {
@@ -21,6 +22,7 @@ class PaymentRepository extends BaseController
 
         $this->PaymentTransaction = new PaymentTransaction();
         $this->Customer = new Customer();
+        $this->publishable_key = 'pk_test_51Lg1MuA6gmHSIFPivTkgXTIRKfoo3XtJDCWP2I5a94nrh2d9geu5n91SSfVxQbrBY70VgF9j218PDSxdbmRg4mDa00AsaSKQ3s';
     }
 
     public function createUpdateTransaction($data)
@@ -74,7 +76,8 @@ class PaymentRepository extends BaseController
             $output = [
                 'client_secret' => $paymentIntent->client_secret,
                 'ephemeral_key' => $ephemeral_key->secret,
-                'customer_id' => $customer_id
+                'customer_id' => $customer_id,
+                'publishable_key' => $this->publishable_key
             ];
 
             return responseJson(200, false, ['msg' => 'payment intent created successfully.'], $output);

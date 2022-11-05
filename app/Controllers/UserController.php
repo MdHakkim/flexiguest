@@ -490,9 +490,9 @@ class UserController extends BaseController
 
             $submitted_image = $this->request->getFile('USR_IMAGE');
 
-            if (empty($sysid) || ($submitted_image->isValid() &&  !$submitted_image->hasMoved()))
+            // if ( (NULL !== $submitted_image) && ($submitted_image->isValid() &&  !$submitted_image->hasMoved()))
 
-                //echo "<pre>"; print_r($this->request->getFile('USR_IMAGE')); echo "</pre>";
+            //     //echo "<pre>"; print_r($this->request->getFile('USR_IMAGE')); echo "</pre>";
 
                 $rules = array_merge($rules, [
                     'USR_IMAGE' => [
@@ -545,10 +545,10 @@ class UserController extends BaseController
                 $image_name = $image->getRandomName();
                 $directory = "assets/img/avatars/";
 
-                $response = documentUpload($image, $image_name, $sysid, $directory);
+            //     $response = documentUpload($image, $image_name, $sysid, $directory);
 
-                if ($response['SUCCESS'] != 200)
-                    return $this->respond(responseJson("500", true, "Product Image not uploaded"));
+            //     if ($response['SUCCESS'] != 200)
+            //         return $this->respond(responseJson("500", true, "Product Image not uploaded"));
 
                 $data['USR_IMAGE'] = $directory . $response['RESPONSE']['OUTPUT'];
             }

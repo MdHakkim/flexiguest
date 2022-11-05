@@ -71,7 +71,7 @@ class TransportRequestController extends BaseController
                         left join FLXY_ROOM on TR_ROOM_ID = RM_ID
                         left join FLXY_TRANSPORT_TYPES on TR_TRANSPORT_TYPE_ID = TT_ID';
 
-        $columns = 'TR_ID,TR_RESERVATION_ID,TR_ROOM_ID,TR_CUSTOMER_ID,TR_GUEST_NAME,TR_TRAVEL_TYPE,TR_TRANSPORT_TYPE_ID,TR_TRAVEL_PURPOSE,TR_PICKUP_DATE,TR_PICKUP_TIME,TR_DROPOFF_DATE,TR_DROPOFF_TIME,TR_STATUS,TR_PAYMENT_STATUS,TR_CREATED_AT,RM_NO,TT_LABEL';
+        $columns = 'TR_ID,TR_RESERVATION_ID,TR_ROOM_ID,TR_CUSTOMER_ID,TR_GUEST_NAME,TR_GUEST_IMAGE,TR_TRAVEL_TYPE,TR_TRANSPORT_TYPE_ID,TR_TRAVEL_PURPOSE,TR_PICKUP_DATE,TR_PICKUP_TIME,TR_DROPOFF_DATE,TR_DROPOFF_TIME,TR_STATUS,TR_PAYMENT_STATUS,TR_CREATED_AT,RM_NO,TT_LABEL';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -84,6 +84,7 @@ class TransportRequestController extends BaseController
             return $this->respond(responseJson("403", true, $this->validator->getErrors()));
 
         $data = json_decode(json_encode($this->request->getVar()), true);
+        $data['TR_GUEST_IMAGE'] = $this->request->getFile('TR_GUEST_IMAGE') ?? null;
 
         // $already_exist = $this->TransportRequestRepository->checkExistingRequest($user, $data);
         // if (!empty($already_exist)) {
@@ -135,7 +136,7 @@ class TransportRequestController extends BaseController
         $data['PICKUP_POINTS'] = $this->PickupPoint->select('PP_ID as id, PP_POINT as label')->orderBy('PP_SEQUENCE')->findAll();
         $data['DROPOFF_POINTS'] = $this->DropoffPoint->select('DP_ID as id, DP_POINT as label')->orderBy('DP_SEQUENCE')->findAll();
         $data['FLIGHT_CARRIERS'] = $this->FlightCarrier->select('FC_ID, FC_FLIGHT_CARRIER, FC_FLIGHT_CODE')->orderBy('FC_SEQUENCE')->findAll();
-        $data['TRANSPORT_TYPES'] = $this->TransportType->select("TT_ID as id, concat(TT_LABEL, ' - ', TT_MAX_PRICE) as label")->orderBy('TT_DISPLAY_SEQUENCE')->findAll();
+        $data['TRANSPORT_TYPES'] = $this->TransportType->select("TT_ID as id, concat(TT_LABEL, ' - ', TT_PRICE) as label")->orderBy('TT_DISPLAY_SEQUENCE')->findAll();
 
         return $this->respond(responseJson(200, false, ['msg' => 'lookup API'], $data));
     }
@@ -183,7 +184,7 @@ class TransportRequestController extends BaseController
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
         $all_requests = $this->TransportRequest
-            ->select('FLXY_TRANSPORT_REQUESTS.*, pp.PP_POINT, dp.DP_POINT, RM_NO, TT_LABEL, TT_MAX_PRICE, FC_FLIGHT_CARRIER')
+            ->select('FLXY_TRANSPORT_REQUESTS.*, pp.PP_POINT, dp.DP_POINT, RM_NO, TT_LABEL, TT_PRICE, FC_FLIGHT_CARRIER')
             ->join('FLXY_PICKUP_POINTS as pp', 'FLXY_TRANSPORT_REQUESTS.TR_PICKUP_POINT_ID = pp.PP_ID', 'left')
             ->join('FLXY_DROPOFF_POINTS as dp', 'FLXY_TRANSPORT_REQUESTS.TR_DROPOFF_POINT_ID = dp.DP_ID', 'left')
             ->join('FLXY_TRANSPORT_TYPES', 'TR_TRANSPORT_TYPE_ID = TT_ID', 'left')

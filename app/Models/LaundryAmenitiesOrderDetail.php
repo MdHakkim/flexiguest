@@ -9,6 +9,7 @@ class LaundryAmenitiesOrderDetail extends Model
     protected $table      = 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS';
     protected $primaryKey = 'LAOD_ID';
     protected $allowedFields = [
+        'LAOD_ATTENDANT_ID',
         'LAOD_ORDER_ID',
         'LAOD_PRODUCT_ID',
         'LAOD_QUANTITY',
@@ -16,6 +17,7 @@ class LaundryAmenitiesOrderDetail extends Model
         'LAOD_DELIVERY_STATUS', // 'New','Processing','Delivered','Acknowledged','Cancelled'
         'LAOD_EXPIRY_DATETIME',
         'LAOD_IS_REQUEST_ESCALATED',
+        'LAOD_ASSIGNED_AT',
         'LAOD_CREATED_BY',
         'LAOD_UPDATED_BY',
     ];
