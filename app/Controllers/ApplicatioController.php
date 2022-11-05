@@ -2422,6 +2422,7 @@ class ApplicatioController extends BaseController
     public function roomList(){
         $search = $this->request->getPost("search");
         $room_type = $this->request->getPost("room_type");
+        $room_ids = $this->request->getPost("room_ids");
 
         $sql = "SELECT RM_ID, RM_NO, RM_DESC FROM FLXY_ROOM WHERE 1 = 1"; 
         
@@ -2429,7 +2430,10 @@ class ApplicatioController extends BaseController
             $sql .= " AND RM_DESC like '%$search%'";
 
         if(!empty($room_type))
-            $sql .= " AND RM_TYPE_REF_ID = $room_type";
+            $sql .= " AND RM_TYPE_REF_ID IN (".$room_type.")";
+
+        if(!empty($room_ids))
+            $sql .= " AND RM_ID IN (".$room_ids.")";
 
         $response = $this->Db->query($sql)->getResultArray();
 
@@ -2694,7 +2698,7 @@ class ApplicatioController extends BaseController
         $search = $this->request->getPost("search");
         $sql = "SELECT RM_TY_ID,RM_TY_CODE,RM_TY_DESC,RM_TY_ROOM_CLASS,RM_TY_FEATURE FROM FLXY_ROOM_TYPE WHERE RM_TY_DESC like '%$search%'";
         $response = $this->Db->query($sql)->getResultArray();
-        $option='<option value="">Select Room Type</option>';
+        $option='';
         foreach($response as $row){
             $option.= '<option data-room-type-id="'.trim($row['RM_TY_ID']).'" data-feture="'.trim($row['RM_TY_FEATURE']).'" data-desc="'.trim($row['RM_TY_DESC']).'" data-rmclass="'.trim($row['RM_TY_ROOM_CLASS']).'" value="'.$row['RM_TY_CODE'].'"'.set_select('SEARCH_ROOM_TYPE', $row['RM_TY_ID'], False).'>'.$row['RM_TY_DESC'].'</option>';
         }

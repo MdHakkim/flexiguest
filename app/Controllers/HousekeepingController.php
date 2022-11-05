@@ -18,13 +18,14 @@ class HousekeepingController extends BaseController
         helper(['form', 'url', 'custom', 'common', 'upload']);
     }
 
-   
+
 
     /**************      Task Code Functions      ***************/
 
-    public function taskcode(){
+    public function taskcode()
+    {
         $data['title'] = getMethodName();
-        $data['session'] = $this->session;           
+        $data['session'] = $this->session;
         return view('Housekeeping/TaskcodeView', $data);
     }
 
@@ -45,8 +46,8 @@ class HousekeepingController extends BaseController
 
             $validate = $this->validate([
                 'HKT_CODE' => ['label' => 'Task Code', 'rules' => 'required|is_unique[FLXY_HK_TASKS.HKT_CODE,HKT_ID,' . $sysid . ']'],
-                'HKT_DESCRIPTION' => ['label' => 'Description', 'rules' => 'required'],         
-                
+                'HKT_DESCRIPTION' => ['label' => 'Description', 'rules' => 'required'],
+
             ]);
             if (!$validate) {
                 $validate = $this->validator->getErrors();
@@ -56,18 +57,17 @@ class HousekeepingController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            
+
             $data = [
                 "HKT_CODE" => trim($this->request->getPost('HKT_CODE')),
                 "HKT_DESCRIPTION" => trim($this->request->getPost('HKT_DESCRIPTION'))
             ];
-            if(empty($sysid)){
+            if (empty($sysid)) {
                 $data["HKT_CREATED_AT"] = date("Y-m-d H:i:s A");
-                $data["HKT_CREATED_BY"] = $user_id;               
-            }
-            else{
+                $data["HKT_CREATED_BY"] = $user_id;
+            } else {
                 $data["HKT_UPDATED_AT"] = date("Y-m-d H:i:s A");
-                $data["HKT_UPDATED_BY"] = $user_id;                
+                $data["HKT_UPDATED_BY"] = $user_id;
             }
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_HK_TASKS')->where('HKT_ID', $sysid)->update($data) : $this->Db->table('FLXY_HK_TASKS')->insert($data);
@@ -101,10 +101,9 @@ class HousekeepingController extends BaseController
                 WHERE HKST_TASK_ID=:SYSID: ";
 
             $response = $this->Db->query($sql, $param)->getNumRows();
-            if($response > 0 )
-            {
+            if ($response > 0) {
                 $result = $this->responseJson("0");
-            }else{
+            } else {
                 $return = $this->Db->table('FLXY_HK_TASKS')->delete(['HKT_ID' => $sysid]);
                 $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
             }
@@ -120,8 +119,8 @@ class HousekeepingController extends BaseController
         $data['session'] = $this->session;
         $data['toggleButton_javascript'] = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
-        $data['blockLoader_javascript'] = blockLoader_javascript();  
-        
+        $data['blockLoader_javascript'] = blockLoader_javascript();
+
         return view('Housekeeping/TaskView', $data);
     }
 
@@ -134,7 +133,8 @@ class HousekeepingController extends BaseController
         exit;
     }
 
-    public function taskcodeList(){
+    public function taskcodeList()
+    {
         $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
 
         $sql = "SELECT HKT_ID, HKT_CODE
@@ -146,8 +146,8 @@ class HousekeepingController extends BaseController
         }
 
         $response = $this->Db->query($sql)->getResultArray();
-        IF(!empty($response)){
-        
+        if (!empty($response)) {
+
             $option = '<option value="">Choose an Option</option>';
             foreach ($response as $row) {
                 $option .= '<option value="' . $row['HKT_ID'] . '">' . $row['HKT_CODE']  . '</option>';
@@ -165,8 +165,8 @@ class HousekeepingController extends BaseController
 
             $validate = $this->validate([
                 'HKST_DESCRIPTION' => ['label' => 'Task', 'rules' => 'required|is_unique[FLXY_HK_SUBTASKS.HKST_DESCRIPTION,HKST_ID,' . $sysid . ']'],
-                'HKST_TASK_ID' => ['label' => 'Task Code', 'rules' => 'required'],         
-                
+                'HKST_TASK_ID' => ['label' => 'Task Code', 'rules' => 'required'],
+
             ]);
             if (!$validate) {
                 $validate = $this->validator->getErrors();
@@ -176,18 +176,17 @@ class HousekeepingController extends BaseController
                 echo json_encode($result);
                 exit;
             }
-            
+
             $data = [
                 "HKST_TASK_ID" => trim($this->request->getPost('HKST_TASK_ID')),
                 "HKST_DESCRIPTION" => trim($this->request->getPost('HKST_DESCRIPTION'))
             ];
-            if(empty($sysid)){
+            if (empty($sysid)) {
                 $data["HKST_CREATED_AT"] = date("Y-m-d H:i:s A");
-                $data["HKST_CREATED_BY"] = $user_id;               
-            }
-            else{
+                $data["HKST_CREATED_BY"] = $user_id;
+            } else {
                 $data["HKST_UPDATED_AT"] = date("Y-m-d H:i:s A");
-                $data["HKST_UPDATED_BY"] = $user_id;                
+                $data["HKST_UPDATED_BY"] = $user_id;
             }
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_HK_SUBTASKS')->where('HKST_ID', $sysid)->update($data) : $this->Db->table('FLXY_HK_SUBTASKS')->insert($data);
@@ -215,41 +214,46 @@ class HousekeepingController extends BaseController
         $sysid = $this->request->getPost('sysid');
 
         try {
-           
+
             $param = ['SYSID' => $sysid];
             $sql = "SELECT HKATD_ID
                 FROM FLXY_HK_ASSIGNED_TASK_DETAILS
                 WHERE HKATD_SUBTASK_ID=:SYSID: ";
 
             $response = $this->Db->query($sql, $param)->getNumRows();
-            if($response > 0 )
-            {
+            if ($response > 0) {
                 $result = $this->responseJson("0");
-            }else{
+            } else {
                 $return = $this->Db->table('FLXY_HK_SUBTASKS')->delete(['HKST_ID' => $sysid]);
                 $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
             }
 
 
-          
+
             echo json_encode($result);
         } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
 
-    public function housekeeping(){
+    public function housekeeping()
+    {
         $data['title'] = getMethodName();
         $data['room_status_list'] = $this->Db->table('FLXY_ROOM_STATUS_MASTER')->select('RM_STATUS_ID,RM_STATUS_CODE,RM_STATUS_COLOR_CLASS')->get()->getResultArray();
+        $data['toggleButton_javascript'] = toggleButton_javascript();
+        $data['clearFormFields_javascript'] = clearFormFields_javascript();
+        $data['blockLoader_javascript'] = blockLoader_javascript();
 
         return view('Housekeeping/HKRoomView', $data);
     }
 
-    public function HkRoomView(){
+    public function HkRoomView()
+    {
         $mine = new ServerSideDataTable(); // loads and creates instance
         $TODAYDATE = date('Y-m-d');
 
-        $tableName = "  (SELECT RM_ID,RM_NO,RM_DESC,RM_TYPE,RM_CLASS,RM_FEATURE,RM_FLOOR_PREFERN,
+        $tableName = "  (SELECT RM_ID,RM_NO,RM_DESC,RM_TYPE,RM_CLASS,RM_FEATURE,RM_FLOOR_PREFERN,RM_MAX_OCCUPANCY,
+                        RM_SMOKING_PREFERN,RM_SQUARE_UNITS,RM_PHONE_NO,
                         ISNULL(SM.RM_STATUS_ID, 2) AS RM_STATUS_ID,ISNULL(SM.RM_STATUS_CODE, 'Dirty') AS RM_STATUS_CODE,
                         ISNULL(RVN.RESV_STATUS, 'Not Reserved') AS RESV_STATUS,
                         (CASE
@@ -267,14 +271,14 @@ class HousekeepingController extends BaseController
 
                         LEFT JOIN ( SELECT MAX(RESV_ID) AS RESV_MAX_ID, RESV_ROOM_ID AS RESV_ROOM
                                     FROM FLXY_RESERVATION
-                                    WHERE '".$TODAYDATE."' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE
+                                    WHERE '" . $TODAYDATE . "' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE
                                     AND RESV_STATUS NOT IN ('Cancelled')
                                     GROUP BY RESV_ROOM_ID ) RESV ON RESV.RESV_ROOM = RM.RM_ID
                         LEFT JOIN FLXY_RESERVATION RVN ON RVN.RESV_ID = RESV.RESV_MAX_ID
                         ) ROOM_STATS";
-                        
-        $columns = 'RM_ID,RM_NO,RM_DESC,RM_TYPE,RM_CLASS,RM_FEATURE,RM_STATUS_ID,RM_STATUS_CODE,RM_FLOOR_PREFERN,RESV_STATUS,FO_STATUS';
-        $mine->generate_DatatTable($tableName,$columns);
+
+        $columns = 'RM_ID,RM_NO,RM_DESC,RM_TYPE,RM_CLASS,RM_FEATURE,RM_STATUS_ID,RM_STATUS_CODE,RM_FLOOR_PREFERN,RESV_STATUS,FO_STATUS,RM_FLOOR_PREFERN,RM_MAX_OCCUPANCY,RM_SMOKING_PREFERN,RM_SQUARE_UNITS,RM_PHONE_NO';
+        $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
 
@@ -284,6 +288,24 @@ class HousekeepingController extends BaseController
         echo getFeaturesDesc($comma_list);
     }
 
+    public function showRoomStatus()
+    {
+        $param = ['SYSID' => $this->request->getPost('roomId')];
+
+        $sql = "SELECT RM_MAX_LOG_ID, RL.RM_STAT_ROOM_ID, RM_STAT_ROOM_STATUS, RM_STATUS_CODE 
+                FROM (  SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
+                        FROM FLXY_ROOM_STATUS_LOG
+                        GROUP BY RM_STAT_ROOM_ID
+                        HAVING RM_STAT_ROOM_ID = :SYSID:) RM_STAT_LOG
+                LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                        
+                LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS";
+
+        $response = $this->Db->query($sql, $param)->getRowArray();
+        $response = !$response ? ['RM_STAT_ROOM_ID' => $param['SYSID'], 'RM_STAT_ROOM_STATUS' => 2, 'RM_STATUS_CODE' => 'Dirty'] : $response;
+
+        echo json_encode($response);
+    }
+
     public function updateRoomStatus()
     {
         try {
@@ -291,9 +313,11 @@ class HousekeepingController extends BaseController
             $new_status = $this->request->getPost('new_status');
             $user_id = session()->get('USR_ID');
 
-            $logdata = ["RM_STAT_ROOM_ID" => $roomId, "RM_STAT_ROOM_STATUS" => $new_status, 
-                        "RM_STAT_UPDATED_BY" => $user_id, "RM_STAT_UPDATED"=> date("Y-m-d H:i:s")];
-                        
+            $logdata = [
+                "RM_STAT_ROOM_ID" => $roomId, "RM_STAT_ROOM_STATUS" => $new_status,
+                "RM_STAT_UPDATED_BY" => $user_id, "RM_STAT_UPDATED" => date("Y-m-d H:i:s")
+            ];
+
             $return = $this->Db->table('FLXY_ROOM_STATUS_LOG')->insert($logdata);
 
             echo json_encode($this->responseJson("1", "0", $return, $response = ''));
@@ -302,4 +326,56 @@ class HousekeepingController extends BaseController
         }
     }
 
+    public function bulkUpdateRoomStatus()
+    {
+        $user_id = session()->get('USR_ID');
+
+        try {
+            // echo json_encode(print_r($_POST));
+            // exit;
+
+            $selectRoomsBy = $this->request->getPost('selectRoomsBy');
+            $statusToChange = $this->request->getPost('statusToChange');
+
+            $rooms_to_log = $rooms_to_update = [];
+            $ins = NULL;
+
+            $roomIds = $this->request->getPost('roomIds');
+
+            if (!empty($roomIds)) {
+
+                //Select Rooms in the list not already having the new status
+                $sql = "SELECT RM_ID, RM_STAT_ROOM_STATUS
+                        FROM FLXY_ROOM RM
+                        LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
+                                    FROM FLXY_ROOM_STATUS_LOG
+                                    GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+                        LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID 
+                        WHERE RM_ID IN ($roomIds) 
+                        AND (RM_STAT_ROOM_STATUS != $statusToChange OR RM_STAT_ROOM_STATUS IS NULL)";
+
+                $rooms_to_update = $this->Db->query($sql)->getResultArray();
+            }
+
+
+            if ($rooms_to_update != NULL) {
+                foreach ($rooms_to_update as $room_to_update) {
+                    $rooms_to_log[] = [
+                        'RM_STAT_ROOM_ID' => $room_to_update['RM_ID'],
+                        'RM_STAT_ROOM_STATUS' => $statusToChange,
+                        'RM_STAT_UPDATED_BY' => $user_id,
+                        'RM_STAT_UPDATED' => date('Y-m-d H:i:s')
+                    ];
+                }
+
+                // Insert all rooms new statuses to log
+                $ins = $this->Db->table('FLXY_ROOM_STATUS_LOG')->insertBatch($rooms_to_log);
+            }
+
+            $result = $this->responseJson("1", "0", $ins, count($rooms_to_update));
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
 }

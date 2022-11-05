@@ -1132,7 +1132,7 @@ class FacilityController extends BaseController
 
             if(file_exists($response[$i]['PR_IMAGE']))
                 $option .= '            <img src="' . base_url($response[$i]['PR_IMAGE']) . '" alt="' . $response[$i]['PR_NAME'] . '"
-                                            class="w-px-50 me-3">';
+                                            class="w-px-50 h-px-50 me-3">';
             else {
                         //file not exists
                         $stateNum = rand(0,6);
@@ -1143,8 +1143,8 @@ class FacilityController extends BaseController
                         $initials = count($name_string) >= 2 ? strtoupper(substr($name_string[0], 0, 1).substr($name_string[1], 0, 1)) : strtoupper(substr($name_string[0], 0, 2));
 
                         $option .=
-                            '<div class="avatar avatar-lg me-2">
-                                <span class="avatar-initial bg-label-warning me-1">' . $initials . '</span>
+                            '<div class="avatar avatar-lg me-3">
+                                <span class="avatar-initial bg-label-warning w-px-50 h-px-50">' . $initials . '</span>
                              </div>';
             }
 
@@ -1206,7 +1206,7 @@ class FacilityController extends BaseController
 
                 if(file_exists($selectedProductDetail['prodImg']))
                     $output .= '        <img src="' . base_url($selectedProductDetail['prodImg']) . '" alt="' . $selectedProductDetail['prodName'] . '"
-                                                class="w-px-100">';
+                                                class="w-px-100 h-px-100">';
                 else {
                             //file not exists
                             $stateNum = rand(0,6);
@@ -1216,8 +1216,8 @@ class FacilityController extends BaseController
                             $name_string = explode(" ", trim($name));
                             $initials = count($name_string) >= 2 ? strtoupper(substr($name_string[0], 0, 1).substr($name_string[1], 0, 1)) : strtoupper(substr($name_string[0], 0, 2));
 
-                            $output .=  '<div class="avatar avatar-lg me-2">
-                                            <span class="avatar-initial bg-label-warning me-1">' . $initials . '</span>
+                            $output .=  '<div class="avatar avatar-lg w-px-100 h-px-100">
+                                            <span class="avatar-initial bg-label-warning">' . $initials . '</span>
                                         </div>';
                 }
                 $output .= '        </div>

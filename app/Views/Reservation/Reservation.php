@@ -504,7 +504,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label col-md-12">Room Type</label>
                                     <select name="COPY_RM_TYPE" id="COPY_RM_TYPE" data-width="100%"
-                                        class="selectpicker COPY_RM_TYPE" data-live-search="true">
+                                        class="selectpicker COPY_RM_TYPE" data-style="btn btn-default" data-live-search="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
@@ -710,7 +710,7 @@
                                 <div class="col-md-3 mt-0">
                                     <label class="form-label">Guest Name</label>
                                     <div class="input-group mb-3">
-                                        <select id="RESV_NAME" class="selectpicker RESV_NAME" data-live-search="true">
+                                        <select id="RESV_NAME" class="selectpicker RESV_NAME" data-style="btn btn-default" data-live-search="true">
                                             <option value="">Select</option>
                                         </select>
                                         <button type="button" onClick="childReservation('C')"
@@ -820,8 +820,8 @@
                                 </div>
                                 <div class="col-md-3 selPickerDiv">
                                     <label class="form-label">Features</label>
-                                    <select id="RESV_FEATURE" class="selectpicker" multiple data-icon-base="bx"
-                                        data-tick-icon="bx-check text-primary" data-live-search="true"
+                                    <select id="RESV_FEATURE" class="selectpicker" multiple data-style="btn btn-default" 
+                                        data-icon-base="bx" data-tick-icon="bx-check text-primary" data-live-search="true"
                                         data-allow-clear="true">
                                     </select>
                                 </div>
@@ -846,7 +846,8 @@
                                     <label class="form-label">Guest Name</label>
                                     <div class="input-group mb-3">
                                         <select name="RESV_NAME" id="RESV_NAME"
-                                            class="selectpicker RESV_NAME activeName" data-live-search="true" required>
+                                            class="selectpicker RESV_NAME activeName" data-style="btn btn-default" 
+                                            data-live-search="true" required>
                                             <option value="">Select</option>
                                         </select>
                                         <div class="invalid-feedback">
@@ -891,7 +892,7 @@
                                 <div class="col-md-3">
                                     <label class="form-label">Country</label>
                                     <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%"
-                                        class="selectpicker CUST_COUNTRY" data-live-search="true">
+                                        class="selectpicker CUST_COUNTRY" data-style="btn btn-default" data-live-search="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
@@ -1168,7 +1169,7 @@
                                             <div class="col-md-3 mt-2 selPickerDiv">
                                                 <label class="form-label" for="RESV_SPECIALS">Specials</label>
                                                 <select name="RESV_SPECIALS[]" id="RESV_SPECIALS" class="selectpicker"
-                                                    multiple data-icon-base="bx" data-tick-icon="bx-check text-primary"
+                                                    data-style="btn btn-default" multiple data-icon-base="bx" data-tick-icon="bx-check text-primary"
                                                     data-live-search="true" data-allow-clear="true">
                                                 </select>
                                             </div>
@@ -1688,7 +1689,7 @@
                             <div class="col-md-3">
                                 <label class="form-label col-md-12">Country</label>
                                 <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%"
-                                    class="selectpicker CUST_COUNTRY" data-live-search="true" required>
+                                    class="selectpicker CUST_COUNTRY" data-style="btn btn-default" data-live-search="true" required>
                                     <option value="">Select</option>
                                 </select>
                                 <div class="invalid-feedback">
@@ -1698,14 +1699,14 @@
                             <div class="col-md-3">
                                 <label class="form-label col-md-12">State</label>
                                 <select name="CUST_STATE" id="CUST_STATE" data-width="100%"
-                                    class="selectpicker CUST_STATE" data-live-search="true">
+                                    class="selectpicker CUST_STATE" data-style="btn btn-default" data-live-search="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label col-md-12">City</label>
                                 <select name="CUST_CITY" id="CUST_CITY" data-width="100%" class="selectpicker CUST_CITY"
-                                    data-live-search="true">
+                                    data-style="btn btn-default" data-live-search="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>

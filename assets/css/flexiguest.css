@@ -617,3 +617,7 @@ td{
   text-align: center;
 }
 /* web link checkin */
+
+.dtr-bs-modal .modal-header{
+  padding-bottom: 15px;
+}

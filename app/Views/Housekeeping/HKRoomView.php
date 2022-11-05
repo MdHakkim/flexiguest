@@ -1,7 +1,35 @@
-<?=$this->extend("Layout/AppView")?>
-<?=$this->section("contentRender")?>
+<?= $this->extend("Layout/AppView") ?>
+<?= $this->section("contentRender") ?>
 <?= $this->include('Layout/SuccessReport') ?>
 <?= $this->include('Layout/ErrorReport') ?>
+
+<style>
+.tagify__input {
+    padding-left: 6px;
+}
+
+.tagify__tag>div {
+    cursor: pointer;
+}
+
+.table-hover>tbody>tr:hover {
+    cursor: pointer;
+}
+
+.table-warning {
+    color: #000 !important;
+}
+
+.roomTypeSelDiv .select2-search--inline {
+    display: contents;
+    /*this will make the container disappear, making the child the one who sets the width of the element*/
+}
+
+.roomTypeSelDiv .select2-search__field:placeholder-shown {
+    width: 100% !important;
+    /*makes the placeholder to be 100% of the width while there are no options selected*/
+}
+</style>
 
 <!-- Content wrapper -->
 <div class="content-wrapper">
@@ -15,6 +43,10 @@
         <div class="card">
             <!-- <h5 class="card-header">Responsive Datatable</h5> -->
             <div class="container-fluid p-3">
+
+                <button type="button" class="btn btn-primary mb-2 use_selected_rooms" data-change-selected="0"><i
+                        class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick Change</button>
+
                 <div class="room_list_div table-responsive text-nowrap">
                     <table id="room_list" class="table table-bordered table-hover table-striped">
                         <thead>
@@ -24,6 +56,11 @@
                                 <th class="all">Room No</th>
                                 <th class="all">Room Type</th>
                                 <th class="all">Room Status</th>
+                                <th>Description</th>
+                                <th>Max Occupancy</th>
+                                <th>Smoking Preference</th>
+                                <th>Square Units</th>
+                                <th>Phone Number</th>
                                 <th>FO Status</th>
                                 <th>Reservation Status</th>
                                 <th class="all">Floor</th>
@@ -41,156 +78,112 @@
     </div>
     <!-- / Content -->
 
-    <!-- Modal Window -->
-
-    <div class="modal fade" id="popModalWindow" tabindex="-1" aria-lableledby="popModalWindowlable" aria-hidden="true">
-        <div class="modal-dialog modal-md">
+    <!-- Quick Change Room Status Modal -->
+    <div class="modal fade" id="quickChangeRmStat" data-backdrop="static" data-keyboard="false"
+        aria-lableledby="quickChangeRmStatlable" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="popModalWindowlable">Room</h5>
+                    <h4 class="modal-title" id="quickChangeRmStatlabel">Quick Change Room Status</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="submitForm">
-                        <div class="row g-3">
-                            <input type="hidden" name="RM_ID" id="RM_ID" class="form-control" />
-                            <div class="col-md-6">
-                                <lable class="form-lable">Room No / Room Class</lable>
-                                <div class="input-group mb-3">
-                                    <div class="col-md-6">
-                                        <input type="number" name="RM_NO" id="RM_NO" class="form-control"
-                                            placeholder="room no" />
+                    <form id="quickChangeRmForm" class="needs-validation" novalidate>
+
+                        <div class="mb-3 d-flex flex-row bd-highlight">
+                            <label class="form-label fw-bold col-md-3 pt-2">Room Types</label>
+                            <div class="col-md-9 ps-3 pe-3 roomTypeSelDiv">
+                                <select name="RM_TYPES[]" id="RM_TYPES" data-width="100%" multiple
+                                    class="select2 form-select" data-placeholder="All Room Types"
+                                    data-allow-clear="true">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="border rounded pt-3 p-3">
+                            <div class="row mb-3">
+                                <div class="col-md-3 pt-1">
+                                    <div class="form-check">
+                                        <input id="selectRoomsByL" name="selectRoomsBy" class="form-check-input "
+                                            type="radio" value="L" checked="">
+                                        <label class="form-label fw-bold" for="selectRoomsByL"> Room List </label>
                                     </div>
-                                    <div class="col-md-6">
-                                        <input type="text" readonly name="RM_CLASS" id="RM_CLASS" class="form-control"
-                                            placeholder="room class" />
+                                </div>
+                                <div class="col-md-9 selectRoomsByCol">
+                                    <select id="selectRoomsList" name="selectRoomsList[]"
+                                        class="selectpicker selectRooms w-100" multiple data-style="btn btn-default"
+                                        data-icon-base="bx" data-tick-icon="bx-check text-primary"
+                                        data-live-search="true" data-allow-clear="true">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3 border-top pt-3">
+                                <div class="col-md-3 pt-1">
+                                    <div class="form-check">
+                                        <input name="selectRoomsBy" class="form-check-input" type="radio" value="N"
+                                            id="selectRoomsByN">
+                                        <label class="form-label fw-bold" for="selectRoomsByN"> From Room </label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <lable class="form-lable">Room Type</lable>
-                                <input type="hidden" name="RM_DESC" id="RM_DESC" class="form-control" />
-                                <input type="hidden" name="RM_TYPE_REF_ID" id="RM_TYPE_REF_ID" class="form-control" />
-                                <select name="RM_TYPE" id="RM_TYPE" data-width="100%" class="selectpicker RM_TYPE"
-                                    data-live-search="true">
-                                    <option value="">Select</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <lable class="form-lable">Pub. Rate Code</lable>
-                                <select name="RM_PUBLIC_RATE_CODE" id="RM_PUBLIC_RATE_CODE" class="select2 form-select"
-                                    data-allow-clear="true">
-                                    <option value="">Select</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <lable class="form-lable">Floor Preference</lable>
-                                <select name="RM_FLOOR_PREFERN" id="RM_FLOOR_PREFERN" class="select2 form-select"
-                                    data-allow-clear="true">
-                                    <option value="">Select</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <lable class="form-lable">Pub. Rate Amount</lable>
-                                <input type="text" name="RM_PUBLIC_RATE_AMOUNT" id="RM_PUBLIC_RATE_AMOUNT"
-                                    class="form-control" placeholder="rate amount" />
-                            </div>
-                            <div class="col-md-6">
-                                <lable class="form-lable">Smoking Preference</lable>
-                                <select name="RM_SMOKING_PREFERN" id="RM_SMOKING_PREFERN" class="select2 form-select"
-                                    data-allow-clear="true">
-                                    <option value="">Select</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <lable class="form-lable">Display Seq./Max Occupancy</lable>
-                                <div class="input-group mb-3">
-                                    <input type="number" name="RM_DISP_SEQ" id="RM_DISP_SEQ" class="form-control"
-                                        placeholder="display seq." />
-                                    <input type="number" name="RM_MAX_OCCUPANCY" id="RM_MAX_OCCUPANCY"
-                                        class="form-control" placeholder="max occupancy" />
+                                <div class="col-md-4 selectRoomsByCol">
+                                    <select id="selectRoomsFrom" name="selectRoomsFrom"
+                                        class="selectpicker selectRooms w-100" data-style="btn btn-default"
+                                        data-icon-base="bx" data-tick-icon="bx-check text-primary"
+                                        data-live-search="true" data-allow-clear="true">
+                                    </select>
+                                </div>
+                                <label class="col-md-1 pt-2 form-label text-end fw-bold">To</label>
+                                <div class="col-md-4 selectRoomsByCol">
+                                    <select id="selectRoomsTo" name="selectRoomsTo"
+                                        class="selectpicker selectRooms w-100" data-style="btn btn-default"
+                                        data-icon-base="bx" data-tick-icon="bx-check text-primary"
+                                        data-live-search="true" data-allow-clear="true">
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <lable class="form-lable">Measurement/Square Units</lable>
-                                <div class="input-group mb-3">
-                                    <input type="number" name="RM_MEASUREMENT" id="RM_MEASUREMENT" class="form-control"
-                                        placeholder="measurement" />
-                                    <input type="number" name="RM_SQUARE_UNITS" id="RM_SQUARE_UNITS"
-                                        class="form-control" placeholder="square units" />
+
+                            <div class="row border-top pt-3">
+                                <label class="col-md-3 pt-2 form-label fw-bold">Change Status to</label>
+                                <div class="col-md-4 qcRoomStatusDiv">
+                                    <!-- Change Status button here -->
                                 </div>
-                            </div>
-                            <div class="col-md-12">
-                                <lable class="form-lable">Features</lable>
-                                <!-- <select name="RM_FEATURE"  id="RM_FEATURE" data-width="100%" class="selectpicker RM_FEATURE" data-live-search="true">
-                              <option value="">Select</option>
-                          </select> -->
-                                <select name="RM_FEATURE[]" id="RM_FEATURE" class="select2 form-select" multiple>
-                                    <option value="">Select</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <lable class="form-lable">Day section</lable>
-                                <select name="RM_HOUSKP_DY_SECTION" id="RM_HOUSKP_DY_SECTION" data-width="100%"
-                                    class="selectpicker RM_HOUSKP_DY_SECTION" data-live-search="true">
-                                    <option value="">Select</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <lable class="form-lable">Evening section</lable>
-                                <select name="RM_HOUSKP_EV_SECTION" id="RM_HOUSKP_EV_SECTION" data-width="100%"
-                                    class="selectpicker RM_HOUSKP_EV_SECTION" data-live-search="true">
-                                    <option value="">Select</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <lable class="form-lable">Phone No</lable>
-                                <input type="text" name="RM_PHONE_NO" id="RM_PHONE_NO" class="form-control"
-                                    placeholder="phone" />
-                            </div>
-                            <div class="col-md-6">
-                                <lable class="form-lable">Stayover/Departure Credits</lable>
-                                <div class="input-group mb-3">
-                                    <input type="number" name="RM_STAYOVER_CR" id="RM_STAYOVER_CR" class="form-control"
-                                        placeholder="stayover" />
-                                    <input type="number" name="RM_DEPARTURE_CR" id="RM_DEPARTURE_CR"
-                                        class="form-control" placeholder="departure" />
-                                </div>
+                                <input type="hidden" id="statusToChange" name="statusToChange" value="" />
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="submitBtn" onClick="submitForm('submitForm')"
-                        class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary clearQuickChange">Reset</button>
+                    <button type="button" id="quickChangeSubmitBtn" class="btn btn-primary">Update Rooms</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- /Modal window -->
 
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
 <script>
-var compAgntMode = '';
-var linkMode = '';
+var clicked_room_ids = [];
+
 $(document).ready(function() {
-    linkMode = 'EX';
+
     $('#room_list').DataTable({
         'processing': true,
         'serverSide': true,
         'serverMethod': 'post',
         'ajax': {
-            'url': '<?php echo base_url('/hkroomView')?>'
+            'url': '<?php echo base_url('/hkroomView') ?>'
         },
         'columns': [{
                 data: ''
-            }, {
+            },
+            {
                 data: 'RM_ID',
                 "visible": false,
-            }, {
+            },
+            {
                 data: 'RM_NO'
             },
             {
@@ -198,7 +191,27 @@ $(document).ready(function() {
             },
             {
                 data: 'RM_STATUS_CODE',
-                className: "text-center"
+                className: "text-center rmStatusCol"
+            },
+            {
+                data: 'RM_DESC',
+                "visible": false,
+            },
+            {
+                data: 'RM_MAX_OCCUPANCY',
+                "visible": false,
+            },
+            {
+                data: 'RM_SMOKING_PREFERN',
+                "visible": false,
+            },
+            {
+                data: 'RM_SQUARE_UNITS',
+                "visible": false,
+            },
+            {
+                data: 'RM_PHONE_NO',
+                "visible": false,
             },
             {
                 data: 'FO_STATUS',
@@ -219,6 +232,21 @@ $(document).ready(function() {
                 data: 'RM_FEATURE'
             },
         ],
+        'createdRow': function(row, data, dataIndex) {
+            var check_str = 'room_chk_' + data['RM_ID'];
+
+            $(row).attr('data-room-id', data['RM_ID']);
+            $(row).addClass('roomRow' + data['RM_ID']);
+
+            if (jQuery.inArray(check_str, clicked_room_ids) !== -1 && !$(row).hasClass(
+                    'table-warning')) {
+                $(row).addClass('table-warning');
+            } else if (jQuery.inArray(check_str, clicked_room_ids) == -1 && $(row)
+                .hasClass(
+                    'table-warning')) {
+                $(row).removeClass('table-warning');
+            }
+        },
         columnDefs: [{
             width: "5%",
             className: 'control',
@@ -232,12 +260,15 @@ $(document).ready(function() {
         }, {
             width: "2%"
         }, {
-            width: "8%"
+            width: "8%",
+            responsivePriority: 2
         }, {
-            width: "10%"
+            width: "10%",
+            responsivePriority: 3
         }, {
             // Label
             targets: 4,
+            responsivePriority: 4,
             width: "10%",
             className: "text-center",
             render: function(data, type, full, meta) {
@@ -245,25 +276,42 @@ $(document).ready(function() {
                 var $status_name = full['RM_STATUS_CODE'];
                 var $status_id = full['RM_STATUS_ID'];
 
-                var $statButton = showRoomStatChange($status_id, $status_name, full[
-                    'RM_ID']);
+                var $statButton = showRoomStatChange($status_id, $status_name,
+                    full[
+                        'RM_ID']);
                 return $statButton;
             },
         }, {
-            width: "8%"
+            width: "0%"
         }, {
-            width: "12%"
+            width: "0%"
         }, {
-            width: "5%"
+            width: "0%"
         }, {
-            width: "10%"
+            width: "0%"
         }, {
-            width: "20%"
+            width: "0%"
+        }, {
+            width: "8%",
+            responsivePriority: 7
+        }, {
+            width: "12%",
+            responsivePriority: 8
+        }, {
+            width: "5%",
+            responsivePriority: 5
+        }, {
+            width: "10%",
+            responsivePriority: 9
+        }, {
+            width: "20%",
+            responsivePriority: 6
         }],
         autowidth: true,
         "order": [
             [2, "asc"]
         ],
+        destroy: true,
         language: {
             emptyTable: 'There are no rooms to display'
         },
@@ -277,24 +325,40 @@ $(document).ready(function() {
                 }),
                 type: 'column',
                 renderer: function(api, rowIdx, columns) {
+                    var room_id = '';
                     var data = $.map(columns, function(col, i) {
 
-                        var dataVal = col.title == 'Features' ? showFeaturesDesc(col.data) :
-                            col.data;
-                        var colClass = col.title == 'Features' ? 'featPopup' : '';
+                        if (col.title == 'Room ID')
+                            room_id = col.data;
+
+                        var dataVal = col.title == 'Features' ?
+                            showFeaturesDesc(col.data) :
+                            (col.title == 'Reservation Status' ? col.data +
+                                '<a href="<?php echo base_url('/reservation') ?>?ROOM_ID=' +
+                                room_id +
+                                '&ARRIVAL_DATE=<?= date('Y-m-d') ?>&CREATE_WALKIN=1" target="_blank" class="btn btn-sm btn-primary ms-2">Create Walk-In</a>' :
+                                (col.title == 'Room Status' ?
+                                    showRoomCurrentStat(room_id) :
+                                    col.data));
+
+                        var rowClass = col.title == 'Room Status' ? 'roomRow' +
+                            room_id :
+                            '';
+                        var colClass = col.title == 'Room Status' ?
+                            'rmStatusCol' : '';
 
                         return col.title !==
                             '' // ? Do not show row in modal popup if title is blank (for check box)
                             ?
-                            '<tr data-dt-row="' +
+                            '<tr class="' + rowClass + '" data-dt-row="' +
                             col.rowIndex +
                             '" data-dt-column="' +
                             col.columnIndex +
                             '">' +
-                            '<td width="35%">' +
+                            '<td width="35%"><b>' +
                             col.title +
                             ':' +
-                            '</td> ' +
+                            '</b></td> ' +
                             '<td class="' + colClass + '">' +
                             dataVal +
                             '</td>' +
@@ -302,18 +366,71 @@ $(document).ready(function() {
                             '';
                     }).join('');
 
-                    return data ? $('<table class="table"/><tbody />').append(data) : false;
+                    return data ? $('<table class="table"/><tbody />').append(data) :
+                        false;
                 }
             }
+        },
+        select: {
+            style: 'multi',
+            info: false
         }
 
     });
     $("#room_list_wrapper .row:first").before(
-        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick=""><i class="fa-solid fa-pencil"></i>&nbsp;&nbsp;Change Selected</button></div></div>'
+        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"></div></div>'
     );
+
+
+    $(document).on('click', '#room_list > tbody > tr', function() {
+
+        var room_chk_str = $(this).attr('data-room-id') ? $(this).attr('data-room-id') : '';
+
+        //If value in array
+        if (jQuery.inArray(room_chk_str, clicked_room_ids) !==
+            -1) {
+            if ($(this).hasClass("table-warning")) {
+                // Remove value from array
+                clicked_room_ids = $.grep(clicked_room_ids, function(value) {
+                    return value != room_chk_str;
+                });
+            }
+        } else {
+            if (!$(this).hasClass("table-warning") && room_chk_str != '') {
+                clicked_room_ids.push(room_chk_str);
+            }
+        }
+
+        if (clicked_room_ids.length == 0) {
+            $('.use_selected_rooms').html(
+                '<i class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick Change');
+            $('.use_selected_rooms').attr('data-change-selected', 0);
+        } else {
+            $('.use_selected_rooms').html(
+                '<i class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Change Selected');
+            $('.use_selected_rooms').attr('data-change-selected', 1);
+        }
+
+        //alert(clicked_room_ids);
+
+        $(this).toggleClass('table-warning', $(this).hasClass('selected'));
+    });
+
+    $.ajax({
+        url: '<?php echo base_url('/roomTypeList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        // dataType:'json',
+        success: function(respn) {
+            $('#RM_TYPES').html(respn);
+        }
+    });
 
 });
 
+// Return Features Details
 function showFeaturesDesc(comma_list = '') {
 
     $.ajax({
@@ -342,9 +459,9 @@ function showRoomStatChange(curStatId, curStatName, rmId) {
     var $status_id = curStatId;
 
     var $status = {
-        <?php foreach($room_status_list as $room_status) { ?> '<?=$room_status['RM_STATUS_ID']?>': {
-            class: 'btn-<?=$room_status['RM_STATUS_COLOR_CLASS']?>',
-            title: '<?=$room_status['RM_STATUS_CODE']?>'
+        <?php foreach ($room_status_list as $room_status) { ?> '<?= $room_status['RM_STATUS_ID'] ?>': {
+            class: 'btn-<?= $room_status['RM_STATUS_COLOR_CLASS'] ?>',
+            title: '<?= $room_status['RM_STATUS_CODE'] ?>'
         },
         <?php } ?>
     };
@@ -358,29 +475,51 @@ function showRoomStatChange(curStatId, curStatName, rmId) {
         'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
         $status_name + '</button>';
 
-    //if ($status_id != '4' && $status_id != '5') {
-    $statButton += ' <ul class="dropdown-menu">' +
-        '     <li>' +
-        '      <h6 class="dropdown-header">Change Room Status</h6>' +
-        '     </li><li><hr class="dropdown-divider"></li>';
+    if ($status_id != '4' && $status_id != '5') {
+        $statButton += ' <ul class="dropdown-menu">' +
+            '     <li>' +
+            '      <h6 class="dropdown-header">Change Room Status</h6>' +
+            '     </li><li><hr class="dropdown-divider"></li>';
 
-    $.each($status, function(statText) {
-        if (statText == $status_id) $statButton += '';
-        else $statButton +=
-            '<li><a class="dropdown-item changeRoomStatus" data-room-id="' + rmId + '"' +
-            ' data-room-new-stat="' + statText + '"' +
-            ' data-room-new-statName="' + $status[statText].title + '"' +
-            ' data-room-old-stat="' + $status_id + '"' +
-            ' data-room-old-statName="' + $status_name + '"' +
-            'href="javascript:void(0);">' + $status[statText].title + '</a></li>';
-    });
+        $.each($status, function(statText) {
+            if (statText == $status_id) $statButton += '';
+            else $statButton +=
+                '<li><a class="dropdown-item changeRoomStatus" data-room-id="' + rmId + '"' +
+                ' data-room-new-stat="' + statText + '"' +
+                ' data-room-new-statName="' + $status[statText].title + '"' +
+                ' data-room-old-stat="' + $status_id + '"' +
+                ' data-room-old-statName="' + $status_name + '"' +
+                ' href="javascript:void(0);">' + $status[statText].title + '</a></li>';
+        });
 
-    $statButton += '  </ul>';
-    //}
+        $statButton += '  </ul>';
+    }
 
     return $statButton;
 }
 
+// Return Features Details
+function showRoomCurrentStat(rmId) {
+
+    $.ajax({
+        url: '<?php echo base_url('/showRoomStatus') ?>',
+        type: 'POST',
+        async: false,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            roomId: rmId,
+        },
+        dataType: 'json'
+    }).done(function(response) {
+        ret_val = response;
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        ret_val = null;
+    });
+
+    return showRoomStatChange(ret_val.RM_STAT_ROOM_STATUS, ret_val.RM_STATUS_CODE, rmId);
+}
 
 
 // Change Room status
@@ -391,281 +530,361 @@ $(document).on('click', '.changeRoomStatus', function() {
     var new_status = $(this).attr('data-room-new-stat');
     var new_statusName = $(this).attr('data-room-new-statName');
 
-    var clickedCol = $(this).closest('td');
+    var clickedCol = $('.roomRow' + roomId).find('.rmStatusCol');
 
-    bootbox.confirm({
-        message: "Are you sure you want to change the housekeeping status from '" + current_statusName +
-            "' to '" + new_statusName + "' for this room?",
-        buttons: {
-            confirm: {
-                label: 'Yes',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: 'No',
-                className: 'btn-danger'
-            }
-        },
-        callback: function(result) {
-            if (result) {
-                $.ajax({
-                    url: '<?php echo base_url('/updateRoomStatus') ?>',
-                    type: "post",
-                    data: {
-                        roomId: roomId,
-                        new_status: new_status
-                    },
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    dataType: 'json',
-                    success: function(respn) {
-                        var response = respn['SUCCESS'];
-                        if (response != '1') {
-                            var ERROR = respn['RESPONSE']['ERROR'];
-                            var mcontent = '';
-                            $.each(ERROR, function(ind, data) {
-
-                                mcontent += '<li>' + data + '</li>';
-                            });
-                            showModalAlert('error', mcontent);
-                        } else {
-                            showModalAlert('success',
-                                `<li>The Room Status has been updated successfully.</li>`
-                            );
-
-                            clickedCol.html(showRoomStatChange(new_status,
-                                new_statusName, roomId));
-                            //$('#room_list').dataTable().fnDraw();
-                        }
-                    }
-                });
-            }
-        }
-    });
-
-});
-
-function addForm() {
-    $(':input', '#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
-    $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-    $('#popModalWindow').modal('show');
-    $('#RM_TYPE,#RM_HOUSKP_DY_SECTION,#RM_HOUSKP_EV_SECTION').html('<option value="">Select</option>').selectpicker(
-        'refresh');
-    $('#RM_FEATURE').val('').trigger('change');
-    runInitialLevel();
-}
-
-$(document).on('click', '.delete-record', function() {
-    var sysid = $(this).attr('data_sysid');
-    bootbox.confirm({
-        message: "Are you sure you want to delete this record?",
-        buttons: {
-            confirm: {
-                label: 'Yes',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: 'No',
-                className: 'btn-danger'
-            }
-        },
-        callback: function(result) {
-            if (result) {
-                $.ajax({
-                    url: '<?php echo base_url('/deleteRoom')?>',
-                    type: "post",
-                    data: {
-                        sysid: sysid
-                    },
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    dataType: 'json',
-                    success: function(respn) {
-
-                        $('#room_list').dataTable().fnDraw();
-                    }
-                });
-            }
-        }
-    });
-});
-
-function runInitialLevel() {
-    $.ajax({
-        url: '<?php echo base_url('/getSupportingRoomLov')?>',
-        type: "post",
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        dataType: 'json',
-        async: false,
-        success: function(respn) {
-            var memData = respn[0];
-            var idArray = ['RM_PUBLIC_RATE_CODE', 'RM_FLOOR_PREFERN', 'RM_SMOKING_PREFERN', 'RM_FEATURE'];
-            $(respn).each(function(ind, data) {
-                var option = '<option value="">Select</option>';
-                $.each(data, function(i, valu) {
-                    var value = $.trim(valu['CODE']); //fields.trim();
-                    var desc = $.trim(valu['DESCS']); //datavals.trim();
-                    option += '<option value=' + value + '>' + desc + '</option>';
-                });
-                $('#' + idArray[ind]).html(option);
-            });
-        }
-    });
-}
-
-$(document).on('keyup', '.RM_TYPE .form-control', function() {
-    var search = $(this).val();
-    $.ajax({
-        url: '<?php echo base_url('/roomTypeList')?>',
-        type: "post",
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        data: {
-            search: search
-        },
-        // dataType:'json',
-        success: function(respn) {
-
-            $('#RM_TYPE').html(respn).selectpicker('refresh');
-        }
-    });
-});
-
-$(document).on('change', '#RM_TYPE', function() {
-    var value = $(this).find('option:selected').attr('data-rmclass');
-    var room_type_id = $(this).find('option:selected').data('room-type-id');
-    var desc = $(this).find('option:selected').attr('data-desc');
-
-    $('#RM_DESC').val(desc);
-    $('#RM_TYPE_REF_ID').val(room_type_id);
-    $('#RM_CLASS').val(value);
-});
-
-// $(document).on('keyup','.RM_FEATURE .form-control',function(){
-//   var search = $(this).val();
-//   $.ajax({
-//       url: '<?php echo base_url('/featureList')?>',
-//       type: "post",
-//       headers: {'X-Requested-With': 'XMLHttpRequest'},
-//       data:{search:search},
-//       // dataType:'json',
-//       success:function(respn){
-//         
-//         $('#RM_FEATURE').html(respn).selectpicker('refresh');
-//       }
-//   });
-// });
-
-$(document).on('keyup', '.RM_HOUSKP_DY_SECTION .form-control,.RM_HOUSKP_EV_SECTION .form-control', function() {
-    var search = $(this).val();
-    var fieldName = $(this).parents('.bootstrap-select')[0].classList[2];
-    $.ajax({
-        url: '<?php echo base_url('/houseKeepSecionList')?>',
-        type: "post",
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        data: {
-            search: search
-        },
-        // dataType:'json',
-        success: function(respn) {
-
-            $('#' + fieldName).html(respn).selectpicker('refresh');
-        }
-    });
-});
-
-$(document).on('click', '.flxCheckBox', function() {
-    var checked = $(this).is(':checked');
-    var parent = $(this).parent();
-    if (checked) {
-        parent.find('input[type=hidden]').val('Y');
+    if (current_status == new_status) {
+        alert('The Room status is already ' + current_statusName);
     } else {
-        parent.find('input[type=hidden]').val('N');
+        bootbox.confirm({
+            message: "Are you sure you want to change the housekeeping status from '" +
+                current_statusName +
+                "' to '" + new_statusName + "' for this room?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function(result) {
+                if (result) {
+                    $.ajax({
+                        url: '<?php echo base_url('/updateRoomStatus') ?>',
+                        type: "post",
+                        data: {
+                            roomId: roomId,
+                            new_status: new_status
+                        },
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        dataType: 'json',
+                        success: function(respn) {
+                            var response = respn['SUCCESS'];
+                            if (response != '1') {
+                                var ERROR = respn['RESPONSE']['ERROR'];
+                                var mcontent = '';
+                                $.each(ERROR, function(ind, data) {
+
+                                    mcontent += '<li>' + data +
+                                        '</li>';
+                                });
+                                showModalAlert('error', mcontent);
+                            } else {
+                                showModalAlert('success',
+                                    `<li>The Room Status has been updated successfully.</li>`
+                                );
+
+                                clickedCol.html(showRoomStatChange(new_status,
+                                    new_statusName, roomId));
+                                //$('#room_list').dataTable().fnDraw();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 });
 
-$(document).on('click', '.editWindow', function() {
-    var thiss = $(this);
-    $.when(runInitialLevel()).done(function() {
-        var sysid = thiss.attr('data_sysid');
-        $('#popModalWindow').modal('show');
-        var url = '<?php echo base_url('/editRoom')?>';
+// Click Change Selected Button
+$(document).on('click', '.use_selected_rooms', function() {
+
+    $('#quickChangeRmStat').modal('show');
+
+    var hasSelectedRooms = $(this).attr('data-change-selected');
+
+    $('#RM_TYPES,#selectRoomsByN').prop('disabled', hasSelectedRooms == '1' ? true : false);
+    $('#selectRoomsFrom,#selectRoomsTo').prop('disabled', hasSelectedRooms == '1' ? true : false).selectpicker(
+        'refresh');
+    $('#selectRoomsByL').prop("checked", true).trigger("click");
+
+    if (clicked_room_ids.length > 0) {
+
+        var room_ids = clicked_room_ids.join(',');
         $.ajax({
-            url: url,
+            url: '<?php echo base_url('/roomList') ?>',
+            async: false,
             type: "post",
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             },
             data: {
-                sysid: sysid
+                room_ids: room_ids
             },
-            dataType: 'json',
-            success: function(respn) {
-                $(respn).each(function(inx, data) {
-                    $.each(data, function(fields, datavals) {
-                        var field = $.trim(fields); //fields.trim();
-                        var dataval = $.trim(datavals); //datavals.trim();
-                        if (field == 'RM_TYPE') {
-                            var option = '<option value="' + dataval +
-                                '" data-room-type-id="' + data[field +
-                                    '_REF_ID'] + '">' + data[field +
-                                    '_DESC'] + '</option>';
-                            $('#' + field).html(option).selectpicker(
-                                'refresh');
-                        } else if (field == 'RM_FEATURE') {
-                            var feture = dataval.split(',');
-                            $('#' + field).val(feture).trigger('change');
-                        } else {
-                            $('#' + field).val(dataval).trigger('change');
-                        }
-                    });
-                });
-                $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text(
-                    'Update');
-            }
+            dataType: 'html'
+        }).done(function(respn) {
+            var room_opts = respn;
+            room_opts = room_opts.replace('<option value="">Select Room</option>', '');
+            room_opts = room_opts.replace('<option value="">No Rooms</option>', '');
+
+            $('#selectRoomsList').html(room_opts).selectpicker('refresh');
+            $.each(clicked_room_ids, function(i, room_id) {
+                $("#selectRoomsList option[data-room-id='" + room_id + "']").prop("selected",
+                    true);
+            });
+            $('#selectRoomsList').selectpicker('refresh');
         });
-    });
+    }
+
+    // Show 'Clean' status by default
+    $('.qcRoomStatusDiv').html(showQuickStatChange(1, 'Clean'));
+    $('#statusToChange').val(1);
 });
 
-function submitForm(id) {
-    $('#errorModal').hide();
-    var formSerialization = $('#' + id).serializeArray();
-    var url = '<?php echo base_url('/insertRoom')?>';
-    $.ajax({
-        url: url,
-        type: "post",
-        data: formSerialization,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
+
+// Reset and clear Quick Change form
+function resetQuickChange() {
+    blockLoader('#quickChangeRmForm');
+    $('#RM_TYPES,#selectRoomsByL,#selectRoomsByN').prop('disabled', false);
+    $("#selectRoomsByL").prop("checked", true).trigger("click");
+
+    clearFormFields('#quickChangeRmForm');
+
+    // Show 'Clean' status by default
+    $('.qcRoomStatusDiv').html(showQuickStatChange(1, 'Clean'));
+    $('#statusToChange').val(1);
+}
+
+// Show and Change room status button in popup
+function showQuickStatChange(curStatId, curStatName) {
+
+    var $status_name = curStatName;
+    var $status_id = curStatId;
+
+    var $status = {
+        <?php foreach ($room_status_list as $room_status) { ?> '<?= $room_status['RM_STATUS_ID'] ?>': {
+            class: 'btn-<?= $room_status['RM_STATUS_COLOR_CLASS'] ?>',
+            title: '<?= $room_status['RM_STATUS_CODE'] ?>'
         },
-        dataType: 'json',
-        success: function(respn) {
+        <?php } ?>
+    };
+    if (typeof $status[$status_id] === 'undefined') {
+        return $status_name;
+    }
 
-            var response = respn['SUCCESS'];
-            if (response != '1') {
-                $('#errorModal').show();
-                var ERROR = respn['RESPONSE']['ERROR'];
-                var error = '<ul>';
-                $.each(ERROR, function(ind, data) {
+    var $statButton = '<button type="button" class="btn ' + $status[$status_id].class +
+        ' dropdown-toggle qcRoomStatusBtn"' + ' data-bs-toggle="dropdown" data-new-status="' + $status_name +
+        '" aria-haspopup="true" aria-expanded="false">' +
+        $status_name + '</button>';
 
-                    error += '<li>' + data + '</li>';
-                });
-                error += '<ul>';
-                $('#formErrorMessage').html(error);
-            } else {
-                $('#popModalWindow').modal('hide');
-                $('#room_list').dataTable().fnDraw();
-            }
+    $statButton += ' <ul class="dropdown-menu">';
+
+    $.each($status, function(statText) {
+        if (statText == $status_id || statText == 4 || statText == 5) $statButton += '';
+        else $statButton +=
+            '<li><a class="dropdown-item qcRoomStatus" data-statId="' + statText + '" data-statName="' +
+            $status[statText].title + '" href="javascript:void(0);">' + $status[statText].title +
+            '</a></li>';
+    });
+
+    $statButton += '  </ul>';
+
+    return $statButton;
+}
+
+// Change Room status
+$(document).on('click', '.qcRoomStatus', function() {
+    var new_status = $(this).attr('data-statId');
+    var new_statusName = $(this).attr('data-statName');
+
+    $('.qcRoomStatusDiv').html(showQuickStatChange(new_status, new_statusName));
+    $('#statusToChange').val(new_status);
+});
+
+$(document).on('click', '.clearQuickChange', function() {
+    resetQuickChange();
+});
+
+//Select room type to load room options
+$(document).on('change.select2', '#RM_TYPES', function() {
+
+    var room_types = '';
+    var room_opts = '';
+
+    var selectedRoomTypes = $(this).find(":selected");
+
+    if (selectedRoomTypes.length > 0) {
+        selectedRoomTypes.each(function() {
+            room_types += $(this).data('room-type-id') + ',';
+        });
+        room_types = room_types.substring(0, room_types.length - 1);
+
+        $.ajax({
+            url: '<?php echo base_url('/roomList') ?>',
+            async: false,
+            type: "post",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                room_type: room_types
+            },
+            dataType: 'html'
+        }).done(function(respn) {
+            var room_opts = respn;
+            room_opts = room_opts.replace('<option value="">Select Room</option>', '');
+            room_opts = room_opts.replace('<option value="">No Rooms</option>', '');
+
+            $('#selectRoomsList,#selectRoomsFrom,#selectRoomsTo').html(room_opts).selectpicker(
+                'refresh');
+        });
+    } else
+        $('#selectRoomsList,#selectRoomsFrom,#selectRoomsTo').html(room_opts).selectpicker('refresh');
+
+});
+
+$(document).on('click', 'input[name=selectRoomsBy]', function() {
+
+    //alert($('input[name=selectRoomsBy]').not($(this)).closest('.col-md-3').siblings('.selectRoomsByCol').find('.selectRooms').val());
+
+    $(this).closest('.col-md-3').siblings('.selectRoomsByCol').find('.selectRooms').prop('disabled', false)
+        .selectpicker('refresh');
+    $('input[name=selectRoomsBy]').not($(this)).closest('.col-md-3').siblings('.selectRoomsByCol').find(
+            '.selectRooms')
+        .prop('disabled', true).selectpicker('refresh');
+
+});
+
+// Submit Quick Change Room Status form
+
+quickChangeSubmitBtn = document.querySelector('#quickChangeSubmitBtn');
+
+quickChangeSubmitBtn.onclick = function() {
+
+    var formSerialization = $('#quickChangeRmForm').serializeArray();
+    var roomIds = [];
+
+    var selectRoomsBy = '';
+
+    $.each(formSerialization, function(ind, field) {
+        if (field.name == 'selectRoomsBy') {
+            selectRoomsBy = field.value;
+            return false; //break
         }
     });
-}
+
+    if (selectRoomsBy == 'L') {
+        var selectedRoomList = $('#selectRoomsList').find('option:selected');
+
+        if ($('#selectRoomsList').val() == '') {
+            showModalAlert('error', '<li>You have to select at least one Room from the list</li>');
+            return false;
+        }
+
+        $.each(selectedRoomList, function(index, item) {
+            roomIds.push(item.getAttribute('data-room-id'));
+        });
+    } else if (selectRoomsBy == 'N') {
+        var selectRoomsFrom = $('#selectRoomsFrom').val() ? $('#selectRoomsFrom').find('option:selected').attr(
+            'data-room-id') : null;
+        var selectRoomsTo = $('#selectRoomsTo').val() ? $('#selectRoomsTo').find('option:selected').attr(
+            'data-room-id') : null;
+
+        if ($('#selectRoomsFrom').val() == '') {
+            showModalAlert('error', '<li>You have to select the From Room</li>');
+            return false;
+        } else if ($('#selectRoomsTo').val() == '') {
+            showModalAlert('error', '<li>You have to select the To Room</li>');
+            return false;
+        }
+
+        var flag = 0;
+
+        $.each($('#selectRoomsFrom > option'), function(index, item) {
+
+            var curRoomId = item.getAttribute('data-room-id');
+
+            if (curRoomId != selectRoomsFrom && flag == 0) return true; // continue
+            else flag = 1;
+            roomIds.push(curRoomId);
+            if (curRoomId == selectRoomsTo) return false; // break
+        });
+    }
+
+    formSerialization.push({
+        name: "roomIds",
+        value: roomIds
+    });
+
+    Swal.fire({
+        title: '',
+        html: '<h4 class="lh-lg">Are you sure you want to change the status of these rooms to \'' + $(
+            '.qcRoomStatusBtn').data('new-status') + '\'?</h4>',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, change them!',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+    }).then(function(result) {
+        if (result.value) {
+            var url = '<?php echo base_url('/bulkUpdateRoomStatus') ?>';
+            $.ajax({
+                url: url,
+                type: "post",
+                data: formSerialization,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                dataType: 'json',
+                success: function(respn) {
+
+                    var response = respn['SUCCESS'];
+                    if (response != '1') {
+                        var ERROR = respn['RESPONSE']['ERROR'];
+                        var mcontent = '';
+                        $.each(ERROR, function(ind, data) {
+                            mcontent += '<li>' + data + '</li>';
+                        });
+                        showModalAlert('error', mcontent);
+                    } else {
+                        if (respn['RESPONSE']['OUTPUT'] != '0') {
+
+                            var alertText = '<li>' + respn['RESPONSE']['OUTPUT'] +
+                                ' Rooms have been updated.</li>';
+                            showModalAlert('success', alertText);
+                        } else
+                            showModalAlert('warning',
+                                '<li>No Room statuses have been updated. Please try again</li>'
+                            );
+
+                        $('#quickChangeRmStat').modal('hide');
+                        clicked_room_ids = [];
+                        $('.use_selected_rooms').html(
+                            '<i class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick Change'
+                        );
+                        $('.use_selected_rooms').attr('data-change-selected', 0);
+
+                        $('#room_list').dataTable().fnDraw();
+                    }
+
+                }
+            });
+        }
+    });
+};
+
+
+// Close Quick Change Popup Form
+$(document).on('hide.bs.modal', '#quickChangeRmStat', function() {
+    resetQuickChange();
+});
+
+// Display function toggleButton
+<?php echo isset($toggleButton_javascript) ? $toggleButton_javascript : ''; ?>
+
+// Display function clearFormFields
+<?php echo isset($clearFormFields_javascript) ? $clearFormFields_javascript : ''; ?>
+
+// Display function blockLoader
+<?php echo isset($blockLoader_javascript) ? $blockLoader_javascript : ''; ?>
 </script>
 
-<?=$this->endSection()?>
+<?= $this->endSection() ?>

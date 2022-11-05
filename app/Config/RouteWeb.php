@@ -715,6 +715,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/hkroomView', 'HousekeepingController::HkRoomView');
     $routes->match(['post'], '/showFeaturesDesc', 'HousekeepingController::showFeaturesDesc');
     $routes->match(['post'], '/updateRoomStatus', 'HousekeepingController::updateRoomStatus');
+    $routes->match(['post'], '/showRoomStatus', 'HousekeepingController::showRoomStatus');
+    $routes->match(['post'], '/bulkUpdateRoomStatus', 'HousekeepingController::bulkUpdateRoomStatus');
     
 
     // ABUBAKAR CODE (START)
