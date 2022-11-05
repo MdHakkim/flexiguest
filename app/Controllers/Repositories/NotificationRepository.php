@@ -81,14 +81,24 @@ class NotificationRepository extends BaseController
 
 	public function userReadNotifications($user, $notification_ids)
 	{
-		foreach ($notification_ids as $notification_id) {
+		if (empty($notification_ids)) { // mark all as read
 			$this->NotificationUser
 				->set([
 					'NU_READ_STATUS' => 1,
 					'NU_UPDATED_BY' => $user['USR_ID'],
 				])
-				->where(['NU_USER_ID' => $user['USR_ID'], 'NU_NOTIFICATION_ID' => $notification_id])
+				->where(['NU_USER_ID' => $user['USR_ID']])
 				->update();
+		} else {
+			foreach ($notification_ids as $notification_id) {
+				$this->NotificationUser
+					->set([
+						'NU_READ_STATUS' => 1,
+						'NU_UPDATED_BY' => $user['USR_ID'],
+					])
+					->where(['NU_USER_ID' => $user['USR_ID'], 'NU_NOTIFICATION_ID' => $notification_id])
+					->update();
+			}
 		}
 
 		return true;

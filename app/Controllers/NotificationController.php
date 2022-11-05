@@ -181,6 +181,7 @@ class NotificationController extends BaseController
                         'title' => 'Notification',
                         'body' => $data['NOTIFICATION_TEXT'],
                         'screen' => '',
+                        'notification_id' => $Notification_ID
                     ], $notification_type);
 
                     error_log("Notification => " . json_encode($response));
@@ -847,7 +848,7 @@ class NotificationController extends BaseController
     public function userReadNotifications()
     {
         $user = $this->request->user;
-        $notification_ids = $this->request->getVar('notification_ids');
+        $notification_ids = $this->request->getVar('notification_ids') ?? null;
         $this->NotificationRepository->userReadNotifications($user, $notification_ids);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Success']));
