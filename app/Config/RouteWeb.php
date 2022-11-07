@@ -607,7 +607,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/resolveTraces', 'ReservationController::resolveTraces');
 
     $routes->match(['get'], 'roomPlan/(:segment)', 'ReservationController::roomPlan/$1');
-    $routes->match(['post'], '/roomPlan', 'ReservationController::roomPlan');  
+    
     $routes->get('/roomPlanResource', 'ReservationController::roomPlanResource');
 
     $routes->match(['post'], '/roomplanResources', 'ReservationController::roomplanResources');
@@ -625,7 +625,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/deleteTraces', 'ReservationController::deleteTraces');
     $routes->match(['post'], '/showTraceDetails', 'ReservationController::showTraceDetails');
     $routes->match(['post'], '/resolveTraces', 'ReservationController::resolveTraces');
-  
+    
+    //$routes->get('/roomPlanResource', 'ReservationController::roomPlanResource');
 
     $routes->match(['post'], '/roomplanResources', 'ReservationController::roomplanResources');
     $routes->match(['post'], '/getReservations', 'ReservationController::getReservations');
@@ -675,7 +676,10 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
       $routes->match(['post'], '/roomTypeSearchList', 'ReservationController::roomTypeSearchList');
       $routes->match(['post'], '/roomClassSearchList', 'ReservationController::roomClassSearchList'); 
       $routes->match(['post'], '/roomSearchList', 'ReservationController::roomSearchList'); 
-      $routes->match(['post'], '/roomplanResourcesJson', 'ReservationController::roomplanResourcesJson'); 
+      $routes->match(['post'], '/roomplanResourcesJson', 'ReservationController::roomplanResourcesJson');       
+      $routes->match(['post'], '/roomPlan/(:segment)', 'ReservationController::roomPlan/$1'); 
+      $routes->match(['post'], '/roomPlan', 'ReservationController::roomPlan');
+      $routes->get('/roomPlan', 'ReservationController::roomPlan');
          
       
 
@@ -702,9 +706,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/roomStatusList', 'ReservationController::roomStatusList');
     $routes->match(['post'], '/roomFloorList', 'ReservationController::roomFloorList');
     $routes->get('/itemAvailability', 'ReservationController::itemAvailability');
-
-    $routes->get('/TaskAssignment', 'TaskAssignmentController::TaskAssignment'); 
-    $routes->match(['post'], '/TaskAssignmentList', 'TaskAssignmentController::TaskAssignmentList');
+    
     //Subina Code (END)  
 
 
