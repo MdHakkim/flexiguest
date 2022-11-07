@@ -98,7 +98,7 @@ class NotificationController extends BaseController
     {
         try {
             $user = session('user');
-            
+            $user_ids = '';
             $rules = [];
             $NOTIFI = [];
             $sysid = $this->request->getPost('NOTIFICATION_ID');
@@ -170,7 +170,7 @@ class NotificationController extends BaseController
                 $user_ids = $NOTIFICATION_TO_ID;
             }
             
-            $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $Notification_ID);
+           $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $Notification_ID);
 
             if(!empty($user_ids)){
 
@@ -257,13 +257,15 @@ class NotificationController extends BaseController
                     for($j=0; $j<count($NOTIFICATION_DEPARTMENT);$j++){                       
                         $NOTIFI['NOTIF_TRAIL_DEPARTMENT']      = $NOTIFICATION_DEPARTMENT[$j];
                         $DEPARTMENT_USERS = $this->getDepartmentUsers($NOTIFICATION_DEPARTMENT[$j]);
-                        foreach($DEPARTMENT_USERS as $USERS){
-                            $NOTIFI['NOTIF_TRAIL_USER'] = $USERS['USR_ID'];
-                            $NOTIFI['NOTIF_TRAIL_NOTIFICATION_ID'] = $RSV_TRACE_NOTIFICATION_ID;
-                            $NOTIFI['NOTIF_TRAIL_READ_STATUS']     = 0;
-                            $NOTIFI['NOTIF_TRAIL_DATETIME']        = $NOTIFICATION_DATE_TIME;
-                            $return1 = $this->Db->table('FLXY_NOTIFICATION_TRAIL')->insert($NOTIFI);
-                        }                       
+                        if(!empty($DEPARTMENT_USERS)){
+                            foreach($DEPARTMENT_USERS as $USERS){
+                                $NOTIFI['NOTIF_TRAIL_USER'] = $USERS['USR_ID'];
+                                $NOTIFI['NOTIF_TRAIL_NOTIFICATION_ID'] = $RSV_TRACE_NOTIFICATION_ID;
+                                $NOTIFI['NOTIF_TRAIL_READ_STATUS']     = 0;
+                                $NOTIFI['NOTIF_TRAIL_DATETIME']        = $NOTIFICATION_DATE_TIME;
+                                $return1 = $this->Db->table('FLXY_NOTIFICATION_TRAIL')->insert($NOTIFI);
+                            }    
+                        }                   
                     }   
 
                 } 
@@ -335,7 +337,7 @@ class NotificationController extends BaseController
                                 UNION 
                             SELECT ACCOMP_CUST_ID AS CUST_ID 
                             FROM FLXY_ACCOMPANY_PROFILE INNER JOIN FLXY_RESERVATION ON ACCOMP_REF_RESV_ID = RESV_ID WHERE RESV_STATUS IN ('Checked-In','Checked-Out-Requested','Pre Checked-In','Due Pre Check-In') AND ACCOMP_REF_RESV_ID =:SYSID:)";
-                        
+                                                    
         $response = $this->Db->query($sql, $param)->getResultArray();
         return $response;
     }
@@ -384,16 +386,18 @@ class NotificationController extends BaseController
         $data['option2'] = '';
 
         $checked = 'checked="checked"';
-        foreach ($response as $row) {
-           // $option .= '<option value="' . $row['NOTIF_TY_ID'] . '">' . $row['NOTIF_TY_DESC'] . '</option>';
-            
-            $data['option1'] .= '<div class="col-md-2 form-check mb-2" style="float:left;margin-right:10px">
-            <input type="radio" id="NOTIFICATION_TYPE_'.$row["NOTIF_TY_ID"].'" name="NOTIFICATION_TYPE" value="'.$row["NOTIF_TY_ID"].'" class="form-check-input" required="" '.$checked.'>
-            <label class="form-check-label" for="NOTIFICATION_TYPE_'.$row["NOTIF_TY_ID"].'">'.$row["NOTIF_TY_DESC"].'</label>
-            </div>';
-            $checked = '';
+        if(!empty($response)){
+            foreach ($response as $row) {
+            // $option .= '<option value="' . $row['NOTIF_TY_ID'] . '">' . $row['NOTIF_TY_DESC'] . '</option>';
+                
+                $data['option1'] .= '<div class="col-md-2 form-check mb-2" style="float:left;margin-right:10px">
+                <input type="radio" id="NOTIFICATION_TYPE_'.$row["NOTIF_TY_ID"].'" name="NOTIFICATION_TYPE" value="'.$row["NOTIF_TY_ID"].'" class="form-check-input" required="" '.$checked.'>
+                <label class="form-check-label" for="NOTIFICATION_TYPE_'.$row["NOTIF_TY_ID"].'">'.$row["NOTIF_TY_DESC"].'</label>
+                </div>';
+                $checked = '';
 
-            $data['option2'] .= "<option value='{$row['NOTIF_TY_ID']}'>{$row['NOTIF_TY_DESC']}</option>";
+                $data['option2'] .= "<option value='{$row['NOTIF_TY_ID']}'>{$row['NOTIF_TY_DESC']}</option>";
+            }
         }
 
         echo json_encode($data);
@@ -417,8 +421,10 @@ class NotificationController extends BaseController
         $response = $this->Db->query($sql)->getResultArray();
 
         $option = '';
-        foreach ($response as $row) {
-            $option .= '<option value="' . $row['USR_ID'] . '">' . $row['FULL_NAME'] . '</option>';
+        if(!empty($response)){
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['USR_ID'] . '">' . $row['FULL_NAME'] . '</option>';
+            }
         }
 
         return $option;
@@ -462,8 +468,10 @@ class NotificationController extends BaseController
         $response = $this->Db->query($sql)->getResultArray();
 
         $option = '<option value="all">All</option>';
-        foreach ($response as $row) {
-            $option .= '<option value="' . $row['DEPT_ID'] . '">' . $row['DEPT_CODE'] . ' | ' . $row['DEPT_DESC']  . '</option>';
+        if(!empty($response)){
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['DEPT_ID'] . '">' . $row['DEPT_CODE'] . ' | ' . $row['DEPT_DESC']  . '</option>';
+            }
         }
 
         return $option;
@@ -512,8 +520,10 @@ class NotificationController extends BaseController
         $options = array();
 
         $option = '';
-        foreach ($response as $row) {
-            $option .= '<option value="' . $row['CUST_ID'] . '">' . $row['FULLNAME']  . '</option>';
+        if(!empty($response)){
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['CUST_ID'] . '">' . $row['FULLNAME']  . '</option>';
+            }
         }
 
         return $option;
@@ -736,14 +746,13 @@ class NotificationController extends BaseController
     public function checkAllNotificationRead($UserID){
        
         $userNotifications = $this->Db->query("SELECT DISTINCT NOTIF_TRAIL_NOTIFICATION_ID FROM FLXY_NOTIFICATION_TRAIL INNER JOIN FLXY_NOTIFICATIONS ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID WHERE NOTIFICATION_FROM_ID = '$UserID'")->getResultArray(); 
-       
-        foreach($userNotifications as $noti_id) {
-           $notification_id = $noti_id['NOTIF_TRAIL_NOTIFICATION_ID'];
-           $reservationsStatus = $this->Db->query("SELECT NOTIF_TRAIL_READ_STATUS FROM FLXY_NOTIFICATION_TRAIL INNER JOIN FLXY_NOTIFICATIONS ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID WHERE NOTIF_TRAIL_READ_STATUS = 0 AND NOTIFICATION_ID = $notification_id")->getNumRows();
-            if($reservationsStatus == 0)
-            $response = $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $notification_id)->update(['NOTIFICATION_READ_STATUS'=>'1']);
-         
-
+        if(!empty($userNotifications)){       
+            foreach($userNotifications as $noti_id) {
+            $notification_id = $noti_id['NOTIF_TRAIL_NOTIFICATION_ID'];
+            $reservationsStatus = $this->Db->query("SELECT NOTIF_TRAIL_READ_STATUS FROM FLXY_NOTIFICATION_TRAIL INNER JOIN FLXY_NOTIFICATIONS ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID WHERE NOTIF_TRAIL_READ_STATUS = 0 AND NOTIFICATION_ID = $notification_id")->getNumRows();
+                if($reservationsStatus == 0)
+                $response = $this->Db->table('FLXY_NOTIFICATIONS')->where('NOTIFICATION_ID', $notification_id)->update(['NOTIFICATION_READ_STATUS'=>'1']); 
+            }
         }
 
 
@@ -758,71 +767,71 @@ class NotificationController extends BaseController
         $notificationInfo = $this->Db->query($sql,$param)->getResultArray();
         $basicInfo = [];
         if(!empty($notificationInfo)){
-        foreach($notificationInfo as $info){
-            $NOTIFICATION_ID      = $info['NOTIFICATION_ID'];
-            $NOTIFICATION_TYPE_ID = $info['NOTIFICATION_TYPE'];
-            $NOTIFICATION_TYPE    = $info['NOTIFI_TYPE'];
-            $NOTIFICATION_TEXT    = $info['NOTIFICATION_TEXT'];
-            $NOTIFICATION_URL     = $info['NOTIFICATION_URL'];
-            $NOTIFICATION_RESERVATION_ID     = !empty($info['NOTIFICATION_RESERVATION_ID']) ? implode(',',json_decode($info['NOTIFICATION_RESERVATION_ID'])):'';
+            foreach($notificationInfo as $info){
+                $NOTIFICATION_ID      = $info['NOTIFICATION_ID'];
+                $NOTIFICATION_TYPE_ID = $info['NOTIFICATION_TYPE'];
+                $NOTIFICATION_TYPE    = $info['NOTIFI_TYPE'];
+                $NOTIFICATION_TEXT    = $info['NOTIFICATION_TEXT'];
+                $NOTIFICATION_URL     = $info['NOTIFICATION_URL'];
+                $NOTIFICATION_RESERVATION_ID     = !empty($info['NOTIFICATION_RESERVATION_ID']) ? implode(',',json_decode($info['NOTIFICATION_RESERVATION_ID'])):'';
 
-            $basicInfo = ['NOTIFICATION_ID'=>$NOTIFICATION_ID, 'NOTIFICATION_TYPE'=>$NOTIFICATION_TYPE, 'NOTIFICATION_TEXT'=>$NOTIFICATION_TEXT, 'NOTIFICATION_URL' => $NOTIFICATION_URL,'NOTIFICATION_TYPE_ID'=>$NOTIFICATION_TYPE_ID ];
+                $basicInfo = ['NOTIFICATION_ID'=>$NOTIFICATION_ID, 'NOTIFICATION_TYPE'=>$NOTIFICATION_TYPE, 'NOTIFICATION_TEXT'=>$NOTIFICATION_TEXT, 'NOTIFICATION_URL' => $NOTIFICATION_URL,'NOTIFICATION_TYPE_ID'=>$NOTIFICATION_TYPE_ID ];
 
-            if($NOTIFICATION_TYPE_ID == 1) {$start = 'You have an ';$end = ' message'; }
-            else if($NOTIFICATION_TYPE_ID == 2) {$start = 'You have a ';$end = ''; }
-            else if($NOTIFICATION_TYPE_ID == 3) {$start = 'You have a ';$end = ''; }
-            else if($NOTIFICATION_TYPE_ID == 4) {$start = 'You have a ';$end = ' message'; }
+                if($NOTIFICATION_TYPE_ID == 1) {$start = 'You have an ';$end = ' message'; }
+                else if($NOTIFICATION_TYPE_ID == 2) {$start = 'You have a ';$end = ''; }
+                else if($NOTIFICATION_TYPE_ID == 3) {$start = 'You have a ';$end = ''; }
+                else if($NOTIFICATION_TYPE_ID == 4) {$start = 'You have a ';$end = ' message'; }
 
-            if($NOTIFICATION_TYPE_ID == 1 || $NOTIFICATION_TYPE_ID == 2 || $NOTIFICATION_TYPE_ID == 4){
+                if($NOTIFICATION_TYPE_ID == 1 || $NOTIFICATION_TYPE_ID == 2 || $NOTIFICATION_TYPE_ID == 4){
 
-                if($NOTIFICATION_TYPE_ID == 4){
-                    $sql="SELECT RESV_NO FROM FLXY_RESERVATION 
-                    WHERE RESV_ID IN ($NOTIFICATION_RESERVATION_ID)";
-                    $reservationInfo = $this->Db->query($sql)->getResultArray();
-                    if(!empty($reservationInfo)){
-                        foreach($reservationInfo as $resvInfo){
-                            $RESV_NO[] = $resvInfo['RESV_NO'];
+                    if($NOTIFICATION_TYPE_ID == 4){
+                        $sql="SELECT RESV_NO FROM FLXY_RESERVATION 
+                        WHERE RESV_ID IN ($NOTIFICATION_RESERVATION_ID)";
+                        $reservationInfo = $this->Db->query($sql)->getResultArray();
+                        if(!empty($reservationInfo)){
+                            foreach($reservationInfo as $resvInfo){
+                                $RESV_NO[] = $resvInfo['RESV_NO'];
+                            }
+                            $basicInfo['RESERVATION'] = implode(',',$RESV_NO);
                         }
-                        $basicInfo['RESERVATION'] = implode(',',$RESV_NO);
+                        
+                    }
+                
+                    $basicInfo['HEADING'] = $start." ".$NOTIFICATION_TYPE." ".$end;
+                    $sql="SELECT CONCAT_WS(' ', USR_FIRST_NAME, USR_LAST_NAME) AS FULL_NAME, USR_EMAIL FROM FLXY_NOTIFICATION_TRAIL 
+                    INNER JOIN FLXY_USERS ON  NOTIF_TRAIL_USER = USR_ID  WHERE NOTIF_TRAIL_NOTIFICATION_ID  = '$NOTIFICATION_ID'";
+                    $notificationInfoDetails = $this->Db->query($sql)->getResultArray(); 
+                    if(!empty($notificationInfoDetails)){
+                        foreach($notificationInfoDetails as $infodetails)  {
+                            $details['FULL_NAME'] = $infodetails['FULL_NAME'];
+                            $details['USR_EMAIL'] = $infodetails['USR_EMAIL'];
+                            $emailResp = $emailCall->notificationEmail($details, $basicInfo);
+                            if($emailResp)
+                            $this->Db->table('FLXY_NOTIFICATION_TRAIL')->where('NOTIF_TRAIL_NOTIFICATION_ID', $NOTIFICATION_ID)->update(['NOTIFICATION_TRAIL_SEND'=>'1']);
+                            
+                        }
                     }
                     
                 }
-               
-                $basicInfo['HEADING'] = $start." ".$NOTIFICATION_TYPE." ".$end;
-                $sql="SELECT CONCAT_WS(' ', USR_FIRST_NAME, USR_LAST_NAME) AS FULL_NAME, USR_EMAIL FROM FLXY_NOTIFICATION_TRAIL 
-                INNER JOIN FLXY_USERS ON  NOTIF_TRAIL_USER = USR_ID  WHERE NOTIF_TRAIL_NOTIFICATION_ID  = '$NOTIFICATION_ID'";
-                $notificationInfoDetails = $this->Db->query($sql)->getResultArray(); 
-                if(!empty($notificationInfoDetails)){
-                    foreach($notificationInfoDetails as $infodetails)  {
-                        $details['FULL_NAME'] = $infodetails['FULL_NAME'];
-                        $details['USR_EMAIL'] = $infodetails['USR_EMAIL'];
-                        $emailResp = $emailCall->notificationEmail($details, $basicInfo);
-                        if($emailResp)
-                        $this->Db->table('FLXY_NOTIFICATION_TRAIL')->where('NOTIF_TRAIL_NOTIFICATION_ID', $NOTIFICATION_ID)->update(['NOTIFICATION_TRAIL_SEND'=>'1']);
-                        
+                else if($NOTIFICATION_TYPE_ID == 3){
+                    $basicInfo['HEADING'] = $start." ".$NOTIFICATION_TYPE." ".$end;
+                    $sql="SELECT CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULL_NAME, CUST_EMAIL FROM FLXY_NOTIFICATION_TRAIL 
+                    INNER JOIN FLXY_CUSTOMER ON  NOTIF_TRAIL_GUEST = CUST_ID  WHERE NOTIF_TRAIL_NOTIFICATION_ID  = '$NOTIFICATION_ID'";
+                    $notificationInfoDetails = $this->Db->query($sql)->getResultArray(); 
+                    if(!empty($notificationInfoDetails)){
+                        foreach($notificationInfoDetails as $infodetails)  {
+                            $details['FULL_NAME'] = $infodetails['FULL_NAME'];
+                            $details['USR_EMAIL'] = $infodetails['CUST_EMAIL'];
+                            $emailResp = $emailCall->notificationEmail($details, $basicInfo);
+                            if($emailResp)
+                                $this->Db->table('FLXY_NOTIFICATION_TRAIL')->where('NOTIF_TRAIL_NOTIFICATION_ID', $NOTIFICATION_ID)->update(['NOTIFICATION_TRAIL_SEND'=>'1']);
+                            
+                        }
                     }
+                    
                 }
-                
-            }
-            else if($NOTIFICATION_TYPE_ID == 3){
-                $basicInfo['HEADING'] = $start." ".$NOTIFICATION_TYPE." ".$end;
-                $sql="SELECT CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULL_NAME, CUST_EMAIL FROM FLXY_NOTIFICATION_TRAIL 
-                INNER JOIN FLXY_CUSTOMER ON  NOTIF_TRAIL_GUEST = CUST_ID  WHERE NOTIF_TRAIL_NOTIFICATION_ID  = '$NOTIFICATION_ID'";
-                $notificationInfoDetails = $this->Db->query($sql)->getResultArray(); 
-                if(!empty($notificationInfoDetails)){
-                    foreach($notificationInfoDetails as $infodetails)  {
-                        $details['FULL_NAME'] = $infodetails['FULL_NAME'];
-                        $details['USR_EMAIL'] = $infodetails['CUST_EMAIL'];
-                        $emailResp = $emailCall->notificationEmail($details, $basicInfo);
-                        if($emailResp)
-                            $this->Db->table('FLXY_NOTIFICATION_TRAIL')->where('NOTIF_TRAIL_NOTIFICATION_ID', $NOTIFICATION_ID)->update(['NOTIFICATION_TRAIL_SEND'=>'1']);
-                        
-                    }
-                }
-                
-            }
 
-        }
+            }
     }
       
         
