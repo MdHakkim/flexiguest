@@ -1057,7 +1057,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div id="signature" style=''>
+                        <div id="signature">
                             <canvas id="signature-pad" class="signature-pad" width="460px" height="200px"></canvas>
                         </div>
                     </div>
