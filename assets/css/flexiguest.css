@@ -367,6 +367,11 @@ td{
   display: none;
 }
 
+.flxy_signature_block .singatureContent .guest-data .row div{
+  word-wrap: break-word;
+  padding: 10px;
+  border-bottom: 1px solid #ecedf0;
+}
 /* web link checkin */
 .signHideClass{
   display: none !important;
@@ -393,11 +398,17 @@ td{
   flex:1;
   display: flex;
 }
-.flxy_block_card{
+.flxy_web-blockcont .flxy_block_card{
   display: block;
   width: 50%;
   padding-right: 4px;
 }
+/* .flxy_web-blockcont .flxy_block_card .card {
+  height: 140px;
+} 
+.flxy_web-blockcont .flxy_block_card .card .row{
+  height: 100%;
+} */
 .flxy_web-header{
   border-bottom: 1px solid #ccc9c9;
   padding: 7px;
@@ -432,12 +443,18 @@ td{
 }
 .flxy_web-blockcont .flxy_block_card .col-md-3{
   background: #00426a;
+  min-height: 60px;
 }
 .flxy_web-blockcont .flxy_block_card .col-md-9{
   background: #0073b7;
+  min-height: 124px;
 }
 .flxy_web-blockcont .flxy_block_card .card-body{
   text-align: left;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 .flxy_web-blockcont .flxy_block_card .card-body .card-title{
   color: #002b44 !important;
@@ -457,7 +474,8 @@ td{
 .sliderclass{
   display: none;
   width:100%;
-  padding: 2em 8em 0em 8em;
+  /* margin: 2em 8em 0em 8em; */
+  margin: 2% 20% 2% 20%;
 }
 .activeslide{
   display: flex;
@@ -466,7 +484,7 @@ td{
 
 .activeslide .document-status-card{
   margin: 10px;
-  width: 45% !important;
+  width: 46% !important;
 }
 
 .flxy_web-ul .text-flxy{
@@ -521,10 +539,16 @@ td{
   width:100%;
   flex: 1;
 } 
-.flxy_doc_content{
-  display: flex;
+.flxy_doc_block .flxy_doc_content{
+  /* display: flex; */
   width: 100%;
 }
+.flxy_doc_block .flxy_doc_content .flxy_block_card {
+  display: inline-block;
+  margin: 20px 0;
+  width: 49%;
+}
+
 .flxy_none{
   display: none !important;
 }
@@ -621,3 +645,41 @@ td{
 .dtr-bs-modal .modal-header{
   padding-bottom: 15px;
 }
+
+#vaccineModal .col-form-label{
+  text-align: right;
+}
+
+.container-fluid.text-center.flxy_content_flex {
+  overflow: overlay;
+}
+
+@media only screen and (max-width: 1316px) {
+  .activeslide .document-status-card{
+    width: 58% !important;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .activeslide .document-status-card{
+    width: 75% !important;
+  }
+
+  .flxy_doc_block .flxy_doc_content .flxy_block_card {
+    width: 75%;
+  }
+}
+
+
+@media only screen and (max-width: 770px) {
+  .sliderclass {
+    margin: 0;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  #vaccineModal .col-form-label{
+    text-align: left;
+  }
+}
+
