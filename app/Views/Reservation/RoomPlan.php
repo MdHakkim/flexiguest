@@ -1807,7 +1807,7 @@ $(document).on('change', '#SEARCH_ROOM_TYPE', function() {
 
 function roomClass() {
   var roomClass = '<?php echo isset($SEARCH_ROOM_CLASS)? $SEARCH_ROOM_CLASS: null; ?>';
-
+  //$('#SEARCH_ROOM_CLASS').attr('disabled','disabled');
     $.ajax({
         url: '<?php echo base_url('/roomClassSearchList') ?>',
         type: "post",
@@ -1817,8 +1817,8 @@ function roomClass() {
         async: false,
         success: function(respn) {
             $('#SEARCH_ROOM_CLASS').html(respn);
-            $('#SEARCH_ROOM_CLASS').val(roomClass).change();
-            $('#SEARCH_ROOM_CLASS').attr('disabled','disabled'); 
+            $('#SEARCH_ROOM_CLASS').val(roomClass).trigger('change');
+            
         }
     });
 }
