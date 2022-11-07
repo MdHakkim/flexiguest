@@ -482,7 +482,7 @@ function showRoomStatChange(curStatId, curStatName, rmId) {
             '     </li><li><hr class="dropdown-divider"></li>';
 
         $.each($status, function(statText) {
-            if (statText == $status_id) $statButton += '';
+            if (statText == $status_id || statText == 4 || statText == 5) $statButton += '';
             else $statButton +=
                 '<li><a class="dropdown-item changeRoomStatus" data-room-id="' + rmId + '"' +
                 ' data-room-new-stat="' + statText + '"' +
@@ -737,6 +737,7 @@ $(document).on('change.select2', '#RM_TYPES', function() {
 
 });
 
+// Click Room List or From Room radio button
 $(document).on('click', 'input[name=selectRoomsBy]', function() {
 
     //alert($('input[name=selectRoomsBy]').not($(this)).closest('.col-md-3').siblings('.selectRoomsByCol').find('.selectRooms').val());
@@ -746,6 +747,39 @@ $(document).on('click', 'input[name=selectRoomsBy]', function() {
     $('input[name=selectRoomsBy]').not($(this)).closest('.col-md-3').siblings('.selectRoomsByCol').find(
             '.selectRooms')
         .prop('disabled', true).selectpicker('refresh');
+
+});
+
+//Select From Room select
+$(document).on('change', '#selectRoomsFrom', function() {
+
+    var selectedFRoomOpts = $(this).html();
+    var selectedFRoom = $(this).val();
+    $('#selectRoomsTo').empty();
+    var optionsArr = $('#selectRoomsFrom > option').clone();
+
+    if (selectedFRoom != '') {
+        var selectRoomsFrom = $(this).find('option:selected').attr('data-room-id');
+        var flag = 0;
+
+        //console.log(optionsArr); // See the contents
+        $.each(optionsArr, function(ind, opt) {
+            var curRoomId = opt.getAttribute('data-room-id');
+
+            if (curRoomId != selectRoomsFrom && flag == 0) return true; // continue
+            else flag = 1;
+            $('#selectRoomsTo').append(opt);
+            //if (curRoomId == selectRoomsFrom) return false; // break
+        });
+
+    } else {
+        $.each(optionsArr, function(ind, opt) {
+            if (opt.value !== '')
+                $('#selectRoomsTo').append(opt);
+        });
+    }
+
+    $('#selectRoomsTo').selectpicker('refresh');
 
 });
 

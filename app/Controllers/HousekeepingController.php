@@ -238,7 +238,7 @@ class HousekeepingController extends BaseController
 
     public function housekeeping()
     {
-        $data['title'] = getMethodName();
+        $data['title'] = 'Housekeeping - Room Status';
         $data['room_status_list'] = $this->Db->table('FLXY_ROOM_STATUS_MASTER')->select('RM_STATUS_ID,RM_STATUS_CODE,RM_STATUS_COLOR_CLASS')->get()->getResultArray();
         $data['toggleButton_javascript'] = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
