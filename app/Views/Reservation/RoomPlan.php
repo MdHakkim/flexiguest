@@ -162,7 +162,7 @@
                           </div>
                           <div class="col-12 col-sm-6 col-lg-4">
                             <label class="form-label"><b>Room Class:</b></label>
-                            <select id="SEARCH_ROOM_CLASS" name="SEARCH_ROOM_CLASS" class="select2 form-select" data-allow-clear="true" >                                       
+                            <select id="SEARCH_ROOM_CLASS" name="SEARCH_ROOM_CLASS" class="select2 form-select" data-allow-clear="true" placeholder="Room Class">                                       
                             </select>  
                             
                           </div>
@@ -172,18 +172,17 @@
                             <select id="SEARCH_ROOM_FLOOR" name="SEARCH_ROOM_FLOOR" class="select2 form-select" data-allow-clear="true" >                                       
                             </select>                            
                           </div>
+
                           <div class="col-12 col-sm-6 col-lg-4">
                             <label class="form-label"><b>Room Status:</b></label>
                             <select id="SEARCH_ROOM_STATUS" name="SEARCH_ROOM_STATUS" class="select2 form-select" data-allow-clear="true" >                                       
-                            </select>  
-                            
+                            </select>                             
                           </div>
 
                           <div class="col-12 col-sm-6 col-lg-4">
                             <label class="form-label"><b>Room:</b></label>
                             <select id="SEARCH_ROOM" name="SEARCH_ROOM" class="select2 form-select" data-allow-clear="true" >                                       
-                            </select>  
-                            
+                            </select>                             
                           </div>
                                 
 

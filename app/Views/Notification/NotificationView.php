@@ -367,18 +367,14 @@
 					},
 					{
 						data: 'NOTIFICATION_READ_STATUS',
-						render: function(data, type, full, meta) {
-							if (full["RSV_TRACE_RESOLVED_BY"] != '') {
-								return '';
-							} else return full["NOTIFICATION_READ_STATUS"];
-						}
+						
 					},
 					{
 						data: null,
 						className: "text-center",
 						"orderable": false,
 						render: function(data, type, full, meta) {
-							if (full["RSV_TRACE_RESOLVED_BY"] == '' && full["NOTIFICATION_READ_STATUS"] == 0) {
+							if (full["RSV_TRACE_RESOLVED_BY"] == null && full["NOTIFICATION_READ_STATUS"] == 0) {
 								var resvListButtons =
 									'<div class="d-inline-block flxy_option_view dropend">' +
 									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
@@ -447,9 +443,12 @@
 						targets: 11,
 						width: "10%",
 						render: function(data, type, full, meta) {
-							var $status = full['NOTIFICATION_READ_STATUS'];
-							return '<span class="badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';
-
+							if (full["RSV_TRACE_RESOLVED_BY"] != null) {
+								return '';
+							} else {
+								var $status = full['NOTIFICATION_READ_STATUS'];
+								return '<span class="badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';
+							}
 						}
 					}
 				],
