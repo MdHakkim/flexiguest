@@ -335,10 +335,6 @@
 						data: 'NOTIFICATION_GUEST_ID',
 						render: function(data, type, full, meta) {
 							if (full['NOTIFICATION_GUEST_ID'] != '') {
-								dots = '';
-								NOTIFICATION_GUEST_ID = full['NOTIFICATION_GUEST_ID'];
-								if(NOTIFICATION_GUEST_ID.length>20)
-								var dots = '...<p><span class="btn btn-sm btn-label-info">View</span></p>';
 								return '<a href="javascript:;" onclick="viewAll(\'Guests\',' + full['NOTIFICATION_ID'] + ')" title="View Guests"  rel="">' + full['NOTIFICATION_GUEST_ID'] + '<br><span class="btn btn-sm btn-label-info">View</span></a>';
 							} else return '';
 						}
@@ -348,11 +344,7 @@
 						data: 'NOTIFICATION_TEXT',
 						render: function(data, type, full, meta) {
 							if (full['NOTIFICATION_TEXT'] != '') {
-								dots = '';
-								NOTIFICATION_TEXT = full['NOTIFICATION_TEXT'];
-								if(NOTIFICATION_TEXT.length>20)
-								var dots = '...<p><span class="btn btn-sm btn-label-info">View</span></p>';
-								return '<a href="javascript:;" onclick="viewAll(\'Messages\',' + full['NOTIFICATION_ID'] + ')" title="View Message" rel="">' + NOTIFICATION_TEXT.substr(0, 20)+ dots+'</a>';
+								return '<a href="javascript:;" onclick="viewAll(\'Messages\',' + full['NOTIFICATION_ID'] + ')" title="View Message" rel="">' + full['NOTIFICATION_TEXT'] + '<br><span class="btn btn-sm btn-label-info">View</span></a>';
 							} else return '';
 						}
 					},

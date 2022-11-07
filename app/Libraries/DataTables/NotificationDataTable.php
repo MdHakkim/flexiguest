@@ -135,12 +135,14 @@ class NotificationDataTable{
                         $row[$name] = '';
                         if(!empty($guest_ids)){
                             foreach($reservationsGuests as $reservation)
-                                $row[$name] .= $reservation['FULLNAME'] . ', ';
+                                $row[$name] .= $reservation['FULLNAME'] . (count($reservationsGuests) > 1 ? ',':'');
 
                             $row[$name] = substr($row[$name], 0, 20). '...';
                         }
                     }
                 }
+
+                
                
 
                 if($name == "RSV_TRACE_RESOLVED_BY") {
