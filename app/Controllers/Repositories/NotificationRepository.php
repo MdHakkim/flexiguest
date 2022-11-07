@@ -58,14 +58,16 @@ class NotificationRepository extends BaseController
 
 	public function storeNotificationUsers($user, $user_ids, $notification_id)
 	{
-		foreach ($user_ids as $user_id) {
-			$this->NotificationUser->insert([
-				'NU_USER_ID' => $user_id,
-				'NU_NOTIFICATION_ID' => $notification_id,
-				'NU_READ_STATUS' => 0,
-				'NU_CREATED_BY' => $user['USR_ID'],
-				'NU_UPDATED_BY' => $user['USR_ID'],
-			]);
+		if(!empty($user_ids)){
+			foreach ($user_ids as $user_id) {
+				$this->NotificationUser->insert([
+					'NU_USER_ID' => $user_id,
+					'NU_NOTIFICATION_ID' => $notification_id,
+					'NU_READ_STATUS' => 0,
+					'NU_CREATED_BY' => $user['USR_ID'],
+					'NU_UPDATED_BY' => $user['USR_ID'],
+				]);
+			}
 		}
 
 		return true;
@@ -81,14 +83,16 @@ class NotificationRepository extends BaseController
 
 	public function userReadNotifications($user, $notification_ids)
 	{
-		foreach ($notification_ids as $notification_id) {
-			$this->NotificationUser
-				->set([
-					'NU_READ_STATUS' => 1,
-					'NU_UPDATED_BY' => $user['USR_ID'],
-				])
-				->where(['NU_USER_ID' => $user['USR_ID'], 'NU_NOTIFICATION_ID' => $notification_id])
-				->update();
+		if(!empty($notification_ids)){
+			foreach ($notification_ids as $notification_id) {
+				$this->NotificationUser
+					->set([
+						'NU_READ_STATUS' => 1,
+						'NU_UPDATED_BY' => $user['USR_ID'],
+					])
+					->where(['NU_USER_ID' => $user['USR_ID'], 'NU_NOTIFICATION_ID' => $notification_id])
+					->update();
+			}
 		}
 
 		return true;
