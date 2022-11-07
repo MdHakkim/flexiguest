@@ -1249,10 +1249,11 @@ public function showPackages()
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['blockLoader_javascript']     = blockLoader_javascript();
         $perPage = 20;
-        $start = 0;    
-        $segment = $this->uri->getSegment(2);    
-        $page = $segment =='' ? 1:$segment; 
-        $offset = (int)($page - 1) * $perPage;  
+        $start = 0; 
+        $segments = $this->uri->getSegments(); 
+          
+        $page = empty($segments[1]) ? 1 :$segments[1]; 
+        $offset = ( $page == 1 ) ?  0: ($page-1) * $perPage;  
 
         $clear = $this->request->getPost('SEARCH_CLEAR');
         if($clear == 1){
@@ -2281,7 +2282,7 @@ public function getRoomStatistics(){
         $search = $this->request->getPost("search");
         $sql = "SELECT RM_CL_CODE,RM_CL_DESC FROM FLXY_ROOM_CLASS WHERE RM_CL_DESC like '%$search%'";
         $response = $this->DB->query($sql)->getResultArray();
-        $option='<option value="">Select RoomClass</option>';
+        $option='<option value=""> Select Room Class</option>';
         foreach($response as $row){
             $option.= '<option value="'.trim($row['RM_CL_CODE']).'">'.$row['RM_CL_CODE'].'</option>';
         }
