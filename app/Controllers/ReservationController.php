@@ -1250,30 +1250,13 @@ public function showPackages()
         $data['blockLoader_javascript']     = blockLoader_javascript();
         $perPage = 20;
         $start = 0; 
-        $segments = $this->uri->getSegments(); 
-        //print_r($segments);
-        
-
+        $segments = $this->uri->getSegments();
         $page = empty($segments[1]) ? 1 : $segments[1]; 
         $offset = ( $page == 1 ) ?  0: ($page - 1) * $perPage;  
-
-        //$urlArray = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        //print_r($urlArray);
-        //$segments = explode('/', $urlArray);
-        // echo count($segments);
-        // //echo 'd'.$segments[1];
-       // if(isset($segments[1])){
-           // echo 'in';
-          
-       // }
-        // else{
-        //     echo 'out';
-        //     echo  'segment'.$numSegments = count($segments) + 2;
-        // }
         
-        //echo 'segment'.$numSegments = (empty($segments[1]) || $segments[1] == 1) ? count($segments) :  count($segments) -1 ;
-        
-        $numSegments = isset($segments[1]) ? count($segments)  + 1 : count($segments) + 2;
+        $urlArray = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);    
+        $segments = explode('/', $urlArray);      
+        $numSegments = end($segments) == 'roomPlan' ? count($segments) : count($segments) - 1;          
 
         $clear = $this->request->getPost('SEARCH_CLEAR');
         if($clear == 1){
