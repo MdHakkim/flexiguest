@@ -46,7 +46,7 @@ class NotificationController extends BaseController
 
         $UserID = session()->get('USR_ID');
         $mine = new NotificationDataTable();
-        $tableName = "( SELECT NOTIFICATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIF_TY_DESC,CONCAT_WS(' ',USR_FROM.USR_FIRST_NAME,USR_FROM.USR_LAST_NAME) AS NOTIFICATION_FROM_NAME,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_RESERVATION_ID,NOTIFICATION_URL,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY,NOTIFICATION_TYPE FROM FLXY_NOTIFICATIONS
+        $tableName = "( SELECT NOTIFICATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIF_TY_DESC,CONCAT_WS(' ',USR_FROM.USR_FIRST_NAME,USR_FROM.USR_LAST_NAME) AS NOTIFICATION_FROM_NAME,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,RSV_ID,NOTIFICATION_URL,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY,NOTIFICATION_TYPE FROM FLXY_NOTIFICATIONS
         INNER JOIN FLXY_NOTIFICATION_TYPE ON NOTIFICATION_TYPE = NOTIF_TY_ID        
         LEFT JOIN FLXY_USERS USR_FROM ON USR_FROM.USR_ID = NOTIFICATION_FROM_ID 
         LEFT JOIN FLXY_RESERVATION_TRACES ON RSV_TRACE_NOTIFICATION_ID = NOTIFICATION_ID 
@@ -79,16 +79,16 @@ class NotificationController extends BaseController
                 if(strlen($str))
                     $str .= " OR ";
 
-                $str .= "NOTIFICATION_RESERVATION_ID like '%$reservation_id%'";
+                $str .= "RSV_ID like '%$reservation_id%'";
             }
 
-            $init_cond['NOTIFICATION_RESERVATION_ID'] = "(" . $str . ")";
+            $init_cond['RSV_ID'] = "(" . $str . ")";
         }
 
         if(isset($data['notification_text']))
             $init_cond['NOTIFICATION_TEXT like '] = "'%{$data['notification_text']}%'";
     
-        $columns = 'NOTIFICATION_ID,NOTIF_TY_DESC,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_FROM_NAME,NOTIFICATION_RESERVATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_URL,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY';
+        $columns = 'NOTIFICATION_ID,NOTIF_TY_DESC,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_FROM_NAME,RSV_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_URL,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY';
         $mine->generate_DataTable($tableName, $columns, $init_cond);
         exit;
     }
@@ -181,7 +181,6 @@ class NotificationController extends BaseController
                         'title' => 'Notification',
                         'body' => $data['NOTIFICATION_TEXT'],
                         'screen' => '',
-                        'notification_id' => $Notification_ID
                     ], $notification_type);
 
                     error_log("Notification => " . json_encode($response));
@@ -857,7 +856,7 @@ class NotificationController extends BaseController
     public function userReadNotifications()
     {
         $user = $this->request->user;
-        $notification_ids = $this->request->getVar('notification_ids') ?? null;
+        $notification_ids = $this->request->getVar('notification_ids');
         $this->NotificationRepository->userReadNotifications($user, $notification_ids);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Success']));

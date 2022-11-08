@@ -112,17 +112,14 @@ class NotificationDataTable{
                     }
                 }
 
-                if($name == "NOTIFICATION_RESERVATION_ID") {
+                if($name == "RSV_ID") {
                     if($row[$name] != ''){                                        
-                        $reservation_ids = implode(',', json_decode($row[$name]));                                        
-                        $reservations = $this->Db->query("select CONCAT_WS(' ', RESV_NO, RESV_STATUS) AS RESV_NAME FROM FLXY_RESERVATION where RESV_ID in ($reservation_ids)")->getResultArray();                       
+                        $reservation = $this->Db->query("select RESV_NO FROM FLXY_RESERVATION where RESV_ID = $row[$name]")->getRow()->RESV_NO;            
                         
                         $row[$name] = '';
-                        if(!empty($reservation_ids)){
-                            foreach($reservations as $reservation)
-                                $row[$name] .= $reservation['RESV_NAME'] . ', ';
+                        if(!empty($reservation)){                             
 
-                            $row[$name] = substr($row[$name], 0, 20). '...';
+                            $row[$name] = $reservation;
                         }
                     }
                 }

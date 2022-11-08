@@ -74,7 +74,7 @@
 							<th class="all">Notification Type</th>
 							<th class="all">Department</th>
 							<th>To User</th>
-							<th>Reservation</th>
+							<th class="all">Reservation</th>
 							<th>Guest</th>
 							<th class="all">Message</th>
 							<th>URL</th>
@@ -324,10 +324,10 @@
 						}
 					},
 					{
-						data: 'NOTIFICATION_RESERVATION_ID',
+						data: 'RSV_ID',
 						render: function(data, type, full, meta) {
-							if (full['NOTIFICATION_RESERVATION_ID'] != '') {
-								return '<a href="javascript:;" onclick="viewAll(\'Reservations\',' + full['NOTIFICATION_ID'] + ')" title="View Reservations"  rel="">' + full['NOTIFICATION_RESERVATION_ID'] + '<br><span class="btn btn-sm btn-label-info">View</span></br></a>';
+							if (full['RSV_ID'] != '') {
+								return full['RSV_ID'];
 							} else return '';
 						}
 					},
@@ -381,10 +381,7 @@
 								var resvListButtons =
 									'<div class="d-inline-block flxy_option_view dropend">' +
 									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
-									'<ul class="dropdown-menu dropdown-menu-end">' +
-									'<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
-									'"  class="dropdown-item editNotification text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
-									'<div class="dropdown-divider"></div>' +
+									'<ul class="dropdown-menu dropdown-menu-end">' +									
 									'<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
 									'" data-row-ind="' + meta.row + '"  class="dropdown-item viewNotification text-success"><i class="fa-solid fa-align-justify"></i> View</a></li><div class="dropdown-divider"></div>' +
 									'<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +

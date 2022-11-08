@@ -80,7 +80,7 @@ class ServerSideDataTable{
                 }
                $designArr[$name] = $row[$name];
             }
-            $return[]=$designArr;
+            $return[] = $designArr;
         }
         ## Response
         $response = array(
