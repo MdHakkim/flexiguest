@@ -58,7 +58,7 @@ class NotificationRepository extends BaseController
 
 	public function storeNotificationUsers($user, $user_ids, $notification_id)
 	{
-		if(!empty($user_ids)){
+		if (!empty($user_ids)) {
 			foreach ($user_ids as $user_id) {
 				$this->NotificationUser->insert([
 					'NU_USER_ID' => $user_id,
@@ -92,7 +92,7 @@ class NotificationRepository extends BaseController
 				->where(['NU_USER_ID' => $user['USR_ID']])
 				->update();
 		} else {
-			if(!empty($notification_ids)){
+			if (!empty($notification_ids)) {
 				foreach ($notification_ids as $notification_id) {
 					$this->NotificationUser
 						->set([
@@ -106,5 +106,14 @@ class NotificationRepository extends BaseController
 		}
 
 		return true;
+	}
+
+	public function unseenNotifications($user)
+	{
+		return $this->NotificationUser
+			->select('count(NU_ID) as unseen_notifications')
+			->where('NU_USER_ID', $user['USR_ID'])
+			->where('NU_READ_STATUS', 0)
+			->findAll();
 	}
 }
