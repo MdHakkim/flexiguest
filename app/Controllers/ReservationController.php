@@ -1251,9 +1251,13 @@ public function showPackages()
         $perPage = 20;
         $start = 0; 
         $segments = $this->uri->getSegments(); 
-          
-        $page = empty($segments[1]) ? 1 :$segments[1]; 
-        $offset = ( $page == 1 ) ?  0: ($page-1) * $perPage;  
+
+        $page = empty($segments[1]) ? 1 : $segments[1]; 
+        $offset = ( $page == 1 ) ?  0: ($page - 1) * $perPage;  
+
+        $urlArray = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        $segments = explode('/', $urlArray);
+        $numSegments = ($page == 1) ? count($segments) : count($segments) - 1;              
 
         $clear = $this->request->getPost('SEARCH_CLEAR');
         if($clear == 1){
@@ -1285,7 +1289,7 @@ public function showPackages()
         $response                   = $this->roomplanResources($offset, $perPage);
         $data['RoomResources']      = $response['response'];
         $totalResources             = $response['responseCount'];
-        $data['pager_links']        = $this->pager->makeLinks($page, $perPage, $totalResources,'custom_pagination_full',3);
+        $data['pager_links']        = $this->pager->makeLinks($page, $perPage, $totalResources,'custom_pagination_full',$numSegments);
         $data['RoomOOS']            = $this->getRoomOOS(); 
         $data['title']              = 'Room Plan';
         
