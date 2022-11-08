@@ -19,7 +19,7 @@ class AppUpdateController extends BaseController
 
     public function appUpdate()
     {
-        $app_updates = $this->AppUpdate->orderBy('AU_ID', 'desc')->findAll();
+        $app_updates = $this->AppUpdate->orderBy('AU_SEQUENCE', 'desc')->findAll();
         
         foreach($app_updates as $index => $item){
             $app_updates[$index]['AU_COVER_IMAGE'] = base_url($item['AU_COVER_IMAGE']);
