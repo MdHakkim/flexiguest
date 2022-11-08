@@ -360,7 +360,10 @@
 						data: 'NOTIFICATION_URL'
 					},
 					{
-						data: 'RSV_TRACE_RESOLVED_BY'
+						data: 'RSV_TRACE_RESOLVED_BY',
+						render: function(data, type, full, meta) {
+							return (full['RSV_TRACE_RESOLVED_BY'] != 0 ) ? full['RSV_TRACE_RESOLVED_BY'] : ''; 
+						}
 					},
 					{
 						data: 'NOTIFICATION_DATE_TIME'
