@@ -862,11 +862,11 @@ class NotificationController extends BaseController
         return $this->respond(responseJson(200, false, ['msg' => 'Success']));
     }
 
-    public function unseenNotifications()
+    public function unreadNotifications()
     {
         $user = $this->request->user;
 
-        $result = $this->NotificationRepository->unseenNotifications($user);
+        $result = $this->NotificationRepository->unreadNotifications($user);
         return $this->respond(responseJson(200, false, ['msg' => 'count'], $result));
     }
 }

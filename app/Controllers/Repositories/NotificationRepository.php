@@ -108,7 +108,7 @@ class NotificationRepository extends BaseController
 		return true;
 	}
 
-	public function unseenNotifications($user)
+	public function unreadNotifications($user)
 	{
 		return $this->NotificationUser
 			->select('count(NU_ID) as unseen_notifications')
