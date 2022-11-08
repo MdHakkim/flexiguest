@@ -1256,7 +1256,7 @@ public function showPackages()
         
         $urlArray = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);    
         $segments = explode('/', $urlArray);      
-        $numSegments = end($segments) == 'roomPlan' ? count($segments) : count($segments) - 1;          
+        $numSegments = is_numeric(end($segments)) ? count($segments) - 1 : count($segments);          
 
         $clear = $this->request->getPost('SEARCH_CLEAR');
         if($clear == 1){
