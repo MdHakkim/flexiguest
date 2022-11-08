@@ -9,6 +9,7 @@ class AppUpdate extends Model
     protected $table      = 'FLXY_APP_UPDATES';
     protected $primaryKey = 'AU_ID';
     protected $allowedFields = [
+        'AU_SEQUENCE',
         'AU_TITLE',
         'AU_COVER_IMAGE',
         'AU_DESCRIPTION',

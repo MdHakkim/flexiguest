@@ -2,6 +2,7 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<?= $this->include('Layout/image_modal') ?>
 
 <style>
     .optional-files .image,
@@ -55,7 +56,7 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>ID</th>
+                            <th>Display Sequence</th>
                             <th>Disable/Enable</th>
                             <th>Title</th>
                             <th>Cover Image</th>
@@ -90,18 +91,19 @@
                         <div class="row g-3">
                             <input type="hidden" name="id" class="form-control" />
 
-                            <div class="col-md-6">
-
+                            <div class="col-md-12">
                                 <label class="form-label"><b>Title *</b></label>
-
                                 <input type="text" name="GL_TITLE" class="form-control" placeholder="Title" required />
                             </div>
 
                             <div class="col-md-6">
-
                                 <label class="form-label"><b>Cover Image *</b></label>
-
                                 <input type="file" name="GL_COVER_IMAGE" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Display Sequence</b></label>
+                                <input type="number" name="GL_SEQUENCE" class="form-control" placeholder="Label" required />
                             </div>
 
                             <div class="col-md-12">
@@ -196,7 +198,7 @@
                     data: ''
                 },
                 {
-                    data: 'GL_ID'
+                    data: 'GL_SEQUENCE'
                 },
                 {
                     data: null,
@@ -225,7 +227,7 @@
                     render: function(data, type, row, meta) {
                         return (
                             `
-                                <img src='${data['GL_COVER_IMAGE']}' width='80' height='80'/>
+                                <img onClick='displayImagePopup("<?= base_url() ?>/${data['GL_COVER_IMAGE']}")' src='${data['GL_COVER_IMAGE']}' width='80' height='80'/>
                             `
                         );
                     }

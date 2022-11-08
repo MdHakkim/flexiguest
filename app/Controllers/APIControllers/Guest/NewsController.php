@@ -19,7 +19,7 @@ class NewsController extends BaseController
 
     public function news()
     {
-        $news = $this->News->orderBy('NS_ID', 'desc')->findAll();
+        $news = $this->News->orderBy('NS_SEQUENCE', 'desc')->findAll();
         
         foreach($news as $index => $item) {
             $news[$index]['NS_COVER_IMAGE'] = base_url($item['NS_COVER_IMAGE']);
