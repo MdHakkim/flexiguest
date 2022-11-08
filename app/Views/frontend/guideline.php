@@ -2,6 +2,7 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<?= $this->include('Layout/image_modal') ?>
 
 <style>
     .optional-files .image,
@@ -226,7 +227,7 @@
                     render: function(data, type, row, meta) {
                         return (
                             `
-                                <img src='${data['GL_COVER_IMAGE']}' width='80' height='80'/>
+                                <img onClick='displayImagePopup("<?= base_url() ?>/${data['GL_COVER_IMAGE']}")' src='${data['GL_COVER_IMAGE']}' width='80' height='80'/>
                             `
                         );
                     }

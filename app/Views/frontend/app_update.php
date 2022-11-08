@@ -2,6 +2,7 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<?= $this->include('Layout/image_modal') ?>
 
 <!-- Content wrapper -->
 <div class="content-wrapper">
@@ -139,7 +140,7 @@
                     render: function(data, type, row, meta) {
                         return (
                             `
-                                <img src='${data['AU_COVER_IMAGE']}' width='80' height='80'/>
+                                <img onClick='displayImagePopup("<?= base_url() ?>/${data['AU_COVER_IMAGE']}")' src='${data['AU_COVER_IMAGE']}' width='80' height='80'/>
                             `
                         );
                     }
