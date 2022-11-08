@@ -110,10 +110,12 @@ class NotificationRepository extends BaseController
 
 	public function unreadNotifications($user)
 	{
-		return $this->NotificationUser
+		$notifications = $this->NotificationUser
 			->select('count(NU_ID) as unread_notifications')
 			->where('NU_USER_ID', $user['USR_ID'])
 			->where('NU_READ_STATUS', 0)
 			->findAll();
+
+		return $notifications[0];
 	}
 }
