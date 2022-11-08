@@ -9,6 +9,7 @@ class News extends Model
     protected $table      = 'FLXY_NEWS';
     protected $primaryKey = 'NS_ID';
     protected $allowedFields = [
+        'NS_SEQUENCE',
         'NS_TITLE',
         'NS_COVER_IMAGE',
         'NS_DESCRIPTION',

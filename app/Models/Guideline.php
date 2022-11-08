@@ -9,6 +9,7 @@ class Guideline extends Model
     protected $table      = 'FLXY_GUIDELINES';
     protected $primaryKey = 'GL_ID';
     protected $allowedFields = [
+        'GL_SEQUENCE',
         'GL_TITLE',
         'GL_COVER_IMAGE',
         'GL_DESCRIPTION',

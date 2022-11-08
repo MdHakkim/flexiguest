@@ -91,6 +91,7 @@ class GuidelineController extends BaseController
         $data['GL_TITLE'] = trim($this->request->getPost('GL_TITLE'));
         $data['GL_DESCRIPTION'] = trim($this->request->getPost('GL_DESCRIPTION'));
         $data['GL_BODY'] = trim($this->request->getPost('GL_BODY'));
+        $data['GL_SEQUENCE'] = $this->request->getPost('GL_SEQUENCE');
 
         if (empty($id)) {
             $data['GL_CREATED_BY'] = $data['GL_UPDATED_BY'] = $user_id;

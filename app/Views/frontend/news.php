@@ -18,6 +18,7 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>Display Sequence</th>
                             <th>Title</th>
                             <th>Cover Image</th>
                             <th>Description</th>
@@ -50,33 +51,29 @@
                         <div class="row g-3">
                             <input type="hidden" name="id" id="news-id" class="form-control" />
 
-                            <div class="col-md-6">
-
+                            <div class="col-md-12">
                                 <label class="form-label"><b>Title *</b></label>
-
                                 <input type="text" name="NS_TITLE" class="form-control" placeholder="Title" required />
                             </div>
 
                             <div class="col-md-6">
-
                                 <label class="form-label"><b>Cover Image *</b></label>
-
                                 <input type="file" name="NS_COVER_IMAGE" class="form-control" required />
                             </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Display Sequence</b></label>
+                                <input type="number" name="NS_SEQUENCE" class="form-control" placeholder="Label" required />
+                            </div>
+
                             <div class="col-md-12">
-
                                 <label class="form-label"><b>Description *</b></label>
-
                                 <textarea type="number" name="NS_DESCRIPTION" class="form-control" placeholder="Description..."></textarea>
                             </div>
 
                             <div class="col-md-12">
-
                                 <label class="form-label"><b>Body *</b></label>
-
                                 <textarea name="NS_BODY" class="d-none"></textarea>
-
                                 <div id="snow-editor"></div>
                             </div>
 
@@ -130,6 +127,9 @@
             },
             'columns': [{
                     data: ''
+                },
+                {
+                    data: 'NS_SEQUENCE'
                 },
                 {
                     data: 'NS_TITLE'
@@ -210,7 +210,7 @@
                 width: "15%"
             }],
             "order": [
-                [5, "desc"]
+                [1, "desc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
