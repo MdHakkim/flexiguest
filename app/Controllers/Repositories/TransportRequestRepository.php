@@ -33,7 +33,7 @@ class TransportRequestRepository extends BaseController
         $this->TransportRequest = new TransportRequest();
     }
 
-    public function validationRules()
+    public function validationRules($data)
     {
         $rules = [
             'TR_RESERVATION_ID' => ['label' => 'reservation', 'rules' => 'required', 'errors' => ['required' => 'Please select a reservation.']],
@@ -53,18 +53,23 @@ class TransportRequestRepository extends BaseController
                 ]
             ],
             'TR_PICKUP_POINT_ID' => ['label' => 'pickup point', 'rules' => 'required', 'errors' => ['required' => 'Please select a pickup point.']],
-            'TR_DROPOFF_TIME' => ['label' => 'dropoff time', 'rules' => 'required'],
-            'TR_DROPOFF_DATE' => [
-                'label' => 'dropoff date',
-                'rules' => 'required|afterDateTime[TR_PICKUP_DATE,TR_PICKUP_TIME,TR_DROPOFF_DATE,TR_DROPOFF_TIME]',
-                'errors' => [
-                    'afterDateTime' => 'Dropoff date & time should be after pickup date & time.'
-                ]
-            ],
-            'TR_DROPOFF_POINT_ID' => ['label' => 'dropoff point', 'rules' => 'required', 'errors' => ['required' => 'Please select a dropoff point.']],
             'TR_FLIGHT_CARRIER_ID' => ['label' => 'flight carrier', 'rules' => 'required', 'errors' => ['required' => 'Please select a flight carrier.']],
             'TR_PAYMENT_METHOD' => ['label' => 'payment method', 'rules' => 'required', 'errors' => ['required' => 'Please select a payment method.']],
         ];
+
+        if (!empty($data['TR_DROPOFF_POINT_ID']) || !empty($data['TR_DROPOFF_DATE']) || !empty($data['TR_DROPOFF_TIME'])) {
+            $rules = array_merge($rules, [
+                'TR_DROPOFF_TIME' => ['label' => 'dropoff time', 'rules' => 'required'],
+                'TR_DROPOFF_DATE' => [
+                    'label' => 'dropoff date',
+                    'rules' => 'required|afterDateTime[TR_PICKUP_DATE,TR_PICKUP_TIME,TR_DROPOFF_DATE,TR_DROPOFF_TIME]',
+                    'errors' => [
+                        'afterDateTime' => 'Dropoff date & time should be after pickup date & time.'
+                    ]
+                ],
+                'TR_DROPOFF_POINT_ID' => ['label' => 'dropoff point', 'rules' => 'required', 'errors' => ['required' => 'Please select a dropoff point.']],
+            ]);
+        }
 
         if (isWeb()) {
             $rules = array_merge($rules, [

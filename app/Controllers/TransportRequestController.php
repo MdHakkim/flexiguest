@@ -79,12 +79,12 @@ class TransportRequestController extends BaseController
     public function store()
     {
         $user = $this->request->user ?? session('user');
-
-        if (!$this->validate($this->TransportRequestRepository->validationRules()))
-            return $this->respond(responseJson("403", true, $this->validator->getErrors()));
-
+        
         $data = json_decode(json_encode($this->request->getVar()), true);
         $data['TR_GUEST_IMAGE'] = $this->request->getFile('TR_GUEST_IMAGE') ?? null;
+
+        if (!$this->validate($this->TransportRequestRepository->validationRules($data)))
+            return $this->respond(responseJson("403", true, $this->validator->getErrors()));
 
         // $already_exist = $this->TransportRequestRepository->checkExistingRequest($user, $data);
         // if (!empty($already_exist)) {
