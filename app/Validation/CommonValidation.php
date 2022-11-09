@@ -40,9 +40,9 @@ class CommonValidation{
     public function afterDateTime(string $str, string $field, array $data)
     {
         $fields = explode(',', $field);
-
-        $datetime = date($data[$fields[0]] . " " . $data[$fields[1]]);
-        $datetime2 = date($data[$fields[2]] . " " . $data[$fields[3]]);
+        
+        $datetime = date("Y-m-d H:i:s", strtotime($data[$fields[0]] . " " . $data[$fields[1]]));
+        $datetime2 = date("Y-m-d H:i:s", strtotime($data[$fields[2]] . " " . $data[$fields[3]]));
 
         if($datetime >= $datetime2)
             return false;
