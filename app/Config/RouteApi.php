@@ -130,6 +130,7 @@ $routes->group("api", ["filter" => "authapi:Admin,Guest,Attendee", 'namespace' =
         $routes->get("get-user-notifications", "NotificationController::getUserNotifications");
         $routes->get("unread-notifications", "NotificationController::unreadNotifications");
         $routes->post("user-read-notifications", "NotificationController::userReadNotifications");
+        $routes->post("trace-resolved", "NotificationController::traceResolved");
     });
 });
 

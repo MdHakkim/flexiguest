@@ -869,4 +869,14 @@ class NotificationController extends BaseController
         $result = $this->NotificationRepository->unreadNotifications($user);
         return $this->respond(responseJson(200, false, ['msg' => 'count'], $result));
     }
+
+    public function traceResolved()
+    {
+        $user = $this->request->user;
+        $notification_id = $this->request->getVar('notification_id');
+
+        $this->NotificationRepository->traceResolved($user, $notification_id);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Trace Resolved.']));
+    }
 }

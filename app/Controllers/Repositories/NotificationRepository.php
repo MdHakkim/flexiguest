@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Libraries\CurlRequestLibrary;
 use App\Models\Notification;
 use App\Models\NotificationUser;
+use App\Models\ReservationTrace;
 use CodeIgniter\API\ResponseTrait;
 
 class NotificationRepository extends BaseController
@@ -14,12 +15,14 @@ class NotificationRepository extends BaseController
 
 	private $Notification;
 	private $NotificationUser;
+	private $ReservationTrace;
 	private $CurlRequestLibrary;
 
 	public function __construct()
 	{
 		$this->Notification = new Notification();
 		$this->NotificationUser = new NotificationUser();
+		$this->ReservationTrace = new ReservationTrace();
 		$this->CurlRequestLibrary = new CurlRequestLibrary();
 	}
 
@@ -76,7 +79,8 @@ class NotificationRepository extends BaseController
 	public function getUserNotifications($user)
 	{
 		return $this->Notification
-			->join('FLXY_NOTIFICATION_USERS', "NOTIFICATION_ID = NU_NOTIFICATION_ID AND NU_USER_ID = {$user['USR_ID']}")
+			->join('FLXY_NOTIFICATION_USERS', "NOTIFICATION_ID = NU_NOTIFICATION_ID AND NU_USER_ID = {$user['USR_ID']}", 'left')
+			->join('FLXY_RESERVATION_TRACES', 'NOTIFICATION_ID = RSV_TRACE_NOTIFICATION_ID', 'left')
 			->orderBy('NOTIFICATION_ID', 'desc')
 			->findAll();
 	}
@@ -117,5 +121,19 @@ class NotificationRepository extends BaseController
 			->findAll();
 
 		return $notifications[0];
+	}
+
+	public function traceResolved($user, $notification_id)
+	{
+		return $this->ReservationTrace
+			->set(
+				[
+					'RSV_TRACE_RESOLVED_BY' => $user['USR_ID'],
+					'RSV_TRACE_RESOLVED_ON' => date('Y-m-d H:i:s'),
+					'RSV_TRACE_RESOLVED_TIME' => date('h:i:s A')
+				]
+			)
+			->where('RSV_TRACE_NOTIFICATION_ID', $notification_id)
+			->update();
 	}
 }
