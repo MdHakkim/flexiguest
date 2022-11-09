@@ -43,7 +43,7 @@
 
     <!-- Modal Window -->
 
-    <div class="modal fade" id="reservationChild" tabindex="-1" aria-labelledby="reservationChildLabel" aria-hidden="true">
+    <div class="modal fade" id="reservationChild" tabindex="-1" aria-labelledby="reservationChildLabel" aria-hidden="true" style="z-index: 1100;">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
@@ -174,7 +174,7 @@
     </div>
     <!-- /Modal window -->
 
-    <div class="modal fade" id="comment-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="comment-modal" tabindex="-1" aria-hidden="true" style="z-index: 1100;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
