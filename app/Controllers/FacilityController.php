@@ -649,27 +649,17 @@ class FacilityController extends BaseController
                     $file = end($filename);
                     $folderPath = "assets/Uploads/Shuttle/" . $file;
                     if (file_exists($folderPath)) {
-                        if (unlink($folderPath)) {
-                            if ($doc_file) {
-                                $doc_name = $doc_file->getName();
-                                $folderPath = "assets/Uploads/Shuttle/";
-                                // 
-                                $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
-                                if ($doc_up['SUCCESS'] == 200) {
-                                    $data['SHUTL_ROUTE_IMG'] = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
-                                }
-                            }
-                        }
+                        unlink($folderPath);                            
                     }
-                } else {
-                    if ($doc_file) {
-                        $doc_name = $doc_file->getName();
-                        $folderPath = "assets/Uploads/Shuttle/";
-                        // 
-                        $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
-                        if ($doc_up['SUCCESS'] == 200) {
-                            $data['SHUTL_ROUTE_IMG'] = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
-                        }
+                }
+
+                if ($doc_file) {
+                    $doc_name = $doc_file->getName();
+                    $folderPath = "assets/Uploads/Shuttle/";
+                    // 
+                    $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
+                    if ($doc_up['SUCCESS'] == 200) {
+                        $data['SHUTL_ROUTE_IMG'] = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
                     }
                 }
                 
