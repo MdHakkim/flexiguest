@@ -706,6 +706,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/itemAvailability', 'ReservationController::itemAvailability');
     $routes->match(['post'], '/getResvNo', 'NotificationController::getResvNo');
     $routes->match(['post'], '/resolveNotification', 'NotificationController::resolveNotification');
+    $routes->match(['post'], '/notification-status', 'NotificationController::notificationStatus');
 
     
     
