@@ -759,6 +759,7 @@ $(document).ready(function() {
 function addForm() {
     $(':input', '#submitForm').not('[type="radio"],[type="checkbox"]').val('').prop('checked', false).prop('selected',
         false);
+        $('#USR_NAME').removeAttr("readonly");
     //$('.select2').val(null).trigger('change');
     $('#USR_COUNTRY,#USR_STATE,#USR_CITY').html('<option value="">Select</option>');
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');

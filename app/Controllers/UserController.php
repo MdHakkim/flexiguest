@@ -41,14 +41,18 @@ class UserController extends BaseController
         if ($this->request->getMethod() == 'post') {
             // echo "Test";exit;
             $rules = [
-                'username' => 'required|max_length[50]',
+                'username' => 'required|max_length[50]|userActive[username]',
                 'password' => 'required|min_length[8]|max_length[255]|validateUser[username,password]',
             ];
 
             $errors = [
+                'username' => [
+                    'userActive' => "User is inactive",
+                ],
                 'password' => [
                     'validateUser' => "Email/Username or Password don't match",
                 ],
+                
             ];
 
             if (!$this->validate($rules, $errors)) {
