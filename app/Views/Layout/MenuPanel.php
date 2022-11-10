@@ -1,3 +1,6 @@
+
+<?= $this->include('Layout/ErrorReport') ?>
+<?= $this->include('Layout/SuccessReport') ?>
 <style>
 .flex-grow-1.notification-text p{
   margin-bottom:0px !important;padding-bottom:0px !important;
@@ -595,7 +598,7 @@ $(document).on('click', '.dropdown-notifications-item', function() {
 
 
     $(document).on('click', '#resolveButton', function() {
-		hideModalAlerts();
+      hideModalAlerts();
 		$('.dtr-bs-modal').modal('hide');
 
 		var trail_id = $(this).data('trail_id');
