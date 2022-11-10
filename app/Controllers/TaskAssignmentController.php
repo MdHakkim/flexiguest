@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Controllers;
-
+use App\Libraries\ServerSideDataTable;
 use CodeIgniter\API\ResponseTrait;
-use App\Libraries\DataTables\NotificationDataTable;
 
 class TaskAssignmentController extends BaseController
 {
@@ -24,9 +23,9 @@ class TaskAssignmentController extends BaseController
         
     }
 
-    /**************      Notification Functions      ***************/
+    /**************      TaskAssignment Functions      ***************/
 
-    public function Notifications()
+    public function TaskAssignment()
     {
         $data['title'] = getMethodName();
         $data['session'] = $this->session;       
@@ -38,45 +37,42 @@ class TaskAssignmentController extends BaseController
     {
 
         $UserID = session()->get('USR_ID');
-        $mine = new NotificationDataTable();
-        $tableName = "FLXY_HK_TASKASSIGNMENT_OVERVIEW";
-
+        $mine = new ServerSideDataTable();
+        $tableName = "FLXY_HK_TASKASSIGNMENT_OVERVIEW INNER JOIN FLXY_HK_TASKS ON HKAT_TASK_CODE = HKT_ID INNER JOIN FLXY_USERS ON USR_ID = HKAT_CREATED_BY";
+        $init_cond = '';
         // search filters
         $data = $this->request->getPost();
-        if(isset($data['notification_type']))
-            $init_cond['NOTIFICATION_TYPE IN '] = '('. implode(',', $data['notification_type']) . ')';
+        if(isset($data['HKTAO_TASK_DATE']))
+            $init_cond['HKTAO_TASK_DATE IN '] = '('. implode(',', $data['HKTAO_TASK_DATE']) . ')';
 
-        if(isset($data['notification_department'])) {
+        if(isset($data['HKAT_TASK_CODE'])) {
                 $str = '';
 
-            foreach($data['notification_department'] as $department) {
+            foreach($data['HKAT_TASK_CODE'] as $taskCode) {
                 if(strlen($str))
                     $str .= " OR ";
 
-                $str .= "NOTIFICATION_DEPARTMENT like '%$department%'";       
+                $str .= "HKAT_TASK_CODE like '%$taskCode%'";       
             }
 
-            $init_cond['NOTIFICATION_DEPARTMENT'] = "(" . $str . ")";
+            $init_cond['HKAT_TASK_CODE'] = "(" . $str . ")";
         }
 
-        if(isset($data['notification_reservation_id'])) {
+        if(isset($data['HKAT_CREATED_BY'])) {
             $str = '';
 
-            foreach($data['notification_reservation_id'] as $reservation_id) {
+            foreach($data['HKAT_CREATED_BY'] as $created_by) {
                 if(strlen($str))
                     $str .= " OR ";
 
-                $str .= "NOTIFICATION_RESERVATION_ID like '%$reservation_id%'";
+                $str .= "HKAT_CREATED_BY like '%$created_by%'";
             }
 
-            $init_cond['NOTIFICATION_RESERVATION_ID'] = "(" . $str . ")";
+            $init_cond['HKAT_CREATED_BY'] = "(" . $str . ")";
         }
-
-        if(isset($data['notification_text']))
-            $init_cond['NOTIFICATION_TEXT like '] = "'%{$data['notification_text']}%'";
     
-        $columns = 'NOTIFICATION_ID,NOTIF_TY_DESC,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_FROM_NAME,NOTIFICATION_RESERVATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_URL,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY';
-        $mine->generate_DataTable($tableName, $columns, $init_cond);
+        $columns = 'HKTAO_ID,HKTAO_TASK_DATE,HKT_CODE,HKAT_AUTO,HKAT_TOTAL_SHEETS,HKAT_TOTAL_CREDIT,HKAT_CREATED_AT,USR_FIRST_NAME,USR_LAST_NAME';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
 

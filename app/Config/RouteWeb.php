@@ -704,6 +704,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/roomStatusList', 'ReservationController::roomStatusList');
     $routes->match(['post'], '/roomFloorList', 'ReservationController::roomFloorList');
     $routes->get('/itemAvailability', 'ReservationController::itemAvailability');
+    $routes->match(['post'], '/getResvNo', 'NotificationController::getResvNo');
+    $routes->match(['post'], '/resolveNotification', 'NotificationController::resolveNotification');
+
+    
+    
     
     //Subina Code (END)  
 
