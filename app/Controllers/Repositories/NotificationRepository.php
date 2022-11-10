@@ -79,7 +79,7 @@ class NotificationRepository extends BaseController
 	public function getUserNotifications($user)
 	{
 		return $this->Notification
-			->join('FLXY_NOTIFICATION_USERS', "NOTIFICATION_ID = NU_NOTIFICATION_ID AND NU_USER_ID = {$user['USR_ID']}", 'left')
+			->join('FLXY_NOTIFICATION_USERS', "NOTIFICATION_ID = NU_NOTIFICATION_ID AND NU_USER_ID = {$user['USR_ID']}")
 			->join('FLXY_RESERVATION_TRACES', 'NOTIFICATION_ID = RSV_TRACE_NOTIFICATION_ID', 'left')
 			->orderBy('NOTIFICATION_ID', 'desc')
 			->findAll();
@@ -135,5 +135,13 @@ class NotificationRepository extends BaseController
 			)
 			->where('RSV_TRACE_NOTIFICATION_ID', $notification_id)
 			->update();
+	}
+
+	public function notificationStatus($notification_id)
+	{
+		return $this->NotificationUser
+			->join('FlXY_USERS', 'NU_USER_ID = USR_ID', 'left')
+			->where('NU_NOTIFICATION_ID', $notification_id)
+			->findAll();
 	}
 }
