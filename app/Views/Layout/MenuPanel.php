@@ -401,7 +401,8 @@ $(document).on('click', '#ViewAll', function() {
             "orderable": false,
             render: function(data, type, full, meta) {                      
               if(full['NOTIFICATION_RESERVATION_ID'] != ''){
-                return getResvNo(full['NOTIFICATION_RESERVATION_ID'], full['NOTIF_TY_ID'],full['NOTIF_TRAIL_ID'],full['NOTIFICATION_ID'],full['NOTIF_TRAIL_READ_STATUS']);
+               // return full['NOTIFICATION_RESERVATION_ID'];
+                 return getResvNo(full['NOTIFICATION_RESERVATION_ID'], full['NOTIF_TY_ID'],full['NOTIF_TRAIL_ID'],full['NOTIFICATION_ID'],full['NOTIF_TRAIL_READ_STATUS']);
               }
               
             }
