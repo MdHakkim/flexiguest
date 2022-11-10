@@ -698,7 +698,17 @@ class NotificationController extends BaseController
     {
         $UserID = session()->get('USR_ID');
         $mine = new NotificationDataTable();
-        $tableName = "FLXY_NOTIFICATION_TRAIL INNER JOIN FLXY_NOTIFICATIONS ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID INNER JOIN FLXY_NOTIFICATION_TYPE ON NOTIFICATION_TYPE = NOTIF_TY_ID";
+        $tableName = "(SELECT NOTIF_TRAIL_ID, ISNULL(RD.RESV_NOS,'') AS NOTIFICATION_RESERVATION_ID,
+                        NOTIF_TY_ID,NOTIFICATION_ID,NOTIF_TY_DESC, NOTIFICATION_TEXT,NOTIF_TRAIL_DATETIME,NOTIF_TRAIL_READ_STATUS,NOTIF_TRAIL_USER
+                      FROM FLXY_NOTIFICATION_TRAIL 
+                      INNER JOIN FLXY_NOTIFICATIONS ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID 
+                      INNER JOIN FLXY_NOTIFICATION_TYPE ON NOTIFICATION_TYPE = NOTIF_TY_ID
+                      LEFT JOIN (   SELECT TR.RSV_TRACE_NOTIFICATION_ID, STRING_AGG(RV.RESV_NO, ', ') AS RESV_NOS
+                                    FROM FLXY_RESERVATION_TRACES TR
+                                    LEFT JOIN FLXY_RESERVATION RV ON RV.RESV_ID = TR.RSV_ID
+                                    GROUP BY TR.RSV_TRACE_NOTIFICATION_ID) RD 
+                                    ON RD.RSV_TRACE_NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID
+                      ) USER_NOTIF";
 
         $init_cond = array("NOTIF_TRAIL_USER = "=> $UserID);
     
@@ -882,5 +892,52 @@ class NotificationController extends BaseController
         $this->NotificationRepository->traceResolved($user, $notification_id);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Trace Resolved.']));
+    }
+
+
+    public function resolveNotification(){
+        $UserID = session()->get('USR_ID');
+        $NOTIF_TRAIL_ID = $this->request->getPost('NOTIF_TRAIL_ID');
+        $NOTIF_NOTIF_ID = $this->request->getPost('NOTIF_NOTIF_ID');       
+        $data = [];
+        try{
+            $update_status = $this->Db->table('FLXY_NOTIFICATION_TRAIL')->where('NOTIF_TRAIL_ID', $NOTIF_TRAIL_ID)->update(['NOTIF_TRAIL_READ_STATUS' => 1]); 
+
+            $update_trace_user = $this->Db->table('FLXY_RESERVATION_TRACES')->where('RSV_TRACE_NOTIFICATION_ID', $NOTIF_NOTIF_ID)->update(['RSV_TRACE_RESOLVED_BY' => $UserID,'RSV_TRACE_RESOLVED_ON' => date('Y-m-d'), 'RSV_TRACE_RESOLVED_TIME' => date('H:i:s')]);
+
+            $sqlStatusCount = "SELECT NOTIF_TRAIL_ID FROM FLXY_NOTIFICATION_TRAIL WHERE NOTIF_TRAIL_USER = $UserID AND NOTIF_TRAIL_READ_STATUS = '0'";
+            $data['responseStatusCount'] = $this->Db->query($sqlStatusCount)->getNumRows();
+
+
+            if($update_status == 1 && $update_trace_user == 1)
+            $data['status'] = 'success';
+            else
+            $data['status'] = 'failed';
+
+            echo json_encode($data);
+        }
+        catch (\Exception $e) {
+            return $e->getMessage();
+        }   
+        
+    }
+
+    public function getResvNo(){
+        //echo 'g'.$this->request->getPost('NOTIFICATION_RESERVATION_ID');exit;
+        $NOTIFICATION_RESERVATION_ID = json_decode($this->request->getPost('NOTIFICATION_RESERVATION_ID'));
+        $NOTIFICATION_RESERVATION_ID = implode(',',$NOTIFICATION_RESERVATION_ID);
+        $basicInfo = '';
+        $RESV_NO = [];
+        
+         $sql="SELECT RESV_NO FROM FLXY_RESERVATION WHERE RESV_ID in ($NOTIFICATION_RESERVATION_ID)";
+        $reservations = $this->Db->query($sql)->getResultArray(); 
+        if(!empty($reservations)){
+            foreach($reservations as $resv)  {                
+                $RESV_NO[] = $resv['RESV_NO'];              
+                       
+            }
+            $basicInfo = implode(',',$RESV_NO);  
+        }
+        echo json_encode($basicInfo);
     }
 }
