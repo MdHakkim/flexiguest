@@ -270,14 +270,14 @@ class APIController extends BaseController
         $guest['is_document_uploaded'] = 1;
 
         $sql = "select DOC_IS_VERIFY from FLXY_DOCUMENTS where DOC_CUST_ID = :CUST_ID: AND DOC_RESV_ID = :RESV_ID: AND DOC_FILE_TYPE = 'PROOF'";
-        $res = $this->Db->query($sql, ['CUST_ID' => $customer_id, 'RESV_ID' => $reservation_id])->getResultArray();
+        $res = $this->DB->query($sql, ['CUST_ID' => $customer_id, 'RESV_ID' => $reservation_id])->getResultArray();
         if (count($res))
             $guest['DOC_IS_VERIFY'] = $res[0]['DOC_IS_VERIFY'];
         else
             $guest['is_document_uploaded'] = 0;
 
         $sql = "select VACC_IS_VERIFY from FLXY_VACCINE_DETAILS where VACC_CUST_ID = :CUST_ID: AND VACC_RESV_ID = :RESV_ID:";
-        $res = $this->Db->query($sql, ['CUST_ID' => $customer_id, 'RESV_ID' => $reservation_id])->getResultArray();
+        $res = $this->DB->query($sql, ['CUST_ID' => $customer_id, 'RESV_ID' => $reservation_id])->getResultArray();
         if (count($res))
             $guest['VACC_IS_VERIFY'] = $res[0]['VACC_IS_VERIFY'];
         else
@@ -309,14 +309,14 @@ class APIController extends BaseController
             $accompany_profiles[$index]['is_document_uploaded'] = 1;
 
             $sql = "select DOC_IS_VERIFY from FLXY_DOCUMENTS where DOC_CUST_ID = :CUST_ID: AND DOC_RESV_ID = :RESV_ID: AND DOC_FILE_TYPE = 'PROOF'";
-            $res = $this->Db->query($sql, ['CUST_ID' => $accompany_profile['CUST_ID'], 'RESV_ID' => $reservation_id])->getResultArray();
+            $res = $this->DB->query($sql, ['CUST_ID' => $accompany_profile['CUST_ID'], 'RESV_ID' => $reservation_id])->getResultArray();
             if (count($res))
                 $accompany_profiles[$index]['DOC_IS_VERIFY'] = $res[0]['DOC_IS_VERIFY'];
             else
                 $accompany_profiles[$index]['is_document_uploaded'] = 0;
 
             $sql = "select VACC_IS_VERIFY from FLXY_VACCINE_DETAILS where VACC_CUST_ID = :CUST_ID: AND VACC_RESV_ID = :RESV_ID:";
-            $res = $this->Db->query($sql, ['CUST_ID' => $accompany_profile['CUST_ID'], 'RESV_ID' => $reservation_id])->getResultArray();
+            $res = $this->DB->query($sql, ['CUST_ID' => $accompany_profile['CUST_ID'], 'RESV_ID' => $reservation_id])->getResultArray();
             if (count($res))
                 $accompany_profiles[$index]['VACC_IS_VERIFY'] = $res[0]['VACC_IS_VERIFY'];
             else
