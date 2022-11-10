@@ -376,12 +376,21 @@
 					{
 						data: null,
 						render: function(data, type, full, meta) {
+							if (data['NOTIFICATION_TYPE'] == 4) {
+
+								let index = 0;
+								if (data['RSV_TRACE_RESOLVED_BY'])
+									index = 1;
+
+								return `
+										<span class="badge ${statusObj[index].class}">${statusObj[index].title}</span>
+									`;
+							}
+
 							return `
-								<div class="text-center">
 									<p>Unseen (${data['UNSEEN_COUNT']}), Seen (${data['SEEN_COUNT']})</p>
-									<span class="btn btn-sm btn-label-info" onclick="viewStatus(${data['NOTIFICATION_ID']})">View Status</span>
-								</div>
-							`;
+									<span class="btn btn-sm btn-label-info w-100" onclick="viewStatus(${data['NOTIFICATION_ID']})">View Status</span>
+								`;
 						}
 					},
 					{
