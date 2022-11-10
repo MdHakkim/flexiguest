@@ -192,7 +192,7 @@ class NotificationController extends BaseController
                     $remove_registration_ids = [];
                     if(!empty($response['failure']) && $response['failure'] > 0) {
                         foreach($response['results'] as $index => $res) {
-                            if(!empty($res['error']) && $res['error'] == 'NotRegistered' || $res['error'] == 'InvalidRegistration') {
+                            if(!empty($res['error']) && ($res['error'] == 'NotRegistered' || $res['error'] == 'InvalidRegistration') && isset($registration_ids[$index])) {
                                 $remove_registration_ids[] = $registration_ids[$index];
                             }
                         }
