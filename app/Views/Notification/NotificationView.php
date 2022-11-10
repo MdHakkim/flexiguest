@@ -15,6 +15,10 @@
 	#modalCenter {
 		z-index: 1092 !important;
 	}
+	.disabledDiv{
+		pointer-events: none;
+   		 opacity: 0.4;
+	}
 </style>
 
 <!-- Content wrapper -->
@@ -377,9 +381,12 @@
 						className: "text-center",
 						"orderable": false,
 						render: function(data, type, full, meta) {
-							if (full["RSV_TRACE_RESOLVED_BY"] == null && full["NOTIFICATION_READ_STATUS"] == 0) {
+							var disabledDiv = "disabledDiv";
+							if (full["NOTIFICATION_READ_STATUS"] == 0) {
+								var disabledDiv  = "";
+							}
 								var resvListButtons =
-									'<div class="d-inline-block flxy_option_view dropend">' +
+									'<div class="d-inline-block flxy_option_view dropend '+disabledDiv+'" >' +
 									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
 									'<ul class="dropdown-menu dropdown-menu-end">' +									
 									'<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
@@ -393,7 +400,7 @@
 									'</div>';
 
 								return resvListButtons;
-							} else return '';
+							
 						}
 					}
 				],
@@ -443,12 +450,12 @@
 						targets: 11,
 						width: "10%",
 						render: function(data, type, full, meta) {
-							if (full["RSV_TRACE_RESOLVED_BY"] != null) {
-								return '';
-							} else {
+							// if (full["RSV_TRACE_RESOLVED_BY"] != null) {
+							// 	return '';
+							// } else {
 								var $status = full['NOTIFICATION_READ_STATUS'];
 								return '<span class="badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';
-							}
+							//}
 						}
 					}
 				],

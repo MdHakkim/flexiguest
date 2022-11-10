@@ -1,10 +1,11 @@
-          <style>
-
+<style>
 .flex-grow-1.notification-text p{
   margin-bottom:0px !important;padding-bottom:0px !important;
   
 }
-          </style>
+
+
+ </style>
           <!-- Navbar -->
 
           <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
@@ -337,8 +338,8 @@
 
   
 $(document).on('click', '#ViewAll', function() {
- 
-
+  
+  $('#loader_flex_bg').show();
 
   var dt_notification_table = $('#dataTable_view1'),
       select2 = $('.select2'),
@@ -371,6 +372,7 @@ $(document).on('click', '#ViewAll', function() {
         'ajax': {
             'url': '<?php echo base_url('/userNotifications')?>'
         },
+        'initComplete': function(){$('#loader_flex_bg').hide();},
         columns: [        
           {
             data: 'NOTIF_TRAIL_ID',
@@ -397,15 +399,7 @@ $(document).on('click', '#ViewAll', function() {
           
           
           {
-            data: 'NOTIFICATION_RESERVATION_ID',
-            "orderable": false,
-            render: function(data, type, full, meta) {                      
-              if(full['NOTIFICATION_RESERVATION_ID'] != ''){
-               // return full['NOTIFICATION_RESERVATION_ID'];
-                 return getResvNo(full['NOTIFICATION_RESERVATION_ID'], full['NOTIF_TY_ID'],full['NOTIF_TRAIL_ID'],full['NOTIFICATION_ID'],full['NOTIF_TRAIL_READ_STATUS']);
-              }
-              
-            }
+            data: 'NOTIFICATION_RESERVATION_ID'
           },      
           
           {
@@ -439,7 +433,16 @@ $(document).on('click', '#ViewAll', function() {
         },
         {
             width: "10%",
-            "orderable": false
+            targets: 3,
+            "orderable": false,
+            render: function(data, type, full, meta) {                   
+              if(full['NOTIFICATION_RESERVATION_ID'] != ''){
+                return getResvNo(full['NOTIFICATION_RESERVATION_ID'], full['NOTIF_TY_ID'],full['NOTIF_TRAIL_ID'],full['NOTIFICATION_ID'],full['NOTIF_TRAIL_READ_STATUS']);
+              }
+              else 
+              return '';
+              
+            }
         },
         {
             targets: 5,
@@ -460,14 +463,14 @@ $(document).on('click', '#ViewAll', function() {
             targets: 6,
             width: "10%",
             render: function(data, type, full, meta) {
-              if(full['NOTIF_TY_ID'] == 4  ) {
-                if(full['NOTIF_TRAIL_READ_STATUS'] == 2){
-                $status = 2;
-                }else{
-                  $status = 3;
-                }
-              }
-              else
+              // if(full['NOTIF_TY_ID'] == 4  ) {
+              //   if(full['NOTIF_TRAIL_READ_STATUS'] == 2){
+              //   $status = 2;
+              //   }else{
+              //     $status = 3;
+              //   }
+              // }
+              // else
                $status = full['NOTIF_TRAIL_READ_STATUS'];
 
               
@@ -476,7 +479,7 @@ $(document).on('click', '#ViewAll', function() {
             }
         }],
         "order": [
-            [0, "desc"]
+            [5, "desc"]
         ],
         'createdRow': function(row, data, dataIndex) {
           if(data['NOTIF_TRAIL_READ_STATUS'] == 0)
@@ -490,35 +493,44 @@ $(document).on('click', '#ViewAll', function() {
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
 
     });
+
+    $('#ViewAllNotificationsModal').modal('show');
+
+    
   }
-  $('#ViewAllNotificationsModal').modal('show');
+ 
+ 
+  
+  
   
 });
 
 function getResvNo(NOTIFICATION_RESERVATION_ID, NOTIF_TY_ID,NOTIF_TRAIL_ID, NOTIFICATION_ID, NOTIFICATION_READ_STATUS ){
-  var resvNo = null;
-    $.ajax({
-        url: '<?php echo base_url('/getResvNo') ?>',       
-        type: "post",
-       async: false,
-        data:{
-          NOTIFICATION_RESERVATION_ID : NOTIFICATION_RESERVATION_ID, 
-          NOTIFICATION_ID:NOTIFICATION_ID                     
-        },
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }, 
-        dataType:'json',
+  var resvNo = NOTIFICATION_RESERVATION_ID;
+  
+    // $.ajax({
+    //     url: '<?php echo base_url('/getResvNo') ?>',       
+    //     type: "post",
+    //    async: false,
+    //     data:{
+    //       NOTIFICATION_RESERVATION_ID : NOTIFICATION_RESERVATION_ID, 
+    //       NOTIFICATION_ID:NOTIFICATION_ID                     
+    //     },
+    //     headers: {
+    //         'X-Requested-With': 'XMLHttpRequest'
+    //     }, 
+    //     dataType:'json',
 
-    }).done(function(respn) {         
+    // }).done(function(respn) {         
           
-      resvNo =  respn;
-          });
+    //   resvNo =  respn;
+    //       });
+          
           var result = '';
           if(resvNo != null){ 
             var result = resvNo;
             if(NOTIF_TY_ID == 4 && NOTIFICATION_READ_STATUS == 0){
-              result +='<br><button type="button" class="btn btn-sm btn-primary" onclick="resolveNotification('+NOTIF_TRAIL_ID+','+NOTIFICATION_ID+')" title="Resolve" id="resolveButton" >Resolve</button>';    
+              result +='<br><button type="button" class="btn btn-sm btn-primary" title="Resolve" id="resolveButton"  data-trail_id ="'+NOTIF_TRAIL_ID+'" data-notification_id = "'+NOTIFICATION_ID+'" >Resolve</button>';    
               
               }
             return result;
@@ -548,6 +560,12 @@ $(document).on('click', '.dropdown-notifications-item', function() {
     var NOTIF_TRAIL_ID  = $(this).attr('rel'); 
     $("#notifi-icon-"+ NOTIF_TRAIL_ID).css('color','#ddd'); 
     $("#notifications-read-"+ NOTIF_TRAIL_ID).css('display','none'); 
+  if( $(this).data('resolve') === "resolve"){
+    $('#loader_flex_bg').show();
+    $('#ViewAll').click();
+    
+  }else{
+    
     $.ajax({
         url: '<?php echo base_url('/updateNotification') ?>',       
         type: "post",
@@ -569,36 +587,69 @@ $(document).on('click', '.dropdown-notifications-item', function() {
 
         }
     });
+  }
 
   });
 
 
-    function resolveNotification(notificationTrailId, notificationId){          
-      $.ajax({
-          url: '<?php echo base_url('/resolveNotification') ?>',       
-          type: "post",
-          headers: {
-              'X-Requested-With': 'XMLHttpRequest'
-          },   
-          data:{
-            NOTIF_TRAIL_ID:notificationTrailId,
-            NOTIF_NOTIF_ID:notificationId
-          },
-          dataType: 'json',
-          success: function(respn) {           
-            if(respn ==='success'){             
-              $('#resolveButton').hide();
-              $("#not_status").html('Resolved');
-              $("#not_status").removeClass('bg-label-warning');
-              $("#not_status").addClass('bg-label-info');
 
-              var alertText = '<li>Successfully resolved</li>';
-					    showModalAlert('success', alertText);
-            }
-          }
-      });
 
-    }
+    $(document).on('click', '#resolveButton', function() {
+		hideModalAlerts();
+		$('.dtr-bs-modal').modal('hide');
+
+		var trail_id = $(this).data('trail_id');
+    var notificationId = $(this).data('notification_id');
+		bootbox.confirm({
+			message: "Are you sure you want to resolve this notification?",
+			buttons: {
+				confirm: {
+					label: 'Yes',
+					className: 'btn-success'
+				},
+				cancel: {
+					label: 'No',
+					className: 'btn-danger'
+				}
+			},
+			callback: function(result) {
+				if (result) {
+					$.ajax({
+						url: '<?php echo base_url('/resolveNotification') ?>',
+						type: "post",
+						data: {
+							NOTIF_TRAIL_ID: trail_id,
+              NOTIF_NOTIF_ID:notificationId
+
+						},
+						headers: {
+							'X-Requested-With': 'XMLHttpRequest'
+						},
+						dataType: 'json',
+						success: function(respn) {
+                if(respn != null && respn.status === "success"){             
+                $('#resolveButton').hide();
+                $("#not_status").html('SEEN');
+                $("#not_status").removeClass('bg-label-warning');
+                $("#not_status").addClass('bg-label-success');
+                $("#dataTable_view1 .notifi-"+trail_id).removeClass('table-warning');
+                $(".badge-notifications").html(respn.responseStatusCount);
+
+                var alertText = '<li>Successfully resolved</li>';
+                showModalAlert('success', alertText);
+              }
+              else{
+                var alertText = '<li>Failed</li>';
+                showModalAlert('error', alertText);
+              }
+						}
+
+
+					});
+				}
+			}
+		});
+	});
 
   
 function showMessage(){ 

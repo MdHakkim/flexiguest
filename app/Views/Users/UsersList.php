@@ -818,6 +818,9 @@ function editUser(sysid) {
     $('.dtr-bs-modal').modal('hide');
 
     $('#USR_ID').val(sysid);
+    
+    $('#USR_NAME').attr("readonly",'readonly');
+    
 
     $('#popModalWindowlabel').html('Edit User');
 
