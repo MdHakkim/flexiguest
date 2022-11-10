@@ -253,7 +253,7 @@ class APIController extends BaseController
 
         // an indicator to inform this is accompanying person
         $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_LAST_NAME) as name, 
-                        fc.CUST_ID, 
+                        fc.CUST_ID
                         FROM FLXY_CUSTOMER as fc
                         where CUST_ID = :customer_id:
                         group by fc.CUST_FIRST_NAME, fc.CUST_LAST_NAME, fc.CUST_ID";
@@ -293,7 +293,7 @@ class APIController extends BaseController
             return $this->respond(responseJson(200, false, ["msg" => "Accompany person"], $guest));
 
         $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_LAST_NAME) as name, 
-                        fc.CUST_ID, 
+                        fc.CUST_ID
                         FROM FLXY_CUSTOMER as fc
                         inner join FLXY_ACCOMPANY_PROFILE as fap on fc.CUST_ID = fap.ACCOMP_CUST_ID 
                         where fap.ACCOMP_REF_RESV_ID = :reservation_id:
