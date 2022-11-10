@@ -162,17 +162,21 @@ class NotificationController extends BaseController
             $Notification_ID = $RSV_TRACE_NOTIFICATION_ID =  empty($sysid) ? $this->Db->insertID():$sysid; 
 
             if(!empty($NOTIFICATION_GUEST_ID)) {
+
                 $notification_type = 'guest';
                 $user_ids = $this->UserRepository->getUserIdsByCustomerIds($NOTIFICATION_GUEST_ID);
             } else if(!empty($NOTIFICATION_TO_ID)) {
 
                 $notification_type = 'admin';
                 $user_ids = $NOTIFICATION_TO_ID;
+            } else if(!empty($NOTIFICATION_DEPARTMENT)) {
+
+                $notification_type = 'admin';
+                $user_ids = $this->UserRepository->getUserIdsByDepartment($NOTIFICATION_DEPARTMENT);
             }
             
-           $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $Notification_ID);
-
-            if(!empty($user_ids)){
+            if(!empty($user_ids)) {
+                $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $Notification_ID);
 
                 $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
                 if(!empty($registration_ids)) {
