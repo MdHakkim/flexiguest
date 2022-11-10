@@ -698,7 +698,7 @@ class NotificationController extends BaseController
 
         $init_cond = array("NOTIF_TRAIL_USER = "=> $UserID);
     
-        $columns = 'NOTIF_TRAIL_ID,NOTIFICATION_RESERVATION_ID,NOTIF_TY_DESC,NOTIFICATION_TEXT,NOTIF_TRAIL_DATETIME,NOTIF_TRAIL_READ_STATUS';
+        $columns = 'NOTIF_TRAIL_ID,NOTIFICATION_RESERVATION_ID,NOTIF_TY_ID,NOTIFICATION_ID,NOTIF_TY_DESC,NOTIFICATION_TEXT,NOTIF_TRAIL_DATETIME,NOTIF_TRAIL_READ_STATUS';
         $mine->generate_DataTable($tableName, $columns, $init_cond);
         exit;
     }
