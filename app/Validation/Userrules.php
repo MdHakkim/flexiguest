@@ -16,4 +16,19 @@ class Userrules
 
         return password_verify($data['password'], $user['USR_PASSWORD']);
     }
+
+    public function userActive(string $str, string $fields, array $data)
+    {
+        $model = new UserModel();
+        $user = null;
+        $user = $model->where(['USR_EMAIL'=> $data['username'], 'USR_STATUS'=> 1])->first() ?? $model->Where(['USR_NAME'=> $data['username'], 'USR_STATUS'=> 1])->first(); 
+       
+        if (!$user) {
+            return false;
+        }else
+        return true;
+    
+
+        
+    }
 }
