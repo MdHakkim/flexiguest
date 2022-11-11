@@ -278,7 +278,12 @@ class NotificationController extends BaseController
             else if($NOTIFICATION_TYPE == 3 ){
                 if(isset($NOTIFICATION_GUEST_ID) && !empty($NOTIFICATION_GUEST_ID)){
                     for($j=0; $j<count($NOTIFICATION_GUEST_ID);$j++){
+
                         $NOTIFI['NOTIF_TRAIL_GUEST'] = $NOTIFICATION_GUEST_ID[$j];
+                        
+                        $cond = "USR_CUST_ID = '". $NOTIFI['NOTIF_TRAIL_GUEST']."'";
+                        $NOTIFI['NOTIF_TRAIL_USER']  = getValueFromTable('USR_ID',$cond,'FLXY_USERS');
+
                         $NOTIFI['NOTIF_TRAIL_NOTIFICATION_ID'] = $RSV_TRACE_NOTIFICATION_ID;
                         $NOTIFI['NOTIF_TRAIL_READ_STATUS']     = 0;
                         $NOTIFI['NOTIF_TRAIL_DATETIME']        = $NOTIFICATION_DATE_TIME;
