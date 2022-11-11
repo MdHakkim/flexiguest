@@ -179,8 +179,6 @@ class NotificationController extends BaseController
             }
             
             if(!empty($user_ids)) {
-                // $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $Notification_ID);
-
                 $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
                 if(!empty($registration_ids)) {
                     $response = $this->NotificationRepository->sendNotification([
