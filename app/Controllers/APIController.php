@@ -283,9 +283,6 @@ class APIController extends BaseController
         $res = $this->DB->query($sql, ['CUST_ID' => $customer_id, 'RESV_ID' => $reservation_id])->getResultArray();
         if (count($res))
             $guest['VACC_IS_VERIFY'] = $res[0]['VACC_IS_VERIFY'];
-        else
-            $guest['is_document_uploaded'] = 0;
-
         // DOC VERIFY
 
         $sql = "select * from FLXY_ACCOMPANY_PROFILE where ACCOMP_CUST_ID = :customer_id: and ACCOMP_REF_RESV_ID = :reservation_id:";
@@ -321,9 +318,7 @@ class APIController extends BaseController
             $sql = "select VACC_IS_VERIFY from FLXY_VACCINE_DETAILS where VACC_CUST_ID = :CUST_ID: AND VACC_RESV_ID = :RESV_ID:";
             $res = $this->DB->query($sql, ['CUST_ID' => $accompany_profile['CUST_ID'], 'RESV_ID' => $reservation_id])->getResultArray();
             if (count($res))
-                $accompany_profiles[$index]['VACC_IS_VERIFY'] = $res[0]['VACC_IS_VERIFY'];
-            else
-                $accompany_profiles[$index]['is_document_uploaded'] = 0;
+                $accompany_profiles[$index]['VACC_IS_VERIFY'] = $res[0]['VACC_IS_VERIFY'];                
             // DOC VERIFY
         }
 
