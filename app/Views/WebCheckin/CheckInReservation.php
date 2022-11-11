@@ -1158,8 +1158,10 @@
         if (param == 'N') {
             var length = $('.sliderclass.activeslide').next('.sliderclass').length;
             if (length == 0) {
-                if ($('.flxy_doc_prof:contains(Pending)').length && $('.flxy_doc_vacc:contains(Pending)').length) {
-                    alert('Please upload required Guest details, Identity and Vaccine documents.');
+                // if ($('.flxy_doc_prof:contains(Pending)').length && $('.flxy_doc_vacc:contains(Pending)').length) {
+                if ($('.flxy_doc_prof:contains(Pending)').length) {
+                    // alert('Please upload required Guest details, Identity and Vaccine documents.');
+                    alert('Please upload required Guest details and Identity documents.');
                     return false;
                 }
 
@@ -1168,10 +1170,10 @@
                     return false;
                 }
 
-                if ($('.flxy_doc_vacc:contains(Pending)').length) {
-                    alert('Please upload required Vaccine documents.');
-                    return false;
-                }
+                // if ($('.flxy_doc_vacc:contains(Pending)').length) {
+                //     alert('Please upload required Vaccine documents.');
+                //     return false;
+                // }
 
                 <?php
                 if (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1') {
@@ -1750,7 +1752,8 @@
                     }
                     ?>
 
-                    if (row.DOC_IS_VERIFY && row.VACC_IS_VERIFY)
+                    // if (row.DOC_IS_VERIFY && row.VACC_IS_VERIFY)
+                    if (row.DOC_IS_VERIFY)
                         text = '<i class="fa-solid fa-circle-check me-1"></i> Document verified';
 
                     $(`.customer-card-${row.CUST_ID} .document-verified-status`).html(text);
