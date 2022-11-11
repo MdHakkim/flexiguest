@@ -231,7 +231,7 @@
                                                     <?php endforeach ?>
                                                 </select>
                                             </div>
-                                            
+
                                             <div class="col-md-4">
                                                 <label class="form-label"><b>Adults *</b></label>
                                                 <input type="number" name="TR_ADULTS" class="form-control" value=1 oninput="updateTotalPassengers()" />
@@ -246,7 +246,7 @@
                                                 <label class="form-label"><b>Total Passengers *</b></label>
                                                 <input type="number" name="TR_TOTAL_PASSENGERS" class="form-control" value="0" readonly />
                                             </div>
-                                            
+
                                             <div class="col-md-6">
                                                 <label class="form-label"><b>Guest Name *</b></label>
                                                 <input type="text" name="TR_GUEST_NAME" class="form-control" placeholder="Guest name" />
@@ -834,6 +834,11 @@
             let id = "submit-form";
 
             var fd = new FormData($(`#${id}`)[0]);
+            fd.delete('TR_GUEST_IMAGE');
+
+            files = $(`#${id} input[name='TR_GUEST_IMAGE']`)[0].files;
+            if (files.length)
+                fd.append('TR_GUEST_IMAGE', files[0]);
 
             $.ajax({
                 url: '<?= base_url('transport/transport-request/store') ?>',
