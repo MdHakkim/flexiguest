@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Controllers\Repositories\ReservationRepository;
 use  App\Libraries\ServerSideDataTable;
 use  App\Libraries\EmailLibrary;
 use App\Models\Documents;
@@ -23,6 +24,7 @@ class ApplicatioController extends BaseController
     private $Reservation;
     private $RoomAsset;
     private $ReservationRoomAsset;
+    private $ReservationRepository;
 
     public function __construct(){
         $this->Db = \Config\Database::connect();
@@ -35,6 +37,7 @@ class ApplicatioController extends BaseController
         $this->Reservation = new Reservation();
         $this->RoomAsset = new RoomAsset();
         $this->ReservationRoomAsset = new ReservationRoomAsset();
+        $this->ReservationRepository = new ReservationRepository();
     }
 
     public function Reservation(){   
@@ -4653,28 +4656,8 @@ class ApplicatioController extends BaseController
         $customer_id = $this->request->getVar('customer_id');
         $reservation_id = $this->request->getVar('reservation_id');
 
-        $params = [
-            'customer_id' => $customer_id,
-            'reservation_id' => $reservation_id
-        ];
-
-        $sql = "select * from FLXY_DOCUMENTS where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:";
-        $response = $this->Db->query($sql, $params)->getResultArray();
-        if(empty($response))
-            return $this->respond(responseJson(403, true, ['msg' => 'No documents uploaded yet.']));
-
-        $sql = "select * from FLXY_VACCINE_DETAILS where VACC_CUST_ID = :customer_id: and VACC_RESV_ID = :reservation_id:";
-        $response = $this->Db->query($sql, $params)->getResultArray();
-        if(empty($response))
-            return $this->respond(responseJson(403, true, ['msg' => 'Vaccination details are not uploaded yet.']));
-        
-        $sql = "update FLXY_DOCUMENTS set DOC_IS_VERIFY = 1 where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:";
-        $this->Db->query($sql, $params);
-
-        $sql = "update FLXY_VACCINE_DETAILS set VACC_IS_VERIFY = 1 where VACC_CUST_ID = :customer_id: and VACC_RESV_ID = :reservation_id:";
-        $this->Db->query($sql, $params);
-
-        return $this->respond(responseJson(200, false, ['msg' => 'Documents verified.']));
+        $result = $this->ReservationRepository->verifyDocuments($customer_id, $reservation_id);
+        return $this->respond($result);
     }
     
     public function transactionList()

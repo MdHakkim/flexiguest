@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\UserRepository;
 use CodeIgniter\API\ResponseTrait;
 use  App\Libraries\EmailLibrary;
@@ -22,6 +23,7 @@ class APIController extends BaseController
     private $ApplicatioController;
     private $PropertyInfo;
     private $UserRepository;
+    private $ReservationRepository;
 
     public function __construct()
     {
@@ -32,6 +34,7 @@ class APIController extends BaseController
         $this->ApplicatioController = new ApplicatioController();
         $this->PropertyInfo = new PropertyInfo();
         $this->UserRepository = new UserRepository();
+        $this->ReservationRepository = new ReservationRepository();
     }
 
     // ----------- START API FOR FLEXI GUEST --------------//
@@ -1272,21 +1275,11 @@ class APIController extends BaseController
 
     public function verifyDocuments()
     {
-        $reservation_id = $this->request->getVar('reservation_id');
         $customer_id = $this->request->getVar('customer_id');
+        $reservation_id = $this->request->getVar('reservation_id');
 
-        $params = [
-            'reservation_id' => $reservation_id,
-            'customer_id' => $customer_id
-        ];
-
-        $check_exist = $this->DB->query('select * from FLXY_DOCUMENTS where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:', $params)->getResultArray();
-        if (!count($check_exist))
-            return $this->respond(responseJson(404, true, ['msg' => 'No Documents uploaded for this guest.']));
-
-        $this->DB->query('update FLXY_DOCUMENTS set DOC_IS_VERIFY = 1 where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:', $params);
-
-        return $this->respond(responseJson(200, false, ['msg' => 'Documents are verified.']));
+        $result = $this->ReservationRepository->verifyDocuments($customer_id, $reservation_id);
+        return $this->respond($result);
     }
 
     public function guestCheckedIn()
