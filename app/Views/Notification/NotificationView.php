@@ -952,7 +952,7 @@
 						seen_count = 0;
 
 					$.each(user_list, function(index, user) {
-						if (user.NU_READ_STATUS == 0) {
+						if (user.NOTIF_TRAIL_READ_STATUS == 0) {
 							unseen_count++;
 							unseen_html += `<p>${user.USR_FIRST_NAME || ''} ${user.USR_LAST_NAME || ''}</p>`;
 						} else {
