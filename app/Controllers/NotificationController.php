@@ -47,8 +47,8 @@ class NotificationController extends BaseController
         $UserID = session()->get('USR_ID');
         $mine = new NotificationDataTable();
         $tableName = "( SELECT NOTIFICATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIF_TY_DESC,CONCAT_WS(' ',USR_FROM.USR_FIRST_NAME,USR_FROM.USR_LAST_NAME) AS NOTIFICATION_FROM_NAME,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,RSV_ID,NOTIFICATION_URL,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY,NOTIFICATION_TYPE, 
-                        (select count(NU_ID) as UNSEEN_COUNT from FLXY_NOTIFICATION_USERS where NU_NOTIFICATION_ID = NOTIFICATION_ID and NU_READ_STATUS = 0) as UNSEEN_COUNT,
-                        (select count(NU_ID) as SEEN_COUNT from FLXY_NOTIFICATION_USERS where NU_NOTIFICATION_ID = NOTIFICATION_ID and NU_READ_STATUS = 1) as SEEN_COUNT
+                        (select count(NOTIF_TRAIL_ID) as UNSEEN_COUNT from FLXY_NOTIFICATION_TRAIL where NOTIF_TRAIL_NOTIFICATION_ID = NOTIFICATION_ID and NOTIF_TRAIL_READ_STATUS = 0) as UNSEEN_COUNT,
+                        (select count(NOTIF_TRAIL_ID) as SEEN_COUNT from FLXY_NOTIFICATION_TRAIL where NOTIF_TRAIL_NOTIFICATION_ID = NOTIFICATION_ID and NOTIF_TRAIL_READ_STATUS = 1) as SEEN_COUNT
                             FROM FLXY_NOTIFICATIONS
                                 INNER JOIN FLXY_NOTIFICATION_TYPE ON NOTIFICATION_TYPE = NOTIF_TY_ID        
                                 LEFT JOIN FLXY_USERS USR_FROM ON USR_FROM.USR_ID = NOTIFICATION_FROM_ID 
@@ -179,7 +179,7 @@ class NotificationController extends BaseController
             }
             
             if(!empty($user_ids)) {
-                $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $Notification_ID);
+                // $this->NotificationRepository->storeNotificationUsers($user, $user_ids, $Notification_ID);
 
                 $registration_ids = $this->UserRepository->getRegistrationIds($user_ids);
                 if(!empty($registration_ids)) {
