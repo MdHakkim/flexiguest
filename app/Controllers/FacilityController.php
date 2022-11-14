@@ -641,19 +641,19 @@ class FacilityController extends BaseController
                 ];
 
                 // UPDATE
-                // unlink the old file from the folder and update the column in db
-                $doc_data = $this->Db->table('FLXY_SHUTTLE')->select('SHUTL_ROUTE_IMG')->where('SHUTL_ID', $sysid)->get()->getRowArray();
-                $filename = $doc_data['SHUTL_ROUTE_IMG'];
-                if ($filename) {
-                    $filename = explode('/', $filename);
-                    $file = end($filename);
-                    $folderPath = "assets/Uploads/Shuttle/" . $file;
-                    if (file_exists($folderPath)) {
-                        unlink($folderPath);                            
-                    }
-                }
-
                 if ($doc_file) {
+                    // unlink the old file from the folder and update the column in db
+                    $doc_data = $this->Db->table('FLXY_SHUTTLE')->select('SHUTL_ROUTE_IMG')->where('SHUTL_ID', $sysid)->get()->getRowArray();
+                    $filename = $doc_data['SHUTL_ROUTE_IMG'];
+                    if ($filename) {
+                        $filename = explode('/', $filename);
+                        $file = end($filename);
+                        $folderPath = "assets/Uploads/Shuttle/" . $file;
+                        if (file_exists($folderPath)) {
+                            unlink($folderPath);                            
+                        }
+                    }
+
                     $doc_name = $doc_file->getName();
                     $folderPath = "assets/Uploads/Shuttle/";
                     // 
