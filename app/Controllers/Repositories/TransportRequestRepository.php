@@ -53,7 +53,6 @@ class TransportRequestRepository extends BaseController
                 ]
             ],
             'TR_PICKUP_POINT_ID' => ['label' => 'pickup point', 'rules' => 'required', 'errors' => ['required' => 'Please select a pickup point.']],
-            'TR_FLIGHT_CARRIER_ID' => ['label' => 'flight carrier', 'rules' => 'required', 'errors' => ['required' => 'Please select a flight carrier.']],
             'TR_PAYMENT_METHOD' => ['label' => 'payment method', 'rules' => 'required', 'errors' => ['required' => 'Please select a payment method.']],
         ];
 
@@ -68,6 +67,26 @@ class TransportRequestRepository extends BaseController
                     ]
                 ],
                 'TR_DROPOFF_POINT_ID' => ['label' => 'dropoff point', 'rules' => 'required', 'errors' => ['required' => 'Please select a dropoff point.']],
+            ]);
+        }
+
+        if (!empty($data['TR_PICKUP_POINT_ID']))
+            $pickup_point = $this->PickupPoint->find($data['TR_PICKUP_POINT_ID']);
+
+        if (!empty($data['TR_DROPOFF_POINT_ID']))
+            $dropoff_point = $this->DropoffPoint->find($data['TR_DROPOFF_POINT_ID']);
+
+        if ((!empty($pickup_point) && str_contains(strtolower($pickup_point['PP_POINT']), 'airport')) || (!empty($dropoff_point) && str_contains(strtolower($dropoff_point['DP_POINT']), 'airport'))) {
+            $rules = array_merge($rules, [
+                'TR_FLIGHT_CARRIER_ID' => ['label' => 'flight carrier', 'rules' => 'required', 'errors' => ['required' => 'Please select a flight carrier.']],
+                'TR_FLIGHT_TIME' => ['label' => 'flight time', 'rules' => 'required'],
+                'TR_FLIGHT_DATE' => [
+                    'label' => 'flight date',
+                    'rules' => 'required|afterNow[TR_FLIGHT_DATE,TR_FLIGHT_TIME]',
+                    'errors' => [
+                        'afterNow' => 'flight date & time should be after current date & time.'
+                    ]
+                ]
             ]);
         }
 
