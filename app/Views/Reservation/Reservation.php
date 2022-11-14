@@ -3219,7 +3219,8 @@ $(document).ready(function() {
         },
         // dataType:'json',
         success: function(respn) {
-            $('#S_RESV_RM_TYPE').html(respn);
+            $('#S_RESV_RM_TYPE').html('<option value="">Select Value</option>');
+            $('#S_RESV_RM_TYPE').append(respn);
             $('.RESV_RM_TYPE,#RESV_RTC').html(respn);
         }
     });
