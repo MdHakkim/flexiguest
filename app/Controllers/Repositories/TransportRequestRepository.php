@@ -79,12 +79,12 @@ class TransportRequestRepository extends BaseController
         if ((!empty($pickup_point) && str_contains(strtolower($pickup_point['PP_POINT']), 'airport')) || (!empty($dropoff_point) && str_contains(strtolower($dropoff_point['DP_POINT']), 'airport'))) {
             $rules = array_merge($rules, [
                 'TR_FLIGHT_CARRIER_ID' => ['label' => 'flight carrier', 'rules' => 'required', 'errors' => ['required' => 'Please select a flight carrier.']],
-                'TR_FLIGHT_TIME' => ['label' => 'flight time', 'rules' => 'required'],
+                // 'TR_FLIGHT_TIME' => ['label' => 'flight time', 'rules' => 'required'],
                 'TR_FLIGHT_DATE' => [
                     'label' => 'flight date',
-                    'rules' => 'required|afterNow[TR_FLIGHT_DATE,TR_FLIGHT_TIME]',
+                    'rules' => 'required|todayOrAfter[TR_FLIGHT_DATE]',
                     'errors' => [
-                        'afterNow' => 'flight date & time should be after current date & time.'
+                        'todayOrAfter' => 'flight date should be today or after today.'
                     ]
                 ]
             ]);
