@@ -529,8 +529,10 @@ class RestaurantRepository extends BaseController
             $where_condition = "RO_ATTENDANT_ID = {$user['USR_ID']}";
 
         $orders = $this->RestaurantOrder
-            ->select("FLXY_RESTAURANT_ORDERS.*, concat(USR_FIRST_NAME, ' ', USR_LAST_NAME) as RO_ATTENDANT_NAME")
+            ->select("FLXY_RESTAURANT_ORDERS.*, concat(USR_FIRST_NAME, ' ', USR_LAST_NAME) as RO_ATTENDANT_NAME, RM_NO, concat(CUST_FIRST_NAME, ' ', CUST_LAST_NAME) as GUEST_NAME")
             ->join('FlXY_USERS', 'RO_ATTENDANT_ID = USR_ID', 'left')
+            ->join('FLXY_ROOM', 'RO_ROOM_ID = RM_ID', 'left')
+            ->join('FLXY_CUSTOMER', 'RO_CUSTOMER_ID = CUST_ID', 'left')
             ->where($where_condition)
             ->orderBy('RO_ID', 'desc')
             ->findAll();
