@@ -197,6 +197,8 @@ class ApplicatioController extends BaseController
                     switch($search_key)
                     {
                         case 'S_GUEST_NAME': $init_cond["CONCAT_WS(' ', CUST_FIRST_NAME, CUST_LAST_NAME) LIKE "] = "'%$value%'"; break;
+                        case 'S_CUST_FIRST_NAME': $init_cond["CUST_FIRST_NAME LIKE "] = "'%$value%'"; break;
+                        
                         //case 'S_GUEST_FIRST_NAME': $init_cond["SUBSTRING(FULLNAME,1,(CHARINDEX(' ',FULLNAME + ' ')-1)) LIKE "] = "'%$value%'"; break;
                         case 'S_GUEST_PHONE': $init_cond["(CUST_MOBILE LIKE '%$value%' OR CUST_PHONE LIKE '%$value%')"] = ""; break;
                         case 'S_ARRIVAL_FROM': $init_cond["RESV_ARRIVAL_DT >= "] = "'$value'"; break;
