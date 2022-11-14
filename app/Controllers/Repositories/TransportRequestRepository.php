@@ -132,7 +132,9 @@ class TransportRequestRepository extends BaseController
                 return responseJson(500, true, ['msg' => "Guest image not uploaded"]);
 
             $data['TR_GUEST_IMAGE'] = $directory . $response['RESPONSE']['OUTPUT'];
-        }
+        } 
+        else 
+            unset($data['TR_GUEST_IMAGE']);
 
         foreach ($data as $index => $row) {
             if (empty($row))
