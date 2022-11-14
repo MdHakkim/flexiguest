@@ -57,7 +57,7 @@ class TransportRequestRepository extends BaseController
             'TR_PAYMENT_METHOD' => ['label' => 'payment method', 'rules' => 'required', 'errors' => ['required' => 'Please select a payment method.']],
         ];
 
-        if (!empty($data['TR_DROPOFF_POINT_ID']) || !empty($data['TR_DROPOFF_DATE']) || !empty($data['TR_DROPOFF_TIME'])) {
+        if (!empty($data['TR_TRAVEL_TYPE']) &&  $data['TR_TRAVEL_TYPE'] == 'Round Trip') {
             $rules = array_merge($rules, [
                 'TR_DROPOFF_TIME' => ['label' => 'dropoff time', 'rules' => 'required'],
                 'TR_DROPOFF_DATE' => [
