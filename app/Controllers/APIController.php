@@ -1203,7 +1203,7 @@ class APIController extends BaseController
     {
         if ($shutleID) {
             $param = ['SHUTL_ID' => $shutleID];
-            $sql = "SELECT FLXY_SHUTTLE_ROUTE.*, SHUTL_START_AT, SHUTL_STAGE_NAME FROM FLXY_SHUTTLE_ROUTE 
+            $sql = "SELECT FLXY_SHUTTLE_ROUTE.*, SHUTL_START_AT, SHUTL_STAGE_NAME, SHUTL_STAGE_IMAGE FROM FLXY_SHUTTLE_ROUTE 
                         left join FLXY_SHUTTLE on FSR_SHUTTLE_ID = SHUTL_ID
                         left join FLXY_SHUTL_STAGES on FSR_STAGE_ID = SHUTL_STAGE_ID
                         WHERE FSR_SHUTTLE_ID = :SHUTL_ID: order by FSR_ORDER_NO";
