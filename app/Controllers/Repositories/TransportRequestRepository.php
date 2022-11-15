@@ -58,14 +58,14 @@ class TransportRequestRepository extends BaseController
 
         if (!empty($data['TR_TRAVEL_TYPE']) &&  $data['TR_TRAVEL_TYPE'] == 'Round Trip') {
             $rules = array_merge($rules, [
-                'TR_DROPOFF_TIME' => ['label' => 'dropoff time', 'rules' => 'required'],
-                'TR_DROPOFF_DATE' => [
-                    'label' => 'dropoff date',
-                    'rules' => 'required|afterDateTime[TR_PICKUP_DATE,TR_PICKUP_TIME,TR_DROPOFF_DATE,TR_DROPOFF_TIME]',
-                    'errors' => [
-                        'afterDateTime' => 'Dropoff date & time should be after pickup date & time.'
-                    ]
-                ],
+                // 'TR_DROPOFF_TIME' => ['label' => 'dropoff time', 'rules' => 'required'],
+                // 'TR_DROPOFF_DATE' => [
+                //     'label' => 'dropoff date',
+                //     'rules' => 'required|afterDateTime[TR_PICKUP_DATE,TR_PICKUP_TIME,TR_DROPOFF_DATE,TR_DROPOFF_TIME]',
+                //     'errors' => [
+                //         'afterDateTime' => 'Dropoff date & time should be after pickup date & time.'
+                //     ]
+                // ],
                 'TR_DROPOFF_POINT_ID' => ['label' => 'dropoff point', 'rules' => 'required', 'errors' => ['required' => 'Please select a dropoff point.']],
             ]);
         }
