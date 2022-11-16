@@ -3,34 +3,38 @@
 namespace App\Controllers;
 
 use App\Controllers\Repositories\AssetCategoryRepository;
+use App\Controllers\Repositories\AssetRepository;
 use App\Libraries\ServerSideDataTable;
 use CodeIgniter\API\ResponseTrait;
 
-class AssetCategoryController extends BaseController
+class AssetController extends BaseController
 {
 
     use ResponseTrait;
 
     private $AssetCategoryRepository;
+    private $AssetRepository;
 
     public function __construct()
     {
         $this->AssetCategoryRepository = new AssetCategoryRepository();
+        $this->AssetRepository = new AssetRepository();
     }
 
-    public function assetCategory()
+    public function asset()
     {
         $data['title'] = getMethodName();
         $data['session'] = session();
+        $data['asset_categories'] = $this->AssetCategoryRepository->allAssetCategories();
 
-        return view('frontend/room_assets/asset_category', $data);
+        return view('frontend/room_assets/asset', $data);
     }
 
-    public function allAssetCategories()
+    public function allAssets()
     {
         $mine = new ServerSideDataTable();
-        $tableName = 'FLXY_ASSET_CATEGORIES';
-        $columns = 'AC_ID,AC_CATEGORY,AC_CREATED_AT';
+        $tableName = 'FLXY_ASSETS left join FLXY_ASSET_CATEGORIES on AS_ASSET_CATEGORY_ID = AC_ID';
+        $columns = 'AS_ID,AS_ASSET_CATEGORY_ID,AS_ASSET,AS_PRICE,AS_CREATED_AT,AC_CATEGORY';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -40,10 +44,10 @@ class AssetCategoryController extends BaseController
         $user = session('user');
         $data = $this->request->getPost();
 
-        if (!$this->validate($this->AssetCategoryRepository->validationRules()))
+        if (!$this->validate($this->AssetRepository->validationRules()))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
-        $result = $this->AssetCategoryRepository->createUpdateCategory($user, $data);
+        $result = $this->AssetRepository->createUpdateAsset($user, $data);
         return $this->respond($result);
     }
 
@@ -51,20 +55,20 @@ class AssetCategoryController extends BaseController
     {
         $id = $this->request->getPost('id');
 
-        $asset_category = $this->AssetCategoryRepository->assetCategoryById($id);
-        if ($asset_category)
-            return $this->respond(responseJson(200, false, ['msg' => "Asset Category"], $asset_category));
+        $asset = $this->AssetRepository->assetById($id);
+        if ($asset)
+            return $this->respond(responseJson(200, false, ['msg' => "Asset"], $asset));
 
-        return $this->respond(responseJson(404, true, ['msg' => "Asset Category not found"]));
+        return $this->respond(responseJson(404, true, ['msg' => "Asset not found"]));
     }
 
     public function delete()
     {
         $id = $this->request->getPost('id');
 
-        $result = $this->AssetCategoryRepository->deleteAssetCategory($id);
+        $result = $this->AssetRepository->deleteAsset($id);
         $result = $result
-            ? responseJson(200, false, ['msg' => 'Asset Category deleted successfully'])
+            ? responseJson(200, false, ['msg' => 'Asset deleted successfully'])
             : responseJson(500, true, "record not deleted");
 
         return $this->respond($result);

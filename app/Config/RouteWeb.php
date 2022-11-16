@@ -892,6 +892,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         });
 
         $routes->group('asset', function ($routes) {
+            $routes->get('', 'AssetController::asset');
+            $routes->post('all-assets', 'AssetController::allAssets');
+            $routes->post('store', 'AssetController::store');
+            $routes->post('edit', 'AssetController::edit');
+            $routes->delete('delete', 'AssetController::delete');
         });
 
         $routes->group('room-asset', function ($routes) {
