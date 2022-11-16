@@ -8,7 +8,7 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Flight Carriers</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Room Assets /</span> Asset Categories</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -18,9 +18,8 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Flight Carrier</th>
-                            <th>Carrier Code</th>
-                            <th>Display Sequence</th>
+                            <th>ID</th>
+                            <th>Category</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
@@ -40,28 +39,18 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h4 class="modal-title" id="popModalWindowlabel">Flight Carrier</h4>
+                    <h4 class="modal-title" id="popModalWindowlabel">Asset Category</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
 
                 <div class="modal-body">
                     <form id="submit-form" class="needs-validation" novalidate>
                         <div class="row g-3">
-                            <input type="hidden" name="id" class="form-control" />
+                            <input type="hidden" name="AC_ID" class="form-control" />
 
-                            <div class="col-md-6">
-                                <label class="form-label"><b>Flight Carrier Name *</b></label>
-                                <input type="text" name="FC_FLIGHT_CARRIER" class="form-control" placeholder="Flight Carrier Name" required />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label"><b>Carrier Code *</b></label>
-                                <input type="text" name="FC_FLIGHT_CODE" class="form-control" placeholder="Carrier Code" required />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label"><b>Display Sequence</b></label>
-                                <input type="number" name="FC_SEQUENCE" class="form-control" placeholder="Label" required />
+                            <div class="col-md-12">
+                                <label class="form-label"><b>Category *</b></label>
+                                <input type="text" name="AC_CATEGORY" class="form-control" placeholder="Category" required />
                             </div>
                         </div>
                     </form>
@@ -105,22 +94,19 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('transport/flight-carrier/all-flight-carriers') ?>'
+                'url': '<?php echo base_url('asset/category/all-asset-categories') ?>'
             },
             'columns': [{
                     data: ''
                 },
                 {
-                    data: 'FC_FLIGHT_CARRIER'
+                    data: 'AC_ID'
                 },
                 {
-                    data: 'FC_FLIGHT_CODE'
+                    data: 'AC_CATEGORY'
                 },
                 {
-                    data: 'FC_SEQUENCE'
-                },
-                {
-                    data: 'FC_CREATED_AT'
+                    data: 'AC_CREATED_AT'
                 },
                 {
                     data: null,
@@ -136,7 +122,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['FC_ID']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['AC_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -144,7 +130,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['FC_ID']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['AC_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -187,7 +173,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['FC_POINT'];
+                            return 'Details of ' + data['AC_ID'];
                         }
                     }),
                     type: 'column',
@@ -229,7 +215,7 @@
     function addForm() {
         resetForm();
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add Flight Carrier');
+        $('#popModalWindowlabel').html('Add Asset Category');
 
         $('#popModalWindow').modal('show');
     }
@@ -248,26 +234,22 @@
         var fd = new FormData($(`#${id}`)[0]);
 
         $.ajax({
-            url: '<?= base_url('transport/flight-carrier/store') ?>',
+            url: '<?= base_url('asset/category/store') ?>',
             type: "post",
             data: fd,
             processData: false,
             contentType: false,
             dataType: 'json',
             success: function(response) {
+                var mcontent = '';
+                $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                    mcontent += '<li>' + data + '</li>';
+                });
 
-                if (response['SUCCESS'] != 200) {
-                    var mcontent = '';
-                    $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
-                        mcontent += '<li>' + data + '</li>';
-                    });
-
+                if (response['SUCCESS'] != 200)
                     showModalAlert('error', mcontent);
-                } else {
-                    var alertText = response['RESPONSE']['REPORT_RES']['msg'];
-
-                    showModalAlert('success', alertText);
-
+                else {
+                    showModalAlert('success', mcontent);
                     $('#popModalWindow').modal('hide');
                     $('#dataTable_view').dataTable().fnDraw();
                 }
@@ -279,31 +261,38 @@
     $(document).on('click', '.editWindow', function() {
         resetForm();
 
-        let flight_carrier_id = $(this).attr('data_id');
+        let asset_category_id = $(this).attr('data_id');
         $('.dtr-bs-modal').modal('hide');
 
         let id = "submit-form";
-        $(`#${id} input[name='id']`).val(flight_carrier_id);
+        $(`#${id} input[name='AC_ID']`).val(asset_category_id);
 
-        $('#popModalWindowlabel').html('Edit Flight Carrier');
+        $('#popModalWindowlabel').html('Edit Asset Category');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('transport/flight-carrier/edit') ?>';
+        var url = '<?php echo base_url('asset/category/edit') ?>';
         $.ajax({
             url: url,
             type: "post",
             data: {
-                id: flight_carrier_id
+                id: asset_category_id
             },
             dataType: 'json',
-            success: function(respn) {
-                $(respn).each(function(inx, data) {
-                    
-                    $.each(data, function(field, val) {
-                        if ($(`#${id} input[name='${field}'][type!='file']`).length)
-                            $(`#${id} input[name='${field}']`).val(val);
-                    });
+            success: function(response) {
+                var mcontent = '';
+                $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                    mcontent += '<li>' + data + '</li>';
                 });
+
+                if (response['SUCCESS'] != 200)
+                    showModalAlert('error', mcontent);
+                else
+                    $(response['RESPONSE']['OUTPUT']).each(function(inx, data) {
+                        $.each(data, function(field, val) {
+                            if ($(`#${id} input[name='${field}'][type!='file']`).length)
+                                $(`#${id} input[name='${field}']`).val(val);
+                        });
+                    });
 
                 $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
             }
@@ -331,7 +320,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('transport/flight-carrier/delete') ?>',
+                        url: '<?php echo base_url('asset/category/delete') ?>',
                         type: "post",
                         data: {
                             id: id,

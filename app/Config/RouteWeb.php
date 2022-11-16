@@ -614,7 +614,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/pdfTest', 'AdditionalController::pdfTest');
     $routes->match(['post'], '/updateRoomPlan', 'ReservationController::updateRoomPlan');
     $routes->match(['post'], '/changeReservationDates', 'ReservationController::changeReservationDates');
-    $routes->match(['post'], '/updateRoomPlanDetails', 'ReservationController::updateRoomPlanDetails'); 
+    $routes->match(['post'], '/updateRoomPlanDetails', 'ReservationController::updateRoomPlanDetails');
 
 
 
@@ -624,7 +624,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/deleteTraces', 'ReservationController::deleteTraces');
     $routes->match(['post'], '/showTraceDetails', 'ReservationController::showTraceDetails');
     $routes->match(['post'], '/resolveTraces', 'ReservationController::resolveTraces');
-    
+
     //$routes->get('/roomPlanResource', 'ReservationController::roomPlanResource');
 
     $routes->match(['post'], '/roomplanResources', 'ReservationController::roomplanResources');
@@ -638,50 +638,50 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/getRoomStatistics', 'ReservationController::getRoomStatistics');
     $routes->match(['post'], '/updateRoomRTC', 'ReservationController::updateRoomRTC');
 
-    
-
-      $routes->get('/Notifications', 'NotificationController::Notifications'); 
-      $routes->match(['post'], '/NotificationList', 'NotificationController::NotificationList');
-      $routes->match(['post'], '/insertNotification', 'NotificationController::insertNotification');
-      $routes->match(['post'], '/editNotification', 'NotificationController::editNotification');
-      $routes->match(['post'], '/deleteNotification', 'NotificationController::deleteNotification'); 
-      $routes->get('/notificationTypeList', 'NotificationController::notificationTypeList');
-      $routes->get('/usersList', 'NotificationController::usersList'); 
-      $routes->get('/allDepartmentList', 'NotificationController::allDepartmentList'); 
-      $routes->get('/reservationList', 'NotificationController::reservationList');
-      $routes->get('/getCustomers', 'NotificationController::getCustomers');
-
-      $routes->match(['post'], '/viewAllNotificationDetails', 'NotificationController::viewAllNotificationDetails');
-      $routes->match(['post'], '/guestByReservation', 'NotificationController::guestByReservation');
-      $routes->match(['post'], '/loadNotification', 'NotificationController::loadNotification');
-
-      $routes->get('/taskcode', 'HousekeepingController::taskcode');
-      $routes->match(['post'], '/taskcodeView', 'HousekeepingController::taskcodeView');
-      $routes->match(['post'], '/insertTaskcode', 'HousekeepingController::insertTaskcode');
-      $routes->match(['post'], '/editTaskcode', 'HousekeepingController::editTaskcode');
-      $routes->match(['post'], '/deleteTaskcode', 'HousekeepingController::deleteTaskcode');
-
-      $routes->get('/tasks', 'HousekeepingController::tasks');
-      $routes->match(['post'], '/tasksView', 'HousekeepingController::tasksView');
-      $routes->match(['post'], '/insertTask', 'HousekeepingController::insertTask');
-      $routes->match(['post'], '/editTask', 'HousekeepingController::editTask');
-      $routes->match(['post'], '/deleteTask', 'HousekeepingController::deleteTask');
-      $routes->get('/taskcodeList', 'HousekeepingController::taskcodeList'); 
-      $routes->match(['post'], '/searchRooms', 'ReservationController::searchRooms');
 
 
-      $routes->match(['post'], '/floorsList', 'ReservationController::floorsList');
+    $routes->get('/Notifications', 'NotificationController::Notifications');
+    $routes->match(['post'], '/NotificationList', 'NotificationController::NotificationList');
+    $routes->match(['post'], '/insertNotification', 'NotificationController::insertNotification');
+    $routes->match(['post'], '/editNotification', 'NotificationController::editNotification');
+    $routes->match(['post'], '/deleteNotification', 'NotificationController::deleteNotification');
+    $routes->get('/notificationTypeList', 'NotificationController::notificationTypeList');
+    $routes->get('/usersList', 'NotificationController::usersList');
+    $routes->get('/allDepartmentList', 'NotificationController::allDepartmentList');
+    $routes->get('/reservationList', 'NotificationController::reservationList');
+    $routes->get('/getCustomers', 'NotificationController::getCustomers');
 
-      $routes->match(['post'], '/roomTypeSearchList', 'ReservationController::roomTypeSearchList');
-      $routes->match(['post'], '/roomClassSearchList', 'ReservationController::roomClassSearchList'); 
-      $routes->match(['post'], '/roomSearchList', 'ReservationController::roomSearchList'); 
-      $routes->match(['post'], '/roomplanResourcesJson', 'ReservationController::roomplanResourcesJson'); 
-      $routes->match(['post','get'], '/roomPlan', 'ReservationController::roomPlan');
-      $routes->get('/roomPlan/(:segment)', 'ReservationController::roomPlan/$1');
-         
-      
+    $routes->match(['post'], '/viewAllNotificationDetails', 'NotificationController::viewAllNotificationDetails');
+    $routes->match(['post'], '/guestByReservation', 'NotificationController::guestByReservation');
+    $routes->match(['post'], '/loadNotification', 'NotificationController::loadNotification');
 
-     //Subina Code (END)  
+    $routes->get('/taskcode', 'HousekeepingController::taskcode');
+    $routes->match(['post'], '/taskcodeView', 'HousekeepingController::taskcodeView');
+    $routes->match(['post'], '/insertTaskcode', 'HousekeepingController::insertTaskcode');
+    $routes->match(['post'], '/editTaskcode', 'HousekeepingController::editTaskcode');
+    $routes->match(['post'], '/deleteTaskcode', 'HousekeepingController::deleteTaskcode');
+
+    $routes->get('/tasks', 'HousekeepingController::tasks');
+    $routes->match(['post'], '/tasksView', 'HousekeepingController::tasksView');
+    $routes->match(['post'], '/insertTask', 'HousekeepingController::insertTask');
+    $routes->match(['post'], '/editTask', 'HousekeepingController::editTask');
+    $routes->match(['post'], '/deleteTask', 'HousekeepingController::deleteTask');
+    $routes->get('/taskcodeList', 'HousekeepingController::taskcodeList');
+    $routes->match(['post'], '/searchRooms', 'ReservationController::searchRooms');
+
+
+    $routes->match(['post'], '/floorsList', 'ReservationController::floorsList');
+
+    $routes->match(['post'], '/roomTypeSearchList', 'ReservationController::roomTypeSearchList');
+    $routes->match(['post'], '/roomClassSearchList', 'ReservationController::roomClassSearchList');
+    $routes->match(['post'], '/roomSearchList', 'ReservationController::roomSearchList');
+    $routes->match(['post'], '/roomplanResourcesJson', 'ReservationController::roomplanResourcesJson');
+    $routes->match(['post', 'get'], '/roomPlan', 'ReservationController::roomPlan');
+    $routes->get('/roomPlan/(:segment)', 'ReservationController::roomPlan/$1');
+
+
+
+    //Subina Code (END)  
 
     $routes->match(['post'], '/roomOOSList', 'ReservationController::roomOOSList');
     $routes->match(['post'], '/roomPlanList', 'ReservationController::roomPlanList');
@@ -708,9 +708,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/resolveNotification', 'NotificationController::resolveNotification');
     $routes->match(['post'], '/notification-status', 'NotificationController::notificationStatus');
 
-    
-    
-    
+
+
+
     //Subina Code (END)  
 
 
@@ -722,7 +722,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/updateRoomStatus', 'HousekeepingController::updateRoomStatus');
     $routes->match(['post'], '/showRoomStatus', 'HousekeepingController::showRoomStatus');
     $routes->match(['post'], '/bulkUpdateRoomStatus', 'HousekeepingController::bulkUpdateRoomStatus');
-    
+
 
     // ABUBAKAR CODE (START)
     $routes->group('news', function ($routes) {
@@ -853,7 +853,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('edit-menu-category', 'RestaurantController::editMenuCategory');
             $routes->delete('delete-menu-category', 'RestaurantController::deleteMenuCategory');
         });
-        
+
         $routes->group('meal-type', function ($routes) {
             $routes->get('', 'RestaurantController::mealType');
             $routes->post('all-meal-type', 'RestaurantController::allMealType');
@@ -876,6 +876,22 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('place-order', 'RestaurantController::placeOrder');
             $routes->post('edit-order', 'RestaurantController::editOrder');
             $routes->delete('delete-order', 'RestaurantController::deleteOrder');
+        });
+    });
+
+    $routes->group('asset', function ($routes) {
+        $routes->group('category', function ($routes) {
+            $routes->get('', 'AssetCategoryController::assetCategory');
+            $routes->post('all-asset-categories', 'AssetCategoryController::allAssetCategories');
+            $routes->post('store', 'AssetCategoryController::store');
+            $routes->post('edit', 'AssetCategoryController::edit');
+            $routes->delete('delete', 'AssetCategoryController::delete');
+        });
+
+        $routes->group('asset', function ($routes) {
+        });
+
+        $routes->group('room-asset', function ($routes) {
         });
     });
     // ABUBAKAR CODE (END)
