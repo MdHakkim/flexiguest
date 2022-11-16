@@ -294,7 +294,7 @@ class APIController extends BaseController
         $sql = "select * from FLXY_ACCOMPANY_PROFILE where ACCOMP_CUST_ID = :customer_id: and ACCOMP_REF_RESV_ID = :reservation_id:";
         $params = ['customer_id' => $customer_id, 'reservation_id' => $reservation_id];
         $data = $this->DB->query($sql, $params)->getResultArray();
-
+        
         if (count($data)) // when user is not main guest
             return $this->respond(responseJson(200, false, ["msg" => "Accompany person"], $guest));
 
