@@ -3238,7 +3238,8 @@ $(document).ready(function() {
         },
         // dataType:'json',
         success: function(respn) {
-            $('#S_RESV_RM_TYPE').html(respn);
+            $('#S_RESV_RM_TYPE').html('<option value="">Select Value</option>');
+            $('#S_RESV_RM_TYPE').append(respn);
             $('.RESV_RM_TYPE,#RESV_RTC').html(respn);
         }
     });
@@ -6744,10 +6745,10 @@ $(document).on('click', '#traceButton', function() {
     departmentList();
     showTraces(reservID);
 
-    $('#RSV_TRACE_DATE').datepicker({
-        format: 'd-M-yyyy',
-        autoclose: true
-    }).datepicker("setDate", $('#FIXD_ARRIVAL').val());
+    // $('#RSV_TRACE_DATE').datepicker({
+    //     format: 'd-M-yyyy',
+    //     autoclose: true
+    // }).datepicker("setDate", $('#FIXD_ARRIVAL').val());
 
     $.ajax({
         url: '<?php echo base_url('/getReservDetails') ?>',
@@ -6767,11 +6768,11 @@ $(document).on('click', '#traceButton', function() {
             $('#TRACE_ARRIVAL_DT').val(respn.RESV_ARRIVAL_DT);
             $('#TRACE_DEPARTURE_DT').val(respn.RESV_DEPARTURE);
             $('#RESERVATION_STATUS').val(respn.RESV_STATUS);
-
+    //alert(respn.RESV_ARRIVAL_DT);
             $('#RSV_TRACE_DATE').datepicker({
                 format: 'd-M-yyyy',
                 autoclose: true
-            }).datepicker("setDate", respn.RESV_ARRIVAL_DT);
+            }).datepicker("setDate", new Date(respn.RESV_ARRIVAL_DT));
 
 
         }

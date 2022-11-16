@@ -25,6 +25,18 @@ class UserRepository extends BaseController
         return $this->User->whereIn('USR_DEPARTMENT', $department_ids)->findAll();
     }
 
+    public function getUserIdsByDepartment($department_ids)
+    {
+        $users = $this->userByDepartment($department_ids);
+        
+        $user_ids = [];
+        foreach ($users as $user) {
+            $user_ids[] = $user['USR_ID'];
+        }
+
+        return $user_ids;
+    }
+
     public function userById($user_id)
     {
         return $this->User->find($user_id);

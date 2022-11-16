@@ -35,7 +35,7 @@ class GuidelineRepository extends BaseController
 
     public function allGuidelines()
     {
-        $guidelines = $this->Guideline->where('GL_IS_ENABLED', 1)->orderBy('GL_ID', 'desc')->findAll();
+        $guidelines = $this->Guideline->where('GL_IS_ENABLED', 1)->orderBy('GL_SEQUENCE', 'desc')->findAll();
         
         foreach($guidelines as $index => $item) {
             $guidelines[$index]['GL_COVER_IMAGE'] = base_url($item['GL_COVER_IMAGE']);

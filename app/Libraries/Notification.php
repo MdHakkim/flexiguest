@@ -2,8 +2,6 @@
 
 namespace App\Libraries;
 
-namespace App\Libraries;
-
 use App\Controllers\NotificationController;
 use \Firebase\JWT\JWT;
 
@@ -52,11 +50,15 @@ class Notification
         $background_color = ($notif['NOTIF_TRAIL_READ_STATUS'] == 0) ? "#5a8dee" : "#69809a";
         $display = ($notif['NOTIF_TRAIL_READ_STATUS'] == 0) ? "block" : "none";
 
+        // $resolve = ($notif['NOTIFICATION_TYPE'] == 4) ? '<p class="pt-2"><button type="button" class="btn btn-sm btn-primary" id="resolveNotifcation" rel="'.$notif['NOTIF_TRAIL_NOTIFICATION_ID'].'">Resolve</button></p>' : "";
+       
+        $resolve = ($notif['NOTIF_TRAIL_READ_STATUS'] == 0  && $notif['NOTIFICATION_TYPE'] == 4) ? "resolve": '';
+        
         $notification_time = $this->getTime($notif['NOTIFICATION_DATE_TIME']);
 
         $NotificationOutput .= <<<EOD
                 
-                <li class="list-group-item list-group-item-action dropdown-notifications-item" rel="{$notif['NOTIF_TRAIL_ID']}">
+                <li class="list-group-item list-group-item-action dropdown-notifications-item" rel="{$notif['NOTIF_TRAIL_ID']}" data-resolve="{$resolve}">
                 <div class="d-flex">
                     <div class="flex-shrink-0 me-3 notifi-icon-all" style="{$color}" id="notifi-icon-{$notif['NOTIF_TRAIL_ID']}">
                     {$notif['NOTIF_TY_ICON']}
@@ -65,6 +67,7 @@ class Notification
                     <h6 class="mb-1">New {$notif['NOTIF_TY_DESC']}</h6>
                     <p class="mb-0 pb-0">{$NOTIFICATION_TEXT}</p>
                     <small class="text-muted">{$notification_time}</small>
+                    
                   </div>
                   <div class="dropdown-notifications-actions flex-shrink-0" >
                     <a href="javascript:void(0)" class="dropdown-notifications-read"

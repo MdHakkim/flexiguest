@@ -641,35 +641,25 @@ class FacilityController extends BaseController
                 ];
 
                 // UPDATE
-                // unlink the old file from the folder and update the column in db
-                $doc_data = $this->Db->table('FLXY_SHUTTLE')->select('SHUTL_ROUTE_IMG')->where('SHUTL_ID', $sysid)->get()->getRowArray();
-                $filename = $doc_data['SHUTL_ROUTE_IMG'];
-                if ($filename) {
-                    $filename = explode('/', $filename);
-                    $file = end($filename);
-                    $folderPath = "assets/Uploads/Shuttle/" . $file;
-                    if (file_exists($folderPath)) {
-                        if (unlink($folderPath)) {
-                            if ($doc_file) {
-                                $doc_name = $doc_file->getName();
-                                $folderPath = "assets/Uploads/Shuttle/";
-                                // 
-                                $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
-                                if ($doc_up['SUCCESS'] == 200) {
-                                    $data['SHUTL_ROUTE_IMG'] = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
-                                }
-                            }
+                if ($doc_file) {
+                    // unlink the old file from the folder and update the column in db
+                    $doc_data = $this->Db->table('FLXY_SHUTTLE')->select('SHUTL_ROUTE_IMG')->where('SHUTL_ID', $sysid)->get()->getRowArray();
+                    $filename = $doc_data['SHUTL_ROUTE_IMG'];
+                    if ($filename) {
+                        $filename = explode('/', $filename);
+                        $file = end($filename);
+                        $folderPath = "assets/Uploads/Shuttle/" . $file;
+                        if (file_exists($folderPath)) {
+                            unlink($folderPath);                            
                         }
                     }
-                } else {
-                    if ($doc_file) {
-                        $doc_name = $doc_file->getName();
-                        $folderPath = "assets/Uploads/Shuttle/";
-                        // 
-                        $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
-                        if ($doc_up['SUCCESS'] == 200) {
-                            $data['SHUTL_ROUTE_IMG'] = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
-                        }
+
+                    $doc_name = $doc_file->getName();
+                    $folderPath = "assets/Uploads/Shuttle/";
+                    // 
+                    $doc_up = documentUpload($doc_file, $doc_name, $this->session->USR_ID, $folderPath);
+                    if ($doc_up['SUCCESS'] == 200) {
+                        $data['SHUTL_ROUTE_IMG'] = base_url($folderPath . $doc_up['RESPONSE']['OUTPUT']);
                     }
                 }
                 
@@ -720,27 +710,37 @@ class FacilityController extends BaseController
     public function insertStages()
     {
         try {
-            $validate = $this->validate([
-
-                'SHUTL_STAGE_NAME' => ['label' => 'Shuttle A', 'rules' => 'required'],
-
-            ]);
-            if (!$validate) {
-
-                $validate = $this->validator->getErrors();
-                $result["SUCCESS"] = "-402";
-                $result[]["ERROR"] = $validate;
-                $result = responseJson("-402", $validate);
-                echo json_encode($result);
-                exit;
-            }
+            $user = session('user');
+            $user_id = $user['USR_ID'];
 
             $sysid = $this->request->getPost("sysid");
 
+            $rules = [
+                'SHUTL_STAGE_NAME' => ['label' => 'stage name', 'rules' => 'required'],
+            ];
+
+            if(empty($sysid) || !empty($this->request->getFile('SHUTL_STAGE_IMAGE')))
+                $rules['SHUTL_STAGE_IMAGE'] = [
+                    'label' => 'stage image',
+                    'rules' => ['uploaded[SHUTL_STAGE_IMAGE]', 'mime_in[SHUTL_STAGE_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[SHUTL_STAGE_IMAGE,2048]']
+                ];
+                
+            if (!$this->validate($rules))
+                return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
+            if (!empty($image = $this->request->getFile('SHUTL_STAGE_IMAGE'))) {
+                $image_name = $image->getName();
+                $directory = "assets/Uploads/Shuttle/stage_images/";
+                $response = documentUpload($image, $image_name, $user_id, $directory);
+    
+                if ($response['SUCCESS'] != 200)
+                    return $this->respond(responseJson(500, true, ['msg' => "stage image not uploaded"]));
+    
+                $image_path = $directory . $response['RESPONSE']['OUTPUT'];
+            } 
+
             if (empty($sysid)) {
-
                 // INSERT
-
                 $data =
                     [
                         "SHUTL_STAGE_NAME" => $this->request->getPost("SHUTL_STAGE_NAME"),
@@ -748,6 +748,7 @@ class FacilityController extends BaseController
                         "SHUTL_CREATE_UID" => session()->get('USR_ID'),
                         "SHUTL_UPDATE_DT" => date("d-M-Y"),
                         "SHUTL_UPDATE_UID" => session()->get('USR_ID'),
+                        "SHUTL_STAGE_IMAGE" => $image_path
                     ];
                 $ins = $this->Db->table('FLXY_SHUTL_STAGES')->insert($data);
             } else {
@@ -759,35 +760,44 @@ class FacilityController extends BaseController
                         "SHUTL_UPDATE_DT" => date("d-M-Y"),
                         "SHUTL_UPDATE_UID" => session()->get('USR_ID'),
                     ];
+
+                    if(!empty($image_path))
+                        $data['SHUTL_STAGE_IMAGE'] = $image_path;
+
                 $ins = $this->Db->table('FLXY_SHUTL_STAGES')->where('SHUTL_STAGE_ID', $sysid)->update($data);
             }
-            if ($ins) {
-                $result = responseJson(200, true, "Shuttle request Added", []);
-                echo json_encode($result);
-                die;
-            } else {
-                $result = responseJson(500, true, "Creation Failed", []);
-                echo json_encode($result);
-                die;
-            }
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+
+            if ($ins)
+                $result = responseJson(200, false, ['msg' => 'Shuttle Stage created/updated successfully.']);
+            else
+                $result = responseJson(500, true, ['msg' => 'Unable to create/update']);
+            
+            return $this->respond($result);
+        } catch (\Exception $e) {
+            return $this->respond($e->getMessage());
         }
     }
     public function deleteStages()
     {
         $sysid = $this->request->getPost("sysid");
         try {
+            $check = $this->Shuttle->where('SHUTL_FROM', $sysid)->orWhere('SHUTL_TO', $sysid)->findAll();
+            if(!empty($check))
+                return $this->respond(responseJson(202, true, ['msg' => "It can't be removed. First remove it from all shuttles."]));
+
+            $check = $this->ShuttleRoute->where('FSR_STAGE_ID', $sysid)->findAll();
+            if(!empty($check))
+                return $this->respond(responseJson(202, true, ['msg' => "It can't be removed. First remove it from all shuttle routes."]));
+
             $return = $this->Db->table('FLXY_SHUTL_STAGES')->delete(['SHUTL_STAGE_ID' => $sysid]);
-            if ($return) {
-                $result = $this->responseJson(200, false, "Deleted the shuttle Stage", $return);
-                echo json_encode($result);
-            } else {
-                $result = $this->responseJson(500, true, "shuttle Stage not deleted", []);
-                echo json_encode($result);
-            }
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+            if ($return)
+                $result = responseJson(200, false, ['msg' => "Shuttle Stage deleted successfully."]);
+            else
+                $result = responseJson(500, true, ['msg' => "Unable to delete shuttle stage"]);
+            
+            return $this->respond($result);
+        } catch (\Exception $e) {
+            return $this->respond($e->getMessage());
         }
     }
     function editStages()
@@ -802,7 +812,7 @@ class FacilityController extends BaseController
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_SHUTL_STAGES';
         // CUST_FULLNAME|
-        $columns = 'SHUTL_STAGE_ID|SHUTL_CREATE_UID|SHUTL_STAGE_NAME|FORMAT(SHUTL_CREATE_DT,\'dd-MMM-yyyy\')SHUTL_CREATE_DT';
+        $columns = 'SHUTL_STAGE_ID|SHUTL_CREATE_UID|SHUTL_STAGE_NAME|SHUTL_STAGE_IMAGE|FORMAT(SHUTL_CREATE_DT,\'dd-MMM-yyyy\')SHUTL_CREATE_DT';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }

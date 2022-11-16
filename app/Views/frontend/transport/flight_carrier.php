@@ -94,6 +94,10 @@
     var linkMode = '';
 
     $(document).ready(function() {
+        $('#submit-form').submit(function(e) {
+            e.preventDefault();
+        });
+        
         linkMode = 'EX';
 
         $('#dataTable_view').DataTable({

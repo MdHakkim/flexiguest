@@ -30,7 +30,7 @@ class NewsController extends BaseController
     {
         $mine = new ServerSideDataTable();
         $tableName = 'FLXY_NEWS';
-        $columns = 'NS_ID,NS_TITLE,NS_COVER_IMAGE,NS_DESCRIPTION,NS_BODY,NS_CREATED_AT';
+        $columns = 'NS_ID,NS_SEQUENCE,NS_TITLE,NS_COVER_IMAGE,NS_DESCRIPTION,NS_BODY,NS_CREATED_AT';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -79,6 +79,7 @@ class NewsController extends BaseController
         $data['NS_TITLE'] = trim($this->request->getPost('NS_TITLE'));
         $data['NS_DESCRIPTION'] = trim($this->request->getPost('NS_DESCRIPTION'));
         $data['NS_BODY'] = trim($this->request->getPost('NS_BODY'));
+        $data['NS_SEQUENCE'] = $this->request->getPost('NS_SEQUENCE');
 
         if(empty($id)){
             $data['NS_CREATED_BY'] = $data['NS_UPDATED_BY'] = $user_id;

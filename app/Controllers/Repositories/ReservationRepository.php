@@ -10,10 +10,12 @@ class ReservationRepository extends BaseController
 {
     use ResponseTrait;
 
+    private $DB;
     private $Reservation;
 
     public function __construct()
     {
+        $this->DB = \Config\Database::connect();
         $this->Reservation = new Reservation();
     }
 
@@ -67,5 +69,31 @@ class ReservationRepository extends BaseController
     public function updateReservation($data, $where_condition)
     {
         return $this->Reservation->where($where_condition)->set($data)->update();
+    }
+
+    public function verifyDocuments($customer_id, $reservation_id)
+    {
+        $params = [
+            'customer_id' => $customer_id,
+            'reservation_id' => $reservation_id
+        ];
+
+        $sql = "select * from FLXY_DOCUMENTS where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:";
+        $response = $this->DB->query($sql, $params)->getResultArray();
+        if(empty($response))
+            return responseJson(403, true, ['msg' => 'No documents uploaded yet.']);
+
+        // $sql = "select * from FLXY_VACCINE_DETAILS where VACC_CUST_ID = :customer_id: and VACC_RESV_ID = :reservation_id:";
+        // $response = $this->DB->query($sql, $params)->getResultArray();
+        // if(empty($response))
+        //     return responseJson(403, true, ['msg' => 'Vaccination details are not uploaded yet.']);
+        
+        $sql = "update FLXY_DOCUMENTS set DOC_IS_VERIFY = 1 where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:";
+        $this->DB->query($sql, $params);
+
+        // $sql = "update FLXY_VACCINE_DETAILS set VACC_IS_VERIFY = 1 where VACC_CUST_ID = :customer_id: and VACC_RESV_ID = :reservation_id:";
+        // $this->DB->query($sql, $params);
+
+        return responseJson(200, false, ['msg' => 'Documents are verified.']);
     }
 }

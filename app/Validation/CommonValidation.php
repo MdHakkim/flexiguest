@@ -27,6 +27,16 @@ class CommonValidation{
         return false;
     }
 
+    public function todayOrAfter(string $str, string $field, array $data)
+    {
+        $fields = explode(',', $field);
+        $date = date("Y-m-d", strtotime($data[$fields[0]]));
+        
+        $date_now = date("Y-m-d"); // this format is string comparable
+        if($date < $date_now)
+            return false;
+    }
+
     public function afterNow(string $str, string $field, array $data)
     {
         $fields = explode(',', $field);
@@ -40,9 +50,9 @@ class CommonValidation{
     public function afterDateTime(string $str, string $field, array $data)
     {
         $fields = explode(',', $field);
-
-        $datetime = date($data[$fields[0]] . " " . $data[$fields[1]]);
-        $datetime2 = date($data[$fields[2]] . " " . $data[$fields[3]]);
+        
+        $datetime = date("Y-m-d H:i:s", strtotime($data[$fields[0]] . " " . $data[$fields[1]]));
+        $datetime2 = date("Y-m-d H:i:s", strtotime($data[$fields[2]] . " " . $data[$fields[3]]));
 
         if($datetime >= $datetime2)
             return false;

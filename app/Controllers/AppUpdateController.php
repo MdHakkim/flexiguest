@@ -30,7 +30,7 @@ class AppUpdateController extends BaseController
     {
         $mine = new ServerSideDataTable();
         $tableName = 'FLXY_APP_UPDATES';
-        $columns = 'AU_ID,AU_TITLE,AU_COVER_IMAGE,AU_DESCRIPTION,AU_BODY,AU_CREATED_AT';
+        $columns = 'AU_ID,AU_SEQUENCE,AU_TITLE,AU_COVER_IMAGE,AU_DESCRIPTION,AU_BODY,AU_CREATED_AT';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -79,6 +79,7 @@ class AppUpdateController extends BaseController
         $data['AU_TITLE'] = trim($this->request->getPost('AU_TITLE'));
         $data['AU_DESCRIPTION'] = trim($this->request->getPost('AU_DESCRIPTION'));
         $data['AU_BODY'] = trim($this->request->getPost('AU_BODY'));
+        $data['AU_SEQUENCE'] = $this->request->getPost('AU_SEQUENCE');
 
         if (empty($id)) {
             $data['AU_CREATED_BY'] = $data['AU_UPDATED_BY'] = $user_id;

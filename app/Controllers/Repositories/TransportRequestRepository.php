@@ -33,7 +33,7 @@ class TransportRequestRepository extends BaseController
         $this->TransportRequest = new TransportRequest();
     }
 
-    public function validationRules()
+    public function validationRules($data)
     {
         $rules = [
             'TR_RESERVATION_ID' => ['label' => 'reservation', 'rules' => 'required', 'errors' => ['required' => 'Please select a reservation.']],
@@ -53,18 +53,48 @@ class TransportRequestRepository extends BaseController
                 ]
             ],
             'TR_PICKUP_POINT_ID' => ['label' => 'pickup point', 'rules' => 'required', 'errors' => ['required' => 'Please select a pickup point.']],
-            'TR_DROPOFF_TIME' => ['label' => 'dropoff time', 'rules' => 'required'],
-            'TR_DROPOFF_DATE' => [
-                'label' => 'dropoff date',
-                'rules' => 'required|afterDateTime[TR_PICKUP_DATE,TR_PICKUP_TIME,TR_DROPOFF_DATE,TR_DROPOFF_TIME]',
-                'errors' => [
-                    'afterDateTime' => 'Dropoff date & time should be after pickup date & time.'
-                ]
-            ],
-            'TR_DROPOFF_POINT_ID' => ['label' => 'dropoff point', 'rules' => 'required', 'errors' => ['required' => 'Please select a dropoff point.']],
-            'TR_FLIGHT_CARRIER_ID' => ['label' => 'flight carrier', 'rules' => 'required', 'errors' => ['required' => 'Please select a flight carrier.']],
             'TR_PAYMENT_METHOD' => ['label' => 'payment method', 'rules' => 'required', 'errors' => ['required' => 'Please select a payment method.']],
         ];
+
+        if (!empty($data['TR_TRAVEL_TYPE']) &&  $data['TR_TRAVEL_TYPE'] == 'Round Trip') {
+            $rules = array_merge($rules, [
+                // 'TR_DROPOFF_TIME' => ['label' => 'dropoff time', 'rules' => 'required'],
+                // 'TR_DROPOFF_DATE' => [
+                //     'label' => 'dropoff date',
+                //     'rules' => 'required|afterDateTime[TR_PICKUP_DATE,TR_PICKUP_TIME,TR_DROPOFF_DATE,TR_DROPOFF_TIME]',
+                //     'errors' => [
+                //         'afterDateTime' => 'Dropoff date & time should be after pickup date & time.'
+                //     ]
+                // ],
+                'TR_DROPOFF_POINT_ID' => ['label' => 'dropoff point', 'rules' => 'required', 'errors' => ['required' => 'Please select a dropoff point.']],
+            ]);
+        }
+
+        if (!empty($data['TR_PICKUP_POINT_ID']))
+            $pickup_point = $this->PickupPoint->find($data['TR_PICKUP_POINT_ID']);
+
+        if (!empty($data['TR_DROPOFF_POINT_ID']))
+            $dropoff_point = $this->DropoffPoint->find($data['TR_DROPOFF_POINT_ID']);
+
+        if ((!empty($pickup_point) && str_contains(strtolower($pickup_point['PP_POINT']), 'airport')) || (!empty($dropoff_point) && str_contains(strtolower($dropoff_point['DP_POINT']), 'airport'))) {
+            $rules = array_merge($rules, [
+                'TR_FLIGHT_CARRIER_ID' => ['label' => 'flight carrier', 'rules' => 'required', 'errors' => ['required' => 'Please select a flight carrier.']],
+                // 'TR_FLIGHT_TIME' => ['label' => 'flight time', 'rules' => 'required'],
+                'TR_FLIGHT_DATE' => [
+                    'label' => 'flight date',
+                    'rules' => 'required|todayOrAfter[TR_FLIGHT_DATE]',
+                    'errors' => [
+                        'todayOrAfter' => 'flight date should be today or after today.'
+                    ]
+                ]
+            ]);
+        }
+
+        if (!empty($data['TR_GUEST_IMAGE']))
+            $rules['TR_GUEST_IMAGE'] = [
+                'label' => 'guest image',
+                'rules' => ['uploaded[TR_GUEST_IMAGE]', 'mime_in[TR_GUEST_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[TR_GUEST_IMAGE,2048]']
+            ];
 
         if (isWeb()) {
             $rules = array_merge($rules, [
@@ -102,11 +132,13 @@ class TransportRequestRepository extends BaseController
                 return responseJson(500, true, ['msg' => "Guest image not uploaded"]);
 
             $data['TR_GUEST_IMAGE'] = $directory . $response['RESPONSE']['OUTPUT'];
-        }
+        } 
+        else 
+            unset($data['TR_GUEST_IMAGE']);
 
         foreach ($data as $index => $row) {
             if (empty($row))
-                unset($data[$index]);
+                $data[$index] = null;
         }
 
         if (empty($data['id'])) {

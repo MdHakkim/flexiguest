@@ -41,14 +41,18 @@ class UserController extends BaseController
         if ($this->request->getMethod() == 'post') {
             // echo "Test";exit;
             $rules = [
-                'username' => 'required|max_length[50]',
+                'username' => 'required|max_length[50]|userActive[username]',
                 'password' => 'required|min_length[8]|max_length[255]|validateUser[username,password]',
             ];
 
             $errors = [
+                'username' => [
+                    'userActive' => "User is inactive",
+                ],
                 'password' => [
                     'validateUser' => "Email/Username or Password don't match",
                 ],
+                
             ];
 
             if (!$this->validate($rules, $errors)) {
@@ -554,14 +558,28 @@ class UserController extends BaseController
             }
             */
 
+            if (!empty($sysid) ){
+                unset($data["USR_NAME"]);
+            }
+
             $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
-            if ($return) {
+            if ($return && $sysid == session()->get('USR_ID')) {
                 $model = new UserModel();
                 $user = $model->where('USR_ID', $sysid)->first();
 
-                // Stroing session values
-                $this->setUserSession($user);
+                // Stroring session values
+                
+                $data = [
+                    'USR_FIRST_NAME' => $user['USR_FIRST_NAME'],
+                    'USR_LAST_NAME' => $user['USR_LAST_NAME'],
+                    'USR_PHONE' => $user['USR_PHONE'],
+                    'USR_EMAIL' => $user['USR_EMAIL'],
+                    'USR_IMAGE' => $user['USR_IMAGE'],
+                    "USR_ROLE" => $user['USR_ROLE'],
+                    'USR_ROLE_ID' => $user['USR_ROLE_ID']
+                ];        
+                session()->set($data);
             }
             echo json_encode($result);
         } catch (Exception $e) {

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\UserRepository;
 use CodeIgniter\API\ResponseTrait;
 use  App\Libraries\EmailLibrary;
@@ -22,6 +23,7 @@ class APIController extends BaseController
     private $ApplicatioController;
     private $PropertyInfo;
     private $UserRepository;
+    private $ReservationRepository;
 
     public function __construct()
     {
@@ -32,6 +34,7 @@ class APIController extends BaseController
         $this->ApplicatioController = new ApplicatioController();
         $this->PropertyInfo = new PropertyInfo();
         $this->UserRepository = new UserRepository();
+        $this->ReservationRepository = new ReservationRepository();
     }
 
     // ----------- START API FOR FLEXI GUEST --------------//
@@ -196,12 +199,18 @@ class APIController extends BaseController
             if (checkFileExists("assets/reservation-invoices/RES$resID-Invoice.pdf"))
                 $data['INVOICE_URL'] = base_url("assets/reservation-invoices/RES$resID-Invoice.pdf");
         } else {
-
             $param = ['RESV_NAME' => $cust_id];
+            $records = $this->DB->query("select ACCOMP_REF_RESV_ID from FLXY_ACCOMPANY_PROFILE where ACCOMP_CUST_ID = :RESV_NAME:", $param)->getResultArray();
+
+            $reservation_ids = [];
+            foreach($records as $row)
+                $reservation_ids[] = $row['ACCOMP_REF_RESV_ID'];
+            $reservation_ids = implode(',', $reservation_ids);
+
             $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, a.RESV_PAYMENT_STATUS, a.RESV_RATE, CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_LAST_NAME) as NAME ,d.RM_NO,d.RM_DESC,b.CUST_EMAIL,b.CUST_MOBILE_CODE,b.CUST_MOBILE FROM FLXY_RESERVATION a 
                             LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
                             LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM 
-                            WHERE a.RESV_NAME = :RESV_NAME: order by a.RESV_ID desc";
+                            WHERE a.RESV_NAME = :RESV_NAME: OR a.RESV_ID in ($reservation_ids) order by a.RESV_ID desc";
             $data = $this->DB->query($sql, $param)->getResultArray();
 
             foreach ($data as $index => $res) {
@@ -253,13 +262,10 @@ class APIController extends BaseController
 
         // an indicator to inform this is accompanying person
         $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_LAST_NAME) as name, 
-                        fc.CUST_ID, 
-                        case when count(fd.DOC_ID) >= 1 then 1 else 0 end as is_document_uploaded,
-                        case when fd.DOC_IS_VERIFY = 1 then 1 else 0 end as DOC_IS_VERIFY
+                        fc.CUST_ID
                         FROM FLXY_CUSTOMER as fc
-                        left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID AND fd.DOC_FILE_TYPE = 'PROOF' AND fd.DOC_RESV_ID = :reservation_id:
                         where CUST_ID = :customer_id:
-                        group by fc.CUST_FIRST_NAME, fc.CUST_LAST_NAME, fc.CUST_ID, fd.DOC_IS_VERIFY";
+                        group by fc.CUST_FIRST_NAME, fc.CUST_LAST_NAME, fc.CUST_ID";
 
         $param = ['customer_id' => $customer_id, 'reservation_id' => $reservation_id];
         $data = $this->DB->query($sql, $param)->getResultArray();
@@ -267,6 +273,23 @@ class APIController extends BaseController
             return $this->respond(responseJson(404, true, ["msg" => "Customer not found"]));
 
         $guest = $data[0];
+
+        // DOC VERIFY
+        $guest['DOC_IS_VERIFY'] = $guest['VACC_IS_VERIFY'] = 0;
+        $guest['is_document_uploaded'] = 1;
+
+        $sql = "select DOC_IS_VERIFY from FLXY_DOCUMENTS where DOC_CUST_ID = :CUST_ID: AND DOC_RESV_ID = :RESV_ID: AND DOC_FILE_TYPE = 'PROOF'";
+        $res = $this->DB->query($sql, ['CUST_ID' => $customer_id, 'RESV_ID' => $reservation_id])->getResultArray();
+        if (count($res))
+            $guest['DOC_IS_VERIFY'] = $res[0]['DOC_IS_VERIFY'];
+        else
+            $guest['is_document_uploaded'] = 0;
+
+        $sql = "select VACC_IS_VERIFY from FLXY_VACCINE_DETAILS where VACC_CUST_ID = :CUST_ID: AND VACC_RESV_ID = :RESV_ID:";
+        $res = $this->DB->query($sql, ['CUST_ID' => $customer_id, 'RESV_ID' => $reservation_id])->getResultArray();
+        if (count($res))
+            $guest['VACC_IS_VERIFY'] = $res[0]['VACC_IS_VERIFY'];
+        // DOC VERIFY
 
         $sql = "select * from FLXY_ACCOMPANY_PROFILE where ACCOMP_CUST_ID = :customer_id: and ACCOMP_REF_RESV_ID = :reservation_id:";
         $params = ['customer_id' => $customer_id, 'reservation_id' => $reservation_id];
@@ -276,17 +299,36 @@ class APIController extends BaseController
             return $this->respond(responseJson(200, false, ["msg" => "Accompany person"], $guest));
 
         $sql = "SELECT concat(fc.CUST_FIRST_NAME, ' ', fc.CUST_LAST_NAME) as name, 
-                        fc.CUST_ID, 
-                        case when count(fd.DOC_ID) >= 1 then 1 else 0 end as is_document_uploaded,
-                        case when fd.DOC_IS_VERIFY = 1 then 1 else 0 end as DOC_IS_VERIFY
+                        fc.CUST_ID
                         FROM FLXY_CUSTOMER as fc
                         inner join FLXY_ACCOMPANY_PROFILE as fap on fc.CUST_ID = fap.ACCOMP_CUST_ID 
-                        left join FLXY_DOCUMENTS as fd on fc.CUST_ID = fd.DOC_CUST_ID and fd.DOC_FILE_TYPE = 'PROOF' and fd.DOC_RESV_ID = :reservation_id:
                         where fap.ACCOMP_REF_RESV_ID = :reservation_id:
-                        group by fc.CUST_FIRST_NAME, fc.CUST_LAST_NAME, fc.CUST_ID, fd.DOC_IS_VERIFY";
+                        group by fc.CUST_FIRST_NAME, fc.CUST_LAST_NAME, fc.CUST_ID";
 
         $param = ['reservation_id' => $reservation_id];
-        $guest['accompany_profiles'] = $this->DB->query($sql, $param)->getResultArray();
+        $accompany_profiles = $this->DB->query($sql, $param)->getResultArray();
+
+        foreach ($accompany_profiles as $index => $accompany_profile) {
+
+            // DOC VERIFY
+            $accompany_profiles[$index]['DOC_IS_VERIFY'] = $accompany_profiles[$index]['VACC_IS_VERIFY'] = 0;
+            $accompany_profiles[$index]['is_document_uploaded'] = 1;
+
+            $sql = "select DOC_IS_VERIFY from FLXY_DOCUMENTS where DOC_CUST_ID = :CUST_ID: AND DOC_RESV_ID = :RESV_ID: AND DOC_FILE_TYPE = 'PROOF'";
+            $res = $this->DB->query($sql, ['CUST_ID' => $accompany_profile['CUST_ID'], 'RESV_ID' => $reservation_id])->getResultArray();
+            if (count($res))
+                $accompany_profiles[$index]['DOC_IS_VERIFY'] = $res[0]['DOC_IS_VERIFY'];
+            else
+                $accompany_profiles[$index]['is_document_uploaded'] = 0;
+
+            $sql = "select VACC_IS_VERIFY from FLXY_VACCINE_DETAILS where VACC_CUST_ID = :CUST_ID: AND VACC_RESV_ID = :RESV_ID:";
+            $res = $this->DB->query($sql, ['CUST_ID' => $accompany_profile['CUST_ID'], 'RESV_ID' => $reservation_id])->getResultArray();
+            if (count($res))
+                $accompany_profiles[$index]['VACC_IS_VERIFY'] = $res[0]['VACC_IS_VERIFY'];                
+            // DOC VERIFY
+        }
+
+        $guest['accompany_profiles'] = $accompany_profiles;
 
         if (!empty($guest['accompany_profiles']))
             $result = responseJson(200, false, ["msg" => "Accompany list for the reservation"], $guest);
@@ -1167,7 +1209,7 @@ class APIController extends BaseController
     {
         if ($shutleID) {
             $param = ['SHUTL_ID' => $shutleID];
-            $sql = "SELECT FLXY_SHUTTLE_ROUTE.*, SHUTL_START_AT, SHUTL_STAGE_NAME FROM FLXY_SHUTTLE_ROUTE 
+            $sql = "SELECT FLXY_SHUTTLE_ROUTE.*, SHUTL_START_AT, SHUTL_STAGE_NAME, SHUTL_STAGE_IMAGE FROM FLXY_SHUTTLE_ROUTE 
                         left join FLXY_SHUTTLE on FSR_SHUTTLE_ID = SHUTL_ID
                         left join FLXY_SHUTL_STAGES on FSR_STAGE_ID = SHUTL_STAGE_ID
                         WHERE FSR_SHUTTLE_ID = :SHUTL_ID: order by FSR_ORDER_NO";
@@ -1234,21 +1276,11 @@ class APIController extends BaseController
 
     public function verifyDocuments()
     {
-        $reservation_id = $this->request->getVar('reservation_id');
         $customer_id = $this->request->getVar('customer_id');
+        $reservation_id = $this->request->getVar('reservation_id');
 
-        $params = [
-            'reservation_id' => $reservation_id,
-            'customer_id' => $customer_id
-        ];
-
-        $check_exist = $this->DB->query('select * from FLXY_DOCUMENTS where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:', $params)->getResultArray();
-        if (!count($check_exist))
-            return $this->respond(responseJson(404, true, ['msg' => 'No Documents uploaded for this guest.']));
-
-        $this->DB->query('update FLXY_DOCUMENTS set DOC_IS_VERIFY = 1 where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:', $params);
-
-        return $this->respond(responseJson(200, false, ['msg' => 'Documents are verified.']));
+        $result = $this->ReservationRepository->verifyDocuments($customer_id, $reservation_id);
+        return $this->respond($result);
     }
 
     public function guestCheckedIn()

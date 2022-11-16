@@ -17,7 +17,7 @@ class GuidelineDataTable{
 
         $rowperpage = $_POST['length']; // Rows display per page
 
-        $columns = ['GL_ID', 'GL_IS_ENABLED', 'GL_TITLE', 'GL_COVER_IMAGE', 'GL_DESCRIPTION', 'GL_BODY', 'GL_CREATED_AT'];
+        $columns = ['GL_SEQUENCE', 'GL_IS_ENABLED', 'GL_TITLE', 'GL_COVER_IMAGE', 'GL_DESCRIPTION', 'GL_BODY', 'GL_CREATED_AT'];
         
         $columnIndex = isset($_POST['order']) ? $_POST['order'][0]['column'] : ''; // Column index
         $columnName  = isset($_POST['order']) ? $columns[$columnIndex] : $columns[0]; // Column name
@@ -48,6 +48,7 @@ class GuidelineDataTable{
 
             $return[] = [
                 'GL_ID' => $row['GL_ID'],
+                'GL_SEQUENCE' => $row['GL_SEQUENCE'],
                 'GL_TITLE' => $row['GL_TITLE'],
                 'GL_COVER_IMAGE' => $row['GL_COVER_IMAGE'],
                 'GL_DESCRIPTION' => $row['GL_DESCRIPTION'],

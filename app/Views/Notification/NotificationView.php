@@ -15,6 +15,11 @@
 	#modalCenter {
 		z-index: 1092 !important;
 	}
+
+	.disabledDiv {
+		pointer-events: none;
+		opacity: 0.4;
+	}
 </style>
 
 <!-- Content wrapper -->
@@ -51,9 +56,9 @@
 							</div>
 
 							<div class="col-md-6">
-                                <label class="form-label"><b>Notification Text</b></label>
-                                <textarea name="notification_text" class="form-control" placeholder="text..."></textarea>
-                            </div>
+								<label class="form-label"><b>Notification Text</b></label>
+								<textarea name="notification_text" class="form-control" placeholder="text..."></textarea>
+							</div>
 
 							<div class="col-md-12 text-end">
 								<button type="button" class="btn btn-primary submit-search-form">
@@ -74,7 +79,7 @@
 							<th class="all">Notification Type</th>
 							<th class="all">Department</th>
 							<th>To User</th>
-							<th>Reservation</th>
+							<th class="all">Reservation</th>
 							<th>Guest</th>
 							<th class="all">Message</th>
 							<th>URL</th>
@@ -324,10 +329,10 @@
 						}
 					},
 					{
-						data: 'NOTIFICATION_RESERVATION_ID',
+						data: 'RSV_ID',
 						render: function(data, type, full, meta) {
-							if (full['NOTIFICATION_RESERVATION_ID'] != '') {
-								return '<a href="javascript:;" onclick="viewAll(\'Reservations\',' + full['NOTIFICATION_ID'] + ')" title="View Reservations"  rel="">' + full['NOTIFICATION_RESERVATION_ID'] + '<br><span class="btn btn-sm btn-label-info">View</span></br></a>';
+							if (full['RSV_ID'] != '') {
+								return full['RSV_ID'];
 							} else return '';
 						}
 					},
@@ -337,8 +342,8 @@
 							if (full['NOTIFICATION_GUEST_ID'] != '') {
 								dots = '';
 								NOTIFICATION_GUEST_ID = full['NOTIFICATION_GUEST_ID'];
-								if(NOTIFICATION_GUEST_ID.length>20)
-								var dots = '...<p><span class="btn btn-sm btn-label-info">View</span></p>';
+								if (NOTIFICATION_GUEST_ID.length > 20)
+									var dots = '...<p><span class="btn btn-sm btn-label-info">View</span></p>';
 								return '<a href="javascript:;" onclick="viewAll(\'Guests\',' + full['NOTIFICATION_ID'] + ')" title="View Guests"  rel="">' + full['NOTIFICATION_GUEST_ID'] + '<br><span class="btn btn-sm btn-label-info">View</span></a>';
 							} else return '';
 						}
@@ -350,9 +355,9 @@
 							if (full['NOTIFICATION_TEXT'] != '') {
 								dots = '';
 								NOTIFICATION_TEXT = full['NOTIFICATION_TEXT'];
-								if(NOTIFICATION_TEXT.length>20)
-								var dots = '...<p><span class="btn btn-sm btn-label-info">View</span></p>';
-								return '<a href="javascript:;" onclick="viewAll(\'Messages\',' + full['NOTIFICATION_ID'] + ')" title="View Message" rel="">' + NOTIFICATION_TEXT.substr(0, 20)+ dots+'</a>';
+								if (NOTIFICATION_TEXT.length > 20)
+									var dots = '...<p><span class="btn btn-sm btn-label-info">View</span></p>';
+								return '<a href="javascript:;" onclick="viewAll(\'Messages\',' + full['NOTIFICATION_ID'] + ')" title="View Message" rel="">' + NOTIFICATION_TEXT.substr(0, 20) + dots + '</a>';
 							} else return '';
 						}
 					},
@@ -360,40 +365,48 @@
 						data: 'NOTIFICATION_URL'
 					},
 					{
-						data: 'RSV_TRACE_RESOLVED_BY'
+						data: 'RSV_TRACE_RESOLVED_BY',
+						render: function(data, type, full, meta) {
+							return (full['RSV_TRACE_RESOLVED_BY'] != 0) ? full['RSV_TRACE_RESOLVED_BY'] : '';
+						}
 					},
 					{
 						data: 'NOTIFICATION_DATE_TIME'
 					},
 					{
-						data: 'NOTIFICATION_READ_STATUS',
-						
+						data: null,
+						render: function(data, type, full, meta) {
+							return `
+									<p>Unseen (${data['UNSEEN_COUNT']}), Seen (${data['SEEN_COUNT']})</p>
+									<span class="btn btn-sm btn-label-info w-100" onclick="viewStatus(${data['NOTIFICATION_ID']})">View Status</span>
+								`;
+						}
 					},
 					{
 						data: null,
 						className: "text-center",
 						"orderable": false,
 						render: function(data, type, full, meta) {
-							if (full["RSV_TRACE_RESOLVED_BY"] == null && full["NOTIFICATION_READ_STATUS"] == 0) {
-								var resvListButtons =
-									'<div class="d-inline-block flxy_option_view dropend">' +
-									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
-									'<ul class="dropdown-menu dropdown-menu-end">' +
-									'<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
-									'"  class="dropdown-item editNotification text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
-									'<div class="dropdown-divider"></div>' +
-									'<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
-									'" data-row-ind="' + meta.row + '"  class="dropdown-item viewNotification text-success"><i class="fa-solid fa-align-justify"></i> View</a></li><div class="dropdown-divider"></div>' +
-									'<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
-									'" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>';
+							var disabledDiv = "disabledDiv";
+							if (full["NOTIFICATION_READ_STATUS"] == 0) {
+								var disabledDiv = "";
+							}
+							var resvListButtons =
+								'<div class="d-inline-block flxy_option_view dropend ' + disabledDiv + '" >' +
+								'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
+								'<ul class="dropdown-menu dropdown-menu-end">' +
+								'<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
+								'" data-row-ind="' + meta.row + '"  class="dropdown-item viewNotification text-success"><i class="fa-solid fa-align-justify"></i> View</a></li><div class="dropdown-divider"></div>' +
+								'<li><a href="javascript:;" data_sysid="' + full['NOTIFICATION_ID'] +
+								'" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>';
 
-								//console.log("metaObj", meta);
+							//console.log("metaObj", meta);
 
-								resvListButtons += '</ul>' +
-									'</div>';
+							resvListButtons += '</ul>' +
+								'</div>';
 
-								return resvListButtons;
-							} else return '';
+							return resvListButtons;
+
 						}
 					}
 				],
@@ -441,15 +454,7 @@
 					},
 					{
 						targets: 11,
-						width: "10%",
-						render: function(data, type, full, meta) {
-							if (full["RSV_TRACE_RESOLVED_BY"] != null) {
-								return '';
-							} else {
-								var $status = full['NOTIFICATION_READ_STATUS'];
-								return '<span class="badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';
-							}
-						}
+						width: "10%"
 					}
 				],
 				"order": [
@@ -924,6 +929,59 @@
 
 		$('#dataTable_view').dataTable().fnDraw();
 	});
+
+	function viewStatus(notification_id) {
+		$.ajax({
+			url: '<?php echo base_url('/notification-status') ?>',
+			async: false,
+			type: "post",
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest'
+			},
+			data: {
+				notification_id
+			},
+			success: function(response) {
+				if (response.SUCCESS == 200) {
+					let user_list = response.RESPONSE.OUTPUT;
+					console.log('user_list', user_list);
+
+					let unseen_html = '',
+						seen_html = '',
+						unseen_count = 0,
+						seen_count = 0;
+
+					$.each(user_list, function(index, user) {
+						if (user.NOTIF_TRAIL_READ_STATUS == 0) {
+							unseen_count++;
+							unseen_html += `<p>${user.USR_FIRST_NAME || ''} ${user.USR_LAST_NAME || ''}</p>`;
+						} else {
+							seen_count++;
+							seen_html += `<p>${user.USR_FIRST_NAME || ''} ${user.USR_LAST_NAME || ''}</p>`;
+						}
+					});
+
+					$("#modalCenterTitle").html('Status');
+					$("#modalCenter .showDetails").html(
+						`
+						<div class="row text-center">
+							<div class="col-md-6">
+								<h5>Unseen Users (${unseen_count})</h5>
+								${unseen_html}
+							</div>
+
+							<div class="col-md-6">
+								<h5>Seen Users (${seen_count})</h5>
+								${seen_html}
+							</div>
+						</div>
+						`
+					);
+					$("#modalCenter").modal('show');
+				}
+			}
+		});
+	}
 </script>
 
 <?= $this->endSection() ?>
