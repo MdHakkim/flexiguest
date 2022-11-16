@@ -68,6 +68,7 @@
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/toastr/toastr.css')?>" >
 
 <link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/dropzone/dropzone.css')?>" />
+<link rel="stylesheet" href="<?php echo base_url('assets/vendor/libs/spinkit/spinkit.css')?>" />
 
 <!-- Page CSS -->
 <script src="<?php echo base_url('assets/js/jquery-3.6.0.min.js')?>"></script>

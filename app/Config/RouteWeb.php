@@ -707,7 +707,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     
     //Subina Code (END)  
 
-
+    // Deleep 
     $routes->group('housekeeping', function ($routes) {
         $routes->get('rooms', 'HousekeepingController::housekeeping');
     });
@@ -716,6 +716,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/updateRoomStatus', 'HousekeepingController::updateRoomStatus');
     $routes->match(['post'], '/showRoomStatus', 'HousekeepingController::showRoomStatus');
     $routes->match(['post'], '/bulkUpdateRoomStatus', 'HousekeepingController::bulkUpdateRoomStatus');
+    $routes->match(['post'], '/updateServiceStatus', 'HousekeepingController::updateServiceStatus');
+    $routes->match(['post'], '/showRoomServiceStatus', 'HousekeepingController::showRoomServiceStatus');
     
 
     // ABUBAKAR CODE (START)

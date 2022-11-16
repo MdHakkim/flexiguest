@@ -240,6 +240,7 @@ class HousekeepingController extends BaseController
     {
         $data['title'] = 'Housekeeping - Room Status';
         $data['room_status_list'] = $this->Db->table('FLXY_ROOM_STATUS_MASTER')->select('RM_STATUS_ID,RM_STATUS_CODE,RM_STATUS_COLOR_CLASS')->get()->getResultArray();
+        $data['room_class_list'] = $this->Db->table('FLXY_ROOM_CLASS')->select('RM_CL_ID,RM_CL_CODE,RM_CL_DESC')->get()->getResultArray();
         $data['toggleButton_javascript'] = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['blockLoader_javascript'] = blockLoader_javascript();
@@ -249,13 +250,93 @@ class HousekeepingController extends BaseController
 
     public function HkRoomView()
     {
-        $mine = new ServerSideDataTable(); // loads and creates instance
+        $init_cond = [];
         $TODAYDATE = date('Y-m-d');
 
-        $tableName = "  (SELECT RM_ID,RM_NO,RM_DESC,RM_TYPE,RM_CLASS,RM_FEATURE,RM_FLOOR_PREFERN,RM_MAX_OCCUPANCY,
-                        RM_SMOKING_PREFERN,RM_SQUARE_UNITS,RM_PHONE_NO,
+        $search_keys = [
+            'S_RM_STATUS_ID', 'S_FO_STATUS', 'S_FROM_RM', 'RM_FLOOR_PREFERN',
+            'S_RM_CLASS', 'S_RM_TYPES', 'S_RM_FEATURES', 'S_RESV_STATUS', 'S_SRV_STATUS'
+        ];
+
+        $init_cond = $resv_cond = array();
+
+        if ($search_keys != NULL) {
+            foreach ($search_keys as $search_key) {
+                if (null !== $this->request->getPost($search_key) && !empty($this->request->getPost($search_key))) {
+                    $value = $this->request->getPost($search_key);
+
+                    switch ($search_key) {
+                        case 'S_FROM_RM':
+                            $init_cond["RM_ID >="] = "(SELECT TOP(1) RM_ID FROM FLXY_ROOM WHERE RM_NO LIKE '$value')";
+                            break;
+
+                        case 'S_RM_TYPES':
+                            $init_cond["RM_TYPE_REF_ID IN"] = "(" . implode(",", $value) . ")";
+                            break;
+
+                        case 'S_RESV_STATUS':
+                            foreach ($value as $resv_status) {
+                                switch ($resv_status) {
+                                    case 'Arrivals':
+                                        $resv_cond[] = "( RESV_ARRIVAL_DT = '" . $TODAYDATE . "' 
+                                                             AND RESV_STATUS IN ('Due Pre Check-In','Pre Checked-In')) ";
+                                        break;
+                                    case 'Arrived':
+                                        $resv_cond[] = "( RESV_ARRIVAL_DT = '" . $TODAYDATE . "' 
+                                                             AND RESV_STATUS IN ('Checked-In')) ";
+                                        break;
+                                    case 'Due Out':
+                                        $resv_cond[] = "( RESV_DEPARTURE  = '" . $TODAYDATE . "' 
+                                                             AND RESV_STATUS IN ('Checked-In','Check-Out-Requested')) ";
+                                        break;
+                                    case 'Departed':
+                                        $resv_cond[] = "( RESV_DEPARTURE  = '" . $TODAYDATE . "' 
+                                                             AND RESV_STATUS IN ('Checked-Out')) ";
+                                        break;
+                                    case 'Stayover':
+                                        $resv_cond[] = "( RESV_DEPARTURE  > '" . $TODAYDATE . "' 
+                                                             AND RESV_STATUS IN ('Checked-In')) ";
+                                        break;
+                                    case 'Day Use':
+                                        $resv_cond[] = "( RESV_ARRIVAL_DT = '" . $TODAYDATE . "' 
+                                                             AND RESV_ARRIVAL_DT = RESV_DEPARTURE) ";
+                                        break;
+                                    case 'Not Reserved':
+                                        $resv_cond[] = "( RESV_STATUS IN ('Not Reserved')) ";
+                                        break;
+                                }
+                            }
+
+                            $init_cond[implode(" OR ", $resv_cond)] = "";
+                            break;
+
+                        case 'S_RM_FEATURES':
+                            $init_cond["CONCAT(',', RM_FEATURE, ',') LIKE '%," . str_replace(",", ",%' AND CONCAT(',', RM_FEATURE, ',') LIKE '%,", implode(",", $value)) . ",%'"] = "";
+                            break;
+
+                        case 'S_RM_STATUS_ID':
+                        case 'S_FO_STATUS':
+                            $init_cond["" . ltrim($search_key, "S_") . " IN"] = "('" . implode("','", $value) . "')";
+                            break;
+
+                        case 'S_SRV_STATUS':
+                            $init_cond["RM_GUEST_SERVICE_STATUS IN"] = "(" . implode(",", $value) . ")";
+                            break;
+
+                        default:
+                            $init_cond["" . ltrim($search_key, "S_") . " = "] = "'$value'";
+                            break;
+                    }
+                }
+            }
+        }
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+
+        $tableName = "  (SELECT RM_ID,RM_NO,RM_DESC,RM_TYPE,RM_TYPE_REF_ID,RM_CLASS,RM_FEATURE,RM_FLOOR_PREFERN,RM_MAX_OCCUPANCY,
+                        RM_SMOKING_PREFERN,RM_SQUARE_UNITS,RM_PHONE_NO,RVN.RESV_ID,RVN.RESV_ARRIVAL_DT,RVN.RESV_DEPARTURE,
                         ISNULL(SM.RM_STATUS_ID, 2) AS RM_STATUS_ID,ISNULL(SM.RM_STATUS_CODE, 'Dirty') AS RM_STATUS_CODE,
-                        ISNULL(RVN.RESV_STATUS, 'Not Reserved') AS RESV_STATUS,
+                        ISNULL(RVN.RESV_STATUS, 'Not Reserved') AS RESV_STATUS,RM_GUEST_SERVICE_STATUS,
                         (CASE
                             WHEN RVN.RESV_STATUS IN ('Due Pre Check-In','Pre Checked-In','Checked-Out') 
                                  OR RVN.RESV_STATUS IS NULL  THEN 'VAC'
@@ -277,8 +358,8 @@ class HousekeepingController extends BaseController
                         LEFT JOIN FLXY_RESERVATION RVN ON RVN.RESV_ID = RESV.RESV_MAX_ID
                         ) ROOM_STATS";
 
-        $columns = 'RM_ID,RM_NO,RM_DESC,RM_TYPE,RM_CLASS,RM_FEATURE,RM_STATUS_ID,RM_STATUS_CODE,RM_FLOOR_PREFERN,RESV_STATUS,FO_STATUS,RM_FLOOR_PREFERN,RM_MAX_OCCUPANCY,RM_SMOKING_PREFERN,RM_SQUARE_UNITS,RM_PHONE_NO';
-        $mine->generate_DatatTable($tableName, $columns);
+        $columns = 'RM_ID,RM_NO,RM_DESC,RM_TYPE,RM_TYPE_REF_ID,RM_CLASS,RM_FEATURE,RM_STATUS_ID,RM_STATUS_CODE,RM_GUEST_SERVICE_STATUS,RM_FLOOR_PREFERN,RESV_ID,RESV_STATUS,FO_STATUS,RM_FLOOR_PREFERN,RM_MAX_OCCUPANCY,RM_SMOKING_PREFERN,RM_SQUARE_UNITS,RM_PHONE_NO';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
 
@@ -377,5 +458,38 @@ class HousekeepingController extends BaseController
         } catch (Exception $e) {
             return $this->respond($e->errors());
         }
+    }
+
+    public function updateServiceStatus()
+    {
+        try {
+            $roomId = $this->request->getPost('roomId');
+            $new_status = $this->request->getPost('new_status');
+            $user_id = session()->get('USR_ID');
+
+            $logdata = [
+                "RM_GUEST_SERVICE_STATUS" => $new_status, "RM_UPDATED_UID" => $user_id, "RM_UPDATED_DT" => date("d-M-Y")
+            ];
+
+            $return = $this->Db->table('FLXY_ROOM')->where('RM_ID', $roomId)->update($logdata);
+
+            echo json_encode($this->responseJson("1", "0", $return, $response = ''));
+        } catch (\Exception $e) {
+            echo json_encode($this->responseJson("-444", "db insert not successful", $return));
+        }
+    }
+
+    public function showRoomServiceStatus()
+    {
+        $param = ['SYSID' => $this->request->getPost('roomId')];
+
+        $sql = "SELECT RM_ID, RM_GUEST_SERVICE_STATUS 
+                FROM FLXY_ROOM 
+                WHERE RM_ID = :SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getRowArray();
+        $response = !$response ? ['RM_ID' => $param['SYSID'], 'RM_GUEST_SERVICE_STATUS' => 0] : $response;
+
+        echo json_encode($response);
     }
 }

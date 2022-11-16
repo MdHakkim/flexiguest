@@ -42,10 +42,11 @@
                 <form class="dt_adv_search" method="POST">
                     <div class="border rounded pt-4 p-3">
                         <div class="row g-3">
-                            <div class="col-4 col-sm-6 col-lg-4">
+                            <div class="col-12 col-sm-6 col-lg-4">
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Guest
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Guest
                                             Name:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_CUST_FULL_NAME" name="S_CUST_FULL_NAME"
@@ -54,7 +55,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Requested
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Requested
                                             On:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_LAO_CREATED_AT" name="S_LAO_CREATED_AT"
@@ -63,10 +65,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-4 col-sm-6 col-lg-4">
+                            <div class="col-12 col-sm-6 col-lg-4">
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Resvn
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Resvn
                                             No:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_RESV_NO" name="S_RESV_NO" class="form-control dt-input"
@@ -75,7 +78,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Room
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Room
                                             No:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_RM_NO" name="S_RM_NO" class="form-control dt-input"
@@ -84,10 +88,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-4 col-sm-6 col-lg-4">
+                            <div class="col-12 col-sm-6 col-lg-4">
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Max
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Max
                                             Total:</b></label>
                                     <div class="col-md-8">
                                         <input type="number" id="S_LAO_TOTAL_PAYABLE" name="S_LAO_TOTAL_PAYABLE"
@@ -96,7 +101,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Paymemt
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end text-end justify-content-sm-start"><b>Paymemt
                                             Status:</b></label>
                                     <div class="col-md-8">
                                         <select id="S_LAO_PAYMENT_STATUS" name="S_LAO_PAYMENT_STATUS"
@@ -115,11 +121,10 @@
 
                         <div class="row g-3">
 
-                            <div class="col-8 col-sm-6 col-lg-8">
+                            <div class="col-12 col-sm-6 col-lg-8">
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-2"
-                                        style="text-align: right;"><b>Products:</b></label>
+                                    <label class="col-form-label col-md-2 d-flex justify-content-lg-end justify-content-sm-start"><b>Products:</b></label>
                                     <div class="col-md-10">
                                         <select id="S_PRODUCTS" name="S_PRODUCTS[]" class="select2 form-select"
                                             multiple>
@@ -130,7 +135,7 @@
 
                             </div>
 
-                            <div class="col-4 col-sm-6 col-lg-4">
+                            <div class="col-12 col-sm-6 col-lg-4">
 
                                 <div class="row mb-3">
                                     <div class="col-md-12 text-end">
@@ -931,7 +936,9 @@ $(document).on('click', '.viewDetails', function() {
     showAmenityOrderDetails(orderId);
     $('#amenityOrderDetailsWindowLabel').html('Products Requested in Order: ' + orderId);
 
-    $('.addOrderProducts').attr({'data-selected-orderId': orderId});
+    $('.addOrderProducts').attr({
+        'data-selected-orderId': orderId
+    });
 });
 
 function checkFileExist(urlToFile) {
@@ -1101,7 +1108,7 @@ function showAmenityOrderDetails(orderId) {
             emptyTable: 'There are no products requested'
         }
     });
-    
+
     // $("#amenity_order_details_wrapper .row:first").before(
     //     '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary addOrderProducts" data-selected-orderId=""><i class="fa-solid fa-plus fa-lg"></i> Add New</button></div></div>'
     // );

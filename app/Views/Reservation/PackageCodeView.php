@@ -181,8 +181,7 @@
                                                 <div class="col-md-8">
                                                     <div class="row mb-3">
 
-                                                        <label for="PO_RH_ID" class="col-form-label col-md-4"
-                                                            style="text-align: right;"><b>Posting Rhythm *</b></label>
+                                                        <label for="PO_RH_ID" class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Posting Rhythm *</b></label>
                                                         <div class="col-md-8">
                                                             <select id="PO_RH_ID" name="PO_RH_ID"
                                                                 class="select2 form-select form-select-lg">
@@ -203,8 +202,7 @@
 
                                                     <div class="row mb-3">
 
-                                                        <label for="CLC_RL_ID" class="col-form-label col-md-4"
-                                                            style="text-align: right;"><b>Calculation Rule *</b></label>
+                                                        <label for="CLC_RL_ID" class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Calculation Rule *</b></label>
                                                         <div class="col-md-8">
                                                             <select id="CLC_RL_ID" name="CLC_RL_ID"
                                                                 class="select2 form-select form-select-lg">

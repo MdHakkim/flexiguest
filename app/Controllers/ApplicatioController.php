@@ -1858,8 +1858,10 @@ class ApplicatioController extends BaseController
 
     public function BlockView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
-        $tableName = 'FLXY_BLOCK';
-        $columns = 'BLK_ID,BLK_CODE,BLK_NAME,BLK_START_DT,BLK_END_DT,BLK_STATUS,BLK_RESER_TYPE,BLK_RESER_METHOD';
+        $tableName = 'FLXY_BLOCK 
+                      LEFT JOIN FLXY_BLOCK_STATUS_CODE ON BLK_STS_CD_ID = BLK_STATUS
+                      LEFT JOIN FLXY_RESERVATION_METHOD ON RM_ID = BLK_RESER_METHOD';
+        $columns = 'BLK_ID,BLK_CODE,BLK_NAME,BLK_START_DT,BLK_END_DT,BLK_STATUS,BLK_STS_CD_DESC,BLK_RESER_TYPE,RM_DESC,BLK_RESER_METHOD';
         $mine->generate_DatatTable($tableName,$columns);
         exit;
     }
@@ -2707,7 +2709,11 @@ class ApplicatioController extends BaseController
 
     public function featureList(){
         $search = $this->request->getPost("search");
-        $sql = "SELECT RM_FT_ID,RM_FT_CODE,RM_FT_DESC FROM FLXY_ROOM_FEATURE WHERE RM_FT_DESC like '%$search%'";
+        $sql = "SELECT RM_FT_ID,RM_FT_CODE,RM_FT_DESC FROM FLXY_ROOM_FEATURE WHERE 1 = 1"; 
+        
+        if(!empty($search))
+            $sql .= " AND RM_FT_DESC like '%$search%'";
+
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select Feature</option>';
         foreach($response as $row){

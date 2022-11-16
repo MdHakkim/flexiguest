@@ -189,8 +189,7 @@
                                                     class="form-control" min="0.00" step=".01" placeholder="eg: 3" />
                                             </div>
 
-                                            <label for="RT_CD_MULTIPLICATION" class="col-form-label col-md-3"
-                                                style="text-align: right;">Multiplication</label>
+                                            <label for="RT_CD_MULTIPLICATION" class="col-form-label col-md-3 d-flex justify-content-lg-end justify-content-sm-start">Multiplication</label>
                                             <div class="col-md-3">
                                                 <input type="number" name="RT_CD_MULTIPLICATION"
                                                     id="RT_CD_MULTIPLICATION" class="form-control" min="0.00" step=".01"
@@ -205,8 +204,7 @@
                                                     class="form-control" min="0" placeholder="eg: 3" />
                                             </div>
 
-                                            <label for="RT_CD_MAX_OCCUPANCY" class="col-form-label col-md-3"
-                                                style="text-align: right;">Max
+                                            <label for="RT_CD_MAX_OCCUPANCY" class="col-form-label col-md-3 d-flex justify-content-lg-end justify-content-sm-start">Max
                                                 Occupancy</label>
                                             <div class="col-md-3">
                                                 <input type="number" name="RT_CD_MAX_OCCUPANCY" id="RT_CD_MAX_OCCUPANCY"
@@ -563,8 +561,7 @@
                                                     <h6 class="">Amounts</h6>
 
                                                     <div class="row mb-3">
-                                                        <label for="RT_CD_DT_1_ADULT" class="col-form-label col-md-5"
-                                                            style="text-align: right;"><b>1 Adult *</b></label>
+                                                        <label for="RT_CD_DT_1_ADULT" class="col-form-label col-md-5 d-flex justify-content-lg-end justify-content-sm-start"><b>1 Adult *</b></label>
                                                         <div class="col-md-7">
                                                             <input type="number" name="RT_CD_DT_1_ADULT"
                                                                 id="RT_CD_DT_1_ADULT" class="form-control" min="0.00"
@@ -573,8 +570,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="html5-color-input" class="col-form-label col-md-5"
-                                                            style="text-align: right;">2 Adult</label>
+                                                        <label for="html5-color-input" class="col-form-label col-md-5 d-flex justify-content-lg-end justify-content-sm-start">2 Adult</label>
                                                         <div class="col-md-7">
                                                             <input type="number" name="RT_CD_DT_2_ADULT"
                                                                 id="RT_CD_DT_2_ADULT" class="form-control" min="0.00"
@@ -583,8 +579,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="html5-color-input" class="col-form-label col-md-5"
-                                                            style="text-align: right;">3 Adult</label>
+                                                        <label for="html5-color-input" class="col-form-label col-md-5 d-flex justify-content-lg-end justify-content-sm-start">3 Adult</label>
                                                         <div class="col-md-7">
                                                             <input type="number" name="RT_CD_DT_3_ADULT"
                                                                 id="RT_CD_DT_3_ADULT" class="form-control" min="0.00"
@@ -593,8 +588,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="html5-color-input" class="col-form-label col-md-5"
-                                                            style="text-align: right;">4 Adult</label>
+                                                        <label for="html5-color-input" class="col-form-label col-md-5 d-flex justify-content-lg-end justify-content-sm-start">4 Adult</label>
                                                         <div class="col-md-7">
                                                             <input type="number" name="RT_CD_DT_4_ADULT"
                                                                 id="RT_CD_DT_4_ADULT" class="form-control" min="0.00"
@@ -603,8 +597,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="html5-color-input" class="col-form-label col-md-5"
-                                                            style="text-align: right;">5 Adult</label>
+                                                        <label for="html5-color-input" class="col-form-label col-md-5 d-flex justify-content-lg-end justify-content-sm-start">5 Adult</label>
                                                         <div class="col-md-7">
                                                             <input type="number" name="RT_CD_DT_5_ADULT"
                                                                 id="RT_CD_DT_5_ADULT" class="form-control" min="0.00"
@@ -613,8 +606,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="html5-color-input" class="col-form-label col-md-5"
-                                                            style="text-align: right;">Extra Adult</label>
+                                                        <label for="html5-color-input" class="col-form-label col-md-5 d-flex justify-content-lg-end justify-content-sm-start">Extra Adult</label>
                                                         <div class="col-md-7">
                                                             <input type="number" name="RT_CD_DT_EXTRA_ADULT"
                                                                 id="RT_CD_DT_EXTRA_ADULT" class="form-control"
@@ -623,8 +615,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="html5-color-input" class="col-form-label col-md-5"
-                                                            style="text-align: right;">Extra Child</label>
+                                                        <label for="html5-color-input" class="col-form-label col-md-5 d-flex justify-content-lg-end justify-content-sm-start">Extra Child</label>
                                                         <div class="col-md-7">
                                                             <input type="number" name="RT_CD_DT_EXTRA_CHILD"
                                                                 id="RT_CD_DT_EXTRA_CHILD" class="form-control"
@@ -639,8 +630,7 @@
                                                     <h6 class="">Children on Own</h6>
 
                                                     <div class="row mb-3">
-                                                        <label for="html5-color-input" class="col-form-label col-md-5"
-                                                            style="text-align: right;">1 Child</label>
+                                                        <label for="html5-color-input" class="col-form-label col-md-5 d-flex justify-content-lg-end justify-content-sm-start">1 Child</label>
                                                         <div class="col-md-7">
                                                             <input type="number" name="RT_CD_DT_1_CHILD"
                                                                 id="RT_CD_DT_1_CHILD" class="form-control" min="0.00"
@@ -649,8 +639,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="html5-color-input" class="col-form-label col-md-5"
-                                                            style="text-align: right;">2 Children</label>
+                                                        <label for="html5-color-input" class="col-form-label col-md-5 d-flex justify-content-lg-end justify-content-sm-start">2 Children</label>
                                                         <div class="col-md-7">
                                                             <input type="number" name="RT_CD_DT_2_CHILD"
                                                                 id="RT_CD_DT_2_CHILD" class="form-control" min="0.00"
@@ -659,8 +648,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="html5-color-input" class="col-form-label col-md-5"
-                                                            style="text-align: right;">3 Children</label>
+                                                        <label for="html5-color-input" class="col-form-label col-md-5 d-flex justify-content-lg-end justify-content-sm-start">3 Children</label>
                                                         <div class="col-md-7">
                                                             <input type="number" name="RT_CD_DT_3_CHILD"
                                                                 id="RT_CD_DT_3_CHILD" class="form-control" min="0.00"
@@ -669,8 +657,7 @@
                                                     </div>
 
                                                     <div class="row mb-3">
-                                                        <label for="html5-color-input" class="col-form-label col-md-5"
-                                                            style="text-align: right;">4 Children</label>
+                                                        <label for="html5-color-input" class="col-form-label col-md-5 d-flex justify-content-lg-end justify-content-sm-start">4 Children</label>
                                                         <div class="col-md-7">
                                                             <input type="number" name="RT_CD_DT_4_CHILD"
                                                                 id="RT_CD_DT_4_CHILD" class="form-control" min="0.00"
@@ -1273,8 +1260,7 @@
                                                 <div class="col-md-8">
                                                     <div class="row mb-3">
 
-                                                        <label for="PO_RH_ID" class="col-form-label col-md-4"
-                                                            style="text-align: right;"><b>Posting Rhythm *</b></label>
+                                                        <label for="PO_RH_ID" class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Posting Rhythm *</b></label>
                                                         <div class="col-md-8">
                                                             <select id="PO_RH_ID" name="PO_RH_ID"
                                                                 class="select2 select2Pkg form-select form-select-lg">
@@ -1295,8 +1281,7 @@
 
                                                     <div class="row mb-3">
 
-                                                        <label for="CLC_RL_ID" class="col-form-label col-md-4"
-                                                            style="text-align: right;"><b>Calculation Rule *</b></label>
+                                                        <label for="CLC_RL_ID" class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Calculation Rule *</b></label>
                                                         <div class="col-md-8">
                                                             <select id="CLC_RL_ID" name="CLC_RL_ID"
                                                                 class="select2 select2Pkg form-select form-select-lg">

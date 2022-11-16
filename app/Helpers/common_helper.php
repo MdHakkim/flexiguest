@@ -74,8 +74,8 @@ function getValueFromTable($column, $cond, $table)
             FROM ".$param['TABLENAME']."
             WHERE ".$cond."";
 
-    $response = $Db->query($sql,$param)->getRow()->{$param['COLUMN']};
-    return $response;    
+    $response = $Db->query($sql,$param)->getRow();
+    return $response ? $response->{$param['COLUMN']} : null;    
 }
 
 

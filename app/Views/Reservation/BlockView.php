@@ -35,21 +35,24 @@
         <div class="card">
             <!-- <h5 class="card-header">Responsive Datatable</h5> -->
             <div class="container-fluid p-3">
-                <table id="dataTable_view" class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Block Code</th>
-                            <th>Block Name</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                            <th>Status</th>
-                            <th>Res Type</th>
-                            <th>Res Method</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+                <div class="dataTable_view_div table-responsive text-nowrap">
 
-                </table>
+                    <table id="dataTable_view" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th class="all">Block Code</th>
+                                <th class="all">Block Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th class="all">Status</th>
+                                <th>Res Method</th>
+                                <th class="all">Action</th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -240,8 +243,8 @@
                                         <div class="row g-3">
                                             <div class="col-4 col-sm-6 col-lg-4">
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Name:</b></label>
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Name:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_GUEST_NAME" name="S_GUEST_NAME"
                                                             class="form-control dt-input" data-column="0"
@@ -250,8 +253,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>First
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>First
                                                             Name:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_CUST_FIRST_NAME"
@@ -262,8 +265,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Email:</b></label>
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Email:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_CUST_EMAIL" name="S_CUST_EMAIL"
                                                             class="form-control dt-input" data-column="0"
@@ -272,8 +275,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Contact
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Contact
                                                             No:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_GUEST_PHONE" name="S_GUEST_PHONE"
@@ -283,8 +286,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Company:</b></label>
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Company:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_COMPNAME" name="S_COMPNAME"
                                                             class="form-control dt-input" data-column="19"
@@ -293,8 +296,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Travel
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Travel
                                                             Agent:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_AGENTNAME" name="S_AGENTNAME"
@@ -308,8 +311,8 @@
                                             <div class="col-4 col-sm-6 col-lg-4">
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Arrival
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Arrival
                                                             From:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_ARRIVAL_FROM" name="S_ARRIVAL_FROM"
@@ -318,8 +321,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Departure
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Departure
                                                             From:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_DEPARTURE_FROM" name="S_DEPARTURE_FROM"
@@ -328,8 +331,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Room
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Room
                                                             No:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_RESV_ROOM" name="S_RESV_ROOM"
@@ -338,8 +341,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Room
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Room
                                                             Type:</b></label>
                                                     <div class="col-md-8">
                                                         <select id="S_RESV_RM_TYPE" name="S_RESV_RM_TYPE"
@@ -351,8 +354,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Created
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Created
                                                             On:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_RESV_CREATE_DT" name="S_RESV_CREATE_DT"
@@ -365,8 +368,8 @@
                                             <div class="col-4 col-sm-6 col-lg-4">
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Arrival
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Arrival
                                                             To:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_ARRIVAL_TO" name="S_ARRIVAL_TO"
@@ -376,8 +379,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Departure
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Departure
                                                             To:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_DEPARTURE_TO" name="S_DEPARTURE_TO"
@@ -387,8 +390,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Search
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Search
                                                             Type:</b></label>
                                                     <div class="col-md-8">
                                                         <select id="S_SEARCH_TYPE" name="S_SEARCH_TYPE"
@@ -407,8 +410,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Conf
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Conf
                                                             No:</b></label>
                                                     <div class="col-md-8">
                                                         <input type="text" id="S_RESV_NO" name="S_RESV_NO"
@@ -417,8 +420,8 @@
                                                 </div>
 
                                                 <div class="row mb-3">
-                                                    <label class="col-form-label col-md-4"
-                                                        style="text-align: right;"><b>Created
+                                                    <label
+                                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Created
                                                             By:</b></label>
                                                     <div class="col-md-8">
                                                         <select id="S_RESV_CREATE_UID" name="S_RESV_CREATE_UID"
@@ -497,7 +500,7 @@
                             <div class="tab-pane fade" id="navs-room-pool" role="tabpanel">
 
                                 <div class="room_pool_div table-responsive text-nowrap">
-                                    
+
                                 </div>
 
                             </div>
@@ -662,6 +665,8 @@ $(document).ready(function() {
             'url': '<?php echo base_url('/blockView') ?>'
         },
         'columns': [{
+                data: ''
+            }, {
                 data: 'BLK_CODE'
             },
             {
@@ -674,13 +679,26 @@ $(document).ready(function() {
                 data: 'BLK_END_DT'
             },
             {
-                data: 'BLK_STATUS'
+                data: 'BLK_STS_CD_DESC',
+                render: function(data, type, full, meta) {
+                    
+                    return (
+                        '<span class="badge rounded-pill bg-label-primary">' +
+                        full['BLK_STS_CD_DESC'] +
+                        '</span>'
+                    );
+                }
             },
             {
-                data: 'BLK_RESER_TYPE'
-            },
-            {
-                data: 'BLK_RESER_METHOD'
+                data: 'RM_DESC',
+                render: function(data, type, full, meta) {
+                    
+                    return (
+                        '<span class="badge rounded-pill bg-label-info">' +
+                        full['RM_DESC'] +
+                        '</span>'
+                    );
+                }
             },
             {
                 data: null,
@@ -704,7 +722,73 @@ $(document).ready(function() {
                 }
             },
         ],
-        autowidth: true
+        columnDefs: [{
+            width: "5%",
+            className: 'control',
+            responsivePriority: 1,
+            orderable: false,
+            targets: 0,
+            searchable: false,
+            render: function(data, type, full, meta) {
+                return '';
+            }
+        }, {
+            width: "10%"
+        }, {
+            width: "10%"
+        }, {
+            width: "15%"
+        }, {
+            width: "12%"
+        }, {
+            width: "12%"
+        }, {
+            width: "12%"
+        }, {
+            width: "12%"
+        }],
+        autowidth: true,
+        "order": [
+            [1, "asc"]
+        ],
+        responsive: {
+            details: {
+                display: $.fn.dataTable.Responsive.display.modal({
+                    header: function(row) {
+                        var data = row.data();
+                        return 'Details of Block ' + data['BLK_NAME'];
+                    }
+                }),
+                type: 'column',
+                renderer: function(api, rowIdx, columns) {
+                    var data = $.map(columns, function(col, i) {
+
+                        var dataVal = col.data;
+
+                        return col.title !==
+                            '' // ? Do not show row in modal popup if title is blank (for check box)
+                            ?
+                            '<tr data-dt-row="' +
+                            col.rowIndex +
+                            '" data-dt-column="' +
+                            col.columnIndex +
+                            '">' +
+                            '<td width="35%"><b>' +
+                            col.title +
+                            ':' +
+                            '</b></td> ' +
+                            '<td>' +
+                            dataVal +
+                            '</td>' +
+                            '</tr>' :
+                            '';
+                    }).join('');
+
+                    return data ? $('<table class="table"/><tbody />').append(data) :
+                        false;
+                }
+            }
+        }
 
     });
     $("#dataTable_view_wrapper .row:first").before(
@@ -787,7 +871,7 @@ $(document).on('click', '.editWindow', function() {
     runSupportingLov();
 
     showBlockReservations(sysid); // List Reservations in 2nd Tab
-    
+
     showBlockRoomPool(sysid); // Show Room Pool in 3rd Tab
 
     var url = '<?php echo base_url('/editBlock') ?>';

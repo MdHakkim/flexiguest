@@ -184,17 +184,17 @@
             <div class="container-fluid p-3">
 
                 <div class="row">
-                    <div class="col-md-3 mt-1 mb-3"><button type="button" class="btn btn-primary"
+                    <div class="col-md-12 col-lg-3 mt-1 mb-3"><button type="button" class="btn btn-primary"
                             onClick="addResvation()" id="addReservation"><i class="fa-solid fa-plus fa-lg"></i> Add
                             New</button></div>
                 </div>
                 <form class="dt_adv_search mb-2" method="POST">
                     <div class="border rounded p-3 mb-3">
                         <div class="row g-3">
-                            <div class="col-4 col-sm-6 col-lg-4">
+                            <div class="col-12 col-sm-6 col-lg-4">
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4"
-                                        style="text-align: right;"><b>Name:</b></label>
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Name:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_GUEST_NAME" name="S_GUEST_NAME"
                                             class="form-control dt-input" data-column="0" placeholder="" />
@@ -202,7 +202,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>First
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>First
                                             Name:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_CUST_FIRST_NAME" name="S_CUST_FIRST_NAME"
@@ -212,8 +213,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4"
-                                        style="text-align: right;"><b>Company:</b></label>
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Company:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_COMPNAME" name="S_COMPNAME"
                                             class="form-control dt-input" data-column="19" placeholder="" />
@@ -222,10 +223,11 @@
 
                             </div>
 
-                            <div class="col-4 col-sm-6 col-lg-4">
+                            <div class="col-12 col-sm-6 col-lg-4">
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Arrival
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Arrival
                                             From:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_ARRIVAL_FROM" name="S_ARRIVAL_FROM"
@@ -235,7 +237,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Conf
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Conf
                                             No:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_RESV_NO" name="S_RESV_NO" class="form-control dt-input"
@@ -244,7 +247,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Room
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Room
                                             No:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_RESV_ROOM" name="S_RESV_ROOM"
@@ -253,10 +257,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-4 col-sm-6 col-lg-4">
+                            <div class="col-12 col-sm-6 col-lg-4">
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Arrival
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Arrival
                                             To:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_ARRIVAL_TO" name="S_ARRIVAL_TO"
@@ -266,7 +271,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Search
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Search
                                             Type:</b></label>
                                     <div class="col-md-8">
                                         <select id="S_SEARCH_TYPE" name="S_SEARCH_TYPE" class="form-select dt-select"
@@ -306,9 +312,10 @@
 
                     <div class="border rounded p-3 advanced_fields" style="display: none;">
                         <div class="row g-3">
-                            <div class="col-4 col-sm-6 col-lg-4">
+                            <div class="col-12 col-sm-6 col-lg-4">
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Contact
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Contact
                                             No:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_GUEST_PHONE" name="S_GUEST_PHONE"
@@ -317,8 +324,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4"
-                                        style="text-align: right;"><b>Email:</b></label>
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Email:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_CUST_EMAIL" name="S_CUST_EMAIL"
                                             class="form-control dt-input" data-column="0" placeholder="" />
@@ -327,7 +334,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Travel
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Travel
                                             Agent:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_AGENTNAME" name="S_AGENTNAME"
@@ -337,10 +345,11 @@
 
                             </div>
 
-                            <div class="col-4 col-sm-6 col-lg-4">
+                            <div class="col-12 col-sm-6 col-lg-4">
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Departure
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Departure
                                             From:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_DEPARTURE_FROM" name="S_DEPARTURE_FROM"
@@ -349,7 +358,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Room
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Room
                                             Type:</b></label>
                                     <div class="col-md-8">
                                         <select id="S_RESV_RM_TYPE" name="S_RESV_RM_TYPE"
@@ -360,10 +370,11 @@
                                 </div>
                             </div>
 
-                            <div class="col-4 col-sm-6 col-lg-4">
+                            <div class="col-12 col-sm-6 col-lg-4">
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Departure
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Departure
                                             To:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_DEPARTURE_TO" name="S_DEPARTURE_TO"
@@ -372,7 +383,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Created
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Created
                                             On:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_RESV_CREATE_DT" name="S_RESV_CREATE_DT"
@@ -381,7 +393,8 @@
                                 </div>
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Created
+                                    <label
+                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Created
                                             By:</b></label>
                                     <div class="col-md-8">
                                         <select id="S_RESV_CREATE_UID" name="S_RESV_CREATE_UID"
@@ -501,16 +514,17 @@
                         <div id="flxy_add_content">
                             <p>Which of these reservation attributes do you want to copy?</p>
                             <div class="row mb-3">
-                                <div class="col-md-6">
+                                <div class="col-md-12 col-lg-6">
                                     <label class="form-label col-md-12">Room Type</label>
                                     <select name="COPY_RM_TYPE" id="COPY_RM_TYPE" data-width="100%"
-                                        class="selectpicker COPY_RM_TYPE" data-style="btn btn-default" data-live-search="true">
+                                        class="selectpicker COPY_RM_TYPE" data-style="btn btn-default"
+                                        data-live-search="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12 col-lg-6">
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
                                             <input type="checkbox" class="switch-input copyReser" checked
@@ -588,7 +602,7 @@
                                         <label class="form-check-lable flxy_lab_left"> Comments</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-12 col-lg-6">
                                     <div class="form-check mt-3 p-0">
                                         <label class="switch">
                                             <input type="checkbox" class="switch-input copyReser" checked
@@ -669,7 +683,7 @@
                     <form id="reservationForm" novalidate>
                         <div class="window-1" id="window1">
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-md-12 col-lg-6">
                                     <input type="hidden" name="RESV_STATUS" id="RESV_STATUS" class="form-control" />
                                     <label class="form-label">Arrival / Departure Date</label>
                                     <div class="input-group mb-3">
@@ -689,7 +703,7 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6 col-lg-3">
                                     <label class="form-label">Nights / No of Rooms</label>
                                     <div class="input-group mb-3">
                                         <input type="number" id="RESV_NIGHT" class="form-control RESV_NIGHT" min="0"
@@ -698,7 +712,7 @@
                                             min="1" placeholder="no of room" />
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6 col-lg-3">
                                     <label class="form-label">Adults / Children</label>
                                     <div class="input-group mb-3">
                                         <input type="number" id="RESV_ADULTS" class="form-control RESV_ADULTS" min="1"
@@ -707,10 +721,11 @@
                                             min="0" value="0" placeholder="children" />
                                     </div>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-12 col-lg-3 mt-0">
                                     <label class="form-label">Guest Name</label>
                                     <div class="input-group mb-3">
-                                        <select id="RESV_NAME" class="selectpicker RESV_NAME" data-style="btn btn-default" data-live-search="true">
+                                        <select id="RESV_NAME" class="selectpicker RESV_NAME"
+                                            data-style="btn btn-default" data-live-search="true">
                                             <option value="">Select</option>
                                         </select>
                                         <button type="button" onClick="childReservation('C')"
@@ -718,7 +733,7 @@
                                                 aria-hidden="true"></i></button>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Member Type</label>
                                     <div class="input-group sel2Container mb-3">
                                         <select id="RESV_MEMBER_TY_ADD" class="select2 form-select"
@@ -729,7 +744,7 @@
                                                 aria-hidden="true"></i></button>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Company</label>
                                     <div class="input-group sel2Container mb-3">
                                         <select id="RESV_COMPANY_ADD" class="select2 form-select RESV_COMPANY"
@@ -740,7 +755,7 @@
                                                 aria-hidden="true"></i></button>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Agent</label>
                                     <div class="input-group sel2Container mb-3">
                                         <select id="RESV_AGENT_ADD" class="select2 form-select RESV_AGENT"
@@ -751,28 +766,28 @@
                                                 aria-hidden="true"></i></button>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Block</label>
                                     <select id="RESV_BLOCK_ADD" data-width="100%" class="select2 form-select RESV_BLOCK"
                                         data-allow-clear="true">
                                     </select>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Member No</label>
                                     <input type="text" id="RESV_MEMBER_NO" class="form-control RESV_MEMBER_NO"
                                         placeholder="member no" readonly />
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">CORP NO</label>
                                     <input type="text" name="RESV_CORP_NO" id="RESV_CORP_NO" class="form-control"
                                         placeholder="CORP no" />
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">IATA NO</label>
                                     <input type="text" name="RESV_IATA_NO" id="RESV_IATA_NO" class="form-control"
                                         placeholder="IATA no" />
                                 </div>
-                                <div class="col-md-3 flxi_ds_flx">
+                                <div class="col-md-12 col-lg-3 flxi_ds_flx">
                                     <div class="form-check mt-4 me-3">
                                         <input class="form-check-input flxCheckBox" type="checkbox"
                                             id="RESV_CLOSED_CHK">
@@ -791,47 +806,47 @@
                                         <label class="form-label" for="RESV_PSEUDO_CHK"> Pseudo </label>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6 col-lg-3">
                                     <label class="form-label">Rate Class</label>
                                     <select name="RESV_RATE_CLASS" id="RESV_RATE_CLASS" class="select2 form-select"
                                         data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6 col-lg-3">
                                     <label class="form-label">Rate Category</label>
                                     <select name="RESV_RATE_CATEGORY" id="RESV_RATE_CATEGORY"
                                         class="select2 form-select" data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6 col-lg-3">
                                     <label class="form-label">Rate Code</label>
                                     <select id="RESV_RATE_CODE" class="select2 form-select" data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6 col-lg-3">
                                     <label class="form-label">Room Class</label>
                                     <select name="RESV_ROOM_CLASS" id="RESV_ROOM_CLASS" class="select2 form-select"
                                         data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3 selPickerDiv">
+                                <div class="col-md-6 col-lg-3 selPickerDiv">
                                     <label class="form-label">Features</label>
-                                    <select id="RESV_FEATURE" class="selectpicker" multiple data-style="btn btn-default" 
-                                        data-icon-base="bx" data-tick-icon="bx-check text-primary" data-live-search="true"
-                                        data-allow-clear="true">
+                                    <select id="RESV_FEATURE" class="selectpicker" multiple data-style="btn btn-default"
+                                        data-icon-base="bx" data-tick-icon="bx-check text-primary"
+                                        data-live-search="true" data-allow-clear="true">
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6 col-lg-3">
                                     <label class="form-label">Packages</label>
                                     <select id="RESV_PACKAGES" class="select2 form-select" data-allow-clear="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6 col-lg-3">
                                     <label class="form-label">Purpose Of Stay</label>
                                     <select name="RESV_PURPOSE_STAY" id="RESV_PURPOSE_STAY" class="select2 form-select"
                                         data-allow-clear="true">
@@ -842,11 +857,11 @@
                         </div>
                         <div class="window-2">
                             <div class="row g-3">
-                                <div class="col-md-3">
+                                <div class="col-md-12 col-lg-3">
                                     <label class="form-label">Guest Name</label>
                                     <div class="input-group mb-3">
                                         <select name="RESV_NAME" id="RESV_NAME"
-                                            class="selectpicker RESV_NAME activeName" data-style="btn btn-default" 
+                                            class="selectpicker RESV_NAME activeName" data-style="btn btn-default"
                                             data-live-search="true" required>
                                             <option value="">Select</option>
                                         </select>
@@ -859,7 +874,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6 col-lg-3">
                                     <label class="form-label">Title / First Name</label>
                                     <div class="input-group">
                                         <select name="CUST_TITLE" id="CUST_TITLE" class="form-select"
@@ -889,25 +904,26 @@
                                     </div>
 
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6 col-lg-3">
                                     <label class="form-label">Country</label>
                                     <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%"
-                                        class="selectpicker CUST_COUNTRY" data-style="btn btn-default" data-live-search="true">
+                                        class="selectpicker CUST_COUNTRY" data-style="btn btn-default"
+                                        data-live-search="true">
                                         <option value="">Select</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6 col-lg-3">
                                     <label class="form-label">VIP</label>
                                     <select name="CUST_VIP" id="CUST_VIP_ADD" class="select2 form-select CUST_VIP"
                                         data-allow-clear="true">
                                     </select>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Phone</label>
                                     <input type="text" name="CUST_PHONE" id="CUST_PHONE" class="form-control"
                                         placeholder="phone" />
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Member Type</label>
                                     <div class="input-group sel2Container mb-3">
                                         <select name="RESV_MEMBER_TY" id="RESV_MEMBER_TY" class="select2 form-select"
@@ -918,13 +934,13 @@
                                                 aria-hidden="true"></i></button>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Member No</label>
                                     <input type="text" name="RESV_MEMBER_NO" id="RESV_MEMBER_NO" class="form-control"
                                         placeholder="member no" readonly />
                                     <div class="invalidfx-feedback"></div>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Company</label>
                                     <div class="input-group sel2Container mb-3">
                                         <select name="RESV_COMPANY" id="RESV_COMPANY"
@@ -935,7 +951,7 @@
                                                 aria-hidden="true"></i></button>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Agent</label>
                                     <div class="input-group sel2Container mb-3">
                                         <select name="RESV_AGENT" id="RESV_AGENT" class="select2 form-select RESV_AGENT"
@@ -946,18 +962,18 @@
                                                 aria-hidden="true"></i></button>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Block</label>
                                     <select name="RESV_BLOCK" id="RESV_BLOCK" data-width="100%"
                                         class="select2 form-select RESV_BLOCK" data-allow-clear="true">
                                     </select>
                                 </div>
-                                <div class="col-md-3 mt-0">
+                                <div class="col-md-6 col-lg-3 mt-0">
                                     <label class="form-label">Guest Balance</label>
                                     <input type="text" name="RESV_GUST_BAL" value="0.00" readonly id="RESV_GUST_BAL"
                                         class="form-control" placeholder="Guest Balance" />
                                 </div>
-                                <div class="col-md-3"></div>
+                                <div class="col-md-12 col-lg-3"></div>
                             </div>
                             <div class="row">
                                 <ul class="nav nav-tabs">
@@ -972,7 +988,7 @@
                                 <div class="tab-content">
                                     <div class="tab-pane fade show active" id="reservationDetail">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12 col-lg-6">
                                                 <input type="hidden" name="RESV_FEATURE" id="RESV_FEATURE"
                                                     class="form-control" />
                                                 <input type="hidden" name="RESV_ID" id="RESV_ID" class="form-control" />
@@ -1011,7 +1027,7 @@
                                                 </div>
 
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Nights / No of Rooms</label>
                                                 <div class="input-group mb-3">
                                                     <input type="number" name="RESV_NIGHT" id="RESV_NIGHT"
@@ -1028,7 +1044,7 @@
                                                     No of room required can't empty.
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Adults / Children</label>
                                                 <div class="input-group mb-3 flxy_fxcolm">
                                                     <div class="flxy_join">
@@ -1045,7 +1061,7 @@
                                                 </div>
 
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Room Type</label>
                                                 <select name="RESV_RM_TYPE" id="RESV_RM_TYPE" data-width="100%"
                                                     class="select2 form-select RESV_RM_TYPE" data-allow-clear="true">
@@ -1054,7 +1070,7 @@
                                                 <div class="invalid-feedback"> Room Type is required & can't be empty.
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Room</label>
                                                 <select name="RESV_ROOM" id="RESV_ROOM" data-width="100%"
                                                     class="select2 form-select" data-allow-clear="true">
@@ -1063,7 +1079,7 @@
                                                 <input type="hidden" name="RESV_ROOM_ID" id="RESV_ROOM_ID" value=""
                                                     readonly />
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Rate Code</label>
                                                 <div class="input-group mb-3">
                                                     <input type="text" readonly name="RESV_RATE_CODE"
@@ -1075,13 +1091,13 @@
                                                 </div>
                                                 <div class="invalid-feedback"> Rate Code required can't empty.</div>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Rate</label>
                                                 <input type="number" step="0.01" name="RESV_RATE" id="RESV_RATE"
                                                     class="form-control" placeholder="rate" min="0" required />
                                                 <div class="invalid-feedback"> Rate required can't empty.</div>
                                             </div>
-                                            <div class="col-md-3 mt-4">
+                                            <div class="col-md-6 col-lg-3 mt-4">
                                                 <label class="form-label"> Fixed Rate</label>
                                                 <label class="switch">
                                                     <input type="checkbox" class="switch-input"
@@ -1098,7 +1114,7 @@
                                                     </span>
                                                 </label>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Package</label>
                                                 <div class="input-group mb-3">
                                                     <input type="text" readonly name="RESV_PACKAGE" id="RESV_PACKAGE"
@@ -1113,7 +1129,7 @@
                                                     <option value="">Select</option>
                                                 </select> -->
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">ETA - C/O Time</label>
                                                 <div class="flxi_flex">
                                                     <input type="time" name="RESV_ETA" id="RESV_ETA"
@@ -1123,42 +1139,42 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">RTC</label>
                                                 <select name="RESV_RTC" id="RESV_RTC" data-width="100%"
                                                     class="select2 RESV_RTC" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mt-2">
+                                            <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Reservation Type</label>
                                                 <select name="RESV_RESRV_TYPE" id="RESV_RESRV_TYPE"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mt-2">
+                                            <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Market</label>
                                                 <select name="RESV_MARKET" id="RESV_MARKET" class="select2 form-select"
                                                     data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mt-2">
+                                            <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Source</label>
                                                 <select name="RESV_SOURCE" id="RESV_SOURCE" class="select2 form-select"
                                                     data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mt-2">
+                                            <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Origin</label>
                                                 <select name="RESV_ORIGIN" id="RESV_ORIGIN" class="select2 form-select"
                                                     data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mt-2">
+                                            <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Payment</label>
                                                 <select name="RESV_PAYMENT_TYPE" id="RESV_PAYMENT_TYPE"
                                                     class="select2 form-select" data-allow-clear="true">
@@ -1166,14 +1182,15 @@
                                                 </select>
                                                 <div class="invalid-feedback"> Payment required can't empty.</div>
                                             </div>
-                                            <div class="col-md-3 mt-2 selPickerDiv">
+                                            <div class="col-md-6 col-lg-3 mt-2 selPickerDiv">
                                                 <label class="form-label" for="RESV_SPECIALS">Specials</label>
                                                 <select name="RESV_SPECIALS[]" id="RESV_SPECIALS" class="selectpicker"
-                                                    data-style="btn btn-default" multiple data-icon-base="bx" data-tick-icon="bx-check text-primary"
-                                                    data-live-search="true" data-allow-clear="true">
+                                                    data-style="btn btn-default" multiple data-icon-base="bx"
+                                                    data-tick-icon="bx-check text-primary" data-live-search="true"
+                                                    data-allow-clear="true">
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mt-2">
+                                            <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Comments</label>
                                                 <textarea class="form-control" name="RESV_COMMENTS" id="RESV_COMMENTS"
                                                     rows="1"></textarea>
@@ -1181,7 +1198,7 @@
 
                                             <!-- Item Inventory  -->
 
-                                            <div class="col-md-3 mt-2">
+                                            <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Item Inventory</label>
                                                 <div class="input-group mb-3">
                                                     <input type="text" readonly name="RESV_INV_ITEM" id="RESV_INV_ITEM"
@@ -1194,7 +1211,7 @@
                                             </div>
 
 
-                                            <!-- <div class="col-md-3 mt-2">
+                                            <!-- <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Item Inventory</label>
                                                 <div class="input-group mb-3">
                                                    
@@ -1211,7 +1228,7 @@
                                             <!-- End Item Inventory  -->
 
 
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Booker Last / First</label>
                                                 <div class="flxi_flex">
                                                     <input type="text" name="RESV_BOKR_LAST" id="RESV_BOKR_LAST"
@@ -1220,7 +1237,7 @@
                                                         class="form-control" placeholder="booker first" />
                                                 </div>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Booker Email/Phone</label>
                                                 <div class="flxi_flex">
                                                     <input type="text" name="RESV_BOKR_EMAIL" id="RESV_BOKR_EMAIL"
@@ -1267,26 +1284,26 @@
                                     </div>
                                     <div class="tab-pane fade" id="moreDetails">
                                         <div class="row">
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">C/O Time</label>
                                                 <input type="time" name="RESV_C_O_TIME" id="RESV_C_O_TIME"
                                                     class="form-control" placeholder="c/o time" />
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Tax Type</label>
                                                 <select name="RESV_TAX_TYPE" id="RESV_TAX_TYPE"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Exempt No</label>
                                                 <input type="text" name="RESV_EXEMPT_NO" id="RESV_EXEMPT_NO"
                                                     class="form-control" placeholder="exempt no" />
                                             </div>
-                                            <div class="col-md-3"></div>
+                                            <div class="col-md-6 col-lg-3"></div>
 
-                                            <div class="col-md-3 mt-4">
+                                            <div class="col-md-6 col-lg-3 mt-4">
                                                 <label class="form-label">Pickup Requested ?</label>
                                                 <label class="switch">
                                                     <input type="checkbox" class="switch-input"
@@ -1303,29 +1320,29 @@
                                                     </span>
                                                 </label>
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Transport Type</label>
                                                 <select name="RESV_TRANSPORT_TYP" id="RESV_TRANSPORT_TYP"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Station Code</label>
                                                 <input type="text" name="RESV_STATION_CD" id="RESV_STATION_CD"
                                                     class="form-control" placeholder="station code" />
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Carrier Code</label>
                                                 <input type="text" name="RESV_CARRIER_CD" id="RESV_CARRIER_CD"
                                                     class="form-control" placeholder="carrier code" />
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Transport No</label>
                                                 <input type="text" name="RESV_TRANSPORT_NO" id="RESV_TRANSPORT_NO"
                                                     class="form-control" placeholder="tranport no" />
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Arrival Date</label>
                                                 <div class="input-group ">
                                                     <input type="text" id="RESV_ARRIVAL_DT_PK" name="RESV_ARRIVAL_DT_PK"
@@ -1337,13 +1354,13 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Pick up Time</label>
                                                 <input type="time" name="RESV_PICKUP_TIME" id="RESV_PICKUP_TIME"
                                                     class="form-control" placeholder="pickup time" />
                                             </div>
-                                            <div class="col-md-3"></div>
-                                            <div class="col-md-3 mt-4">
+                                            <div class="col-md-6 col-lg-3"></div>
+                                            <div class="col-md-6 col-lg-3 mt-4">
                                                 <label class="form-label">Drop off Requested ?</label>
                                                 <label class="switch">
                                                     <input type="checkbox" class="switch-input"
@@ -1360,29 +1377,29 @@
                                                     </span>
                                                 </label>
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Transport Type</label>
                                                 <select name="RESV_TRANSPORT_TYP_DO" id="RESV_TRANSPORT_TYP_DO"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Station Code</label>
                                                 <input type="text" name="RESV_STATION_CD_DO" id="RESV_STATION_CD_DO"
                                                     class="form-control" placeholder="station code" />
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Carrier Code</label>
                                                 <input type="text" name="RESV_CARRIER_CD_DO" id="RESV_CARRIER_CD_DO"
                                                     class="form-control" placeholder="carrier code" />
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Transport No</label>
                                                 <input type="text" name="RESV_TRANSPORT_NO_DO" id="RESV_TRANSPORT_NO_DO"
                                                     class="form-control" placeholder="transport no" />
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Arrival Date</label>
                                                 <div class="input-group">
                                                     <input type="text" id="RESV_ARRIVAL_DT_DO" name="RESV_ARRIVAL_DT_DO"
@@ -1394,46 +1411,46 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 mb-3">
+                                            <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Drop off Time</label>
                                                 <input type="time" name="RESV_DROPOFF_TIME" id="RESV_DROPOFF_TIME"
                                                     class="form-control" placeholder="drop off time" />
                                             </div>
-                                            <div class="col-md-3"></div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3"></div>
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Guest Type</label>
                                                 <select name="RESV_GUST_TY" id="RESV_GUST_TY"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Purpose of Stay</label>
                                                 <select name="RESV_EXT_PURP_STAY" id="RESV_EXT_PURP_STAY"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Entry Point</label>
                                                 <select name="RESV_ENTRY_PONT" id="RESV_ENTRY_PONT"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Reserv. Profile</label>
                                                 <select name="RESV_PROFILE" id="RESV_PROFILE"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-3 mt-3">
+                                            <div class="col-md-6 col-lg-3 mt-3">
                                                 <label class="form-label">Name on Card</label>
                                                 <input type="text" name="RESV_NAME_ON_CARD" id="RESV_NAME_ON_CARD"
                                                     class="form-control" placeholder="name on code" />
                                             </div>
-                                            <div class="col-md-3 mt-5">
+                                            <div class="col-md-6 col-lg-3 mt-5">
                                                 <label class="form-label">Print Rate</label>
                                                 <label class="switch">
                                                     <input type="checkbox" class="switch-input"
@@ -1482,44 +1499,44 @@
                 </div>
                 <div class="modal-body">
                     <div class="row profileSearch">
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-6 col-lg-3 mb-2">
                             <label class="form-label">Name</label>
                             <input type="text" id="CUST_LAST_NAME" class="form-control" placeholder="Name" />
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-6 col-lg-3 mb-2">
                             <label class="form-label">First Name</label>
                             <input type="text" id="CUST_FIRST_NAME" class="form-control" placeholder="First name" />
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-6 col-lg-3 mb-2">
                             <label class="form-label">City</label>
                             <input type="text" id="CUST_CITY" class="form-control" placeholder="City" />
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-6 col-lg-3 mb-2">
                             <label class="form-label">Email ID</label>
                             <input type="text" name="CUST_EMAIL" id="CUST_EMAIL" class="form-control"
                                 placeholder="Email" />
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-6 col-lg-3 mb-2">
                             <label class="form-label">Client ID</label>
                             <input type="text" id="CUST_CLIENT_ID" class="form-control" placeholder="Client ID" />
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-6 col-lg-3 mb-2">
                             <label class="form-label">IATA No</label>
                             <input type="text" id="CUST_IATA_NO" class="form-control" placeholder="IATA No" />
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-6 col-lg-3 mb-2">
                             <label class="form-label">Corp No</label>
                             <input type="text" id="CUST_CORP_NO" class="form-control" placeholder="Corp No" />
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-6 col-lg-3 mb-2">
                             <label class="form-label">A/R No</label>
                             <input type="text" id="CUST_AR_NO" class="form-control" placeholder="A/R No" />
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-6 col-lg-3 mb-2">
                             <label class="form-label">Mobile</label>
                             <input type="text" id="CUST_MOBILE" class="form-control" placeholder="Mobile" />
                         </div>
-                        <div class="col-md-3 mb-2">
+                        <div class="col-md-6 col-lg-3 mb-2">
                             <label class="form-label">Communication</label>
                             <input type="text" id="CUST_COMMUNICATION_DESC" class="form-control"
                                 placeholder="Communication" />
@@ -1569,7 +1586,7 @@
                     </div>
                     <form id="customerForm" class="profileCreate">
                         <div class="row g-3">
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <input type="hidden" name="CUST_ID" id="CUST_ID" class="form-control" />
                                 <label class="form-label">First Name</label>
                                 <input type="text" name="CUST_FIRST_NAME" id="CUST_FIRST_NAME" class="form-control"
@@ -1578,17 +1595,17 @@
                                     First name is required can't empty.
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Middle Name</label>
                                 <input type="text" name="CUST_MIDDLE_NAME" id="CUST_MIDDLE_NAME" class="form-control"
                                     placeholder="middle name" />
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Last Name</label>
                                 <input type="text" name="CUST_LAST_NAME" id="CUST_LAST_NAME" class="form-control"
                                     placeholder="last name" />
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Language/Title</label>
                                 <div class="form-group flxi_join">
                                     <select name="CUST_LANG" id="CUST_LANG" class="form-select" data-allow-clear="true">
@@ -1610,7 +1627,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">DOB</label>
                                 <div class="input-group mb-3">
                                     <input type="text" id="CUST_DOB" name="CUST_DOB" class="form-control CUST_DOB"
@@ -1623,31 +1640,31 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Document Number</label>
                                 <input type="text" name="CUST_DOC_NUMBER" class="form-control"
                                     placeholder="Document number" />
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Doc Issue Date</label>
                                 <input type="text" name="CUST_DOC_ISSUE" class="form-control CUST_DOC_ISSUE"
                                     placeholder="YYYY-MM-DD" />
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Doc Expiry Date</label>
                                 <input type="text" name="CUST_DOC_EXPIRY" class="form-control CUST_DOC_EXPIRY"
                                     placeholder="YYYY-MM-DD" />
                             </div>
 
-                            <!-- <div class="col-md-3">
+                            <!-- <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Passport</label>
                                 <input type="text" name="CUST_PASSPORT" id="CUST_PASSPORT" class="form-control"
                                     placeholder="passport" />
                             </div> -->
 
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Address</label>
                                 <input type="text" name="CUST_ADDRESS_1" id="CUST_ADDRESS_1" class="form-control"
                                     placeholder="addresss 1" required />
@@ -1656,21 +1673,21 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="col-md-3 flxy_mgtop"> -->
-                            <div class="col-md-3">
+                            <!-- <div class="col-md-6 col-lg-3 flxy_mgtop"> -->
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label"></label>
                                 <input type="text" name="CUST_ADDRESS_2" id="CUST_ADDRESS_2" class="form-control"
                                     placeholder="address 2" />
                             </div>
 
-                            <!-- <div class="col-md-3" style="margin-top: 23px !important;"> -->
-                            <div class="col-md-3">
+                            <!-- <div class="col-md-6 col-lg-3" style="margin-top: 23px !important;"> -->
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label"></label>
                                 <input type="text" name="CUST_ADDRESS_3" id="CUST_ADDRESS_3" class="form-control"
                                     placeholder="address 3" />
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label for="html5-text-input" class="form-label" style="display: block"><b>GENDER
                                         *</b></label>
                                 <div class="form-check mb-2" style="float:left;margin-right:10px">
@@ -1686,31 +1703,33 @@
                             </div>
 
 
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label col-md-12">Country</label>
                                 <select name="CUST_COUNTRY" id="CUST_COUNTRY" data-width="100%"
-                                    class="selectpicker CUST_COUNTRY" data-style="btn btn-default" data-live-search="true" required>
+                                    class="selectpicker CUST_COUNTRY" data-style="btn btn-default"
+                                    data-live-search="true" required>
                                     <option value="">Select</option>
                                 </select>
                                 <div class="invalid-feedback">
                                     country is required can't empty.
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label col-md-12">State</label>
                                 <select name="CUST_STATE" id="CUST_STATE" data-width="100%"
-                                    class="selectpicker CUST_STATE" data-style="btn btn-default" data-live-search="true">
+                                    class="selectpicker CUST_STATE" data-style="btn btn-default"
+                                    data-live-search="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label col-md-12">City</label>
                                 <select name="CUST_CITY" id="CUST_CITY" data-width="100%" class="selectpicker CUST_CITY"
                                     data-style="btn btn-default" data-live-search="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Email</label>
                                 <input type="text" name="CUST_EMAIL" id="CUST_EMAIL" class="form-control"
                                     placeholder="email" required />
@@ -1718,7 +1737,7 @@
                                     Email is required can't empty.
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Mobile</label>
                                 <input type="text" name="CUST_MOBILE" id="CUST_MOBILE" class="form-control"
                                     placeholder="mobile" required />
@@ -1726,42 +1745,42 @@
                                     Mobile No is required can't empty.
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Phone</label>
                                 <input type="text" name="CUST_PHONE" id="CUST_PHONE" class="form-control"
                                     placeholder="phone" />
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Client ID</label>
                                 <input type="text" name="CUST_CLIENT_ID" id="CUST_CLIENT_ID" class="form-control"
                                     placeholder="client id" />
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Postal Code</label>
                                 <input type="text" name="CUST_POSTAL_CODE" id="CUST_POSTAL_CODE" class="form-control"
                                     placeholder="postal" />
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">VIP</label>
                                 <select name="CUST_VIP" id="CUST_VIP" class="select2 form-select CUST_VIP"
                                     data-allow-clear="true">
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Nationality</label>
                                 <select name="CUST_NATIONALITY" id="CUST_NATIONALITY" class="select2 form-select"
                                     data-allow-clear="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Business Segment</label>
                                 <select name="CUST_BUS_SEGMENT" id="CUST_BUS_SEGMENT" class="select2 form-select"
                                     data-allow-clear="true">
                                     <option value="">Select</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Communication</label>
                                 <select name="CUST_COMMUNICATION" id="CUST_COMMUNICATION" class="select2 form-select"
                                     data-allow-clear="true">
@@ -1772,12 +1791,12 @@
                                     <option value="OTHER">Other</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <label class="form-label">Communication Desc.</label>
                                 <input type="text" name="CUST_COMMUNICATION_DESC" id="CUST_COMMUNICATION_DESC"
                                     class="form-control" placeholder="communication desc" />
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6 col-lg-3">
                                 <div class="form-check mt-3">
                                     <input class="form-check-input flxCheckBox" type="checkbox" id="CUST_ACTIVE_CHK">
                                     <input type="hidden" name="CUST_ACTIVE" id="CUST_ACTIVE" value="N"
@@ -1831,7 +1850,7 @@
                 <div class="modal-footer flxy_paddng">
                     <div class="flxy_opertion flxy_opt1 border rounded">
                         <div class="flxy_radio mb-2">
-                            <div class="col-md-3 flxy_equal">
+                            <div class="col-md-12 col-lg-3 flxy_equal">
                                 <label class="switch">
                                     <input type="checkbox" class="switch-input rateRadio" mode="AVG" />
                                     <span class="switch-toggle-slider">
@@ -1845,7 +1864,7 @@
                                     <span class="switch-label">Average Rate</span>
                                 </label>
                             </div>
-                            <div class="col-md-3 flxy_equal1">
+                            <div class="col-md-12 col-lg-3 flxy_equal1">
                                 <label class="switch">
                                     <input type="checkbox" class="switch-input rateRadio" mode="TOT" />
                                     <span class="switch-toggle-slider">
@@ -2271,28 +2290,28 @@
                             <div class="row g-3">
                                 <div class="border rounded p-4 mb-3">
                                     <div class="row">
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-6 col-lg-3 mb-3">
                                             <label for="FIXD_RSV_NAME" class="col-form-label col-md-4"><b>
                                                     Name</b></label>
                                             <input type="text" name="FIXD_RSV_NAME" id="FIXD_RSV_NAME" disabled
                                                 class="form-control" />
 
                                         </div>
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-6 col-lg-3 mb-3">
                                             <label for="FIXD_ARRIVAL" class="col-form-label col-md-4"><b>
                                                     Arrival</b></label>
                                             <input type="text" name="FIXD_ARRIVAL" id="FIXD_ARRIVAL" disabled
                                                 class="form-control" />
 
                                         </div>
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-6 col-lg-3 mb-3">
                                             <label for="FIXD_NIGHTS" class="col-form-label col-md-4"><b>
                                                     Nights</b></label>
                                             <input type="text" name="FIXD_NIGHTS" id="FIXD_NIGHTS" class="form-control"
                                                 disabled />
 
                                         </div>
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-6 col-lg-3 mb-3">
                                             <label for="FIXD_DEPARTURE" class="col-form-label col-md-4"><b>
                                                     Departure</b></label>
                                             <input type="text" name="FIXD_DEPARTURE" id="FIXD_DEPARTURE" disabled
@@ -2405,7 +2424,7 @@
                                     </div>
 
                                     <div class="row g-3 ">
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-6 col-lg-3 mb-3">
                                             <div class="col-md-8 float-right">
                                                 <button type="button" class="btn btn-success save-fixedcharge-detail">
                                                     <i class="fa-solid fa-floppy-disk"></i>&nbsp; Save
@@ -2662,7 +2681,7 @@
                                     </div>
 
                                     <div class="row g-3 ">
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-6 col-lg-3 mb-3">
                                             <div class="col-md-8 float-right">
                                                 <button type="button" class="btn btn-success save-package-detail">
                                                     <i class="fa-solid fa-floppy-disk"></i>&nbsp; Save
@@ -2824,14 +2843,14 @@
                             <div class="row g-3">
                                 <div class="border rounded p-4 mb-3">
                                     <div class="row">
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-6 col-lg-3 mb-3">
                                             <label for="TRACE_RSV_NAME" class="col-form-label col-md-4"><b>
                                                     Name</b></label>
                                             <input type="text" name="TRACE_RSV_NAME" id="TRACE_RSV_NAME" disabled
                                                 class="form-control" />
 
                                         </div>
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-6 col-lg-3 mb-3">
                                             <label for="TRACE_ARRIVAL" class="col-form-label col-md-4"><b>
                                                     Arrival</b></label>
                                             <input type="text" name="TRACE_ARRIVAL" id="TRACE_ARRIVAL" disabled
@@ -2840,7 +2859,7 @@
                                                 class="form-control" />
 
                                         </div>
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-6 col-lg-3 mb-3">
                                             <label for="TRACE_DEPARTURE" class="col-form-label col-md-4"><b>
                                                     Departure</b></label>
                                             <input type="text" name="TRACE_DEPARTURE" id="TRACE_DEPARTURE" disabled
@@ -2849,7 +2868,7 @@
                                                 class="form-control" />
 
                                         </div>
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-6 col-lg-3 mb-3">
                                             <label for="RESERVATION_STATUS" class="col-form-label col-md-4"><b>
                                                     Status</b></label>
                                             <input type="text" name="RESERVATION_STATUS" id="RESERVATION_STATUS"
@@ -2897,7 +2916,7 @@
                                     </div>
 
                                     <div class="row g-3 ">
-                                        <div class="col-md-3 mb-3">
+                                        <div class="col-md-12 col-lg-3 mb-3">
                                             <div class="col-md-8 float-right">
                                                 <button type="button" class="btn btn-success save-trace-detail">
                                                     <i class="fa-solid fa-floppy-disk"></i>&nbsp; Save
@@ -3245,17 +3264,17 @@ $(document).ready(function() {
 
     <?php
   
-    if(!empty($RESV_ID)) {  ?>        
-        var clickResv = $(".editReserWindow");
+    if(!empty($RESV_ID)) {  ?>
+    var clickResv = $(".editReserWindow");
 
-        clickResv.attr('data_sysid', '<?php echo $RESV_ID; ?>');
-        clickResv.attr('data-reservation_customer_id', '<?php echo $CUSTOMER_ID; ?>');
-        clickResv.click();
+    clickResv.attr('data_sysid', '<?php echo $RESV_ID; ?>');
+    clickResv.attr('data-reservation_customer_id', '<?php echo $CUSTOMER_ID; ?>');
+    clickResv.click();
     <?php
     }
 
     if(!empty($ROOM_ID) || $create_walkin) { ?>
-        addResvation();
+    addResvation();
     <?php
     }
     ?>
@@ -3549,8 +3568,8 @@ $(document).on('change', '.RESV_ARRIVAL_DT,.RESV_DEPARTURE', function() {
 
 $(document).on('blur', '.RESV_NIGHT', function() {
     var new_days = $(this).val();
-    var startField = $(this).closest('.col-md-3').prev('.col-md-6').find('.RESV_ARRIVAL_DT');
-    var endField = $(this).closest('.col-md-3').prev('.col-md-6').find('.RESV_DEPARTURE');
+    var startField = $(this).closest('.col-lg-3').prev('.col-lg-6').find('.RESV_ARRIVAL_DT');
+    var endField = $(this).closest('.col-lg-3').prev('.col-lg-6').find('.RESV_DEPARTURE');
     var new_date = moment(startField.val(), "DD-MMM-YYYY").add(new_days, 'days').format("DD-MMM-YYYY");
 
     //alert(startField.val()); alert(new_date);
@@ -3583,7 +3602,7 @@ function setNights(element, val) {
 
         var endField = element.hasClass('RESV_DEPARTURE') ? element : element.closest('.input-group').find(
             '.RESV_DEPARTURE');
-        endField.closest('.col-md-6').next('.col-md-3').find('.RESV_NIGHT').val(no_of_nights);
+        endField.closest('.col-lg-6').next('.col-lg-3').find('.RESV_NIGHT').val(no_of_nights);
 
         //$('.RESV_NIGHT').val(no_of_nights);
     }
@@ -3896,7 +3915,7 @@ $(document).on('click', '.delete-record', function() {
                     },
                     dataType: 'json',
                     success: function(respn) {
-                        
+
                         $('#dataTable_view').dataTable().fnDraw();
                     }
                 });
@@ -3960,8 +3979,9 @@ function addResvation() {
     $('#reservationForm').removeClass('was-validated');
     $('#ITEM_RESV_ID', '#RSV_ID').val('');
 
-    $('#reservationWlable').html('<?php echo $create_walkin ? 'Create a Walk In Reservation' : 'Add New Reservation';?>');
-    
+    $('#reservationWlable').html(
+        '<?php echo $create_walkin ? 'Create a Walk In Reservation' : 'Add New Reservation';?>');
+
     runSupportingResevationLov();
     $('.window-1,#nextbtn').show();
     //$('.flxyFooter').addClass('flxy_space');
@@ -4091,7 +4111,7 @@ function reservationValidate(event, id, mode) {
     form.classList.add('was-validated');
 
     if (condition || additionValid || checkSelectInvalid($(
-        '#RESV_RM_TYPE'))) { // -- customize validate user validUsername
+            '#RESV_RM_TYPE'))) { // -- customize validate user validUsername
         return false;
     } else {
         return true;

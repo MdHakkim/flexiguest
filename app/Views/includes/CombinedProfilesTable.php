@@ -28,10 +28,11 @@
 <form class="dt_adv_search mb-4" method="POST">
     <div class="border rounded p-3">
         <div class="row g-3">
-            <div class="col-4 col-sm-6 col-lg-4">
+            <div class="col-12 col-sm-6 col-lg-4">
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Name:</b></label>
+                    <label
+                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Name:</b></label>
                     <div class="col-md-8">
                         <input type="text" id="S_PROFILE_NAME" name="S_PROFILE_NAME"
                             class="form-control dt-input dt-full-name" data-column="0" placeholder="" />
@@ -39,7 +40,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>First
+                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>First
                             Name:</b></label>
                     <div class="col-md-8">
                         <input type="text" id="S_PROFILE_FIRST_NAME" name="S_PROFILE_FIRST_NAME"
@@ -49,7 +50,8 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Communication:</b></label>
+                    <label
+                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Communication:</b></label>
                     <div class="col-md-8">
                         <input type="text" id="S_PROFILE_COMMUNICATION" name="S_PROFILE_COMMUNICATION"
                             class="form-control dt-input dt-communication" placeholder="" />
@@ -57,7 +59,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>View
+                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>View
                             By:</b></label>
                     <div class="col-md-8">
                         <select id="S_PROFILE_TYPE" name="S_PROFILE_TYPE" class="form-select dt-select dt-view-by"
@@ -78,10 +80,11 @@
                 </div>
             </div>
 
-            <div class="col-4 col-sm-6 col-lg-4">
+            <div class="col-12 col-sm-6 col-lg-4">
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>City /
+                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end text-end justify-content-sm-start"><b>City
+                            /
                             Postal Code:</b></label>
                     <div class="col-md-5" style="padding-right:  0;">
                         <input type="text" id="S_PROFILE_CITY" name="S_PROFILE_CITY"
@@ -94,7 +97,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Membership
+                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end text-end justify-content-sm-start"><b>Membership
                             Type:</b></label>
                     <div class="col-md-8">
                         <select id="S_MEMBERSHIP_TYPE" name="S_MEMBERSHIP_TYPE"
@@ -115,7 +118,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Membership
+                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Membership
                             No:</b></label>
                     <div class="col-md-8">
                         <input type="text" id="S_MEMBERSHIP_NUMBER" name="S_MEMBERSHIP_NUMBER"
@@ -124,7 +127,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Passport
+                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Passport
                             No:</b></label>
                     <div class="col-md-8">
                         <input type="text" id="S_PROFILE_PASSPORT" name="S_PROFILE_PASSPORT"
@@ -133,10 +136,10 @@
                 </div>
             </div>
 
-            <div class="col-4 col-sm-6 col-lg-4">
+            <div class="col-12 col-sm-6 col-lg-4">
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Client
+                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Client
                             ID:</b></label>
                     <div class="col-md-8">
                         <input type="text" id="S_PROFILE_NUMBER" name="S_PROFILE_NUMBER"
@@ -145,7 +148,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>IATA
+                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>IATA
                             No:</b></label>
                     <div class="col-md-8">
                         <input type="text" id="S_AGN_IATA" name="S_AGN_IATA" class="form-control dt-input dt-iata-no"
@@ -154,7 +157,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>Corp
+                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Corp
                             No:</b></label>
                     <div class="col-md-8">
                         <input type="text" id="S_COM_CORP_ID" name="S_COM_CORP_ID"
@@ -163,7 +166,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4" style="text-align: right;"><b>A/R
+                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>A/R
                             No:</b></label>
                     <div class="col-md-8">
                         <input type="text" class="form-control dt-input dt-ar-no" placeholder="" disabled />
@@ -227,7 +230,8 @@ $(document).ready(function() {
 
         $(document).on('click', '#combined_profiles > tbody > tr', function() {
 
-            var profile_chk_str = $(this).attr('data-profile-type') && $(this).attr('data-profile-id') ? 'profile_chk_' + $(this).attr('data-profile-type') + '_' + $(this)
+            var profile_chk_str = $(this).attr('data-profile-type') && $(this).attr('data-profile-id') ?
+                'profile_chk_' + $(this).attr('data-profile-type') + '_' + $(this)
                 .attr('data-profile-id') : '';
 
             //If value in array

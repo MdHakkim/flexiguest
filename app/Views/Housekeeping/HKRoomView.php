@@ -44,8 +44,393 @@
             <!-- <h5 class="card-header">Responsive Datatable</h5> -->
             <div class="container-fluid p-3">
 
-                <button type="button" class="btn btn-primary mb-2 use_selected_rooms" data-change-selected="0"><i
-                        class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick Change</button>
+                <form class="dt_adv_search mb-2" method="POST">
+                    <div class="row g-3 mb-2">
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <div class="row border rounded p-3 pb-4 m-1">
+                                <h6 class="mb-4">Room Status</h6>
+                                <div class="col-md pe-1">
+                                    <div class="sk-wave sk-primary">
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                    </div>
+                                    <div class="d-none">
+                                        <div class="switches-stacked">
+
+                                            <?php foreach ($room_status_list as $room_status) { ?>
+
+                                            <?php if ($room_status['RM_STATUS_ID'] == '4') { ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="sk-wave sk-primary">
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                    </div>
+                                    <div class="d-none">
+                                        <div class="switches-stacked">
+
+                                            <?php } ?>
+
+                                            <label class="switch switch-<?= $room_status['RM_STATUS_COLOR_CLASS'] ?>">
+                                                <input type="checkbox" class="switch-input S_RM_STATUS_ID"
+                                                    name="S_RM_STATUS_ID[]"
+                                                    id="S_RM_STATUS_ID<?= $room_status['RM_STATUS_ID'] ?>"
+                                                    value="<?= $room_status['RM_STATUS_ID'] ?>">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span
+                                                    class="switch-label fw-bold form-label"><?= $room_status['RM_STATUS_CODE'] ?></span>
+                                            </label>
+
+                                            <?php } ?>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-4 col-lg-2">
+                            <div class="row border rounded p-3 pb-4 ps-2 m-1">
+                                <h6 class="mb-4">FO Status</h6>
+                                <div class="col-md">
+                                    <div class="sk-wave sk-primary">
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                    </div>
+                                    <div class="d-none">
+                                        <div class="switches-stacked">
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input S_FO_STATUS"
+                                                    name="S_FO_STATUS[]" value="VAC">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span class="switch-label fw-bold form-label">Vacant</span>
+                                            </label>
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input S_FO_STATUS"
+                                                    name="S_FO_STATUS[]" value="OCC">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span class="switch-label fw-bold form-label">Occupied</span>
+                                            </label>
+                                            <label class="switch"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <div class="row border rounded p-3 pb-4 m-1">
+                                <h6 class="mb-4">Reservation Status</h6>
+                                <div class="col-md">
+                                    <div class="sk-wave sk-primary">
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                    </div>
+                                    <div class="d-none">
+                                        <div class="switches-stacked">
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input S_RESV_STATUS"
+                                                    name="S_RESV_STATUS[]" value="Arrivals">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span class="switch-label fw-bold form-label">Arrivals</span>
+                                            </label>
+
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input S_RESV_STATUS"
+                                                    name="S_RESV_STATUS[]" value="Arrived">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span class="switch-label fw-bold form-label">Arrived</span>
+                                            </label>
+
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input S_RESV_STATUS"
+                                                    name="S_RESV_STATUS[]" value="Stayover">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span class="switch-label fw-bold form-label">Stayover</span>
+                                            </label>
+
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input S_RESV_STATUS"
+                                                    name="S_RESV_STATUS[]" value="Not Reserved">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span class="switch-label fw-bold form-label">Not Reserved</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="sk-wave sk-primary">
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                    </div>
+                                    <div class="d-none">
+                                        <div class="switches-stacked">
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input S_RESV_STATUS"
+                                                    name="S_RESV_STATUS[]" value="Due Out">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span class="switch-label fw-bold form-label">Due Out</span>
+                                            </label>
+
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input S_RESV_STATUS"
+                                                    name="S_RESV_STATUS[]" value="Departed">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span class="switch-label fw-bold form-label">Departed</span>
+                                            </label>
+
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input S_RESV_STATUS"
+                                                    name="S_RESV_STATUS[]" value="Day Use">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span class="switch-label fw-bold form-label">Day Use</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-4 col-lg-2">
+                            <div class="row border rounded p-3 pb-4 ps-2 m-1">
+                                <h6 class="mb-4">Service Status</h6>
+                                <div class="col-md">
+                                    <div class="sk-wave sk-primary">
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                        <div class="sk-wave-rect"></div>
+                                    </div>
+                                    <div class="d-none">
+                                        <div class="switches-stacked">
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input S_SRV_STATUS"
+                                                    name="S_SRV_STATUS[]" value="1">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span class="switch-label fw-bold form-label">Do Not Disturb</span>
+                                            </label>
+                                            <label class="switch">
+                                                <input type="checkbox" class="switch-input S_SRV_STATUS"
+                                                    name="S_SRV_STATUS[]" value="2">
+                                                <span class="switch-toggle-slider">
+                                                    <span class="switch-on"></span>
+                                                    <span class="switch-off"></span>
+                                                </span>
+                                                <span class="switch-label fw-bold form-label">Make Up Room</span>
+                                            </label>
+                                            <label class="switch"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Advanced Search Fields -->
+
+                    <div class="row g-3">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <div class="row border rounded p-3 pb-1 m-1">
+
+                                <div class="col-12 col-sm-6 col-lg-4">
+                                    <div class="row mb-3">
+                                        <label
+                                            class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>From
+                                                Room:</b></label>
+                                        <div class="col-md-8">
+                                            <div class="sk-wave sk-primary">
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                            </div>
+                                            <div class="d-none">
+                                                <input type="text" id="S_FROM_RM" name="S_FROM_RM"
+                                                    class="form-control dt-input" data-column="19" placeholder="" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-8">
+
+                                    <div class="row mb-3">
+                                        <label
+                                            class="col-form-label col-md-3 d-flex justify-content-lg-end justify-content-sm-start"><b>Room
+                                                Types:</b></label>
+                                        <div class="col-md-9 roomTypeSelDiv">
+                                            <div class="sk-wave sk-primary">
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                            </div>
+                                            <div class="d-none">
+                                                <select name="S_RM_TYPES[]" id="S_RM_TYPES" data-width="100%" multiple
+                                                    class="select2 form-select" data-placeholder="All Room Types"
+                                                    data-allow-clear="true">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-4">
+
+                                    <div class="row mb-3">
+                                        <label
+                                            class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Floor:</b></label>
+                                        <div class="col-md-8">
+                                            <div class="sk-wave sk-primary">
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                            </div>
+                                            <div class="d-none">
+                                                <select id="RM_FLOOR_PREFERN" name="RM_FLOOR_PREFERN"
+                                                    class="select2 form-select dt-input" data-placeholder="All Floors"
+                                                    data-allow-clear="true">
+                                                    <option value=""></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-8">
+
+                                    <div class="row mb-3">
+                                        <label
+                                            class="col-form-label col-md-3 d-flex justify-content-lg-end justify-content-sm-start"><b>Room
+                                                Features:</b></label>
+                                        <div class="col-md-9 roomTypeSelDiv">
+                                            <div class="sk-wave sk-primary">
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                            </div>
+                                            <div class="d-none">
+                                                <select name="S_RM_FEATURES[]" id="S_RM_FEATURES" data-width="100%"
+                                                    multiple class="select2 form-select"
+                                                    data-placeholder="Any Room Feature" data-allow-clear="true">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-4">
+
+                                    <div class="row mb-3">
+                                        <label
+                                            class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Room
+                                                Class:</b></label>
+                                        <div class="col-md-8">
+                                            <div class="sk-wave sk-primary">
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                                <div class="sk-wave-rect"></div>
+                                            </div>
+                                            <div class="d-none">
+                                                <select id="S_RM_CLASS" name="S_RM_CLASS"
+                                                    class="select2 form-select dt-input"
+                                                    data-placeholder="All Room Classes" data-allow-clear="true">
+                                                    <option value=""></option>
+                                                    <?php foreach ($room_class_list as $row) {
+                                                        echo '<option value="' . $row['RM_CL_ID'] . '" data-rmclass-id="' . $row['RM_CL_CODE'] . '">' . $row['RM_CL_CODE'] . ' | ' . $row['RM_CL_DESC'] . '</option>';
+                                                    } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-4 text-end">
+                                    <button type="button" class="btn btn-success use_selected_rooms"
+                                        data-change-selected="0"><i
+                                            class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick
+                                        Change</button>&nbsp;
+                                </div>
+
+                                <div class="col-12 col-sm-6 col-lg-4 text-end mb-3">
+
+                                    <button type="button" class="btn btn-primary submitAdvSearch">
+                                        <i class='bx bx-search'></i>&nbsp;
+                                        Search
+                                    </button>&nbsp;
+                                    <button type="button" class="btn btn-secondary clearAdvSearch">Clear</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
 
                 <div class="room_list_div table-responsive text-nowrap">
                     <table id="room_list" class="table table-bordered table-hover table-striped">
@@ -56,13 +441,15 @@
                                 <th class="all">Room No</th>
                                 <th class="all">Room Type</th>
                                 <th class="all">Room Status</th>
+                                <th>Reservation ID</th>
                                 <th>Description</th>
                                 <th>Max Occupancy</th>
                                 <th>Smoking Preference</th>
                                 <th>Square Units</th>
                                 <th>Phone Number</th>
-                                <th>FO Status</th>
-                                <th>Reservation Status</th>
+                                <th class="all">FO Status</th>
+                                <th class="all">Reservation Status</th>
+                                <th class="all">Service Status</th>
                                 <th class="all">Floor</th>
                                 <th>Room Class</th>
                                 <th class="all">Features</th>
@@ -94,7 +481,7 @@
                             <label class="form-label fw-bold col-md-3 pt-2">Room Types</label>
                             <div class="col-md-9 ps-3 pe-3 roomTypeSelDiv">
                                 <select name="RM_TYPES[]" id="RM_TYPES" data-width="100%" multiple
-                                    class="select2 form-select" data-placeholder="All Room Types"
+                                    class="select2 form-select" data-placeholder="Select Room Type First"
                                     data-allow-clear="true">
                                 </select>
                             </div>
@@ -171,10 +558,43 @@ $(document).ready(function() {
 
     $('#room_list').DataTable({
         'processing': true,
+        "searching": false,
         'serverSide': true,
         'serverMethod': 'post',
         'ajax': {
-            'url': '<?php echo base_url('/hkroomView') ?>'
+            'url': '<?php echo base_url('/hkroomView') ?>',
+            'type': 'POST',
+            'data': function(d) {
+
+                var formSerialization = $('.dt_adv_search').serializeArray();
+                $(formSerialization).each(function(i, field) {
+                    if (field.name == 'S_RM_TYPES[]') {
+                        var selectedRoomTypes = $('#S_RM_TYPES').find(":selected");
+                        var room_types = [];
+                        selectedRoomTypes.each(function(i, item) {
+                            room_types.push(item.getAttribute('data-room-type-id'));
+                        });
+                        d[field.name] = room_types;
+                    } else if (field.name == 'S_RM_FEATURES[]')
+                        d[field.name] = $('#S_RM_FEATURES').val();
+                    else if (field.name == 'RM_FLOOR_PREFERN')
+                        d[field.name] = $('#RM_FLOOR_PREFERN').find(":selected").data(
+                            'rm-pref');
+                    else if (field.name == 'S_RM_CLASS')
+                        d[field.name] = $('#S_RM_CLASS').find(":selected").data(
+                            'rmclass-id');
+                    else if (field.name == 'S_RM_STATUS_ID[]') {
+                        d[field.name] = getCheckboxValArray('S_RM_STATUS_ID');
+                    } else if (field.name == 'S_FO_STATUS[]') {
+                        d[field.name] = getCheckboxValArray('S_FO_STATUS');
+                    } else if (field.name == 'S_RESV_STATUS[]') {
+                        d[field.name] = getCheckboxValArray('S_RESV_STATUS');
+                    } else if (field.name == 'S_SRV_STATUS[]') {
+                        d[field.name] = getCheckboxValArray('S_SRV_STATUS');
+                    } else
+                        d[field.name] = field.value;
+                });
+            },
         },
         'columns': [{
                 data: ''
@@ -192,6 +612,10 @@ $(document).ready(function() {
             {
                 data: 'RM_STATUS_CODE',
                 className: "text-center rmStatusCol"
+            },
+            {
+                data: 'RESV_ID',
+                "visible": false,
             },
             {
                 data: 'RM_DESC',
@@ -220,6 +644,10 @@ $(document).ready(function() {
             {
                 data: 'RESV_STATUS',
                 className: "text-center"
+            },
+            {
+                data: 'RM_GUEST_SERVICE_STATUS',
+                className: "text-center srvStatusCol"
             },
             {
                 data: 'RM_FLOOR_PREFERN',
@@ -292,11 +720,23 @@ $(document).ready(function() {
         }, {
             width: "0%"
         }, {
+            width: "0%"
+        }, {
             width: "8%",
-            responsivePriority: 7
+            responsivePriority: 8
         }, {
             width: "12%",
-            responsivePriority: 8
+            responsivePriority: 7
+        }, {
+            targets: 13,
+            width: "8%",
+            responsivePriority: 9,
+            className: "text-center",
+            render: function(data, type, full, meta) {
+                var $serv_stat = parseInt(full['RM_GUEST_SERVICE_STATUS']);
+                return full['FO_STATUS'] == 'OCC' ? showServiceStatChange($serv_stat, full[
+                    'RM_ID']) : '';
+            }
         }, {
             width: "5%",
             responsivePriority: 5
@@ -312,6 +752,7 @@ $(document).ready(function() {
             [2, "asc"]
         ],
         destroy: true,
+        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
         language: {
             emptyTable: 'There are no rooms to display'
         },
@@ -325,27 +766,46 @@ $(document).ready(function() {
                 }),
                 type: 'column',
                 renderer: function(api, rowIdx, columns) {
-                    var room_id = '';
+                    var room_id = resv_id = fo_status = '';
                     var data = $.map(columns, function(col, i) {
 
                         if (col.title == 'Room ID')
                             room_id = col.data;
 
+                        if (col.title == 'Reservation ID') {
+                            resv_id = col.data;
+                            return true;
+                        }
+
+                        if (col.title == 'FO Status')
+                            fo_status = col.data;
+
                         var dataVal = col.title == 'Features' ?
                             showFeaturesDesc(col.data) :
-                            (col.title == 'Reservation Status' ? col.data +
-                                '<a href="<?php echo base_url('/reservation') ?>?ROOM_ID=' +
-                                room_id +
-                                '&ARRIVAL_DATE=<?= date('Y-m-d') ?>&CREATE_WALKIN=1" target="_blank" class="btn btn-sm btn-primary ms-2">Create Walk-In</a>' :
-                                (col.title == 'Room Status' ?
-                                    showRoomCurrentStat(room_id) :
-                                    col.data));
+                            (col.title == 'Reservation Status' ? (col.data ==
+                                    'Not Reserved' ? col
+                                    .data +
+                                    '<a href="<?php echo base_url('/reservation') ?>?ROOM_ID=' +
+                                    room_id +
+                                    '&ARRIVAL_DATE=<?= date('Y-m-d') ?>&CREATE_WALKIN=1" target="_blank" class="btn btn-sm btn-primary ms-2">Create Walk-In</a>' :
+                                    col.data +
+                                    '<a href="<?php echo base_url('/reservation') ?>?RESV_ID=' +
+                                    resv_id +
+                                    '" target="_blank" class="btn btn-sm btn-primary ms-2">View Reservation</a>'
+                                ) :
+                                (col.title == 'Room Status' ? showRoomCurrentStat(room_id) :
+                                    (col.title == 'Service Status' ?
+                                        (fo_status == 'OCC' ? showRoomCurrentServStat(
+                                            room_id) : '') : col
+                                        .data)));
 
-                        var rowClass = col.title == 'Room Status' ? 'roomRow' +
+                        var rowClass = col.title == 'Room Status' || col.title ==
+                            'Service Status' ? 'roomRow' +
                             room_id :
                             '';
                         var colClass = col.title == 'Room Status' ?
-                            'rmStatusCol' : '';
+                            'rmStatusCol' : (col.title == 'Service Status' ?
+                                'srvStatusCol' : '');
 
                         return col.title !==
                             '' // ? Do not show row in modal popup if title is blank (for check box)
@@ -377,9 +837,6 @@ $(document).ready(function() {
         }
 
     });
-    $("#room_list_wrapper .row:first").before(
-        '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"></div></div>'
-    );
 
 
     $(document).on('click', '#room_list > tbody > tr', function() {
@@ -424,11 +881,49 @@ $(document).ready(function() {
         },
         // dataType:'json',
         success: function(respn) {
-            $('#RM_TYPES').html(respn);
+            $('#RM_TYPES,#S_RM_TYPES').html(respn);
+        }
+    });
+
+    $.ajax({
+        url: '<?php echo base_url('/roomFloorList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        // dataType:'json',
+        success: function(respn) {
+            $('#RM_FLOOR_PREFERN').html(respn);
+        }
+    });
+
+    $.ajax({
+        url: '<?php echo base_url('/featureList') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        // dataType:'json',
+        success: function(respn) {
+            respn = respn.replace('<option value="">Select Feature</option>', '');
+            $('#S_RM_FEATURES').html(respn);
         }
     });
 
 });
+
+$(window).on('load', function() {
+    // executes when complete page is fully loaded, including all frames, objects and images
+    $('.sk-wave').hide().next().removeClass('d-none');
+});
+
+function getCheckboxValArray(className) {
+    var checkedArr = [];
+    $.each($('.' + className + ':checkbox:checked'), function(i, checked) {
+        checkedArr.push(checked.value);
+    });
+    return checkedArr;
+}
 
 // Return Features Details
 function showFeaturesDesc(comma_list = '') {
@@ -498,7 +993,7 @@ function showRoomStatChange(curStatId, curStatName, rmId) {
     return $statButton;
 }
 
-// Return Features Details
+// Show Room Current Status
 function showRoomCurrentStat(rmId) {
 
     $.ajax({
@@ -520,6 +1015,79 @@ function showRoomCurrentStat(rmId) {
 
     return showRoomStatChange(ret_val.RM_STAT_ROOM_STATUS, ret_val.RM_STATUS_CODE, rmId);
 }
+
+function showServiceStatChange(curStatId, rmId) {
+
+    var $serv_status_id = curStatId;
+    var $serv_status = {
+        1: {
+            class: 'btn-instagram',
+            title: 'Do Not Disturb'
+        },
+        2: {
+            class: 'btn-warning',
+            title: 'Make Up Room'
+        },
+        0: {
+            class: 'btn-dark',
+            title: 'None'
+        },
+    };
+
+    if (typeof $serv_status[$serv_status_id] === 'undefined') {
+        return $serv_status_id;
+    }
+
+    var $serv_status_name = $serv_status[$serv_status_id].title;
+
+    var $statButton = '<button type="button" class="btn btn-sm ' + $serv_status[$serv_status_id].class +
+        ' dropdown-toggle"' +
+        'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + $serv_status_name + '</button>';
+
+    $statButton += ' <ul class="dropdown-menu">' +
+        '     <li>' +
+        '      <h6 class="dropdown-header">Change Service Status</h6>' +
+        '     </li><li><hr class="dropdown-divider"></li>';
+
+    $.each($serv_status, function(statText) {
+        if (statText == $serv_status_id) $statButton += '';
+        else $statButton +=
+            '<li><a class="dropdown-item changeServiceStatus" data-room-id="' + rmId + '"' +
+            ' data-service-new-stat="' + statText + '"' +
+            ' data-service-new-statName="' + $serv_status[statText].title + '"' +
+            ' data-service-old-stat="' + $serv_status_id + '"' +
+            ' data-service-old-statName="' + $serv_status_name + '"' +
+            ' href="javascript:void(0);">' + $serv_status[statText].title + '</a></li>';
+    });
+
+    $statButton += '  </ul>';
+
+    return $statButton;
+}
+
+// Show Room Current Service Status
+function showRoomCurrentServStat(rmId) {
+
+    $.ajax({
+        url: '<?php echo base_url('/showRoomServiceStatus') ?>',
+        type: 'POST',
+        async: false,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            roomId: rmId,
+        },
+        dataType: 'json'
+    }).done(function(response) {
+        ret_val = response;
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        ret_val = null;
+    });
+
+    return showServiceStatChange(ret_val.RM_GUEST_SERVICE_STATUS, rmId);
+}
+
 
 
 // Change Room status
@@ -590,6 +1158,73 @@ $(document).on('click', '.changeRoomStatus', function() {
     }
 });
 
+// Change Service status
+$(document).on('click', '.changeServiceStatus', function() {
+    var roomId = $(this).attr('data-room-id');
+    var current_status = $(this).attr('data-service-old-stat');
+    var current_statusName = $(this).attr('data-service-old-statName');
+    var new_status = $(this).attr('data-service-new-stat');
+    var new_statusName = $(this).attr('data-service-new-statName');
+
+    var clickedCol = $('.roomRow' + roomId).find('.srvStatusCol');
+
+    if (current_status == new_status) {
+        alert('The Service status is already ' + current_statusName);
+    } else {
+        bootbox.confirm({
+            message: "Are you sure you want to change the service status from '" +
+                current_statusName +
+                "' to '" + new_statusName + "' for this room?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function(result) {
+                if (result) {
+                    $.ajax({
+                        url: '<?php echo base_url('/updateServiceStatus') ?>',
+                        type: "post",
+                        data: {
+                            roomId: roomId,
+                            new_status: new_status
+                        },
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        dataType: 'json',
+                        success: function(respn) {
+                            var response = respn['SUCCESS'];
+                            if (response != '1') {
+                                var ERROR = respn['RESPONSE']['ERROR'];
+                                var mcontent = '';
+                                $.each(ERROR, function(ind, data) {
+
+                                    mcontent += '<li>' + data +
+                                        '</li>';
+                                });
+                                showModalAlert('error', mcontent);
+                            } else {
+                                showModalAlert('success',
+                                    `<li>The Service Status has been updated successfully.</li>`
+                                );
+
+                                clickedCol.html(showServiceStatChange(new_status,
+                                    roomId));
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+});
+
 // Click Change Selected Button
 $(document).on('click', '.use_selected_rooms', function() {
 
@@ -601,6 +1236,8 @@ $(document).on('click', '.use_selected_rooms', function() {
     $('#selectRoomsFrom,#selectRoomsTo').prop('disabled', hasSelectedRooms == '1' ? true : false).selectpicker(
         'refresh');
     $('#selectRoomsByL').prop("checked", true).trigger("click");
+    if (hasSelectedRooms == '0')
+        $('#selectRoomsList').html("").selectpicker('refresh');
 
     if (clicked_room_ids.length > 0) {
 
@@ -905,11 +1542,49 @@ quickChangeSubmitBtn.onclick = function() {
     });
 };
 
-
 // Close Quick Change Popup Form
 $(document).on('hide.bs.modal', '#quickChangeRmStat', function() {
     resetQuickChange();
 });
+
+(function() {
+
+    // Amenities Requests Advanced Search Functions Starts
+    // --------------------------------------------------------------------
+    const dt_adv_filter_table = $('#room_list');
+
+    $(document).on('click', '.submitAdvSearch', function() {
+
+        blockLoader('.room_list_div');
+        clicked_room_ids = [];
+
+        $('.use_selected_rooms').html(
+            '<i class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick Change'
+        );
+        $('.use_selected_rooms').attr('data-change-selected', 0);
+
+        resetQuickChange();
+        dt_adv_filter_table.dataTable().fnDraw();
+    });
+
+    $(document).on('click', '.clearAdvSearch', function() {
+
+        clicked_room_ids = [];
+        clearFormFields('.dt_adv_search');
+
+        blockLoader('.dt_adv_search');
+        blockLoader('.room_list_div');
+
+        $('.use_selected_rooms').html(
+            '<i class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick Change'
+        );
+        $('.use_selected_rooms').attr('data-change-selected', 0);
+
+        resetQuickChange();
+        dt_adv_filter_table.dataTable().fnDraw();
+    });
+
+})();
 
 // Display function toggleButton
 <?php echo isset($toggleButton_javascript) ? $toggleButton_javascript : ''; ?>
