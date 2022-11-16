@@ -204,7 +204,8 @@ class APIController extends BaseController
             $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, a.RESV_PAYMENT_STATUS, a.RESV_RATE, CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_LAST_NAME) as NAME ,d.RM_NO,d.RM_DESC,b.CUST_EMAIL,b.CUST_MOBILE_CODE,b.CUST_MOBILE FROM FLXY_RESERVATION a 
                             LEFT JOIN FLXY_CUSTOMER b ON b.CUST_ID = a.RESV_NAME 
                             LEFT JOIN FLXY_ROOM d ON d.RM_NO = a.RESV_ROOM 
-                            WHERE a.RESV_NAME = :RESV_NAME: order by a.RESV_ID desc";
+                            left join FLXY_ACCOMPANY_PROFILE on ACCOMP_CUST_ID = :RESV_NAME:
+                            WHERE a.RESV_NAME = :RESV_NAME: OR a.RESV_ID = ACCOMP_REF_RESV_ID order by a.RESV_ID desc";
             $data = $this->DB->query($sql, $param)->getResultArray();
 
             foreach ($data as $index => $res) {
