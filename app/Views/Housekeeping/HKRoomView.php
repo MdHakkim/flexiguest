@@ -1029,7 +1029,7 @@ function showServiceStatChange(curStatId, rmId) {
             title: 'Make Up Room'
         },
         0: {
-            class: 'btn-dark',
+            class: 'btn-secondary',
             title: 'None'
         },
     };
