@@ -118,6 +118,29 @@ $(document).on('click', '.custOptions', function() {
     var custOptId = $(this).attr('data_sysid');
     var custName = $(this).attr('data_custname');
 
+    showCustOptions(custOptId, custName);
+});
+
+function loadCustOptions(custOptId) {
+    $.ajax({
+        url: '<?php echo base_url('/getExistCustomer') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            custId: custOptId
+        },
+        dataType: 'json'
+    }).done(function(respn) {
+        var custDetails = respn[0];
+        var custName = custDetails['NAMES'];
+
+        showCustOptions(custOptId, custName);
+    });
+}
+
+function showCustOptions(custOptId, custName) {
     $('.modal').modal('hide');
     $('#custOptionsWindow').modal('show');
 
@@ -134,7 +157,7 @@ $(document).on('click', '.custOptions', function() {
     $('#CM_CUST_ID').val(custOptId);
     $('#RESV_NAME').val(custOptId);
     $('#neg_PROFILE_ID').val('profile_chk_1_' + custOptId);
-});
+}
 
 // Print / Download PDF Popup
 

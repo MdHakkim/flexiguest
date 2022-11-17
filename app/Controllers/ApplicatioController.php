@@ -863,6 +863,7 @@ class ApplicatioController extends BaseController
         if($data['editId'] && !checkValueinTable('CUST_ID', $data['editId'], 'FLXY_CUSTOMER'))
             return redirect()->to(base_url('customer'));  
 
+        $data['show_options'] = null !== $this->request->getGet("show_options") ? '1' : null;
         $data['add'] = null !== $this->request->getGet("add") ? '1' : null;
 
         $data['rateCodeOptions'] = $this->rateCodeList();

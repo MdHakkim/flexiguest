@@ -196,6 +196,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="#" target="_blank" id="custOptionsBtn" class="btn btn-primary custOptions"
+                    data_sysid="">Options</a>
                 <button type="button" id="edit-customer-submitBtn"
                     onClick="submitEditCustomerForm('edit-customer-form','C')" class="btn btn-primary">Save</button>
             </div>
@@ -416,6 +418,10 @@ $(document).on('click', '.editcustomer', function() {
                         $(`${form_id} select[name='${field}']`).val(dataval)
                         .trigger('change');
                 });
+            });
+            $('#custOptionsBtn').attr({
+                'href': '<?php echo base_url('/customer') ?>?editId=' + sysid +
+                    '&show_options=1'
             });
             $('#edit-customer-submitBtn').removeClass('btn-primary').addClass('btn-success').text(
                 'Update');

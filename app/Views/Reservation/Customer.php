@@ -358,9 +358,12 @@ $(document).ready(function() {
     });
 
     <?php
-    if(!empty($editId)) {  ?>
-    editCust(<?php echo $editId; ?>);
-    <?php
+    if(!empty($editId)) { 
+        if(!empty($show_options)) { ?>
+            loadCustOptions(<?php echo $editId; ?>);
+        <?php } else { ?>
+            editCust(<?php echo $editId; ?>);
+    <?php }
     }
     ?>
 
