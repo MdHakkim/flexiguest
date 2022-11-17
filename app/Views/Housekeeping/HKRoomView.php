@@ -289,9 +289,10 @@
 
                                 <div class="col-12 col-sm-6 col-lg-4">
                                     <div class="row mb-3">
+
                                         <label
-                                            class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>From
-                                                Room:</b></label>
+                                            class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Room
+                                                Class:</b></label>
                                         <div class="col-md-8">
                                             <div class="sk-wave sk-primary">
                                                 <div class="sk-wave-rect"></div>
@@ -301,8 +302,14 @@
                                                 <div class="sk-wave-rect"></div>
                                             </div>
                                             <div class="d-none">
-                                                <input type="text" id="S_FROM_RM" name="S_FROM_RM"
-                                                    class="form-control dt-input" data-column="19" placeholder="" />
+                                                <select id="S_RM_CLASS" name="S_RM_CLASS"
+                                                    class="select2 form-select dt-input"
+                                                    data-placeholder="All Room Classes" data-allow-clear="true">
+                                                    <option value=""></option>
+                                                    <?php foreach ($room_class_list as $row) {
+                                                        echo '<option value="' . $row['RM_CL_ID'] . '" data-rmclass-id="' . $row['RM_CL_CODE'] . '">' . $row['RM_CL_CODE'] . ' | ' . $row['RM_CL_DESC'] . '</option>';
+                                                    } ?>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -336,6 +343,7 @@
                                 <div class="col-12 col-sm-6 col-lg-4">
 
                                     <div class="row mb-3">
+
                                         <label
                                             class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Floor:</b></label>
                                         <div class="col-md-8">
@@ -354,6 +362,7 @@
                                                 </select>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
 
@@ -381,13 +390,13 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-sm-6 col-lg-4">
+                                <div class="col-12 col-sm-6 col-lg-7">
 
-                                    <div class="row mb-3">
+                                    <div class="row mb-3 ps-3">
                                         <label
-                                            class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Room
-                                                Class:</b></label>
-                                        <div class="col-md-8">
+                                            class="col-form-label col-md-2 d-flex justify-content-lg-end justify-content-sm-start"><b>Room
+                                                Nos:</b></label>
+                                        <div class="col-md-10">
                                             <div class="sk-wave sk-primary">
                                                 <div class="sk-wave-rect"></div>
                                                 <div class="sk-wave-rect"></div>
@@ -395,36 +404,38 @@
                                                 <div class="sk-wave-rect"></div>
                                                 <div class="sk-wave-rect"></div>
                                             </div>
-                                            <div class="d-none">
-                                                <select id="S_RM_CLASS" name="S_RM_CLASS"
-                                                    class="select2 form-select dt-input"
-                                                    data-placeholder="All Room Classes" data-allow-clear="true">
-                                                    <option value=""></option>
-                                                    <?php foreach ($room_class_list as $row) {
-                                                        echo '<option value="' . $row['RM_CL_ID'] . '" data-rmclass-id="' . $row['RM_CL_CODE'] . '">' . $row['RM_CL_CODE'] . ' | ' . $row['RM_CL_DESC'] . '</option>';
-                                                    } ?>
+                                            <div class="d-none S_RM_ID_div col-12">
+                                                <select id="S_RM_ID" name="S_RM_ID[]" class="selectpicker w-100"
+                                                    data-style="btn btn-default" multiple data-icon-base="bx"
+                                                    data-tick-icon="bx-check text-primary" data-live-search="true"
+                                                    data-placeholder="Enter 3 or more characters"
+                                                    data-allow-clear="true">
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-sm-6 col-lg-4 text-end">
-                                    <button type="button" class="btn btn-success use_selected_rooms"
-                                        data-change-selected="0"><i
-                                            class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick
-                                        Change</button>&nbsp;
+                                <div class="col-12 col-sm-6 col-lg-5 text-end">
+
+                                    <div class="row mb-3">
+
+                                        <div class="col-md-12 text-end">
+
+                                            <button type="button" class="btn btn-success use_selected_rooms"
+                                                data-change-selected="0"><i
+                                                    class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick
+                                                Change</button>&nbsp;
+                                            <button type="button" class="btn btn-primary submitAdvSearch">
+                                                <i class='bx bx-search'></i>&nbsp;
+                                                Search
+                                            </button>&nbsp;
+                                            <button type="button"
+                                                class="btn btn-secondary clearAdvSearch">Clear</button>
+                                        </div>
+
+                                    </div>
                                 </div>
-
-                                <div class="col-12 col-sm-6 col-lg-4 text-end mb-3">
-
-                                    <button type="button" class="btn btn-primary submitAdvSearch">
-                                        <i class='bx bx-search'></i>&nbsp;
-                                        Search
-                                    </button>&nbsp;
-                                    <button type="button" class="btn btn-secondary clearAdvSearch">Clear</button>
-                                </div>
-
                             </div>
                         </div>
                     </div>
@@ -575,6 +586,13 @@ $(document).ready(function() {
                             room_types.push(item.getAttribute('data-room-type-id'));
                         });
                         d[field.name] = room_types;
+                    } else if (field.name == 'S_RM_ID[]') {
+                        var selectedRooms = $('#S_RM_ID').find(":selected");
+                        var room_ids = [];
+                        selectedRooms.each(function(i, item) {
+                            room_ids.push(item.getAttribute('data-room-id'));
+                        });
+                        d[field.name] = room_ids;
                     } else if (field.name == 'S_RM_FEATURES[]')
                         d[field.name] = $('#S_RM_FEATURES').val();
                     else if (field.name == 'RM_FLOOR_PREFERN')
@@ -1547,13 +1565,74 @@ $(document).on('hide.bs.modal', '#quickChangeRmStat', function() {
     resetQuickChange();
 });
 
+
+//Select room class to load room types
+$(document).on('change.select2', '#S_RM_CLASS', function() {
+
+    var selectedRoomClass = $(this).val();
+
+    $.ajax({
+        url: '<?php echo base_url('/roomTypeList') ?>',
+        async: false,
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            room_class_id: selectedRoomClass
+        },
+        dataType: 'html'
+    }).done(function(respn) {
+        $('#S_RM_TYPES').html(respn);
+        $('#S_RM_TYPES').val(null).trigger('change');
+    });
+
+});
+
+// Search room nos in dropdown
+$(document).on('keyup', '.S_RM_ID_div .form-control', function() {
+    var search = $(this).val();
+    if (search.length >= 3) {
+
+        var room_types = '';
+        var selectedRoomTypes = $('#S_RM_TYPES').find(":selected");
+
+        if (selectedRoomTypes.length > 0) {
+            selectedRoomTypes.each(function() {
+                room_types += $(this).data('room-type-id') + ',';
+            });
+            room_types = room_types.substring(0, room_types.length - 1);
+        }
+
+        $.ajax({
+            url: '<?php echo base_url('/roomList') ?>',
+            async: false,
+            type: "post",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                search: search,
+                room_type: room_types
+            },
+            dataType: 'html'
+        }).done(function(respn) {
+            var room_opts = respn;
+            room_opts = room_opts.replace('<option value="">Select Room</option>', '');
+            room_opts = room_opts.replace('<option value="">No Rooms</option>', '');
+
+            $('#S_RM_ID').html(room_opts).selectpicker('refresh');
+        });
+    }
+});
+
 (function() {
 
-    // Amenities Requests Advanced Search Functions Starts
+    // Room List Advanced Search Functions Starts
     // --------------------------------------------------------------------
     const dt_adv_filter_table = $('#room_list');
 
-    $(document).on('click', '.submitAdvSearch', function() {
+    $(document).on('click', '.submitAdvSearch', function() { // Click Search button
 
         blockLoader('.room_list_div');
         clicked_room_ids = [];
@@ -1567,13 +1646,15 @@ $(document).on('hide.bs.modal', '#quickChangeRmStat', function() {
         dt_adv_filter_table.dataTable().fnDraw();
     });
 
-    $(document).on('click', '.clearAdvSearch', function() {
+    $(document).on('click', '.clearAdvSearch', function() { // Click Clear button
 
         clicked_room_ids = [];
         clearFormFields('.dt_adv_search');
 
         blockLoader('.dt_adv_search');
         blockLoader('.room_list_div');
+
+        $('#S_RM_ID').html("").selectpicker('refresh');
 
         $('.use_selected_rooms').html(
             '<i class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick Change'

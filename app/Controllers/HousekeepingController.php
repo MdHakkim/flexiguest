@@ -254,7 +254,7 @@ class HousekeepingController extends BaseController
         $TODAYDATE = date('Y-m-d');
 
         $search_keys = [
-            'S_RM_STATUS_ID', 'S_FO_STATUS', 'S_FROM_RM', 'RM_FLOOR_PREFERN',
+            'S_RM_STATUS_ID', 'S_FO_STATUS', 'S_RM_ID', 'RM_FLOOR_PREFERN',
             'S_RM_CLASS', 'S_RM_TYPES', 'S_RM_FEATURES', 'S_RESV_STATUS', 'S_SRV_STATUS'
         ];
 
@@ -266,10 +266,6 @@ class HousekeepingController extends BaseController
                     $value = $this->request->getPost($search_key);
 
                     switch ($search_key) {
-                        case 'S_FROM_RM':
-                            $init_cond["RM_ID >="] = "(SELECT TOP(1) RM_ID FROM FLXY_ROOM WHERE RM_NO LIKE '$value')";
-                            break;
-
                         case 'S_RM_TYPES':
                             $init_cond["RM_TYPE_REF_ID IN"] = "(" . implode(",", $value) . ")";
                             break;
@@ -314,6 +310,7 @@ class HousekeepingController extends BaseController
                             $init_cond["CONCAT(',', RM_FEATURE, ',') LIKE '%," . str_replace(",", ",%' AND CONCAT(',', RM_FEATURE, ',') LIKE '%,", implode(",", $value)) . ",%'"] = "";
                             break;
 
+                        case 'S_RM_ID':
                         case 'S_RM_STATUS_ID':
                         case 'S_FO_STATUS':
                             $init_cond["" . ltrim($search_key, "S_") . " IN"] = "('" . implode("','", $value) . "')";
