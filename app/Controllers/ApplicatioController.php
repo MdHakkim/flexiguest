@@ -2434,7 +2434,7 @@ class ApplicatioController extends BaseController
         $sql = "SELECT RM_ID, RM_NO, RM_DESC FROM FLXY_ROOM WHERE 1 = 1"; 
         
         if(!empty($search))
-            $sql .= " AND RM_DESC like '%$search%'";
+            $sql .= " AND RM_NO like '%$search%'";
 
         if(!empty($room_type))
             $sql .= " AND RM_TYPE_REF_ID IN (".$room_type.")";
@@ -2583,6 +2583,7 @@ class ApplicatioController extends BaseController
             $RM_TY_FEATURE = implode(",",$RM_TY_FEATURE);
             if(!empty($sysid)){
                 $data = ["RM_TY_ROOM_CLASS" => $this->request->getPost("RM_TY_ROOM_CLASS"),
+                    "RM_CL_ID" => $this->request->getPost("RM_CL_ID"),
                     "RM_TY_CODE" => $this->request->getPost("RM_TY_CODE"),
                     "RM_TY_DESC" => $this->request->getPost("RM_TY_DESC"),
                     "RM_TY_FEATURE" => $RM_TY_FEATURE,
@@ -2605,6 +2606,7 @@ class ApplicatioController extends BaseController
             $return = $this->Db->table('FLXY_ROOM_TYPE')->where('RM_TY_ID', $sysid)->update($data); 
             }else{
                 $data = ["RM_TY_ROOM_CLASS" => $this->request->getPost("RM_TY_ROOM_CLASS"),
+                    "RM_CL_ID" => $this->request->getPost("RM_CL_ID"),
                     "RM_TY_CODE" => $this->request->getPost("RM_TY_CODE"),
                     "RM_TY_DESC" => $this->request->getPost("RM_TY_DESC"),
                     "RM_TY_FEATURE" => $RM_TY_FEATURE,
@@ -2640,11 +2642,11 @@ class ApplicatioController extends BaseController
 
     public function roomClassList(){
         $search = $this->request->getPost("search");
-        $sql = "SELECT RM_CL_CODE,RM_CL_DESC FROM FLXY_ROOM_CLASS WHERE RM_CL_DESC like '%$search%'";
+        $sql = "SELECT RM_CL_CODE,RM_CL_DESC,RM_CL_ID FROM FLXY_ROOM_CLASS WHERE RM_CL_DESC like '%$search%'";
         $response = $this->Db->query($sql)->getResultArray();
         $option='<option value="">Select RoomClass</option>';
         foreach($response as $row){
-            $option.= '<option value="'.trim($row['RM_CL_CODE']).'">'.$row['RM_CL_DESC'].'</option>';
+            $option.= '<option data-room-class-id="'.trim($row['RM_CL_ID']).'" value="'.trim($row['RM_CL_CODE']).'">'.$row['RM_CL_DESC'].'</option>';
         }
         echo $option;
     }
@@ -2696,14 +2698,25 @@ class ApplicatioController extends BaseController
 
     public function editRoomType(){
         $param = ['SYSID'=> $this->request->getPost("sysid")];
-        $sql = "SELECT RM_TY_ID,RM_TY_ROOM_CLASS,(SELECT RM_CL_DESC FROM FLXY_ROOM_CLASS WHERE RM_CL_CODE=RM_TY_ROOM_CLASS)RM_TY_ROOM_CLASS_DESC,RM_TY_CODE,RM_TY_DESC,RM_TY_FEATURE,RM_TY_TOTAL_ROOM,RM_TY_DISP_SEQ,RM_TY_PUBLIC_RATE_CODE,RM_TY_DEFUL_OCCUPANCY,RM_TY_MAX_OCCUPANCY,RM_TY_MAX_ADULTS,RM_TY_MAX_CHILDREN,RM_TY_PSEUDO_RM,RM_TY_HOUSEKEEPING,RM_TY_MIN_OCCUPANCY,RM_TY_SEND_T_INTERF,RM_TY_PUBLIC_RATE_AMT,RM_TY_ACTIVE_DT FROM FLXY_ROOM_TYPE WHERE RM_TY_ID=:SYSID:";
+        $sql = "SELECT RM_TY_ID,RM_TY_ROOM_CLASS,(SELECT RM_CL_DESC FROM FLXY_ROOM_CLASS WHERE RM_CL_CODE=RM_TY_ROOM_CLASS)RM_TY_ROOM_CLASS_DESC,RM_TY_CODE,RM_CL_ID,RM_TY_DESC,RM_TY_FEATURE,RM_TY_TOTAL_ROOM,RM_TY_DISP_SEQ,RM_TY_PUBLIC_RATE_CODE,RM_TY_DEFUL_OCCUPANCY,RM_TY_MAX_OCCUPANCY,RM_TY_MAX_ADULTS,RM_TY_MAX_CHILDREN,RM_TY_PSEUDO_RM,RM_TY_HOUSEKEEPING,RM_TY_MIN_OCCUPANCY,RM_TY_SEND_T_INTERF,RM_TY_PUBLIC_RATE_AMT,RM_TY_ACTIVE_DT FROM FLXY_ROOM_TYPE WHERE RM_TY_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }
 
     public function roomTypeList(){
         $search = $this->request->getPost("search");
-        $sql = "SELECT RM_TY_ID,RM_TY_CODE,RM_TY_DESC,RM_TY_ROOM_CLASS,RM_TY_FEATURE FROM FLXY_ROOM_TYPE WHERE RM_TY_DESC like '%$search%'";
+        $room_type = $this->request->getPost("room_type");
+        $room_class_id = $this->request->getPost("room_class_id");
+
+        $sql = "SELECT RM_TY_ID,RM_TY_CODE,RM_TY_DESC,RM_TY_ROOM_CLASS,RM_TY_FEATURE 
+                FROM FLXY_ROOM_TYPE WHERE 1 = 1";
+        
+        if(!empty($search))
+            $sql .= " AND RM_TY_DESC like '%$search%'";
+
+        if(!empty($room_class_id))
+            $sql .= " AND RM_CL_ID IN (".$room_class_id.")";
+
         $response = $this->Db->query($sql)->getResultArray();
         $option='';
         foreach($response as $row){
