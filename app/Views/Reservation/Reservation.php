@@ -4017,7 +4017,11 @@ function addResvation() {
 
     <?php } ?>
 
-
+    $(':input', '#reservationForm').not(
+        '#CUST_FIRST_NAME,#RESV_MEMBER_NO,#RESV_GUST_BAL,#RESV_ROOM_ID,#RESV_RATE_CODE,#RESV_PACKAGE,#RESV_INV_ITEM,#PACKAGE_EXCLUDE,#RSV_PCKG_POST_RYTHM,RSV_PCKG_CALC_RULE'
+    ).prop('readonly', false);
+    $(':input', '.profileSearch').val('').prop({'checked': false, 'selected': false, 'disabled': false, 'readonly': false});
+    $(':input', '#customerForm').val('').prop({'checked': false, 'selected': false, 'disabled': false, 'readonly': false});
 
     $('#RESV_NIGHT,#RESV_NO_F_ROOM,#RESV_ADULTS').val('1');
     $('#RESV_CONFIRM_YN,#RESV_NO_POST,#RESV_PICKUP_YN,#RESV_DROPOFF_YN,#RESV_EXT_PRINT_RT,#RESV_FIXED_RATE').val('N');
