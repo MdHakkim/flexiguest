@@ -46,7 +46,7 @@
 
                 <form class="dt_adv_search mb-2" method="POST">
                     <div class="row g-3 mb-2">
-                        <div class="col-12 col-sm-4 col-lg-4">
+                        <div class="col-12 col-sm-8 col-lg-4">
                             <div class="row border rounded p-3 pb-4 m-1">
                                 <h6 class="mb-4">Room Status</h6>
                                 <div class="col-md pe-1">
@@ -139,7 +139,7 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-sm-4 col-lg-4">
+                        <div class="col-12 col-sm-8 col-lg-4">
                             <div class="row border rounded p-3 pb-4 m-1">
                                 <h6 class="mb-4">Reservation Status</h6>
                                 <div class="col-md">
@@ -416,16 +416,17 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-sm-6 col-lg-5 text-end">
+                                <div class="col-12 col-sm-6 col-lg-5">
 
                                     <div class="row mb-3">
 
-                                        <div class="col-md-12 text-end">
-
+                                        <div class="col-md-6">
                                             <button type="button" class="btn btn-success use_selected_rooms"
                                                 data-change-selected="0"><i
                                                     class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick
                                                 Change</button>&nbsp;
+                                        </div>
+                                        <div class="col-md-6 text-end">
                                             <button type="button" class="btn btn-primary submitAdvSearch">
                                                 <i class='bx bx-search'></i>&nbsp;
                                                 Search
