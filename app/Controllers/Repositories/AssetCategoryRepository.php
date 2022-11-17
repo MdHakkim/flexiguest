@@ -49,4 +49,9 @@ class AssetCategoryRepository extends BaseController
     {
         return $this->AssetCategory->delete($id);
     }
+
+    public function allAssetCategories()
+    {
+        return $this->AssetCategory->findAll();
+    }
 }
