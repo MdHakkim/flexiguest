@@ -20,7 +20,7 @@ class ConciergeRequest extends Model
         'CR_TOTAL_AMOUNT',
         'CR_TAX_AMOUNT',
         'CR_NET_AMOUNT',
-        'CR_STATUS',
+        'CR_STATUS', // In Progress, Approved, Rejected, Closed
         'CR_PREFERRED_DATE',
         'CR_PREFERRED_TIME',
         'CR_PAYMENT_METHOD', // Pay at Reception, Samsung Pay, Credit/Debit card
