@@ -119,6 +119,14 @@
     cursor: pointer;
   }
 
+  .fc-custom1-button{
+    margin-left:10px !important;
+    pointer-events: none;
+    background-color: #ccc;
+    color: #fff;
+    
+  }
+
 
 
 
@@ -231,7 +239,14 @@
                   </div>
                   </form>
                 </div>
-          <div class="card-body">
+          <div class="card-body">         
+            <!-- <div class="col-12 col-sm-6 col-lg-4 pb-2 pt-0 text-end">
+              <button type="submit" class="btn btn-primary" name="Assign Rooms" id="assignRooms"  >
+              <i class="fa-solid fa-list-check"></i>
+                  Assign Room
+              </button>                           
+            
+          </div> -->
                    
               <!-- FullCalendar -->
           <div id="calendarRoomPlan"></div>
@@ -555,7 +570,7 @@
                                 <div class="col-md-12">
                                     <div class="border rounded p-4 mb-3">
                                      
-                                        <p>Click on a row to see the available rooms</p>
+                                        <p><b>* Click on a row to see the available rooms</b></p>
                                         <div class="table-responsive text-nowrap">
                                             <table id="Room_Assign_Details" class="table table-bordered table-hover">
                                                 <thead>
@@ -806,7 +821,7 @@ function roomPlanFunc(){
       
         header: {
 
-        left: 'today prev,next',
+        left: 'today prev,next,custom1',
 
         center: 'title',
 
@@ -820,6 +835,17 @@ function roomPlanFunc(){
       droppable: true,
       editable: true,
       resourceAreaWidth: '35%',
+      selectable: true,
+   
+      customButtons: {
+      custom1: {
+        text: 'Assign Room',
+        backgroundColor:'#ccc'
+        
+      },
+     
+    },
+
       resourceColumns: [
         {
           labelText: 'Room',
@@ -942,6 +968,7 @@ function roomPlanFunc(){
        
       ],
       eventClick: function(info) {
+        
         console.log(info);
         info.jsEvent.preventDefault(); 
 
@@ -1107,6 +1134,7 @@ function roomPlanFunc(){
         hour12: false
       },
       dateClick: function(info) {
+       
         if (info.resource.id) {
           let START = info.dateStr;
           const STARTARRAY = START.split("T");
@@ -1125,17 +1153,24 @@ function roomPlanFunc(){
               mcontent += '<li>' + data.status_message + '</li>';
 
               if (data.status == 1) {  
-
+                var mcontent = '';
+                mcontent += '<li>This reservation has no room assignment!</li>';
+                showModalAlert('info', mcontent);
                 $('#Room_Assign_Details').DataTable().destroy();
                 $('#Room_Assign_Details > tbody').html(data.room_assign);
                 $('#Room_Assign_Details').DataTable({ paging: true});
-                
-                $('#RoomAssign').modal('show');            
+                $(".fc-custom1-button").css('pointer-events','all');
+                $(".fc-custom1-button").css('background-color','#5a8dee');
+                $(".fc-custom1-button").css('color','#fff');
+               
+                         
                 //showModalAlert('error', mcontent);
               } 
               else{
-                var base_url = '<?php echo base_url()?>';
-                
+                $(".fc-custom1-button").css('pointer-events','none');
+                $(".fc-custom1-button").css('background-color','#e5edfc');
+                $(".fc-custom1-button").css('color','#5a8dee');
+                var base_url = '<?php echo base_url()?>';                
                 var url = '/reservation?ROOM_ID='+info.resource.id+'&ARRIVAL_DATE='+START;
                 window.open(base_url+url);
 
@@ -1147,6 +1182,7 @@ function roomPlanFunc(){
       }
 
       },
+     
 
     });
    <?php  if(isset($SEARCH_DATE) && $SEARCH_DATE != ''){ ?>
@@ -1956,6 +1992,12 @@ $(document).on('click', '.clearAdvSearch', function() {
   clearFormFields('.dt_adv_search');
   $("#SEARCH_CLEAR").val('1');
   $(".dt_adv_search").submit();    
+});
+
+
+
+$(document).on('click', '.fc-custom1-button', function() {
+  $('#RoomAssign').modal('show');   
 });
 
 

@@ -1267,15 +1267,15 @@ public function showPackages()
 
         $data['SEARCH_DATE']             = ($this->request->getPost('SEARCH_DATE') == '' && $page > 1)? ((isset($roomPlanSearch['SEARCH_DATE']) && $roomPlanSearch['SEARCH_DATE'] !='') ? $roomPlanSearch['SEARCH_DATE']:'') : $this->request->getPost('SEARCH_DATE');            
 
-        $data['SEARCH_ROOM_TYPE']        = ($this->request->getPost('SEARCH_ROOM_TYPE') == '' && $page > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_TYPE']) && $roomPlanSearch['SEARCH_ROOM_TYPE'] != '') ? $roomPlanSearch['SEARCH_ROOM_TYPE'] :'') : $this->request->getPost('SEARCH_ROOM_TYPE');
+        $data['SEARCH_ROOM_TYPE']        = ($this->request->getPost('SEARCH_ROOM_TYPE') == '' ) ? ((isset($roomPlanSearch['SEARCH_ROOM_TYPE']) && $roomPlanSearch['SEARCH_ROOM_TYPE'] != '') ? $roomPlanSearch['SEARCH_ROOM_TYPE'] :'') : $this->request->getPost('SEARCH_ROOM_TYPE');
 
-        $data['SEARCH_ROOM_CLASS']       = ($this->request->getPost('SEARCH_ROOM_CLASS') == '' && $page > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_CLASS']) && $roomPlanSearch['SEARCH_ROOM_CLASS'] != '') ? $roomPlanSearch['SEARCH_ROOM_CLASS'] :'') : $this->request->getPost('SEARCH_ROOM_CLASS');
+        $data['SEARCH_ROOM_CLASS']       = ($this->request->getPost('SEARCH_ROOM_CLASS') == '') ? ((isset($roomPlanSearch['SEARCH_ROOM_CLASS']) && $roomPlanSearch['SEARCH_ROOM_CLASS'] != '') ? $roomPlanSearch['SEARCH_ROOM_CLASS'] :'') : $this->request->getPost('SEARCH_ROOM_CLASS');
 
-        $data['SEARCH_ROOM']             =  ($this->request->getPost('SEARCH_ROOM') == '' && $page > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM']) && $roomPlanSearch['SEARCH_ROOM'] != '') ? $roomPlanSearch['SEARCH_ROOM'] :'') : $this->request->getPost('SEARCH_ROOM');
+        $data['SEARCH_ROOM']             =  ($this->request->getPost('SEARCH_ROOM') == '' ) ? ((isset($roomPlanSearch['SEARCH_ROOM']) && $roomPlanSearch['SEARCH_ROOM'] != '') ? $roomPlanSearch['SEARCH_ROOM'] :'') : $this->request->getPost('SEARCH_ROOM');
 
-        $data['SEARCH_ROOM_STATUS']      = ($this->request->getPost('SEARCH_ROOM_STATUS') == '' && $page > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_STATUS']) && $roomPlanSearch['SEARCH_ROOM_STATUS'] != '') ? $roomPlanSearch['SEARCH_ROOM_STATUS'] : '') :$this->request->getPost('SEARCH_ROOM_STATUS');
+        $data['SEARCH_ROOM_STATUS']      = ($this->request->getPost('SEARCH_ROOM_STATUS') == '' ) ? ((isset($roomPlanSearch['SEARCH_ROOM_STATUS']) && $roomPlanSearch['SEARCH_ROOM_STATUS'] != '') ? $roomPlanSearch['SEARCH_ROOM_STATUS'] : '') :$this->request->getPost('SEARCH_ROOM_STATUS');
         
-        $data['SEARCH_ROOM_FLOOR']       = ($this->request->getPost('SEARCH_ROOM_FLOOR') == '' && $page > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_FLOOR']) && $roomPlanSearch['SEARCH_ROOM_FLOOR'] != '') ? $roomPlanSearch['SEARCH_ROOM_FLOOR'] :'') : $this->request->getPost('SEARCH_ROOM_FLOOR');   
+        $data['SEARCH_ROOM_FLOOR']       = ($this->request->getPost('SEARCH_ROOM_FLOOR') == '') ? ((isset($roomPlanSearch['SEARCH_ROOM_FLOOR']) && $roomPlanSearch['SEARCH_ROOM_FLOOR'] != '') ? $roomPlanSearch['SEARCH_ROOM_FLOOR'] :'') : $this->request->getPost('SEARCH_ROOM_FLOOR');   
 
         $data['SEARCH_ASSIGNED_ROOMS']       = (NULL == $this->request->getPost('SEARCH_ASSIGNED_ROOMS') && $page > 1 ) ? ((isset($roomPlanSearch['SEARCH_ASSIGNED_ROOMS']) && $roomPlanSearch['SEARCH_ASSIGNED_ROOMS'] != '') ? $roomPlanSearch['SEARCH_ASSIGNED_ROOMS'] :'') : $this->request->getPost('SEARCH_ASSIGNED_ROOMS'); 
 
@@ -1378,23 +1378,23 @@ public function showPackages()
 
         $roomPlanSearch = $this->session->get('roomPlanSearch');
 
-         $SEARCH_DATE  = (date("Y-m-d",strtotime($this->request->getPost('SEARCH_DATE'))) == '')? ((isset($roomPlanSearch['SEARCH_DATE']) && $roomPlanSearch['SEARCH_DATE'] !='') ? $roomPlanSearch['SEARCH_DATE']:'') : date("Y-m-d",strtotime($this->request->getPost('SEARCH_DATE')));        
+         $SEARCH_DATE  = (date("Y-m-d",strtotime($this->request->getPost('SEARCH_DATE'))) == '' && $PAGE > 1)? ((isset($roomPlanSearch['SEARCH_DATE']) && $roomPlanSearch['SEARCH_DATE'] !='') ? $roomPlanSearch['SEARCH_DATE']:'') : date("Y-m-d",strtotime($this->request->getPost('SEARCH_DATE')));        
         
         if((isset($clear) && $clear == '0') || $SEARCH_DATE != ''){ 
 
-            $SEARCH_ROOM_TYPE        = ($this->request->getPost('SEARCH_ROOM_TYPE') == '' && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_TYPE']) && $roomPlanSearch['SEARCH_ROOM_TYPE'] != '') ? $roomPlanSearch['SEARCH_ROOM_TYPE'] :'') : $this->request->getPost('SEARCH_ROOM_TYPE');
+            $SEARCH_ROOM_TYPE        = ($this->request->getPost('SEARCH_ROOM_TYPE') == '' ) ? ((isset($roomPlanSearch['SEARCH_ROOM_TYPE']) && $roomPlanSearch['SEARCH_ROOM_TYPE'] != '') ? $roomPlanSearch['SEARCH_ROOM_TYPE'] :'') : $this->request->getPost('SEARCH_ROOM_TYPE');
 
-            $SEARCH_ROOM_CLASS      = ($this->request->getPost('SEARCH_ROOM_CLASS') == '' && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_CLASS']) && $roomPlanSearch['SEARCH_ROOM_CLASS'] != '') ? $roomPlanSearch['SEARCH_ROOM_CLASS'] :'') : $this->request->getPost('SEARCH_ROOM_CLASS');
+            $SEARCH_ROOM_CLASS      = ($this->request->getPost('SEARCH_ROOM_CLASS') == '' ) ? ((isset($roomPlanSearch['SEARCH_ROOM_CLASS']) && $roomPlanSearch['SEARCH_ROOM_CLASS'] != '') ? $roomPlanSearch['SEARCH_ROOM_CLASS'] :'') : $this->request->getPost('SEARCH_ROOM_CLASS');
 
-            $SEARCH_ROOM            =  ($this->request->getPost('SEARCH_ROOM') == '' && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM']) && $roomPlanSearch['SEARCH_ROOM'] != '') ? $roomPlanSearch['SEARCH_ROOM'] :'') : $this->request->getPost('SEARCH_ROOM');
+            $SEARCH_ROOM            =  ($this->request->getPost('SEARCH_ROOM') == '' ) ? ((isset($roomPlanSearch['SEARCH_ROOM']) && $roomPlanSearch['SEARCH_ROOM'] != '') ? $roomPlanSearch['SEARCH_ROOM'] :'') : $this->request->getPost('SEARCH_ROOM');
 
-            $SEARCH_ROOM_STATUS      = ($this->request->getPost('SEARCH_ROOM_STATUS') == '' && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_STATUS']) && $roomPlanSearch['SEARCH_ROOM_STATUS'] != '') ? $roomPlanSearch['SEARCH_ROOM_STATUS'] : '') :$this->request->getPost('SEARCH_ROOM_STATUS');
+            $SEARCH_ROOM_STATUS   = ($this->request->getPost('SEARCH_ROOM_STATUS') == '' ) ? ((isset($roomPlanSearch['SEARCH_ROOM_STATUS']) && $roomPlanSearch['SEARCH_ROOM_STATUS'] != '') ? $roomPlanSearch['SEARCH_ROOM_STATUS'] : '') :$this->request->getPost('SEARCH_ROOM_STATUS');
             
-            $SEARCH_ROOM_FLOOR       = ($this->request->getPost('SEARCH_ROOM_FLOOR') == '' && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_ROOM_FLOOR']) && $roomPlanSearch['SEARCH_ROOM_FLOOR'] != '') ? $roomPlanSearch['SEARCH_ROOM_FLOOR'] :'') : $this->request->getPost('SEARCH_ROOM_FLOOR');
+            $SEARCH_ROOM_FLOOR     = ($this->request->getPost('SEARCH_ROOM_FLOOR') == '' ) ? ((isset($roomPlanSearch['SEARCH_ROOM_FLOOR']) && $roomPlanSearch['SEARCH_ROOM_FLOOR'] != '') ? $roomPlanSearch['SEARCH_ROOM_FLOOR'] :'') : $this->request->getPost('SEARCH_ROOM_FLOOR');
 
-            $SEARCH_ASSIGNED_ROOMS       = (NULL == $this->request->getPost('SEARCH_ASSIGNED_ROOMS') && $PAGE > 1 ) ? ((isset($roomPlanSearch['SEARCH_ASSIGNED_ROOMS']) && $roomPlanSearch['SEARCH_ASSIGNED_ROOMS'] != '') ? $roomPlanSearch['SEARCH_ASSIGNED_ROOMS'] :'') : $this->request->getPost('SEARCH_ASSIGNED_ROOMS'); 
+            $SEARCH_ASSIGNED_ROOMS   = (NULL == $this->request->getPost('SEARCH_ASSIGNED_ROOMS') && $PAGE > 1 ) ? ((isset($roomPlanSearch['SEARCH_ASSIGNED_ROOMS']) && $roomPlanSearch['SEARCH_ASSIGNED_ROOMS'] != '') ? $roomPlanSearch['SEARCH_ASSIGNED_ROOMS'] :'') : $this->request->getPost('SEARCH_ASSIGNED_ROOMS'); 
 
-            $SEARCH_UNASSIGNED_ROOMS       = (NULL == $this->request->getPost('SEARCH_UNASSIGNED_ROOMS') && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_UNASSIGNED_ROOMS']) && $roomPlanSearch['SEARCH_UNASSIGNED_ROOMS'] != '') ? $roomPlanSearch['SEARCH_UNASSIGNED_ROOMS'] :'') : $this->request->getPost('SEARCH_UNASSIGNED_ROOMS'); 
+            $SEARCH_UNASSIGNED_ROOMS  = (NULL == $this->request->getPost('SEARCH_UNASSIGNED_ROOMS') && $PAGE > 1) ? ((isset($roomPlanSearch['SEARCH_UNASSIGNED_ROOMS']) && $roomPlanSearch['SEARCH_UNASSIGNED_ROOMS'] != '') ? $roomPlanSearch['SEARCH_UNASSIGNED_ROOMS'] :'') : $this->request->getPost('SEARCH_UNASSIGNED_ROOMS'); 
     
             
             
