@@ -65,7 +65,8 @@ class HouseKeepingController extends BaseController
                 "
             )
             ->join('FLXY_HK_TASKS', 'HKAT_TASK_ID = HKT_ID', 'left')
-            ->join('FLXY_ROOM', 'HKAT_ROOM_ID = RM_ID', 'left')
+            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_ID = HKARM_TASK_ID', 'left')
+            ->join('FLXY_ROOM', 'HKARM_ROOM_ID = RM_ID', 'left')
             ->join('FLXY_USERS', 'HKAT_ATTENDANT_ID = USR_ID', 'left')
             ->where($where_condition)
             ->findAll();
@@ -77,7 +78,8 @@ class HouseKeepingController extends BaseController
     {
         $data = $this->HKAssignedTask
             ->select('FLXY_HK_ASSIGNED_TASKS.*, RM_NO')
-            ->join('FLXY_ROOM', 'HKAT_ROOM_ID = RM_ID', 'left')
+            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_ID = HKARM_TASK_ID', 'left')
+            ->join('FLXY_ROOM', 'HKARM_ROOM_ID = RM_ID', 'left')
             ->find($task_id);
 
         $notes = $this->HKAssignedTaskNote
