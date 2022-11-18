@@ -126,7 +126,7 @@ class HouseKeepingController extends BaseController
             if (empty($sub_task))
                 return $this->respond(responseJson(404, true, ['msg' => 'No Task found.']));
             
-            if($sub_task['HKATD_STATUS'] == 'In Progress')
+            if(in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_STATUS'] == 'In Progress') // (admin || supervisor) && In Progress
                 return $this->respond(responseJson(202, true, ['msg' => 'Not All tasks are completed.']));
         }
 
