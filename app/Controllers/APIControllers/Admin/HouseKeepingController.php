@@ -52,7 +52,7 @@ class HouseKeepingController extends BaseController
             ->select(
                 "FLXY_HK_ASSIGNED_TASKS.*, 
                 HKT_DESCRIPTION as TASK_TITLE,
-                RM_NO,
+                HKARM_ROOM_ID, RM_NO,
                 USR_NAME as ATTENDEE_NAME,
                 (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS = 'Not Inspected') as NOT_INSPECTED_COUNT,
                 (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS = 'Inspected') as INSPECTED_COUNT,
@@ -77,7 +77,7 @@ class HouseKeepingController extends BaseController
     public function taskDetails($task_id)
     {
         $data = $this->HKAssignedTask
-            ->select('FLXY_HK_ASSIGNED_TASKS.*, RM_NO')
+            ->select('FLXY_HK_ASSIGNED_TASKS.*, HKARM_ROOM_ID, RM_NO')
             ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_ID = HKARM_TASK_ID', 'left')
             ->join('FLXY_ROOM', 'HKARM_ROOM_ID = RM_ID', 'left')
             ->find($task_id);
