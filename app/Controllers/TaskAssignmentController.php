@@ -253,13 +253,13 @@ class TaskAssignmentController extends BaseController
                 "HKAT_INSTRUCTIONS"   => trim($HKAT_SHEET_INSTRUCTIONS), 
                 "HKAT_CREATED_AT"     => date("Y-m-d H:i:s A"),
                 "HKAT_UPDATED_BY"     => $user_id,
-                "HKAT_ROOM_ID"        => 0
+                
             ];
             
             $return = !empty($sysid) ? $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->where('HKAT_ID', $sysid)->update($data) : $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->insert($data);
 
-            $SHEET_NO = $this->getLastSheetNo($HKAT_TASK_ID, 1);
-            $this->Db->table('FLXY_HK_TASKASSIGNMENT_OVERVIEW')->where('HKTAO_ID', $HKAT_TASK_ID)->update(['HKATO_TOTAL_SHEETS'=>(--$SHEET_NO)]);
+            $SHEET_NO_OVERVIEW = $SHEET_NO = $this->getLastSheetNo($HKAT_TASK_ID, 1);
+            $this->Db->table('FLXY_HK_TASKASSIGNMENT_OVERVIEW')->where('HKTAO_ID', $HKAT_TASK_ID)->update(['HKATO_TOTAL_SHEETS'=>(--$SHEET_NO_OVERVIEW)]);
 
             $result = $return ? $this->responseJson("1", "0", $return, $response = $SHEET_NO) : $this->responseJson("-444", "db insert not successful", $return);
             echo json_encode($result);
