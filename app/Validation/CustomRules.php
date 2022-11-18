@@ -477,6 +477,28 @@ public function checkReservationYearlyDate(string $str, string $fields, array $d
       }
   
 
+      public function Taskexists(string $str, string $fields, array $data)
+      {
+            /**
+             *  Check task exists in this dates
+             */
+              $response = 0;              
+              $HKTAO_ID          = $data['HKTAO_ID']; 
+              $HKTAO_TASK_DATE   = date('Y-m-d',(strtotime($data['HKTAO_TASK_DATE']))); 
+              $HKATO_TASK_CODE   = $data['HKATO_TASK_CODE'];  
+              $HKATO_AUTO        = $data['HKATO_AUTO']; 
+              
+              if($HKTAO_ID != '')
+              $cond = "HKTAO_ID != '".$HKTAO_ID."'";
+              
+              $sql = "SELECT * FROM FLXY_HK_TASKASSIGNMENT_OVERVIEW WHERE HKTAO_TASK_DATE = '".$HKTAO_TASK_DATE."' AND HKATO_TASK_CODE = '".$HKATO_TASK_CODE."' AND HKATO_AUTO = ".$HKATO_AUTO;
+      
+              $response = $this->Db->query($sql)->getNumRows();
+              return ($response == 0 ? true : false); 
+      }
+  
+      
+
     
     
 

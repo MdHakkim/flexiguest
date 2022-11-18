@@ -179,17 +179,16 @@
                                 </button>
                             </div>
                             <div class="line"></div>
-                            <div class="step" data-target="#task-room" onclick="showRoomAssignment()">
+                            <div class="step" data-target="#task-room" >
                                 <button type="button" class="step-trigger">
                                     <span class="bs-stepper-circle">2</span>
-                                    <span class="bs-stepper-label">Assign Room</span>
+                                    <span class="bs-stepper-label">Task Room</span>
                                 </button>
                             </div>
                         </div>
                         <div class="bs-stepper-content">
                             <form id="tasksheet-submit-form" onSubmit="return false">
-							<input type="hidden" name="HKAT_TASK_ID" id="HKAT_TASK_ID" class="form-control" />    
-							<input type="hidden" name="HKAT_SHEET_NO" id="HKAT_SHEET_NO" class="form-control" />    
+							<input type="hidden" name="HK_SHEET_ID" id="HK_SHEET_ID" class="form-control" />    
 
                             <div id="task-sheets" class="content">
 								<div class="border rounded p-4 mb-3"> 
@@ -198,21 +197,21 @@
 										<strong></strong>
 									</div>
 									<div class="col-md-4">
-										<label for="HKAT_SHEET_NUMBER"
+										<label for="HK_SHEET_NUMBER"
 											class="col-form-label col-md-5"><b>TASK SHEET </b></label>
-											<input type="number" name="HKAT_SHEET_NUMBER" id="HKAT_SHEET_NUMBER"
+											<input type="number" name="HK_SHEET_NUMBER" id="HK_SHEET_NUMBER"
 											class="form-control"  readonly/>
 									</div>
 									<div class="col-md-4">
 										<label for="TASK_ASSIGNMENT_DATE"
 											class="col-form-label col-md-5"><b>TASK DATE</b></label>
-										<input type="text" name="TASK_ASSIGNMENT_DATE" 
+										<input type="text" name="TASK_ASSIGNMENT_DATE" id="TASK_ASSIGNMENT_DATE"
 											class="form-control" value="" readonly/>
 									</div>
 									<div class="col-md-4 ">
 										<label for="TASK_CODE" class="col-form-label col-md-4"><b>TASK CODE
 												</b></label>
-										<input type="text" name="TASK_CODE" 
+										<input type="text" name="TASK_CODE" id="TASK_CODE"
 											class="form-control" readonly/>
 									</div>									
 								</div>
@@ -226,9 +225,9 @@
 									</div>
 
 									<div class="col-md-8">
-										<label for="HKAT_SHEET_INSTRUCTIONS" class="col-form-label col-md-4"><b>INSTRUCTIONS
+										<label for="HK_SHEET_INSTRUCTIONS" class="col-form-label col-md-4"><b>INSTRUCTIONS
 												</b></label>
-											<textarea  name="HKAT_SHEET_INSTRUCTIONS" id="HKAT_SHEET_INSTRUCTIONS"
+											<textarea  name="HK_SHEET_INSTRUCTIONS" id="HK_SHEET_INSTRUCTIONS"
 											class="form-control" row="1"></textarea>
 
 									</div>
@@ -249,14 +248,14 @@
                                     <div class="border rounded p-4 mb-3">                                        
 
                                         <div class="table-responsive text-nowrap">
-                                            <table id="Taskassignment_sheet_details" class="table table-bordered table-hover">
+                                            <table id="FixedCharge_Details" class="table table-bordered table-hover">
                                                 <thead>
                                                     <tr>
-														<th></th>
                                                         <th class="all">Sheet No</th>
-														<th class="all">Attendant</th>
-														<th class="all">Credits</th>
-                                                        <!-- <th class="all">Completed On</th> -->
+                                                        <th class="all">Rooms</th>
+                                                        <th class="all">Credits</th>
+                                                        <th class="all">Completed On</th>
+                                                        <th class="all">Task Code</th>
                                                         <th class="all">Instructions</th>
                                                         <th class="all">Action</th>
                                                     </tr>
@@ -270,100 +269,38 @@
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Close</button>
 
-                                </div>                          
+                                </div>
+
+                           
 
                                 </div>
                             </form>
-							<form id="roomassign-submit-form" onSubmit="return false">
-								<div id="task-room" class="content">
-								<div class="border rounded p-4 mb-3"> 
-								<div class="row mb-3">
-								<div class="col-md-12">
-										<strong></strong>
-									</div>
-								
-									<div class="col-md-4">
-										<label for="TASK_ASSIGNMENT_DATE"
-											class="col-form-label col-md-5"><b>TASK DATE</b></label>
-										<input type="text" name="TASK_ASSIGNMENT_DATE" 
-											class="form-control" value="" readonly/>
-									</div>
-									<div class="col-md-4 ">
-										<label for="TASK_CODE" class="col-form-label col-md-4"><b>TASK CODE
-												</b></label>
-										<input type="text" name="TASK_CODE" 
-											class="form-control" readonly/>
-									</div>									
-								</div>
-                                
-								<div class="row g-3 mb-3">
-									<div class="col-md-4 ">
-										<label for="HKARM_TASK_SHEET_ID" class="col-form-label col-md-4"><b>Task Sheet
-												*</b></label>
-										<select id="HKARM_TASK_SHEET_ID" name="HKARM_TASK_SHEET_ID"
-											class="select2 form-select form-select-lg"></select>
-									</div>
-									<div class="col-md-4 ">
-										<label for="HKARM_ROOM_ID" class="col-form-label col-md-4"><b>Room
-												*</b></label>
-										<select id="HKARM_ROOM_ID" name="HKARM_ROOM_ID"
-											class="select2 form-select form-select-lg"></select>
-									</div>
-									<div class="col-md-4 ">
-										<label for="HKARM_CREDITS" class="col-form-label col-md-4"><b>Credits
-												</b></label>
-												<input type="number" name="HKARM_CREDITS"  id="HKARM_CREDITS"
-											class="form-control" min="1"/>
-									</div>
+                            <div id="task-room" class="content">
+							<div class="row g-3 mb-3">
+							<div class="col-md-4">
+								<label for="FIXD_CHRG_TRNCODE"
+									class="col-form-label col-md-5"><b>TRANSACTION CODE *</b></label>
+								<select id="FIXD_CHRG_TRNCODE" name="FIXD_CHRG_TRNCODE"
+									class="select2 form-select form-select-lg"></select>
 
-									<div class="col-md-12">
-										<label for="HKARM_INSTRUCTIONS" class="col-form-label col-md-4"><b>ROOM INSTRUCTIONS
-												</b></label>
-											<textarea  name="HKARM_INSTRUCTIONS" id="HKARM_INSTRUCTIONS"
-											class="form-control" row="1"></textarea>
+							</div>
+							<div class="col-md-4 ">
+								<label for="FIXD_CHRG_AMT" class="col-form-label col-md-4"><b>AMOUNT
+										*</b></label>
+								<input type="number" name="FIXD_CHRG_AMT" id="FIXD_CHRG_AMT"
+									class="form-control" min="1" step="1" placeholder="eg: 12" />
 
-									</div>
-								</div>
-								
+							</div>
 
-                                    <div class="row g-3 ">
-                                        <div class="col-md-3 mb-3">
-                                            <div class="col-md-8 float-right">
-                                                <button type="button" class="btn btn-success save-taskroom-detail">
-                                                    <i class="fa-solid fa-floppy-disk"></i>&nbsp; Add
-                                                </button>&nbsp;
-                                            </div>
-                                        </div>
+							<div class="col-md-4">
+								<label for="FIXD_CHRG_QTY" class="col-form-label col-md-4"><b>QUANTITY
+										*</b></label>
+								<input type="number" name="FIXD_CHRG_QTY" id="FIXD_CHRG_QTY"
+									class="form-control" min="1" step="1" placeholder="eg: 12" />
+
+							</div>
                                     </div>
-                               </div>
-                                <div class="col-md-12">
-                                    <div class="border rounded p-4 mb-3">                                        
-
-                                        <div class="table-responsive text-nowrap">
-                                            <table id="Taskassignment_room_details" class="table table-bordered table-hover">
-                                                <thead>
-                                                    <tr>
-														<th></th>
-                                                        <th class="all">Sheet No</th>														
-														<th class="all">Room</th>
-														<th class="all">Credits</th>
-                                                        <th class="all">Instructions</th>
-                                                        <th class="all">Action</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
-                                        <br />
-                                    </div>
-                                </div>
-                                <div class="d-flex col-12 justify-content-between">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Close</button>
-
-                                </div>                          
-
-                                </div>
-							</form>
+                            </div>
 
                         </div>
                     </div>
@@ -517,9 +454,9 @@
 									'<div class="d-inline-block flxy_option_view dropend">' +
 									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                                     '<ul class="dropdown-menu dropdown-menu-end">' +									
-									'<li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
-									'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="dropdown-item viewTaskAssignment text-success"><i class="fa-solid fa-align-justify"></i> Add Sheet</a></li><div class="dropdown-divider" ></div>' +
-									'<li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
+									'<li><a href="javascript:;" data_sysid="' + full['HKTAO_ID'] +
+									'" data-row-ind="' + meta.row + '"  class="dropdown-item viewTaskAssignment text-success"><i class="fa-solid fa-align-justify"></i> Add Sheet</a></li><div class="dropdown-divider" ></div>' +
+									'<li><a href="javascript:;" data_sysid="' + full['HKTAO_ID'] +
 									'" class="dropdown-item text-danger deleteTaskAssignment"><i class="fas fa-trash"></i> Delete</a></li>';
 
                                     taskAssignButtons += '</ul>' +
@@ -631,7 +568,8 @@
 
 
 
-	// Show Add Task Assigment
+	// Show Add Notification
+
 	function addForm() {
 		$('#submitForm').not('[type="radio"],[type="checkbox"]').val('').prop('checked', false).prop('selected', false);
 		$('.select2').val(null).trigger('change');		
@@ -641,6 +579,123 @@
 		$('#popModalWindow').modal('show');
 	}
 
+	// Delete Notification
+
+	$(document).on('click', '.viewNotification', function() {
+		//alert($(this).data('row-ind'))
+		var rowInd = $(this).data('row-ind');
+		$("td.control").eq(rowInd).click();
+	});
+
+	$(document).on('click', '.delete-record', function() {
+		hideModalAlerts();
+		$('.dtr-bs-modal').modal('hide');
+
+		var sysid = $(this).attr('data_sysid');
+		bootbox.confirm({
+			message: "Are you sure you want to delete this record?",
+			buttons: {
+				confirm: {
+					label: 'Yes',
+					className: 'btn-success'
+				},
+				cancel: {
+					label: 'No',
+					className: 'btn-danger'
+				}
+			},
+			callback: function(result) {
+				if (result) {
+					$.ajax({
+						url: '<?php echo base_url('/deleteNotification') ?>',
+						type: "post",
+						data: {
+							sysid: sysid
+						},
+						headers: {
+							'X-Requested-With': 'XMLHttpRequest'
+						},
+						dataType: 'json',
+						success: function(respn) {
+							showModalAlert('warning',
+								'<li>The Notification has been deleted</li>');
+							$('#dataTable_view').dataTable().fnDraw();
+						}
+					});
+				}
+			}
+		});
+	});
+
+	// Show Edit Notification 
+
+	$(document).on('click', '.editNotification', function() {
+		$('#popModalWindowlabel').html('Edit Notification');
+		$('.dtr-bs-modal').modal('hide');
+		var sysid = $(this).attr('data_sysid');
+		$('#popModalWindowlabel').html('Edit Notification');
+		$("#DEPT_CODE").prop("readonly", true);
+		$('#popModalWindow').modal('show');
+
+		var url = '<?php echo base_url('/editNotification') ?>';
+		$.ajax({
+			url: url,
+			type: "post",
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest'
+			},
+			data: {
+				sysid: sysid
+			},
+			dataType: 'json',
+			success: function(respn) {
+				$(respn).each(function(inx, data) {
+					$.each(data, function(fields, datavals) {
+						var field = $.trim(fields); //fields.trim();
+						var dataval = $.trim(datavals); //datavals.trim();                   
+
+						if (field == "NOTIFICATION_DEPARTMENT") {
+							if (dataval != '') {
+								$("#submitForm select[name='NOTIFICATION_DEPARTMENT[]']").val(JSON.parse(dataval));
+								$("#submitForm select[name='NOTIFICATION_DEPARTMENT[]']").trigger('change');
+							}
+						} else if (field == "NOTIFICATION_TO_ID") {
+							if (dataval != '') {
+								$("#submitForm select[name='NOTIFICATION_TO_ID[]']").val(JSON.parse(dataval));
+								$("#submitForm select[name='NOTIFICATION_TO_ID[]']").trigger('change');
+							}
+						} else if (field == "NOTIFICATION_RESERVATION_ID") {
+							if (dataval != '') {
+								$("#submitForm select[name='NOTIFICATION_RESERVATION_ID[]']").val(JSON.parse(dataval));
+								$("#submitForm select[name='NOTIFICATION_RESERVATION_ID[]']").trigger('change');
+							}
+						} else if (field == "NOTIFICATION_GUEST_ID") {
+							if (dataval != '') {
+								$("#submitForm select[name='NOTIFICATION_GUEST_ID[]']").val(JSON.parse(dataval));
+								$("#submitForm select[name='NOTIFICATION_GUEST_ID[]']").trigger('change');
+							}
+						} else if ($('#' + field).attr('type') == 'checkbox') {
+							$('#' + field).prop('checked', dataval == 1 ? true : false);
+						} else if ($("input[name=" + field + "]").attr('type') == 'radio') {
+							$('#' + field + '_' + dataval).prop('checked', true);
+							$('#' + field + '_' + dataval).click();
+							$('#NOTIFICATION_OLD_TYPE').val(dataval)
+						} else if (field == "NOTIFICATION_TEXT") {
+							$("#full-editor .ql-editor").html(dataval)
+						} else {
+							$('#' + field).val(dataval)
+						}
+
+
+					});
+				});
+				$('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
+			}
+		});
+	});
+
+
+	// Add New or Edit Department submit Function
 
 	function submitForm(id) {
 
@@ -679,8 +734,246 @@
 		});
 	}
 
+	function notificationTypeList() {
+		$.ajax({
+			url: '<?php echo base_url('/notificationTypeList') ?>',
+			type: "GET",
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest'
+			},
+			async: false,
+			success: function(respn) {
+				respn = JSON.parse(respn);
+
+				$('.notification_type').html(respn.option1);
+				$('.search-form [name="notification_type[]"]').html(respn.option2);
+			}
+		});
+
+	}
 
 
+	function departmentList() {
+		$.ajax({
+			url: '<?php echo base_url('/allDepartmentList') ?>',
+			type: "get",
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest'
+			},
+			async: false,
+			success: function(respn) {
+				$('#NOTIFICATION_DEPARTMENT').html(respn);
+				$('.search-form [name="notification_department[]"').html(respn);
+			}
+		});
+	}
+
+	function usersList() {
+		$.ajax({
+			url: '<?php echo base_url('/usersList') ?>',
+			type: "GET",
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest'
+			},
+			async: false,
+			success: function(respn) {
+				$('#HKATOO_CREATED_BY').html(respn);
+			}
+		});
+	}
+
+	$("#submitForm [name='NOTIFICATION_DEPARTMENT[]'], .search-form [name='notification_department[]']").change(function() {
+		let name = $(this).attr('name');
+		let department_ids = $(this).val();
+		if (department_ids.length) {
+			if (department_ids.includes('all')) {
+				if (name == 'notification_department[]') {
+					$(".search-form [name='notification_department[]']> option").prop("selected", true);
+					$(".search-form [name='notification_department[]'] > option").first().prop("selected", false);
+					$(".search-form [name='notification_department[]']").trigger("change");
+				} else {
+
+					$("#submitForm [name='NOTIFICATION_DEPARTMENT[]']> option").prop("selected", true);
+					$("#submitForm [name='NOTIFICATION_DEPARTMENT[]'] > option").first().prop("selected", false);
+					$("#submitForm [name='NOTIFICATION_DEPARTMENT[]']").trigger("change");
+				}
+				return;
+			}
+
+			if (name == 'NOTIFICATION_DEPARTMENT[]') {
+				$.ajax({
+					url: '<?= base_url('/usersByDepartmentList') ?>',
+					type: "post",
+					data: {
+						department_ids: department_ids
+					},
+					dataType: 'json',
+					success: function(response) {
+						$("#submitForm select[name='NOTIFICATION_TO_ID[]']").html(response);
+						$("#submitForm select[name='NOTIFICATION_TO_ID[]']").trigger('change');
+					}
+				});
+			}
+		}
+	});
+
+	$("#submitForm [name='NOTIFICATION_TO_ID[]']").change(function() {
+		let user_ids = $(this).val();
+
+		if (user_ids.length && user_ids.includes('all')) {
+			$("#submitForm [name='NOTIFICATION_TO_ID[]'] > option").prop("selected", true);
+			$("#submitForm [name='NOTIFICATION_TO_ID[]'] > option").first().prop("selected", false);
+			$("#submitForm [name='NOTIFICATION_TO_ID[]']").trigger("change");
+		}
+	});
+
+	$("#submitForm [name='NOTIFICATION_RESERVATION_ID[]']").change(function() {
+
+		let reservation_ids = $(this).val();
+		if (reservation_ids.length) {
+			if (reservation_ids.includes('all')) {
+				$("#submitForm [name='NOTIFICATION_RESERVATION_ID[]']> option").prop("selected", true);
+				$("#submitForm [name='NOTIFICATION_RESERVATION_ID[]'] > option").first().prop("selected", false);
+				$("#submitForm [name='NOTIFICATION_RESERVATION_ID[]']").trigger("change");
+				return;
+			}
+
+			$.ajax({
+				url: '<?= base_url('/guestByReservation') ?>',
+				type: "post",
+				data: {
+					reservation_ids: reservation_ids
+				},
+				dataType: 'json',
+				success: function(response) {
+					if (response) {
+						let guests = response;
+						let html = '';
+						for (let guest of guests) {
+							html += `
+                            <option value="${guest.CUST_ID}">${guest.FULLNAME} </option>
+                        `;
+						}
+						$("#submitForm select[name='NOTIFICATION_GUEST_ID[]']").html(html);
+						$("#submitForm select[name='NOTIFICATION_GUEST_ID[]']").trigger('change');
+					} else {
+
+					}
+				}
+			});
+		}
+	});
+
+	function reservationList() {
+		$.ajax({
+			url: '<?php echo base_url('/reservationList') ?>',
+			type: "GET",
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest'
+			},
+			async: false,
+			// dataType:'json',
+			success: function(respn) {
+				$('#NOTIFICATION_RESERVATION_ID').html(respn);
+				$('.search-form [name="notification_reservation_id[]"]').html(respn);
+			}
+		});
+	}
+
+	function guestList() {
+		$.ajax({
+			url: '<?php echo base_url('/getCustomers') ?>',
+			type: "GET",
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest'
+			},
+			async: false,
+			success: function(respn) {
+				$('#NOTIFICATION_GUEST_ID').html(respn);
+			}
+		});
+	}
+
+
+	$(document).on('click', '[name=NOTIFICATION_TYPE]', function() {
+		if ($(this).val() === '4') {
+			$(".Reservation").show();
+			$(".Department").show();
+			$(".Users").hide();
+			$(".Guest").hide();
+			$('#NOTIFICATION_RESERVATION_ID').val(null).trigger('change');
+		} else if ($(this).val() === '3') {
+			$(".Department").hide();
+			$(".Users").hide();
+			$(".Reservation").show();
+			$(".Guest").show();
+			guestList();
+		} else if ($(this).val() === '1' || $(this).val() === '2') {
+			$(".Department").show();
+			$(".Users").show();
+			$(".Reservation").hide();
+			$(".Guest").hide();
+
+		}
+	});
+
+
+	$(document).on('change', '#NOTIFICATION_RESERVATION_ID', function() {
+		var resvId = $(this).val();
+		if (document.querySelector('input[name="NOTIFICATION_TYPE"]:checked').value === 'Traces') {
+			fillCustomerSelect(resvId);
+		}
+
+	});
+
+	function fillCustomerSelect(resvId) {
+		$.ajax({
+			url: '<?php echo base_url('/showReservationCustomers') ?>',
+			async: false,
+			type: "post",
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest'
+			},
+			data: {
+				sysid: resvId
+			},
+			dataType: 'json',
+			success: function(respn) {
+				var customerSelect = $('#NOTIFICATION_GUEST_ID');
+				customerSelect.empty().trigger("change");
+
+				$(respn).each(function(inx, data) {
+					var newOption = new Option(data.text, data.id, false, false);
+					customerSelect.append(newOption);
+				});
+				customerSelect.val(respn.length == 1 ? respn[0].id : null).trigger('change');
+				// if only 1 guest, select one by default
+			}
+		});
+	}
+
+	// function viewAll(field, notificationId) {
+	// 	$(".showDetails").html('');
+	// 	$.ajax({
+	// 		url: '<?php //echo base_url('/viewAllNotificationDetails') ?>',
+	// 		async: false,
+	// 		type: "post",
+	// 		headers: {
+	// 			'X-Requested-With': 'XMLHttpRequest'
+	// 		},
+	// 		data: {
+	// 			notificationId: notificationId,
+	// 			type: field
+	// 		},
+	// 		success: function(respn) {
+	// 			$("#modalCenterTitle").html(field);
+	// 			$(".showDetails").html(respn);
+
+
+	// 		}
+	// 	});
+	// 	$("#modalCenter").modal('show')
+	// }
 
 	$(document).on('click', '.submit-search-form', function() {
 		search_form_data = new FormData($(`form.search-form`)[0]);
@@ -695,51 +988,24 @@
 	});
 
 	function attendeeList() {
-		$.ajax({
-			url: '<?php echo base_url('/attendeeList') ?>',
-			type: "POST",
-			headers: {
-				'X-Requested-With': 'XMLHttpRequest'
-			},
-			async: false,
-			success: function(respn) {
-				$('#HKAT_ATTENDANT_ID').html('<option value="">Select </option>');
-				$('#HKAT_ATTENDANT_ID').append(respn);
-			}
-		});
-	}
+			$.ajax({
+				url: '<?php echo base_url('/attendeeList') ?>',
+				type: "POST",
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest'
+				},
+				async: false,
+				success: function(respn) {
+					$('#HKAT_ATTENDANT_ID').html('<option value="">Select </option>');
+					$('#HKAT_ATTENDANT_ID').append(respn);
+				}
+			});
+		}
 
 	$(document).on('click', '.viewTaskAssignment', function() {
-		$("#HKAT_TASK_ID").val($(this).data('sysid'));
-		var HKAT_TASK_ID = $(this).data('sysid');
-
-		
-		$('input[name="TASK_ASSIGNMENT_DATE"]').val($(this).data('task_date'));
-		$('input[name="TASK_CODE"]').val($(this).data('task_code')+' - '+$(this).data('task_desc'));
+		$("#TASK_ASSIGNMENT_DATE").val($(this).data('task_date'));
+		$("#TASK_CODE").val($(this).data('task_code')+' - '+$(this).data('task_desc'));
 		attendeeList();
-		showTasksheetTable($(this).data('sysid'));
-		$.ajax({
-			url: '<?php echo base_url('/getLastSheetNo') ?>',
-			type: "POST",
-			data:{HKAT_TASK_ID: $(this).data('sysid')},
-			headers: {
-				'X-Requested-With': 'XMLHttpRequest'
-			},
-			async: false,
-			success: function(respn) {
-				$("#HKAT_SHEET_NUMBER").val(respn);
-				$("#HKAT_SHEET_NO").val(respn);
-				
-			}
-		});
-
-		// showTasksheetTable(HKAT_TASK_ID);
-		// showRoomAssignment();
-		
-		 //Make First Tab active
-		 $('[data-target="#task-sheets"]').trigger('click');
-		// $(".second-tab").removeclass('active')
-
 		$('#TaskAssignmentDetails').modal('show');
 	});
 
@@ -748,348 +1014,9 @@
 		console.log('sdflsflksd')
 	}
 
-	function showTasksheetTable(HKTAO_ID)
-	{
-		$('#Taskassignment_sheet_details').DataTable().destroy();
-		$('#Taskassignment_sheet_details').DataTable({
-        'processing': true,
-        async: false,
-        'serverSide': true,
-        'serverMethod': 'post',
-        'ajax': {
-            'url': '<?php echo base_url('/showTaskSheets') ?>',
-            'data': {
-                "HKTAO_ID": HKTAO_ID
-            }
-        },
-        'columns': [{
-                data: 'HKAT_ID',
-                'visible': false
-            }, {
-
-                data: 'HKAT_TASK_SHEET_ID',
-                render: function(data, type, full, meta) {
-                    if (full['HKAT_TASK_SHEET_ID'] != null)
-                        return full['HKAT_TASK_SHEET_ID'];
-                    else
-                        return '';
-                }
-            },
-            
-            {
-                data: 'USR_FIRST_NAME',
-				render: function(data, type, full, meta) {
-                    if (full['USR_FIRST_NAME'] != null)
-                        return full['USR_FIRST_NAME']+' '+full['USR_LAST_NAME'];
-                    else
-                        return '';
-                }
-            },
-            {
-                data: 'HKAT_CREDITS'
-            },
-            {
-                data: 'HKAT_INSTRUCTIONS'
-            },
-			{
-                data: null,
-                className: "text-center",
-                "orderable": false,
-                render: function(data, type, row, meta) {
-                    return (
-                        '<a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
-                        '" data-tasksheet_id="' + data['HKAT_ID'] +
-                        '" class="dropdown-item text-danger delete_sheet_record"><i class="fa-solid fa-ban"></i> Delete</a>'
-                    );
-                }
-            },
-			
-           
-
-        ],
-        "order": [
-            [1, "asc"]
-        ],
-        'createdRow': function(row, data, dataIndex) {
-            $(row).attr('data-tasksheet_id', data['HKAT_ID']);
-			$(row).attr('data-task_id', data['HKAT_TASK_ID']);
-        },
-        destroy: true,
-        "ordering": true,
-        "searching": false,
-        autowidth: true,
-        responsive: true
-    });
-	}
-
-	$(document).on('click', '.save-tasksheet-detail', function() {
-		var task_id      = $("#HKAT_TASK_ID").val();
-		var tasksheet_no = $("#HKAT_SHEET_NO").val();
-		var attendant_id = $("#HKAT_ATTENDANT_ID").val();
-		var instructions = $("#HKAT_SHEET_INSTRUCTIONS").val();
-		var url = '<?php echo base_url('/insertTaskAssignmentSheet') ?>';
-		$.ajax({
-			url: url,
-			type: "post",
-			data: {task_id:task_id,tasksheet_no:tasksheet_no,attendant_id:attendant_id,instructions:instructions},
-			headers: {
-				'X-Requested-With': 'XMLHttpRequest'
-			},
-			dataType: 'json',
-			success: function(respn) {
-				var response = respn['SUCCESS'];
-				if (response != '1') {
-					var ERROR = respn['RESPONSE']['ERROR'];
-					var mcontent = '';
-					$.each(ERROR, function(ind, data) {
-						mcontent += '<li>' + data + '</li>';
-					});
-					showModalAlert('error', mcontent);
-					$('#loader_flex_bg').hide();
-				} else {
-					$("#HKAT_SHEET_NO").val(respn['RESPONSE']['OUTPUT']);
-					$("#HKAT_SHEET_NUMBER").val(respn['RESPONSE']['OUTPUT']);					
-					$("#HKAT_ATTENDANT_ID").val(null).trigger('change');
-					$("#HKAT_SHEET_INSTRUCTIONS").val('');
-					var alertText =  '<li>The task assignment sheet has been created</li>';
-					showModalAlert('success', alertText);
-					$('#loader_flex_bg').hide();
-					$('#Taskassignment_sheet_details').dataTable().fnDraw();
-				}
-			}
-		});
-
-	});
-
-
-	$(document).on('click', '.delete_sheet_record', function() {
-		hideModalAlerts();
-
-		var tasksheet_id = $(this).data('tasksheet_id');
-		var task_id = $(this).data('task_id');
-		bootbox.confirm({
-			message: "Are you sure you want to delete this record?",
-			buttons: {
-				confirm: {
-					label: 'Yes',
-					className: 'btn-success'
-				},
-				cancel: {
-					label: 'No',
-					className: 'btn-danger'
-				}
-			},
-			callback: function(result) {
-				if (result) {
-					$.ajax({
-						url: '<?php echo base_url('/deleteTaskAssignmentSheet') ?>',
-						type: "post",
-						data: {
-							tasksheet_id: tasksheet_id, task_id: task_id
-						},
-						headers: {
-							'X-Requested-With': 'XMLHttpRequest'
-						},
-						dataType: 'json',
-						success: function(respn) {
-							showModalAlert('warning',
-							'<li>The tasksheet has been deleted</li>');
-							$("#HKAT_SHEET_NO").val(respn['RESPONSE']['OUTPUT']);
-							$("#HKAT_SHEET_NUMBER").val(respn['RESPONSE']['OUTPUT']);	
-							$('#Taskassignment_sheet_details').dataTable().fnDraw();
-						}
-					});
-				}
-			}
-		});
-	});
-
-
-	function showRoomAssignment()
-	{
-		var task_id      = $("#HKAT_TASK_ID").val();
-
-		getTaskSheets(task_id);
-		getRooms();
-		$('#Taskassignment_room_details').DataTable({
-        'processing': true,
-        async: false,
-        'serverSide': true,
-        'serverMethod': 'post',
-        'ajax': {
-            'url': '<?php echo base_url('/showTaskAssignedRooms') ?>',
-            'data': {
-                "HKTAO_ID": task_id
-            }
-        },
-        'columns': [{
-                data: 'HKARM_ID',
-                'visible': false
-            }, 
-            
-            {
-                data: 'HKARM_TASK_SHEET_ID',
-				
-            },
-			{
-                data: 'HKARM_ROOM_ID'
-            },
-            {
-                data: 'HKARM_CREDITS'
-            },
-			
-            {
-                data: 'HKARM_INSTRUCTIONS'
-            },
-
-			{
-                data: null,
-                className: "text-center",
-                "orderable": false,
-                render: function(data, type, row, meta) {
-                    return (
-                        '<a href="javascript:;" data-assignroom_id="' + data['HKARM_ID'] +
-                        '" class="dropdown-item text-danger delete_room_record"><i class="fa-solid fa-ban"></i> Delete</a>'
-                    );
-                }
-            },
-			
-           
-
-        ],
-        "order": [
-            [1, "asc"]
-        ],
-        'createdRow': function(row, data, dataIndex) {
-            $(row).attr('data-tasksheet_id', data['HKAT_ID']);
-			$(row).attr('data-task_id', data['HKAT_TASK_ID']);
-        },
-        destroy: true,
-        "ordering": true,
-        "searching": false,
-        autowidth: true,
-        responsive: true
-    });
-	}
-
-	function getTaskSheets(task_id){
-
-		$.ajax({
-			url: '<?php echo base_url('/taskSheetList') ?>',
-			type: "POST",
-			data:{task_id:task_id},
-			headers: {
-				'X-Requested-With': 'XMLHttpRequest'
-			},
-			async: false,
-			success: function(respn) {
-				$('#HKARM_TASK_SHEET_ID').html('<option value="">Select </option>');
-				$('#HKARM_TASK_SHEET_ID').append(respn);
-			}
-		});
-	}
-
-
-	function getRooms(){
-		$.ajax({
-			url: '<?php echo base_url('/roomList') ?>',
-			type: "POST",
-			headers: {
-				'X-Requested-With': 'XMLHttpRequest'
-			},
-			async: false,
-			success: function(respn) {
-				$('#HKARM_ROOM_ID').html('<option value="">Select </option>');
-				$('#HKARM_ROOM_ID').append(respn);
-			}
-		});
-		
-	}
-	
 
 
 	
-	$(document).on('click', '.save-taskroom-detail', function() {
-		var HKAT_TASK_ID         = $("#HKAT_TASK_ID").val();
-		var HKARM_TASK_SHEET_ID  = $("#HKARM_TASK_SHEET_ID").val();
-		var HKARM_ROOM_ID        = $("#HKARM_ROOM_ID").val();
-		var HKARM_CREDITS        = $("#HKARM_CREDITS").val();
-		var HKARM_INSTRUCTIONS   = $("#HKARM_INSTRUCTIONS").val();
-		var url = '<?php echo base_url('/insertTaskAssignmentRoom') ?>';
-		$.ajax({
-			url: url,
-			type: "post",
-			data: {HKAT_TASK_ID:HKAT_TASK_ID,HKARM_TASK_SHEET_ID:HKARM_TASK_SHEET_ID,HKARM_ROOM_ID:HKARM_ROOM_ID,HKARM_CREDITS:HKARM_CREDITS,HKARM_INSTRUCTIONS:HKARM_INSTRUCTIONS},
-			headers: {
-				'X-Requested-With': 'XMLHttpRequest'
-			},
-			dataType: 'json',
-			success: function(respn) {
-				var response = respn['SUCCESS'];
-				if (response != '1') {
-					var ERROR = respn['RESPONSE']['ERROR'];
-					var mcontent = '';
-					$.each(ERROR, function(ind, data) {
-						mcontent += '<li>' + data + '</li>';
-					});
-					showModalAlert('error', mcontent);
-					$('#loader_flex_bg').hide();
-				} else {
-									
-					$("#HKARM_TASK_SHEET_ID").val(null).trigger('change');
-					$("#HKARM_ROOM_ID").val(null).trigger('change');
-					$("#HKARM_CREDITS").val('');
-					$("#HKARM_INSTRUCTIONS").val('');
-					var alertText =  '<li>The room has been assigned</li>';
-					showModalAlert('success', alertText);
-					$('#loader_flex_bg').hide();
-					$('#Taskassignment_room_details').dataTable().fnDraw();
-				}
-			}
-		});
-
-	});
-
-
-	$(document).on('click', '.delete_room_record', function() {
-		hideModalAlerts();
-
-		var assignroom_id = $(this).data('assignroom_id');
-		bootbox.confirm({
-			message: "Are you sure you want to delete this record?",
-			buttons: {
-				confirm: {
-					label: 'Yes',
-					className: 'btn-success'
-				},
-				cancel: {
-					label: 'No',
-					className: 'btn-danger'
-				}
-			},
-			callback: function(result) {
-				if (result) {
-					$.ajax({
-						url: '<?php echo base_url('/deleteTaskAssignmentRoom') ?>',
-						type: "post",
-						data: {
-							HKARM_ID: assignroom_id
-						},
-						headers: {
-							'X-Requested-With': 'XMLHttpRequest'
-						},
-						dataType: 'json',
-						success: function(respn) {
-							showModalAlert('warning',
-							'<li>The room assigned has been deleted</li>');								
-							$('#Taskassignment_room_details').dataTable().fnDraw();
-						}
-					});
-				}
-			}
-		});
-	});
-
 </script>
 
 <?= $this->endSection() ?>

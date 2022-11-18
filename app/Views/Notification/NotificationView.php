@@ -634,7 +634,7 @@
 	});
 
 
-	// Add New or Edit Department submit Function
+	// Add New or Edit Notification submit Function
 
 	function submitForm(id) {
 

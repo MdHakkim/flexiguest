@@ -682,6 +682,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
 
     //Subina Code (END)  
+      $routes->match(['post'], '/roomTypeSearchList', 'ReservationController::roomTypeSearchList');
+      $routes->match(['post'], '/roomClassSearchList', 'ReservationController::roomClassSearchList'); 
+      $routes->match(['post'], '/roomSearchList', 'ReservationController::roomSearchList'); 
+      $routes->match(['post'], '/roomplanResourcesJson', 'ReservationController::roomplanResourcesJson'); 
+      $routes->match(['post','get'], '/roomPlan', 'ReservationController::roomPlan');
+      $routes->get('/roomPlan/(:segment)', 'ReservationController::roomPlan/$1');   
 
     $routes->match(['post'], '/roomOOSList', 'ReservationController::roomOOSList');
     $routes->match(['post'], '/roomPlanList', 'ReservationController::roomPlanList');
@@ -711,6 +717,37 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
 
 
+    
+
+    $routes->get('/Notifications', 'NotificationController::Notifications'); 
+    $routes->match(['post'], '/NotificationList', 'NotificationController::NotificationList');
+
+
+    $routes->get('/TaskAssignment', 'TaskAssignmentController::TaskAssignment'); 
+    $routes->match(['post'], '/TaskAssignmentView', 'TaskAssignmentController::TaskAssignmentView');
+    $routes->match(['post'], '/insertTaskAssignment', 'TaskAssignmentController::InsertTaskAssignment');
+    $routes->match(['post'], '/attendeeList', 'TaskAssignmentController::attendeeList');
+    $routes->match(['post'], '/showTaskSheets', 'TaskAssignmentController::showTaskSheets');
+    $routes->match(['post'], '/getLastSheetNo', 'TaskAssignmentController::getLastSheetNo');
+
+    $routes->match(['post'], '/insertTaskAssignmentSheet', 'TaskAssignmentController::insertTaskAssignmentSheet');
+    $routes->match(['post'], '/deleteTaskAssignmentSheet', 'TaskAssignmentController::deleteTaskAssignmentSheet');
+    $routes->match(['post'], '/showTaskAssignedRooms', 'TaskAssignmentController::showTaskAssignedRooms');
+    $routes->match(['post'], '/taskSheetList', 'TaskAssignmentController::taskSheetList');
+    $routes->match(['post'], '/insertTaskAssignmentRoom', 'TaskAssignmentController::insertTaskAssignmentRoom');
+    $routes->match(['post'], '/deleteTaskAssignmentRoom', 'TaskAssignmentController::deleteTaskAssignmentRoom');
+    $routes->match(['post'], '/taskRoomList', 'TaskAssignmentController::taskRoomList');
+    
+    
+    
+    
+
+    
+
+
+    
+    
+    
     //Subina Code (END)  
 
     // Deleep 
