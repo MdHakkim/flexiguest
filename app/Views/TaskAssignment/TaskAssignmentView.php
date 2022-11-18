@@ -74,6 +74,7 @@
 							<th class="all">Created On</th>							
 							<th class="all">Auto</th>
 							<th class="all">Total Sheets</th>
+							<th class="all">Total Rooms</th>
 							<th class="all">Total Credits</th>
                             <th class="all">Action</th>
 						</tr>
@@ -170,28 +171,35 @@
                 <div class="modal-body">
 				
 
-                    <div id="wizard-validation" class="bs-stepper mt-2">
-                        <div class="bs-stepper-header">
-                            <div class="step" data-target="#task-sheets">
-                                <button type="button" class="step-trigger">
-                                    <span class="bs-stepper-circle">1</span>
-                                    <span class="bs-stepper-label">Task Sheets</span>
+                 
+                    <div class="card-header border-bottom">
+                        <ul class="nav nav-pills" role="tablist">
+                            <li class="nav-item">
+                                <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab"
+                                    data-bs-target="#task-sheets" aria-controls="task-sheets"
+                                    aria-selected="true">
+                                    Task Sheets
                                 </button>
-                            </div>
-                            <div class="line"></div>
-                            <div class="step" data-target="#task-room" onclick="showRoomAssignment()">
-                                <button type="button" class="step-trigger">
-                                    <span class="bs-stepper-circle">2</span>
-                                    <span class="bs-stepper-label">Assign Room</span>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                                    data-bs-target="#task-room"
+                                    aria-controls="task-room" aria-selected="false" onclick="showRoomAssignment()">
+                                    Assign Room
                                 </button>
-                            </div>
-                        </div>
-                        <div class="bs-stepper-content">
+                            </li>
+                           
+                        </ul>
+
+                    </div>
+                    <div class="tab-content">
+
+                        <div class="tab-pane fade show active" id="task-sheets" role="tabpanel">
                             <form id="tasksheet-submit-form" onSubmit="return false">
 							<input type="hidden" name="HKAT_TASK_ID" id="HKAT_TASK_ID" class="form-control" />    
 							<input type="hidden" name="HKAT_SHEET_NO" id="HKAT_SHEET_NO" class="form-control" />    
 
-                            <div id="task-sheets" class="content">
+                           
 								<div class="border rounded p-4 mb-3"> 
 								<div class="row mb-3">
 								<div class="col-md-12">
@@ -226,7 +234,7 @@
 									</div>
 
 									<div class="col-md-8">
-										<label for="HKAT_SHEET_INSTRUCTIONS" class="col-form-label col-md-4"><b>INSTRUCTIONS
+										<label for="HKAT_SHEET_INSTRUCTIONS" class="col-form-label col-md-4"><b>TASK INSTRUCTIONS
 												</b></label>
 											<textarea  name="HKAT_SHEET_INSTRUCTIONS" id="HKAT_SHEET_INSTRUCTIONS"
 											class="form-control" row="1"></textarea>
@@ -255,9 +263,11 @@
 														<th></th>
                                                         <th class="all">Sheet No</th>
 														<th class="all">Attendant</th>
-														<th class="all">Credits</th>
-                                                        <!-- <th class="all">Completed On</th> -->
-                                                        <th class="all">Instructions</th>
+														<th class="all">Status</th>
+                                                        <th class="all">Completed On</th>
+														<th class="all">Inspected status</th>
+                                                        <th class="all">Task Instructions</th>
+														
                                                         <th class="all">Action</th>
                                                     </tr>
                                                 </thead>
@@ -271,11 +281,11 @@
                                         data-bs-dismiss="modal">Close</button>
 
                                 </div>                          
-
+                                </form>
                                 </div>
-                            </form>
+                                <div class="tab-pane fade" id="task-room" role="tabpanel">
 							<form id="roomassign-submit-form" onSubmit="return false">
-								<div id="task-room" class="content">
+								
 								<div class="border rounded p-4 mb-3"> 
 								<div class="row mb-3">
 								<div class="col-md-12">
@@ -310,7 +320,7 @@
 											class="select2 form-select form-select-lg"></select>
 									</div>
 									<div class="col-md-4 ">
-										<label for="HKARM_CREDITS" class="col-form-label col-md-4"><b>Credits
+										<label for="HKARM_CREDITS" class="col-form-label col-md-4"><b>Room Credits
 												</b></label>
 												<input type="number" name="HKARM_CREDITS"  id="HKARM_CREDITS"
 											class="form-control" min="1"/>
@@ -346,8 +356,8 @@
 														<th></th>
                                                         <th class="all">Sheet No</th>														
 														<th class="all">Room</th>
-														<th class="all">Credits</th>
-                                                        <th class="all">Instructions</th>
+														<th class="all">Room Credits</th>
+                                                        <th class="all">Room Instructions</th>
                                                         <th class="all">Action</th>
                                                     </tr>
                                                 </thead>
@@ -361,12 +371,12 @@
                                         data-bs-dismiss="modal">Close</button>
 
                                 </div>                          
-
+                                </form>
                                 </div>
-							</form>
+							
 
                         </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -394,6 +404,7 @@
        $('.dt-date').datepicker({
 			format: 'dd-M-yyyy',
 			autoclose: true,
+			startDate: '-0m',
 			onSelect: function() {
 				$(this).change();
 			},        
@@ -502,6 +513,35 @@
 					},
 					{
 						data: 'HKATO_TOTAL_SHEETS',
+						render: function(data, type, full, meta) {
+							if(full['HKATO_TOTAL_SHEETS'] > 0 ){
+							var HKATO_TOTAL_SHEETS = 	
+
+							'<a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
+									'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="viewTaskAssignment btn btn-outline-info">'+full['HKATO_TOTAL_SHEETS']+' </a>';
+
+								return HKATO_TOTAL_SHEETS;	
+							}else{
+								return '0';
+							}
+						}
+						
+					},
+					{
+						data: 'HKATO_TOTAL_ROOMS',
+						render: function(data, type, full, meta) {
+							if(full['HKATO_TOTAL_ROOMS'] > 0 ){
+								var HKATO_TOTAL_ROOMS = 						
+
+								'<a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
+										'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="viewTaskAssignment btn btn-outline-info" data-room-view="1">'+full['HKATO_TOTAL_ROOMS']+' </a>';
+
+									return HKATO_TOTAL_ROOMS;	
+							}
+							else{
+								return '0';	
+							}
+						}
 						
 					},					
 					{
@@ -518,14 +558,14 @@
 									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                                     '<ul class="dropdown-menu dropdown-menu-end">' +									
 									'<li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
-									'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="dropdown-item viewTaskAssignment text-success"><i class="fa-solid fa-align-justify"></i> Add Sheet</a></li><div class="dropdown-divider" ></div>' +
-									'<li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
-									'" class="dropdown-item text-danger deleteTaskAssignment"><i class="fas fa-trash"></i> Delete</a></li>';
+									'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="dropdown-item viewTaskAssignment text-success"><i class="fa-solid fa-align-justify"></i> Add Sheet</a></li>'
+									;
 
+									// '<div class="dropdown-divider" ></div><li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
+									// '" class="dropdown-item text-danger deleteTaskAssignment"><i class="fas fa-trash"></i> Delete</a></li>'
                                     taskAssignButtons += '</ul>' +
 									'</div>';
-								return taskAssignButtons;
-							
+								return taskAssignButtons;							
 						}
 					}					
 					
@@ -679,9 +719,6 @@
 		});
 	}
 
-
-
-
 	$(document).on('click', '.submit-search-form', function() {
 		search_form_data = new FormData($(`form.search-form`)[0]);
 		$('#dataTable_view').dataTable().fnDraw();
@@ -737,7 +774,11 @@
 		// showRoomAssignment();
 		
 		 //Make First Tab active
-		 $('[data-target="#task-sheets"]').trigger('click');
+		 if($(this).data('room-view') == 1)
+         $('[data-bs-target="#task-room"]').trigger('click');
+		 else
+		 $('[data-bs-target="#task-sheets"]').trigger('click');
+		
 		// $(".second-tab").removeclass('active')
 
 		$('#TaskAssignmentDetails').modal('show');
@@ -786,7 +827,14 @@
                 }
             },
             {
-                data: 'HKAT_CREDITS'
+                data: 'HKATD_STATUS',
+				
+            },
+			{
+                data: 'HKATD_COMPLETION_TIME'
+            },
+			{
+                data: 'HKATD_INSPECTED_STATUS'
             },
             {
                 data: 'HKAT_INSTRUCTIONS'
@@ -796,11 +844,27 @@
                 className: "text-center",
                 "orderable": false,
                 render: function(data, type, row, meta) {
-                    return (
-                        '<a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
-                        '" data-tasksheet_id="' + data['HKAT_ID'] +
-                        '" class="dropdown-item text-danger delete_sheet_record"><i class="fa-solid fa-ban"></i> Delete</a>'
-                    );
+
+					var taskAssignButtons = 
+									'<div class="d-inline-block flxy_option_view dropend">' +
+									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
+                                    '<ul class="dropdown-menu dropdown-menu-end">' +									
+									'<li><a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
+									'" data-tasksheet_id="' + data['HKAT_ID'] +
+									'" class="dropdown-item text-primary delete_sheet_record"><i class="fas fa-eye"></i> View</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
+									'" data-tasksheet_id="' + data['HKAT_ID'] +
+									'" class="dropdown-item text-danger delete_sheet_record"><i class="fas fa-trash"></i> Delete</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-tasksheet_id="' + data['HKAT_TASK_ID'] +
+									'" data-sysid="' + data['HKAT_ID'] +
+									'" class="dropdown-item text-info printTaskAssignment"><i class="fa fa-print" aria-hidden="true"></i> Print</a></li>'
+                                    taskAssignButtons += '</ul>' +
+									'</div>';
+								return taskAssignButtons;	
+
+                    // return (
+                    //     '<a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
+                    //     '" data-tasksheet_id="' + data['HKAT_ID'] +
+                    //     '" class="dropdown-item text-danger delete_sheet_record"><i class="fa-solid fa-ban"></i> Delete</a>'
+                    // );
                 }
             },
 			
@@ -808,7 +872,7 @@
 
         ],
         "order": [
-            [1, "asc"]
+            [0, "asc"]
         ],
         'createdRow': function(row, data, dataIndex) {
             $(row).attr('data-tasksheet_id', data['HKAT_ID']);
@@ -949,6 +1013,7 @@
                 render: function(data, type, row, meta) {
                     return (
                         '<a href="javascript:;" data-assignroom_id="' + data['HKARM_ID'] +
+                        '" data-task_id="' + task_id +
                         '" class="dropdown-item text-danger delete_room_record"><i class="fa-solid fa-ban"></i> Delete</a>'
                     );
                 }
@@ -992,7 +1057,7 @@
 
 	function getRooms(){
 		$.ajax({
-			url: '<?php echo base_url('/roomList') ?>',
+			url: '<?php echo base_url('/taskRoomList') ?>',
 			type: "POST",
 			headers: {
 				'X-Requested-With': 'XMLHttpRequest'
@@ -1055,6 +1120,7 @@
 		hideModalAlerts();
 
 		var assignroom_id = $(this).data('assignroom_id');
+        var taskid = $(this).data('task_id');
 		bootbox.confirm({
 			message: "Are you sure you want to delete this record?",
 			buttons: {
@@ -1073,7 +1139,8 @@
 						url: '<?php echo base_url('/deleteTaskAssignmentRoom') ?>',
 						type: "post",
 						data: {
-							HKARM_ID: assignroom_id
+							HKARM_ID: assignroom_id,
+                            HKAT_TASK_ID: taskid,
 						},
 						headers: {
 							'X-Requested-With': 'XMLHttpRequest'

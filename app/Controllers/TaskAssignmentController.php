@@ -31,7 +31,7 @@ class TaskAssignmentController extends BaseController
         $data['js_to_load'] = array("TaskAssignmentFormWizardNumbered.js");
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['blockLoader_javascript']     = blockLoader_javascript();
-        return view('TaskAssignment/TaskAssignmentView1', $data);
+        return view('TaskAssignment/TaskAssignmentView', $data);
     }
 
     public function TaskAssignmentView()
@@ -188,7 +188,7 @@ class TaskAssignmentController extends BaseController
 
         $UserID = session()->get('USR_ID');
         $mine = new ServerSideDataTable();
-        $tableName = "FLXY_HK_ASSIGNED_TASKS INNER JOIN FLXY_USERS ON HKAT_ATTENDANT_ID = USR_ID";
+        $tableName = "FLXY_HK_ASSIGNED_TASKS INNER JOIN FLXY_USERS ON HKAT_ATTENDANT_ID = USR_ID LEFT JOIN FLXY_HK_ASSIGNED_TASK_DETAILS ON HKAT_ID = HKATD_ASSIGNED_TASK_ID";
         $init_cond = [];
 
         $data = $this->request->getPost();
@@ -197,7 +197,7 @@ class TaskAssignmentController extends BaseController
         }
        // echo  $init_cond['HKAT_TASK_ID = '];exit;
 
-        $columns = "HKAT_ID,HKAT_TASK_ID,USR_FIRST_NAME,USR_LAST_NAME,HKAT_TASK_SHEET_ID,HKAT_ATTENDANT_ID,HKAT_CREDITS,HKAT_INSTRUCTIONS";
+        $columns = "HKAT_ID,HKAT_TASK_ID,USR_FIRST_NAME,USR_LAST_NAME,HKAT_TASK_SHEET_ID,HKAT_ATTENDANT_ID,HKAT_CREDITS,HKAT_INSTRUCTIONS,HKATD_COMPLETION_TIME,HKATD_STATUS,HKATD_INSPECTED_STATUS";
         $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
 
@@ -255,8 +255,29 @@ class TaskAssignmentController extends BaseController
                 "HKAT_UPDATED_BY"     => $user_id,
                 
             ];
+
+            
             
             $return = !empty($sysid) ? $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->where('HKAT_ID', $sysid)->update($data) : $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->insert($data);
+            
+            $HKAT_ID = $this->Db->insertID();
+
+            $sql = "SELECT HKST_ID
+            FROM FLXY_HK_SUBTASKS WHERE HKST_TASK_ID = '$HKAT_TASK_ID' ORDER BY HKST_ID asc";
+
+            $response = $this->Db->query($sql)->getResultArray();
+            if(!empty($response)){               
+                foreach($response as $row){
+                    $task_details = [
+                        "HKATD_ASSIGNED_TASK_ID"  => trim($HKAT_ID),
+                        "HKATD_SUBTASK_ID"        => trim($row['HKST_ID']),
+                        "HKATD_CREATED_AT"        => date("Y-m-d H:i:s A"),
+                        "HKATD_UPDATED_BY"        => $user_id,
+                        
+                    ];
+                    $this->Db->table('FLXY_HK_ASSIGNED_TASK_DETAILS')->insert($task_details);
+                }
+            }
 
             $SHEET_NO_OVERVIEW = $SHEET_NO = $this->getLastSheetNo($HKAT_TASK_ID, 1);
             $this->Db->table('FLXY_HK_TASKASSIGNMENT_OVERVIEW')->where('HKTAO_ID', $HKAT_TASK_ID)->update(['HKATO_TOTAL_SHEETS'=>(--$SHEET_NO_OVERVIEW)]);
