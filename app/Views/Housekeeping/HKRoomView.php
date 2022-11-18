@@ -418,23 +418,17 @@
 
                                 <div class="col-12 col-sm-6 col-lg-5">
 
-                                    <div class="row mb-3">
+                                    <div class="mb-3 d-flex justify-content-between">
 
-                                        <div class="col-md-6">
-                                            <button type="button" class="btn btn-success use_selected_rooms"
-                                                data-change-selected="0"><i
-                                                    class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick
-                                                Change</button>&nbsp;
-                                        </div>
-                                        <div class="col-md-6 text-end">
-                                            <button type="button" class="btn btn-primary submitAdvSearch">
-                                                <i class='bx bx-search'></i>&nbsp;
-                                                Search
-                                            </button>&nbsp;
-                                            <button type="button"
-                                                class="btn btn-secondary clearAdvSearch">Clear</button>
-                                        </div>
-
+                                        <button type="button" class="btn btn-success use_selected_rooms"
+                                            data-change-selected="0"><i
+                                                class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick
+                                            Change</button>&nbsp;
+                                        <button type="button" class="btn btn-primary submitAdvSearch">
+                                            <i class='bx bx-search'></i>&nbsp;
+                                            Search
+                                        </button>
+                                        <button type="button" class="btn btn-secondary clearAdvSearch">Clear</button>
                                     </div>
                                 </div>
                             </div>
