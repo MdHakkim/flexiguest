@@ -263,11 +263,9 @@
 														<th></th>
                                                         <th class="all">Sheet No</th>
 														<th class="all">Attendant</th>
-														<th class="all">Status</th>
-                                                        <th class="all">Completed On</th>
-														<th class="all">Inspected status</th>
+														<!-- <th class="all">Task Credits</th> -->
+                                                        <!-- <th class="all">Completed On</th> -->
                                                         <th class="all">Task Instructions</th>
-														
                                                         <th class="all">Action</th>
                                                     </tr>
                                                 </thead>
@@ -404,7 +402,6 @@
        $('.dt-date').datepicker({
 			format: 'dd-M-yyyy',
 			autoclose: true,
-			startDate: '-0m',
 			onSelect: function() {
 				$(this).change();
 			},        
@@ -558,11 +555,10 @@
 									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                                     '<ul class="dropdown-menu dropdown-menu-end">' +									
 									'<li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
-									'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="dropdown-item viewTaskAssignment text-success"><i class="fa-solid fa-align-justify"></i> Add Sheet</a></li>'
-									;
+									'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="dropdown-item viewTaskAssignment text-success"><i class="fa-solid fa-align-justify"></i> Add Sheet</a></li><div class="dropdown-divider" ></div>' +
+									'<li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
+									'" class="dropdown-item text-danger deleteTaskAssignment"><i class="fas fa-trash"></i> Delete</a></li>';
 
-									// '<div class="dropdown-divider" ></div><li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
-									// '" class="dropdown-item text-danger deleteTaskAssignment"><i class="fas fa-trash"></i> Delete</a></li>'
                                     taskAssignButtons += '</ul>' +
 									'</div>';
 								return taskAssignButtons;							
@@ -826,16 +822,9 @@
                         return '';
                 }
             },
-            {
-                data: 'HKATD_STATUS',
-				
-            },
-			{
-                data: 'HKATD_COMPLETION_TIME'
-            },
-			{
-                data: 'HKATD_INSPECTED_STATUS'
-            },
+            // {
+            //     data: 'HKAT_CREDITS'
+            // },
             {
                 data: 'HKAT_INSTRUCTIONS'
             },
@@ -844,27 +833,11 @@
                 className: "text-center",
                 "orderable": false,
                 render: function(data, type, row, meta) {
-
-					var taskAssignButtons = 
-									'<div class="d-inline-block flxy_option_view dropend">' +
-									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
-                                    '<ul class="dropdown-menu dropdown-menu-end">' +									
-									'<li><a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
-									'" data-tasksheet_id="' + data['HKAT_ID'] +
-									'" class="dropdown-item text-primary delete_sheet_record"><i class="fas fa-eye"></i> View</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
-									'" data-tasksheet_id="' + data['HKAT_ID'] +
-									'" class="dropdown-item text-danger delete_sheet_record"><i class="fas fa-trash"></i> Delete</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-tasksheet_id="' + data['HKAT_TASK_ID'] +
-									'" data-sysid="' + data['HKAT_ID'] +
-									'" class="dropdown-item text-info printTaskAssignment"><i class="fa fa-print" aria-hidden="true"></i> Print</a></li>'
-                                    taskAssignButtons += '</ul>' +
-									'</div>';
-								return taskAssignButtons;	
-
-                    // return (
-                    //     '<a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
-                    //     '" data-tasksheet_id="' + data['HKAT_ID'] +
-                    //     '" class="dropdown-item text-danger delete_sheet_record"><i class="fa-solid fa-ban"></i> Delete</a>'
-                    // );
+                    return (
+                        '<a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
+                        '" data-tasksheet_id="' + data['HKAT_ID'] +
+                        '" class="dropdown-item text-danger delete_sheet_record"><i class="fa-solid fa-ban"></i> Delete</a>'
+                    );
                 }
             },
 			
@@ -872,7 +845,7 @@
 
         ],
         "order": [
-            [0, "asc"]
+            [1, "asc"]
         ],
         'createdRow': function(row, data, dataIndex) {
             $(row).attr('data-tasksheet_id', data['HKAT_ID']);

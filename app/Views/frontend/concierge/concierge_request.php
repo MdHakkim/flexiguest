@@ -153,10 +153,10 @@
                             <div class="col-md-6">
                                 <label class="form-label"><b>Status *</b></label>
                                 <select class="select2" name="CR_STATUS">
-                                    <option value="in-progress">In Progress</option>
-                                    <option value="approved">Approved</option>
-                                    <option value="rejected">Rejected</option>
-                                    <option value="closed">Closed</option>
+                                    <option>In Progress</option>
+                                    <option>Approved</option>
+                                    <option>Rejected</option>
+                                    <option>Closed</option>
                                 </select>
                             </div>
 
@@ -257,13 +257,13 @@
                     render: function(data, type, row, meta) {
                         let class_name = 'badge rounded-pill';
 
-                        if (data['CR_STATUS'] == 'accepted')
+                        if (data['CR_STATUS'] == 'Approved')
                             class_name += ' bg-label-success';
 
-                        else if (data['CR_STATUS'] == 'rejected')
+                        else if (data['CR_STATUS'] == 'Rejected')
                             class_name += ' bg-label-danger';
 
-                        else if (data['CR_STATUS'] == 'in-progress')
+                        else if (data['CR_STATUS'] == 'In Progress')
                             class_name += ' bg-label-warning';
 
                         else
@@ -449,7 +449,7 @@
         $(`#${id} select`).val('').trigger('change');
         $(`#${id} #CR_QUANTITY`).val('1');
 
-        $(`#${id} select[name='CR_STATUS']`).val('in-progress').trigger('change');
+        $(`#${id} select[name='CR_STATUS']`).val('In Progress').trigger('change');
         $(`#${id} select[name='CR_PAYMENT_METHOD']`).val('Pay at Reception').trigger('change');
         $(`#${id} select[name='CR_PAYMENT_STATUS']`).val('UnPaid').trigger('change');
     }

@@ -27,6 +27,8 @@
                             <th>SubCategory</th>
                             <th>Prefered Date & Time</th>
                             <th>Status</th>
+                            <th>Attendant</th>
+                            <th>Completed At</th>
                             <th>Image</th>
                             <th>Reported Time</th>
                             <th>Action</th>
@@ -225,9 +227,6 @@
                         if (data['CUST_FIRST_NAME'])
                             name += data['CUST_FIRST_NAME'] + ' ';
 
-                        if (data['CUST_MIDDLE_NAME'])
-                            name += data['CUST_MIDDLE_NAME'] + ' ';
-
                         if (data['CUST_LAST_NAME'])
                             name += data['CUST_LAST_NAME'];
 
@@ -252,6 +251,12 @@
                 },
                 {
                     data: 'MAINT_STATUS'
+                },
+                {
+                    data: 'MAINT_ATTENDANT_NAME'
+                },
+                {
+                    data: 'MAINT_COMPLETED_AT'
                 },
                 {
                     data: null,

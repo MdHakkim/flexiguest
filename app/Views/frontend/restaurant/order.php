@@ -596,14 +596,12 @@
                         `;
                         }
 
-                        $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).html(html);
-                        $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).trigger('change');
+                        $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).html(html).trigger('change');
                     }
                 }
             });
         } else {
-            $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).html('');
-            $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).trigger('change');
+            $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).html('').trigger('change');
         }
     });
 
@@ -622,6 +620,9 @@
         let ids = $(this).val();
 
         if (ids.length == 0) {
+            selected_item_ids = [];
+            selected_items = [];
+            
             hideSelectedItems();
             return;
         }

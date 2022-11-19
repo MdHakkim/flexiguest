@@ -52,7 +52,7 @@ class HouseKeepingController extends BaseController
             ->select(
                 "FLXY_HK_ASSIGNED_TASKS.*, 
                 HKT_DESCRIPTION as TASK_TITLE,
-                RM_NO,
+                HKARM_ROOM_ID, RM_NO,
                 USR_NAME as ATTENDEE_NAME,
                 (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS = 'Not Inspected') as NOT_INSPECTED_COUNT,
                 (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS = 'Inspected') as INSPECTED_COUNT,
@@ -65,7 +65,8 @@ class HouseKeepingController extends BaseController
                 "
             )
             ->join('FLXY_HK_TASKS', 'HKAT_TASK_ID = HKT_ID', 'left')
-            ->join('FLXY_ROOM', 'HKAT_ROOM_ID = RM_ID', 'left')
+            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_ID = HKARM_TASK_ID', 'left')
+            ->join('FLXY_ROOM', 'HKARM_ROOM_ID = RM_ID', 'left')
             ->join('FLXY_USERS', 'HKAT_ATTENDANT_ID = USR_ID', 'left')
             ->where($where_condition)
             ->findAll();
@@ -76,8 +77,9 @@ class HouseKeepingController extends BaseController
     public function taskDetails($task_id)
     {
         $data = $this->HKAssignedTask
-            ->select('FLXY_HK_ASSIGNED_TASKS.*, RM_NO')
-            ->join('FLXY_ROOM', 'HKAT_ROOM_ID = RM_ID', 'left')
+            ->select('FLXY_HK_ASSIGNED_TASKS.*, HKARM_ROOM_ID, RM_NO')
+            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_ID = HKARM_TASK_ID', 'left')
+            ->join('FLXY_ROOM', 'HKARM_ROOM_ID = RM_ID', 'left')
             ->find($task_id);
 
         $notes = $this->HKAssignedTaskNote
@@ -124,7 +126,7 @@ class HouseKeepingController extends BaseController
             if (empty($sub_task))
                 return $this->respond(responseJson(404, true, ['msg' => 'No Task found.']));
             
-            if($sub_task['HKATD_STATUS'] == 'In Progress')
+            if(in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_STATUS'] == 'In Progress') // (admin || supervisor) && In Progress
                 return $this->respond(responseJson(202, true, ['msg' => 'Not All tasks are completed.']));
         }
 

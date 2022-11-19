@@ -127,9 +127,12 @@ class HousekeepingController extends BaseController
     public function tasksView()
     {
         $mine      = new ServerSideDataTable(); // loads and creates instance
+        $init_cond = [];
         $tableName = 'FLXY_HK_SUBTASKS INNER JOIN FLXY_HK_TASKS ON HKST_TASK_ID = HKT_ID';
         $columns   = 'HKST_ID,HKT_CODE,HKST_DESCRIPTION';
-        $mine->generate_DatatTable($tableName, $columns);
+        if($this->request->getPost('HKT_ID') != '')
+        $init_cond = array("HKST_TASK_ID = "=>$this->request->getPost('HKT_ID'));        
+        $mine->generate_DatatTable($tableName, $columns,$init_cond);
         exit;
     }
 
@@ -137,8 +140,8 @@ class HousekeepingController extends BaseController
     {
         $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
 
-        $sql = "SELECT HKT_ID, HKT_CODE
-                FROM FLXY_HK_TASKS";
+        $sql = "SELECT HKT_ID, HKT_CODE, HKT_DESCRIPTION
+                FROM FLXY_HK_TASKS ";
 
         if ($search != '') {
             $sql .= " WHERE HKT_CODE LIKE '%$search%'
@@ -150,7 +153,7 @@ class HousekeepingController extends BaseController
 
             $option = '<option value="">Choose an Option</option>';
             foreach ($response as $row) {
-                $option .= '<option value="' . $row['HKT_ID'] . '">' . $row['HKT_CODE']  . '</option>';
+                $option .= '<option value="' . $row['HKT_ID'] . '">' . $row['HKT_CODE']  . ' - ' . $row['HKT_DESCRIPTION'].'</option>';
             }
         }
 
@@ -199,7 +202,7 @@ class HousekeepingController extends BaseController
 
     public function editTask()
     {
-        $param = ['SYSID' => $this->request->getPost('taskID')];
+        $param = ['SYSID' => $this->request->getPost('sysid')];
 
         $sql = "SELECT HKST_ID,HKST_TASK_ID,HKST_DESCRIPTION
                 FROM FLXY_HK_SUBTASKS

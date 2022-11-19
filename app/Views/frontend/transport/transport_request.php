@@ -676,6 +676,9 @@
                     {
                         data: null,
                         render: function(data, type, row, meta) {
+                            if(!data['TR_GUEST_IMAGE']) 
+                                return '';
+                                
                             return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['TR_GUEST_IMAGE']}")' src='<?= base_url() ?>/${data['TR_GUEST_IMAGE']}' width='80' height='80'/>`);
                         }
                     },
