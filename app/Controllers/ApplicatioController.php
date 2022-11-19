@@ -3516,15 +3516,35 @@ class ApplicatioController extends BaseController
                         'TODAYDATE'=> $TODAYDATE
                      ];
 
-            $sql = "SELECT RM_TY_CODE, RM_TY_DESC, RM_TY_TOTAL_ROOM, TOTAL_OVER_BOOKING, RM_TY_FEATURE 
+            $sql = "SELECT RM_TY_CODE, RM_TY_DESC, ISNULL(NUM_ROOMS, 0) AS RM_TY_TOTAL_ROOM, ISNULL((NUM_ROOMS+TOTAL_OVER_BOOKING), 0) AS TOTAL_OVER_BOOKING, RM_TY_FEATURE 
                     FROM 
-			            (   SELECT  RM_TY_CODE,(RM_TY_TOTAL_ROOM) RM_TY_TOTAL_ROOM, RM_TY_DESC, RM_TY_ROOM_CLASS,
-			                        (RM_TY_TOTAL_ROOM)TOTAL_OVER_BOOKING, RM_TY_FEATURE,
+			            (   SELECT  RM_TY_CODE, RM_TY_ID, (RM_TY_TOTAL_ROOM) RM_TY_TOTAL_ROOM, RM_TY_DESC, RM_TY_ROOM_CLASS,
+			                        (RM_TY_TOTAL_ROOM)TOTAL_OVER_BOOKING, RM_TY_FEATURE,NUM_ROOMS,
 			                        ROW_NUMBER() OVER (PARTITION BY RM_TY_CODE ORDER BY RM_TY_CODE) AS ROW_NUMBER
 			                FROM    FLXY_ROOM_TYPE ROOMTYTB
                 			LEFT JOIN FLXY_OVERBOOKING OVERBTB  ON RM_TY_CODE = OB_RM_TYPE 
 			                                                    AND ( :ARRIVAL_DT: BETWEEN OB_FROM_DT AND OB_UPTO_DT 
-                                                                      AND :DEPARTURE_DT: BETWEEN OB_FROM_DT AND OB_UPTO_DT ) 
+                                                                      OR :DEPARTURE_DT: BETWEEN OB_FROM_DT AND OB_UPTO_DT )
+                            
+                            LEFT JOIN ( SELECT RM_TYPE_REF_ID, RM_TYPE, (COUNT(*)-COUNT(RESV_ROOM)) AS NUM_ROOMS
+                                        FROM FLXY_ROOM 
+                                        LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
+                                                    FROM FLXY_ROOM_STATUS_LOG
+                                                    GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+                                        
+                                        LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                
+                                        LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
+
+                                        LEFT JOIN (SELECT RESV_ROOM_ID AS RESV_ROOM     
+                                                    FROM FLXY_RESERVATION
+                                                    WHERE RESV_ROOM_ID > 0
+                                                    AND (:ARRIVAL_DT: <= RESV_DEPARTURE AND :DEPARTURE_DT: >= RESV_ARRIVAL_DT)
+                                                    AND RESV_STATUS NOT IN ('Checked-Out','Cancelled')
+                                                    GROUP BY RESV_ROOM_ID) RESV_ROOMS ON RESV_ROOMS.RESV_ROOM = RM_ID
+                                        
+                                        WHERE RM_STATUS_ID IS NULL OR RM_STATUS_ID NOT IN (4,5)
+                                        GROUP BY RM_TYPE_REF_ID, RM_TYPE
+                                        ) RMTYPE_ROOMS ON RMTYPE_ROOMS.RM_TYPE_REF_ID = ROOMTYTB.RM_TY_ID                                
                         ) MAIN_DATA 
                     WHERE ROW_NUMBER = 1 
                     $room_class_filter
@@ -3670,7 +3690,7 @@ class ApplicatioController extends BaseController
     function getSupportingOverbookingLov(){
         $sql = "SELECT RM_CL_CODE,RM_CL_DESC FROM FLXY_ROOM_CLASS";
         $response = $this->Db->query($sql)->getResultArray();
-        $option='<option value="">Select Section</option>';
+        $option='<option value=""></option>';
         foreach($response as $row){
             $option.= '<option value="'.trim($row['RM_CL_CODE']).'">'.$row['RM_CL_DESC'].'</option>';
         }
@@ -3679,11 +3699,11 @@ class ApplicatioController extends BaseController
 
     function getRoomType(){
         $param = ['ROOMCLASS'=> $this->request->getPost("rmclass")];
-        $sql = "SELECT RM_TY_CODE,RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_ROOM_CLASS=:ROOMCLASS:";
+        $sql = "SELECT RM_TY_ID,RM_TY_CODE,RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_ROOM_CLASS=:ROOMCLASS:";
         $response = $this->Db->query($sql,$param)->getResultArray();
-        $option='<option value="">Select Section</option>';
+        $option='<option value=""></option>';
         foreach($response as $row){
-            $option.= '<option value="'.$row['RM_TY_CODE'].'">'.$row['RM_TY_DESC'].'</option>';
+            $option.= '<option value="'.$row['RM_TY_CODE'].'" data-room-type-id="'.$row['RM_TY_ID'].'">'.$row['RM_TY_DESC'].'</option>';
         }
         echo $option;
     }
@@ -3709,6 +3729,7 @@ class ApplicatioController extends BaseController
                     "OB_UPTO_DT" => $this->request->getPost("OB_UPTO_DT"),
                     "OB_RM_CLASS" => $this->request->getPost("OB_RM_CLASS"),
                     "OB_RM_TYPE" => $this->request->getPost("OB_RM_TYPE"),
+                    "OB_RM_TYPE_ID" => $this->request->getPost("OB_RM_TYPE_ID"),
                     "OB_OVER_BK_COUNT" => $this->request->getPost("OB_OVER_BK_COUNT"),
                     "OB_DAYS" => $dayes
                 ];
@@ -3718,6 +3739,7 @@ class ApplicatioController extends BaseController
                     "OB_UPTO_DT" => $this->request->getPost("OB_UPTO_DT"),
                     "OB_RM_CLASS" => $this->request->getPost("OB_RM_CLASS"),
                     "OB_RM_TYPE" => $this->request->getPost("OB_RM_TYPE"),
+                    "OB_RM_TYPE_ID" => $this->request->getPost("OB_RM_TYPE_ID"),
                     "OB_OVER_BK_COUNT" => $this->request->getPost("OB_OVER_BK_COUNT"),
                     "OB_DAYS" => $dayes
                 ];
@@ -3737,7 +3759,7 @@ class ApplicatioController extends BaseController
 
     public function editOverBooking(){
         $param = ['SYSID'=> $this->request->getPost("sysid")];
-        $sql = "SELECT OB_ID,FORMAT(OB_FROM_DT,'dd-MMM-yyyy') OB_FROM_DT,FORMAT(OB_UPTO_DT,'dd-MMM-yyyy')OB_UPTO_DT,OB_RM_CLASS,OB_RM_TYPE,OB_DAYS,
+        $sql = "SELECT OB_ID,FORMAT(OB_FROM_DT,'dd-MMM-yyyy') OB_FROM_DT,FORMAT(OB_UPTO_DT,'dd-MMM-yyyy')OB_UPTO_DT,OB_RM_CLASS,OB_RM_TYPE,OB_RM_TYPE_ID,OB_DAYS,
         (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=OB_RM_TYPE)OB_RM_TYPE_DESC,
         OB_OVER_BK_COUNT,OB_FORMULA FROM FLXY_OVERBOOKING WHERE OB_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();

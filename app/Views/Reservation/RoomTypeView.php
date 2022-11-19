@@ -303,7 +303,7 @@ $(document).on('keyup', '.RM_TY_ROOM_CLASS .form-control', function() {
     });
 });
 
-//Select From Room select
+//Select Room Class
 $(document).on('change', '#RM_TY_ROOM_CLASS', function() {
 
     var selectedRClass = $(this).val();

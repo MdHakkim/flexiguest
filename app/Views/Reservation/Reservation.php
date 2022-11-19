@@ -349,7 +349,7 @@
 
                                 <div class="row mb-3">
                                     <label
-                                        class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Departure
+                                        class="col-form-label col-md-4 text-end d-flex justify-content-lg-end justify-content-sm-start"><b>Departure
                                             From:</b></label>
                                     <div class="col-md-8">
                                         <input type="text" id="S_DEPARTURE_FROM" name="S_DEPARTURE_FROM"

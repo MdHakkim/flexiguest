@@ -13,6 +13,16 @@
 .ps__rail-y {
     opacity: 0.6 !important;
 }
+
+.prodSelDiv .select2-search--inline {
+    display: contents;
+    /*this will make the container disappear, making the child the one who sets the width of the element*/
+}
+
+.prodSelDiv .select2-search__field:placeholder-shown {
+    width: 100% !important;
+    /*makes the placeholder to be 100% of the width while there are no options selected*/
+}
 </style>
 
 <!-- Content wrapper -->
@@ -100,7 +110,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row mb-3">
+                                <div class="row mb-1">
                                     <label
                                         class="col-form-label col-md-4 d-flex justify-content-lg-end text-end justify-content-sm-start"><b>Paymemt
                                             Status:</b></label>
@@ -124,12 +134,22 @@
                             <div class="col-12 col-sm-6 col-lg-8">
 
                                 <div class="row mb-3">
-                                    <label class="col-form-label col-md-2 d-flex justify-content-lg-end justify-content-sm-start"><b>Products:</b></label>
-                                    <div class="col-md-10">
-                                        <select id="S_PRODUCTS" name="S_PRODUCTS[]" class="select2 form-select"
-                                            multiple>
-                                            <?= $productOptions ?>
-                                        </select>
+                                    <label
+                                        class="col-form-label col-md-2 d-flex justify-content-lg-end justify-content-sm-start"><b>Products:</b></label>
+                                    <div class="col-md-10 prodSelDiv">
+                                        <div class="sk-wave sk-primary">
+                                            <div class="sk-wave-rect"></div>
+                                            <div class="sk-wave-rect"></div>
+                                            <div class="sk-wave-rect"></div>
+                                            <div class="sk-wave-rect"></div>
+                                            <div class="sk-wave-rect"></div>
+                                        </div>
+                                        <div class="d-none">
+                                            <select id="S_PRODUCTS" name="S_PRODUCTS[]" class="select2 form-select"
+                                                data-placeholder="All Products" multiple>
+                                                <?= $productOptions ?>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1514,6 +1534,10 @@ $(function() {
 
 });
 
+$(window).on('load', function() {
+    // executes when complete page is fully loaded, including all frames, objects and images
+    $('.sk-wave').hide().next().removeClass('d-none');
+});
 
 (function() {
 
