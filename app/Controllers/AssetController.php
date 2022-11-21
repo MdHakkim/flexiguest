@@ -73,4 +73,12 @@ class AssetController extends BaseController
 
         return $this->respond($result);
     }
+
+    public function assetByCategories()
+    {
+        $category_ids = $this->request->getVar('category_ids');
+        $result = $this->AssetRepository->assetByCategories($category_ids);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'categories'], $result));
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Controllers\Repositories\ReservationAssetRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use  App\Libraries\ServerSideDataTable;
 use  App\Libraries\EmailLibrary;
@@ -25,6 +26,7 @@ class ApplicatioController extends BaseController
     private $RoomAsset;
     private $ReservationRoomAsset;
     private $ReservationRepository;
+    private $ReservationAssetRepository;
 
     public function __construct(){
         $this->Db = \Config\Database::connect();
@@ -38,6 +40,7 @@ class ApplicatioController extends BaseController
         $this->RoomAsset = new RoomAsset();
         $this->ReservationRoomAsset = new ReservationRoomAsset();
         $this->ReservationRepository = new ReservationRepository();
+        $this->ReservationAssetRepository = new ReservationAssetRepository();
     }
 
     public function Reservation(){   
@@ -4448,43 +4451,6 @@ class ApplicatioController extends BaseController
         }
     }
 
-    public function attachAssetList($user_id, $reservation_id) {
-        $reservation = $this->Reservation
-                            ->select('RESV_ID, RM_ID')
-                            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
-                            ->where('RESV_ID', $reservation_id)
-                            ->first();
-                            
-        if(empty($reservation))
-            return;
-
-        $room_id = $reservation['RM_ID'];
-        
-        // assets already added
-        $already_exist = $this->ReservationRoomAsset
-            ->where('RRA_RESERVATION_ID', $reservation_id)
-            ->where('RRA_ROOM_ID', $room_id)
-            ->first();
-
-        if(!empty($already_exist))
-            return;
-
-        $assets = $this->RoomAsset->where('RA_ROOM_ID', $room_id)->findAll();
-
-        foreach($assets as $asset) {
-            $data = [
-                'RRA_RESERVATION_ID' => $reservation_id,
-                'RRA_ROOM_ID' => $room_id,
-                'RRA_ROOM_ASSET_ID' => $asset['RA_ID'],
-                'RRA_ASSET_ID' => $asset['RA_ASSET_ID'],
-                'RRA_CREATED_BY' => $user_id,
-                'RRA_UPDATED_BY' => $user_id
-            ];
-
-            $this->ReservationRoomAsset->insert($data);
-        }
-    }
-
     function confirmPrecheckinStatus(){
         $sysid = $this->request->getPost("DOC_RESV_ID");
 
@@ -4502,7 +4468,7 @@ class ApplicatioController extends BaseController
         $result = $this->responseJson("1","0",$return,$response='');
 
         if(isset($this->session->USR_ROLE_ID) && $this->session->USR_ROLE_ID == '1')
-            $this->attachAssetList(session('USR_ID'), $sysid);
+            $this->ReservationAssetRepository->attachAssetList(session('USR_ID'), $sysid);
 
         $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, 
                     RESV_RATE, RESV_RM_TYPE, RESV_NAME, 

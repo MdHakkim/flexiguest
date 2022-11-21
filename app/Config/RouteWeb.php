@@ -761,7 +761,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/bulkUpdateRoomStatus', 'HousekeepingController::bulkUpdateRoomStatus');
     $routes->match(['post'], '/updateServiceStatus', 'HousekeepingController::updateServiceStatus');
     $routes->match(['post'], '/showRoomServiceStatus', 'HousekeepingController::showRoomServiceStatus');
-    
+
 
 
     // ABUBAKAR CODE (START)
@@ -934,9 +934,15 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('store', 'AssetController::store');
             $routes->post('edit', 'AssetController::edit');
             $routes->delete('delete', 'AssetController::delete');
+            $routes->post('asset-by-categories', 'AssetController::assetByCategories');
         });
 
         $routes->group('room-asset', function ($routes) {
+            $routes->get('', 'roomAssetController::roomAsset');
+            $routes->post('all-room-assets', 'roomAssetController::allRoomAssets');
+            $routes->post('store', 'roomAssetController::store');
+            $routes->post('edit', 'roomAssetController::edit');
+            // $routes->delete('delete', 'roomAssetController::delete');
         });
     });
     // ABUBAKAR CODE (END)

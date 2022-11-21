@@ -51,4 +51,9 @@ class AssetRepository extends BaseController
     {
         return $this->Asset->delete($id);
     }
+
+    public function assetByCategories($category_ids)
+    {   
+        return $this->Asset->whereIn('AS_ASSET_CATEGORY_ID', $category_ids)->findAll();
+    }
 }
