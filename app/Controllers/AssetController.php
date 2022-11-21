@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\Repositories\AssetCategoryRepository;
 use App\Controllers\Repositories\AssetRepository;
+use App\Controllers\Repositories\ReservationAssetRepository;
+use App\Controllers\Repositories\RoomAssetRepository;
 use App\Libraries\ServerSideDataTable;
 use CodeIgniter\API\ResponseTrait;
 
@@ -14,11 +16,15 @@ class AssetController extends BaseController
 
     private $AssetCategoryRepository;
     private $AssetRepository;
+    private $RoomAssetRepository;
+    private $ReservationAssetRepository;
 
     public function __construct()
     {
         $this->AssetCategoryRepository = new AssetCategoryRepository();
         $this->AssetRepository = new AssetRepository();
+        $this->RoomAssetRepository = new RoomAssetRepository();
+        $this->ReservationAssetRepository = new ReservationAssetRepository();
     }
 
     public function asset()
@@ -65,6 +71,14 @@ class AssetController extends BaseController
     public function delete()
     {
         $id = $this->request->getPost('id');
+
+        $check = $this->RoomAssetRepository->roomAssetsByAssetId($id);
+        if (!empty($check))
+            return $this->respond(responseJson(202, true, ['mag' => 'It cannot be deleted because it is assigned to some rooms.']));
+
+        $check = $this->ReservationAssetRepository->getReservationAssets("RRA_ASSET_ID = $id");
+        if (!empty($check))
+            return $this->respond(responseJson(202, true, ['mag' => 'It cannot be deleted because it is assigned to some reservation rooms.']));
 
         $result = $this->AssetRepository->deleteAsset($id);
         $result = $result

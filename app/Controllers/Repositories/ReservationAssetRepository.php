@@ -59,4 +59,9 @@ class ReservationAssetRepository extends BaseController
             $this->ReservationRoomAsset->insert($data);
         }
     }
+
+    public function getReservationAssets($where_condition)
+    {
+        return $this->ReservationRoomAsset->where($where_condition)->findAll();
+    }
 }

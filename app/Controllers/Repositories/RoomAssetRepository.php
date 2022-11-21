@@ -56,7 +56,7 @@ class RoomAssetRepository extends BaseController
 
         return responseJson(200, false, ['msg' => 'Room Assets created/updated successfully'], $response = '');
     }
-
+    
     public function roomAssetsByRoomId($room_id)
     {
         return $this->RoomAsset->where('RA_ROOM_ID', $room_id)->findAll();
@@ -65,5 +65,10 @@ class RoomAssetRepository extends BaseController
     public function deleteRoomAssets($room_id)
     {
         return $this->RoomAsset->where('RA_ROOM_ID', $room_id)->delete();
+    }
+
+    public function roomAssetsByAssetId($asset_id)
+    {
+        return $this->RoomAsset->where('RA_ASSET_ID', $asset_id)->findAll();
     }
 }
