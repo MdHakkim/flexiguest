@@ -37,8 +37,8 @@ class RoomAssetController extends BaseController
     public function allRoomAssets()
     {
         $mine = new RoomAssetDataTable();
-        $tableName = 'FLXY_ROOM_ASSETS';
-        $columns = 'RA_ROOM_ID,RA_CREATED_AT';
+        $tableName = 'FLXY_ROOM_ASSETS left join FLXY_ROOM on RA_ROOM_ID = RM_ID';
+        $columns = 'RA_ROOM_ID,RA_CREATED_AT,RM_NO';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
