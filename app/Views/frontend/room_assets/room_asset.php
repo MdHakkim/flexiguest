@@ -18,7 +18,7 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Room</th>
+                            <th>Room No</th>
                             <th>Assets</th>
                             <th>Created At</th>
                             <th class="all">Action</th>

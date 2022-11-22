@@ -12,6 +12,7 @@ class ReservationRoomAsset extends Model
         'RRA_RESERVATION_ID',
         'RRA_ROOM_ID',
         'RRA_ASSET_ID',
+        'RRA_QUANTITY',
         'RRA_STATUS',
         'RRA_REMARKS',
         'RRA_TRACKING_REMARKS',

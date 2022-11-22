@@ -52,6 +52,7 @@ class ReservationAssetRepository extends BaseController
                 'RRA_RESERVATION_ID' => $reservation_id,
                 'RRA_ROOM_ID' => $room_id,
                 'RRA_ASSET_ID' => $asset['RA_ASSET_ID'],
+                'RRA_QUANTITY' => $asset['RA_QUANTITY'],
                 'RRA_CREATED_BY' => $user_id,
                 'RRA_UPDATED_BY' => $user_id
             ];
