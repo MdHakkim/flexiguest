@@ -59,7 +59,7 @@ class TaskAssignmentController extends BaseController
            $init_cond['HKATO_CREATED_BY = ' ] = "'".$HKATO_CREATED_BY."'";           
         }      
 
-        $columns = 'HKTAO_ID,HKTAO_TASK_DATE,HKT_CODE,HKT_DESCRIPTION,HKATO_AUTO,HKATO_TOTAL_SHEETS,HKATO_TOTAL_CREDIT,HKATO_TOTAL_ROOMS,HKATO_CREATED_AT,USR_FIRST_NAME,USR_LAST_NAME';
+        $columns = 'HKTAO_ID,HKTAO_TASK_DATE,HKT_ID,HKT_CODE,HKT_DESCRIPTION,HKATO_AUTO,HKATO_TOTAL_SHEETS,HKATO_TOTAL_CREDIT,HKATO_TOTAL_ROOMS,HKATO_CREATED_AT,USR_FIRST_NAME,USR_LAST_NAME';
         $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
@@ -188,7 +188,57 @@ class TaskAssignmentController extends BaseController
 
         $UserID = session()->get('USR_ID');
         $mine = new ServerSideDataTable();
-        $tableName = "FLXY_HK_ASSIGNED_TASKS INNER JOIN FLXY_USERS ON HKAT_ATTENDANT_ID = USR_ID LEFT JOIN FLXY_HK_ASSIGNED_TASK_DETAILS ON HKAT_ID = HKATD_ASSIGNED_TASK_ID";
+        $tableName = "(SELECT HKAT_ID,HKAT_TASK_ID,USR_FIRST_NAME,USR_LAST_NAME,HKAT_TASK_SHEET_ID,HKAT_ATTENDANT_ID, HKAT_CREDITS,HKAT_INSTRUCTIONS,
+		STATS, STATUSCODE, INSP_STATS, SUPER_STATUSCODE, COMPLETION_TIME
+
+        FROM FLXY_HK_ASSIGNED_TASKS INNER JOIN FLXY_USERS ON HKAT_ATTENDANT_ID = USR_ID 
+        
+        LEFT JOIN (SELECT [HKATD_ASSIGNED_TASK_ID], STRING_AGG([HKATD_STATUS], ',') AS STATS, STRING_AGG(STATUS_CODE, ',') AS STATUSCODE 
+		
+		FROM (
+        
+        SELECT [HKATD_ASSIGNED_TASK_ID], [HKATD_STATUS], STATUS_CODE FROM [FLXY_HK_ASSIGNED_TASK_DETAILS] 
+		
+		INNER JOIN FLXY_TASK_STATUS_MASTER ON STATUS_ID = HKATD_STATUS GROUP BY HKATD_ASSIGNED_TASK_ID, HKATD_STATUS, STATUS_CODE)
+        
+        TSKDET GROUP BY HKATD_ASSIGNED_TASK_ID)
+		
+		TASK_PROG_NUM ON TASK_PROG_NUM.HKATD_ASSIGNED_TASK_ID = HKAT_ID 
+
+
+		LEFT JOIN (SELECT [HKATD_ASSIGNED_TASK_ID], STRING_AGG([HKATD_INSPECTED_STATUS], ',') AS INSP_STATS, STRING_AGG(STATUS_CODE, ',') AS SUPER_STATUSCODE 
+		
+		FROM (
+        
+        SELECT [HKATD_ASSIGNED_TASK_ID], [HKATD_INSPECTED_STATUS], STATUS_CODE FROM [FLXY_HK_ASSIGNED_TASK_DETAILS] 
+		
+		INNER JOIN FLXY_TASK_STATUS_MASTER ON STATUS_ID = HKATD_INSPECTED_STATUS 
+		
+		GROUP BY HKATD_ASSIGNED_TASK_ID, HKATD_INSPECTED_STATUS, STATUS_CODE)
+        
+        TSKDET GROUP BY HKATD_ASSIGNED_TASK_ID)
+
+		
+		SUPERTASK_PROG_NUM ON SUPERTASK_PROG_NUM.HKATD_ASSIGNED_TASK_ID = HKAT_ID
+
+
+		
+		LEFT JOIN (SELECT [HKATD_ASSIGNED_TASK_ID],COMPLETION_TIME
+		
+		FROM (
+        
+        SELECT [HKATD_ASSIGNED_TASK_ID],MAX(HKATD_COMPLETION_TIME) AS COMPLETION_TIME FROM [FLXY_HK_ASSIGNED_TASK_DETAILS] 
+		
+		GROUP BY HKATD_ASSIGNED_TASK_ID)
+        
+        TSKDET GROUP BY HKATD_ASSIGNED_TASK_ID,COMPLETION_TIME)
+		
+		SUPERTASK_PROG_TIME ON SUPERTASK_PROG_TIME.HKATD_ASSIGNED_TASK_ID = HKAT_ID
+
+        
+        WHERE 1=1 
+        
+       ) as output";
         $init_cond = [];
 
         $data = $this->request->getPost();
@@ -197,7 +247,7 @@ class TaskAssignmentController extends BaseController
         }
        // echo  $init_cond['HKAT_TASK_ID = '];exit;
 
-        $columns = "HKAT_ID,HKAT_TASK_ID,USR_FIRST_NAME,USR_LAST_NAME,HKAT_TASK_SHEET_ID,HKAT_ATTENDANT_ID,HKAT_CREDITS,HKAT_INSTRUCTIONS,HKATD_COMPLETION_TIME,HKATD_STATUS,HKATD_INSPECTED_STATUS";
+        $columns = "HKAT_ID,HKAT_TASK_ID,USR_FIRST_NAME,USR_LAST_NAME,HKAT_TASK_SHEET_ID,HKAT_ATTENDANT_ID,HKAT_CREDITS,HKAT_INSTRUCTIONS,STATS,STATUSCODE,INSP_STATS,SUPER_STATUSCODE,COMPLETION_TIME";
         $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
 
@@ -254,9 +304,7 @@ class TaskAssignmentController extends BaseController
                 "HKAT_CREATED_AT"     => date("Y-m-d H:i:s A"),
                 "HKAT_UPDATED_BY"     => $user_id,
                 
-            ];
-
-            
+            ];            
             
             $return = !empty($sysid) ? $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->where('HKAT_ID', $sysid)->update($data) : $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->insert($data);
             
@@ -272,17 +320,23 @@ class TaskAssignmentController extends BaseController
                         "HKATD_ASSIGNED_TASK_ID"  => trim($HKAT_ID),
                         "HKATD_SUBTASK_ID"        => trim($row['HKST_ID']),
                         "HKATD_CREATED_AT"        => date("Y-m-d H:i:s A"),
-                        "HKATD_UPDATED_BY"        => $user_id,
-                        
+                        "HKATD_CREATED_BY"        => $user_id,                        
                     ];
-                    $this->Db->table('FLXY_HK_ASSIGNED_TASK_DETAILS')->insert($task_details);
+
+                    $this->Db->table('FLXY_HK_ASSIGNED_TASK_DETAILS')->insert($task_details);                  
+
                 }
+
+                $SHEET_NO_OVERVIEW = $SHEET_NO = $this->getLastSheetNo($HKAT_TASK_ID, 1);
+                $this->Db->table('FLXY_HK_TASKASSIGNMENT_OVERVIEW')->where('HKTAO_ID', $HKAT_TASK_ID)->update(['HKATO_TOTAL_SHEETS'=>(--$SHEET_NO_OVERVIEW)]);
+                $result = $return ? $this->responseJson("1", "0", $return, $response = $SHEET_NO) : $this->responseJson("-444", "db insert not successful", $return);
+            }
+            else{
+                $result = $this->responseJson("-1", "The task has no subtasks", $return);
             }
 
-            $SHEET_NO_OVERVIEW = $SHEET_NO = $this->getLastSheetNo($HKAT_TASK_ID, 1);
-            $this->Db->table('FLXY_HK_TASKASSIGNMENT_OVERVIEW')->where('HKTAO_ID', $HKAT_TASK_ID)->update(['HKATO_TOTAL_SHEETS'=>(--$SHEET_NO_OVERVIEW)]);
 
-            $result = $return ? $this->responseJson("1", "0", $return, $response = $SHEET_NO) : $this->responseJson("-444", "db insert not successful", $return);
+            
             echo json_encode($result);
         } catch (\Exception $e) {
             return $e->getMessage();
@@ -295,10 +349,11 @@ class TaskAssignmentController extends BaseController
     {
         $tasksheet_id = $this->request->getPost('tasksheet_id');
         $task_id      = $this->request->getPost('task_id');
+        $sys_id       = $this->request->getPost('sys_id');
 
         try {
 
-            $param = ['SYSID' => $task_id];
+            $param = ['SYSID' => $sys_id];
             $sql = "SELECT HKAT_TASK_SHEET_ID
                 FROM FLXY_HK_ASSIGNED_TASKS
                 WHERE HKAT_ID=:SYSID: ";
@@ -306,15 +361,22 @@ class TaskAssignmentController extends BaseController
             $response = $this->Db->query($sql, $param)->getNumRows();
 
             $sql1 = "SELECT HKAT_ROOM_TASK_SHEET_ID
-                FROM FLXY_HK_ASSIGNED_ROOMS
-                WHERE HKAT_ROOM_TASK_ID= '$task_id' AND HKAT_ROOM_TASK_SHEET_ID = '$tasksheet_id' ";
+                FROM FLXY_HK_TASK_ASSIGNED_ROOMS
+                WHERE HKARM_TASK_SHEET_ID= '$sys_id' ";
 
             $response1 = $this->Db->query($sql, $param)->getNumRows();
+
+            $sql2 = "SELECT HKATD_ID
+                FROM FLXY_HK_ASSIGNED_TASK_DETAILS
+                WHERE HKATD_ASSIGNED_TASK_ID= '$sys_id' ";
+
+            $response2 = $this->Db->query($sql, $param)->getNumRows();
             
-            if ($response > 0 || $response1 > 0) {
+            
+            if ($response > 0 || $response1 > 0 || $response2 > 0) {
                 $result = $this->responseJson("0");
             } else {
-                $return = $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->delete(['HKAT_ID' => $tasksheet_id]);
+                $return = $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->delete(['HKAT_ID' => $sys_id]);
                 $SHEET_NO = $this->getLastSheetNo($task_id, 1);
                 $result = $return ? $this->responseJson("1", "0", $return, $response = $SHEET_NO) : $this->responseJson("-402", "Record not deleted");
             }
@@ -331,7 +393,7 @@ class TaskAssignmentController extends BaseController
     public function showTaskAssignedRooms(){
         $UserID = session()->get('USR_ID');
         $mine = new ServerSideDataTable();
-        $tableName = "FLXY_HK_TASK_ASSIGNED_ROOMS";
+        $tableName = "FLXY_HK_TASK_ASSIGNED_ROOMS INNER JOIN FLXY_ROOM ON RM_ID = HKARM_ROOM_ID";
         $init_cond = [];
 
         $data = $this->request->getPost();
@@ -339,7 +401,7 @@ class TaskAssignmentController extends BaseController
             $init_cond['HKARM_TASK_ID = '] = "'".$data['HKTAO_ID']."'";
         }
 
-        $columns = "HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS";
+        $columns = "HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC";
         $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
@@ -462,7 +524,7 @@ class TaskAssignmentController extends BaseController
         {
             $option='<option value="">Select Room</option>';
             foreach($response as $row){
-                $option.= '<option value="'.$row['RM_NO'].'" data-room-id="'.$row['RM_ID'].'"  data-icon="bx bxl-instagram">'.$row['RM_NO'].' - '.$row['RM_STATUS_CODE'].'</option>';
+                $option.= '<option value="'.$row['RM_ID'].'" data-room-id="'.$row['RM_ID'].'"  data-icon="bx bxl-instagram">'.$row['RM_NO'].' - '.$row['RM_STATUS_CODE'].'</option>';
             }
         }
         else
