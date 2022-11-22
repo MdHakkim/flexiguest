@@ -1325,6 +1325,23 @@ class FacilityController extends BaseController
         }
     }
 
+    public function updateAmenityOrderPaymentMethod()
+    {
+        try {
+             //echo json_encode(print_r($_POST));
+             //exit;
+
+            $sysid = $this->request->getPost('change_LAO_ID');
+            $pay_method = $this->request->getPost('change_LAO_PAYMENT_METHOD');
+
+            $return = $this->LaundryAmenitiesOrder->update($sysid, ['LAO_PAYMENT_METHOD' => $pay_method]);
+
+            echo json_encode($this->responseJson("1", "0", $return, $response = ''));
+        } catch (\Exception $e) {
+            echo json_encode($this->responseJson("-444", "db insert not successful", $return));
+        }
+    }
+
     public function updateAmenityOrderDetails()
     {
         try {

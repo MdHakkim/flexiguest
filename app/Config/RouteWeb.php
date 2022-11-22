@@ -358,6 +358,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/editAmenitiesRequest', 'FacilityController::editAmenitiesRequest');
     $routes->match(['post'], '/deleteAmenitiesRequest', 'FacilityController::deleteAmenitiesRequest');
     $routes->match(['post'], '/updateAmenityOrder', 'FacilityController::updateAmenityOrder');
+    $routes->match(['post'], '/updateAmenityOrderPaymentMethod', 'FacilityController::updateAmenityOrderPaymentMethod');
     $routes->match(['post'], '/amenityOrderDetailsView', 'FacilityController::AmenityOrderDetailsView');
     $routes->match(['post'], '/updateAmenityOrderDetails', 'FacilityController::updateAmenityOrderDetails');
     $routes->match(['post'], '/searchRequestProducts', 'FacilityController::searchRequestProducts');

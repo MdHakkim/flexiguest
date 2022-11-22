@@ -13,16 +13,6 @@
 .ps__rail-y {
     opacity: 0.6 !important;
 }
-
-.prodSelDiv .select2-search--inline {
-    display: contents;
-    /*this will make the container disappear, making the child the one who sets the width of the element*/
-}
-
-.prodSelDiv .select2-search__field:placeholder-shown {
-    width: 100% !important;
-    /*makes the placeholder to be 100% of the width while there are no options selected*/
-}
 </style>
 
 <!-- Content wrapper -->
@@ -136,7 +126,7 @@
                                 <div class="row mb-3">
                                     <label
                                         class="col-form-label col-md-2 d-flex justify-content-lg-end justify-content-sm-start"><b>Products:</b></label>
-                                    <div class="col-md-10 prodSelDiv">
+                                    <div class="col-md-10">
                                         <div class="sk-wave sk-primary">
                                             <div class="sk-wave-rect"></div>
                                             <div class="sk-wave-rect"></div>
@@ -146,7 +136,7 @@
                                         </div>
                                         <div class="d-none">
                                             <select id="S_PRODUCTS" name="S_PRODUCTS[]" class="select2 form-select"
-                                                data-placeholder="All Products" multiple>
+                                                multiple>
                                                 <?= $productOptions ?>
                                             </select>
                                         </div>
@@ -600,6 +590,69 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="changePaymentMethodModal" data-bs-backdrop="static" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <form id="changePaymentMethod" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changePaymentMethodModalTitle">Choose Products for Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md mb-2 mb-md-0">
+                            <div class="form-check custom-option custom-option-icon checked position-relative">
+                                <label class="form-check-label custom-option-content" for="change_LAO_PAYMENT_METHOD1">
+                                    <span class="custom-option-body">
+                                        <i class="bx bx-credit-card-alt mb-2"></i>
+                                        <span class="custom-option-title">Credit/Debit Card</span>
+                                        <small>The Guest has paid via Credit/Debit Card.</small>
+                                    </span>
+                                    <input name="change_LAO_PAYMENT_METHOD"
+                                        class="form-check-input change_LAO_PAYMENT_METHOD" type="radio"
+                                        value="Credit/Debit card" id="change_LAO_PAYMENT_METHOD1" />
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md mb-2 mb-md-0">
+                            <div class="form-check custom-option custom-option-icon position-relative">
+                                <label class="form-check-label custom-option-content" for="change_LAO_PAYMENT_METHOD2">
+                                    <span class="custom-option-body">
+                                        <i class="bx bx-mobile mb-2"></i>
+                                        <span class="custom-option-title">Samsung Pay</span>
+                                        <small>The Guest has paid using Samsung Pay.</small>
+                                    </span>
+                                    <input name="change_LAO_PAYMENT_METHOD"
+                                        class="form-check-input change_LAO_PAYMENT_METHOD" type="radio"
+                                        value="Samsung Pay" id="change_LAO_PAYMENT_METHOD2" />
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md">
+                            <div class="form-check custom-option custom-option-icon position-relative">
+                                <label class="form-check-label custom-option-content" for="change_LAO_PAYMENT_METHOD3">
+                                    <span class="custom-option-body">
+                                        <i class="bx bx-money mb-2"></i>
+                                        <span class="custom-option-title">Paid at Reception</span>
+                                        <small>The Guest has paid at the reception.</small>
+                                    </span>
+                                    <input name="change_LAO_PAYMENT_METHOD"
+                                        class="form-check-input change_LAO_PAYMENT_METHOD" type="radio"
+                                        value="Pay at Reception" id="change_LAO_PAYMENT_METHOD3" checked="" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer mt-3">
+                    <input type="hidden" name="change_LAO_ID" id="change_LAO_ID" value="" readonly />
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary updateAmOrdPaymentMethod">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
@@ -666,7 +719,10 @@ $(document).ready(function() {
                         '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                         '<ul class="dropdown-menu dropdown-menu-end">' +
                         '<li><a href="javascript:;" data_sysid="' + data['LAO_ID'] +
-                        '" class="dropdown-item text-info viewDetails">View Requested Products</a></li>' +
+                        '" class="dropdown-item text-info viewDetails"><i class="fas fa-align-justify"></i> View Requested Products</a></li>' +
+                        '<li><a href="javascript:;" data_sysid="' + data['LAO_ID'] +
+                        '" data-payment-method="' + data['LAO_PAYMENT_METHOD'] +
+                        '" class="dropdown-item text-primary changePaymentMethod"><i class="bx bx-money"></i> Change Payment Method</a></li>' +
                         '</ul>' +
                         '</div>'
                     );
@@ -959,6 +1015,71 @@ $(document).on('click', '.viewDetails', function() {
     $('.addOrderProducts').attr({
         'data-selected-orderId': orderId
     });
+});
+
+// Change Amenity Order Payment Method
+$(document).on('click', '.changePaymentMethod', function() {
+
+    var orderId = $(this).attr('data_sysid');
+
+    $('#changePaymentMethodModal').modal('show');
+    $('#changePaymentMethodModalTitle').html('Change Payment Method of Order: ' + orderId);
+
+    $('#change_LAO_ID').val(orderId);
+    $(`input[name='change_LAO_PAYMENT_METHOD'][value='` + $(this).data('payment-method') + `']`).prop('checked',
+        true).trigger('click');
+});
+
+// Change Request Order status
+$(document).on('click', '.updateAmOrdPaymentMethod', function() {
+    
+    var formSerialization = $('#changePaymentMethod').serializeArray();
+
+    bootbox.confirm({
+        message: "Are you sure you want to change the payment method for this request?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function(result) {
+            if (result) {
+                $.ajax({
+                    url: '<?php echo base_url('/updateAmenityOrderPaymentMethod') ?>',
+                    type: "post",
+                    data: formSerialization,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    dataType: 'json',
+                    success: function(respn) {
+                        var response = respn['SUCCESS'];
+                        if (response != '1') {
+                            var ERROR = respn['RESPONSE']['ERROR'];
+                            var mcontent = '';
+                            $.each(ERROR, function(ind, data) {
+
+                                mcontent += '<li>' + data + '</li>';
+                            });
+                            showModalAlert('error', mcontent);
+                        } else {
+                            showModalAlert('success',
+                                `<li>The Payment Method for the Order has been updated successfully.</li>`
+                            );
+                            $('#changePaymentMethodModal').modal('hide');
+                            $('#amenities_requests').dataTable().fnDraw();
+                        }
+                    }
+                });
+            }
+        }
+    });
+
 });
 
 function checkFileExist(urlToFile) {
