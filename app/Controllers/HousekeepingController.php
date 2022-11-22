@@ -545,43 +545,7 @@ class HousekeepingController extends BaseController
                         LEFT JOIN FLXY_CUSTOMER C ON C.CUST_ID = FLXY_RESERVATION.RESV_NAME
                         LEFT JOIN FLXY_ROOM RM ON (RM.RM_ID = FLXY_RESERVATION.RESV_ROOM_ID)
                         LEFT JOIN FLXY_ROOM_TYPE RT ON (RT.RM_TY_ID = FLXY_RESERVATION.RESV_RM_TYPE_ID)
-                        LEFT JOIN ( SELECT RESV_ID AS RESERV_ID, SUM(TOT) AS TOTAL_REVENUE
-                                    FROM
-                                    (SELECT LAO_RESERVATION_ID AS RESV_ID, SUM(ISNULL(LAO_TOTAL_PAYABLE, 0.00)) AS TOT
-                                        FROM FLXY_LAUNDRY_AMENITIES_ORDERS
-                                        WHERE LAO_PAYMENT_STATUS = \'Paid\'
-                                        GROUP BY LAO_RESERVATION_ID
-                                    
-                                    UNION 
-                                    
-                                    SELECT TR_RESERVATION_ID AS RESV_ID, SUM(ISNULL(TR_TOTAL_AMOUNT, 0.00)) AS TOT
-                                        FROM FLXY_TRANSPORT_REQUESTS
-                                        WHERE TR_PAYMENT_STATUS = \'Paid\'
-                                        GROUP BY TR_RESERVATION_ID
-                                    
-                                    UNION 
-                                    
-                                    SELECT RO_RESERVATION_ID AS RESV_ID, SUM(ISNULL(RO_TOTAL_PAYABLE, 0.00)) AS TOT
-                                        FROM FLXY_RESTAURANT_ORDERS
-                                        WHERE RO_PAYMENT_STATUS = \'Paid\'
-                                        GROUP BY RO_RESERVATION_ID
-                                    
-                                    UNION 
-                                    
-                                    SELECT CR_RESERVATION_ID AS RESV_ID, SUM(ISNULL(CR_NET_AMOUNT, 0.00)) AS TOT
-                                        FROM FLXY_CONCIERGE_REQUESTS
-                                        WHERE CR_PAYMENT_STATUS = \'Paid\'
-                                        GROUP BY CR_RESERVATION_ID
-                                    
-                                    UNION 
-                                    
-                                    SELECT RESV_ID, SUM(ISNULL(RESV_RATE, 0.00)) AS TOT
-                                        FROM FLXY_RESERVATION
-                                        WHERE RESV_PAYMENT_STATUS = \'Paid\'
-                                        GROUP BY RESV_ID
-                                    
-                                    ) RESV_REVENUE
-                                    GROUP BY RESV_ID) REV_TOT ON REV_TOT.RESERV_ID = FLXY_RESERVATION.RESV_ID';
+                        LEFT JOIN ('.showTotalRevenueQuery().') REV_TOT ON REV_TOT.RESERV_ID = FLXY_RESERVATION.RESV_ID';
         $columns = 'RESV_ID|RESV_NO|RESV_ROOM_ID|RM_ID|RM_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|RM_TYPE_REF_ID|RESV_ROOM|RM_TY_DESC|RESV_NAME|CUST_ID|RESV_RATE_CODE|RESV_RATE|CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME)CUST_FULL_NAME|CONCAT_WS(\' / \', RESV_ADULTS, RESV_CHILDREN)RESV_PERSONS|RESV_ADULTS|RESV_CHILDREN|ISNULL(TOTAL_REVENUE, \'0.00\')TOTAL_REVENUE';
         $mine->generate_DatatTable($tableName, $columns, $init_cond,'|');
         exit;

@@ -394,8 +394,7 @@ function showRoomHistory() {
                 display: $.fn.dataTable.Responsive.display.modal({
                     header: function(row) {
                         var data = row.data();
-                        return 'History Details of Room ' + data['RM_NO'] +
-                            ' for Reservation ' + data['RESV_NO'] + '';
+                        return 'History Details of Room ' + data['RM_NO'] + '';
                     }
                 }),
                 type: 'column',

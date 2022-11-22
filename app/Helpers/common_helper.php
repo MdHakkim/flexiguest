@@ -438,3 +438,47 @@ function getFeaturesDesc($comma_list)
 
     return $features_details['FEATURE_DESC'];
 }
+
+function showTotalRevenueQuery()
+{
+    $query = "SELECT RESV_ID AS RESERV_ID, SUM(TOT) AS TOTAL_REVENUE
+              FROM
+                (SELECT LAO_RESERVATION_ID AS RESV_ID, SUM(ISNULL(LAO_TOTAL_PAYABLE, 0.00)) AS TOT
+                    FROM FLXY_LAUNDRY_AMENITIES_ORDERS
+                    WHERE LAO_PAYMENT_STATUS = 'Paid'
+                    GROUP BY LAO_RESERVATION_ID
+                
+                UNION 
+                
+                SELECT TR_RESERVATION_ID AS RESV_ID, SUM(ISNULL(TR_TOTAL_AMOUNT, 0.00)) AS TOT
+                    FROM FLXY_TRANSPORT_REQUESTS
+                    WHERE TR_PAYMENT_STATUS = 'Paid'
+                    GROUP BY TR_RESERVATION_ID
+                
+                UNION 
+                
+                SELECT RO_RESERVATION_ID AS RESV_ID, SUM(ISNULL(RO_TOTAL_PAYABLE, 0.00)) AS TOT
+                    FROM FLXY_RESTAURANT_ORDERS
+                    WHERE RO_PAYMENT_STATUS = 'Paid'
+                    GROUP BY RO_RESERVATION_ID
+                
+                UNION 
+                
+                SELECT CR_RESERVATION_ID AS RESV_ID, SUM(ISNULL(CR_NET_AMOUNT, 0.00)) AS TOT
+                    FROM FLXY_CONCIERGE_REQUESTS
+                    WHERE CR_PAYMENT_STATUS = 'Paid'
+                    GROUP BY CR_RESERVATION_ID
+                
+                UNION 
+                
+                SELECT RESV_ID, SUM(ISNULL(RESV_RATE, 0.00)) AS TOT
+                    FROM FLXY_RESERVATION
+                    WHERE RESV_PAYMENT_STATUS = 'Paid'
+                    GROUP BY RESV_ID
+                
+                ) RESV_REVENUE
+
+              GROUP BY RESV_ID";
+
+    return $query;          
+}
