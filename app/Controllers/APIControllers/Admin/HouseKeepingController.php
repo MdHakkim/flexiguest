@@ -43,9 +43,9 @@ class HouseKeepingController extends BaseController
         $user = $this->request->user;
         $user_id = $user['USR_ID'];
         $user_role_id = $user['USR_ROLE_ID'];
-        
+
         $where_condition = '1 = 1';
-        if($user_role_id == '3')
+        if ($user_role_id == '3')
             $where_condition = "HKAT_ATTENDANT_ID = $user_id";
 
         $all_tasks = $this->HKAssignedTask
@@ -54,14 +54,14 @@ class HouseKeepingController extends BaseController
                 HKT_DESCRIPTION as TASK_TITLE,
                 HKARM_ROOM_ID, RM_NO,
                 USR_NAME as ATTENDEE_NAME,
-                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS = 'Not Inspected') as NOT_INSPECTED_COUNT,
-                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS = 'Inspected') as INSPECTED_COUNT,
-                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS = 'Rejected') as REJECTED_COUNT,
+                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS_ID = '5') as NOT_INSPECTED_COUNT,
+                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS_ID = '6') as INSPECTED_COUNT,
+                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_INSPECTED_STATUS_ID = '7') as REJECTED_COUNT,
 
-                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS = 'Completed') as COMPLETED_COUNT,
-                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS = 'In Progress') as IN_PROGRESS_COUNT,
-                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS = 'Partially Completed') as PARTIALLY_COMPLETED_COUNT,
-                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS = 'Skipped') as SKIPPED_COUNT
+                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS_ID = '2') as COMPLETED_COUNT,
+                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS_ID = '1') as IN_PROGRESS_COUNT,
+                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS_ID = '3') as PARTIALLY_COMPLETED_COUNT,
+                (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS_ID = '4') as SKIPPED_COUNT
                 "
             )
             ->join('FLXY_HK_TASKS', 'HKAT_TASK_ID = HKT_ID', 'left')
@@ -125,19 +125,19 @@ class HouseKeepingController extends BaseController
             $sub_task = $this->HKAssignedTaskDetail->find($subtask_id);
             if (empty($sub_task))
                 return $this->respond(responseJson(404, true, ['msg' => 'No Task found.']));
-            
-            if(in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_STATUS'] == 'In Progress') // (admin || supervisor) && In Progress
+
+            if (in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_STATUS_ID'] == '1') // (admin || supervisor) && In Progress
                 return $this->respond(responseJson(202, true, ['msg' => 'Not All tasks are completed.']));
         }
 
         if ($user['USR_ROLE_ID'] == '3') {
             $data = [
-                'HKATD_STATUS' => 'Completed',
+                'HKATD_STATUS_ID' => '2',
                 'HKATD_COMPLETION_TIME' => date('Y-m-d H:i:s')
             ];
         } else {
             $data = [
-                'HKATD_INSPECTED_STATUS' => 'Inspected',
+                'HKATD_INSPECTED_STATUS_ID' => '6',
                 'HKATD_INSPECTED_DATETIME' => date('Y-m-d H:i:s')
             ];
         }
@@ -219,19 +219,22 @@ class HouseKeepingController extends BaseController
         $this->HKAssignedTaskDetailNote->insert($data);
 
         $status = $this->request->getVar('status');
-        if ($user['USR_ROLE_ID'] == '3')
-            $subtask['HKATD_STATUS'] = $status;
-        else {
-            if ($subtask['HKATD_STATUS'] == 'In Progress')
-                    return $this->respond(responseJson(202, true, ['msg' => 'This task is not completed yet.']));
+        if ($user['USR_ROLE_ID'] == '3') {
+            if ($status == 'Partially Completed')
+                $subtask['HKATD_STATUS_ID'] = 3;
+            else
+                $subtask['HKATD_STATUS_ID'] = 4; // skipped
+        } else {
+            if ($subtask['HKATD_STATUS_ID'] == '1')
+                return $this->respond(responseJson(202, true, ['msg' => 'This task is not completed yet.']));
 
             if ($status == 'Inspected') {
 
-                $subtask['HKATD_INSPECTED_STATUS'] = 'Inspected';
+                $subtask['HKATD_INSPECTED_STATUS_ID'] = '6';
                 $subtask['HKATD_INSPECTED_DATETIME'] = date('Y-m-d H:i:s');
             } else {
-                $subtask['HKATD_INSPECTED_STATUS'] = 'Rejected';
-                $subtask['HKATD_STATUS'] = 'In Progress';
+                $subtask['HKATD_INSPECTED_STATUS_ID'] = '7';
+                $subtask['HKATD_STATUS_ID'] = '1';
                 $subtask['HKATD_COMPLETION_TIME'] = null;
             }
         }
