@@ -9,13 +9,12 @@ class HKAssignedTask extends Model
     protected $table      = 'FLXY_HK_ASSIGNED_TASKS';
     protected $primaryKey = 'HKAT_ID';
     protected $allowedFields = [
-        'HKAT_TASK_ID',
-        'HKAT_ROOM_ID',
+        'HKAT_TASK_SHEET_ID',
+        'HKAT_TASK_ID', // task overview table ID
         'HKAT_ATTENDANT_ID',
         'HKAT_CREDITS',
         'HKAT_INSTRUCTIONS',
         'HKAT_PRIORITY',
-        'HKAT_NOTE',
         'HKAT_CREATED_BY',
         'HKAT_UPDATED_BY',
     ];

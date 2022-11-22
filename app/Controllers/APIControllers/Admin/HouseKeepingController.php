@@ -64,8 +64,9 @@ class HouseKeepingController extends BaseController
                 (select count(*) from FLXY_HK_ASSIGNED_TASK_DETAILS where HKATD_ASSIGNED_TASK_ID = HKAT_ID and HKATD_STATUS_ID = '4') as SKIPPED_COUNT
                 "
             )
-            ->join('FLXY_HK_TASKS', 'HKAT_TASK_ID = HKT_ID', 'left')
-            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_ID = HKARM_TASK_ID', 'left')
+            ->join('FLXY_HK_TASKASSIGNMENT_OVERVIEW', 'HKAT_TASK_ID = HKTAO_ID', 'left')
+            ->join('FLXY_HK_TASKS', 'HKATO_TASK_CODE = HKT_ID', 'left')
+            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_TASK_ID = HKARM_TASK_ID', 'left')
             ->join('FLXY_ROOM', 'HKARM_ROOM_ID = RM_ID', 'left')
             ->join('FLXY_USERS', 'HKAT_ATTENDANT_ID = USR_ID', 'left')
             ->where($where_condition)
@@ -78,7 +79,7 @@ class HouseKeepingController extends BaseController
     {
         $data = $this->HKAssignedTask
             ->select('FLXY_HK_ASSIGNED_TASKS.*, HKARM_ROOM_ID, RM_NO')
-            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_ID = HKARM_TASK_ID', 'left')
+            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_TASK_ID = HKARM_TASK_ID', 'left')
             ->join('FLXY_ROOM', 'HKARM_ROOM_ID = RM_ID', 'left')
             ->find($task_id);
 
