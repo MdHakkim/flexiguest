@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\ReservationAssetRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\UserRepository;
 use CodeIgniter\API\ResponseTrait;
@@ -20,10 +21,10 @@ class APIController extends BaseController
     private $VaccineDetail;
     private $State;
     private $City;
-    private $ApplicatioController;
     private $PropertyInfo;
     private $UserRepository;
     private $ReservationRepository;
+    private $ReservationAssetRepository;
 
     public function __construct()
     {
@@ -31,10 +32,10 @@ class APIController extends BaseController
         $this->VaccineDetail = new VaccineDetail();
         $this->State = new State();
         $this->City = new City();
-        $this->ApplicatioController = new ApplicatioController();
         $this->PropertyInfo = new PropertyInfo();
         $this->UserRepository = new UserRepository();
         $this->ReservationRepository = new ReservationRepository();
+        $this->ReservationAssetRepository = new ReservationAssetRepository();
     }
 
     // ----------- START API FOR FLEXI GUEST --------------//
@@ -953,7 +954,7 @@ class APIController extends BaseController
 
             if ($update_data &&  $res_data) {
                 if ($user['USR_ROLE_ID'] == '1')
-                    $this->ApplicatioController->attachAssetList($USR_ID, $resID);
+                    $this->ReservationAssetRepository->attachAssetList($USR_ID, $resID);
 
                 $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT'])]);
             } else
@@ -1289,6 +1290,9 @@ class APIController extends BaseController
 
     public function guestCheckedIn()
     {
+        $user = $this->request->user;
+        $user_id = $user['USR_ID'];
+
         $reservation_id = $this->request->getVar('reservation_id');
 
         $params = ['reservation_id' => $reservation_id];
@@ -1297,6 +1301,7 @@ class APIController extends BaseController
             return $this->respond(responseJson(404, true, ['msg' => 'No reservation found.']));
 
         $this->DB->query("update FLXY_RESERVATION set RESV_STATUS = 'Checked-In' where RESV_ID = :reservation_id:", $params);
+        $this->ReservationAssetRepository->attachAssetList($user_id, $reservation_id);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Guest checked-in successfully.']));
     }

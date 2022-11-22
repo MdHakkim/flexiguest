@@ -66,7 +66,7 @@
 				<table id="dataTable_view" class="dt-responsive table table-striped display nowrap" style="width:100%">
 					<thead>
 						<tr>
-                            <th >View</th>
+						    <th class="all">Action</th>
                             <th >Task ID</th>
 							<th class="all">Task Date</th>
 							<th class="all">Task Codes</th>
@@ -76,7 +76,7 @@
 							<th class="all">Total Sheets</th>
 							<th class="all">Total Rooms</th>
 							<th class="all">Total Credits</th>
-                            <th class="all">Action</th>
+                            
 						</tr>
 					</thead>
 				</table>
@@ -196,7 +196,8 @@
 
                         <div class="tab-pane fade show active" id="task-sheets" role="tabpanel">
                             <form id="tasksheet-submit-form" onSubmit="return false">
-							<input type="hidden" name="HKAT_TASK_ID" id="HKAT_TASK_ID" class="form-control" />    
+							<input type="hidden" name="HKAT_TASK_ID" id="HKAT_TASK_ID" class="form-control" />   
+							<input type="hidden" name="TASK_ID" id="TASK_ID" class="form-control" />     
 							<input type="hidden" name="HKAT_SHEET_NO" id="HKAT_SHEET_NO" class="form-control" />    
 
                            
@@ -461,7 +462,25 @@
 					},
 				},
 				columns: [{
-						data: ''
+						data: null,
+						className: "text-center",
+						"orderable": false,
+						render: function(data, type, full, meta) {
+							
+								var taskAssignButtons = 
+									'<div class="d-inline-block flxy_option_view dropend">' +
+									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
+                                    '<ul class="dropdown-menu dropdown-menu-end">' +									
+									'<li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
+									'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_id="' + full['HKT_ID']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="dropdown-item viewTaskAssignment text-success"><i class="fa-solid fa-align-justify"></i> Add Sheet</a></li>'
+									;
+
+									// '<div class="dropdown-divider" ></div><li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
+									// '" class="dropdown-item text-danger deleteTaskAssignment"><i class="fas fa-trash"></i> Delete</a></li>'
+                                    taskAssignButtons += '</ul>' +
+									'</div>';
+								return taskAssignButtons;							
+						}
 					},
 					{
 						data: 'HKTAO_ID',
@@ -518,7 +537,7 @@
 							var HKATO_TOTAL_SHEETS = 	
 
 							'<a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
-									'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="viewTaskAssignment btn btn-outline-info">'+full['HKATO_TOTAL_SHEETS']+' </a>';
+									'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_id="' + full['HKT_ID']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="viewTaskAssignment btn btn-outline-info">'+full['HKATO_TOTAL_SHEETS']+' </a>';
 
 								return HKATO_TOTAL_SHEETS;	
 							}else{
@@ -534,7 +553,7 @@
 								var HKATO_TOTAL_ROOMS = 						
 
 								'<a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
-										'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="viewTaskAssignment btn btn-outline-info" data-room-view="1">'+full['HKATO_TOTAL_ROOMS']+' </a>';
+									'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_id="' + full['HKT_ID']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="viewTaskAssignment btn btn-outline-info" data-room-view="1">'+full['HKATO_TOTAL_ROOMS']+' </a>';
 
 									return HKATO_TOTAL_ROOMS;	
 							}
@@ -547,40 +566,13 @@
 					{
 						data: 'HKATO_TOTAL_CREDIT'
 					},
-                    {
-						data: null,
-						className: "text-center",
-						"orderable": false,
-						render: function(data, type, full, meta) {
-							
-								var taskAssignButtons = 
-									'<div class="d-inline-block flxy_option_view dropend">' +
-									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
-                                    '<ul class="dropdown-menu dropdown-menu-end">' +									
-									'<li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
-									'" data-row-ind="' + meta.row + '"  data-task_date="' + full['HKTAO_TASK_DATE']  + '" data-task_code="' + full['HKT_CODE']  + '" data-task_desc="' + full['HKT_DESCRIPTION']  + '" class="dropdown-item viewTaskAssignment text-success"><i class="fa-solid fa-align-justify"></i> Add Sheet</a></li>'
-									;
-
-									// '<div class="dropdown-divider" ></div><li><a href="javascript:;" data-sysid="' + full['HKTAO_ID'] +
-									// '" class="dropdown-item text-danger deleteTaskAssignment"><i class="fas fa-trash"></i> Delete</a></li>'
-                                    taskAssignButtons += '</ul>' +
-									'</div>';
-								return taskAssignButtons;							
-						}
-					}					
+                    			
 					
 				
 				],
 				columnDefs: [{
-						width: "7%",
-						className: 'control',
-						responsivePriority: 1,
-						orderable: false,
-						targets: 0,
-						searchable: false,
-						render: function(data, type, full, meta) {
-							return '';
-						}
+						width: "7%"
+						
 					}, {
 						width: "15%"
 					}, {
@@ -748,8 +740,8 @@
 
 	$(document).on('click', '.viewTaskAssignment', function() {
 		$("#HKAT_TASK_ID").val($(this).data('sysid'));
+		$("#TASK_ID").val($(this).data('task_id'));
 		var HKAT_TASK_ID = $(this).data('sysid');
-
 		
 		$('input[name="TASK_ASSIGNMENT_DATE"]').val($(this).data('task_date'));
 		$('input[name="TASK_CODE"]').val($(this).data('task_code')+' - '+$(this).data('task_desc'));
@@ -827,14 +819,53 @@
                 }
             },
             {
-                data: 'HKATD_STATUS',
+                data: 'STATUSCODE',
+				render: function(data, type, full, meta) {
+                    //alert(full['STATUSCODE'].indexOf(','));
+					
+					
+					if( full['STATUSCODE'] != null && full['STATUSCODE'].indexOf(',') != -1 ){
+						var match = full['STATS'].split(',')
+						for (var a in match)
+						{
+							var variable = match[a];
+							if(variable == '1')
+							return 'In progress';
+						}
+					}
+                    else
+						return full['STATUSCODE'];
+                }
 				
             },
 			{
-                data: 'HKATD_COMPLETION_TIME'
+                data: 'COMPLETION_TIME',
+				render: function(data, type, full, meta) {	
+				if (full['COMPLETION_TIME'] == null)
+                        return '';
+                    else if (full['COMPLETION_TIME'] != '1900-01-01 00:00:00.000') {
+                        var COMPLETION_TIME = full['COMPLETION_TIME'].split('.');
+                        return (COMPLETION_TIME[0]);
+                    } else
+                        return "";
+				}
             },
 			{
-                data: 'HKATD_INSPECTED_STATUS'
+                data: 'SUPER_STATUSCODE',
+				render: function(data, type, full, meta) {			
+					
+					if( full['SUPER_STATUSCODE'] != null && full['SUPER_STATUSCODE'].indexOf(',') != -1 ){
+						var match = full['INSP_STATS'].split(',')
+						for (var a in match)
+						{
+							var variable = match[a];
+							if(variable == '5')
+							return 'Not inspected';
+						}
+					}
+                    else
+						return full['SUPER_STATUSCODE'];
+                }
             },
             {
                 data: 'HKAT_INSTRUCTIONS'
@@ -850,10 +881,9 @@
 									'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                                     '<ul class="dropdown-menu dropdown-menu-end">' +									
 									'<li><a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
-									'" data-tasksheet_id="' + data['HKAT_ID'] +
-									'" class="dropdown-item text-primary delete_sheet_record"><i class="fas fa-eye"></i> View</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
-									'" data-tasksheet_id="' + data['HKAT_ID'] +
-									'" class="dropdown-item text-danger delete_sheet_record"><i class="fas fa-trash"></i> Delete</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-tasksheet_id="' + data['HKAT_TASK_ID'] +
+									'" data-tasksheet_id="' + data['HKAT_TASK_SHEET_ID'] +
+									'" data-sysid="' + data['HKAT_ID'] +
+									'" class="dropdown-item text-primary view_sheet_record"><i class="fas fa-eye"></i> View</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-tasksheet_id="' + data['HKAT_TASK_SHEET_ID'] +
 									'" data-sysid="' + data['HKAT_ID'] +
 									'" class="dropdown-item text-info printTaskAssignment"><i class="fa fa-print" aria-hidden="true"></i> Print</a></li>'
                                     taskAssignButtons += '</ul>' +
@@ -875,7 +905,7 @@
             [0, "asc"]
         ],
         'createdRow': function(row, data, dataIndex) {
-            $(row).attr('data-tasksheet_id', data['HKAT_ID']);
+            $(row).attr('data-sys_id', data['HKAT_ID']);
 			$(row).attr('data-task_id', data['HKAT_TASK_ID']);
         },
         destroy: true,
@@ -902,7 +932,15 @@
 			dataType: 'json',
 			success: function(respn) {
 				var response = respn['SUCCESS'];
-				if (response != '1') {
+				if(response == '-1'){
+					var ERROR = respn['RESPONSE']['ERROR'];
+					var mcontent = '';					
+						mcontent += '<li>' + ERROR + '</li>';
+				
+					showModalAlert('error', mcontent);
+					$('#loader_flex_bg').hide();
+				}
+				else if (response != '1') {
 					var ERROR = respn['RESPONSE']['ERROR'];
 					var mcontent = '';
 					$.each(ERROR, function(ind, data) {
@@ -931,6 +969,7 @@
 
 		var tasksheet_id = $(this).data('tasksheet_id');
 		var task_id = $(this).data('task_id');
+		var sys_id = $(this).data('sysid');
 		bootbox.confirm({
 			message: "Are you sure you want to delete this record?",
 			buttons: {
@@ -949,7 +988,7 @@
 						url: '<?php echo base_url('/deleteTaskAssignmentSheet') ?>',
 						type: "post",
 						data: {
-							tasksheet_id: tasksheet_id, task_id: task_id
+							tasksheet_id: tasksheet_id, task_id: task_id,sys_id:sys_id
 						},
 						headers: {
 							'X-Requested-With': 'XMLHttpRequest'
@@ -989,14 +1028,21 @@
         'columns': [{
                 data: 'HKARM_ID',
                 'visible': false
-            }, 
-            
+            },            
             {
                 data: 'HKARM_TASK_SHEET_ID',
 				
             },
 			{
-                data: 'HKARM_ROOM_ID'
+                data: 'HKARM_ROOM_ID',
+				render: function(data, type, row, meta) {
+					if(row['RM_NO'] != '')
+                   		return row['RM_NO']+' - '+row['RM_DESC'];
+					else
+					    return '';
+                }
+				
+
             },
             {
                 data: 'HKARM_CREDITS'

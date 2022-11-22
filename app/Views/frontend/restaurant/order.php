@@ -441,14 +441,14 @@
                     $(`${form_id} select[name='RO_PAYMENT_METHOD']`).val(data.RO_PAYMENT_METHOD).trigger('change');
                     $(`${form_id} select[name='RO_PAYMENT_STATUS']`).val(data.RO_PAYMENT_STATUS).trigger('change');
 
-                    selected_item_ids = data.selected_item_ids;
-                    selected_items = data.selected_items;
-
                     setTimeout(function() {
                         $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).val(data.category_ids).trigger('change');
                         $(`${form_id} select[name='RO_DEPARTMENT_ID']`).val(data.RO_DEPARTMENT_ID).trigger('change');
 
                         setTimeout(function() {
+                            selected_item_ids = data.selected_item_ids;
+                            selected_items = data.selected_items;
+
                             $(`${form_id} select[name='RO_ITEMS[][MI_ID]']`).val(data.selected_item_ids).trigger('change');
                             $(`${form_id} select[name='RO_ATTENDANT_ID']`).val(data.RO_ATTENDANT_ID).trigger('change');
                         }, 1000);
