@@ -18,7 +18,7 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Room ID</th>
+                            <th>Room</th>
                             <th>Assets</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
@@ -133,7 +133,7 @@
                     data: ''
                 },
                 {
-                    data: 'RA_ROOM_ID'
+                    data: 'RM_NO'
                 },
                 {
                     data: null,

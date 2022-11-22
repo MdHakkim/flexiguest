@@ -55,7 +55,7 @@ class RoomAssetDataTable
             $searchQuery = " AND ($joinQr) ";
         }
 
-        $table .= "  group by RA_ROOM_ID, RA_CREATED_AT";
+        $table .= "  group by RA_ROOM_ID, RA_CREATED_AT, RM_NO";
         ## Total number of records without filtering
         $result = $this->Db->query("SELECT COUNT(*) AS allcount FROM $table")->getResultArray();
         // $records = mysqli_fetch_assoc($sel);
