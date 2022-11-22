@@ -130,9 +130,9 @@ class HousekeepingController extends BaseController
         $init_cond = [];
         $tableName = 'FLXY_HK_SUBTASKS INNER JOIN FLXY_HK_TASKS ON HKST_TASK_ID = HKT_ID';
         $columns   = 'HKST_ID,HKT_CODE,HKST_DESCRIPTION';
-        if($this->request->getPost('HKT_ID') != '')
-        $init_cond = array("HKST_TASK_ID = "=>$this->request->getPost('HKT_ID'));        
-        $mine->generate_DatatTable($tableName, $columns,$init_cond);
+        if ($this->request->getPost('HKT_ID') != '')
+            $init_cond = array("HKST_TASK_ID = " => $this->request->getPost('HKT_ID'));
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
 
@@ -153,7 +153,7 @@ class HousekeepingController extends BaseController
 
             $option = '<option value="">Choose an Option</option>';
             foreach ($response as $row) {
-                $option .= '<option value="' . $row['HKT_ID'] . '">' . $row['HKT_CODE']  . ' - ' . $row['HKT_DESCRIPTION'].'</option>';
+                $option .= '<option value="' . $row['HKT_ID'] . '">' . $row['HKT_CODE']  . ' - ' . $row['HKT_DESCRIPTION'] . '</option>';
             }
         }
 
@@ -491,5 +491,99 @@ class HousekeepingController extends BaseController
         $response = !$response ? ['RM_ID' => $param['SYSID'], 'RM_GUEST_SERVICE_STATUS' => 0] : $response;
 
         echo json_encode($response);
+    }
+
+    public function roomHistory($rmId = 0)
+    {
+        $data['title'] = 'Housekeeping - Room History';
+        $data['room_id'] = $rmId;
+        //Check if RESV_ID exists in Customer table
+        if($data['room_id'] && !checkValueinTable('RM_ID', $data['room_id'], 'FLXY_ROOM'))
+            return redirect()->to(base_url('housekeeping/room-history')); 
+
+        $data['room_status_list'] = $this->Db->table('FLXY_ROOM_STATUS_MASTER')->select('RM_STATUS_ID,RM_STATUS_CODE,RM_STATUS_COLOR_CLASS')->get()->getResultArray();
+        $data['room_class_list'] = $this->Db->table('FLXY_ROOM_CLASS')->select('RM_CL_ID,RM_CL_CODE,RM_CL_DESC')->get()->getResultArray();
+        $data['toggleButton_javascript'] = toggleButton_javascript();
+        $data['clearFormFields_javascript'] = clearFormFields_javascript();
+        $data['blockLoader_javascript'] = blockLoader_javascript();
+
+        return view('Housekeeping/RoomHistory', $data);
+    }
+
+    public function roomHistoryView()
+    {
+        $init_cond = [];
+        $TODAYDATE = date('Y-m-d');
+
+        $search_keys = [
+            'S_RM_ID', 'S_RM_CLASS', 'S_RM_TYPE_REF_ID', 'S_DEPARTURE_FROM'
+        ];
+
+        $init_cond = array("RM_ID = " => '0');
+
+        if ($search_keys != NULL) {
+            foreach ($search_keys as $search_key) {
+                if (null !== $this->request->getPost($search_key) && !empty($this->request->getPost($search_key))) {
+                    $value = $this->request->getPost($search_key);
+
+                    switch ($search_key) {
+                        case 'S_DEPARTURE_FROM':
+                            $init_cond["RESV_DEPARTURE >= "] = "'$value'";
+                            break;
+
+                        default:
+                            $init_cond["" . ltrim($search_key, "S_") . " = "] = "'$value'";
+                            break;
+                    }
+                }
+            }
+        }
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+
+        $tableName = '  FLXY_RESERVATION
+                        LEFT JOIN FLXY_CUSTOMER C ON C.CUST_ID = FLXY_RESERVATION.RESV_NAME
+                        LEFT JOIN FLXY_ROOM RM ON (RM.RM_ID = FLXY_RESERVATION.RESV_ROOM_ID)
+                        LEFT JOIN FLXY_ROOM_TYPE RT ON (RT.RM_TY_ID = FLXY_RESERVATION.RESV_RM_TYPE_ID)
+                        LEFT JOIN ( SELECT RESV_ID AS RESERV_ID, SUM(TOT) AS TOTAL_REVENUE
+                                    FROM
+                                    (SELECT LAO_RESERVATION_ID AS RESV_ID, SUM(ISNULL(LAO_TOTAL_PAYABLE, 0.00)) AS TOT
+                                        FROM FLXY_LAUNDRY_AMENITIES_ORDERS
+                                        WHERE LAO_PAYMENT_STATUS = \'Paid\'
+                                        GROUP BY LAO_RESERVATION_ID
+                                    
+                                    UNION 
+                                    
+                                    SELECT TR_RESERVATION_ID AS RESV_ID, SUM(ISNULL(TR_TOTAL_AMOUNT, 0.00)) AS TOT
+                                        FROM FLXY_TRANSPORT_REQUESTS
+                                        WHERE TR_PAYMENT_STATUS = \'Paid\'
+                                        GROUP BY TR_RESERVATION_ID
+                                    
+                                    UNION 
+                                    
+                                    SELECT RO_RESERVATION_ID AS RESV_ID, SUM(ISNULL(RO_TOTAL_PAYABLE, 0.00)) AS TOT
+                                        FROM FLXY_RESTAURANT_ORDERS
+                                        WHERE RO_PAYMENT_STATUS = \'Paid\'
+                                        GROUP BY RO_RESERVATION_ID
+                                    
+                                    UNION 
+                                    
+                                    SELECT CR_RESERVATION_ID AS RESV_ID, SUM(ISNULL(CR_NET_AMOUNT, 0.00)) AS TOT
+                                        FROM FLXY_CONCIERGE_REQUESTS
+                                        WHERE CR_PAYMENT_STATUS = \'Paid\'
+                                        GROUP BY CR_RESERVATION_ID
+                                    
+                                    UNION 
+                                    
+                                    SELECT RESV_ID, SUM(ISNULL(RESV_RATE, 0.00)) AS TOT
+                                        FROM FLXY_RESERVATION
+                                        WHERE RESV_PAYMENT_STATUS = \'Paid\'
+                                        GROUP BY RESV_ID
+                                    
+                                    ) RESV_REVENUE
+                                    GROUP BY RESV_ID) REV_TOT ON REV_TOT.RESERV_ID = FLXY_RESERVATION.RESV_ID';
+        $columns = 'RESV_ID|RESV_NO|RESV_ROOM_ID|RM_ID|RM_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|RM_TYPE_REF_ID|RESV_ROOM|RM_TY_DESC|RESV_NAME|CUST_ID|RESV_RATE_CODE|RESV_RATE|CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME)CUST_FULL_NAME|CONCAT_WS(\' / \', RESV_ADULTS, RESV_CHILDREN)RESV_PERSONS|RESV_ADULTS|RESV_CHILDREN|ISNULL(TOTAL_REVENUE, \'0.00\')TOTAL_REVENUE';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond,'|');
+        exit;
     }
 }

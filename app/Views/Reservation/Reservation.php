@@ -3020,6 +3020,10 @@ $(document).ready(function() {
     linkMode = 'EX';
     $('#loader_flex_bg').show();
 
+    $('body').tooltip({
+        selector: '[data-bs-toggle="tooltip"]'
+    });
+
     $('#dataTable_view').DataTable({
         'processing': true,
         'serverSide': true,
@@ -3085,7 +3089,7 @@ $(document).ready(function() {
                     return (
                         '<a href="<?php echo base_url('/customer') ?>?editId=' + row[
                             'RESV_NAME'] +
-                        '" title="View/Edit Profile" target="_blank" class="text-truncate"><span class="fw-semibold">' +
+                        '" data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="" data-bs-original-title="<span>View/Edit Profile</span>" target="_blank" class="text-truncate"><span class="fw-semibold">' +
                         data + '</span></a>'
                     );
                 }

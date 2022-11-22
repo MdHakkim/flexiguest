@@ -672,15 +672,6 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
     $routes->match(['post'], '/floorsList', 'ReservationController::floorsList');
 
-    $routes->match(['post'], '/roomTypeSearchList', 'ReservationController::roomTypeSearchList');
-    $routes->match(['post'], '/roomClassSearchList', 'ReservationController::roomClassSearchList');
-    $routes->match(['post'], '/roomSearchList', 'ReservationController::roomSearchList');
-    $routes->match(['post'], '/roomplanResourcesJson', 'ReservationController::roomplanResourcesJson');
-    $routes->match(['post', 'get'], '/roomPlan', 'ReservationController::roomPlan');
-    $routes->get('/roomPlan/(:segment)', 'ReservationController::roomPlan/$1');
-
-
-
     //Subina Code (END)  
       $routes->match(['post'], '/roomTypeSearchList', 'ReservationController::roomTypeSearchList');
       $routes->match(['post'], '/roomClassSearchList', 'ReservationController::roomClassSearchList'); 
@@ -753,6 +744,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     // Deleep 
     $routes->group('housekeeping', function ($routes) {
         $routes->get('rooms', 'HousekeepingController::housekeeping');
+        
+        $routes->get('room-history', 'HousekeepingController::roomHistory');
+        $routes->get('room-history/(:num)', 'HousekeepingController::roomHistory/$1'); 
     });
     $routes->match(['post'], '/hkroomView', 'HousekeepingController::HkRoomView');
     $routes->match(['post'], '/showFeaturesDesc', 'HousekeepingController::showFeaturesDesc');
@@ -761,6 +755,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/bulkUpdateRoomStatus', 'HousekeepingController::bulkUpdateRoomStatus');
     $routes->match(['post'], '/updateServiceStatus', 'HousekeepingController::updateServiceStatus');
     $routes->match(['post'], '/showRoomServiceStatus', 'HousekeepingController::showRoomServiceStatus');
+    $routes->match(['post'], '/roomHistoryView', 'HousekeepingController::roomHistoryView');
     
 
 

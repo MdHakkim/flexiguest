@@ -774,7 +774,10 @@ $(document).ready(function() {
                 display: $.fn.dataTable.Responsive.display.modal({
                     header: function(row) {
                         var data = row.data();
-                        return 'Details of Room ' + data['RM_NO'];
+                        return 'Details of Room ' + data['RM_NO'] +
+                            '&nbsp;<a href="<?php echo base_url('/housekeeping/room-history') ?>/' +
+                            data['RM_ID'] +
+                            '" target="_blank" class="btn btn-primary ms-5 pt-2 pb-2 ps-3 pe-3"><i class="bx bx-history"></i>&nbsp;View History</a>';
                     }
                 }),
                 type: 'column',
