@@ -86,12 +86,11 @@ class TaskAssignmentController extends BaseController
             }
 
             $data = [
-                "HKTAO_TASK_DATE" => trim($this->request->getPost('HKTAO_TASK_DATE')),
-                "HKATO_TASK_CODE"  => trim($this->request->getPost('HKATO_TASK_CODE')),
-                "HKATO_AUTO"       => trim($this->request->getPost('HKATO_AUTO')),
+                "HKTAO_TASK_DATE"    => trim($this->request->getPost('HKTAO_TASK_DATE')),
+                "HKATO_TASK_CODE"    => trim($this->request->getPost('HKATO_TASK_CODE')),
+                "HKATO_AUTO"         => trim($this->request->getPost('HKATO_AUTO')),
                 "HKATO_TOTAL_SHEETS" => 0,
-                "HKATO_TOTAL_CREDIT" => 0,
-                
+                "HKATO_TOTAL_CREDIT" => 0,         
                 
             ];
 
@@ -268,8 +267,10 @@ class TaskAssignmentController extends BaseController
             else
             echo ++$sheetno;          
         }
-        else 
-        echo $sheetno;
+        else if($output == 1)
+        return $sheetno; 
+        else
+        echo $sheetno;  
         
         
     }
@@ -277,14 +278,14 @@ class TaskAssignmentController extends BaseController
     public function insertTaskAssignmentSheet()
     {
         try {
-            $user_id = session()->get('USR_ID');
-            $HKAT_TASK_ID            = $this->request->getPost('task_id');
+            $user_id                 = session()->get('USR_ID');
+            $TASK_ID                 = $this->request->getPost('task_id');
             $HKAT_TASK_SHEET_ID      = $this->request->getPost('tasksheet_no');
             $HKAT_ATTENDANT_ID       = $this->request->getPost('attendant_id');
             $HKAT_SHEET_INSTRUCTIONS = $this->request->getPost('instructions');
 
             $validate = $this->validate([
-                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required']               
+                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required|taskSheetExists[HKAT_TASK_ID,HKAT_TASK_SHEET_ID,' . $HKAT_ATTENDANT_ID . ']', 'errors' => ['taskSheetExists' => 'Task sheet for the attendee is already assigned to this date']],               
             ]);
 
             if (!$validate) {
@@ -296,7 +297,7 @@ class TaskAssignmentController extends BaseController
                 exit;
             }
             $data = [
-                "HKAT_TASK_ID"        => trim($HKAT_TASK_ID),
+                "HKAT_TASK_ID"        => trim($TASK_ID),
                 "HKAT_TASK_SHEET_ID"  => trim($HKAT_TASK_SHEET_ID),
                 "HKAT_ATTENDANT_ID"   => trim($HKAT_ATTENDANT_ID),
                 "HKAT_CREDITS"        => 0,
@@ -311,24 +312,13 @@ class TaskAssignmentController extends BaseController
             $HKAT_ID = $this->Db->insertID();
 
             $sql = "SELECT HKST_ID
-            FROM FLXY_HK_SUBTASKS WHERE HKST_TASK_ID = '$HKAT_TASK_ID' ORDER BY HKST_ID asc";
+            FROM FLXY_HK_SUBTASKS WHERE HKST_TASK_ID = '$TASK_ID' ORDER BY HKST_ID asc";
 
             $response = $this->Db->query($sql)->getResultArray();
             if(!empty($response)){               
-                foreach($response as $row){
-                    $task_details = [
-                        "HKATD_ASSIGNED_TASK_ID"  => trim($HKAT_ID),
-                        "HKATD_SUBTASK_ID"        => trim($row['HKST_ID']),
-                        "HKATD_CREATED_AT"        => date("Y-m-d H:i:s A"),
-                        "HKATD_CREATED_BY"        => $user_id,                        
-                    ];
-
-                    $this->Db->table('FLXY_HK_ASSIGNED_TASK_DETAILS')->insert($task_details);                  
-
-                }
-
-                $SHEET_NO_OVERVIEW = $SHEET_NO = $this->getLastSheetNo($HKAT_TASK_ID, 1);
-                $this->Db->table('FLXY_HK_TASKASSIGNMENT_OVERVIEW')->where('HKTAO_ID', $HKAT_TASK_ID)->update(['HKATO_TOTAL_SHEETS'=>(--$SHEET_NO_OVERVIEW)]);
+                
+                $SHEET_NO_OVERVIEW = $SHEET_NO = $this->getLastSheetNo($TASK_ID, 1);
+                $this->Db->table('FLXY_HK_TASKASSIGNMENT_OVERVIEW')->where('HKTAO_ID', $TASK_ID)->update(['HKATO_TOTAL_SHEETS'=>(--$SHEET_NO_OVERVIEW)]);
                 $result = $return ? $this->responseJson("1", "0", $return, $response = $SHEET_NO) : $this->responseJson("-444", "db insert not successful", $return);
             }
             else{
@@ -360,28 +350,22 @@ class TaskAssignmentController extends BaseController
 
             $response = $this->Db->query($sql, $param)->getNumRows();
 
-            $sql1 = "SELECT HKAT_ROOM_TASK_SHEET_ID
+            $sql1 = "DELETE 
                 FROM FLXY_HK_TASK_ASSIGNED_ROOMS
-                WHERE HKARM_TASK_SHEET_ID= '$sys_id' ";
+                WHERE HKARM_TASK_ID= '$sys_id' AND HKARM_TASK_SHEET_ID = '$tasksheet_id'";
 
-            $response1 = $this->Db->query($sql, $param)->getNumRows();
+            $response1 = $this->Db->query($sql1);
 
-            $sql2 = "SELECT HKATD_ID
+            $sql2 = "DELETE 
                 FROM FLXY_HK_ASSIGNED_TASK_DETAILS
                 WHERE HKATD_ASSIGNED_TASK_ID= '$sys_id' ";
 
-            $response2 = $this->Db->query($sql, $param)->getNumRows();
+            $response2 = $this->Db->query($sql2);           
             
-            
-            if ($response > 0 || $response1 > 0 || $response2 > 0) {
-                $result = $this->responseJson("0");
-            } else {
-                $return = $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->delete(['HKAT_ID' => $sys_id]);
-                $SHEET_NO = $this->getLastSheetNo($task_id, 1);
-                $result = $return ? $this->responseJson("1", "0", $return, $response = $SHEET_NO) : $this->responseJson("-402", "Record not deleted");
-            }
-
-
+           
+            $return = $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->delete(['HKAT_ID' => $sys_id]);
+            $SHEET_NO = $this->getLastSheetNo($task_id, 1);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = $SHEET_NO) : $this->responseJson("-402", "Record not deleted");
 
             echo json_encode($result);
         } catch (\Exception $e) {
@@ -435,6 +419,7 @@ class TaskAssignmentController extends BaseController
     {
         try {
             $user_id = session()->get('USR_ID');
+            $TASK_ID              = $this->request->getPost('TASK_ID');
             $HKAT_TASK_ID         = $this->request->getPost('HKAT_TASK_ID');
             $HKARM_TASK_SHEET_ID  = $this->request->getPost('HKARM_TASK_SHEET_ID');
             $HKARM_ROOM_ID        = $this->request->getPost('HKARM_ROOM_ID');
@@ -463,6 +448,31 @@ class TaskAssignmentController extends BaseController
                 "HKARM_CREATED_AT"     => date("Y-m-d H:i:s A"),
                 "HKARM_CREATED_BY"     => $user_id,
             ];
+
+
+            //// get Task Assigned id 
+            $cond = "HKAT_TASK_SHEET_ID = '".trim($HKARM_TASK_SHEET_ID)."'";
+            $HKATD_ASSIGNED_TASK_ID = getValueFromTable('HKAT_ID',$cond,'FLXY_HK_ASSIGNED_TASKS');
+
+            $sql = "SELECT HKST_ID
+            FROM FLXY_HK_SUBTASKS WHERE HKST_TASK_ID = '$TASK_ID' ORDER BY HKST_ID asc";
+
+            $response = $this->Db->query($sql)->getResultArray();
+            if(!empty($response)){                
+                foreach($response as $row){
+                    $task_details = [
+                        "HKATD_ASSIGNED_TASK_ID"  => $HKATD_ASSIGNED_TASK_ID,
+                        "HKATD_ROOM_ID"           => trim($HKARM_ROOM_ID),
+                        "HKATD_SUBTASK_ID"        => trim($row['HKST_ID']),
+                        "HKATD_CREATED_AT"        => date("Y-m-d H:i:s A"),
+                        "HKATD_CREATED_BY"        => $user_id,                        
+                    ];
+
+                    $this->Db->table('FLXY_HK_ASSIGNED_TASK_DETAILS')->insert($task_details);                  
+
+                }
+            }
+
             
             $return = !empty($sysid) ? $this->Db->table('FLXY_HK_TASK_ASSIGNED_ROOMS')->where('HKARM_ID', $sysid)->update($data) : $this->Db->table('FLXY_HK_TASK_ASSIGNED_ROOMS')->insert($data);
 

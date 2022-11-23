@@ -496,6 +496,21 @@ public function checkReservationYearlyDate(string $str, string $fields, array $d
               $response = $this->Db->query($sql)->getNumRows();
               return ($response == 0 ? true : false); 
       }
+
+      public function taskSheetExists(string $str, string $fields, array $data)
+      {
+            /**
+             *  Check taskSheetExists 
+             */
+              $response = 0;              
+              $HKAT_TASK_ID         = $data['task_id']; 
+              $HKAT_ATTENDANT_ID    = $data['attendant_id'];           
+              
+              $sql = "SELECT * FROM FLXY_HK_ASSIGNED_TASKS WHERE HKAT_TASK_ID = '".$HKAT_TASK_ID."' AND HKAT_ATTENDANT_ID = ".$HKAT_ATTENDANT_ID;
+      
+              $response = $this->Db->query($sql)->getNumRows();
+              return ($response == 0 ? true : false); 
+      }
   
       
 
