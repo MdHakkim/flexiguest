@@ -440,7 +440,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['AL_ID'];
+                            return 'Details of ' + data['EV_ID'];
                         }
                     }),
                     type: 'column',
