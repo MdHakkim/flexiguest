@@ -10,6 +10,8 @@ use CodeIgniter\API\ResponseTrait;
 use  App\Libraries\EmailLibrary;
 use App\Models\City;
 use App\Models\PropertyInfo;
+use App\Models\Reservation;
+use App\Models\Room;
 use App\Models\State;
 use App\Models\VaccineDetail;
 
@@ -22,6 +24,8 @@ class APIController extends BaseController
     private $State;
     private $City;
     private $PropertyInfo;
+    private $Room;
+    private $Reservation;
     private $UserRepository;
     private $ReservationRepository;
     private $ReservationAssetRepository;
@@ -33,6 +37,9 @@ class APIController extends BaseController
         $this->State = new State();
         $this->City = new City();
         $this->PropertyInfo = new PropertyInfo();
+        $this->Room = new Room();
+        $this->Reservation = new Reservation();
+
         $this->UserRepository = new UserRepository();
         $this->ReservationRepository = new ReservationRepository();
         $this->ReservationAssetRepository = new ReservationAssetRepository();
@@ -204,12 +211,12 @@ class APIController extends BaseController
             $records = $this->DB->query("select ACCOMP_REF_RESV_ID from FLXY_ACCOMPANY_PROFILE where ACCOMP_CUST_ID = :RESV_NAME:", $param)->getResultArray();
 
             $reservation_ids = [];
-            foreach($records as $row)
+            foreach ($records as $row)
                 $reservation_ids[] = $row['ACCOMP_REF_RESV_ID'];
             $reservation_ids = implode(',', $reservation_ids);
 
             $where_condition = '';
-            if(!empty($reservation_ids))
+            if (!empty($reservation_ids))
                 $where_condition = "OR a.RESV_ID in ($reservation_ids)";
 
             $sql = "SELECT  a.RESV_ID,a.RESV_NAME,a.RESV_CHILDREN,a.RESV_ADULTS,a.RESV_NIGHT,a.RESV_ARRIVAL_DT,a.RESV_DEPARTURE,a.RESV_STATUS, a.RESV_PAYMENT_STATUS, a.RESV_RATE, CONCAT_WS(' ', b.CUST_FIRST_NAME, b.CUST_LAST_NAME) as NAME ,d.RM_NO,d.RM_DESC,b.CUST_EMAIL,b.CUST_MOBILE_CODE,b.CUST_MOBILE FROM FLXY_RESERVATION a 
@@ -299,7 +306,7 @@ class APIController extends BaseController
         $sql = "select * from FLXY_ACCOMPANY_PROFILE where ACCOMP_CUST_ID = :customer_id: and ACCOMP_REF_RESV_ID = :reservation_id:";
         $params = ['customer_id' => $customer_id, 'reservation_id' => $reservation_id];
         $data = $this->DB->query($sql, $params)->getResultArray();
-        
+
         if (count($data)) // when user is not main guest
             return $this->respond(responseJson(200, false, ["msg" => "Accompany person"], $guest));
 
@@ -329,7 +336,7 @@ class APIController extends BaseController
             $sql = "select VACC_IS_VERIFY from FLXY_VACCINE_DETAILS where VACC_CUST_ID = :CUST_ID: AND VACC_RESV_ID = :RESV_ID:";
             $res = $this->DB->query($sql, ['CUST_ID' => $accompany_profile['CUST_ID'], 'RESV_ID' => $reservation_id])->getResultArray();
             if (count($res))
-                $accompany_profiles[$index]['VACC_IS_VERIFY'] = $res[0]['VACC_IS_VERIFY'];                
+                $accompany_profiles[$index]['VACC_IS_VERIFY'] = $res[0]['VACC_IS_VERIFY'];
             // DOC VERIFY
         }
 
@@ -1144,12 +1151,24 @@ class APIController extends BaseController
         $customer_id = $this->request->user['USR_CUST_ID'];
 
         if ($this->request->user['USR_ROLE_ID'] == '1') {
-            $room_list = $this->DB->table('FLXY_ROOM')
-                ->select("RM_NO as RESV_ROOM, RM_ID, RESV_ID, (CASE WHEN RESV_ID is not null THEN concat(RESV_ID, '-', CUST_FIRST_NAME, ' ', CUST_LAST_NAME) ELSE NULL END) as ID_NAME")
-                ->join('FLXY_RESERVATION', "RM_NO = RESV_ROOM and RESV_STATUS = 'Checked-In'", 'left')
-                ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
-                ->get()
-                ->getResult();
+            $room_list = [];
+
+            $rooms = $this->Room->select('RM_ID, RM_NO')->findAll();            
+            foreach ($rooms as $index => $room) {
+                $reservations = $this->Reservation
+                    ->select("RESV_ID, (CASE WHEN RESV_ID is not null THEN concat(RESV_ID, '-', CUST_FIRST_NAME, ' ', CUST_LAST_NAME) ELSE NULL END) as ID_NAME")
+                    ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
+                    ->where('RESV_ROOM', $room['RM_NO'])
+                    ->whereIn('RESV_STATUS', ['Checked-In', 'Checked-Out-Requested'])
+                    ->findAll();
+
+                if (empty($reservations))
+                    unset($rooms[$index]);
+                else {
+                    $rooms[$index]['reservations'] = $reservations;
+                    $room_list[] = $rooms[$index];
+                }
+            }
         } else {
             $room_list = $this->DB->table('FLXY_RESERVATION')
                 ->select("RESV_ID, RESV_ROOM, RM_ID, concat(RESV_ID, '-', CUST_FIRST_NAME, ' ', CUST_LAST_NAME) as ID_NAME")
