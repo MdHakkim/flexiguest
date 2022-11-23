@@ -1153,8 +1153,9 @@ class APIController extends BaseController
         if ($this->request->user['USR_ROLE_ID'] == '1') {
             $room_list = $this->DB->table('FLXY_ROOM')
                 ->select("RM_NO as RESV_ROOM, RM_ID, RESV_ID, (CASE WHEN RESV_ID is not null THEN concat(RESV_ID, '-', CUST_FIRST_NAME, ' ', CUST_LAST_NAME) ELSE NULL END) as ID_NAME")
-                ->join('FLXY_RESERVATION', "RM_NO = RESV_ROOM and RESV_STATUS = 'Checked-In'", 'left')
+                ->join('FLXY_RESERVATION', "RM_NO = RESV_ROOM", 'left')
                 ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
+                ->whereIn('RESV_STATUS', ['Checked-In', 'Checked-Out-Requested'])
                 ->get()
                 ->getResult();
 
