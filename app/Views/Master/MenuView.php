@@ -90,8 +90,13 @@
                                     placeholder="reservation" required />
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label"><b> Icon</b></label>
+                                <label class="form-label"><b> Icon Class</b></label>
                                 <input type="text" name="MENU_ICON" id="MENU_ICON" class="form-control"
+                                    placeholder="" />
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label"><b> CSS Class</b></label>
+                                <input type="text" name="MENU_CSS_CLASS" id="MENU_CSS_CLASS" class="form-control"
                                     placeholder="" />
                             </div> 
                         </div>
