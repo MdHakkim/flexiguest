@@ -60,14 +60,17 @@ class ReceivingFormController extends BaseController
 
     public function submitAssetHandoverForm()
     {
+        $user = $this->request->user;
         $assets = $this->request->getVar('assets');
 
         foreach($assets as $asset) {
             $data = [
                 'RRA_ID' => $asset->RRA_ID,
                 'RRA_REMARKS' => $asset->RRA_REMARKS,
-                'RRA_STATUS' => 'Completed',
             ];
+            
+            if($user['USR_ROLE_ID'] == 2)
+                $data['RRA_STATUS'] = 'Completed';
 
             $this->ReservationRoomAsset->save($data);
         }

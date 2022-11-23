@@ -41,11 +41,10 @@ class AssetTrackingController extends BaseController
                     concat(CUST_FIRST_NAME, ' ', CUST_LAST_NAME) as GUEST_NAME")
             ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
             ->join('FLXY_CUSTOMER', 'RESV_NAME = CUST_ID', 'left')
-            ->where('RESV_STATUS', 'Checked-In')
+            ->whereIn('RESV_STATUS', ['Checked-In', 'Checked-Out-Requested'])
             ->findAll();
 
-
-
+        $rooms_list = [];
         foreach ($rooms as $index => $room) {
             $assets = $this->ReservationRoomAsset
                 ->select("RRA_ID, RRA_QUANTITY, RRA_STATUS, RRA_TRACKING_REMARKS, AS_ASSET, AS_PRICE,
@@ -62,10 +61,11 @@ class AssetTrackingController extends BaseController
                 $rooms[$index]['RRA_STATUS'] = ($assets[0]['RRA_STATUS'] == 'Verified' || $assets[0]['RRA_STATUS'] == 'Discrepancy') 
                                                 ? 'Verified' : $assets[0]['RRA_STATUS']; 
                 $rooms[$index]['ASSETS'] = $assets;
+                $rooms_list[] = $rooms[$index];
             }
         }
 
-        return $this->respond(responseJson(200, false, ['msg' => 'assets list'], $rooms));
+        return $this->respond(responseJson(200, false, ['msg' => 'assets list'], $rooms_list));
     }
 
     public function submitForm()
