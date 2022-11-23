@@ -84,7 +84,7 @@ class Notification
 
       $NotificationOutput .= <<<EOD
             <li class="dropdown-menu-footer border-top">
-            <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center p-3" id="ViewAll">
+            <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center p-3" id="ViewAllNotifs">
                 View all notifications
             </a>
             </li>
@@ -113,7 +113,7 @@ class Notification
 
       $NotificationOutput .= <<<EOD
               <li class="dropdown-menu-footer border-top">
-              <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center p-3" id="ViewAll">
+              <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center p-3" id="ViewAllNotifs">
                   View all notifications
               </a>
               </li>
@@ -131,7 +131,7 @@ class Notification
     // {        
     //   $NotificationOutput.= <<<EOD
     //       <li class="dropdown-menu-footer border-top">
-    //       <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center p-3" id="ViewAll">
+    //       <a href="javascript:void(0);" class="dropdown-item d-flex justify-content-center p-3" id="ViewAllNotifs">
     //           View all notifications
     //       </a>
     //       </li>

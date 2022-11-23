@@ -59,8 +59,10 @@
                                             height="48" alt="Room Assignment" />
                                         <h5>Room Assignment</h5>
                                         <p>View and plan the assignment of rooms to guests...</p>
-                                        <a class="btn btn-label-success" target="_blank"
-                                            href="<?php echo base_url() ?>/roomPlan">View</a>
+                                        <a class="btn rounded-pill btn-label-success" target="_blank"
+                                            href="<?php echo base_url() ?>/roomPlan">View</a>&nbsp;
+                                        <a class="btn rounded-pill btn-label-success" target="_blank"
+                                            href="<?php echo base_url() ?>/housekeeping/rooms">Room Status</a>   
                                     </div>
                                 </div>
                             </div>

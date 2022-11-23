@@ -914,6 +914,8 @@ $(document).on('click', '.changeAmOrdStatus', function() {
 $(document).on('click', '.amenityOrderRequest', function() {
 
     $('#amenityOrderRequestWindow').modal('show');
+    clearFormFields('#amenityOrderRequestForm');
+
     selectedProductDetails = [];
 
     $('.showSelectedProducts').html("");

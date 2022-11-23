@@ -34,7 +34,7 @@ class Menu{
                 $subMenuCount = $this->Db->query($sql)->getNumRows();
                 $menu_url = $menu['MENU_URL'];
                 if($menu_url == ''){
-                    $menu_url =  ($menu['MENU_NAME'] == 'Dashboard') ? base_url('/'):'javascript:void(0)';                   
+                    $menu_url =  ($menu['MENU_NAME'] == 'Dashboard') ? base_url().'/':'javascript:void(0)';                   
                 }
                 else
                     $menu_url = base_url().'/'.$menu_url;
@@ -47,10 +47,10 @@ class Menu{
                                           
                     $rolesSubmenuOutput.='<ul class="menu-sub">';
                     foreach($subMenu as $smenu){
-                        $submenu_item_active = (isset($url) && ($url == base_url().'/'.$smenu['MENU_URL'])) ? 'active' : '' ; 
-                        $submenu_url = ($smenu['MENU_URL'] == '')?'':base_url($smenu['MENU_URL']);
-                        $submenu_url_array[] = base_url().'/'.$smenu['MENU_URL'];
+                        $submenu_url = ($smenu['MENU_URL'] == '') ? 'javascript:void(0)' : base_url($smenu['MENU_URL']);
+                        $submenu_url_array[] = $submenu_url;
 
+                        $submenu_item_active = (isset($url) && ($url == $submenu_url)) ? 'active' : '' ; 
                             
                         $rolesSubmenuOutput.= <<<EOD
                             {$misc}   

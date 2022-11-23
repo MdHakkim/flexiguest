@@ -498,8 +498,8 @@ class HousekeepingController extends BaseController
         $data['title'] = 'Housekeeping - Room History';
         $data['room_id'] = $rmId;
         //Check if RESV_ID exists in Customer table
-        if($data['room_id'] && !checkValueinTable('RM_ID', $data['room_id'], 'FLXY_ROOM'))
-            return redirect()->to(base_url('housekeeping/room-history')); 
+        if ($data['room_id'] && !checkValueinTable('RM_ID', $data['room_id'], 'FLXY_ROOM'))
+            return redirect()->to(base_url('housekeeping/room-history'));
 
         $data['room_status_list'] = $this->Db->table('FLXY_ROOM_STATUS_MASTER')->select('RM_STATUS_ID,RM_STATUS_CODE,RM_STATUS_COLOR_CLASS')->get()->getResultArray();
         $data['room_class_list'] = $this->Db->table('FLXY_ROOM_CLASS')->select('RM_CL_ID,RM_CL_CODE,RM_CL_DESC')->get()->getResultArray();
@@ -545,9 +545,51 @@ class HousekeepingController extends BaseController
                         LEFT JOIN FLXY_CUSTOMER C ON C.CUST_ID = FLXY_RESERVATION.RESV_NAME
                         LEFT JOIN FLXY_ROOM RM ON (RM.RM_ID = FLXY_RESERVATION.RESV_ROOM_ID)
                         LEFT JOIN FLXY_ROOM_TYPE RT ON (RT.RM_TY_ID = FLXY_RESERVATION.RESV_RM_TYPE_ID)
-                        LEFT JOIN ('.showTotalRevenueQuery().') REV_TOT ON REV_TOT.RESERV_ID = FLXY_RESERVATION.RESV_ID';
+                        LEFT JOIN (' . showTotalRevenueQuery() . ') REV_TOT ON REV_TOT.RESERV_ID = FLXY_RESERVATION.RESV_ID';
         $columns = 'RESV_ID|RESV_NO|RESV_ROOM_ID|RM_ID|RM_NO|FORMAT(RESV_ARRIVAL_DT,\'dd-MMM-yyyy\')RESV_ARRIVAL_DT|RESV_NIGHT|FORMAT(RESV_DEPARTURE,\'dd-MMM-yyyy\')RESV_DEPARTURE|RESV_RM_TYPE|RM_TYPE_REF_ID|RESV_ROOM|RM_TY_DESC|RESV_NAME|CUST_ID|RESV_RATE_CODE|RESV_RATE|CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME)CUST_FULL_NAME|CONCAT_WS(\' / \', RESV_ADULTS, RESV_CHILDREN)RESV_PERSONS|RESV_ADULTS|RESV_CHILDREN|ISNULL(TOTAL_REVENUE, \'0.00\')TOTAL_REVENUE';
-        $mine->generate_DatatTable($tableName, $columns, $init_cond,'|');
+        $mine->generate_DatatTable($tableName, $columns, $init_cond, '|');
         exit;
+    }
+
+    public function HkRoomStatistics()
+    {
+        $room_status_list = $this->Db->table('FLXY_ROOM_STATUS_MASTER')->select('RM_STATUS_ID,RM_STATUS_CODE,RM_STATUS_COLOR_CLASS')->get()->getResultArray();
+
+        $selectRoomCounts = [];
+
+        //Get Totals
+        $selectRoomCounts[] = "COUNT(*) AS HKRooms";
+        foreach ($room_status_list as $room_status) {
+            $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RM_STATUS_ID, 2) = " . $room_status['RM_STATUS_ID'] . " THEN 1 ELSE 0 END) AS TotRooms" . $room_status['RM_STATUS_ID'] . "";
+        }
+
+        //Get Detailed Totals - Not Reserved
+        foreach ($room_status_list as $room_status) {
+            if ($room_status['RM_STATUS_ID'] == '5') continue;
+            $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RM_STATUS_ID, 2) = " . $room_status['RM_STATUS_ID'] . " AND ISNULL(RVN.RESV_STATUS, 'Not Reserved') = 'Not Reserved' THEN 1 ELSE 0 END) AS NRTotRooms" . $room_status['RM_STATUS_ID'] . "";
+        }
+        //Get Detailed Totals - Reserved
+        foreach ($room_status_list as $room_status) {
+            if ($room_status['RM_STATUS_ID'] == '5') continue;
+            $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RM_STATUS_ID, 2) = " . $room_status['RM_STATUS_ID'] . " AND ISNULL(RVN.RESV_STATUS, 'Not Reserved') != 'Not Reserved' THEN 1 ELSE 0 END) AS RTotRooms" . $room_status['RM_STATUS_ID'] . "";
+        }
+
+        $sql = "SELECT " . implode(',', $selectRoomCounts) . "
+                FROM FLXY_ROOM RM
+                LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
+                            FROM FLXY_ROOM_STATUS_LOG
+                            GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+                LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                
+                LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
+                LEFT JOIN ( SELECT MAX(RESV_ID) AS RESV_MAX_ID, RESV_ROOM_ID AS RESV_ROOM
+                            FROM FLXY_RESERVATION
+                            WHERE '" . date('Y-m-d') . "' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE
+                            AND RESV_STATUS NOT IN ('Cancelled')
+                            GROUP BY RESV_ROOM_ID ) RESV ON RESV.RESV_ROOM = RM.RM_ID
+                LEFT JOIN FLXY_RESERVATION RVN ON RVN.RESV_ID = RESV.RESV_MAX_ID";
+
+        $response = $this->Db->query($sql)->getResultArray();
+
+        echo json_encode([$response, $room_status_list]);
     }
 }
