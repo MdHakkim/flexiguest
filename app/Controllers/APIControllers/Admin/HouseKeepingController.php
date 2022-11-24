@@ -66,7 +66,7 @@ class HouseKeepingController extends BaseController
             )
             ->join('FLXY_HK_TASKASSIGNMENT_OVERVIEW', 'HKAT_TASK_ID = HKTAO_ID', 'left')
             ->join('FLXY_HK_TASKS', 'HKATO_TASK_CODE = HKT_ID', 'left')
-            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_TASK_ID = HKARM_TASK_ID', 'left')
+            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_TASK_ID = HKARM_TASK_ID AND HKAT_TASK_SHEET_ID = HKARM_TASK_SHEET_ID')
             ->join('FLXY_ROOM', 'HKARM_ROOM_ID = RM_ID', 'left')
             ->join('FLXY_USERS', 'HKAT_ATTENDANT_ID = USR_ID', 'left')
             ->where($where_condition)
@@ -75,18 +75,26 @@ class HouseKeepingController extends BaseController
         return $this->respond(responseJson(200, false, ['msg' => 'All Tasks'], $all_tasks));
     }
 
-    public function taskDetails($task_id)
+    public function taskDetails()
     {
+        $task_id = $this->request->getVar('task_id');
+        $room_id = $this->request->getVar('room_id');
+
         $data = $this->HKAssignedTask
             ->select('FLXY_HK_ASSIGNED_TASKS.*, HKARM_ROOM_ID, RM_NO')
-            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_TASK_ID = HKARM_TASK_ID', 'left')
+            ->join('FLXY_HK_TASK_ASSIGNED_ROOMS', 'HKAT_TASK_ID = HKARM_TASK_ID')
             ->join('FLXY_ROOM', 'HKARM_ROOM_ID = RM_ID', 'left')
+            ->where('HKARM_ROOM_ID', $room_id)
             ->find($task_id);
+
+        if (empty($data))
+            return $this->respond(responseJson(202, true, ['msg' => 'No Task Details found']));
 
         $notes = $this->HKAssignedTaskNote
             ->select('FLXY_HK_ASSIGNED_TASK_NOTES.*, USR_NAME')
             ->join('FlXY_USERS', 'ATN_USER_ID = USR_ID', 'left')
             ->where('ATN_ASSIGNED_TASK_ID', $task_id)
+            ->where('ATN_ROOM_ID', $room_id)
             ->findAll();
 
         foreach ($notes as $index => $note) {
@@ -103,6 +111,7 @@ class HouseKeepingController extends BaseController
             ->select('FLXY_HK_ASSIGNED_TASK_DETAILS.*, HKST_DESCRIPTION')
             ->join('FLXY_HK_SUBTASKS', 'HKATD_SUBTASK_ID = HKST_ID', 'left')
             ->where('HKATD_ASSIGNED_TASK_ID', $task_id)
+            ->where('HKATD_ROOM_ID', $room_id)
             ->findAll();
 
         foreach ($task_details as $index => $task_detail)
@@ -152,6 +161,7 @@ class HouseKeepingController extends BaseController
     {
         $rules = [
             'task_id' => ['label' => 'task', 'rules' => 'required'],
+            'room_id' => ['label' => 'room', 'rules' => 'required'],
             'note' => ['label' => 'note', 'rules' => 'required'],
         ];
 
@@ -168,6 +178,7 @@ class HouseKeepingController extends BaseController
 
         $data['ATN_USER_ID'] = $user_id = $this->request->user['USR_ID'];
         $data['ATN_ASSIGNED_TASK_ID'] = $this->request->getVar('task_id');
+        $data['ATN_ROOM_ID'] = $this->request->getVar('room_id');
         $data['ATN_NOTE'] = $this->request->getVar('note');
 
         if (empty($this->HKAssignedTask->find($data['ATN_ASSIGNED_TASK_ID'])))

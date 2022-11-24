@@ -188,7 +188,7 @@ $routes->group("api/admin", ["filter" => "authapi:Admin", 'namespace' => 'App\Co
 $routes->group("api/admin", ["filter" => "authapi:Admin,Attendee", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
     $routes->group('housekeeping', function ($routes) {
         $routes->get("all-tasks", "HouseKeepingController::allTasks");
-        $routes->get("task-details/(:segment)", "HouseKeepingController::taskDetails/$1");
+        $routes->post("task-details", "HouseKeepingController::taskDetails");
         $routes->post("mark-subtask-completed-inspected", "HouseKeepingController::markSubtaskCompletedInspected");
         $routes->post("submit-task-note", "HouseKeepingController::submitTaskNote");
         $routes->post("submit-subtask-note", "HouseKeepingController::submitSubtaskNote");

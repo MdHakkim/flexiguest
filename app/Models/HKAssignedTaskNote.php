@@ -10,6 +10,7 @@ class HKAssignedTaskNote extends Model
     protected $primaryKey = 'ATN_ID';
     protected $allowedFields = [
         'ATN_ASSIGNED_TASK_ID',
+        'ATN_ROOM_ID',
         'ATN_USER_ID',
         'ATN_NOTE',
         'ATN_CREATED_BY',
