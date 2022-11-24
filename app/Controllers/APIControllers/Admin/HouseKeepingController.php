@@ -126,6 +126,27 @@ class HouseKeepingController extends BaseController
         return $this->respond(responseJson(200, false, ['msg' => 'Task Details'], $data));
     }
 
+    public function taskStarted()
+    {
+        $data = json_decode(json_encode($this->request->getVar()), true);
+
+        $rules = [
+            'task_id' => ['label' => 'task', 'rules' => 'required'],
+            'room_id' => ['label' => 'room', 'rules' => 'required'],
+        ];
+
+        if (!$this->validate($rules))
+            return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
+        $this->HKAssignedTaskDetail
+            ->where('HKATD_ASSIGNED_TASK_ID', $data['task_id'])
+            ->where('HKATD_ROOM_ID', $data['room_id'])
+            ->set(['HKATD_START_TIME' => date('Y-m-d H:i:s')])
+            ->update();
+        
+        return $this->respond(responseJson(200, false, ['msg' => 'Task started.']));
+    }
+
     public function markSubtaskCompletedInspected()
     {
         $user = $this->request->user;
