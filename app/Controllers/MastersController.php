@@ -1958,7 +1958,7 @@ class MastersController extends BaseController
         if (!empty($room_type)) {
             $sql .= " AND CONCAT(',', RT_CD_DT_ROOM_TYPES, ',') LIKE '%," . $room_type . ",%'";
         }
-        
+
         $response = $this->Db->query($sql)->getNumRows();
         echo ($response > 0 ? "0" : "1");
     }
@@ -3266,9 +3266,9 @@ class MastersController extends BaseController
                 'BLK_STS_CD_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
             ];
 
-            if(null !== $this->request->getPost('RM_STATUS_TY_ID') && $this->request->getPost('RM_STATUS_TY_ID') == '4'){
+            if (null !== $this->request->getPost('RM_STATUS_TY_ID') && $this->request->getPost('RM_STATUS_TY_ID') == '4') {
                 $rules['RM_CANCEL_TY_ID'] = [
-                    'label' => 'Cancel Type', 
+                    'label' => 'Cancel Type',
                     'rules' => 'required'
                 ];
             }
@@ -3347,4 +3347,93 @@ class MastersController extends BaseController
         }
     }
 
+    /**************      Room Status Change Reason Functions      ***************/
+
+    public function roomStatusChangeReason()
+    {
+        $data['title'] = getMethodName();
+        $data['session'] = $this->session;
+
+        return view('Master/RoomStatusChangeReasonView', $data);
+    }
+
+    public function RoomStatusChangeReasonView()
+    {
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_ROOM_STATUS_CHANGE_REASON';
+        $columns = 'RM_STATUS_CHANGE_ID,RM_STATUS_CHANGE_CODE,RM_STATUS_CHANGE_DESC,RM_STATUS_CHANGE_DIS_SEQ,RM_STATUS_CHANGE_STATUS';
+        $mine->generate_DatatTable($tableName, $columns);
+        exit;
+    }
+
+    public function insertRoomStatusChangeReason()
+    {
+        try {
+            $sysid = $this->request->getPost('RM_STATUS_CHANGE_ID');
+
+            $validate = $this->validate([
+                'RM_STATUS_CHANGE_CODE' => ['label' => 'Room Status Change Code', 'rules' => 'required|is_unique[FLXY_ROOM_STATUS_CHANGE_REASON.RM_STATUS_CHANGE_CODE,RM_STATUS_CHANGE_ID,' . $sysid . ']'],
+                'RM_STATUS_CHANGE_DESC' => ['label' => 'Room Status Change Description', 'rules' => 'required'],
+                'RM_STATUS_CHANGE_DIS_SEQ' => ['label' => 'Display Sequence', 'rules' => 'permit_empty|greater_than_equal_to[0]'],
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            //echo json_encode(print_r($_POST)); exit;
+
+            $data = [
+                "RM_STATUS_CHANGE_CODE" => trim($this->request->getPost('RM_STATUS_CHANGE_CODE')),
+                "RM_STATUS_CHANGE_DESC" => trim($this->request->getPost('RM_STATUS_CHANGE_DESC')),
+                "RM_STATUS_CHANGE_DIS_SEQ" => trim($this->request->getPost('RM_STATUS_CHANGE_DIS_SEQ')) != '' ? trim($this->request->getPost('RM_STATUS_CHANGE_DIS_SEQ')) : '',
+                "RM_STATUS_CHANGE_STATUS" => null !== $this->request->getPost('RM_STATUS_CHANGE_STATUS') ? '1' : '0',
+            ];
+
+            $return = !empty($sysid) ? $this->Db->table('FLXY_ROOM_STATUS_CHANGE_REASON')->where('RM_STATUS_CHANGE_ID', $sysid)->update($data) : $this->Db->table('FLXY_ROOM_STATUS_CHANGE_REASON')->insert($data);
+            $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
+
+    public function checkRoomStatusChangeReason($rcCode)
+    {
+        $sql = "SELECT RM_STATUS_CHANGE_ID
+                FROM FLXY_ROOM_STATUS_CHANGE_REASON
+                WHERE RM_STATUS_CHANGE_CODE = '" . $rcCode . "'";
+
+        $response = $this->Db->query($sql)->getNumRows();
+        return $rcCode == '' || strlen($rcCode) > 10 ? 1 : $response; // Send found row even if submitted code is empty
+    }
+
+    public function editRoomStatusChangeReason()
+    {
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+
+        $sql = "SELECT RM_STATUS_CHANGE_ID, RM_STATUS_CHANGE_CODE, RM_STATUS_CHANGE_DESC, RM_STATUS_CHANGE_DIS_SEQ, RM_STATUS_CHANGE_STATUS
+                FROM FLXY_ROOM_STATUS_CHANGE_REASON
+                WHERE RM_STATUS_CHANGE_ID=:SYSID:";
+
+        $response = $this->Db->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function deleteRoomStatusChangeReason()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        try {
+            $return = $this->Db->table('FLXY_ROOM_STATUS_CHANGE_REASON')->delete(['RM_STATUS_CHANGE_ID' => $sysid]);
+            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+            echo json_encode($result);
+        } catch (Exception $e) {
+            return $this->respond($e->errors());
+        }
+    }
 }

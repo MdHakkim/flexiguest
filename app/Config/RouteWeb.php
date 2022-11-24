@@ -380,6 +380,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
     $routes->match(['post'], '/uploadResvAttachments', 'ReservationController::uploadResvAttachments');
 
+    $routes->get('/roomStatusChangeReason', 'MastersController::roomStatusChangeReason');
+    $routes->match(['post'], '/roomStatusChangeReasonView', 'MastersController::RoomStatusChangeReasonView');
+    $routes->match(['post'], '/insertRoomStatusChangeReason', 'MastersController::insertRoomStatusChangeReason');
+    $routes->match(['post'], '/editRoomStatusChangeReason', 'MastersController::editRoomStatusChangeReason');
+    $routes->match(['post'], '/deleteRoomStatusChangeReason', 'MastersController::deleteRoomStatusChangeReason');
+
 
     // Code By ALEESHA 
     // Maintenance Request 
