@@ -58,7 +58,7 @@
                             <th></th>
                             <th>Display Sequence</th>
                             <th>Disable/Enable</th>
-                            <th>Title</th>
+                            <th class="all">Title</th>
                             <th>Cover Image</th>
                             <th>Description</th>
                             <th>Body</th>

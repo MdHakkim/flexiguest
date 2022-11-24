@@ -36,7 +36,7 @@
                         <tr>
                             <th></th>
                             <th>Pkg. Code</th>
-                            <th>Description</th>
+                            <th class="all">Description</th>
                             <th class="all">Action</th>
                         </tr>
                     </thead>

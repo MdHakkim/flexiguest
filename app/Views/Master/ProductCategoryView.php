@@ -18,7 +18,7 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Product Category</th>
+                            <th class="all">Product Category</th>
                             <th>Adden On</th>
                             <th>Last Updated</th>
                             <th class="all">Action</th>

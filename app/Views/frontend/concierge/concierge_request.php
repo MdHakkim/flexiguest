@@ -49,8 +49,8 @@
                             <th>Status</th>
                             <th>Payment Status</th>
                             <th>Payment Method</th>
-                            <th>Offer</th>
-                            <th>Guest Name</th>
+                            <th class="all">Offer</th>
+                            <th class="all">Guest Name</th>
                             <th>Guest Phone</th>
                             <th>Guest Email</th>
                             <th>Reservation ID</th>

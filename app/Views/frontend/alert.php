@@ -20,8 +20,8 @@
                             <th></th>
                             <th>ID</th>
                             <th>Departments</th>
-                            <th>Users</th>
-                            <th>Message</th>
+                            <th class="all">Users</th>
+                            <th class="all">Message</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>

@@ -19,7 +19,7 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Asset</th>
+                            <th class="all">Asset</th>
                             <th>Category</th>
                             <th>Price</th>
                             <th>Created At</th>

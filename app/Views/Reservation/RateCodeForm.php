@@ -812,7 +812,7 @@
                                             style="width: 100%;">
                                             <thead>
                                                 <tr>
-                                                    <th>Name</th>
+                                                    <th class="all">Name</th>
                                                     <th>Profile Type</th>
                                                     <th>Client ID</th>
                                                     <th>Start Date</th>

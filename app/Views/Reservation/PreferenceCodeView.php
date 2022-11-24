@@ -20,7 +20,7 @@
                         <tr>
                             <th></th>
                             <th>Preference Code</th>
-                            <th>Description</th>
+                            <th class="all">Description</th>
                             <th>Preference Group</th>
                             <th>Seq</th>
                             <th>Status</th>

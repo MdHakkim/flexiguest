@@ -20,9 +20,9 @@
                         <tr>
                             <th></th>
                             <th>Display Sequence</th>
-                            <th>Title</th>
+                            <th class="all">Title</th>
                             <th>Cover Image</th>
-                            <th>Description</th>
+                            <th class="all">Description</th>
                             <th>Body</th>
                             <th>Created At</th>
                             <th class="all">Action</th>

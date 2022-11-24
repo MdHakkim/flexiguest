@@ -18,7 +18,7 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Flight Carrier</th>
+                            <th class="all">Flight Carrier</th>
                             <th>Carrier Code</th>
                             <th>Display Sequence</th>
                             <th>Created At</th>

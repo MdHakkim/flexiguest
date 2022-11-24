@@ -8,7 +8,7 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Submenu</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Room Status Change Reasons</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -17,12 +17,11 @@
                 <table id="dataTable_view" class="dt-responsive table table-striped display nowrap" style="width:100%">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Code</th>
-                            <th class="all">Name</th>  
-                            <th>URL</th>  
-                            <th>Parent Menu</th>
+                            <th></th>
+                            <th>Room Status Change Code</th>
+                            <th class="all">Description</th>
                             <th>Seq.</th>
+                            <th>Status</th>
                             <th class="all">Action</th>
                         </tr>
                     </thead>
@@ -41,70 +40,46 @@
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="popModalWindowlabel"> Submenu</h4>
+                    <h4 class="modal-title" id="popModalWindowlabel">Room Status Change Reason</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="submitForm" class="needs-validation" novalidate>
                         <div class="row g-3">
-                            <input type="hidden" name="MENU_ID" id="MENU_ID" class="form-control" />
+                            <input type="hidden" name="RM_STATUS_CHANGE_ID" id="RM_STATUS_CHANGE_ID" class="form-control" />
 
+                            <div class="col-md-7">
+                                <label class="form-label"><b>Room Status Change Code *</b></label>
+                                <input type="text" name="RM_STATUS_CHANGE_CODE" id="RM_STATUS_CHANGE_CODE" class="form-control bootstrap-maxlength"
+                                    maxlength="10" placeholder="eg: ACNW" required />
+                            </div>
                             <div class="col-md-8">
-                                <lable class="form-lable"><b>Menu *</b></lable>
-
-                                <select id="PARENT_MENU_ID" name="PARENT_MENU_ID" class="select2 form-select form-select-lg" data-allow-clear="true" required>
-                                       
-                                </select>                                
+                                <label class="form-label"><b>Room Status Change Description *</b></label>
+                                <input type="text" name="RM_STATUS_CHANGE_DESC" id="RM_STATUS_CHANGE_DESC" class="form-control bootstrap-maxlength"
+                                    maxlength="50" placeholder="eg: AC Not Working" required />
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label"><b> Code *</b></label>
-                                <input type="text" name="MENU_CODE" id="MENU_CODE"
-                                    class="form-control bootstrap-maxlength" maxlength="10" placeholder="eg: ADDRESV"
-                                    required />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label"><b> Name *</b></label>
-                                <input type="text" name="MENU_NAME" id="MENU_NAME"
-                                    class="form-control bootstrap-maxlength" maxlength="50"
-                                    placeholder="eg: Add Reservation" required />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label"><b> Description *</b></label>
-                                <textarea class="form-control" name="MENU_DESC" id="MENU_DESC" rows="1"></textarea> 
-                                
+                            <div class="col-md-4">
+                                <label class="form-label">Display Sequence</label>
+                                <input type="number" name="RM_STATUS_CHANGE_DIS_SEQ" id="RM_STATUS_CHANGE_DIS_SEQ" class="form-control" min="0"
+                                    placeholder="eg: 3" />
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label"><b> URL *</b></label>
-                                <input type="text" name="MENU_URL" id="MENU_URL"
-                                    class="form-control bootstrap-maxlength" maxlength="50"
-                                    placeholder="reservation" required />
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label"><b> Display Sequence</b></label>
-                                <input type="number" name="MENU_DIS_SEQ" id="MENU_DIS_SEQ" class="form-control"
-                                    min="0" placeholder="eg: 3" />
-                            </div>      
-                            <div class="col-md-4">
-                            <div class="text-left mt-4">
-                                <div class="col-md-12">
-                                    <label class="switch switch-lg">
-                                        <input id="MENU_STATUS" name="MENU_STATUS" type="checkbox" value="1"
-                                            class="switch-input" />
-                                        <span class="switch-toggle-slider">
-                                            <span class="switch-on">
-                                                <i class="bx bx-check"></i>
-                                            </span>
-                                            <span class="switch-off">
-                                                <i class="bx bx-x"></i>
-                                            </span>
+                                <label class="switch">
+                                    <input id="RM_STATUS_CHANGE_STATUS" name="RM_STATUS_CHANGE_STATUS" type="checkbox" value="1"
+                                        class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on">
+                                            <i class="bx bx-check"></i>
                                         </span>
-                                        <span class="switch-label"><b>Active</b></span>
-                                    </label>
-                                </div>
+                                        <span class="switch-off">
+                                            <i class="bx bx-x"></i>
+                                        </span>
+                                    </span>
+                                    <span class="switch-label">Active</span>
+                                </label>
                             </div>
-                            </div>
-                         </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -116,7 +91,6 @@
         </div>
     </div>
 
-    
     <!-- /Modal window -->
 
     <div class="content-backdrop fade"></div>
@@ -128,7 +102,6 @@ var compAgntMode = '';
 var linkMode = '';
 
 $(document).ready(function() {
-    menuList();
     linkMode = 'EX';
 
     $('#dataTable_view').DataTable({
@@ -136,25 +109,22 @@ $(document).ready(function() {
         'serverSide': true,
         'serverMethod': 'post',
         'ajax': {
-            'url': '<?php echo base_url('/SubMenuView')?>'
+            'url': '<?php echo base_url('/roomStatusChangeReasonView')?>'
         },
         'columns': [{
-                data: 'MENU_ID'
+                data: ''
             },
             {
-                data: 'MENU_CODE'
+                data: 'RM_STATUS_CHANGE_CODE'
             },
             {
-                data: 'MENU_NAME'
+                data: 'RM_STATUS_CHANGE_DESC'
             },
             {
-                data: 'MENU_URL'
+                data: 'RM_STATUS_CHANGE_DIS_SEQ'
             },
             {
-                data: 'P_MENU_NAME'
-            },            
-            {
-                data: 'MENU_DIS_SEQ'
+                data: 'RM_STATUS_CHANGE_STATUS'
             },
             {
                 data: null,
@@ -165,11 +135,10 @@ $(document).ready(function() {
                         '<div class="d-inline-block">' +
                         '<a href="javascript:;" title="Edit or Delete" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
                         '<ul class="dropdown-menu dropdown-menu-end">' +
-                        '<li><a href="javascript:;" data_sysid="' + data['MENU_ID'] +
+                        '<li><a href="javascript:;" data_sysid="' + data['RM_STATUS_CHANGE_ID'] +
                         '" class="dropdown-item editWindow text-primary"><i class="fa-solid fa-pen-to-square"></i> Edit</a></li>' +
-                        '<div class="dropdown-divider"></div>' +                      
-                        
-                        '<li><a href="javascript:;" data_sysid="' + data['MENU_ID'] +
+                        '<div class="dropdown-divider"></div>' +
+                        '<li><a href="javascript:;" data_sysid="' + data['RM_STATUS_CHANGE_ID'] +
                         '" class="dropdown-item text-danger delete-record"><i class="fa-solid fa-ban"></i> Delete</a></li>' +
                         '</ul>' +
                         '</div>'
@@ -190,21 +159,37 @@ $(document).ready(function() {
         }, {
             width: "15%"
         }, {
-            width: "18%"
+            width: "33%"
         }, {
-            width: "8%"
-        }, {
-            width: "8%"
-        
+            width: "20%"
+        }, 
+        {
+          // Label
+          targets: -2,
+          width: "15%",
+          render: function (data, type, full, meta) {
+            var $status_number = full['RM_STATUS_CHANGE_STATUS'];
+            var $status = {
+              0: { title: 'Inactive', class: 'bg-label-danger' },
+              1: { title: 'Active', class: 'bg-label-success' }
+            };
+            if (typeof $status[$status_number] === 'undefined') {
+              return data;
+            }
+            return (
+              '<span class="badge rounded-pill ' +
+              $status[$status_number].class +
+              '">' +
+              $status[$status_number].title +
+              '</span>'
+            );
+          }
         },
         {
-            width: "8%"
-        
-        }, {
-            width: "8%"
+            width: "10%"
         }],
         "order": [
-            [0, "asc"]
+            [3, "asc"]
         ],
         destroy: true,
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -213,7 +198,7 @@ $(document).ready(function() {
                 display: $.fn.dataTable.Responsive.display.modal({
                     header: function(row) {
                         var data = row.data();
-                        return 'Details of ' + data['MENU_CODE'];
+                        return 'Details of ' + data['RM_STATUS_CHANGE_CODE'];
                     }
                 }),
                 type: 'column',
@@ -247,23 +232,24 @@ $(document).ready(function() {
     $("#dataTable_view_wrapper .row:first").before(
         '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>'
     );
-
-   
 });
 
-// Show Add Menu Form
+
+
+// Show Add Room Status Change Reason Form
 
 function addForm() {
-   
     $(':input', '#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
     $('.select2').val(null).trigger('change');
+
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-    $('#popModalWindowlabel').html('Add new menu');   
-    menuList();
-    $('#popModalWindow').modal('show');    
+    $('#popModalWindowlabel').html('Add New Room Status Change Reason');
+    $("#RM_STATUS_CHANGE_CODE").prop("readonly", false);
+
+    $('#popModalWindow').modal('show');
 }
 
-// Delete Submenu
+// Delete Room Status Change Reason
 
 $(document).on('click', '.delete-record', function() {
     hideModalAlerts();
@@ -285,7 +271,7 @@ $(document).on('click', '.delete-record', function() {
         callback: function(result) {
             if (result) {
                 $.ajax({
-                    url: '<?php echo base_url('/deleteMenu')?>',
+                    url: '<?php echo base_url('/deleteRoomStatusChangeReason')?>',
                     type: "post",
                     data: {
                         sysid: sysid
@@ -296,7 +282,7 @@ $(document).on('click', '.delete-record', function() {
                     dataType: 'json',
                     success: function(respn) {
                         showModalAlert('warning',
-                            '<li>The submenu has been deleted</li>');
+                            '<li>The Room Status Change Reason has been deleted</li>');
                         $('#dataTable_view').dataTable().fnDraw();
                     }
                 });
@@ -305,18 +291,30 @@ $(document).on('click', '.delete-record', function() {
     });
 });
 
+// $(document).on('click','.flxCheckBox',function(){
+//   var checked = $(this).is(':checked');
+//   var parent = $(this).parent();
+//   if(checked){
+//     parent.find('input[type=hidden]').val('Y');
+//   }else{
+//     parent.find('input[type=hidden]').val('N');
+//   }
+// });
 
 
-// Show Edit Submenu Form
+// Show Edit Room Status Change Reason Form
 
 $(document).on('click', '.editWindow', function() {
+
     $('.dtr-bs-modal').modal('hide');
+
     var sysid = $(this).attr('data_sysid');
-    $('#popModalWindowlabel').html('Edit Menu');
-    $("#MENU_CODE").prop("readonly", true);
+    $('#popModalWindowlabel').html('Edit Room Status Change Reason');
+    $("#RM_STATUS_CHANGE_CODE").prop("readonly", true);
+
     $('#popModalWindow').modal('show');
 
-    var url = '<?php echo base_url('/editSubMenu')?>';
+    var url = '<?php echo base_url('/editRoomStatusChangeReason')?>';
     $.ajax({
         url: url,
         type: "post",
@@ -331,13 +329,12 @@ $(document).on('click', '.editWindow', function() {
             $(respn).each(function(inx, data) {
                 $.each(data, function(fields, datavals) {
                     var field = $.trim(fields); //fields.trim();
-                    var dataval = $.trim(datavals); //datavals.trim(); 
-                    if (field == 'PARENT_MENU_ID') {
-                        $('#' + field).select2("val", dataval);
-                    } 
-                    else                 
+                    var dataval = $.trim(datavals); //datavals.trim();
+                    if ($('#' + field).attr('type') == 'checkbox') {
+                        $('#' + field).prop('checked', dataval == 1 ? true : false);
+                    } else {
                         $('#' + field).val(dataval);
-                    
+                    }
                 });
             });
             $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
@@ -345,34 +342,13 @@ $(document).on('click', '.editWindow', function() {
     });
 });
 
-// Show Copy Submenu Form
 
-$(document).on('click', '.copyWindow', function() {
-
-    $('.dtr-bs-modal').modal('hide');
-
-    var sysid = $(this).attr('data_sysid');
-    var submenucode = $(this).attr('data_submenucode');
-
-    $('#main_SubMenu_ID').val(sysid);
-
-    $('#copyModalWindowlabel').html('Create menu copies of \'' + submenucode + '\'');
-
-    //Reset repeated fields every time modal is loaded
-    $('[data-repeater-item]').slice(1).empty();
-    $('#form-repeater-1-1').val("");
-
-    $('#copyModalWindow').modal('show');
-
-});
-
-
-// Add New or Edit submenu Function
+// Add New or Edit Room Status Change Reason submit Function
 
 function submitForm(id) {
     hideModalAlerts();
     var formSerialization = $('#' + id).serializeArray();
-    var url = '<?php echo base_url('/insertSubMenu')?>';
+    var url = '<?php echo base_url('/insertRoomStatusChangeReason')?>';
     $.ajax({
         url: url,
         type: "post",
@@ -382,76 +358,29 @@ function submitForm(id) {
         },
         dataType: 'json',
         success: function(respn) {
-            console.log(respn, "testing");
+            
             var response = respn['SUCCESS'];
             if (response != '1') {
                 var ERROR = respn['RESPONSE']['ERROR'];
                 var mcontent = '';
-                $.each(ERROR, function(ind, data) {
-                    console.log(data, "SDF");
+                $.each(ERROR, function(ind, data) {                    
                     mcontent += '<li>' + data + '</li>';
                 });
                 showModalAlert('error', mcontent);
             } else {
-                var alertText = $('#MENU_ID').val() == '' ? '<li>The new Submenu \'' + $('#MENU_CODE')
-                    .val() + '\' has been created</li>' : '<li>The Menu \'' + $('#MENU_CODE').val() +
+                var alertText = $('#RM_STATUS_CHANGE_ID').val() == '' ? '<li>The new Room Status Change Reason \'' + $(
+                        '#RM_STATUS_CHANGE_CODE')
+                    .val() + '\' has been created</li>' : '<li>The Room Status Change Reason \'' + $(
+                        '#RM_STATUS_CHANGE_CODE').val() +
                     '\' has been updated</li>';
                 showModalAlert('success', alertText);
-                menuList();
+
                 $('#popModalWindow').modal('hide');
                 $('#dataTable_view').dataTable().fnDraw();
-               
-                
             }
         }
     });
 }
-
-function menuList() {
-  
-
-$.ajax({
-      url: '<?php echo base_url('/menuList')?>',
-      type: "get",
-      headers: {'X-Requested-With': 'XMLHttpRequest'},
-       async:false,
-      success:function(respn){
-        
-        $('#PARENT_MENU_ID').html(respn);
-      }
-  });
-  
-  
-}
-
-// Copy Submenu to Multiple submit Function
-
-function copyForm(id) {
-    hideModalAlerts();
-
-    var formSerialization = $('#' + id).serializeArray();
-    var url = '<?php echo base_url('/copySubMenu')?>';
-    $.ajax({
-        url: url,
-        type: "post",
-        data: formSerialization,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        dataType: 'json',
-        success: function(response) {
-            if (response == '0') {
-                showModalAlert('error', '<li>No Submenu is added</li>');
-            } else {
-                showModalAlert('success', '<li>' + response +
-                    ' new Submenu copy has been created</li>');
-                $('#copyModalWindow').modal('hide');
-                $('#dataTable_view').dataTable().fnDraw();
-            }
-        }
-    });
-}
-
 </script>
 
 <?=$this->endSection()?>

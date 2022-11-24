@@ -23,7 +23,7 @@
                             <th></th>
                             <th>Seq.</th>
                             <th>Rate Code</th>
-                            <th>Description</th>
+                            <th class="all">Description</th>
                             <th>Rate Category</th>
                             <th>Start Sell</th>
                             <th>End Sell</th>

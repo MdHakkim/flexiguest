@@ -49,12 +49,12 @@
                         <tr>
                             <th></th>
                             <th>Status</th>
-                            <th>Title</th>
+                            <th class="all">Title</th>
                             <th>Description</th>
                             <th>Cover Image</th>
                             <th>From Date</th>
                             <th>To Date</th>
-                            <th>Offer Price</th>
+                            <th class="all">Offer Price</th>
                             <th>Actual Price</th>
                             <th>Provider Title</th>
                             <th>Provider Logo</th>

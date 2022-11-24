@@ -20,7 +20,7 @@
                         <tr>
                             <th></th>
                             <th>Sub Group Code</th>
-                            <th>Description</th>
+                            <th class="all">Description</th>
                             <th>Group</th>
                             <th>Group Type</th>
                             <th>Generates</th>

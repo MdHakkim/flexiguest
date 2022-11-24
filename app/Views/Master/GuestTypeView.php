@@ -18,8 +18,8 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Guest Type Code</th>
-                            <th>Guest Type Description</th>  
+                            <th class="all">Guest Type Code</th>
+                            <th class="all">Guest Type Description</th>  
                             <th>Seq.</th>
                             <th class="all">Action</th>
                         </tr>

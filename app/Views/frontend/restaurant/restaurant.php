@@ -20,7 +20,7 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Restaurant</th>
+                            <th class="all">Restaurant</th>
                             <th>Image</th>
                             <th>Created At</th>
                             <th class="all">Action</th>

@@ -20,7 +20,7 @@
                         <tr>
                             <th></th>
                             <th>Trn. Code</th>
-                            <th>Description</th>
+                            <th class="all">Description</th>
                             <th>Group</th>
                             <th>Sub Group</th>
                             <th>Generates</th>

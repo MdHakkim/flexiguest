@@ -21,8 +21,8 @@
                             <th></th>
                             <th>ID</th>
                             <th>Available</th>
-                            <th>Meal Type</th>
-                            <th>Item</th>
+                            <th class="all">Meal Type</th>
+                            <th class="all">Item</th>
                             <th>Image</th>
                             <th>Description</th>
                             <th>Category ID</th>

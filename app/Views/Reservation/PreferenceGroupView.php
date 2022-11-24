@@ -20,7 +20,7 @@
                         <tr>
                             <th></th>
                             <th>Group Code</th>
-                            <th>Description</th>
+                            <th class="all">Description</th>
                             <th>Seq.</th>
                             <th>Status</th>
                             <th class="all">Action</th>

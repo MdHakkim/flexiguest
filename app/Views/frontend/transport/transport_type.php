@@ -19,9 +19,9 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Transport Code</th>
+                            <th class="all">Transport Code</th>
                             <th>Label</th>
-                            <th>Description</th>
+                            <th class="all">Description</th>
                             <th>Price</th>
                             <th>Display Sequence</th>
                             <th>Created At</th>
