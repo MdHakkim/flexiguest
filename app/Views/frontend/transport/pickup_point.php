@@ -18,7 +18,7 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Point</th>
+                            <th class="all">Point</th>
                             <th>Display Sequence</th>
                             <th>Created At</th>
                             <th class="all">Action</th>

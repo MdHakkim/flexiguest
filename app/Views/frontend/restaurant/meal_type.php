@@ -21,7 +21,7 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Meal Type</th>
+                            <th class="all">Meal Type</th>
                             <th>Image</th>
                             <th>Created At</th>
                             <th class="all">Action</th>

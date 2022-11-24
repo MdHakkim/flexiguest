@@ -55,10 +55,10 @@
                             <th></th>
                             <th>Request ID</th>
                             <th>Status</th>
-                            <th>Travel Type</th>
+                            <th class="all">Travel Type</th>
                             <th>Travel Purpose</th>
-                            <th>Reservation</th>
-                            <th>Room</th>
+                            <th class="all">Reservation</th>
+                            <th class="all">Room</th>
                             <th>Guest Name</th>
                             <th>Guest Image</th>
                             <th>Transport Type</th>

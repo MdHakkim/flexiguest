@@ -19,7 +19,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Code</th>
-                            <th>Name</th>  
+                            <th class="all">Name</th>  
                             <th>URL</th>  
                             <th>Parent Menu</th>
                             <th>Seq.</th>

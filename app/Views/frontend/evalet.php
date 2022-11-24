@@ -57,11 +57,11 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Status</th>
-                            <th>Parking Driver Name</th>
+                            <th class="all">Status</th>
+                            <th class="all">Parking Driver Name</th>
                             <th>Delivery Driver Name</th>
                             <th>Guest Type</th>
-                            <th>Guest Name</th>
+                            <th class="all">Guest Name</th>
                             <th>Contact Number</th>
                             <th>Images</th>
                             <th>Created At</th>

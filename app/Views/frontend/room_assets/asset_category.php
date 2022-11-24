@@ -19,7 +19,7 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Category</th>
+                            <th class="all">Category</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>

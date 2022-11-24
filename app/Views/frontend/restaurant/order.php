@@ -20,8 +20,8 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Room</th>
-                            <th>Guest Name</th>
+                            <th class="all">Room</th>
+                            <th class="all">Guest Name</th>
                             <th>Reservation</th>
                             <th>Delivery Status</th>
                             <th>Payment Status</th>

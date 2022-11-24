@@ -19,7 +19,7 @@
                         <tr>
                             <th></th>
                             <th>Role Code</th>
-                            <th>Role Name</th>  
+                            <th class="all">Role Name</th>  
                             <th>Role Description</th>  
                             <th>Seq.</th>
                             <th class="all">Action</th>

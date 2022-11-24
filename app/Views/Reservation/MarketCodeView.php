@@ -21,7 +21,7 @@
                             <th></th>
                             <th></th>
                             <th>Market Code</th>
-                            <th>Description</th>
+                            <th class="all">Description</th>
                             <th>Market Group</th>
                             <th>Seq</th>
                             <th>Status</th>

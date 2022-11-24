@@ -21,10 +21,10 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Category</th>
+                            <th class="all">Category</th>
                             <th>Image</th>
                             <th>Restaurant ID</th>
-                            <th>Restaurant Name</th>
+                            <th class="all">Restaurant Name</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>

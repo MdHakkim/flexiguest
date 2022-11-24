@@ -20,7 +20,7 @@
                             <th></th>
                             <th>Package Group Code</th>
                             <th>Short Description</th>
-                            <th>Description</th>
+                            <th class="all">Description</th>
                             <th class="all">Action</th>
                         </tr>
                     </thead>

@@ -18,7 +18,7 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Vaccine Name</th>
+                            <th class="all">Vaccine Name</th>
                             <th>Popular Name</th>
                             <th>Vaccine Company</th>
                             <th>Ab Formation Days</th>

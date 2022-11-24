@@ -19,7 +19,7 @@
                         <tr>
                             <th></th>
                             <th>Rate Class Code</th>
-                            <th>Rate Class Description</th>
+                            <th class="all">Rate Class Description</th>
                             <th>Begin Date</th>
                             <th>End Date</th>
                             <th>Associated Rate Categories</th>
