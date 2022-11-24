@@ -189,10 +189,15 @@ $routes->group("api/admin", ["filter" => "authapi:Admin,Attendee", 'namespace' =
     $routes->group('housekeeping', function ($routes) {
         $routes->get("all-tasks", "HouseKeepingController::allTasks");
         $routes->post("task-details", "HouseKeepingController::taskDetails");
-        $routes->post("task-started", "HouseKeepingController::taskStarted");
         $routes->post("mark-subtask-completed-inspected", "HouseKeepingController::markSubtaskCompletedInspected");
         $routes->post("submit-task-note", "HouseKeepingController::submitTaskNote");
         $routes->post("submit-subtask-note", "HouseKeepingController::submitSubtaskNote");
+    });
+});
+
+$routes->group("api", ["filter" => "authapi:Attendee", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
+    $routes->group('housekeeping', function ($routes) {
+        $routes->post("task-started", "HouseKeepingController::taskStarted");
     });
 });
 
