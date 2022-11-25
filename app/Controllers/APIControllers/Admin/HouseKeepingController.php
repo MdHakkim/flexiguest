@@ -157,6 +157,9 @@ class HouseKeepingController extends BaseController
             if (empty($sub_task))
                 return $this->respond(responseJson(404, true, ['msg' => 'No Task found.']));
 
+            if(empty($sub_task['HKATD_START_TIME']))
+                return $this->respond(responseJson(202, true, ['msg' => 'In order to begin the task, please click on the start button.']));
+
             if (in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_STATUS_ID'] == '1') // (admin || supervisor) && In Progress
                 return $this->respond(responseJson(202, true, ['msg' => 'Not All tasks are completed.']));
         }
@@ -248,6 +251,9 @@ class HouseKeepingController extends BaseController
         $subtask = $this->HKAssignedTaskDetail->find($data['ATDN_ASSIGNED_TASK_DETAIL_ID']);
         if (empty($subtask))
             return $this->respond(responseJson(404, true, ['msg' => 'No Subtask found.']));
+
+        if(empty($subtask['HKATD_START_TIME']))
+            return $this->respond(responseJson(202, true, ['msg' => 'In order to begin the task, please click on the start button.']));
 
         $this->HKAssignedTaskDetailNote->insert($data);
 
