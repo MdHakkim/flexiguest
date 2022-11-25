@@ -139,11 +139,11 @@ class HouseKeepingController extends BaseController
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
         $this->HKAssignedTaskDetail
+            ->set(['HKATD_START_TIME' => date('Y-m-d H:i:s')])
             ->where('HKATD_ASSIGNED_TASK_ID', $data['task_id'])
             ->where('HKATD_ROOM_ID', $data['room_id'])
-            ->set(['HKATD_START_TIME' => date('Y-m-d H:i:s')])
             ->update();
-        
+
         return $this->respond(responseJson(200, false, ['msg' => 'Task started.']));
     }
 
