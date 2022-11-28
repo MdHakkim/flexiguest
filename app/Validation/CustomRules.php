@@ -508,7 +508,7 @@ public function checkReservationYearlyDate(string $str, string $fields, array $d
               $HKAT_TASK_DATE       = $data['task_date'];                  
 
             
-              $sql = "SELECT * FROM FLXY_HK_ASSIGNED_TASKS LEFT JOIN FLXY_HK_TASKASSIGNMENT_OVERVIEW ON HKTAO_ID = HKAT_TASK_ID WHERE HKAT_TASK_ID = '".$HKAT_TASK_ID."' AND HKAT_ATTENDANT_ID = ".$HKAT_ATTENDANT_ID." AND HKTAO_TASK_DATE = '".$HKAT_TASK_DATE."'";
+              $sql = "SELECT * FROM FLXY_HK_ASSIGNED_TASKS INNER JOIN FLXY_HK_TASKASSIGNMENT_OVERVIEW ON HKTAO_ID = HKAT_TASK_ID WHERE HKAT_ATTENDANT_ID = ".$HKAT_ATTENDANT_ID." AND HKTAO_TASK_DATE = '".$HKAT_TASK_DATE."'";
       
               $response = $this->Db->query($sql)->getNumRows();
               return ($response == 0 ? true : false); 

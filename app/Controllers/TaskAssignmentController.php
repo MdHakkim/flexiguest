@@ -75,7 +75,7 @@ class TaskAssignmentController extends BaseController
 
             $validate = $this->validate([
                 'HKTAO_TASK_DATE' => ['label' => 'Date', 'rules' => 'required'],
-                'HKATO_TASK_CODE' => ['label' => 'Task Code', 'rules' => 'required|Taskexists[HKTAO_TASK_DATE,HKATO_TASK_CODE,' . $sysid . ']', 'errors' => ['Taskexists' => 'Task exists in this date']],
+                'HKATO_TASK_CODE' => ['label' => 'Task Code', 'rules' => 'required|Taskexists[HKTAO_TASK_DATE,HKATO_TASK_CODE,' . $sysid . ']', 'errors' => ['Taskexists' => 'Task exists on this date']],
             ]);
 
             if (!$validate) {
@@ -290,7 +290,7 @@ class TaskAssignmentController extends BaseController
             $HKAT_SHEET_INSTRUCTIONS = $this->request->getPost('instructions');
 
             $validate = $this->validate([
-                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required|taskSheetExists[HKAT_TASK_ID,HKAT_TASK_SHEET_ID,' . $HKAT_ATTENDANT_ID  . ',' . $HKAT_TASK_DATE  . ']', 'errors' => ['taskSheetExists' => 'Task sheet for the attendee is already assigned to this date']],               
+                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required|taskSheetExists[HKAT_TASK_ID,HKAT_TASK_SHEET_ID]', 'errors' => ['taskSheetExists' => 'Task sheet for the attendee is already assigned to this date']],               
             ]);
 
             if (!$validate) {
