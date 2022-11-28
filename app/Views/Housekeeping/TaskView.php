@@ -323,7 +323,7 @@ function submitForm(id) {
 
 function getTasksCodes(){
     $.ajax({
-      url: '<?php echo base_url('/taskcodeList')?>',
+      url: '<?php echo base_url('/allTaskcodeList')?>',
       type: "get",
       headers: {'X-Requested-With': 'XMLHttpRequest'},
        async:false,
