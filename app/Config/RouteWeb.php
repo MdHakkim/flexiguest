@@ -674,6 +674,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/editTask', 'HousekeepingController::editTask');
     $routes->match(['post'], '/deleteTask', 'HousekeepingController::deleteTask');
     $routes->get('/taskcodeList', 'HousekeepingController::taskcodeList');
+    $routes->get('/allTaskcodeList', 'HousekeepingController::allTaskcodeList');
+    
     $routes->match(['post'], '/searchRooms', 'ReservationController::searchRooms');
 
 
@@ -710,12 +712,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/itemAvailability', 'ReservationController::itemAvailability');
     $routes->match(['post'], '/getResvNo', 'NotificationController::getResvNo');
     $routes->match(['post'], '/resolveNotification', 'NotificationController::resolveNotification');
-    $routes->match(['post'], '/notification-status', 'NotificationController::notificationStatus');
-
-
-
-
-    
+    $routes->match(['post'], '/notification-status', 'NotificationController::notificationStatus');    
 
     $routes->get('/Notifications', 'NotificationController::Notifications'); 
     $routes->match(['post'], '/NotificationList', 'NotificationController::NotificationList');
@@ -735,16 +732,10 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/insertTaskAssignmentRoom', 'TaskAssignmentController::insertTaskAssignmentRoom');
     $routes->match(['post'], '/deleteTaskAssignmentRoom', 'TaskAssignmentController::deleteTaskAssignmentRoom');
     $routes->match(['post'], '/taskRoomList', 'TaskAssignmentController::taskRoomList');
-    
-    
-    
-    
+    $routes->match(['post'], '/updateTaskStatus', 'TaskAssignmentController::updateTaskStatus');
+    $routes->match(['post'], '/viewTaskAssignedRooms', 'TaskAssignmentController::viewTaskAssignedRooms');
+       
 
-    
-
-
-    
-    
     
     //Subina Code (END)  
 
