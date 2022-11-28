@@ -132,6 +132,10 @@ $routes->group("api", ["filter" => "authapi:Admin,Guest,Attendee", 'namespace' =
         $routes->post("user-read-notifications", "NotificationController::userReadNotifications");
         $routes->post("trace-resolved", "NotificationController::traceResolved");
     });
+
+    $routes->group('gallery', function ($routes) {
+        $routes->get('all-images', 'GalleryController::allImages');
+    });
 });
 
 /***************************** Admin + Attendee *****************************/

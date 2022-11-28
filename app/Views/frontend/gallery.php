@@ -8,7 +8,7 @@
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Room Assets /</span> Assets</h4>
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Gallery /</span> Images</h4>
 
         <!-- DataTable with Buttons -->
         <div class="card">
@@ -19,9 +19,8 @@
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th>Asset</th>
-                            <th>Category</th>
-                            <th>Price</th>
+                            <th>Image</th>
+                            <th>Sequence</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
@@ -48,26 +47,16 @@
                 <div class="modal-body">
                     <form id="submit-form" class="needs-validation" novalidate>
                         <div class="row g-3">
-                            <input type="hidden" name="AS_ID" class="form-control" />
+                            <input type="hidden" name="GI_ID" class="form-control" />
 
-                            <div class="col-md-12">
-                                <label class="form-label"><b>Category *</b></label>
-                                <select class="select2" name="AS_ASSET_CATEGORY_ID">
-                                    <option value="">Select Category</option>
-                                    <?php foreach ($asset_categories as $asset_category) : ?>
-                                        <option value="<?= $asset_category['AC_ID'] ?>"><?= $asset_category['AC_CATEGORY'] ?></option>
-                                    <?php endforeach ?>
-                                </select>
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Image *</b></label>
+                                <input type="file" name="GI_IMAGE" class="form-control" />
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label"><b>Asset *</b></label>
-                                <input type="text" name="AS_ASSET" class="form-control" placeholder="Asset" required />
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="form-label"><b>Price *</b></label>
-                                <input type="number" name="AS_PRICE" class="form-control" required />
+                                <label class="form-label"><b>Sequence</b></label>
+                                <input type="number" name="GI_SEQUENCE" class="form-control" required />
                             </div>
                         </div>
                     </form>
@@ -111,25 +100,28 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('asset/asset/all-assets') ?>'
+                'url': '<?php echo base_url('gallery/all-images') ?>'
             },
             'columns': [{
                     data: ''
                 },
                 {
-                    data: 'AS_ID'
+                    data: 'GI_ID'
                 },
                 {
-                    data: 'AS_ASSET'
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        if (!data['GI_IMAGE'])
+                            return '';
+
+                        return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['GI_IMAGE']}")' src='<?= base_url() ?>/${data['GI_IMAGE']}' width='80' height='80'/>`);
+                    }
                 },
                 {
-                    data: 'AC_CATEGORY'
+                    data: 'GI_SEQUENCE'
                 },
                 {
-                    data: 'AS_PRICE'
-                },
-                {
-                    data: 'AS_CREATED_AT'
+                    data: 'GI_CREATED_AT'
                 },
                 {
                     data: null,
@@ -145,7 +137,7 @@
 
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>
-                                    <a href="javascript:;" data_id="${data['AS_ID']}" class="dropdown-item editWindow text-primary">
+                                    <a href="javascript:;" data_id="${data['GI_ID']}" class="dropdown-item editWindow text-primary">
                                         <i class="fa-solid fa-pen-to-square"></i> Edit
                                     </a>
                                 </li>
@@ -153,7 +145,7 @@
                                 <div class="dropdown-divider"></div>
                                 
                                 <li>
-                                    <a href="javascript:;" data_id="${data['AS_ID']}" class="dropdown-item text-danger delete-record">
+                                    <a href="javascript:;" data_id="${data['GI_ID']}" class="dropdown-item text-danger delete-record">
                                         <i class="fa-solid fa-ban"></i> Delete
                                     </a>
                                 </li>
@@ -187,7 +179,7 @@
                 // }
             ],
             "order": [
-                [3, "asc"]
+                [1, "asc"]
             ],
             destroy: true,
             dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
@@ -196,7 +188,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['AS_ID'];
+                            return `ID#${data['GI_ID']}`;
                         }
                     }),
                     type: 'column',
@@ -238,7 +230,7 @@
     function addForm() {
         resetForm();
         $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-        $('#popModalWindowlabel').html('Add Asset');
+        $('#popModalWindowlabel').html('Add Gallery Image');
 
         $('#popModalWindow').modal('show');
     }
@@ -247,6 +239,7 @@
         let id = "submit-form";
 
         $(`#${id} input`).val('');
+        $(`#${id} input[name='GI_SEQUENCE']`).val('1');
         $(`#${id} select`).val('').trigger('change');
     }
 
@@ -256,9 +249,14 @@
         let id = "submit-form";
 
         var fd = new FormData($(`#${id}`)[0]);
+        fd.delete('GI_IMAGE');
+
+        files = $(`#${id} input[name='GI_IMAGE']`)[0].files;
+        if (files.length)
+            fd.append('GI_IMAGE', files[0]);
 
         $.ajax({
-            url: '<?= base_url('asset/asset/store') ?>',
+            url: '<?= base_url('gallery/store') ?>',
             type: "post",
             data: fd,
             processData: false,
@@ -285,21 +283,21 @@
     $(document).on('click', '.editWindow', function() {
         resetForm();
 
-        let asset_id = $(this).attr('data_id');
+        let gallery_image_id = $(this).attr('data_id');
         $('.dtr-bs-modal').modal('hide');
 
         let id = "submit-form";
-        $(`#${id} input[name='AS_ID']`).val(asset_id);
+        $(`#${id} input[name='GI_ID']`).val(gallery_image_id);
 
-        $('#popModalWindowlabel').html('Edit Asset');
+        $('#popModalWindowlabel').html('Edit Gallery Image');
         $('#popModalWindow').modal('show');
 
-        var url = '<?php echo base_url('asset/asset/edit') ?>';
+        var url = '<?php echo base_url('gallery/edit') ?>';
         $.ajax({
             url: url,
             type: "post",
             data: {
-                id: asset_id
+                id: gallery_image_id
             },
             dataType: 'json',
             success: function(response) {
@@ -347,7 +345,7 @@
             callback: function(result) {
                 if (result) {
                     $.ajax({
-                        url: '<?php echo base_url('asset/asset/delete') ?>',
+                        url: '<?php echo base_url('gallery/delete') ?>',
                         type: "post",
                         data: {
                             id: id,
