@@ -682,12 +682,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/floorsList', 'ReservationController::floorsList');
 
     //Subina Code (END)  
-      $routes->match(['post'], '/roomTypeSearchList', 'ReservationController::roomTypeSearchList');
-      $routes->match(['post'], '/roomClassSearchList', 'ReservationController::roomClassSearchList'); 
-      $routes->match(['post'], '/roomSearchList', 'ReservationController::roomSearchList'); 
-      $routes->match(['post'], '/roomplanResourcesJson', 'ReservationController::roomplanResourcesJson'); 
-      $routes->match(['post','get'], '/roomPlan', 'ReservationController::roomPlan');
-      $routes->get('/roomPlan/(:segment)', 'ReservationController::roomPlan/$1');   
+    $routes->match(['post'], '/roomTypeSearchList', 'ReservationController::roomTypeSearchList');
+    $routes->match(['post'], '/roomClassSearchList', 'ReservationController::roomClassSearchList');
+    $routes->match(['post'], '/roomSearchList', 'ReservationController::roomSearchList');
+    $routes->match(['post'], '/roomplanResourcesJson', 'ReservationController::roomplanResourcesJson');
+    $routes->match(['post', 'get'], '/roomPlan', 'ReservationController::roomPlan');
+    $routes->get('/roomPlan/(:segment)', 'ReservationController::roomPlan/$1');
 
     $routes->match(['post'], '/roomOOSList', 'ReservationController::roomOOSList');
     $routes->match(['post'], '/roomPlanList', 'ReservationController::roomPlanList');
@@ -714,11 +714,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/resolveNotification', 'NotificationController::resolveNotification');
     $routes->match(['post'], '/notification-status', 'NotificationController::notificationStatus');    
 
-    $routes->get('/Notifications', 'NotificationController::Notifications'); 
+
+    $routes->get('/Notifications', 'NotificationController::Notifications');
     $routes->match(['post'], '/NotificationList', 'NotificationController::NotificationList');
 
 
-    $routes->get('/TaskAssignment', 'TaskAssignmentController::TaskAssignment'); 
+    $routes->get('/TaskAssignment', 'TaskAssignmentController::TaskAssignment');
     $routes->match(['post'], '/TaskAssignmentView', 'TaskAssignmentController::TaskAssignmentView');
     $routes->match(['post'], '/insertTaskAssignment', 'TaskAssignmentController::InsertTaskAssignment');
     $routes->match(['post'], '/attendeeList', 'TaskAssignmentController::attendeeList');
@@ -742,9 +743,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     // Deleep 
     $routes->group('housekeeping', function ($routes) {
         $routes->get('rooms', 'HousekeepingController::housekeeping');
-        
+
         $routes->get('room-history', 'HousekeepingController::roomHistory');
-        $routes->get('room-history/(:num)', 'HousekeepingController::roomHistory/$1'); 
+        $routes->get('room-history/(:num)', 'HousekeepingController::roomHistory/$1');
     });
     $routes->match(['post'], '/hkroomView', 'HousekeepingController::HkRoomView');
     $routes->match(['post'], '/showFeaturesDesc', 'HousekeepingController::showFeaturesDesc');
@@ -755,7 +756,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/showRoomServiceStatus', 'HousekeepingController::showRoomServiceStatus');
     $routes->match(['post'], '/roomHistoryView', 'HousekeepingController::roomHistoryView');
     $routes->match(['post'], '/HkRoomStatistics', 'HousekeepingController::HkRoomStatistics');
-    
+
 
     // ABUBAKAR CODE (START)
     $routes->group('news', function ($routes) {
@@ -938,6 +939,15 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             // $routes->delete('delete', 'roomAssetController::delete');
         });
     });
+
+    $routes->group('gallery', function ($routes) {
+        $routes->get('', 'GalleryController::gallery');
+        $routes->post('all-images', 'GalleryController::allImages');
+        $routes->post('store', 'GalleryController::store');
+        $routes->post('edit', 'GalleryController::edit');
+        $routes->delete('delete', 'GalleryController::delete');
+    });
+
     // ABUBAKAR CODE (END)
 });
 
