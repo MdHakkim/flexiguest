@@ -286,10 +286,11 @@ class TaskAssignmentController extends BaseController
             $HKAT_TASK_ID            = $this->request->getPost('overview_id');
             $HKAT_TASK_SHEET_ID      = $this->request->getPost('tasksheet_no');
             $HKAT_ATTENDANT_ID       = $this->request->getPost('attendant_id');
+            $HKAT_TASK_DATE          = $this->request->getPost('task_date');
             $HKAT_SHEET_INSTRUCTIONS = $this->request->getPost('instructions');
 
             $validate = $this->validate([
-                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required|taskSheetExists[HKAT_TASK_ID,HKAT_TASK_SHEET_ID,' . $HKAT_ATTENDANT_ID . ']', 'errors' => ['taskSheetExists' => 'Task sheet for the attendee is already assigned to this date']],               
+                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required|taskSheetExists[HKAT_TASK_ID,HKAT_TASK_SHEET_ID,' . $HKAT_ATTENDANT_ID  . ',' . $HKAT_TASK_DATE  . ']', 'errors' => ['taskSheetExists' => 'Task sheet for the attendee is already assigned to this date']],               
             ]);
 
             if (!$validate) {

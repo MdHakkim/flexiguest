@@ -1129,12 +1129,13 @@
 		var overview_id  = $("#HKAT_TASK_ID").val();
 		var tasksheet_no = $("#HKAT_SHEET_NO").val();
 		var attendant_id = $("#HKAT_ATTENDANT_ID").val();
+		var task_date    = $('input[name="TASK_ASSIGNMENT_DATE"]').val();
 		var instructions = $("#HKAT_SHEET_INSTRUCTIONS").val();
 		var url = '<?php echo base_url('/insertTaskAssignmentSheet') ?>';
 		$.ajax({
 			url: url,
 			type: "post",
-			data: {task_id:task_id,tasksheet_no:tasksheet_no,attendant_id:attendant_id,instructions:instructions,overview_id:overview_id},
+			data: {task_id:task_id,tasksheet_no:tasksheet_no,attendant_id:attendant_id,instructions:instructions,overview_id:overview_id,task_date:task_date},
 			headers: {
 				'X-Requested-With': 'XMLHttpRequest'
 			},
