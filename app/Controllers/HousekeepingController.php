@@ -192,7 +192,7 @@ class HousekeepingController extends BaseController
             $user_id = session()->get('USR_ID');
 
             $validate = $this->validate([
-                'HKST_DESCRIPTION' => ['label' => 'Task', 'rules' => 'required|is_unique[FLXY_HK_SUBTASKS.HKST_DESCRIPTION,HKST_ID,' . $sysid . ']'],
+                'HKST_DESCRIPTION' => ['label' => 'Task', 'rules' => 'required'],
                 'HKST_TASK_ID' => ['label' => 'Task Code', 'rules' => 'required'],
 
             ]);
