@@ -220,7 +220,6 @@ class MaintenanceController extends BaseController
         if (empty($maintenance_request))
             return $this->respond(responseJson(404, true, ['msg' => 'Invalid maintenance request.']));
 
-
         $maintenance_request['MAINT_STATUS'] = $status;
         $maintenance_request['MAINT_UPDATE_UID'] = $user_id;
         if($status == 'Completed')
@@ -229,6 +228,23 @@ class MaintenanceController extends BaseController
         $this->Maintenance->save($maintenance_request);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Status updated']));
+    }
+
+    public function acknowledged()
+    {
+        $user_id = $this->request->user['USR_ID'];
+        $maintenance_request_id = $this->request->getVar('maintenance_request_id');
+
+        $maintenance_request = $this->Maintenance->find($maintenance_request_id);
+        if (empty($maintenance_request))
+            return $this->respond(responseJson(404, true, ['msg' => 'Invalid maintenance request.']));
+
+        $maintenance_request['MAINT_STATUS'] = 'Acknowledged';
+        $maintenance_request['MAINT_ACKNOWEDGE_TIME'] = date('Y-m-d H:i:s');
+        $maintenance_request['MAINT_UPDATE_UID'] = $user_id;
+        
+        $this->Maintenance->save($maintenance_request);
+        return $this->respond(responseJson(200, false, ['msg' => 'Acknowledged']));
     }
 
     public function addComment()
