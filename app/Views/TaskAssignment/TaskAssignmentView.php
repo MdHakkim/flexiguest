@@ -15,6 +15,10 @@
 	#modalCenter {
 		z-index: 1092 !important;
 	}
+	#Taskassignment_sheet_details .disabled{
+		opacity: 0.5;
+        background: rgb(147 158 170 / 45%);
+	}
 </style>
 
 <!-- Content wrapper -->
@@ -181,14 +185,14 @@
                                     Task Sheets
                                 </button>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
                                     data-bs-target="#task-room"
                                     aria-controls="task-room" aria-selected="false" onclick="showRoomAssignment()">
                                     Assign Room
                                 </button>
                             </li>
-                           
+                            -->
                         </ul>
 
                     </div>
@@ -262,13 +266,13 @@
                                                 <thead>
                                                     <tr>
 														<th></th>
-														
+														<th class="all">Action</th>
                                                         <th class="all">Sheet No</th>
 														<th class="all">Attendant</th>
 														<th class="all">Status</th>
-                                                        <th class="all">Completed On</th>
-														<th class="all">Inspected status</th>
-                                                        <th class="all">Task Instructions</th>
+                                                        <th class="all">Inspected Status</th>
+														<th class="all">Task Instructions</th>
+														<th class="all">Completed On</th>
 														
                                                         
                                                     </tr>
@@ -278,14 +282,13 @@
                                         <br />
                                     </div>
                                 </div>
-                                <div class="d-flex col-12 justify-content-between">
-                                    <button type="button" class="btn btn-secondary"
+                                
+                                    <button type="button" class="btn btn-secondary "
                                         data-bs-dismiss="modal">Close</button>
-
-                                </div>                          
+                           
                                 </form>
                                 </div>
-                                <div class="tab-pane fade" id="task-room" role="tabpanel">
+                                <!-- <div class="tab-pane fade" id="task-room" role="tabpanel">
 							<form id="roomassign-submit-form" onSubmit="return false">
 								
 								<div class="border rounded p-4 mb-3"> 
@@ -374,7 +377,7 @@
 
                                 </div>                          
                                 </form>
-                                </div>
+                                </div> -->
 							
 
                         </div>
@@ -386,6 +389,175 @@
 
     <!-- /Modal window -->
 
+
+    <!-- Modal Window  Assign Rooms -->
+
+	<div class="modal fade" id="roomAssignmentModal" data-backdrop="static" data-keyboard="false"
+        aria-lableledby="popModalWindowlable">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="popModalWindowlabel">Room Assignment</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close" data-bs-toggle="modal" data-bs-target="#TaskAssignmentDetails"></button>
+                </div>
+                <div class="modal-body">
+                <form id="roomassign-submit-form" onSubmit="return false">								
+					<div class="border rounded p-4 mb-3"> 
+					<div class="row mb-3">
+					<div class="col-md-12">
+							<strong></strong>
+						</div>
+					
+						<div class="col-md-4">
+							<label for="TASK_ASSIGNMENT_DATE"
+								class="col-form-label col-md-5"><b>TASK DATE</b></label>
+							<input type="text" name="TASK_ASSIGNMENT_DATE" 
+								class="form-control" value="" readonly/>
+						</div>
+						<div class="col-md-4 ">
+							<label for="TASK_CODE" class="col-form-label col-md-4"><b>TASK CODE
+									</b></label>
+							<input type="text" name="TASK_CODE" 
+								class="form-control" readonly/>
+						</div>	
+						<div class="col-md-4 ">
+							<label for="HKARM_TASK_SHEET_ID" class="col-form-label col-md-4"><b>Task Sheet
+									</b></label>
+							<input type="text" name="HKARM_TASK_SHEET_ID" id="HKARM_TASK_SHEET_ID"
+								class="form-control" readonly/>
+						</div>								
+					</div>
+					
+					<div class="row g-3 mb-3">
+						
+						<div class="col-md-4 ">
+							<label for="HKARM_ROOM_ID" class="col-form-label col-md-4"><b>Room
+									*</b></label>
+							<select id="HKARM_ROOM_ID" name="HKARM_ROOM_ID"
+								class="select2 form-select form-select-lg"></select>
+						</div>
+						<div class="col-md-4 ">
+							<label for="HKARM_CREDITS" class="col-form-label col-md-4"><b>Room Credits
+									</b></label>
+									<input type="number" name="HKARM_CREDITS"  id="HKARM_CREDITS"
+								class="form-control" min="1"/>
+						</div>
+
+						<div class="col-md-4">
+							<label for="HKARM_INSTRUCTIONS" class="col-form-label col-md-12"><b>ROOM INSTRUCTIONS
+									</b></label>
+								<textarea  name="HKARM_INSTRUCTIONS" id="HKARM_INSTRUCTIONS"
+								class="form-control" row="1"></textarea>
+
+						</div>
+					</div>
+					
+
+						<div class="row g-3 ">
+							<div class="col-md-3 mb-3">
+								<div class="col-md-8 float-right">
+									<button type="button" class="btn btn-success save-taskroom-detail">
+										<i class="fa-solid fa-floppy-disk"></i>&nbsp; Add
+									</button>&nbsp;
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="border rounded p-4 mb-3">                                        
+
+							<div class="table-responsive text-nowrap">
+								<table id="Taskassignment_room_details" class="table table-bordered table-hover">
+									<thead>
+										<tr><th>ID</th>
+											<th class="all">Room</th>
+											<th class="all">Room Credits</th>
+											<th class="all">Room Instructions</th>
+											<th class="all">Action</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<br />
+						</div>
+					</div>
+					                         
+					</form>
+                </div>
+                <div class="modal-footer">				
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#TaskAssignmentDetails">Close</button>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+	<!-- Modal Window  View Rooms -->
+
+	<div class="modal fade" id="roomViewModal" data-backdrop="static" data-keyboard="false"
+        aria-lableledby="popModalWindowlable">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="popModalWindowlabel">Rooms</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close" data-bs-toggle="modal" data-bs-target="#TaskAssignmentDetails"></button>
+                </div>
+                <div class="modal-body">
+                							
+					<div class="border rounded p-4 mb-3"> 
+					<div class="row mb-3">
+					<div class="col-md-12">
+							<strong></strong>
+						</div>
+					
+						<div class="col-md-4">
+							<label for="TASK_ASSIGNMENT_DATE"
+								class="col-form-label col-md-5"><b>TASK DATE</b></label>
+							<input type="text" name="TASK_ASSIGNMENT_DATE" 
+								class="form-control" value="" readonly/>
+						</div>
+						<div class="col-md-4 ">
+							<label for="TASK_CODE" class="col-form-label col-md-4"><b>TASK CODE
+									</b></label>
+							<input type="text" name="TASK_CODE" 
+								class="form-control" readonly/>
+						</div>	
+						<div class="col-md-4 ">
+							<label for="HKARM_TASK_SHEET_ID" class="col-form-label col-md-4"><b>Task Sheet
+									</b></label>
+							<input type="text" name="HKARM_TASK_SHEET_ID" 
+								class="form-control" readonly/>
+						</div>								
+					</div>
+					
+					</div>
+					<div class="col-md-12">
+						<div class="border rounded p-4 mb-3">  
+							<div class="table-responsive text-nowrap">
+								<table id="Taskassignment_room_view" class="table table-bordered table-hover">
+									<thead>
+										<tr><th>ID</th>
+											<th class="all">Room</th>
+											<th class="all">Room Credits</th>
+											<th class="all">Room Instructions</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+							<br />
+						</div>
+					</div>
+					   
+                </div>
+                <div class="modal-footer">				
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#TaskAssignmentDetails">Close</button>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
 	<!-- / Content -->
 	<div class="content-backdrop fade"></div>
 </div>
@@ -395,8 +567,6 @@
 	var search_form_data = null;
 	var compAgntMode = '';
 	var linkMode = '';
-
-
 
 	$(document).ready(function() {
 
@@ -784,6 +954,7 @@
 
 	function showTasksheetTable(HKTAO_ID)
 	{
+		
 		$('#Taskassignment_sheet_details').DataTable().destroy();
 		$('#Taskassignment_sheet_details').DataTable({
         'processing': true,
@@ -799,7 +970,37 @@
         'columns': [{
                 data: 'HKAT_ID',
                 'visible': false
-            }, 
+            },
+			{   
+				data: null,
+                className: "text-center",
+                "orderable": false,
+                render: function(data, type, row, meta) {
+					var disabled = '';
+					if(data['STATS'] != 1){
+						disabled = 'disabled';
+					}
+					var taskAssignButtons = 
+						'<div class="d-inline-block flxy_option_view dropend">' +
+						'<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
+						'<ul class="dropdown-menu dropdown-menu-end">' +									
+						'<li><a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
+						'" data-tasksheet_id="' + data['HKAT_TASK_SHEET_ID'] +
+						'" data-sysid="' + data['HKAT_ID'] +
+						'" class="dropdown-item text-primary assign_rooms '+disabled+'" data-bs-toggle="modal" data-bs-target="#roomAssignmentModal"><i class="fa-solid fa-align-justify "></i> Assign Rooms</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-task_id="' + data['HKAT_TASK_ID'] +
+						'" data-tasksheet_id="' + data['HKAT_TASK_SHEET_ID'] +
+						'" data-sysid="' + data['HKAT_ID'] +
+						'" class="dropdown-item text-primary view_rooms" data-bs-toggle="modal" data-bs-target="#roomViewModal"><i class="fa-solid fa-eye "></i> View Rooms</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-tasksheet_id="' + data['HKAT_TASK_SHEET_ID'] +
+						'" data-sysid="' + data['HKAT_ID'] +
+						'" class="dropdown-item text-info printTaskAssignment disabled"><i class="fa fa-print" aria-hidden="true"></i> Print</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-tasksheet_id="' + data['HKAT_TASK_SHEET_ID'] +
+						'" data-sysid="' + data['HKAT_ID'] +
+						'" class="dropdown-item text-danger delete_sheet_record '+disabled+'"><i class="fa-solid fa-ban"></i>  Delete</a></li>'
+						taskAssignButtons += '</ul>' +
+						'</div>';
+						return taskAssignButtons;	
+
+                }
+            },
 			
 			{
 
@@ -823,23 +1024,72 @@
             },
             {
                 data: 'STATUSCODE',
+				className: "text-center taskStatusCol",
 				render: function(data, type, full, meta) {
-                    //alert(full['STATUSCODE'].indexOf(','));
-					
-					
-					if( full['STATUSCODE'] != null && full['STATUSCODE'].indexOf(',') != -1 ){
-						var match = full['STATS'].split(',')
-						for (var a in match)
-						{
-							var variable = match[a];
-							if(variable == '1')
-							return 'In progress';
+				
+						if( full['STATUSCODE'] != null ){
+							var match = full['STATS'].split(',')
+							var status_text = full['STATUSCODE'].split(',')
+							for (var a in match)
+							{
+								var status_id = match[a];
+								//if(status_id == '1'){
+									
+									for (var b in status_text)
+									{
+										var statText = status_text[b];
+										var statButton = showTaskStatusChange(status_id,statText,full['HKAT_ID'],'3');
+									    return statButton;
+									}
+
+
+								//}
+								
+							}
 						}
-					}
-                    else
-						return full['STATUSCODE'];
+						else if(full['STATUSCODE'] == null ){
+								return '<a href="javascript:;" data-task_id="' + full['HKAT_TASK_ID'] +
+							'" data-tasksheet_id="' + full['HKAT_TASK_SHEET_ID'] +
+							'" data-sysid="' + full['HKAT_ID'] +
+							'" class="dropdown-item text-primary assign_rooms" data-bs-toggle="modal" data-bs-target="#roomAssignmentModal"><i class="fa-solid fa-align-justify"></i> Assign Rooms</a>'
+						}					
+				    
                 }
 				
+            },
+			
+			{
+                data: 'SUPER_STATUSCODE',
+				className: "text-center supertaskStatusCol",
+				render: function(data, type, full, meta) {			
+					
+					if( full['SUPER_STATUSCODE'] != null){
+						var match       = full['INSP_STATS'].split(',');
+						var status_text = full['SUPER_STATUSCODE'].split(',');
+						for (var a in match)
+						{
+							var status_id = match[a];
+							// if(status_id == '5'){
+								for (var b in status_text)
+								{
+									var statText = status_text[b];
+									var statButton = showSuperTaskStatusChange(status_id,statText,full['HKAT_ID'],'5');
+									return statButton;
+								}
+							//}
+						}
+					}
+					else if(full['SUPER_STATUSCODE'] == null ){
+							return '<a href="javascript:;" data-task_id="' + full['HKAT_TASK_ID'] +
+						'" data-tasksheet_id="' + full['HKAT_TASK_SHEET_ID'] +
+						'" data-sysid="' + full['HKAT_ID'] +
+						'" class="dropdown-item text-primary assign_rooms" data-bs-toggle="modal" data-bs-target="#roomAssignmentModal"><i class="fa-solid fa-align-justify"></i> Assign Rooms</a>'
+						}
+                    
+                }
+            },
+            {
+                data: 'HKAT_INSTRUCTIONS'
             },
 			{
                 data: 'COMPLETION_TIME',
@@ -853,26 +1103,6 @@
                         return "";
 				}
             },
-			{
-                data: 'SUPER_STATUSCODE',
-				render: function(data, type, full, meta) {			
-					
-					if( full['SUPER_STATUSCODE'] != null && full['SUPER_STATUSCODE'].indexOf(',') != -1 ){
-						var match = full['INSP_STATS'].split(',')
-						for (var a in match)
-						{
-							var variable = match[a];
-							if(variable == '5')
-							return 'Not inspected';
-						}
-					}
-                    else
-						return full['SUPER_STATUSCODE'];
-                }
-            },
-            {
-                data: 'HKAT_INSTRUCTIONS'
-            },
 			
 			
            
@@ -884,6 +1114,7 @@
         'createdRow': function(row, data, dataIndex) {
             $(row).attr('data-sys_id', data['HKAT_ID']);
 			$(row).attr('data-task_id', data['HKAT_TASK_ID']);
+			$(row).addClass('taskRow' + data['HKAT_ID']);
         },
         destroy: true,
         "ordering": true,
@@ -895,14 +1126,16 @@
 
 	$(document).on('click', '.save-tasksheet-detail', function() {
 		var task_id      = $("#TASK_ID").val();
+		var overview_id  = $("#HKAT_TASK_ID").val();
 		var tasksheet_no = $("#HKAT_SHEET_NO").val();
 		var attendant_id = $("#HKAT_ATTENDANT_ID").val();
+		var task_date    = $('input[name="TASK_ASSIGNMENT_DATE"]').val();
 		var instructions = $("#HKAT_SHEET_INSTRUCTIONS").val();
 		var url = '<?php echo base_url('/insertTaskAssignmentSheet') ?>';
 		$.ajax({
 			url: url,
 			type: "post",
-			data: {task_id:task_id,tasksheet_no:tasksheet_no,attendant_id:attendant_id,instructions:instructions},
+			data: {task_id:task_id,tasksheet_no:tasksheet_no,attendant_id:attendant_id,instructions:instructions,overview_id:overview_id,task_date:task_date},
 			headers: {
 				'X-Requested-With': 'XMLHttpRequest'
 			},
@@ -986,80 +1219,77 @@
 	});
 
 
-	function showRoomAssignment()
-	{
-		var task_id      = $("#HKAT_TASK_ID").val();
+	// function showRoomAssignment()
+	// {
+	// 	var task_id      = $("#HKAT_TASK_ID").val();
 
-		getTaskSheets(task_id);
-		getRooms();
-		$('#Taskassignment_room_details').DataTable({
-        'processing': true,
-        async: false,
-        'serverSide': true,
-        'serverMethod': 'post',
-        'ajax': {
-            'url': '<?php echo base_url('/showTaskAssignedRooms') ?>',
-            'data': {
-                "HKTAO_ID": task_id
-            }
-        },
-        'columns': [{
-                data: 'HKARM_ID',
-                'visible': false
-            },            
-            {
-                data: 'HKARM_TASK_SHEET_ID',
-				
-            },
-			{
-                data: 'HKARM_ROOM_ID',
-				render: function(data, type, row, meta) {
-					if(row['RM_NO'] != '')
-                   		return row['RM_NO']+' - '+row['RM_DESC'];
-					else
-					    return '';
-                }
+	// 	getTaskSheets(task_id);
+	// 	getRooms();
+	// 	$('#Taskassignment_room_details').DataTable({
+    //     'processing': true,
+    //     async: false,
+    //     'serverSide': true,
+    //     'serverMethod': 'post',
+    //     'ajax': {
+    //         'url': '<?php echo base_url('/showTaskAssignedRooms') ?>',
+    //         'data': {
+    //             "HKTAO_ID": task_id
+    //         }
+    //     },
+    //     'columns': [{
+    //             data: 'HKARM_ID',
+    //             'visible': false
+    //         },            
+           
+	// 		{
+    //             data: 'HKARM_ROOM_ID',
+	// 			render: function(data, type, row, meta) {
+	// 				if(row['RM_NO'] != '')
+    //                		return row['RM_NO']+' - '+row['RM_DESC'];
+	// 				else
+	// 				    return '';
+    //             }
 				
 
-            },
-            {
-                data: 'HKARM_CREDITS'
-            },
+    //         },
+    //         {
+    //             data: 'HKARM_CREDITS'
+    //         },
 			
-            {
-                data: 'HKARM_INSTRUCTIONS'
-            },
+    //         {
+    //             data: 'HKARM_INSTRUCTIONS'
+    //         },
 
-			{
-                data: null,
-                className: "text-center",
-                "orderable": false,
-                render: function(data, type, row, meta) {
-                    return (
-                        '<a href="javascript:;" data-assignroom_id="' + data['HKARM_ID'] +
-                        '" data-task_id="' + task_id +
-                        '" class="dropdown-item text-danger delete_room_record"><i class="fa-solid fa-ban"></i> Delete</a>'
-                    );
-                }
-            },
+	// 		{
+    //             data: null,
+    //             className: "text-center",
+    //             "orderable": false,
+    //             render: function(data, type, row, meta) {
+    //                 return (
+    //                     '<a href="javascript:;" data-assignroom_id="' + data['HKARM_ID'] +
+    //                     '" data-task_id="' + task_id +
+    //                     '" class="dropdown-item text-danger delete_room_record"><i class="fa-solid fa-ban"></i> Delete</a>'
+    //                 );
+    //             }
+    //         },
 			
            
 
-        ],
-        "order": [
-            [1, "asc"]
-        ],
-        'createdRow': function(row, data, dataIndex) {
-            $(row).attr('data-tasksheet_id', data['HKAT_ID']);
-			$(row).attr('data-task_id', data['HKAT_TASK_ID']);
-        },
-        destroy: true,
-        "ordering": true,
-        "searching": false,
-        autowidth: true,
-        responsive: true
-    });
-	}
+    //     ],
+    //     "order": [
+    //         [0, "asc"]
+    //     ],
+    //     'createdRow': function(row, data, dataIndex) {
+    //         $(row).attr('data-tasksheet_id', data['HKAT_ID']);
+	// 		$(row).attr('data-task_id', data['HKAT_TASK_ID']);
+    //     },
+    //     destroy: true,
+    //     "ordering": true,
+    //     "searching": false,
+    //     autowidth: true,
+    //     responsive: true
+    // });
+	// }
 
 	function getTaskSheets(task_id){
 
@@ -1124,9 +1354,8 @@
 					});
 					showModalAlert('error', mcontent);
 					$('#loader_flex_bg').hide();
-				} else {
-									
-					$("#HKARM_TASK_SHEET_ID").val(null).trigger('change');
+				} else {								
+					
 					$("#HKARM_ROOM_ID").val(null).trigger('change');
 					$("#HKARM_CREDITS").val('');
 					$("#HKARM_INSTRUCTIONS").val('');
@@ -1182,6 +1411,323 @@
 		});
 	});
 
+	$(document).on('click', '.assign_rooms', function() {
+		hideModalAlerts();
+		getRooms();
+		$('input[name="HKARM_TASK_SHEET_ID"]').val($(this).data('tasksheet_id'));
+		HKARM_TASK_SHEET_ID = $(this).data('tasksheet_id');
+		var task_id      = $("#HKAT_TASK_ID").val();
+		
+		$('#Taskassignment_room_details').DataTable().destroy();
+		$('#Taskassignment_room_details').DataTable({
+		'processing': true,
+		async: false,
+		'serverSide': true,
+		'serverMethod': 'post',
+		'ajax': {
+			'url': '<?php echo base_url('/showTaskAssignedRooms') ?>',
+			'data': {
+				"HKTAO_ID": task_id,
+				"HKARM_TASK_SHEET_ID":HKARM_TASK_SHEET_ID
+			}
+		},
+		'columns': [{
+				data: 'HKARM_ID',
+				'visible': false
+			},            
+			
+			{
+				data: 'HKARM_ROOM_ID',
+				render: function(data, type, row, meta) {
+					if(row['RM_NO'] != '')
+						return row['RM_NO']+' - '+row['RM_DESC'];
+					else
+						return '';
+				}
+				
+
+			},
+			{
+				data: 'HKARM_CREDITS'
+			},
+			
+			{
+				data: 'HKARM_INSTRUCTIONS'
+			},
+
+			{
+				data: null,
+				className: "text-center",
+				"orderable": false,
+				render: function(data, type, row, meta) {
+					return (
+						'<a href="javascript:;" data-assignroom_id="' + data['HKARM_ID'] +
+						'" data-task_id="' + task_id +
+						'" class="dropdown-item text-danger delete_room_record"><i class="fa-solid fa-ban"></i> Delete</a>'
+					);
+				}
+			},
+			
+		
+
+		],
+		"order": [
+			[0, "asc"]
+		],
+		'createdRow': function(row, data, dataIndex) {
+			$(row).attr('data-tasksheet_id', data['HKAT_ID']);
+			$(row).attr('data-task_id', data['HKAT_TASK_ID']);
+		},
+		destroy: true,
+		"ordering": true,
+		"searching": false,
+		autowidth: true,
+		responsive: true
+		});
+	});
+
+	
+
+	function showSuperTaskStatusChange(curStatId, curStatName, taskId, roleId) {
+		$status = '';
+		var $status_name = curStatName;
+		var $status_id = curStatId;
+	
+
+		if(roleId == 5){
+			var $status = {
+				<?php foreach ($task_status_supervisor_list as $task_status) { ?> '<?= $task_status['STATUS_ID'] ?>': {
+					class: 'btn-<?= $task_status['STATUS_COLOR_CLASS'] ?>',
+					title: '<?= $task_status['STATUS_CODE'] ?>'
+				},
+				<?php } ?>
+			};
+		}
+
+
+		if (typeof $status[$status_id] === 'undefined') {
+			return $status_name;
+		}
+
+		var $statButton = '<button type="button" class="btn btn-sm ' + $status[
+				$status_id]
+			.class + ' dropdown-toggle"' +
+			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+			$status_name + '</button>';
+
+		if ($status_id != '1' && $status_id != '2' && $status_id != '3' && $status_id != '4') {
+			$statButton += ' <ul class="dropdown-menu">' +
+				'     <li>' +
+				'      <h6 class="dropdown-header">Change Task Status</h6>' +
+				'     </li><li><hr class="dropdown-divider"></li>';
+
+			$.each($status, function(statText) {
+				if (statText == $status_id || statText == 1 || statText == 2 || statText == 3 || statText == 4) $statButton += '';
+				else $statButton +=
+					'<li><a class="dropdown-item changeTaskStatus" data-role="5" data-task-id="' + taskId + '"' +
+					' data-task-new-stat="' + statText + '"' +
+					' data-task-new-statName="' + $status[statText].title + '"' +
+					' data-task-old-stat="' + $status_id + '"' +
+					' data-task-old-statName="' + $status_name + '"' +
+					' href="javascript:void(0);">' + $status[statText].title + '</a></li>';
+			});
+
+			$statButton += '  </ul>';
+		}
+		//$('#Taskassignment_sheet_details').dataTable().fnDraw();
+
+		return $statButton;
+	}
+
+
+	function showTaskStatusChange(curStatId, curStatName,  taskId, roleId) {
+		
+		$status = '';
+		var $status_name = curStatName;
+		var $status_id = curStatId;
+		if(roleId == 3){
+			var $status = {
+				<?php foreach ($task_status_attendant_list as $task_status) { ?> '<?= $task_status['STATUS_ID'] ?>': {
+					class: 'btn-<?= $task_status['STATUS_COLOR_CLASS'] ?>',
+					title: '<?= $task_status['STATUS_CODE'] ?>'
+				},
+				<?php } ?>
+			};
+		}
+
+		if (typeof $status[$status_id] === 'undefined') {
+			return $status_name;
+		}
+
+		var $statButton = '<button type="button" class="btn btn-sm ' + $status[
+				$status_id]
+			.class + ' dropdown-toggle"' +
+			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+			$status_name + '</button>';
+
+		if ($status_id != '4' && $status_id != '5') {
+			$statButton += ' <ul class="dropdown-menu">' +
+				'     <li>' +
+				'      <h6 class="dropdown-header">Change Task Status</h6>' +
+				'     </li><li><hr class="dropdown-divider"></li>';
+
+			$.each($status, function(statText) {
+				if (statText == $status_id || statText == 4 || statText == 5) $statButton += '';
+				else $statButton +=
+					'<li><a class="dropdown-item changeTaskStatus" data-role="3" data-task-id="' + taskId + '"' +
+					' data-task-new-stat="' + statText + '"' +
+					' data-task-new-statName="' + $status[statText].title + '"' +
+					' data-task-old-stat="' + $status_id + '"' +
+					' data-task-old-statName="' + $status_name + '"' +
+					' href="javascript:void(0);">' + $status[statText].title + '</a></li>';
+			});
+
+			$statButton += '  </ul>';
+		}
+		//console.log($statButton)
+
+		return $statButton;
+	}
+
+
+
+	// Change Task Status
+	$(document).on('click', '.changeTaskStatus', function() {
+		var role = $(this).attr('data-role');
+		var taskId = $(this).attr('data-task-id');
+		var current_status = $(this).attr('data-task-old-stat');
+		var current_statusName = $(this).attr('data-task-old-statName');
+		var new_status = $(this).attr('data-task-new-stat');
+		var new_statusName = $(this).attr('data-task-new-statName');
+
+		if(role == 3)
+			var clickedCol = $('.taskRow' + taskId).find('.taskStatusCol');
+	    if(role == 5)
+		    var clickedCol = $('.taskRow' + taskId).find('.supertaskStatusCol');
+
+		if (current_status == new_status) {
+			alert('The task status is already ' + current_statusName);
+		} else {
+			bootbox.confirm({
+				message: "Are you sure you want to change the status from '" +
+					current_statusName +
+					"' to '" + new_statusName + "' for this task?",
+				buttons: {
+					confirm: {
+						label: 'Yes',
+						className: 'btn-success'
+					},
+					cancel: {
+						label: 'No',
+						className: 'btn-danger'
+					}
+				},
+				callback: function(result) {
+					if (result) {
+						$.ajax({
+							url: '<?php echo base_url('/updateTaskStatus') ?>',
+							type: "post",
+							data: {
+								taskId: taskId,
+								role  : role,
+								new_status: new_status
+							},
+							headers: {
+								'X-Requested-With': 'XMLHttpRequest'
+							},
+							dataType: 'json',
+							success: function(respn) {
+								var response = respn['SUCCESS'];
+								if (response != '1') {
+									var ERROR = respn['RESPONSE']['ERROR'];
+									var mcontent = '';
+									$.each(ERROR, function(ind, data) {
+
+										mcontent += '<li>' + data +
+											'</li>';
+									});
+									showModalAlert('error', mcontent);
+								} else {
+									showModalAlert('success',
+										`<li>The task status has been updated successfully.</li>`
+									);
+									if(role == 3)
+									clickedCol.html(showTaskStatusChange(new_status,
+										new_statusName, taskId, 3));
+									if(role == 5)
+									clickedCol.html(showSuperTaskStatusChange(new_status,
+										new_statusName, taskId, 5));
+																
+									$('#Taskassignment_sheet_details').dataTable().fnDraw();
+								}
+							}
+						});
+					}
+				}
+			});
+		}
+	});
+
+
+
+	$(document).on('click', '.view_rooms', function() {
+		hideModalAlerts();
+		$('input[name="HKARM_TASK_SHEET_ID"]').val($(this).data('tasksheet_id'));
+		HKARM_TASK_SHEET_ID = $(this).data('tasksheet_id');
+		var task_id      = $("#HKAT_TASK_ID").val();
+		
+		$('#Taskassignment_room_view').DataTable().destroy();
+		$('#Taskassignment_room_view').DataTable({
+		'processing': true,
+		async: false,
+		'serverSide': true,
+		'serverMethod': 'post',
+		'ajax': {
+			'url': '<?php echo base_url('/viewTaskAssignedRooms') ?>',
+			'data': {
+				"HKTAO_ID": task_id,
+				"HKARM_TASK_SHEET_ID":HKARM_TASK_SHEET_ID
+			}
+		},
+		'columns': [{
+				data: 'HKARM_ID',
+				'visible': false
+			},            
+			
+			{
+				data: 'HKARM_ROOM_ID',
+				render: function(data, type, row, meta) {
+					if(row['RM_NO'] != '')
+						return row['RM_NO']+' - '+row['RM_DESC'];
+					else
+						return '';
+				}
+				
+
+			},
+			{
+				data: 'HKARM_CREDITS'
+			},
+			
+			{
+				data: 'HKARM_INSTRUCTIONS'
+			},
+
+			
+		
+
+		],
+		"order": [
+			[0, "asc"]
+		],
+		
+		destroy: true,
+		"ordering": true,
+		"searching": false,
+		autowidth: true,
+		responsive: true
+		});
+	});
 </script>
 
 <?= $this->endSection() ?>

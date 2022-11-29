@@ -132,16 +132,41 @@ class HousekeepingController extends BaseController
         $columns   = 'HKST_ID,HKT_CODE,HKST_DESCRIPTION';
         if ($this->request->getPost('HKT_ID') != '')
             $init_cond = array("HKST_TASK_ID = " => $this->request->getPost('HKT_ID'));
-        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+            $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
+
+    public function allTaskcodeList()
+    {
+        $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
+
+        $sql = "SELECT HKT_ID, HKT_CODE, HKT_DESCRIPTION
+                FROM FLXY_HK_TASKS";
+
+        if ($search != '') {
+            $sql .= " WHERE HKT_CODE LIKE '%$search%'
+                    ";
+        }
+
+        $response = $this->Db->query($sql)->getResultArray();
+        if (!empty($response)) {
+
+            $option = '<option value="">Choose an Option</option>';
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['HKT_ID'] . '">' . $row['HKT_CODE']  . ' - ' . $row['HKT_DESCRIPTION'] . '</option>';
+            }
+        }
+
+        echo $option;
+    }
+
 
     public function taskcodeList()
     {
         $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
 
         $sql = "SELECT HKT_ID, HKT_CODE, HKT_DESCRIPTION
-                FROM FLXY_HK_TASKS ";
+                FROM FLXY_HK_TASKS  WHERE HKT_ID IN (SELECT HKST_TASK_ID FROM FLXY_HK_SUBTASKS) ";
 
         if ($search != '') {
             $sql .= " WHERE HKT_CODE LIKE '%$search%'
@@ -167,7 +192,7 @@ class HousekeepingController extends BaseController
             $user_id = session()->get('USR_ID');
 
             $validate = $this->validate([
-                'HKST_DESCRIPTION' => ['label' => 'Task', 'rules' => 'required|is_unique[FLXY_HK_SUBTASKS.HKST_DESCRIPTION,HKST_ID,' . $sysid . ']'],
+                'HKST_DESCRIPTION' => ['label' => 'Task', 'rules' => 'required'],
                 'HKST_TASK_ID' => ['label' => 'Task Code', 'rules' => 'required'],
 
             ]);

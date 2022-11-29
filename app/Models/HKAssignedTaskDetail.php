@@ -10,9 +10,11 @@ class HKAssignedTaskDetail extends Model
     protected $primaryKey = 'HKATD_ID';
     protected $allowedFields = [
         'HKATD_ASSIGNED_TASK_ID',
+        'HKATD_ROOM_ID',
         'HKATD_SUBTASK_ID',
-        'HKATD_COMPLETION_TIME',
         'HKATD_STATUS_ID',
+        'HKATD_START_TIME',
+        'HKATD_COMPLETION_TIME',
         'HKATD_INSPECTED_BY',
         'HKATD_INSPECTED_STATUS_ID',
         'HKATD_INSPECTED_DATETIME',

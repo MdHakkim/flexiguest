@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controllers;
-use App\Libraries\ServerSideDataTable;
+use App\Libraries\DataTables\TaskAssignmentDataTable;
 use CodeIgniter\API\ResponseTrait;
 
 class TaskAssignmentController extends BaseController
@@ -28,6 +28,8 @@ class TaskAssignmentController extends BaseController
         $data['title'] = getMethodName();
         $data['session'] = $this->session;       
         $UserID = session()->get('USR_ID');  
+        $data['task_status_attendant_list'] = $this->Db->table('FLXY_TASK_STATUS_MASTER')->select('STATUS_ID,STATUS_CODE,STATUS_COLOR_CLASS')->where('STATUS_USER_ROLE','3')->get()->getResultArray();
+        $data['task_status_supervisor_list'] = $this->Db->table('FLXY_TASK_STATUS_MASTER')->select('STATUS_ID,STATUS_CODE,STATUS_COLOR_CLASS')->where('STATUS_USER_ROLE','5')->get()->getResultArray();
         $data['js_to_load'] = array("TaskAssignmentFormWizardNumbered.js");
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['blockLoader_javascript']     = blockLoader_javascript();
@@ -38,7 +40,7 @@ class TaskAssignmentController extends BaseController
     {
 
         $UserID = session()->get('USR_ID');
-        $mine = new ServerSideDataTable();
+        $mine = new TaskAssignmentDataTable();
         $tableName = "FLXY_HK_TASKASSIGNMENT_OVERVIEW INNER JOIN FLXY_HK_TASKS ON HKATO_TASK_CODE = HKT_ID INNER JOIN FLXY_USERS ON USR_ID = HKATO_CREATED_BY";
         $init_cond = [];
 
@@ -73,7 +75,7 @@ class TaskAssignmentController extends BaseController
 
             $validate = $this->validate([
                 'HKTAO_TASK_DATE' => ['label' => 'Date', 'rules' => 'required'],
-                'HKATO_TASK_CODE' => ['label' => 'Task Code', 'rules' => 'required|Taskexists[HKTAO_TASK_DATE,HKATO_TASK_CODE,' . $sysid . ']', 'errors' => ['Taskexists' => 'Task exists in this date']],
+                'HKATO_TASK_CODE' => ['label' => 'Task Code', 'rules' => 'required|Taskexists[HKTAO_TASK_DATE,HKATO_TASK_CODE,' . $sysid . ']', 'errors' => ['Taskexists' => 'Task exists on this date']],
             ]);
 
             if (!$validate) {
@@ -186,7 +188,7 @@ class TaskAssignmentController extends BaseController
     public function showTaskSheets(){
 
         $UserID = session()->get('USR_ID');
-        $mine = new ServerSideDataTable();
+        $mine = new  TaskAssignmentDataTable();
         $tableName = "(SELECT HKAT_ID,HKAT_TASK_ID,USR_FIRST_NAME,USR_LAST_NAME,HKAT_TASK_SHEET_ID,HKAT_ATTENDANT_ID, HKAT_CREDITS,HKAT_INSTRUCTIONS,
 		STATS, STATUSCODE, INSP_STATS, SUPER_STATUSCODE, COMPLETION_TIME
 
@@ -238,6 +240,7 @@ class TaskAssignmentController extends BaseController
         WHERE 1=1 
         
        ) as output";
+
         $init_cond = [];
 
         $data = $this->request->getPost();
@@ -280,12 +283,14 @@ class TaskAssignmentController extends BaseController
         try {
             $user_id                 = session()->get('USR_ID');
             $TASK_ID                 = $this->request->getPost('task_id');
+            $HKAT_TASK_ID            = $this->request->getPost('overview_id');
             $HKAT_TASK_SHEET_ID      = $this->request->getPost('tasksheet_no');
             $HKAT_ATTENDANT_ID       = $this->request->getPost('attendant_id');
+            $HKAT_TASK_DATE          = $this->request->getPost('task_date');
             $HKAT_SHEET_INSTRUCTIONS = $this->request->getPost('instructions');
 
             $validate = $this->validate([
-                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required|taskSheetExists[HKAT_TASK_ID,HKAT_TASK_SHEET_ID,' . $HKAT_ATTENDANT_ID . ']', 'errors' => ['taskSheetExists' => 'Task sheet for the attendee is already assigned to this date']],               
+                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required|taskSheetExists[HKAT_TASK_ID,HKAT_TASK_SHEET_ID]', 'errors' => ['taskSheetExists' => 'Task sheet for the attendee is already assigned to this date']],               
             ]);
 
             if (!$validate) {
@@ -297,7 +302,7 @@ class TaskAssignmentController extends BaseController
                 exit;
             }
             $data = [
-                "HKAT_TASK_ID"        => trim($TASK_ID),
+                "HKAT_TASK_ID"        => trim($HKAT_TASK_ID),
                 "HKAT_TASK_SHEET_ID"  => trim($HKAT_TASK_SHEET_ID),
                 "HKAT_ATTENDANT_ID"   => trim($HKAT_ATTENDANT_ID),
                 "HKAT_CREDITS"        => 0,
@@ -305,24 +310,24 @@ class TaskAssignmentController extends BaseController
                 "HKAT_CREATED_AT"     => date("Y-m-d H:i:s A"),
                 "HKAT_UPDATED_BY"     => $user_id,
                 
-            ];            
+            ];   
             
-            $return = !empty($sysid) ? $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->where('HKAT_ID', $sysid)->update($data) : $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->insert($data);
-            
-            $HKAT_ID = $this->Db->insertID();
+                $sql = "SELECT HKST_ID
+                FROM FLXY_HK_SUBTASKS WHERE HKST_TASK_ID = '$TASK_ID' ORDER BY HKST_ID asc";
 
-            $sql = "SELECT HKST_ID
-            FROM FLXY_HK_SUBTASKS WHERE HKST_TASK_ID = '$TASK_ID' ORDER BY HKST_ID asc";
-
-            $response = $this->Db->query($sql)->getResultArray();
-            if(!empty($response)){               
+                $response = $this->Db->query($sql)->getResultArray();
+                if(!empty($response)){               
                 
-                $SHEET_NO_OVERVIEW = $SHEET_NO = $this->getLastSheetNo($TASK_ID, 1);
-                $this->Db->table('FLXY_HK_TASKASSIGNMENT_OVERVIEW')->where('HKTAO_ID', $TASK_ID)->update(['HKATO_TOTAL_SHEETS'=>(--$SHEET_NO_OVERVIEW)]);
+                $return = !empty($sysid) ? $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->where('HKAT_ID', $sysid)->update($data) : $this->Db->table('FLXY_HK_ASSIGNED_TASKS')->insert($data);
+                
+                $HKAT_ID = $this->Db->insertID();           
+                
+                $SHEET_NO_OVERVIEW = $SHEET_NO = $this->getLastSheetNo($HKAT_TASK_ID, 1);
+                $this->Db->table('FLXY_HK_TASKASSIGNMENT_OVERVIEW')->where('HKTAO_ID', $HKAT_TASK_ID)->update(['HKATO_TOTAL_SHEETS'=>(--$SHEET_NO_OVERVIEW)]);
                 $result = $return ? $this->responseJson("1", "0", $return, $response = $SHEET_NO) : $this->responseJson("-444", "db insert not successful", $return);
             }
             else{
-                $result = $this->responseJson("-1", "The task has no subtasks", $return);
+                $result = $this->responseJson("-1", "The task has no subtasks");
             }
 
 
@@ -376,13 +381,35 @@ class TaskAssignmentController extends BaseController
 
     public function showTaskAssignedRooms(){
         $UserID = session()->get('USR_ID');
-        $mine = new ServerSideDataTable();
+        $mine   = new  TaskAssignmentDataTable();
         $tableName = "FLXY_HK_TASK_ASSIGNED_ROOMS INNER JOIN FLXY_ROOM ON RM_ID = HKARM_ROOM_ID";
         $init_cond = [];
 
         $data = $this->request->getPost();
         if(isset($data['HKTAO_ID']) && $data['HKTAO_ID'] != ''){            
             $init_cond['HKARM_TASK_ID = '] = "'".$data['HKTAO_ID']."'";
+        }
+        if(isset($data['HKARM_TASK_SHEET_ID']) && $data['HKARM_TASK_SHEET_ID'] != ''){            
+            $init_cond['HKARM_TASK_SHEET_ID = '] = "'".$data['HKARM_TASK_SHEET_ID']."'";
+        }
+
+        $columns = "HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC";
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
+    public function viewTaskAssignedRooms(){
+        $UserID = session()->get('USR_ID');
+        $mine   = new  TaskAssignmentDataTable();
+        $tableName = "(SELECT HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC FROM FLXY_HK_TASK_ASSIGNED_ROOMS INNER JOIN FLXY_ROOM ON RM_ID = HKARM_ROOM_ID INNER JOIN FLXY_HK_ASSIGNED_TASK_DETAILS ON HKARM_ROOM_ID = HKATD_ROOM_ID GROUP BY HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC) AS OUTPUT";
+        $init_cond = [];
+
+        $data = $this->request->getPost();
+        if(isset($data['HKTAO_ID']) && $data['HKTAO_ID'] != ''){            
+            $init_cond['HKARM_TASK_ID = '] = "'".$data['HKTAO_ID']."'";
+        }
+        if(isset($data['HKARM_TASK_SHEET_ID']) && $data['HKARM_TASK_SHEET_ID'] != ''){            
+            $init_cond['HKARM_TASK_SHEET_ID = '] = "'".$data['HKARM_TASK_SHEET_ID']."'";
         }
 
         $columns = "HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC";
@@ -426,8 +453,7 @@ class TaskAssignmentController extends BaseController
             $HKARM_CREDITS        = $this->request->getPost('HKARM_CREDITS');
             $HKARM_INSTRUCTIONS   = $this->request->getPost('HKARM_INSTRUCTIONS');
 
-            $validate = $this->validate([
-                'HKARM_TASK_SHEET_ID' => ['label' => 'Task Sheet', 'rules' => 'required'],
+            $validate = $this->validate([                
                 'HKARM_ROOM_ID' => ['label' => 'Room', 'rules' => 'required']               
             ]);
 
@@ -534,7 +560,9 @@ class TaskAssignmentController extends BaseController
         {
             $option='<option value="">Select Room</option>';
             foreach($response as $row){
-                $option.= '<option value="'.$row['RM_ID'].'" data-room-id="'.$row['RM_ID'].'"  data-icon="bx bxl-instagram">'.$row['RM_NO'].' - '.$row['RM_STATUS_CODE'].'</option>';
+              
+                $RM_STATUS_CODE = (NULL == $row['RM_STATUS_CODE']) ? 'Dirty' :$row['RM_STATUS_CODE'];
+                $option.= '<option value="'.$row['RM_ID'].'" data-room-id="'.$row['RM_ID'].'"  data-icon="bx bxl-instagram">'.$row['RM_NO'].' - '.$RM_STATUS_CODE.'</option>';
             }
         }
         else
@@ -542,4 +570,439 @@ class TaskAssignmentController extends BaseController
 
         echo $option;
     }
+
+    public function updateTaskStatus()
+    {
+        try {
+
+            $role = $this->request->getPost('role');
+            $taskId = $this->request->getPost('taskId');
+            $new_status = $this->request->getPost('new_status');
+            $user_id = session()->get('USR_ID');
+            $HKATD_COMPLETION_TIME = null;
+            if($role == 3)
+            {   
+                    
+                 $HKATD_COMPLETION_TIME = ($new_status == 2) ? date("Y-m-d H:i:s"): '';                
+
+                $logdata = [
+                    "HKATD_STATUS_ID" => $new_status,
+                    "HKATD_UPDATED_BY" => $user_id, "HKATD_UPDATED_AT" => date("Y-m-d H:i:s"), "HKATD_COMPLETION_TIME" => $HKATD_COMPLETION_TIME
+                ];
+            }
+            else if($role == 5){
+                $logdata = [
+                    "HKATD_INSPECTED_STATUS_ID" => $new_status, "HKATD_INSPECTED_BY" => $user_id,
+                    "HKATD_UPDATED_BY" => $user_id, "HKATD_UPDATED_AT" => date("Y-m-d H:i:s"),"HKATD_INSPECTED_DATETIME"=> date("Y-m-d H:i:s")
+                ];
+            }
+
+            $return = $this->Db->table('FLXY_HK_ASSIGNED_TASK_DETAILS')->where(['HKATD_ASSIGNED_TASK_ID'=>$taskId])->update($logdata);
+
+            echo json_encode($this->responseJson("1", "0", $return, $response = $HKATD_COMPLETION_TIME));
+        } catch (\Exception $e) {
+            echo json_encode($this->responseJson("-444", "db insert not successful"));
+        }
+    }
+
+    public function printTaskSheet(){          
+                    
+        $dompdf = new \Dompdf\Dompdf(); 
+        $options = new \Dompdf\Options();
+        $options->setIsRemoteEnabled(true);
+        $options->setDefaultFont('Courier');
+        $dompdf = new \Dompdf\Dompdf($options);
+
+        $sql = "SELECT CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME, CUST_EMAIL, cname, RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_NO, RESV_RATE FROM FLXY_RESERVATION LEFT JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID LEFT JOIN COUNTRY ON iso2 = CUST_COUNTRY WHERE RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
+        $response = $this->Db->query($sql)->getResultArray();
+
+        if(!empty($response)){
+            foreach ($response as $row) {
+                $data = ['CUST_NAME'=> $row['FULLNAME'], 'CUST_COUNTRY'=> $row['cname'], 'RESV_ARRIVAL_DT'=> $row['RESV_ARRIVAL_DT'], 'RESV_DEPARTURE'=> $row['RESV_DEPARTURE'], 'RESV_NO'=> $row['RESV_NO'], 'RESV_RATE'=> $row['RESV_RATE']];
+                $RESV_ARRIVAL_DT = $row['RESV_ARRIVAL_DT'];
+                $RESV_DEPARTURE = $row['RESV_DEPARTURE'];
+                $RESV_RATE = $row['RESV_RATE'];
+                $CUST_EMAIL = $row['CUST_EMAIL'];
+            } 
+        }
+
+        $sql = "SELECT * FROM FLXY_FIXED_CHARGES INNER JOIN FLXY_TRANSACTION_CODE ON TR_CD_ID = FIXD_CHRG_TRNCODE WHERE FIXD_CHRG_RESV_ID = ".$_SESSION['PROFORMA_RESV_ID'];  
+        $fixedChargesResponse = $this->Db->query($sql)->getResultArray();
+
+        $RESV_ARRIVAL_DATE    = strtotime($RESV_ARRIVAL_DT);
+        $RESV_DEPARTURE_DATE  = strtotime($RESV_DEPARTURE); 
+        $datediff = $RESV_DEPARTURE_DATE - $RESV_ARRIVAL_DATE;
+        $RESERV_DAYS = round($datediff / (60 * 60 * 24));
+        $VAT = 0.05;
+        $TABLE_CONTENTS = '';
+        $FIXED_CONTENTS = '';             
+        $fixed_rows = 0;
+        $DEFAULT_MODE = 20;
+        $DEFAULT_ROWS = 0;
+        $ROOM_CHARGE_TOTAL = 0;
+        $VAT_TOTAL = 0;
+        $j = 0;
+        $fixedChargesAMOUNT = $fixedChargesVAT = $fixedChargesTotal = $fixedChargesVATTotal = $TOTAL = $TOTALVAT = 0;
+        
+        for($i = 1; $i <= $RESERV_DAYS; $i++ ){
+            $ROOM_CHARGE_TOTAL += $RESV_RATE;
+            $VAT_TOTAL += ($RESV_RATE * $VAT);
+            $DEFAULT_VAT = $RESV_RATE * $VAT;
+            $DEFAULT_PAGE_BREAK = '<tr></tr><div style="margin-top:370px;margin-bottom:5px; page-break-after:always"></div></tr>';
+            $sCurrentDate = gmdate("d-m-Y", strtotime("+$i day", $RESV_ARRIVAL_DATE)); 
+            $CurrentDate  = strtotime($sCurrentDate); 
+            $sCurrentDay  = gmdate("w", strtotime("+{$i} day", $RESV_ARRIVAL_DATE));
+            $sCurrentD    = gmdate("d", strtotime("+{$i} day", $RESV_ARRIVAL_DATE)); 
+            $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+                    <td class="text-center" >'.$sCurrentDate.'</td>
+                    <td class="text-center">Room Charge </td>
+                    <td class="text-center"></td>
+                    <td class="text-left" >'.round($RESV_RATE,2).' </td>
+                    <td class="text-left">0.00</td>
+                </tr>';
+            $DEFAULT_ROWS++;
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+            }   
+
+            $TABLE_CONTENTS.= '
+            <tr class="mt-5 mb-5">
+                <td class="text-center">'.$sCurrentDate.'</td>
+                <td class="text-center">VAT 5%</td>
+                <td class="text-center"></td>
+                <td class="text-left">'.round($DEFAULT_VAT).' </td>
+                <td class="text-left">0.00</td>
+            </tr>';
+            $DEFAULT_ROWS++;
+
+            if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+            } 
+
+            ////////// Fixed Charges //////////////               
+            if(!empty($fixedChargesResponse)){
+                foreach($fixedChargesResponse as $fixedCharges) {
+                     
+                    $FIXD_CHRG_BEGIN_DATE =gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_BEGIN_DATE'])) );
+                    $FIXD_CHRG_END_DATE = gmdate("d-m-Y", strtotime("+1 day", strtotime($fixedCharges['FIXD_CHRG_END_DATE'])));
+                    $FIXD_CHRG_FREQUENCY = $fixedCharges['FIXD_CHRG_FREQUENCY'];
+
+
+                    $FIXD_CHRG_BEGIN_DATE = strtotime($FIXD_CHRG_BEGIN_DATE);
+                    $FIXD_CHRG_END_DATE = strtotime($FIXD_CHRG_END_DATE);
+
+                    if($FIXD_CHRG_FREQUENCY == 1 && $CurrentDate == $FIXD_CHRG_BEGIN_DATE){
+                        $ONCE = 1;
+                        $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                        $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                        $fixedChargesTotal += $fixedChargesAMOUNT; 
+                        $fixedChargesVATTotal += $fixedChargesVAT;
+
+                        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                        <td class="text-center">'.$sCurrentDate.'</td>
+                        <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                        <td class="text-center"></td>
+                        <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                        <td width="10%;" class="text-left">0.00</td>
+                        </tr>';
+
+                        $DEFAULT_ROWS++;
+                        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                        }   
+
+                        $TABLE_CONTENTS.= '
+                        <tr class="mt-5 mb-5">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">VAT 5%</td>
+                            <td class="text-center"></td>
+                            
+                            <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                        </tr>';
+                        $DEFAULT_ROWS++;
+
+                        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                        } 
+                    }
+
+                   
+                     if($FIXD_CHRG_FREQUENCY == 2 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE)){
+                       
+                        $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                        $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                        $fixedChargesTotal += $fixedChargesAMOUNT; 
+                        $fixedChargesVATTotal += $fixedChargesVAT;
+
+                        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                        <td class="text-center">'.$sCurrentDate.'</td>
+                        <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                        <td class="text-center"></td>
+                        <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                        <td width="10%;" class="text-left">0.00</td>
+                        </tr>';
+
+                        $DEFAULT_ROWS++;
+                        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                        }   
+
+                        $TABLE_CONTENTS.= '
+                        <tr class="mt-5 mb-5">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">VAT 5%</td>
+                            <td class="text-center"></td>
+                            
+                            <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                        </tr>';
+                        $DEFAULT_ROWS++;
+
+                        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                        } 
+                    } 
+                    
+                    
+                    else if($FIXD_CHRG_FREQUENCY == 3 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentDay == $fixedCharges['FIXD_CHRG_WEEKLY'])){
+                        $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                        $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                        $fixedChargesTotal += $fixedChargesAMOUNT; 
+                        $fixedChargesVATTotal += $fixedChargesVAT;
+
+                        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                        <td class="text-center">'.$sCurrentDate.'</td>
+                        <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                        <td class="text-center"></td>
+                        <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                        <td width="10%;" class="text-left">0.00</td>
+                        </tr>';
+
+                        $DEFAULT_ROWS++;
+                        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                        }   
+
+                        $TABLE_CONTENTS.= '
+                        <tr class="mt-5 mb-5">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">VAT 5%</td>
+                            <td class="text-center"></td>
+                            
+                            <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                        </tr>';
+                        $DEFAULT_ROWS++;
+
+                        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                        } 
+                    }   
+
+                    else if($FIXD_CHRG_FREQUENCY == 4 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && ($sCurrentD == $fixedCharges['FIXD_CHRG_MONTHLY'])){
+                        $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                        $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                        $fixedChargesTotal += $fixedChargesAMOUNT; 
+                        $fixedChargesVATTotal += $fixedChargesVAT;
+
+                        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                        <td class="text-center">'.$sCurrentDate.'</td>
+                        <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                        <td class="text-center"></td>
+                        <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                        <td width="10%;" class="text-left">0.00</td>
+                        </tr>';
+
+                        $DEFAULT_ROWS++;
+                        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                        }   
+
+                        $TABLE_CONTENTS.= '
+                        <tr class="mt-5 mb-5">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">VAT 5%</td>
+                            <td class="text-center"></td>
+                            
+                            <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                        </tr>';
+                        $DEFAULT_ROWS++;
+
+                        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                        } 
+                    }  
+
+        
+                    else if($FIXD_CHRG_FREQUENCY == 6 && ($CurrentDate >= $FIXD_CHRG_BEGIN_DATE && $CurrentDate <= $FIXD_CHRG_END_DATE) && (date('d-m',$sCurrentDate) == date('d-m',$fixedCharges['FIXD_CHRG_YEARLY']))){
+                        $fixedChargesAMOUNT = $fixedCharges['FIXD_CHRG_AMT'] * $fixedCharges['FIXD_CHRG_QTY'];
+                        $fixedChargesVAT = $fixedChargesAMOUNT * $VAT;
+                        $fixedChargesTotal += $fixedChargesAMOUNT; 
+                        $fixedChargesVATTotal += $fixedChargesVAT;
+
+                        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5 ">
+                        <td class="text-center">'.$sCurrentDate.'</td>
+                        <td class="text-center">'.$fixedCharges['TR_CD_DESC'].' </td>
+                        <td class="text-center"></td>
+                        <td width="10%;" class="text-left">'.round($fixedChargesAMOUNT,2).' </td>
+                        <td width="10%;" class="text-left">0.00</td>
+                        </tr>';
+
+                        $DEFAULT_ROWS++;
+                        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+                            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+                        }   
+
+                        $TABLE_CONTENTS.= '
+                        <tr class="mt-5 mb-5">
+                            <td class="text-center">'.$sCurrentDate.'</td>
+                            <td class="text-center">VAT 5%</td>
+                            <td class="text-center"></td>
+                            
+                            <td width="10%;" class="text-left">'.round($fixedChargesVAT,2).' </td>
+                            <td width="10%;" class="text-left">0.00</td>
+                        </tr>';
+                        $DEFAULT_ROWS++;
+
+                        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                        
+                            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK;   
+                        } 
+                    }  
+
+
+                }
+               //exit;
+            }
+                 
+        }
+
+
+        $TOTAL = $ROOM_CHARGE_TOTAL + $fixedChargesTotal;
+        $TOTALVAT = $VAT_TOTAL + $fixedChargesVATTotal;
+
+        ////////////// Footer //////////////////
+
+        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+        <td colspan="5"><hr></td>
+        </tr>';
+        $DEFAULT_ROWS++;
+        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+        }   
+
+        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+        <td class="text-center"></td>
+        <td></td>
+        <td>Total</td>
+        <td width="10%;" class="text-center">'.round($TOTAL,2).' </td>
+        <td width="10%;" class="text-center">0.00</td>
+        </tr>';
+        $DEFAULT_ROWS++;
+        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+        } 
+        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+        <td colspan="5"><hr></td>
+        </tr>';
+        $DEFAULT_ROWS++;
+        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+        }   
+
+        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+        <td class="text-center"></td>
+        <td></td>
+        <td>Balance</td>
+        <td class="text-center">'.round($TOTAL,2).' </td>
+        <td class="text-center">0.00</td>
+        </tr>';
+        $DEFAULT_ROWS++;
+        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+        }  
+        
+        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+        <td class="text-center"></td>
+        <td></td>
+        <td>VAT Incl. Amount</td>
+        <td class="text-center">'.round($TOTAL,2).' </td>
+        <td class="text-center">0.00</td>
+        </tr>';
+        $DEFAULT_ROWS++;
+        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+        }  
+        
+        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+        <td class="text-center"></td>
+        <td></td>
+        <td>5 % VAT</td>
+        <td class="text-center">'.round($TOTALVAT,2).' </td>
+        <td class="text-center">0.00</td>
+        </tr>';
+        $DEFAULT_ROWS++;
+        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+        }  
+
+        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+        <td colspan="5"><hr></td>
+        </tr>';
+        $DEFAULT_ROWS++;
+        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+        }   
+        
+        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+        <td class="text-center"></td>
+        <td></td>
+        <td class="pt-20">Guest Signature</td>
+        <td class="text-center"></td>
+        </tr>';
+        $DEFAULT_ROWS++;
+        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+        }   
+
+        $TABLE_CONTENTS.= '<tr class="mt-5 mb-5">
+        <td colspan="5"></td>
+        </tr>';
+        $DEFAULT_ROWS++;
+        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+        }   
+        $TABLE_CONTENTS.= '<tr class="mt-20 mb-5" >
+        <td class="text-center"></td>
+        <td></td>
+        <td class="mt-20 mb-5 pt-20">Guest Email : '.$CUST_EMAIL.'</td>
+        <td class="text-center"></td>
+        </tr>';
+        $DEFAULT_ROWS++;
+        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+        } 
+        $TABLE_CONTENTS.= '<div class="mt-5 mb-5 pl-20" ><p>'.$_SESSION['FOLIO_TXT_ONE'].'
+       </p></div>';
+        $DEFAULT_ROWS++;
+        if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+            $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+        } 
+
+        $TABLE_CONTENTS.= '<div class="mt-5 mb-5 pl-20"><p>'.$_SESSION['FOLIO_TXT_TWO'].'</p></div>';
+         $DEFAULT_ROWS++;
+         if($DEFAULT_ROWS % $DEFAULT_MODE == 0){                       
+             $TABLE_CONTENTS.= $DEFAULT_PAGE_BREAK; 
+         } 
+        
+        $data['CHARGES'] = $TABLE_CONTENTS; 
+        $dompdf->loadHtml(view('TaskAssignment/TaskSheet',$data));
+        $dompdf->render();           
+        $canvas = $dompdf->getCanvas();
+        $canvas->page_text(18, 780, "{PAGE_NUM} / {PAGE_COUNT}", '', 6, array(0,0,0));
+        $dompdf->stream("TaskSheet_".$_SESSION['PROFORMA_RESV_ID'].".pdf", array("Attachment" => 0));
+       
+    }
+
 }
