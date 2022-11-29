@@ -132,8 +132,7 @@ class TransportRequestRepository extends BaseController
                 return responseJson(500, true, ['msg' => "Guest image not uploaded"]);
 
             $data['TR_GUEST_IMAGE'] = $directory . $response['RESPONSE']['OUTPUT'];
-        } 
-        else 
+        } else
             unset($data['TR_GUEST_IMAGE']);
 
         foreach ($data as $index => $row) {
@@ -145,6 +144,8 @@ class TransportRequestRepository extends BaseController
             $data['TR_UPDATED_BY'] = $data['TR_CREATED_BY'] = $user_id;
             $request_id = $this->TransportRequest->insert($data);
             $msg = "Transport request submitted successfully";
+
+            $this->generateTransportRequestInvoice($request_id);
         } else {
             $data['TR_UPDATED_BY'] = $user_id;
             $this->TransportRequest->update($data['id'], $data);
@@ -176,11 +177,35 @@ class TransportRequestRepository extends BaseController
 
     public function getTransportRequest($where_condition)
     {
-        return $this->TransportRequest->where($where_condition)->first();
+        return $this->TransportRequest
+            ->select('*, 
+                co.cname as COUNTRY_NAME,
+                st.sname as STATE_NAME,
+                ci.ctname as CITY_NAME')
+            ->join('FLXY_RESERVATION', 'TR_RESERVATION_ID = RESV_ID', 'left')
+            ->join('FLXY_CUSTOMER', 'TR_CUSTOMER_ID = CUST_ID', 'left')
+            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
+            ->join('COUNTRY as co', 'CUST_COUNTRY = co.iso2', 'left')
+            ->join('STATE as st', 'CUST_STATE = st.state_code', 'left')
+            ->join('CITY as ci', 'CUST_CITY = ci.id', 'left')
+            ->where($where_condition)
+            ->first();
     }
 
     public function getTransportRequests($where_condition)
     {
         return $this->TransportRequest->where($where_condition)->findAll();
+    }
+
+    public function generateTransportRequestInvoice($request_id)
+    {
+        $transport_request = $this->getTransportRequest("TR_ID = $request_id");
+
+        $view = 'Templates/transport_request_invoice_template';
+        $data = $transport_request;
+        $file_name = "assets/invoices/transport-request-invoices/TR{$request_id}-Invoice.pdf";
+
+        generateInvoice($file_name, $view, $data);
+        return $file_name;
     }
 }

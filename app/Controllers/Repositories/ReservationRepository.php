@@ -47,11 +47,10 @@ class ReservationRepository extends BaseController
             ->findAll();
     }
 
-    public function reservationsOfCustomer($customer_id, $where_condition)
+    public function reservationsOfCustomer($where_condition)
     {
         return $this->Reservation
             ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
-            ->where('RESV_NAME', $customer_id)
             ->where($where_condition)
             ->findAll();
     }
