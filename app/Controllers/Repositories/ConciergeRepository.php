@@ -179,7 +179,7 @@ class ConciergeRepository extends BaseController
     {
         $concierge_request = $this->getConciergeRequest("CR_ID = $concierge_request_id");
 
-        $view = 'Templates/ConciergeInvoiceTemplate';
+        $view = 'Templates/concierge_invoice_template';
         $data = $concierge_request;
         $file_name = "assets/invoices/concierge-invoices/CR{$concierge_request['CR_ID']}-Invoice.pdf";
 
