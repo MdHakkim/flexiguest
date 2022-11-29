@@ -130,8 +130,8 @@ class TransportRequestController extends BaseController
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
 
-        $where_condition = "RESV_STATUS = 'Due Pre Check-In' or RESV_STATUS = 'Pre Checked-In' or RESV_STATUS = 'Checked-In'";
-        $data['RESERVATIONS'] = $this->ReservationRepository->reservationsOfCustomer($customer_id, $where_condition);
+        $where_condition = "RESV_NAME = $customer_id AND (RESV_STATUS = 'Due Pre Check-In' or RESV_STATUS = 'Pre Checked-In' or RESV_STATUS = 'Checked-In')";
+        $data['RESERVATIONS'] = $this->ReservationRepository->reservationsOfCustomer($where_condition);
 
         $data['PICKUP_POINTS'] = $this->PickupPoint->select('PP_ID as id, PP_POINT as label')->orderBy('PP_SEQUENCE')->findAll();
         $data['DROPOFF_POINTS'] = $this->DropoffPoint->select('DP_ID as id, DP_POINT as label')->orderBy('DP_SEQUENCE')->findAll();
