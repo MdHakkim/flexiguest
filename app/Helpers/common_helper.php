@@ -482,3 +482,19 @@ function showTotalRevenueQuery()
 
     return $query;          
 }
+
+function generateInvoice($file_name, $view, $data)
+{
+    try { 
+        $dompdf = new \Dompdf\Dompdf();
+        $dompdf->loadHtml(view($view, ['data' => $data]));
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        file_put_contents($file_name, $dompdf->output());
+    } catch(\Exception $e) {
+        // $e->getMessage();
+    }
+    
+    return $file_name;
+}

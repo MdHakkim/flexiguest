@@ -3,6 +3,8 @@
 namespace App\Controllers\APIControllers\Guest;
 
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\ConciergeRepository;
+use App\Controllers\Repositories\LaundryAmenitiesRepository;
 use App\Models\Documents;
 use App\Models\Reservation;
 use App\Models\VaccineDetail;
@@ -15,12 +17,16 @@ class ProfileController extends BaseController
     private $Documents;
     private $VaccineDetail;
     private $Reservation;
+    private $LaundryAmenitiesRepository;
+    private $ConciergeRepository;
 
     public function __construct()
     {
         $this->Documents = new Documents();
         $this->VaccineDetail = new VaccineDetail();
         $this->Reservation = new Reservation();
+        $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
+        $this->ConciergeRepository = new ConciergeRepository();
     }
 
     public function allDocuments() 
@@ -100,6 +106,34 @@ class ProfileController extends BaseController
                     'url' => base_url($folderPath),
                     'type' => 'pdf',
                     'category' => 'registrationCard'
+                ];
+            }
+        }
+
+        $orders = $this->LaundryAmenitiesRepository->getLAOrders("LAO_CUSTOMER_ID = $customer_id and LAO_PAYMENT_STATUS = 'Paid'");
+        foreach($orders as $order) {
+            $folderPath = "assets/laundry-amenities-invoices/LAO{$order['LAO_ID']}-Invoice.pdf";
+            if (file_exists($folderPath)) {
+                $invoices[] = [
+                    'resv_id' => $order['LAO_RESERVATION_ID'],
+                    'name' => "LAO{$order['LAO_ID']}-Invoice.pdf",
+                    'url' => base_url($folderPath),
+                    'type' => 'pdf',
+                    'category' => 'invoice'
+                ];
+            }
+        }
+
+        $concierge_requests = $this->ConciergeRepository->getConciergeRequests("CR_CUSTOMER_ID = $customer_id and CR_PAYMENT_STATUS = 'Paid'");
+        foreach($concierge_requests as $concierge_request) {
+            $folderPath = "assets/invoices/concierge-invoices/CR{$concierge_request['CR_ID']}-Invoice.pdf";
+            if (file_exists($folderPath)) {
+                $invoices[] = [
+                    'resv_id' => $concierge_request['CR_RESERVATION_ID'],
+                    'name' => "CR{$concierge_request['CR_ID']}-Invoice.pdf",
+                    'url' => base_url($folderPath),
+                    'type' => 'pdf',
+                    'category' => 'invoice'
                 ];
             }
         }

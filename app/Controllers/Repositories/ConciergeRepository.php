@@ -91,7 +91,20 @@ class ConciergeRepository extends BaseController
 
     public function getConciergeRequest($where_condition)
     {
-        return $this->ConciergeRequest->where($where_condition)->first();
+        return $this->ConciergeRequest
+            ->select('*, 
+                co.cname as COUNTRY_NAME,
+                st.sname as STATE_NAME,
+                ci.ctname as CITY_NAME')
+            ->join('FLXY_RESERVATION', 'CR_RESERVATION_ID = RESV_ID', 'left')
+            ->join('FLXY_CUSTOMER', 'CR_CUSTOMER_ID = CUST_ID', 'left')
+            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
+            ->join('FLXY_CONCIERGE_OFFERS', 'CR_OFFER_ID = CO_ID', 'left')
+            ->join('COUNTRY as co', 'CUST_COUNTRY = co.iso2', 'left')
+            ->join('STATE as st', 'CUST_STATE = st.state_code', 'left')
+            ->join('CITY as ci', 'CUST_CITY = ci.id', 'left')
+            ->where($where_condition)
+            ->first();
     }
 
     public function getConciergeRequests($where_condition)
@@ -122,7 +135,8 @@ class ConciergeRepository extends BaseController
             ]);
 
             $msg = 'Concierge request has been created.';
-        } else {            
+            $this->generateConciergeInvoice($concierge_request_id);
+        } else {
             $data['CR_UPDATED_BY'] = $user_id;
             $this->ConciergeRequest->update($id, $data);
 
@@ -159,5 +173,17 @@ class ConciergeRepository extends BaseController
 
         $email_library = new EmailLibrary();
         $email_library->commonEmail($data);
+    }
+
+    public function generateConciergeInvoice($concierge_request_id)
+    {
+        $concierge_request = $this->getConciergeRequest("CR_ID = $concierge_request_id");
+
+        $view = 'Templates/ConciergeInvoiceTemplate';
+        $data = $concierge_request;
+        $file_name = "assets/invoices/concierge-invoices/CR{$concierge_request['CR_ID']}-Invoice.pdf";
+
+        generateInvoice($file_name, $view, $data);
+        return $file_name;
     }
 }
