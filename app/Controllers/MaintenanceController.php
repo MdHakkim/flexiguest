@@ -232,11 +232,14 @@ class MaintenanceController extends BaseController
 
     public function acknowledged()
     {
-        $user_id = $this->request->user['USR_ID'];
+        $user = $this->request->user;
+        $customer_id = $user['USR_CUST_ID'];
+        $user_id = $user['USR_ID'];
+
         $maintenance_request_id = $this->request->getVar('maintenance_request_id');
 
         $maintenance_request = $this->Maintenance->find($maintenance_request_id);
-        if (empty($maintenance_request))
+        if (empty($maintenance_request) || $maintenance_request['CUST_NAME'] != $customer_id)
             return $this->respond(responseJson(404, true, ['msg' => 'Invalid maintenance request.']));
 
         if($maintenance_request['MAINT_STATUS'] != 'Completed')
