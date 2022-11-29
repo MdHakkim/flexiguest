@@ -24,8 +24,8 @@ class ReservationController extends BaseController
     {
         $customer_id = $this->request->user['USR_CUST_ID'];
 
-        $where_condition = "RESV_STATUS = 'Due Pre Check-In' or RESV_STATUS = 'Pre Checked-In' or RESV_STATUS = 'Checked-In'";
-        $result = $this->ReservationRepository->reservationsOfCustomer($customer_id, $where_condition);
+        $where_condition = "RESV_NAME = $customer_id AND (RESV_STATUS = 'Due Pre Check-In' or RESV_STATUS = 'Pre Checked-In' or RESV_STATUS = 'Checked-In')";
+        $result = $this->ReservationRepository->reservationsOfCustomer($where_condition);
 
         return $this->respond(responseJson(200, false, ['msg' => 'reservations'], $result));
     }
