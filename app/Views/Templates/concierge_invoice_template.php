@@ -195,7 +195,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td><b>Tax</b></td>
+                        <td><b>Tax (5%)</b></td>
                         <td><b><?= $data['CR_TAX_AMOUNT'] ?></b></td>
                     </tr>
 

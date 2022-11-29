@@ -5,6 +5,7 @@ namespace App\Controllers\APIControllers\Guest;
 use App\Controllers\BaseController;
 use App\Controllers\Repositories\ConciergeRepository;
 use App\Controllers\Repositories\LaundryAmenitiesRepository;
+use App\Controllers\Repositories\TransportRequestRepository;
 use App\Models\Documents;
 use App\Models\Reservation;
 use App\Models\VaccineDetail;
@@ -19,6 +20,7 @@ class ProfileController extends BaseController
     private $Reservation;
     private $LaundryAmenitiesRepository;
     private $ConciergeRepository;
+    private $TransportRequestRepository;
 
     public function __construct()
     {
@@ -27,6 +29,7 @@ class ProfileController extends BaseController
         $this->Reservation = new Reservation();
         $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
         $this->ConciergeRepository = new ConciergeRepository();
+        $this->TransportRequestRepository = new TransportRequestRepository();
     }
 
     public function allDocuments() 
@@ -131,6 +134,20 @@ class ProfileController extends BaseController
                 $invoices[] = [
                     'resv_id' => $concierge_request['CR_RESERVATION_ID'],
                     'name' => "CR{$concierge_request['CR_ID']}-Invoice.pdf",
+                    'url' => base_url($folderPath),
+                    'type' => 'pdf',
+                    'category' => 'invoice'
+                ];
+            }
+        }
+        
+        $transport_requests = $this->TransportRequestRepository->getTransportRequests("TR_CUSTOMER_ID = $customer_id and TR_PAYMENT_STATUS = 'Paid'");
+        foreach($transport_requests as $transport_request) {
+            $folderPath = "assets/invoices/transport-request-invoices/TR{$transport_request['TR_ID']}-Invoice.pdf";
+            if (file_exists($folderPath)) {
+                $invoices[] = [
+                    'resv_id' => $transport_request['TR_RESERVATION_ID'],
+                    'name' => "TR{$transport_request['TR_ID']}-Invoice.pdf",
                     'url' => base_url($folderPath),
                     'type' => 'pdf',
                     'category' => 'invoice'
