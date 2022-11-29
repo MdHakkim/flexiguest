@@ -2678,7 +2678,7 @@ class ApplicatioController extends BaseController
     }
 
     function getInitializeListReserv(){
-        $sql = "SELECT RESV_TY_CODE CODE,RESV_TY_DESC DESCS FROM FLXY_RESERVATION_TYPE";
+        $sql = "SELECT RESV_TY_ID CODE,RESV_TY_DESC DESCS FROM FLXY_RESERVATION_TYPE";
         $respon1 = $this->Db->query($sql)->getResultArray();
         $sql = "SELECT MK_CD_CODE CODE,MK_CD_DESC DESCS FROM FLXY_MARKET_CODE";
         $respon2 = $this->Db->query($sql)->getResultArray();

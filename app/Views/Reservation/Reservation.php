@@ -275,8 +275,8 @@
                                         class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Search
                                             Type:</b></label>
                                     <div class="col-md-8">
-                                        <select id="S_SEARCH_TYPE" name="S_SEARCH_TYPE" class="form-select dt-select"
-                                            data-column="1">
+                                        <select id="S_SEARCH_TYPE" name="S_SEARCH_TYPE" class="selectpicker w-100 dt-select"
+                                            data-column="1" data-style="btn-default">
                                             <option value="">View All</option>
                                             <option value="1" <?php echo ($show_arrivals) ? 'selected' : '';?>>Due In
                                             </option>
@@ -1149,8 +1149,7 @@
                                             <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Reservation Type</label>
                                                 <select name="RESV_RESRV_TYPE" id="RESV_RESRV_TYPE"
-                                                    class="select2 form-select" data-allow-clear="true">
-                                                    <option value="">Select</option>
+                                                    class="select2 form-select" data-allow-clear="false">
                                                 </select>
                                             </div>
                                             <div class="col-md-6 col-lg-3 mt-2">
@@ -3542,6 +3541,8 @@ function selectRate() {
                         ?>
             }
         });
+
+        $('#RESV_RESRV_TYPE').val(7).trigger('change');
     }
 }
 
@@ -3882,8 +3883,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                 $('#reservationForm .selectpicker').selectpicker('refresh');
                 $('.RESV_ARRIVAL_DT,.RESV_DEPARTURE').datepicker("destroy");
             } else if ($('#RESV_STATUS').val() == 'Checked-In') {
-                $('.RESV_NAME,#CUST_FIRST_NAME,#RESV_RESRV_TYPE,#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RM_TYPE,#RESV_ROOM')
-                    .prop('readonly', true);
+                $('.RESV_NAME,#CUST_FIRST_NAME,#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RESRV_TYPE,#RESV_RM_TYPE,#RESV_ROOM').prop('readonly', true);                
                 $('.RESV_ARRIVAL_DT').datepicker("destroy");
             } else if ($('#RESV_STATUS').val() == 'Due Pre Check-In' || $('#RESV_STATUS').val() ==
                 'Pre Checked-In') {
