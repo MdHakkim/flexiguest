@@ -239,6 +239,9 @@ class MaintenanceController extends BaseController
         if (empty($maintenance_request))
             return $this->respond(responseJson(404, true, ['msg' => 'Invalid maintenance request.']));
 
+        if($maintenance_request['MAINT_STATUS'] != 'Completed')
+            return $this->respond(responseJson(202, true, ['msg' => 'Maintenance request is not completed yet.']));
+
         $maintenance_request['MAINT_STATUS'] = 'Acknowledged';
         $maintenance_request['MAINT_ACKNOWEDGE_TIME'] = date('Y-m-d H:i:s');
         $maintenance_request['MAINT_UPDATE_UID'] = $user_id;
