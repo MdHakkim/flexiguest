@@ -316,8 +316,8 @@ function showRoomHistory() {
                 render: function(data, type, row, meta) {
                     return (
                         '<span data-bs-toggle="tooltip" data-bs-offset="0,4" data-bs-placement="top" data-bs-html="true" title="" data-bs-original-title="<span>' +
-                        row['RESV_ADULTS'] + ' Adults / ' + row['RESV_CHILDREN'] +
-                        ' Children</span>" target="_blank" class="text-truncate"><span class="fw-semibold">' +
+                        row['RESV_ADULTS'] + ' Adult' + (row['RESV_ADULTS'] != 1 ? 's' : '') + ' / ' + row['RESV_CHILDREN'] +
+                        ' Child' + (row['RESV_CHILDREN'] != 1 ? 'ren' : '') + '</span>" target="_blank" class="text-truncate"><span class="fw-semibold">' +
                         data + '</span></span>'
                     );
                 }

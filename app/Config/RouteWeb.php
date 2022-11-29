@@ -757,6 +757,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/roomHistoryView', 'HousekeepingController::roomHistoryView');
     $routes->match(['post'], '/HkRoomStatistics', 'HousekeepingController::HkRoomStatistics');
 
+    $routes->get('OccupancyGraph', 'HousekeepingController::OccupancyGraph');
 
     // ABUBAKAR CODE (START)
     $routes->group('news', function ($routes) {

@@ -132,7 +132,7 @@ class HousekeepingController extends BaseController
         $columns   = 'HKST_ID,HKT_CODE,HKST_DESCRIPTION';
         if ($this->request->getPost('HKT_ID') != '')
             $init_cond = array("HKST_TASK_ID = " => $this->request->getPost('HKT_ID'));
-            $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
 
@@ -166,7 +166,7 @@ class HousekeepingController extends BaseController
         $search = null !== $this->request->getPost('search') && $this->request->getPost('search') != '' ? $this->request->getPost('search') : '';
 
         $sql = "SELECT HKT_ID, HKT_CODE, HKT_DESCRIPTION
-                FROM FLXY_HK_TASKS  WHERE HKT_ID IN (SELECT HKST_TASK_ID FROM FLXY_HK_SUBTASKS) ";
+                FROM FLXY_HK_TASKS ";
 
         if ($search != '') {
             $sql .= " WHERE HKT_CODE LIKE '%$search%'
@@ -192,7 +192,7 @@ class HousekeepingController extends BaseController
             $user_id = session()->get('USR_ID');
 
             $validate = $this->validate([
-                'HKST_DESCRIPTION' => ['label' => 'Task', 'rules' => 'required'],
+                'HKST_DESCRIPTION' => ['label' => 'Task', 'rules' => 'required|is_unique[FLXY_HK_SUBTASKS.HKST_DESCRIPTION,HKST_ID,' . $sysid . ']'],
                 'HKST_TASK_ID' => ['label' => 'Task Code', 'rules' => 'required'],
 
             ]);
@@ -580,23 +580,33 @@ class HousekeepingController extends BaseController
     {
         $room_status_list = $this->Db->table('FLXY_ROOM_STATUS_MASTER')->select('RM_STATUS_ID,RM_STATUS_CODE,RM_STATUS_COLOR_CLASS')->get()->getResultArray();
 
+        $checkForDate = null !== $this->request->getPost('search_date') ? $this->request->getPost('search_date') : date('Y-m-d');
+        $for_graph = null !== $this->request->getPost('for_graph') ? $this->request->getPost('for_graph') : '';
+
         $selectRoomCounts = [];
 
-        //Get Totals
+        //Get Totals for all Room Statuses
         $selectRoomCounts[] = "COUNT(*) AS HKRooms";
         foreach ($room_status_list as $room_status) {
             $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RM_STATUS_ID, 2) = " . $room_status['RM_STATUS_ID'] . " THEN 1 ELSE 0 END) AS TotRooms" . $room_status['RM_STATUS_ID'] . "";
         }
 
-        //Get Detailed Totals - Not Reserved
+        //Get Detailed Totals for all Room Statuses - Not Reserved
         foreach ($room_status_list as $room_status) {
             if ($room_status['RM_STATUS_ID'] == '5') continue;
             $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RM_STATUS_ID, 2) = " . $room_status['RM_STATUS_ID'] . " AND ISNULL(RVN.RESV_STATUS, 'Not Reserved') = 'Not Reserved' THEN 1 ELSE 0 END) AS NRTotRooms" . $room_status['RM_STATUS_ID'] . "";
         }
-        //Get Detailed Totals - Reserved
+
+        //Get Detailed Totals for all Room Statuses - Reserved
         foreach ($room_status_list as $room_status) {
             if ($room_status['RM_STATUS_ID'] == '5') continue;
             $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RM_STATUS_ID, 2) = " . $room_status['RM_STATUS_ID'] . " AND ISNULL(RVN.RESV_STATUS, 'Not Reserved') != 'Not Reserved' THEN 1 ELSE 0 END) AS RTotRooms" . $room_status['RM_STATUS_ID'] . "";
+        }
+
+        if ($for_graph) {
+            $selectRoomCounts = [];
+            $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RVN.RESV_STATUS, 'Not Reserved') != 'Not Reserved' AND RSTYP.RESV_TY_DEDUCT_INV = '1' THEN 1 ELSE 0 END) AS RTotRoomsDeduct";
+            $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RVN.RESV_STATUS, 'Not Reserved') != 'Not Reserved' AND RSTYP.RESV_TY_DEDUCT_INV = '0' THEN 1 ELSE 0 END) AS RTotRoomsNonDeduct";
         }
 
         $sql = "SELECT " . implode(',', $selectRoomCounts) . "
@@ -608,13 +618,29 @@ class HousekeepingController extends BaseController
                 LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
                 LEFT JOIN ( SELECT MAX(RESV_ID) AS RESV_MAX_ID, RESV_ROOM_ID AS RESV_ROOM
                             FROM FLXY_RESERVATION
-                            WHERE '" . date('Y-m-d') . "' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE
+                            WHERE '" . $checkForDate . "' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE
                             AND RESV_STATUS NOT IN ('Cancelled')
                             GROUP BY RESV_ROOM_ID ) RESV ON RESV.RESV_ROOM = RM.RM_ID
-                LEFT JOIN FLXY_RESERVATION RVN ON RVN.RESV_ID = RESV.RESV_MAX_ID";
+                LEFT JOIN FLXY_RESERVATION RVN ON RVN.RESV_ID = RESV.RESV_MAX_ID
+                LEFT JOIN FLXY_RESERVATION_TYPE RSTYP ON RSTYP.RESV_TY_ID = RVN.RESV_RESRV_TYPE";
 
         $response = $this->Db->query($sql)->getResultArray();
 
         echo json_encode([$response, $room_status_list]);
+    }
+
+    public function OccupancyGraph()
+    {
+        $data['title'] = 'Housekeeping - Occupancy Graph';
+
+        $data['js_to_load'] = array("OccupancyGraph.js");
+
+        $data['room_class_list'] = $this->Db->table('FLXY_ROOM_CLASS')->select('RM_CL_ID,RM_CL_CODE,RM_CL_DESC')->get()->getResultArray();
+
+        $data['toggleButton_javascript'] = toggleButton_javascript();
+        $data['clearFormFields_javascript'] = clearFormFields_javascript();
+        $data['blockLoader_javascript'] = blockLoader_javascript();
+
+        return view('Housekeeping/OccupancyGraph', $data);
     }
 }
