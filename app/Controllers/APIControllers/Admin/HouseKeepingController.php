@@ -172,7 +172,8 @@ class HouseKeepingController extends BaseController
         } else {
             $data = [
                 'HKATD_INSPECTED_STATUS_ID' => '6',
-                'HKATD_INSPECTED_DATETIME' => date('Y-m-d H:i:s')
+                'HKATD_INSPECTED_DATETIME' => date('Y-m-d H:i:s'),
+                'HKATD_INSPECTED_BY' => $user['USR_ID']
             ];
         }
 
