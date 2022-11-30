@@ -154,6 +154,22 @@
                     <td>:</td>
                     <td></td>
                 </tr>
+
+                <?php
+                if ($data['TR_PAYMENT_METHOD'] == 'Credit/Debit card' && !empty($data['transaction_id'])) {
+                ?>
+                    <tr>
+                        <td>Payment Method</td>
+                        <td>:</td>
+                        <td><?= $data['TR_PAYMENT_METHOD'] ?></td>
+
+                        <td>Transaction #</td>
+                        <td>:</td>
+                        <td><?= $data['transaction_id'] ?></td>
+                    </tr>
+                <?php
+                }
+                ?>
             </table>
         </div>
 
@@ -208,7 +224,7 @@
                         <td class="border-top-bottom"><b><?= $data['TR_TOTAL_AMOUNT'] ?></b></td>
                     </tr>
 
-                    
+
                 </tbody>
             </table>
         </div>

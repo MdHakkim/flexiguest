@@ -86,8 +86,8 @@ class ProfileController extends BaseController
             }
         }
 
-        $invoices = [];
-        $registation_cards = [];
+        $invoices = $receipts = $registation_cards = [];
+        
         $reservations = $this->Reservation->where('RESV_NAME', $customer_id)->findAll();
         foreach($reservations as $reservation) {
             $folderPath = "assets/reservation-invoices/RES{$reservation['RESV_ID']}-Invoice.pdf";
@@ -115,7 +115,7 @@ class ProfileController extends BaseController
 
         $orders = $this->LaundryAmenitiesRepository->getLAOrders("LAO_CUSTOMER_ID = $customer_id and LAO_PAYMENT_STATUS = 'Paid'");
         foreach($orders as $order) {
-            $folderPath = "assets/laundry-amenities-invoices/LAO{$order['LAO_ID']}-Invoice.pdf";
+            $folderPath = "assets/invoices/laundry-amenities-invoices/LAO{$order['LAO_ID']}-Invoice.pdf";
             if (file_exists($folderPath)) {
                 $invoices[] = [
                     'resv_id' => $order['LAO_RESERVATION_ID'],
@@ -123,6 +123,17 @@ class ProfileController extends BaseController
                     'url' => base_url($folderPath),
                     'type' => 'pdf',
                     'category' => 'invoice'
+                ];
+            }
+
+            $folderPath = "assets/receipts/laundry-amenities-receipts/LAO{$order['LAO_ID']}-Receipt.pdf";
+            if (file_exists($folderPath)) {
+                $receipts[] = [
+                    'resv_id' => $order['LAO_RESERVATION_ID'],
+                    'name' => "LAO{$order['LAO_ID']}-Receipt.pdf",
+                    'url' => base_url($folderPath),
+                    'type' => 'pdf',
+                    'category' => 'receipt'
                 ];
             }
         }
@@ -139,6 +150,17 @@ class ProfileController extends BaseController
                     'category' => 'invoice'
                 ];
             }
+
+            $folderPath = "assets/receipts/concierge-receipts/CR{$concierge_request['CR_ID']}-Receipt.pdf";
+            if (file_exists($folderPath)) {
+                $receipts[] = [
+                    'resv_id' => $order['CR_RESERVATION_ID'],
+                    'name' => "CR{$concierge_request['CR_ID']}-Receipt.pdf",
+                    'url' => base_url($folderPath),
+                    'type' => 'pdf',
+                    'category' => 'receipt'
+                ];
+            }
         }
         
         $transport_requests = $this->TransportRequestRepository->getTransportRequests("TR_CUSTOMER_ID = $customer_id and TR_PAYMENT_STATUS = 'Paid'");
@@ -151,6 +173,17 @@ class ProfileController extends BaseController
                     'url' => base_url($folderPath),
                     'type' => 'pdf',
                     'category' => 'invoice'
+                ];
+            }
+
+            $folderPath = "assets/receipts/transport-request-receipts/TR{$transport_request['TR_ID']}-Receipt.pdf";
+            if (file_exists($folderPath)) {
+                $receipts[] = [
+                    'resv_id' => $order['TR_RESERVATION_ID'],
+                    'name' => "TR{$transport_request['TR_ID']}-Receipt.pdf",
+                    'url' => base_url($folderPath),
+                    'type' => 'pdf',
+                    'category' => 'receipt'
                 ];
             }
         }

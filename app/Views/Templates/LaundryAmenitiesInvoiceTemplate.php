@@ -67,34 +67,34 @@
             <table>
                 <tr>
                     <td colspan="3" class="font-bold">
-                        <?= $order['CUST_FIRST_NAME'] ?> <?= $order['CUST_MIDDLE_NAME'] ?> <?= $order['CUST_LAST_NAME'] ?>
+                        <?= $data['CUST_FIRST_NAME'] ?> <?= $data['CUST_MIDDLE_NAME'] ?> <?= $data['CUST_LAST_NAME'] ?>
                     </td>
 
                     <td>Room No.</td>
                     <td>:</td>
-                    <td><?= $order['RM_NO'] ?> (<?= $order['RM_DESC'] ?>)</td>
+                    <td><?= $data['RM_NO'] ?> (<?= $data['RM_DESC'] ?>)</td>
                 </tr>
 
                 <tr>
                     <td colspan="3" class="font-bold">
-                        <?= $order['CUST_ADDRESS_1'] ?> <?= $order['CUST_ADDRESS_2'] ?> <?= $order['CUST_ADDRESS_3'] ?>
+                        <?= $data['CUST_ADDRESS_1'] ?> <?= $data['CUST_ADDRESS_2'] ?> <?= $data['CUST_ADDRESS_3'] ?>
                     </td>
 
                     <td>Arrival</td>
                     <td>:</td>
-                    <td><?= $order['RESV_ARRIVAL_DT'] ?></td>
+                    <td><?= $data['RESV_ARRIVAL_DT'] ?></td>
                 </tr>
 
                 <tr>
-                    <td colspan="3" class="font-bold"><?= $order['STATE_NAME'] ?></td>
+                    <td colspan="3" class="font-bold"><?= $data['STATE_NAME'] ?></td>
 
                     <td>Departure</td>
                     <td>:</td>
-                    <td><?= $order['RESV_DEPARTURE'] ?></td>
+                    <td><?= $data['RESV_DEPARTURE'] ?></td>
                 </tr>
 
                 <tr>
-                    <td colspan="3" class="font-bold"><?= $order['CITY_NAME'] ?> <?= $order['COUNTRY_NAME'] ?></td>
+                    <td colspan="3" class="font-bold"><?= $data['CITY_NAME'] ?> <?= $data['COUNTRY_NAME'] ?></td>
 
 
                     <td colspan="3"></td>
@@ -122,7 +122,7 @@
 
                     <td>User ID</td>
                     <td>:</td>
-                    <td>CUS<?= $order['LAO_CUSTOMER_ID'] ?></td>
+                    <td>CUS<?= $data['LAO_CUSTOMER_ID'] ?></td>
                 </tr>
 
                 <tr>
@@ -154,6 +154,22 @@
                     <td>:</td>
                     <td></td>
                 </tr>
+
+                <?php
+                if ($data['LAO_PAYMENT_METHOD'] == 'Credit/Debit card' && !empty($data['transaction_id'])) {
+                ?>
+                    <tr>
+                        <td>Payment Method</td>
+                        <td>:</td>
+                        <td><?= $data['LAO_PAYMENT_METHOD'] ?></td>
+
+                        <td>Transaction #</td>
+                        <td>:</td>
+                        <td><?= $data['transaction_id'] ?></td>
+                    </tr>
+                <?php
+                }
+                ?>
             </table>
         </div>
 
@@ -173,7 +189,7 @@
                 <tbody>
                     <?php
                     $row_count = 1;
-                    foreach ($order['order_details'] as $order_detail) {
+                    foreach ($data['order_details'] as $order_detail) {
                     ?>
                         <tr>
                             <td><?= $row_count++ ?></td>
@@ -193,7 +209,7 @@
                         <td></td>
                         <td></td>
                         <td><b>Net</b></td>
-                        <td><b><?= $order['LAO_TOTAL_PAYABLE'] - ($order['LAO_TOTAL_PAYABLE'] * 0.05)?></b></td>
+                        <td><b><?= $data['LAO_TOTAL_PAYABLE'] - ($data['LAO_TOTAL_PAYABLE'] * 0.05) ?></b></td>
                     </tr>
 
                     <tr>
@@ -202,7 +218,7 @@
                         <td></td>
                         <td></td>
                         <td><b>Tax (5%)</b></td>
-                        <td><b><?= $order['LAO_TOTAL_PAYABLE'] * 0.05 ?></b></td>
+                        <td><b><?= $data['LAO_TOTAL_PAYABLE'] * 0.05 ?></b></td>
                     </tr>
 
                     <tr>
@@ -211,7 +227,7 @@
                         <td></td>
                         <td></td>
                         <td class="border-top-bottom"><b>Total</b></td>
-                        <td class="border-top-bottom"><b><?= $order['LAO_TOTAL_PAYABLE'] ?></b></td>
+                        <td class="border-top-bottom"><b><?= $data['LAO_TOTAL_PAYABLE'] ?></b></td>
                     </tr>
                 </tbody>
             </table>

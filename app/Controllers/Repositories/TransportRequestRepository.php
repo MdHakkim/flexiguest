@@ -197,13 +197,21 @@ class TransportRequestRepository extends BaseController
         return $this->TransportRequest->where($where_condition)->findAll();
     }
 
-    public function generateTransportRequestInvoice($request_id)
+    public function generateTransportRequestInvoice($request_id, $transaction_id = null)
     {
         $transport_request = $this->getTransportRequest("TR_ID = $request_id");
+        if(empty($transport_request))
+            return null;
+            
+        $transport_request['transaction_id'] = $transaction_id;
 
         $view = 'Templates/transport_request_invoice_template';
         $data = $transport_request;
-        $file_name = "assets/invoices/transport-request-invoices/TR{$request_id}-Invoice.pdf";
+
+        if (empty($transaction_id))
+            $file_name = "assets/invoices/transport-request-invoices/TR{$request_id}-Invoice.pdf";
+        else
+            $file_name = "assets/receipts/transport-request-receipts/TR{$request_id}-Receipt.pdf";
 
         generateInvoice($file_name, $view, $data);
         return $file_name;

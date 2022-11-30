@@ -110,6 +110,8 @@ class LaundryAmenitiesRepository extends BaseController
             ]);
         }
 
+        $this->generateOrderInvoice($order_id);
+
         if ($data['payment_method'] == 'Credit/Debit card') {
             $data = [
                 'amount' => $total_payable,
@@ -127,5 +129,52 @@ class LaundryAmenitiesRepository extends BaseController
         return $this->LaundryAmenitiesOrder
             ->where($where_condition)
             ->findAll();
+    }
+
+    public function getLAOrder($where_condition)
+    {
+        $order = $this->LaundryAmenitiesOrder
+            ->select('*, 
+                co.cname as COUNTRY_NAME,
+                st.sname as STATE_NAME,
+                ci.ctname as CITY_NAME')
+            ->join('FLXY_RESERVATION', 'LAO_RESERVATION_ID = RESV_ID', 'left')
+            ->join('FLXY_CUSTOMER', 'LAO_CUSTOMER_ID = CUST_ID', 'left')
+            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
+            ->join('COUNTRY as co', 'CUST_COUNTRY = co.iso2', 'left')
+            ->join('STATE as st', 'CUST_STATE = st.state_code', 'left')
+            ->join('CITY as ci', 'CUST_CITY = ci.id', 'left')
+            ->where($where_condition)
+            ->first();
+
+        if(empty($order))
+            return null;
+
+        $order['order_details'] = $this->LaundryAmenitiesOrderDetail
+            ->select('FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.*, pr.PR_NAME, pr.PR_PRICE')
+            ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
+            ->where('LAOD_ORDER_ID', $order['LAO_ID'])
+            ->findAll();
+
+        return $order;
+    }
+
+    public function generateOrderInvoice($order_id, $transaction_id = null)
+    {
+        $order = $this->getLAOrder("LAO_ID = $order_id");
+        if(empty($order))
+            return null;
+
+        $order['transaction_id'] = $transaction_id;
+
+        $view = 'Templates/LaundryAmenitiesInvoiceTemplate';
+        $data = $order;
+        if (empty($transaction_id))
+            $file_name = "assets/invoices/laundry-amenities-invoices/LAO{$order_id}-Invoice.pdf";
+        else
+            $file_name = "assets/receipts/laundry-amenities-receipts/LAO{$order_id}-Receipt.pdf";
+
+        generateInvoice($file_name, $view, $data);
+        return $file_name;
     }
 }

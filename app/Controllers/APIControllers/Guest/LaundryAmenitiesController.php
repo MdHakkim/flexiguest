@@ -92,46 +92,15 @@ class LaundryAmenitiesController extends BaseController
 
     public function downloadInvoice()
     {
-        $customer_id = $this->request->user['USR_CUST_ID'];
         $order_id = $this->request->getVar('order_id');
 
-        $order = $this->LaundryAmenitiesOrder
-            ->select('FLXY_LAUNDRY_AMENITIES_ORDERS.*, 
-            fr.RESV_ARRIVAL_DT, fr.RESV_DEPARTURE,
-            fc.CUST_FIRST_NAME, fc.CUST_MIDDLE_NAME, fc.CUST_LAST_NAME, fc.CUST_ADDRESS_1, fc.CUST_ADDRESS_2, fc.CUST_ADDRESS_3,
-            fc.CUST_COUNTRY, fc.CUST_STATE, fc.CUST_CITY,
-            co.cname as COUNTRY_NAME,
-            st.sname as STATE_NAME,
-            ci.ctname as CITY_NAME,
-            rm.RM_NO, rm.RM_DESC')
-            ->join('FLXY_RESERVATION as fr', 'FLXY_LAUNDRY_AMENITIES_ORDERS.LAO_RESERVATION_ID = fr.RESV_ID', 'left')
-            ->join('FLXY_CUSTOMER as fc', 'FLXY_LAUNDRY_AMENITIES_ORDERS.LAO_CUSTOMER_ID = fc.CUST_ID', 'left')
-            ->join('FLXY_ROOM as rm', 'FLXY_LAUNDRY_AMENITIES_ORDERS.LAO_ROOM_ID = rm.RM_ID', 'left')
-            ->join('COUNTRY as co', 'fc.CUST_COUNTRY = co.iso2', 'left')
-            ->join('STATE as st', 'fc.CUST_STATE = st.state_code', 'left')
-            ->join('CITY as ci', 'fc.CUST_CITY = ci.id', 'left')
-            ->where('LAO_ID', $order_id)
-            ->where('LAO_CUSTOMER_ID', $customer_id)
-            ->first();
+        $file_name = "assets/laundry-amenities-invoices/LAO{$order_id}-Invoice.pdf";
+        if (file_exists($file_name))
+            $result = responseJson(200, false, ['msg' => 'Invoice.'], ['invoice' => base_url($file_name)]);
+        else
+            $result = responseJson(202, true, ['msg' => 'Invoice not available.']);
 
-        if (empty($order))
-            return $this->respond(responseJson(404, true, ['msg' => 'No order found.']));
-
-        $order['order_details'] = $this->LaundryAmenitiesOrderDetail
-            ->select('FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.*, pr.PR_NAME, pr.PR_PRICE')
-            ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
-            ->where('LAOD_ORDER_ID', $order['LAO_ID'])
-            ->findAll();
-
-        $dompdf = new \Dompdf\Dompdf();
-        $dompdf->loadHtml(view('Templates/LaundryAmenitiesInvoiceTemplate', ['order' => $order]));
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-
-        $file_name = "assets/laundry-amenities-invoices/LAO{$order['LAO_ID']}-Invoice.pdf";
-        file_put_contents($file_name, $dompdf->output());
-
-        return $this->respond(responseJson(200, false, ['msg' => 'Invoice'], ['invoice' => base_url($file_name)]));
+        return $this->respond($result);
     }
 
     public function acknowledgedDelivery()

@@ -199,6 +199,8 @@ class PaymentController extends BaseController
                 'LAO_UPDATED_AT' => date('Y-m-d H:i:s'),
                 'LAO_UPDATED_BY' => $meta_data->user_id,
             ]);
+
+            $this->LaundryAmenitiesRepository->generateOrderInvoice($meta_data->model_id, $balance_transaction_id);
         } else if ($meta_data->model == 'FLXY_CONCIERGE_REQUESTS') {
 
             $this->ConciergeRepository->updateConciergeRequestById([
@@ -207,6 +209,8 @@ class PaymentController extends BaseController
                 'CR_UPDATED_AT' => date('Y-m-d H:i:s'),
                 'CR_UPDATED_BY' => $meta_data->user_id,
             ]);
+
+            $this->ConciergeRepository->generateConciergeInvoice($meta_data->model_id, $balance_transaction_id);
         } else if ($meta_data->model == 'FLXY_TRANSPORT_REQUESTS') {
 
             $this->TransportRequestRepository->updateTransportRequestById([
@@ -215,6 +219,8 @@ class PaymentController extends BaseController
                 'TR_UPDATED_AT' => date('Y-m-d H:i:s'),
                 'TR_UPDATED_BY' => $meta_data->user_id,
             ]);
+
+            $this->TransportRequestRepository->generateTransportRequestInvoice($meta_data->model_id, $balance_transaction_id);
         } else if ($meta_data->model == 'FLXY_RESERVATION') {
 
             $this->ReservationRepository->updateReservation([
@@ -230,6 +236,8 @@ class PaymentController extends BaseController
                 'RO_UPDATED_AT' => date('Y-m-d H:i:s'),
                 'RO_UPDATED_BY' => $meta_data->user_id,
             ]);
+
+            $this->RestaurantRepository->generateOrderInvoice($meta_data->model_id, $balance_transaction_id);
         }
     }
 

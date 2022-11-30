@@ -562,8 +562,8 @@ class RestaurantRepository extends BaseController
         return $this->RestaurantOrder->delete($order_id);
     }
 
-    /** ------------------------------Cart------------------------------ */
-    public function addToCart($user, $data)
+    public function generateOrderInvoice($order_id, $transaction_id = null)
     {
+
     }
 }
