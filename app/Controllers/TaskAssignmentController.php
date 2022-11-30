@@ -401,7 +401,7 @@ class TaskAssignmentController extends BaseController
     public function viewTaskAssignedRooms(){
         $UserID = session()->get('USR_ID');
         $mine   = new  TaskAssignmentDataTable();
-        $tableName = "(SELECT HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC FROM FLXY_HK_TASK_ASSIGNED_ROOMS INNER JOIN FLXY_ROOM ON RM_ID = HKARM_ROOM_ID INNER JOIN FLXY_HK_ASSIGNED_TASK_DETAILS ON HKARM_ROOM_ID = HKATD_ROOM_ID GROUP BY HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC) AS OUTPUT";
+        $tableName = "(SELECT HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,MAX(HKATD_COMPLETION_TIME) as HKATD_COMPLETION_TIME,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME) AS INSPECTED_NAME,MAX(HKATD_INSPECTED_DATETIME) as HKATD_INSPECTED_DATETIME  FROM FLXY_HK_TASK_ASSIGNED_ROOMS INNER JOIN FLXY_ROOM ON RM_ID = HKARM_ROOM_ID INNER JOIN FLXY_HK_ASSIGNED_TASK_DETAILS ON HKARM_ROOM_ID = HKATD_ROOM_ID INNER JOIN FLXY_USERS ON HKATD_INSPECTED_BY = USR_ID GROUP BY HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,HKATD_INSPECTED_DATETIME,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME)) AS OUTPUT";
         $init_cond = [];
 
         $data = $this->request->getPost();
@@ -412,7 +412,7 @@ class TaskAssignmentController extends BaseController
             $init_cond['HKARM_TASK_SHEET_ID = '] = "'".$data['HKARM_TASK_SHEET_ID']."'";
         }
 
-        $columns = "HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC";
+        $columns = "HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,HKATD_COMPLETION_TIME,INSPECTED_NAME,HKATD_INSPECTED_DATETIME";
         $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
@@ -548,19 +548,20 @@ class TaskAssignmentController extends BaseController
     
     public function taskRoomList(){
 
-        $sql = "SELECT RM_ID, RM_NO, RM_DESC, RM_STATUS_COLOR_CLASS,RM_STATUS_CODE FROM FLXY_ROOM LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
+        $sql = "SELECT RM_ID, RM_NO, RM_DESC, RM_STATUS_COLOR_CLASS,RM_STATUS_CODE,RM_STATUS_ID FROM FLXY_ROOM LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
         FROM FLXY_ROOM_STATUS_LOG
         GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
         LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                
-        LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS WHERE RM_STATUS_ID != 1 AND RM_STATUS_ID != 3"; 
+        LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS WHERE 1=1"; 
       
         $response = $this->Db->query($sql)->getResultArray();
 
         if($response != NULL)
         {
             $option='<option value="">Select Room</option>';
-            foreach($response as $row){
-              
+            foreach($response as $row){   
+                if($row['RM_STATUS_ID'] == 1 || $row['RM_STATUS_ID'] == 3 )     
+                 continue;      
                 $RM_STATUS_CODE = (NULL == $row['RM_STATUS_CODE']) ? 'Dirty' :$row['RM_STATUS_CODE'];
                 $option.= '<option value="'.$row['RM_ID'].'" data-room-id="'.$row['RM_ID'].'"  data-icon="bx bxl-instagram">'.$row['RM_NO'].' - '.$RM_STATUS_CODE.'</option>';
             }

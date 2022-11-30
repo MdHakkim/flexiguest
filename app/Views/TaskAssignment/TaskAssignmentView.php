@@ -79,7 +79,7 @@
 							<th class="all">Auto</th>
 							<th class="all">Total Sheets</th>
 							<th class="all">Total Rooms</th>
-							<th class="all">Total Credits</th>
+							
                             
 						</tr>
 					</thead>
@@ -541,6 +541,10 @@
 											<th class="all">Room</th>
 											<th class="all">Room Credits</th>
 											<th class="all">Room Instructions</th>
+											<th class="all">Completion Time</th>
+											<th class="all">Inspected By</th>	
+											<th class="all">Inspected Time</th>
+											<!-- <th class="all">Inspected Status</th> -->
 										</tr>
 									</thead>
 								</table>
@@ -568,6 +572,7 @@
 	var compAgntMode = '';
 	var linkMode = '';
 
+	var rooms = [];
 	$(document).ready(function() {
 
 		taskCodelist();
@@ -625,8 +630,7 @@
 				'ajax': {
 					'url': '<?php echo base_url('/TaskAssignmentView') ?>',
 					'type': 'POST',
-					'data': function(d) {						
-
+					'data': function(d) {
 						d['HKTAO_TASK_DATE'] = $('.search-form [name="HKTAO_TASK_DATE"]').val();
 						d['HKATO_TASK_CODE_SEARCH'] = $('.search-form [name="HKATO_TASK_CODE_SEARCH"]').val();
 						d['HKATO_CREATED_BY'] = $('.search-form [name="HKATO_CREATED_BY"]').val();
@@ -734,9 +738,7 @@
 						}
 						
 					},					
-					{
-						data: 'HKATO_TOTAL_CREDIT'
-					},
+					
                     			
 					
 				
@@ -762,9 +764,7 @@
 					{
 						width: "10%"
 					},
-                    {
-						width: "10%"
-					},
+                   
 					
 				],
 				"order": [
@@ -1335,7 +1335,18 @@
 		var HKARM_ROOM_ID        = $("#HKARM_ROOM_ID").val();
 		var HKARM_CREDITS        = $("#HKARM_CREDITS").val();
 		var HKARM_INSTRUCTIONS   = $("#HKARM_INSTRUCTIONS").val();
-
+		console.log(rooms)
+		if(!rooms.includes(HKARM_ROOM_ID)){
+			rooms.push(HKARM_ROOM_ID);	
+		}
+		else{
+			var alertText =  '<li>Room is already assigned</li>';
+			showModalAlert('warning', alertText);
+			$("#HKARM_ROOM_ID").val(null).trigger('change');
+			$("#HKARM_CREDITS").val('');
+			$("#HKARM_INSTRUCTIONS").val('');
+			return;
+		}	
 		
 		var url = '<?php echo base_url('/insertTaskAssignmentRoom') ?>';
 		$.ajax({
@@ -1379,6 +1390,7 @@
 
 		var assignroom_id = $(this).data('assignroom_id');
         var taskid = $(this).data('task_id');
+		rooms.splice(rooms.indexOf(assignroom_id), 1);  //deleting
 		bootbox.confirm({
 			message: "Are you sure you want to delete this record?",
 			buttons: {
@@ -1458,6 +1470,7 @@
 			{
 				data: 'HKARM_INSTRUCTIONS'
 			},
+			
 
 			{
 				data: null,
@@ -1718,6 +1731,18 @@
 			{
 				data: 'HKARM_INSTRUCTIONS'
 			},
+			{
+				data: 'HKATD_COMPLETION_TIME'
+			},			
+			{
+				data: 'INSPECTED_NAME'
+			},
+			{
+				data: 'HKATD_INSPECTED_DATETIME'
+			},
+			
+			
+
 
 			
 		
