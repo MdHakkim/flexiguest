@@ -18,8 +18,8 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th class="all">Room No</th>
-                            <th class="all">Assets</th>
+                            <th>Room No</th>
+                            <th>Assets</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
@@ -305,6 +305,7 @@
         $('#popModalWindowlabel').html('Edit Room Asset');
         $('#popModalWindow').modal('show');
 
+        $(`${form_id} [name='RA_ID']`).val('update');
         $(`${form_id} [name='RA_ROOM_ID']`).val(room_id).trigger('change');
         $(`${form_id} [name='RA_ASSET_CATEGORY_ID[]']`).val(category_ids).trigger('change');
 

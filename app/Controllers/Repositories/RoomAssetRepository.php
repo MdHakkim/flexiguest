@@ -40,7 +40,15 @@ class RoomAssetRepository extends BaseController
     public function createUpdateRoomAsset($user, $data)
     {
         $user_id = $user['USR_ID'];
+        
+        if(empty($data['RA_ID'])) {
+            $check = $this->roomAssetsByRoomId($data['RA_ROOM_ID']);
+            if(!empty($check))
+                return responseJson(202, true, ['msg' => 'Please modify the existing record as assets are already assigned to this room.']);
+        }
 
+        unset($data['RA_ID']);
+        
         $this->deleteRoomAssets($data['RA_ROOM_ID']);
         foreach ($data['RA_ASSETS'] as $asset) {
             $data = [
