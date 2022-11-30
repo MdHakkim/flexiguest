@@ -940,6 +940,13 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('edit', 'roomAssetController::edit');
             // $routes->delete('delete', 'roomAssetController::delete');
         });
+
+        $routes->group('reservation-asset', function ($routes) {
+            $routes->get('', 'ReservationAssetController::reservationAsset');
+            $routes->post('all-reservation-assets', 'ReservationAssetController::allReservationAssets');
+            // $routes->post('store', 'ReservationAssetController::store');
+            $routes->post('edit', 'ReservationAssetController::edit');
+        });
     });
 
     $routes->group('gallery', function ($routes) {
