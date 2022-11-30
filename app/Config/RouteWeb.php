@@ -722,7 +722,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/TaskAssignment', 'TaskAssignmentController::TaskAssignment');
     $routes->match(['post'], '/TaskAssignmentView', 'TaskAssignmentController::TaskAssignmentView');
     $routes->match(['post'], '/insertTaskAssignment', 'TaskAssignmentController::InsertTaskAssignment');
-    $routes->match(['post'], '/attendeeList', 'TaskAssignmentController::attendeeList');
+    $routes->match(['post'], '/attendantList', 'TaskAssignmentController::attendantList');
     $routes->match(['post'], '/showTaskSheets', 'TaskAssignmentController::showTaskSheets');
     $routes->match(['post'], '/getLastSheetNo', 'TaskAssignmentController::getLastSheetNo');
 
@@ -735,8 +735,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/taskRoomList', 'TaskAssignmentController::taskRoomList');
     $routes->match(['post'], '/updateTaskStatus', 'TaskAssignmentController::updateTaskStatus');
     $routes->match(['post'], '/viewTaskAssignedRooms', 'TaskAssignmentController::viewTaskAssignedRooms');
-       
 
+    $routes->match(['post'], '/setTaskSheet', 'TaskAssignmentController::setTaskSheet');
+    $routes->get('/printTaskSheet', 'TaskAssignmentController::printTaskSheet');  
     
     //Subina Code (END)  
 
