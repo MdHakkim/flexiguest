@@ -5,6 +5,7 @@ namespace App\Controllers\APIControllers\Guest;
 use App\Controllers\BaseController;
 use App\Controllers\Repositories\ConciergeRepository;
 use App\Controllers\Repositories\LaundryAmenitiesRepository;
+use App\Controllers\Repositories\RestaurantRepository;
 use App\Controllers\Repositories\TransportRequestRepository;
 use App\Models\Documents;
 use App\Models\Reservation;
@@ -21,6 +22,7 @@ class ProfileController extends BaseController
     private $LaundryAmenitiesRepository;
     private $ConciergeRepository;
     private $TransportRequestRepository;
+    private $RestaurantRepository;
 
     public function __construct()
     {
@@ -30,6 +32,7 @@ class ProfileController extends BaseController
         $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
         $this->ConciergeRepository = new ConciergeRepository();
         $this->TransportRequestRepository = new TransportRequestRepository();
+        $this->RestaurantRepository = new RestaurantRepository();
     }
 
     public function allDocuments() 
@@ -181,6 +184,31 @@ class ProfileController extends BaseController
                 $receipts[] = [
                     'resv_id' => $order['TR_RESERVATION_ID'],
                     'name' => "TR{$transport_request['TR_ID']}-Receipt.pdf",
+                    'url' => base_url($folderPath),
+                    'type' => 'pdf',
+                    'category' => 'receipt'
+                ];
+            }
+        }
+
+        $orders = $this->RestaurantRepository->getOrdersList("RO_CUSTOMER_ID = $customer_id and RO_PAYMENT_STATUS = 'Paid'");
+        foreach($orders as $order) {
+            $folderPath = "assets/invoices/restaurant-order-invoices/RO{$order['RO_ID']}-Invoice.pdf";
+            if (file_exists($folderPath)) {
+                $invoices[] = [
+                    'resv_id' => $order['RO_RESERVATION_ID'],
+                    'name' => "RO{$order['RO_ID']}-Invoice.pdf",
+                    'url' => base_url($folderPath),
+                    'type' => 'pdf',
+                    'category' => 'invoice'
+                ];
+            }
+
+            $folderPath = "assets/receipts/restaurant-order-receipts/RO{$order['RO_ID']}-Receipt.pdf";
+            if (file_exists($folderPath)) {
+                $receipts[] = [
+                    'resv_id' => $order['RO_RESERVATION_ID'],
+                    'name' => "RO{$order['RO_ID']}-Receipt.pdf",
                     'url' => base_url($folderPath),
                     'type' => 'pdf',
                     'category' => 'receipt'

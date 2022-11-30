@@ -464,6 +464,10 @@ class RestaurantRepository extends BaseController
             $this->createUpdateOrderDetail($item_data);
         }
 
+        if (empty($data['RO_ID']))
+            $this->generateOrderInvoice($order_id);
+
+
         if (!isWeb() && empty($data['RO_ID']) && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
             $data = [
                 'amount' => $data['RO_TOTAL_PAYABLE'],
@@ -479,9 +483,12 @@ class RestaurantRepository extends BaseController
     public function restaurantOrderById($id, $with_details = false)
     {
         $order = $this->RestaurantOrder
-        ->select('FLXY_RESTAURANT_ORDERS.*, USR_DEPARTMENT as RO_DEPARTMENT_ID')
-        ->join('FlXY_USERS', 'RO_ATTENDANT_ID = USR_ID', 'left')
-        ->find($id);
+            ->select('FLXY_RESTAURANT_ORDERS.*, USR_DEPARTMENT as RO_DEPARTMENT_ID')
+            ->join('FlXY_USERS', 'RO_ATTENDANT_ID = USR_ID', 'left')
+            ->find($id);
+
+        if (empty($order))
+            return null;
 
         if ($with_details) {
             $order['restaurant_ids'] = [];
@@ -547,6 +554,11 @@ class RestaurantRepository extends BaseController
         return $orders;
     }
 
+    public function getOrdersList($where_condition)
+    {
+        return $this->RestaurantOrder->where($where_condition)->findAll();
+    }
+
     public function allOrder()
     {
         $mine = new ServerSideDataTable();
@@ -564,6 +576,20 @@ class RestaurantRepository extends BaseController
 
     public function generateOrderInvoice($order_id, $transaction_id = null)
     {
+        $order = $this->restaurantOrderById("LAO_ID = $order_id");
+        if (empty($order))
+            return null;
 
+        $order['transaction_id'] = $transaction_id;
+
+        $view = 'Templates/restaurant_order_invoice_template';
+        $data = $order;
+        if (empty($transaction_id))
+            $file_name = "assets/invoices/restaurant-order-invoices/RO{$order_id}-Invoice.pdf";
+        else
+            $file_name = "assets/receipts/restaurant-order-receipts/RO{$order_id}-Receipt.pdf";
+
+        generateInvoice($file_name, $view, $data);
+        return $file_name;
     }
 }
