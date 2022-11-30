@@ -483,8 +483,18 @@ class RestaurantRepository extends BaseController
     public function restaurantOrderById($id, $with_details = false)
     {
         $order = $this->RestaurantOrder
-            ->select('FLXY_RESTAURANT_ORDERS.*, USR_DEPARTMENT as RO_DEPARTMENT_ID')
+            ->select('*, 
+                USR_DEPARTMENT as RO_DEPARTMENT_ID, 
+                co.cname as COUNTRY_NAME,
+                st.sname as STATE_NAME,
+                ci.ctname as CITY_NAME')
+            ->join('FLXY_RESERVATION', 'RO_RESERVATION_ID = RESV_ID', 'left')
+            ->join('FLXY_CUSTOMER', 'RO_CUSTOMER_ID = CUST_ID', 'left')
             ->join('FlXY_USERS', 'RO_ATTENDANT_ID = USR_ID', 'left')
+            ->join('FLXY_ROOM', 'RESV_ROOM = RM_NO', 'left')
+            ->join('COUNTRY as co', 'CUST_COUNTRY = co.iso2', 'left')
+            ->join('STATE as st', 'CUST_STATE = st.state_code', 'left')
+            ->join('CITY as ci', 'CUST_CITY = ci.id', 'left')
             ->find($id);
 
         if (empty($order))
