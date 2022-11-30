@@ -193,7 +193,7 @@
                     ?>
                         <tr>
                             <td><?= $row_count++ ?></td>
-                            <td><?= date_create($order_detail['RO_CREATED_AT'])->format('Y-m-d') ?></td>
+                            <td><?= date_create($data['RO_CREATED_AT'])->format('Y-m-d') ?></td>
                             <td><?= $order_detail['MI_ITEM'] ?></td>
                             <td><?= $order_detail['MI_PRICE'] - ($order_detail['MI_PRICE'] * 0.05) ?></td>
                             <td><?= $order_detail['ROD_QUANTITY'] ?></td>

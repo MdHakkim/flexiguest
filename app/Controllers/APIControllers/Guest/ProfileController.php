@@ -157,7 +157,7 @@ class ProfileController extends BaseController
             $folderPath = "assets/receipts/concierge-receipts/CR{$concierge_request['CR_ID']}-Receipt.pdf";
             if (file_exists($folderPath)) {
                 $receipts[] = [
-                    'resv_id' => $order['CR_RESERVATION_ID'],
+                    'resv_id' => $concierge_request['CR_RESERVATION_ID'],
                     'name' => "CR{$concierge_request['CR_ID']}-Receipt.pdf",
                     'url' => base_url($folderPath),
                     'type' => 'pdf',
@@ -182,7 +182,7 @@ class ProfileController extends BaseController
             $folderPath = "assets/receipts/transport-request-receipts/TR{$transport_request['TR_ID']}-Receipt.pdf";
             if (file_exists($folderPath)) {
                 $receipts[] = [
-                    'resv_id' => $order['TR_RESERVATION_ID'],
+                    'resv_id' => $transport_request['TR_RESERVATION_ID'],
                     'name' => "TR{$transport_request['TR_ID']}-Receipt.pdf",
                     'url' => base_url($folderPath),
                     'type' => 'pdf',
@@ -216,7 +216,7 @@ class ProfileController extends BaseController
             }
         }
         
-        $output = array_merge($identity_documents, $vaccine_documents, $invoices, $registation_cards);
+        $output = array_merge($identity_documents, $vaccine_documents, $invoices, $receipts, $registation_cards);
         return $this->respond(responseJson(200, false, ['msg' => 'All Documents'], $output));
     }
 }

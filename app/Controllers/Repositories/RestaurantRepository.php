@@ -576,7 +576,7 @@ class RestaurantRepository extends BaseController
 
     public function generateOrderInvoice($order_id, $transaction_id = null)
     {
-        $order = $this->restaurantOrderById("LAO_ID = $order_id");
+        $order = $this->restaurantOrderById($order_id, true);
         if (empty($order))
             return null;
 
