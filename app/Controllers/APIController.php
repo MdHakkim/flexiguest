@@ -960,8 +960,7 @@ class APIController extends BaseController
             $res_data = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resID)->update($dataRes);
 
             if ($update_data &&  $res_data) {
-                if ($user['USR_ROLE_ID'] == '1')
-                    $this->ReservationAssetRepository->attachAssetList($USR_ID, $resID);
+                $this->ReservationAssetRepository->attachAssetList($USR_ID, $resID);
 
                 $result = responseJson(200, false, ["msg" => "File uploaded successfully"], ["path" => base_url($folderPath . $doc_up['RESPONSE']['OUTPUT'])]);
             } else

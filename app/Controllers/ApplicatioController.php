@@ -4467,8 +4467,7 @@ class ApplicatioController extends BaseController
         $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
         $result = $this->responseJson("1","0",$return,$response='');
 
-        if(isset($this->session->USR_ROLE_ID) && $this->session->USR_ROLE_ID == '1')
-            $this->ReservationAssetRepository->attachAssetList(session('USR_ID'), $sysid);
+        $this->ReservationAssetRepository->attachAssetList(session('USR_ID'), $sysid);
 
         $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, 
                     RESV_RATE, RESV_RM_TYPE, RESV_NAME, 
