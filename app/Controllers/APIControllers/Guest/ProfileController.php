@@ -116,7 +116,7 @@ class ProfileController extends BaseController
             }
         }
 
-        $orders = $this->LaundryAmenitiesRepository->getLAOrders("LAO_CUSTOMER_ID = $customer_id and LAO_PAYMENT_STATUS = 'Paid'");
+        $orders = $this->LaundryAmenitiesRepository->getLAOrders("LAO_CUSTOMER_ID = $customer_id");
         foreach($orders as $order) {
             $folderPath = "assets/invoices/laundry-amenities-invoices/LAO{$order['LAO_ID']}-Invoice.pdf";
             if (file_exists($folderPath)) {
@@ -130,7 +130,7 @@ class ProfileController extends BaseController
             }
 
             $folderPath = "assets/receipts/laundry-amenities-receipts/LAO{$order['LAO_ID']}-Receipt.pdf";
-            if (file_exists($folderPath)) {
+            if ($order['LAO_PAYMENT_STATUS'] == 'Paid' && file_exists($folderPath)) {
                 $receipts[] = [
                     'resv_id' => $order['LAO_RESERVATION_ID'],
                     'name' => "LAO{$order['LAO_ID']}-Receipt.pdf",
@@ -141,7 +141,7 @@ class ProfileController extends BaseController
             }
         }
 
-        $concierge_requests = $this->ConciergeRepository->getConciergeRequests("CR_CUSTOMER_ID = $customer_id and CR_PAYMENT_STATUS = 'Paid'");
+        $concierge_requests = $this->ConciergeRepository->getConciergeRequests("CR_CUSTOMER_ID = $customer_id");
         foreach($concierge_requests as $concierge_request) {
             $folderPath = "assets/invoices/concierge-invoices/CR{$concierge_request['CR_ID']}-Invoice.pdf";
             if (file_exists($folderPath)) {
@@ -155,7 +155,7 @@ class ProfileController extends BaseController
             }
 
             $folderPath = "assets/receipts/concierge-receipts/CR{$concierge_request['CR_ID']}-Receipt.pdf";
-            if (file_exists($folderPath)) {
+            if ($concierge_request['CR_PAYMENT_STATUS'] == 'Paid' && file_exists($folderPath)) {
                 $receipts[] = [
                     'resv_id' => $concierge_request['CR_RESERVATION_ID'],
                     'name' => "CR{$concierge_request['CR_ID']}-Receipt.pdf",
@@ -166,7 +166,7 @@ class ProfileController extends BaseController
             }
         }
         
-        $transport_requests = $this->TransportRequestRepository->getTransportRequests("TR_CUSTOMER_ID = $customer_id and TR_PAYMENT_STATUS = 'Paid'");
+        $transport_requests = $this->TransportRequestRepository->getTransportRequests("TR_CUSTOMER_ID = $customer_id");
         foreach($transport_requests as $transport_request) {
             $folderPath = "assets/invoices/transport-request-invoices/TR{$transport_request['TR_ID']}-Invoice.pdf";
             if (file_exists($folderPath)) {
@@ -180,7 +180,7 @@ class ProfileController extends BaseController
             }
 
             $folderPath = "assets/receipts/transport-request-receipts/TR{$transport_request['TR_ID']}-Receipt.pdf";
-            if (file_exists($folderPath)) {
+            if ($transport_request['TR_PAYMENT_STATUS'] == 'Paid' && file_exists($folderPath)) {
                 $receipts[] = [
                     'resv_id' => $transport_request['TR_RESERVATION_ID'],
                     'name' => "TR{$transport_request['TR_ID']}-Receipt.pdf",
@@ -191,7 +191,7 @@ class ProfileController extends BaseController
             }
         }
 
-        $orders = $this->RestaurantRepository->getOrdersList("RO_CUSTOMER_ID = $customer_id and RO_PAYMENT_STATUS = 'Paid'");
+        $orders = $this->RestaurantRepository->getOrdersList("RO_CUSTOMER_ID = $customer_id");
         foreach($orders as $order) {
             $folderPath = "assets/invoices/restaurant-order-invoices/RO{$order['RO_ID']}-Invoice.pdf";
             if (file_exists($folderPath)) {
@@ -203,9 +203,9 @@ class ProfileController extends BaseController
                     'category' => 'invoice'
                 ];
             }
-
+            
             $folderPath = "assets/receipts/restaurant-order-receipts/RO{$order['RO_ID']}-Receipt.pdf";
-            if (file_exists($folderPath)) {
+            if ($order['RO_PAYMENT_STATUS'] == 'Paid' && file_exists($folderPath)) {
                 $receipts[] = [
                     'resv_id' => $order['RO_RESERVATION_ID'],
                     'name' => "RO{$order['RO_ID']}-Receipt.pdf",
