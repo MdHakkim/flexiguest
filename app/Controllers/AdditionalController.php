@@ -83,8 +83,8 @@ class AdditionalController extends BaseController
             $return = !empty($sysid) ? $this->Db->table('FLXY_CURRENCY')->where('CUR_ID', $sysid)->update($data) : $this->Db->table('FLXY_CURRENCY')->insert($data);
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
             echo json_encode($result);
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch(\Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -112,8 +112,8 @@ class AdditionalController extends BaseController
             $return = $this->Db->table('FLXY_CURRENCY')->delete(['CUR_ID' => $sysid]);
             $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
             echo json_encode($result);
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch(\Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -173,8 +173,8 @@ class AdditionalController extends BaseController
             $return = !empty($sysid) ? $this->Db->table('FLXY_EXCHANGE_CODES')->where('EXCH_ID', $sysid)->update($data) : $this->Db->table('FLXY_EXCHANGE_CODES')->insert($data);
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
             echo json_encode($result);
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch(\Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -201,8 +201,8 @@ class AdditionalController extends BaseController
             $return = $this->Db->table('FLXY_EXCHANGE_CODES')->delete(['EXCH_ID' => $sysid]);
             $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
             echo json_encode($result);
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch(\Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -401,8 +401,8 @@ class AdditionalController extends BaseController
             $return = !empty($sysid) ? $this->Db->table('FLXY_DEPARTMENT')->where('DEPT_ID', $sysid)->update($data) : $this->Db->table('FLXY_DEPARTMENT')->insert($data);
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
             echo json_encode($result);
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch(\Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -430,8 +430,8 @@ class AdditionalController extends BaseController
             $return = $this->Db->table('FLXY_DEPARTMENT')->delete(['DEPT_ID' => $sysid]);
             $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
             echo json_encode($result);
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch(\Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -881,8 +881,8 @@ class AdditionalController extends BaseController
             $return = !empty($sysid) ? $this->Db->table('FLXY_GUEST_TYPE')->where('GST_TYPE_ID', $sysid)->update($data) : $this->Db->table('FLXY_GUEST_TYPE')->insert($data);
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
             echo json_encode($result);
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch(\Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -930,8 +930,8 @@ class AdditionalController extends BaseController
             echo $no_of_added;
             exit;
 
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch(\Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -977,8 +977,8 @@ class AdditionalController extends BaseController
             $return = $this->Db->table('FLXY_GUEST_TYPE')->delete(['GST_TYPE_ID' => $sysid]);
             $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
             echo json_encode($result);
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch(\Exception $e) {
+            return $e->getMessage();
         }
     }
 
@@ -2813,8 +2813,8 @@ class AdditionalController extends BaseController
             $return = $this->Db->table('FLXY_PRODUCTS')->delete(['PR_ID' => $sysid]);
             $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
             echo json_encode($result);
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch(\Exception $e) {
+            return $e->getMessage();
         }
     }
     

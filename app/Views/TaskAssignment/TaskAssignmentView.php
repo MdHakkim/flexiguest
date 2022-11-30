@@ -894,9 +894,9 @@
 		$('#dataTable_view').dataTable().fnDraw();
 	});
 
-	function attendeeList() {
+	function attendantList() {
 		$.ajax({
-			url: '<?php echo base_url('/attendeeList') ?>',
+			url: '<?php echo base_url('/attendantList') ?>',
 			type: "POST",
 			headers: {
 				'X-Requested-With': 'XMLHttpRequest'
@@ -916,7 +916,7 @@
 		
 		$('input[name="TASK_ASSIGNMENT_DATE"]').val($(this).data('task_date'));
 		$('input[name="TASK_CODE"]').val($(this).data('task_code')+' - '+$(this).data('task_desc'));
-		attendeeList();
+		attendantList();
 		showTasksheetTable($(this).data('sysid'));
 		$.ajax({
 			url: '<?php echo base_url('/getLastSheetNo') ?>',
@@ -977,7 +977,7 @@
                 "orderable": false,
                 render: function(data, type, row, meta) {
 					var disabled = '';
-					if(data['STATS'] != 1){
+					if(data['STATS'] != null && data['STATS'] != 1){
 						disabled = 'disabled';
 					}
 					var taskAssignButtons = 
@@ -992,7 +992,7 @@
 						'" data-sysid="' + data['HKAT_ID'] +
 						'" class="dropdown-item text-primary view_rooms" data-bs-toggle="modal" data-bs-target="#roomViewModal"><i class="fa-solid fa-eye "></i> View Rooms</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-tasksheet_id="' + data['HKAT_TASK_SHEET_ID'] +
 						'" data-sysid="' + data['HKAT_ID'] +
-						'" class="dropdown-item text-info printTaskAssignment disabled"><i class="fa fa-print" aria-hidden="true"></i> Print</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-tasksheet_id="' + data['HKAT_TASK_SHEET_ID'] +
+						'" class="dropdown-item text-info printTaskAssignment"><i class="fa fa-print" aria-hidden="true"></i> Print</a></li><div class="dropdown-divider" ></div><li><a href="javascript:;" data-tasksheet_id="' + data['HKAT_TASK_SHEET_ID'] +
 						'" data-sysid="' + data['HKAT_ID'] +
 						'" class="dropdown-item text-danger delete_sheet_record '+disabled+'"><i class="fa-solid fa-ban"></i>  Delete</a></li>'
 						taskAssignButtons += '</ul>' +
@@ -1335,6 +1335,8 @@
 		var HKARM_ROOM_ID        = $("#HKARM_ROOM_ID").val();
 		var HKARM_CREDITS        = $("#HKARM_CREDITS").val();
 		var HKARM_INSTRUCTIONS   = $("#HKARM_INSTRUCTIONS").val();
+
+		
 		var url = '<?php echo base_url('/insertTaskAssignmentRoom') ?>';
 		$.ajax({
 			url: url,
@@ -1362,7 +1364,9 @@
 					var alertText =  '<li>The room has been assigned</li>';
 					showModalAlert('success', alertText);
 					$('#loader_flex_bg').hide();
+					
 					$('#Taskassignment_room_details').dataTable().fnDraw();
+					$('#Taskassignment_sheet_details').dataTable().fnDraw();
 				}
 			}
 		});
@@ -1475,9 +1479,11 @@
 			[0, "asc"]
 		],
 		'createdRow': function(row, data, dataIndex) {
-			$(row).attr('data-tasksheet_id', data['HKAT_ID']);
-			$(row).attr('data-task_id', data['HKAT_TASK_ID']);
+			$(row).attr('data-tasksheet_id', HKARM_TASK_SHEET_ID);
+			$(row).attr('data-task_id', task_id);
+			$(row).attr('data-room_id', data['HKARM_ROOM_ID']);
 		},
+		
 		destroy: true,
 		"ordering": true,
 		"searching": false,
@@ -1728,6 +1734,32 @@
 		responsive: true
 		});
 	});
+
+
+$(document).on('click', '.printTaskAssignment', function() {
+	var task_overview_id    =  $("#HKAT_TASK_ID").val();
+	var task_overview_date  = $('input[name="TASK_ASSIGNMENT_DATE"]').val();
+	var task_assigned_id       = $(this).data('sysid');
+	
+	$.ajax({
+		url: '<?php echo base_url('/setTaskSheet') ?>',
+		type: "post",
+		data:{task_overview_id:task_overview_id,task_overview_date:task_overview_date, task_assigned_id:task_assigned_id} ,
+		headers: {
+			'X-Requested-With': 'XMLHttpRequest'
+		},
+		async: false,
+		success: function(respn) {
+			if (respn > 0) {				
+			    window.open('<?= base_url('/printTaskSheet') ?>', '_blank');			
+
+			}
+
+		}
+
+	});
+
+});
 </script>
 
 <?= $this->endSection() ?>

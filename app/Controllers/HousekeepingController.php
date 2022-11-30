@@ -480,8 +480,8 @@ class HousekeepingController extends BaseController
 
             $result = $this->responseJson("1", "0", $ins, count($rooms_to_update));
             echo json_encode($result);
-        } catch (Exception $e) {
-            return $this->respond($e->errors());
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
     }
 
