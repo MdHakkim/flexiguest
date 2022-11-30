@@ -39,7 +39,7 @@ class ReservationAssetController extends BaseController
     {
         $mine = new ReservationAssetDataTable();
         $tableName = 'FLXY_RESERVATION_ROOM_ASSETS left join FLXY_ROOM on RRA_ROOM_ID = RM_ID';
-        $columns = 'RRA_ID,RRA_RESERVATION_ID,RRA_ROOM_ID,RRA_CREATED_AT,RM_NO';
+        $columns = 'RRA_RESERVATION_ID,RRA_ROOM_ID,RRA_CREATED_AT,RM_NO';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }

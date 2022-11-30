@@ -55,7 +55,7 @@ class ReservationAssetDataTable
             $searchQuery = " AND ($joinQr) ";
         }
 
-        $table .= "  group by RRA_ID,RRA_RESERVATION_ID, RRA_ROOM_ID, RRA_CREATED_AT, RM_NO";
+        $table .= "  group by RRA_RESERVATION_ID, RRA_ROOM_ID, RRA_CREATED_AT, RM_NO";
         ## Total number of records without filtering
         $result = $this->Db->query("SELECT COUNT(*) AS allcount FROM $table")->getResultArray();
         // $records = mysqli_fetch_assoc($sel);
