@@ -47,7 +47,7 @@ class ReceivingFormController extends BaseController
         $room_id = $this->request->getVar('room_id');
 
         $room_assets = $this->ReservationRoomAsset
-            ->select('RRA_ID, RRA_QUANTITY, RRA_REMARKS, AS_ASSET')
+            ->select('RRA_ID, RRA_QUANTITY, RRA_VERIFIED_QUANTITY, RRA_REMARKS, AS_ASSET')
             ->join('FLXY_ASSETS', 'RRA_ASSET_ID = AS_ID', 'left')
             ->join('FLXY_ROOM', 'RM_ID = RRA_ROOM_ID', 'left')
             ->where('RRA_RESERVATION_ID', $reservation_id)

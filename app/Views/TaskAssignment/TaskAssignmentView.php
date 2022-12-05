@@ -544,7 +544,7 @@
 											<th class="all">Completion Time</th>
 											<th class="all">Inspected By</th>	
 											<th class="all">Inspected Time</th>
-											<!-- <th class="all">Inspected Status</th> -->
+											<th class="all">Comments</th>
 										</tr>
 									</thead>
 								</table>
@@ -557,6 +557,25 @@
                 <div class="modal-footer">				
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#TaskAssignmentDetails">Close</button>
                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<div class="modal fade" id="comment-modal" tabindex="-1" aria-hidden="true" style="z-index: 1100;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Comments</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -1740,14 +1759,56 @@
 			{
 				data: 'HKATD_INSPECTED_DATETIME'
 			},
+			{
+				data: null
+			},
 			
-			
-
-
-			
-		
-
 		],
+		columnDefs: [
+                {
+					data: 'HKATD_COMPLETION_TIME',
+                    width: "10%",
+                    targets: 4,
+					render: function(data, type, row, meta) {
+                        if (row['HKATD_COMPLETION_TIME'] != null ) {							
+                            var HKATD_COMPLETION_TIME = row['HKATD_COMPLETION_TIME'].split(".");
+                            if (HKATD_COMPLETION_TIME[0] == '1900-01-01 00:00:00') {
+                                return '';
+                            } else
+                                return HKATD_COMPLETION_TIME[0];
+                        }else
+						 return '';
+                    }
+                },
+                {
+				data: 'HKATD_INSPECTED_DATETIME',
+				targets: 6,
+				render: function(data, type, row, meta) {
+					if (row['HKATD_INSPECTED_DATETIME'] != null  ) {
+						var HKATD_INSPECTED_DATETIME = row['HKATD_INSPECTED_DATETIME'].split(".");
+						if (HKATD_INSPECTED_DATETIME[0] == '1900-01-01 00:00:00') {
+							return '';
+						} else
+							return HKATD_INSPECTED_DATETIME[0];
+					}else
+					return '';
+                }
+			},{
+			data: '',
+			targets: 7,
+				render: function(data, type, row, meta) {
+
+					if(row['HKATD_COMPLETION_TIME'] != null){
+						return '<a href="javascript:;" data-room_id="' + row['HKARM_ROOM_ID'] +
+							'" data-tasksheet_id="' + row['HKAT_TASK_SHEET_ID'] +
+							'" data-assigned_taskid="' + row['HKATD_ASSIGNED_TASK_ID'] +
+							'" class="text-primary view_comments"><i class="fa-solid fa-eye "></i> </a>';
+						}	
+						else
+						return '';
+				}
+			}
+            ],
 		"order": [
 			[0, "asc"]
 		],
@@ -1785,6 +1846,46 @@ $(document).on('click', '.printTaskAssignment', function() {
 	});
 
 });
+
+
+$(document).on('click', '.view_comments', function() {
+	
+	var HKAT_TASK_ASSIGNED_ID = $(this).data('assigned_taskid');
+	var HKAT_ROOM_ID          = $(this).data('room_id');
+	$.ajax({
+		url: '<?php echo base_url('/getTaskComments') ?>',
+		type: "POST",
+		data:{HKAT_TASK_ASSIGNED_ID: HKAT_TASK_ASSIGNED_ID, HKAT_ROOM_ID:HKAT_ROOM_ID},
+		headers: {
+			'X-Requested-With': 'XMLHttpRequest'
+		},
+		dataType: 'json',
+		success: function(response) {
+                if (response['SUCCESS'] == 200) {
+                    let comments = response['RESPONSE']['OUTPUT'];
+                    
+                    let html = '';
+                    for (let comment of comments) {
+                        html += `
+                            <b>${comment.USER_NAME} (${comment.ATN_CREATED_AT})</b></br>
+                            <span class="">${comment.ATN_NOTE}</span></br>
+                        `;
+                    }
+
+                    if(html)
+                        html = `<b>No Comments!</b>`;
+
+                    //$('#comment-modal .modal-title').html(`Comments of Task# ${HKAT_TASK_ASSIGNED_ID}`);
+                    $('#comment-modal .modal-body').html(html);
+                    $('#comment-modal').modal('show');
+                }
+            }
+	});
+
+	$('#viewTaskComments').modal('show');
+});
+
+
 </script>
 
 <?= $this->endSection() ?>

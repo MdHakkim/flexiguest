@@ -216,7 +216,6 @@ $routes->group("api", ["filter" => "authapi:Guest", 'namespace' => 'App\Controll
         $routes->get("all-restaurants", "RestaurantController::allRestaurants");
         $routes->get("menu-categories", "RestaurantController::menuCategories");
         $routes->post("place-order", "RestaurantController::placeOrder");
-        $routes->post("add-to-cart", "RestaurantController::addToCart");
         $routes->post("get-menu-items", "RestaurantController::getMenuItems");
     });
 

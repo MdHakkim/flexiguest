@@ -385,7 +385,10 @@
                         `;
                         }
 
-                        $(`${form_id} select[name='RA_ASSETS[][RA_ASSET_ID]']`).html(html).trigger('change');
+                        let val = $(`${form_id} select[name='RA_ASSETS[][RA_ASSET_ID]']`).val();
+                        $(`${form_id} select[name='RA_ASSETS[][RA_ASSET_ID]']`).html(html);
+                        $(`${form_id} select[name='RA_ASSETS[][RA_ASSET_ID]']`).val(val);
+                        $(`${form_id} select[name='RA_ASSETS[][RA_ASSET_ID]']`).trigger('change');
                     }
                 }
             });
@@ -436,15 +439,15 @@
         }
 
         if (asset_ids.length < selected_asset_ids.length) {
-            let remove_id = selected_asset_ids.filter(x => !asset_ids.includes(x))[0];
+            let remove_ids = selected_asset_ids.filter(x => !asset_ids.includes(x));
 
-            $.each(selected_assets, function(index, asset) {
-                if (asset.id == remove_id) {
-                    selected_assets.splice(index, 1);
-                    return false;
-                }
+            let selected_assets_itr = [...selected_assets];
+            selected_assets = [];
+            $.each(selected_assets_itr, function(index, asset) {
+                if (!remove_ids.includes(asset.id))
+                    selected_assets.push(asset);
             });
-
+            
         } else if (asset_ids.length > selected_asset_ids.length) {
             let assets = $(`${form_id} [name='RA_ASSETS[][RA_ASSET_ID]'] option:selected`);
 

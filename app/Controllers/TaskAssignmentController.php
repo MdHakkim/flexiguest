@@ -401,7 +401,7 @@ class TaskAssignmentController extends BaseController
     public function viewTaskAssignedRooms(){
         $UserID = session()->get('USR_ID');
         $mine   = new  TaskAssignmentDataTable();
-        $tableName = "(SELECT HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,MAX(HKATD_COMPLETION_TIME) as HKATD_COMPLETION_TIME,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME) AS INSPECTED_NAME,MAX(HKATD_INSPECTED_DATETIME) as HKATD_INSPECTED_DATETIME  FROM FLXY_HK_TASK_ASSIGNED_ROOMS INNER JOIN FLXY_ROOM ON RM_ID = HKARM_ROOM_ID LEFT JOIN FLXY_HK_ASSIGNED_TASK_DETAILS ON HKARM_ROOM_ID = HKATD_ROOM_ID LEFT JOIN FLXY_USERS ON HKATD_INSPECTED_BY = USR_ID GROUP BY HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,HKATD_INSPECTED_DATETIME,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME)) AS OUTPUT";
+        $tableName = "(SELECT HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKATD_ASSIGNED_TASK_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,MAX(HKATD_COMPLETION_TIME) as HKATD_COMPLETION_TIME,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME) AS INSPECTED_NAME,MAX(HKATD_INSPECTED_DATETIME) as HKATD_INSPECTED_DATETIME  FROM FLXY_HK_TASK_ASSIGNED_ROOMS INNER JOIN FLXY_ROOM ON RM_ID = HKARM_ROOM_ID LEFT JOIN FLXY_HK_ASSIGNED_TASK_DETAILS ON HKARM_ROOM_ID = HKATD_ROOM_ID LEFT JOIN FLXY_USERS ON HKATD_INSPECTED_BY = USR_ID GROUP BY HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKATD_ASSIGNED_TASK_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,HKATD_INSPECTED_DATETIME,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME)) AS OUTPUT";
         $init_cond = [];
 
         $data = $this->request->getPost();
@@ -412,7 +412,7 @@ class TaskAssignmentController extends BaseController
             $init_cond['HKARM_TASK_SHEET_ID = '] = "'".$data['HKARM_TASK_SHEET_ID']."'";
         }
 
-        $columns = "HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,HKATD_COMPLETION_TIME,INSPECTED_NAME,HKATD_INSPECTED_DATETIME";
+        $columns = "HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKATD_ASSIGNED_TASK_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,HKATD_COMPLETION_TIME,INSPECTED_NAME,HKATD_INSPECTED_DATETIME";
         $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
@@ -630,7 +630,7 @@ class TaskAssignmentController extends BaseController
 
         FROM FLXY_HK_TASKASSIGNMENT_OVERVIEW INNER JOIN FLXY_HK_ASSIGNED_TASKS ON HKAT_TASK_ID = HKTAO_ID 
                 LEFT JOIN FLXY_HK_TASKS ON HKT_ID = HKATO_TASK_CODE
-                LEFT JOIN FLXY_USERS ON HKAT_ATTENDANT_ID = USR_ID";
+                LEFT JOIN FLXY_USERS ON HKAT_ATTENDANT_ID = USR_ID WHERE HKAT_ID ='$task_assigned_id'";
 
         $header_response = $this->Db->query($header_sql)->getResultArray();        
 
@@ -707,8 +707,7 @@ class TaskAssignmentController extends BaseController
       
 
        
-        $data['CONTENT'] = $TABLE_CONTENTS; 
-        
+        $data['CONTENT'] = $TABLE_CONTENTS;         
         $dompdf->loadHtml(view('TaskAssignment/TaskSheet',$data));
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();           
@@ -717,6 +716,19 @@ class TaskAssignmentController extends BaseController
         
         $dompdf->stream("TaskSheet_".$data['HKAT_TASK_SHEET_ID']."_".$data['HKTAO_TASK_DATE'].".pdf", array("Attachment" => 0));
        
+    }
+
+
+    public function getTaskComments(){   
+        $comments  = null; 
+        $HKAT_TASK_ASSIGNED_ID  = $this->request->getPost('HKAT_TASK_ASSIGNED_ID');
+        $HKAT_ROOM_ID           = $this->request->getPost('HKAT_ROOM_ID');  
+
+        $sql = "SELECT ATN_NOTE,ATN_CREATED_AT,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME) AS USER_NAME
+        FROM FLXY_HK_ASSIGNED_TASK_NOTES LEFT JOIN FLXY_USERS ON ATN_USER_ID = USR_ID WHERE ATN_ASSIGNED_TASK_ID ='$HKAT_TASK_ASSIGNED_ID' AND ATN_ROOM_ID = '$HKAT_ROOM_ID'";
+        
+        $comments = $this->Db->query($sql)->getResultArray();
+        return $this->respond(responseJson(200, false, ['msg' => 'comments'], $comments));
     }
 
 }

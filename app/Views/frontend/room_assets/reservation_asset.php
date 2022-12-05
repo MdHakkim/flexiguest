@@ -58,7 +58,7 @@
                                 <span class="room-no"></span>
                             </div>
 
-                            <div class="col-md-12 assets">
+                            <div class="col-md-12 assets table-responsive">
                                 <h5>Selected Assets</h5>
 
                                 <table class="table">
@@ -67,6 +67,7 @@
                                             <th scope="col">#</th>
                                             <th scope="col">Asset</th>
                                             <th scope="col">Quantity</th>
+                                            <th scope="col">Verified Quantity</th>
                                             <th scope="col">Remarks</th>
                                             <th scope="col">Tracking Remarks</th>
                                             <th scope="col">Status</th>
@@ -242,9 +243,9 @@
 
         });
 
-        $("#dataTable_view_wrapper .row:first").before(
-            '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>'
-        );
+        // $("#dataTable_view_wrapper .row:first").before(
+        //     '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>'
+        // );
     });
 
     // Show Add Rate Class Form
@@ -317,6 +318,7 @@
                     <th scope="row">${index+1}</th>
                     <td>${item.asset}</td>
                     <td>${item.quantity}</td>
+                    <td>${item.verified_quantity}</td>
                     <td>${item.remarks || ''}</td>
                     <td>${item.tracking_remarks || ''}</td>
                     <td>${item.status}</td>

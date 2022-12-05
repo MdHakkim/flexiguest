@@ -307,7 +307,7 @@
                     return '';
                 }
             }, {
-                targets: 11,
+                targets: 13,
                 responsivePriority: 1,
             }],
             autowidth: true,
