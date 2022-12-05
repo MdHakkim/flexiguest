@@ -58,7 +58,7 @@
                                 <span class="room-no"></span>
                             </div>
 
-                            <div class="col-md-12 assets">
+                            <div class="col-md-12 assets table-responsive">
                                 <h5>Selected Assets</h5>
 
                                 <table class="table">
