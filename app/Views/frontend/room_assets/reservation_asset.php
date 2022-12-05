@@ -67,6 +67,7 @@
                                             <th scope="col">#</th>
                                             <th scope="col">Asset</th>
                                             <th scope="col">Quantity</th>
+                                            <th scope="col">Verified Quantity</th>
                                             <th scope="col">Remarks</th>
                                             <th scope="col">Tracking Remarks</th>
                                             <th scope="col">Status</th>
@@ -317,6 +318,7 @@
                     <th scope="row">${index+1}</th>
                     <td>${item.asset}</td>
                     <td>${item.quantity}</td>
+                    <td>${item.verified_quantity}</td>
                     <td>${item.remarks || ''}</td>
                     <td>${item.tracking_remarks || ''}</td>
                     <td>${item.status}</td>

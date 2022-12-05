@@ -96,6 +96,7 @@ class ReservationAssetDataTable
                         'id' => $asset['RRA_ID'],
                         'asset' => $asset['AS_ASSET'],
                         'quantity' => $asset['RRA_QUANTITY'],
+                        'verified_quantity' => $asset['RRA_VERIFIED_QUANTITY'],
                         'status' => $asset['RRA_STATUS'],
                         'remarks' => $asset['RRA_REMARKS'],
                         'tracking_remarks' => $asset['RRA_TRACKING_REMARKS'],

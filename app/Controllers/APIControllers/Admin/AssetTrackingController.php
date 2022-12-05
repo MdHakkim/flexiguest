@@ -47,7 +47,7 @@ class AssetTrackingController extends BaseController
         $rooms_list = [];
         foreach ($rooms as $index => $room) {
             $assets = $this->ReservationRoomAsset
-                ->select("RRA_ID, RRA_QUANTITY, RRA_STATUS, RRA_TRACKING_REMARKS, AS_ASSET, AS_PRICE,
+                ->select("RRA_ID, RRA_QUANTITY, RRA_VERIFIED_QUANTITY, RRA_STATUS, RRA_TRACKING_REMARKS, AS_ASSET, AS_PRICE,
                 case when RRA_STATUS = 'Verified' then 1 else 0 end as IS_VERIFIED")
                 ->join('FLXY_ASSETS', 'RRA_ASSET_ID = AS_ID', 'left')
                 ->where('RRA_RESERVATION_ID', $room['RESV_ID'])
@@ -81,6 +81,7 @@ class AssetTrackingController extends BaseController
             $data = [
                 'RRA_ID' => $asset->RRA_ID,
                 'RRA_TRACKING_REMARKS' => $asset->RRA_TRACKING_REMARKS,
+                'RRA_VERIFIED_QUANTITY' => $asset->RRA_VERIFIED_QUANTITY,
                 'RRA_STATUS' => $status,
             ];
 
