@@ -580,49 +580,66 @@ class HousekeepingController extends BaseController
     {
         $room_status_list = $this->Db->table('FLXY_ROOM_STATUS_MASTER')->select('RM_STATUS_ID,RM_STATUS_CODE,RM_STATUS_COLOR_CLASS')->get()->getResultArray();
 
-        $checkForDate = null !== $this->request->getPost('search_date') ? $this->request->getPost('search_date') : date('Y-m-d');
+        $checkForDates = null !== $this->request->getPost('search_dates') ? json_decode($this->request->getPost('search_dates'), true) : [date('Y-m-d')];
         $for_graph = null !== $this->request->getPost('for_graph') ? $this->request->getPost('for_graph') : '';
+        $for_select = null !== $this->request->getPost('for_select') ? $this->request->getPost('for_select') : ''; // Get Total level of Rooms in dropdown
+
+        $room_types = null !== $this->request->getPost('room_types') ? $this->request->getPost('room_types') : [];
+        $room_type_cond = !empty($room_types) ? " AND RM_TYPE_REF_ID IN (" . implode(",", $room_types) . ")" : "";
+        $room_class_cond = null !== $this->request->getPost('room_class') ? " AND RM_CLASS = '" . $this->request->getPost('room_class') . "'" : "";
 
         $selectRoomCounts = [];
 
         //Get Totals for all Room Statuses
         $selectRoomCounts[] = "COUNT(*) AS HKRooms";
         foreach ($room_status_list as $room_status) {
+            if ($room_status['RM_STATUS_ID'] != '5' && $for_select) continue;
             $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RM_STATUS_ID, 2) = " . $room_status['RM_STATUS_ID'] . " THEN 1 ELSE 0 END) AS TotRooms" . $room_status['RM_STATUS_ID'] . "";
         }
 
         //Get Detailed Totals for all Room Statuses - Not Reserved
         foreach ($room_status_list as $room_status) {
-            if ($room_status['RM_STATUS_ID'] == '5') continue;
+            if ($room_status['RM_STATUS_ID'] == '5' || $for_select) continue;
             $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RM_STATUS_ID, 2) = " . $room_status['RM_STATUS_ID'] . " AND ISNULL(RVN.RESV_STATUS, 'Not Reserved') = 'Not Reserved' THEN 1 ELSE 0 END) AS NRTotRooms" . $room_status['RM_STATUS_ID'] . "";
         }
 
         //Get Detailed Totals for all Room Statuses - Reserved
         foreach ($room_status_list as $room_status) {
-            if ($room_status['RM_STATUS_ID'] == '5') continue;
+            if ($room_status['RM_STATUS_ID'] == '5' || $for_select) continue;
             $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RM_STATUS_ID, 2) = " . $room_status['RM_STATUS_ID'] . " AND ISNULL(RVN.RESV_STATUS, 'Not Reserved') != 'Not Reserved' THEN 1 ELSE 0 END) AS RTotRooms" . $room_status['RM_STATUS_ID'] . "";
         }
 
         if ($for_graph) {
             $selectRoomCounts = [];
-            $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RVN.RESV_STATUS, 'Not Reserved') != 'Not Reserved' AND RSTYP.RESV_TY_DEDUCT_INV = '1' THEN 1 ELSE 0 END) AS RTotRoomsDeduct";
-            $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RVN.RESV_STATUS, 'Not Reserved') != 'Not Reserved' AND RSTYP.RESV_TY_DEDUCT_INV = '0' THEN 1 ELSE 0 END) AS RTotRoomsNonDeduct";
+            $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RVN.RESV_STATUS, 'Not Reserved') != 'Not Reserved' AND RSTYP.RESV_TY_DEDUCT_INV = '1' $room_class_cond $room_type_cond THEN 1 ELSE 0 END) AS RTotRoomsDeduct";
+            $selectRoomCounts[] = "SUM(CASE WHEN ISNULL(RVN.RESV_STATUS, 'Not Reserved') != 'Not Reserved' AND RSTYP.RESV_TY_DEDUCT_INV = '0' $room_class_cond $room_type_cond THEN 1 ELSE 0 END) AS RTotRoomsNonDeduct";
         }
 
-        $sql = "SELECT " . implode(',', $selectRoomCounts) . "
-                FROM FLXY_ROOM RM
-                LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
-                            FROM FLXY_ROOM_STATUS_LOG
-                            GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
-                LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                
-                LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
-                LEFT JOIN ( SELECT MAX(RESV_ID) AS RESV_MAX_ID, RESV_ROOM_ID AS RESV_ROOM
-                            FROM FLXY_RESERVATION
-                            WHERE '" . $checkForDate . "' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE
-                            AND RESV_STATUS NOT IN ('Cancelled')
-                            GROUP BY RESV_ROOM_ID ) RESV ON RESV.RESV_ROOM = RM.RM_ID
-                LEFT JOIN FLXY_RESERVATION RVN ON RVN.RESV_ID = RESV.RESV_MAX_ID
-                LEFT JOIN FLXY_RESERVATION_TYPE RSTYP ON RSTYP.RESV_TY_ID = RVN.RESV_RESRV_TYPE";
+        $sql = "";
+        $i = 0;
+        $noOfDates = count($checkForDates);
+        foreach ($checkForDates as $checkForDate) {
+
+            $sql .= "SELECT " . implode(',', $selectRoomCounts) . "
+                    FROM FLXY_ROOM RM
+                    LEFT JOIN ( SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
+                                FROM FLXY_ROOM_STATUS_LOG
+                                GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG ON RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
+                    LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                
+                    LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
+                    LEFT JOIN ( SELECT MAX(RESV_ID) AS RESV_MAX_ID, RESV_ROOM_ID AS RESV_ROOM
+                                FROM FLXY_RESERVATION
+                                WHERE '" . $checkForDate . "' BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE
+                                AND RESV_STATUS NOT IN ('Cancelled')
+                                GROUP BY RESV_ROOM_ID ) RESV ON RESV.RESV_ROOM = RM.RM_ID
+                    LEFT JOIN FLXY_RESERVATION RVN ON RVN.RESV_ID = RESV.RESV_MAX_ID
+                    LEFT JOIN FLXY_RESERVATION_TYPE RSTYP ON RSTYP.RESV_TY_ID = RVN.RESV_RESRV_TYPE";
+
+            $i++;
+
+            if ($i < $noOfDates)
+                $sql .= " UNION ALL ";
+        }
 
         $response = $this->Db->query($sql)->getResultArray();
 

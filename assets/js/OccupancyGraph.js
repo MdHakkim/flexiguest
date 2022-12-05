@@ -192,7 +192,8 @@
         options.xaxis.labels.style.colors = x_colors;
         options.yaxis[0].max = parseInt($('#S_GRAPH_MAX').val());
         options.grid.yaxis.lines.show = $('#S_GRID_LINES').is(':checked');
-        options.chart.stackType = $('#S_PERCENT').is(':checked') ? '100%' : 'normal';
+        //options.chart.stackType = $('#S_PERCENT').is(':checked') ? '100%' : 'normal';
+        options.chart.stackType = 'normal';
 
         options.xaxis.labels.rotateAlways = $('#S_NO_OF').val() == '16' ? true : false;
         options.xaxis.labels.rotate = $('#S_NO_OF').val() == '16' ? -45 : 0;
@@ -299,7 +300,14 @@ function getFutureDate(start, ahead, type) {
 
     var dateStr = type == 'dates' ? d.toLocaleString('default', { // Set Format - 01 Jan '23
         dateStyle: 'medium'
-    }) : (type == 'colors' ? (dayOfWeek == 0 || dayOfWeek == 6 ? '#5a8dee' : '#677788') : ''); // Set Weekend Color
+    }) : (type == 'colors' ? (dayOfWeek == 0 || dayOfWeek == 6 ? '#5a8dee' : '#677788') : // Set Weekend Color
+        (type == 'search' ? d.toLocaleString('default', {
+            year: 'numeric'
+        }) + '-' + d.toLocaleString('default', {
+            month: '2-digit'
+        }) + '-' + d.toLocaleString('default', {
+            day: '2-digit'
+        }) : ''));
 
     return dateStr;
 }
@@ -309,17 +317,14 @@ function getRand(min, max) {
 }
 
 
-function getOccupiedCount(date, ahead) {
+function getOccupiedCounts(dates) {
     var occCounts = [];
-    var d = new Date(date);
-    d.setDate(d.getDate() + ahead);
 
-    var dateStr = d.toLocaleString('default', {
-        year: 'numeric'
-    }) + '-' + d.toLocaleString('default', {
-        month: '2-digit'
-    }) + '-' + d.toLocaleString('default', {
-        day: '2-digit'
+    // Get selected Room Types
+    var selectedRoomTypes = $('#S_RM_TYPES').find(":selected");
+    var room_types = [];
+    selectedRoomTypes.each(function (i, item) {
+        room_types.push(item.getAttribute('data-room-type-id'));
     });
 
     $.ajax({
@@ -330,14 +335,25 @@ function getOccupiedCount(date, ahead) {
             'X-Requested-With': 'XMLHttpRequest'
         },
         data: {
-            search_date: dateStr,
-            for_graph: '1'
+            search_dates: JSON.stringify(dates),
+            for_graph: '1',
+            room_class: $('#S_RM_CLASS').find(":selected").data('rmclass-id'),
+            room_types: room_types
         },
         dataType: 'json',
     }).done(function (respn) {
         var rmCountData = respn[0];
-        occCounts['Deduct'] = parseInt(rmCountData[0]['RTotRoomsDeduct']);
-        occCounts['NonDeduct'] = parseInt(rmCountData[0]['RTotRoomsNonDeduct']);
+
+        var ded = [],
+            nded = [];
+
+        $(rmCountData).each(function (inx, data) {
+            ded.push(parseInt(data['RTotRoomsDeduct']));
+            nded.push(parseInt(data['RTotRoomsNonDeduct']));
+        });
+
+        occCounts['Deduct'] = ded;
+        occCounts['NonDeduct'] = nded;
         //alert('here_2' + occCount);        
     });
 
@@ -353,30 +369,29 @@ function getChartValues() {
     var freq = searchVals['freq'] * time_period;
 
     var ded = [],
-        nded = [];
+        nded = [],
+        graphDates = [];
 
     var i = 0;
     while (i < no_of) {
-        var counts = getOccupiedCount(startDate, i);
-        ded.push(counts['Deduct']);
-        nded.push(counts['NonDeduct']);
+        graphDates.push(getFutureDate(startDate, i, 'search'));
         i = i + freq;
         //console.log('Ded Rooms at ' + startDate + ' + ' + i + ' days', getOccupiedCount(startDate, i, '1'));
     }
 
     if (i >= no_of && freq > 1) { // Show last date data
-        counts = getOccupiedCount(startDate, i);
-        ded.push(counts['Deduct']);
-        nded.push(counts['NonDeduct']);
+        graphDates.push(getFutureDate(startDate, i, 'search'));
     }
+
+    var counts = getOccupiedCounts(graphDates);
 
     return [{
             name: 'Deduct',
-            data: ded
+            data: counts['Deduct']
         },
         {
             name: 'Non Deduct',
-            data: nded
+            data: counts['NonDeduct']
         }
     ];
 }

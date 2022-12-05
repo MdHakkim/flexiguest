@@ -181,6 +181,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <?php /* ?>
                                         <div class="col-md">
                                             <div class="sk-wave sk-primary">
                                                 <div class="sk-wave-rect"></div>
@@ -203,11 +204,12 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <?php */ ?>
                                     </div>
 
                                     <div class="row mt-4 mb-3">
                                         <label
-                                            class="col-form-label col-md-6 d-flex justify-content-lg-end justify-content-sm-start"><b>Max
+                                            class="col-form-label col-md-6 d-flex justify-content-lg-start justify-content-sm-start"><b>Max
                                                 Level of Rooms:</b></label>
                                         <div class="col-md-5">
                                             <div class="sk-wave sk-primary">
@@ -323,6 +325,9 @@ $(document).ready(function() {
         type: "post",
         headers: {
             'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            for_select: '1'
         },
         dataType: 'json',
         async: false
