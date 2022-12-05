@@ -436,15 +436,4 @@ class RestaurantController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'main screen'], $data));
     }
-
-    /** ------------------------------Cart------------------------------ */
-    public function addToCart()
-    {
-        $user = $this->request->user;
-
-        $data = json_decode(json_encode($this->request->getVar()), true);
-
-        $result = $this->RestaurantRepository->addToCart($user, $data);
-        return $this->respond($result);
-    }
 }

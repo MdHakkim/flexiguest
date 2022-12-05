@@ -8,7 +8,6 @@ use App\Models\MealType;
 use App\Models\MenuCategory;
 use App\Models\MenuItem;
 use App\Models\Restaurant;
-use App\Models\RestaurantCart;
 use App\Models\RestaurantOrder;
 use App\Models\RestaurantOrderDetail;
 use CodeIgniter\API\ResponseTrait;
@@ -23,7 +22,6 @@ class RestaurantRepository extends BaseController
     private $MealType;
     private $RestaurantOrder;
     private $RestaurantOrderDetail;
-    private $RestaurantCart;
 
     public function __construct()
     {
@@ -33,7 +31,6 @@ class RestaurantRepository extends BaseController
         $this->MealType = new MealType();
         $this->RestaurantOrder = new RestaurantOrder();
         $this->RestaurantOrderDetail = new RestaurantOrderDetail();
-        $this->RestaurantCart = new RestaurantCart();
     }
 
     /** ------------------------------Restaurant------------------------------ */
