@@ -508,6 +508,13 @@
         });
     });
 
+    function loadNewHtml(selector, html) {
+        let value = $(selector).val();
+        $(selector).html(html);
+        $(selector).val(value);
+        $(selector).trigger('change');
+    }
+
     $(`${form_id} [name='RO_DEPARTMENT_ID']`).change(function() {
         let department_id = $(this).val();
 
@@ -560,14 +567,12 @@
                         `;
                         }
 
-                        $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).html(html);
-                        $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).trigger('change');
+                        loadNewHtml(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`, html);
                     }
                 }
             });
         } else {
-            $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).html('');
-            $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).trigger('change');
+            $(`${form_id} select[name='RO_MENU_CATEGORY_IDS[]']`).html('').trigger('change');
         }
 
     });
@@ -576,7 +581,7 @@
         let category_ids = $(`${form_id} [name='RO_MENU_CATEGORY_IDS[]']`).val();
         let meal_type_ids = $(`${form_id} [name='RO_MEAL_TYPE_IDS[]']`).val();
 
-        if (category_ids.length) {
+        if (category_ids.length)
             $.ajax({
                 url: '<?= base_url('restaurant/get-menu-items') ?>',
                 type: "post",
@@ -596,13 +601,14 @@
                         `;
                         }
 
-                        $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).html(html).trigger('change');
+                        loadNewHtml(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`, html);
                     }
                 }
             });
-        } else {
+        else
             $(`${form_id} select[name="RO_ITEMS[][MI_ID]"]`).html('').trigger('change');
-        }
+
+        calculateTotalPayable();
     });
 
     function calculateTotalPayable() {
@@ -622,19 +628,19 @@
         if (ids.length == 0) {
             selected_item_ids = [];
             selected_items = [];
-            
+
             hideSelectedItems();
             return;
         }
 
         if (ids.length < selected_item_ids.length) {
-            let remove_id = selected_item_ids.filter(x => !ids.includes(x))[0];
+            let remove_ids = selected_item_ids.filter(x => !ids.includes(x));
 
-            $.each(selected_items, function(index, item) {
-                if (item.id == remove_id) {
-                    selected_items.splice(index, 1);
-                    return false;
-                }
+            let selected_items_itr = [...selected_items];
+            selected_items = [];
+            $.each(selected_items_itr, function(index, item) {
+                if (!remove_ids.includes(item.id))
+                    selected_items.push(item);
             });
 
         } else {
