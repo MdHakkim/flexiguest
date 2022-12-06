@@ -79,6 +79,7 @@ class AssetTrackingController extends BaseController
             if ($asset['RRA_VERIFIED_QUANTITY'] < 0 || $asset['RRA_VERIFIED_QUANTITY'] > $reservation_asset['RRA_QUANTITY'])
                 return $this->respond(responseJson(202, true, ['msg' => 'Verified quantity can not be less than 0 and greater than actual quantity.']));
 
+            $assets[$index]['IS_VERIFIED'] = 1;
             if ($asset['RRA_VERIFIED_QUANTITY'] < $reservation_asset['RRA_QUANTITY'])
                 $assets[$index]['IS_VERIFIED'] = 0;
         }
