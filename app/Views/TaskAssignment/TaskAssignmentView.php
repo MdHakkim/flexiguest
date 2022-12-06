@@ -258,7 +258,7 @@
 
                                     <div class="row g-3 ">
                                         <div class="col-md-3 mb-3">
-                                            <div class="col-md-8 float-right">
+                                            <div class="col-md-8 ">
                                                 <button type="button" class="btn btn-success save-tasksheet-detail">
                                                     <i class="fa-solid fa-floppy-disk"></i>&nbsp; Add
                                                 </button>&nbsp;
@@ -463,7 +463,7 @@
 
 						<div class="row g-3 ">
 							<div class="col-md-3 mb-3">
-								<div class="col-md-8 float-right">
+								<div class="col-md-8">
 									<button type="button" class="btn btn-success save-taskroom-detail">
 										<i class="fa-solid fa-floppy-disk"></i>&nbsp; Add
 									</button>&nbsp;
