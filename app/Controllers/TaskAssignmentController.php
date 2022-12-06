@@ -477,7 +477,7 @@ class TaskAssignmentController extends BaseController
 
 
             //// get Task Assigned id 
-            $cond = "HKAT_TASK_SHEET_ID = '".trim($HKARM_TASK_SHEET_ID)."' AND HKAT_TASK_ID = ".trim($HKAT_TASK_ID)."'";
+            $cond = "HKAT_TASK_SHEET_ID = '".trim($HKARM_TASK_SHEET_ID)."' AND HKAT_TASK_ID = '".trim($HKAT_TASK_ID)."'";
             $HKATD_ASSIGNED_TASK_ID = getValueFromTable('HKAT_ID',$cond,'FLXY_HK_ASSIGNED_TASKS');
 
             $sql = "SELECT HKST_ID
