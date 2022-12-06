@@ -73,7 +73,7 @@ class AssetTrackingController extends BaseController
         $assets = $this->request->getVar('assets');
 
         foreach ($assets as $asset) {
-            $reservation_asset = $this->ReservationRoomAsset->where('RRA_ID', $asset->RRA_ID)->find();
+            $reservation_asset = $this->ReservationRoomAsset->where('RRA_ID', $asset->RRA_ID)->first();
             if(empty($reservation_asset))
                 return $this->respond(responseJson(202, true, ['msg' => 'Invalid request.']));
 
