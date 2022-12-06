@@ -3,6 +3,7 @@
 namespace App\Controllers\APIControllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Controllers\Repositories\RoomRepository;
 use App\Models\HKAssignedTask;
 use App\Models\HKAssignedTaskDetail;
 use App\Models\HKAssignedTaskDetailNote;
@@ -25,6 +26,7 @@ class HouseKeepingController extends BaseController
     private $HKAssignedTaskNoteAttachment;
     private $HKAssignedTaskDetail;
     private $HKAssignedTaskDetailNote;
+    private $RoomRepository;
 
     public function __construct()
     {
@@ -36,6 +38,7 @@ class HouseKeepingController extends BaseController
         $this->HKAssignedTaskNoteAttachment = new HKAssignedTaskNoteAttachment();
         $this->HKAssignedTaskDetail = new HKAssignedTaskDetail();
         $this->HKAssignedTaskDetailNote = new HKAssignedTaskDetailNote();
+        $this->RoomRepository = new RoomRepository();
     }
 
     public function allTasks()
@@ -159,7 +162,10 @@ class HouseKeepingController extends BaseController
             if (empty($sub_task))
                 return $this->respond(responseJson(404, true, ['msg' => 'No Task found.']));
 
-            if(empty($sub_task['HKATD_START_TIME']))
+            $assigned_task_id = $sub_task['HKATD_ASSIGNED_TASK_ID'];
+            $room_id = $sub_task['HKATD_ROOM_ID'];
+
+            if (empty($sub_task['HKATD_START_TIME']))
                 return $this->respond(responseJson(202, true, ['msg' => 'In order to begin the task, please click on the start button.']));
 
             if (in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_STATUS_ID'] == '1') // (admin || supervisor) && In Progress
@@ -180,6 +186,10 @@ class HouseKeepingController extends BaseController
         }
 
         $this->HKAssignedTaskDetail->whereIn('HKATD_ID', $subtask_ids)->set($data)->update();
+
+        if (isset($assigned_task_id) && isset($room_id)) {
+            $this->checkTasksCompleted($user, $assigned_task_id, $room_id);
+        }
 
         return $this->respond(responseJson(200, false, ['msg' => 'Completed successfully.']));
     }
@@ -255,8 +265,11 @@ class HouseKeepingController extends BaseController
         if (empty($subtask))
             return $this->respond(responseJson(404, true, ['msg' => 'No Subtask found.']));
 
-        if(empty($subtask['HKATD_START_TIME']))
+        if (empty($subtask['HKATD_START_TIME']))
             return $this->respond(responseJson(202, true, ['msg' => 'In order to begin the task, please click on the start button.']));
+
+        $assigned_task_id = $subtask['HKATD_ASSIGNED_TASK_ID'];
+        $room_id = $subtask['HKATD_ROOM_ID'];
 
         $this->HKAssignedTaskDetailNote->insert($data);
 
@@ -266,6 +279,8 @@ class HouseKeepingController extends BaseController
                 $subtask['HKATD_STATUS_ID'] = 3;
             else
                 $subtask['HKATD_STATUS_ID'] = 4; // skipped
+
+            $this->checkTasksCompleted($user, $assigned_task_id, $room_id);
         } else {
             if ($subtask['HKATD_STATUS_ID'] == '1')
                 return $this->respond(responseJson(202, true, ['msg' => 'This task is not completed yet.']));
@@ -274,14 +289,43 @@ class HouseKeepingController extends BaseController
 
                 $subtask['HKATD_INSPECTED_STATUS_ID'] = '6';
                 $subtask['HKATD_INSPECTED_DATETIME'] = date('Y-m-d H:i:s');
+
+                $this->checkTasksCompleted($user, $assigned_task_id, $room_id);
             } else {
                 $subtask['HKATD_INSPECTED_STATUS_ID'] = '7';
                 $subtask['HKATD_STATUS_ID'] = '1';
                 $subtask['HKATD_COMPLETION_TIME'] = null;
+
+                $this->RoomRepository->updateRoomStatus($user, $room_id, 2);
             }
         }
         $this->HKAssignedTaskDetail->save($subtask);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Note submitted successfully.']));
+    }
+
+    public function checkTasksCompleted($user, $assigned_task_id, $room_id)
+    {
+        if ($user['USR_ROLE_ID'] == '3') {
+            $pending_tasks = $this->HKAssignedTaskDetail
+                ->where('HKATD_ASSIGNED_TASK_ID', $assigned_task_id)
+                ->where('HKATD_ROOM_ID', $room_id)
+                ->where('HKATD_STATUS_ID', 1)
+                ->findAll();
+
+            if (empty($pending_tasks))
+                $this->RoomRepository->updateRoomStatus($user, $room_id, 1);
+        } else {
+            $pending_tasks = $this->HKAssignedTaskDetail
+                ->where("HKATD_ASSIGNED_TASK_ID = $assigned_task_id 
+                    AND HKATD_ROOM_ID = $room_id 
+                    AND (HKATD_INSPECTED_STATUS_ID = 5 OR HKATD_INSPECTED_STATUS_ID = 7)" )
+                ->findAll();
+
+            if (empty($pending_tasks))
+                $this->RoomRepository->updateRoomStatus($user, $room_id, 3);
+        }
+
+        return true;
     }
 }
