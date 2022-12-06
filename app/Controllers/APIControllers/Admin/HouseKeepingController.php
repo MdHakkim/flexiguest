@@ -44,9 +44,11 @@ class HouseKeepingController extends BaseController
         $user_id = $user['USR_ID'];
         $user_role_id = $user['USR_ROLE_ID'];
 
-        $where_condition = '1 = 1';
+        $today = date('Y-m-d');
+
+        $where_condition = "1 = 1 AND HKTAO_TASK_DATE = $today";
         if ($user_role_id == '3')
-            $where_condition = "HKAT_ATTENDANT_ID = $user_id";
+            $where_condition .= " HKAT_ATTENDANT_ID = $user_id";
 
         $all_tasks = $this->HKAssignedTask
             ->select(
