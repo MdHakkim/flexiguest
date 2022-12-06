@@ -46,7 +46,7 @@ class HouseKeepingController extends BaseController
 
         $today = date('Y-m-d');
 
-        $where_condition = "1 = 1 AND HKTAO_TASK_DATE = $today";
+        $where_condition = "1 = 1 AND HKTAO_TASK_DATE = '$today'";
         if ($user_role_id == '3')
             $where_condition .= " AND HKAT_ATTENDANT_ID = $user_id";
 
