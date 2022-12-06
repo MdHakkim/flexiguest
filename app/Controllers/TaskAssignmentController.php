@@ -498,13 +498,11 @@ class TaskAssignmentController extends BaseController
 
                 }
             }
-
             
             $return = !empty($sysid) ? $this->Db->table('FLXY_HK_TASK_ASSIGNED_ROOMS')->where('HKARM_ID', $sysid)->update($data) : $this->Db->table('FLXY_HK_TASK_ASSIGNED_ROOMS')->insert($data);
 
             $this->totalCredits($HKAT_TASK_ID);
             $this->totalRooms($HKAT_TASK_ID);
-
 
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
             echo json_encode($result);
@@ -520,16 +518,11 @@ class TaskAssignmentController extends BaseController
         $taskroom_id = $this->request->getPost('HKARM_ID');
         $task_id = $this->request->getPost('HKAT_TASK_ID');
 
-        
-
         try {
-
-       
                 $return = $this->Db->table('FLXY_HK_TASK_ASSIGNED_ROOMS')->delete(['HKARM_ID' => $taskroom_id]);             
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-402", "Record not deleted");
                 $this->totalCredits($task_id);
-
-            echo json_encode($result);
+                echo json_encode($result);
         } catch (\Exception $e) {
             return $e->getMessage();
         }
@@ -689,7 +682,7 @@ class TaskAssignmentController extends BaseController
                 $DEFAULT_PAGE_BREAK = '<tr></tr><div style="margin-top:220px;margin-bottom:5px; page-break-after:always"></div></tr>';
             
                 $TABLE_CONTENTS.= '<tr >
-                <th width="15%;" style="text-align:center" class="text-center">'.$row['RM_NO'].'</td>
+                <th width="14%;" style="text-align:center" class="text-center">'.$row['RM_NO'].'</td>
                 <th width="10%;" style="text-align:center" class="text-center">'.$row['RM_TYPE'].'</td>
                 <th width="15%;" style="text-align:center" class="text-center">'.$row['RM_STATUS_CODE'].'</td>
                 <th width="10%;" style="text-align:center" class="text-center">'.$row['FO_STATUS'].'</td>

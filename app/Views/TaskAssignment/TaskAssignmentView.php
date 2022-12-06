@@ -19,6 +19,14 @@
 		opacity: 0.5;
         background: rgb(147 158 170 / 45%);
 	}
+	 td.word-wrap{
+		white-space: break-spaces;
+    	word-break: break-all;
+	}
+	.float-right{
+		float:right;
+	}
+
 </style>
 
 <!-- Content wrapper -->
@@ -283,8 +291,8 @@
                                     </div>
                                 </div>
                                 
-                                    <button type="button" class="btn btn-secondary "
-                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-secondary float-right"
+                                        data-bs-dismiss="modal" >Close</button>
                            
                                 </form>
                                 </div>
@@ -1108,7 +1116,8 @@
                 }
             },
             {
-                data: 'HKAT_INSTRUCTIONS'
+                data: 'HKAT_INSTRUCTIONS',
+				
             },
 			{
                 data: 'COMPLETION_TIME',
@@ -1127,6 +1136,15 @@
            
 
         ],
+		columnDefs: [
+
+			{
+				data: 'HKAT_INSTRUCTIONS',
+				width: "10%",
+				targets: 6,
+				class:'word-wrap'
+				},
+		],
         "order": [
             [0, "asc"]
         ],
@@ -1488,6 +1506,7 @@
 			
 			{
 				data: 'HKARM_INSTRUCTIONS'
+				
 			},
 			
 
@@ -1507,6 +1526,13 @@
 		
 
 		],
+		columnDefs: [
+				{
+				data: 'HKARM_INSTRUCTIONS',
+				width: "10%",
+				class:'word-wrap',
+				targets:3,
+				}],
 		"order": [
 			[0, "asc"]
 		],
@@ -1765,6 +1791,12 @@
 			
 		],
 		columnDefs: [
+				{
+				data: 'HKARM_INSTRUCTIONS',
+				width: "10%",
+				class:'word-wrap',
+				targets:3,
+				},
                 {
 					data: 'HKATD_COMPLETION_TIME',
                     width: "10%",
@@ -1816,7 +1848,6 @@
 		destroy: true,
 		"ordering": true,
 		"searching": false,
-		autowidth: true,
 		responsive: true
 		});
 	});
@@ -1862,20 +1893,20 @@ $(document).on('click', '.view_comments', function() {
 		dataType: 'json',
 		success: function(response) {
                 if (response['SUCCESS'] == 200) {
-                    let comments = response['RESPONSE']['OUTPUT'];
-                    
+                    let comments = response['RESPONSE']['OUTPUT'];                    
                     let html = '';
-                    for (let comment of comments) {
-                        html += `
-                            <b>${comment.USER_NAME} (${comment.ATN_CREATED_AT})</b></br>
-                            <span class="">${comment.ATN_NOTE}</span></br>
-                        `;
-                    }
+					if(comments.length > 0){
+						for (let comment of comments) {
+							html += `
+								<b>${comment.USER_NAME} (${comment.ATN_CREATED_AT})</b></br>
+								<span class="">${comment.ATN_NOTE}</span></br>
+							`;
+						}
+					}
 
-                    if(html)
+                    if(!html)
                         html = `<b>No Comments!</b>`;
-
-                    //$('#comment-modal .modal-title').html(`Comments of Task# ${HKAT_TASK_ASSIGNED_ID}`);
+						
                     $('#comment-modal .modal-body').html(html);
                     $('#comment-modal').modal('show');
                 }
