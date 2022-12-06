@@ -73,6 +73,15 @@ class AssetTrackingController extends BaseController
         $assets = $this->request->getVar('assets');
 
         foreach ($assets as $asset) {
+            $reservation_asset = $this->ReservationRoomAsset->where('RRA_ID', $asset->RRA_ID)->find();
+            if(empty($reservation_asset))
+                return $this->respond(responseJson(202, true, ['msg' => 'Invalid request.']));
+
+            if($asset->RRA_VERIFIED_QUANTITY < 0 || $asset->RRA_VERIFIED_QUANTITY > $reservation_asset['RRA_QUANTITY'])
+                return $this->respond(responseJson(202, true, ['msg' => 'Verified quantity can not be less than 0 and greater than actual quantity.']));
+        }
+
+        foreach ($assets as $asset) {
 
             $status = 'Discrepancy';
             if ($asset->IS_VERIFIED)
