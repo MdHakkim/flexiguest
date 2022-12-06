@@ -53,13 +53,12 @@ class AssetTrackingController extends BaseController
                 ->where('RRA_RESERVATION_ID', $room['RESV_ID'])
                 ->where('RRA_ROOM_ID', $room['ROOM_ID'])
                 ->findAll();
-            
-            if(!count($assets)) {
+
+            if (!count($assets)) {
                 unset($rooms[$index]);
-            }
-            else{
-                $rooms[$index]['RRA_STATUS'] = ($assets[0]['RRA_STATUS'] == 'Verified' || $assets[0]['RRA_STATUS'] == 'Discrepancy') 
-                                                ? 'Verified' : $assets[0]['RRA_STATUS']; 
+            } else {
+                $rooms[$index]['RRA_STATUS'] = ($assets[0]['RRA_STATUS'] == 'Verified' || $assets[0]['RRA_STATUS'] == 'Discrepancy')
+                    ? 'Verified' : $assets[0]['RRA_STATUS'];
                 $rooms[$index]['ASSETS'] = $assets;
                 $rooms_list[] = $rooms[$index];
             }
@@ -70,27 +69,29 @@ class AssetTrackingController extends BaseController
 
     public function submitForm()
     {
-        $assets = $this->request->getVar('assets');
+        $assets = json_decode(json_encode($this->request->getVar('assets')), true);
 
-        foreach ($assets as $asset) {
-            $reservation_asset = $this->ReservationRoomAsset->where('RRA_ID', $asset->RRA_ID)->first();
-            if(empty($reservation_asset))
+        foreach ($assets as $index => $asset) {
+            $reservation_asset = $this->ReservationRoomAsset->where('RRA_ID', $asset['RRA_ID'])->first();
+            if (empty($reservation_asset))
                 return $this->respond(responseJson(202, true, ['msg' => 'Invalid request.']));
 
-            if($asset->RRA_VERIFIED_QUANTITY < 0 || $asset->RRA_VERIFIED_QUANTITY > $reservation_asset['RRA_QUANTITY'])
+            if ($asset['RRA_VERIFIED_QUANTITY'] < 0 || $asset['RRA_VERIFIED_QUANTITY'] > $reservation_asset['RRA_QUANTITY'])
                 return $this->respond(responseJson(202, true, ['msg' => 'Verified quantity can not be less than 0 and greater than actual quantity.']));
+
+            if ($asset['RRA_VERIFIED_QUANTITY'] < $reservation_asset['RRA_QUANTITY'])
+                $assets[$index]['IS_VERIFIED'] = 0;
         }
 
         foreach ($assets as $asset) {
-
             $status = 'Discrepancy';
-            if ($asset->IS_VERIFIED)
+            if ($asset['IS_VERIFIED'])
                 $status = 'Verified';
 
             $data = [
-                'RRA_ID' => $asset->RRA_ID,
-                'RRA_TRACKING_REMARKS' => $asset->RRA_TRACKING_REMARKS,
-                'RRA_VERIFIED_QUANTITY' => $asset->RRA_VERIFIED_QUANTITY,
+                'RRA_ID' => $asset['RRA_ID'],
+                'RRA_TRACKING_REMARKS' => $asset['RRA_TRACKING_REMARKS'],
+                'RRA_VERIFIED_QUANTITY' => $asset['RRA_VERIFIED_QUANTITY'],
                 'RRA_STATUS' => $status,
             ];
 
