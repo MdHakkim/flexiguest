@@ -84,7 +84,7 @@
 							<th class="all">Task Codes</th>
 							<th class="all">Created By</th>							
 							<th class="all">Created On</th>							
-							<th class="all">Auto</th>
+							<!-- <th class="all">Auto</th> -->
 							<th class="all">Total Sheets</th>
 							<th class="all">Total Rooms</th>
 							
@@ -143,7 +143,7 @@
                               <span class="switch-label"><b> New Task</b></span>
                           </label>
                           </div>
-                          <div class="col-12 col-sm-6 col-lg-4">
+                          <!-- <div class="col-12 col-sm-6 col-lg-4">
                           <label class="switch switch-md">
                             <input id="HKATO_AUTO2" name="HKATO_AUTO" type="radio" 
                                 class="switch-input"  value="1"/>
@@ -157,7 +157,7 @@
                             </span>
                             <span class="switch-label"><b>Auto Task</b></span>
                         </label>
-                          </div>
+                          </div> -->
 						</div>
                     
                     </form>
@@ -601,7 +601,7 @@
 
 	var rooms = [];
 	$(document).ready(function() {
-
+		var rooms = [];
 		taskCodelist();
 		usersList();
 
@@ -724,14 +724,14 @@
 						}	
 						
 					},
-					{
-						data: 'HKATO_AUTO',
-						render: function(data, type, full, meta) {
-							var $status = full['HKATO_AUTO'];
-							return '<span class="badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';
-						}
+					// {
+					// 	data: 'HKATO_AUTO',
+					// 	render: function(data, type, full, meta) {
+					// 		var $status = full['HKATO_AUTO'];
+					// 		return '<span class="badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';
+					// 	}
 
-					},
+					// },
 					{
 						data: 'HKATO_TOTAL_SHEETS',
 						render: function(data, type, full, meta) {
@@ -1100,7 +1100,7 @@
 								for (var b in status_text)
 								{
 									var statText = status_text[b];
-									var statButton = showSuperTaskStatusChange(status_id,statText,full['HKAT_ID'],'5');
+									var statButton = showSuperTaskStatusChange(status_id,statText,full['HKAT_ID'],'5',full['COMPLETION_TIME']);
 									return statButton;
 								}
 							//}
@@ -1372,54 +1372,84 @@
 		var HKARM_ROOM_ID        = $("#HKARM_ROOM_ID").val();
 		var HKARM_CREDITS        = $("#HKARM_CREDITS").val();
 		var HKARM_INSTRUCTIONS   = $("#HKARM_INSTRUCTIONS").val();
-		console.log(rooms)
-		if(!rooms.includes(HKARM_ROOM_ID)){
-			rooms.push(HKARM_ROOM_ID);	
-		}
-		else{
-			var alertText =  '<li>Room is already assigned</li>';
-			showModalAlert('warning', alertText);
-			$("#HKARM_ROOM_ID").val(null).trigger('change');
-			$("#HKARM_CREDITS").val('');
-			$("#HKARM_INSTRUCTIONS").val('');
-			return;
-		}	
+		var TASK_DATE            = $('input[name="TASK_ASSIGNMENT_DATE"]').val();		
+
+		room_exists = checkRoomAlreadyAssigned(HKAT_TASK_ID,HKARM_ROOM_ID,TASK_DATE);
 		
-		var url = '<?php echo base_url('/insertTaskAssignmentRoom') ?>';
+		if(room_exists == null){
+			
+			var url = '<?php echo base_url('/insertTaskAssignmentRoom') ?>';
+			$.ajax({
+				url: url,
+				type: "post",
+				data: {TASK_ID:TASK_ID,HKAT_TASK_ID:HKAT_TASK_ID,HKARM_TASK_SHEET_ID:HKARM_TASK_SHEET_ID,HKARM_ROOM_ID:HKARM_ROOM_ID,HKARM_CREDITS:HKARM_CREDITS,HKARM_INSTRUCTIONS:HKARM_INSTRUCTIONS},
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest'
+				},
+				dataType: 'json',
+				success: function(respn) {
+					var response = respn['SUCCESS'];
+					if (response != '1') {
+						var ERROR = respn['RESPONSE']['ERROR'];
+						var mcontent = '';
+						$.each(ERROR, function(ind, data) {
+							mcontent += '<li>' + data + '</li>';
+						});
+						showModalAlert('error', mcontent);
+						$('#loader_flex_bg').hide();
+					} else {								
+						
+						$("#HKARM_ROOM_ID").val(null).trigger('change');
+						$("#HKARM_CREDITS").val('');
+						$("#HKARM_INSTRUCTIONS").val('');
+						var alertText =  '<li>The room has been assigned</li>';
+						showModalAlert('success', alertText);
+						$('#loader_flex_bg').hide();
+						
+						$('#Taskassignment_room_details').dataTable().fnDraw();
+						$('#Taskassignment_sheet_details').dataTable().fnDraw();
+					}
+				}
+			});
+		}
+		else return;
+
+	});
+
+
+
+	function checkRoomAlreadyAssigned(HKAT_TASK_ID,HKARM_ROOM_ID,TASK_DATE) {
 		$.ajax({
-			url: url,
-			type: "post",
-			data: {TASK_ID:TASK_ID,HKAT_TASK_ID:HKAT_TASK_ID,HKARM_TASK_SHEET_ID:HKARM_TASK_SHEET_ID,HKARM_ROOM_ID:HKARM_ROOM_ID,HKARM_CREDITS:HKARM_CREDITS,HKARM_INSTRUCTIONS:HKARM_INSTRUCTIONS},
+			url: '<?php echo base_url('/checkRoomAlreadyAssigned') ?>',
+			type: 'POST',
+			async: false,
 			headers: {
 				'X-Requested-With': 'XMLHttpRequest'
 			},
-			dataType: 'json',
-			success: function(respn) {
-				var response = respn['SUCCESS'];
-				if (response != '1') {
-					var ERROR = respn['RESPONSE']['ERROR'];
-					var mcontent = '';
-					$.each(ERROR, function(ind, data) {
-						mcontent += '<li>' + data + '</li>';
-					});
-					showModalAlert('error', mcontent);
-					$('#loader_flex_bg').hide();
-				} else {								
-					
-					$("#HKARM_ROOM_ID").val(null).trigger('change');
-					$("#HKARM_CREDITS").val('');
-					$("#HKARM_INSTRUCTIONS").val('');
-					var alertText =  '<li>The room has been assigned</li>';
-					showModalAlert('success', alertText);
-					$('#loader_flex_bg').hide();
-					
-					$('#Taskassignment_room_details').dataTable().fnDraw();
-					$('#Taskassignment_sheet_details').dataTable().fnDraw();
-				}
-			}
-		});
+			data: {
+					HKARM_ID: HKARM_ROOM_ID,
+					HKAT_TASK_ID: HKAT_TASK_ID,
+					TASK_DATE: TASK_DATE,
+				},
+			dataType: 'json'
 
-	});
+		}).done(function(response) {
+			if(response['RESPONSE']['OUTPUT'] != '' ){
+				var alertText =  '<li>Room is already assigned</li>';
+				showModalAlert('warning', alertText);
+				$("#HKARM_ROOM_ID").val(null).trigger('change');
+				$("#HKARM_CREDITS").val('');
+				$("#HKARM_INSTRUCTIONS").val('');
+				ret_val = 1;
+			}
+			else{
+				ret_val = null;
+			}
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			ret_val = null;
+		});
+		return ret_val;
+	}
 
 
 	$(document).on('click', '.delete_room_record', function() {
@@ -1552,7 +1582,7 @@
 
 	
 
-	function showSuperTaskStatusChange(curStatId, curStatName, taskId, roleId) {
+	function showSuperTaskStatusChange(curStatId, curStatName, taskId, roleId, completionTime) {
 		$status = '';
 		var $status_name = curStatName;
 		var $status_id = curStatId;
@@ -1576,7 +1606,7 @@
 		var $statButton = '<button type="button" class="btn btn-sm ' + $status[
 				$status_id]
 			.class + ' dropdown-toggle"' +
-			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="supervisor_status">' +
 			$status_name + '</button>';
 
 		if ($status_id != '1' && $status_id != '2' && $status_id != '3' && $status_id != '4') {
@@ -1593,6 +1623,7 @@
 					' data-task-new-statName="' + $status[statText].title + '"' +
 					' data-task-old-stat="' + $status_id + '"' +
 					' data-task-old-statName="' + $status_name + '"' +
+					' data-completion-time="' + completionTime + '"' +
 					' href="javascript:void(0);">' + $status[statText].title + '</a></li>';
 			});
 
@@ -1611,9 +1642,11 @@
 		var $status_id = curStatId;
 		if(roleId == 3){
 			var $status = {
-				<?php foreach ($task_status_attendant_list as $task_status) { ?> '<?= $task_status['STATUS_ID'] ?>': {
+				<?php foreach ($task_status_attendant_list as $task_status) { ?> 
+					'<?= $task_status['STATUS_ID'] ?>': {
 					class: 'btn-<?= $task_status['STATUS_COLOR_CLASS'] ?>',
-					title: '<?= $task_status['STATUS_CODE'] ?>'
+					title: '<?= $task_status['STATUS_CODE'] ?>',
+					statusId: '<?= $task_status['STATUS_ID'] ?>',
 				},
 				<?php } ?>
 			};
@@ -1623,10 +1656,11 @@
 			return $status_name;
 		}
 
-		var $statButton = '<button type="button" class="btn btn-sm ' + $status[
-				$status_id]
+		var $statButton = '<button type="button" id="task_status_id" class="btn btn-sm ' + $status[
+			$status_id]
 			.class + ' dropdown-toggle"' +
-			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" rel="'+$status[
+			$status_id].statusId+'" >' +
 			$status_name + '</button>';
 
 		if ($status_id != '4' && $status_id != '5') {
@@ -1663,11 +1697,23 @@
 		var current_statusName = $(this).attr('data-task-old-statName');
 		var new_status = $(this).attr('data-task-new-stat');
 		var new_statusName = $(this).attr('data-task-new-statName');
+		var completion_time = $(this).attr('data-completion-time');		
+
+		var task_status = $("#task_status_id").attr('rel');
+	
 
 		if(role == 3)
 			var clickedCol = $('.taskRow' + taskId).find('.taskStatusCol');
 	    if(role == 5)
-		    var clickedCol = $('.taskRow' + taskId).find('.supertaskStatusCol');
+		    var clickedCol = $('.taskRow' + taskId).find('.supertaskStatusCol');	
+			
+		if(role == 5 && (task_status == 1 || task_status == 3)){
+			showModalAlert('error',
+			`<li>The task is not completed.</li>`
+		);
+		return;
+
+		}
 
 		if (current_status == new_status) {
 			alert('The task status is already ' + current_statusName);
@@ -1694,7 +1740,8 @@
 							data: {
 								taskId: taskId,
 								role  : role,
-								new_status: new_status
+								new_status: new_status,
+								completion_time:completion_time
 							},
 							headers: {
 								'X-Requested-With': 'XMLHttpRequest'
