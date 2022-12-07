@@ -31,7 +31,7 @@ class RoomRepository extends BaseController
             'RM_STAT_ROOM_ID' => $room_id,
             'RM_STAT_ROOM_STATUS' => $status_id,
             'RM_STAT_UPDATED_BY' => $user['USR_ID'],
-            'RM_STAT_UPDATED' => date('Y-m-d')
+            'RM_STAT_UPDATED' => date('Y-m-d H:i:s')
         ]);
     }
 }
