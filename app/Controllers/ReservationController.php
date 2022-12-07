@@ -555,6 +555,8 @@ class ReservationController extends BaseController
         $response = $this->registerCardData();  
         $data['title'] = getMethodName(); 
         $data['response'] = $response['response'];
+        $data['branding_logo'] = brandingLogo();
+        
         return view('Reservation/RegisterCard',$data);
     }
 
