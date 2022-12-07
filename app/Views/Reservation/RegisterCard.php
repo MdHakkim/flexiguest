@@ -357,7 +357,9 @@ situation, which may cause you to vacate the premises</span
         </div>
       </div>
       <hr>
-      <div class="row row p-3">
+      <br/>
+      
+      <div class="row p-3">
         <div class="col-12">
           <span>
             <b>Guest Signature: </b>
