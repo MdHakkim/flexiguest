@@ -206,14 +206,12 @@ class TransportRequestRepository extends BaseController
         $transport_request['transaction_id'] = $transaction_id;
 
         $view = 'Templates/transport_request_invoice_template';
-        $data = $transport_request;
-
         if (empty($transaction_id))
             $file_name = "assets/invoices/transport-request-invoices/TR{$request_id}-Invoice.pdf";
         else
             $file_name = "assets/receipts/transport-request-receipts/TR{$request_id}-Receipt.pdf";
 
-        generateInvoice($file_name, $view, $data);
+        generateInvoice($file_name, $view, ['data' => $transport_request]);
         return $file_name;
     }
 }

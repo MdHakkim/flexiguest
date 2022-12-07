@@ -184,13 +184,12 @@ class ConciergeRepository extends BaseController
         $concierge_request['transaction_id'] = $transaction_id;
 
         $view = 'Templates/concierge_invoice_template';
-        $data = $concierge_request;
         if (empty($transaction_id))
             $file_name = "assets/invoices/concierge-invoices/CR{$concierge_request['CR_ID']}-Invoice.pdf";
         else
             $file_name = "assets/receipts/concierge-receipts/CR{$concierge_request['CR_ID']}-Receipt.pdf";
 
-        generateInvoice($file_name, $view, $data);
+        generateInvoice($file_name, $view, ['data' => $concierge_request]);
         return $file_name;
     }
 }

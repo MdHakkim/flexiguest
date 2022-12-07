@@ -590,13 +590,12 @@ class RestaurantRepository extends BaseController
         $order['transaction_id'] = $transaction_id;
 
         $view = 'Templates/restaurant_order_invoice_template';
-        $data = $order;
         if (empty($transaction_id))
             $file_name = "assets/invoices/restaurant-order-invoices/RO{$order_id}-Invoice.pdf";
         else
             $file_name = "assets/receipts/restaurant-order-receipts/RO{$order_id}-Receipt.pdf";
 
-        generateInvoice($file_name, $view, $data);
+        generateInvoice($file_name, $view, ['data' => $order]);
         return $file_name;
     }
 }

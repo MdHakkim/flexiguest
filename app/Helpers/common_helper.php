@@ -490,7 +490,7 @@ function generateInvoice($file_name, $view, $data)
         $options->setIsRemoteEnabled(true);
 
         $dompdf = new \Dompdf\Dompdf($options);
-        $dompdf->loadHtml(view($view, ['data' => $data]));
+        $dompdf->loadHtml(view($view, $data));
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 

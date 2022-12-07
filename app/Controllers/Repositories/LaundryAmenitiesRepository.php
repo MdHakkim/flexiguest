@@ -168,13 +168,12 @@ class LaundryAmenitiesRepository extends BaseController
         $order['transaction_id'] = $transaction_id;
 
         $view = 'Templates/LaundryAmenitiesInvoiceTemplate';
-        $data = $order;
         if (empty($transaction_id))
             $file_name = "assets/invoices/laundry-amenities-invoices/LAO{$order_id}-Invoice.pdf";
         else
             $file_name = "assets/receipts/laundry-amenities-receipts/LAO{$order_id}-Receipt.pdf";
 
-        generateInvoice($file_name, $view, $data);
+        generateInvoice($file_name, $view, ['data' => $order]);
         return $file_name;
     }
 }
