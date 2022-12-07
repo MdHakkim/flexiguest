@@ -568,32 +568,62 @@ class TaskAssignmentController extends BaseController
     public function updateTaskStatus()
     {
         try {
+                $role            = $this->request->getPost('role');
+                $taskId          = $this->request->getPost('taskId');
+                $new_status      = $this->request->getPost('new_status');
+                $completed_time = $this->request->getPost('completion_time');
+                
+                $user_id = session()->get('USR_ID');
+                $completion_time = '';
+                $room_status =  '';
+                $roomsSql = "SELECT HKATD_ROOM_ID
+                    FROM FLXY_HK_ASSIGNED_TASK_DETAILS
+                    WHERE HKATD_ASSIGNED_TASK_ID='$taskId'";        
+                $roomResponse = $this->Db->query($roomsSql)->getResultArray();
+                if($role == 3)
+                {                           
+                    $room_status = ($new_status == 1 || $new_status == 3)? 2:1;                     
+                    $completion_time = ($new_status == 1 || $new_status == 3) ? '': date("Y-m-d H:i:s"); 
 
-            $role = $this->request->getPost('role');
-            $taskId = $this->request->getPost('taskId');
-            $new_status = $this->request->getPost('new_status');
-            $user_id = session()->get('USR_ID');
-            $HKATD_COMPLETION_TIME = null;
-            if($role == 3)
-            {   
-                    
-                 $HKATD_COMPLETION_TIME = ($new_status == 2) ? date("Y-m-d H:i:s"): '';                
+                    $logdata = [
+                        "HKATD_STATUS_ID" => $new_status,
+                        "HKATD_UPDATED_BY" => $user_id, "HKATD_UPDATED_AT" => date("Y-m-d H:i:s"), "HKATD_COMPLETION_TIME" => $completion_time
+                    ];
 
-                $logdata = [
-                    "HKATD_STATUS_ID" => $new_status,
-                    "HKATD_UPDATED_BY" => $user_id, "HKATD_UPDATED_AT" => date("Y-m-d H:i:s"), "HKATD_COMPLETION_TIME" => $HKATD_COMPLETION_TIME
-                ];
-            }
-            else if($role == 5){
-                $logdata = [
-                    "HKATD_INSPECTED_STATUS_ID" => $new_status, "HKATD_INSPECTED_BY" => $user_id,
-                    "HKATD_UPDATED_BY" => $user_id, "HKATD_UPDATED_AT" => date("Y-m-d H:i:s"),"HKATD_INSPECTED_DATETIME"=> date("Y-m-d H:i:s")
-                ];
-            }
+                    /// update room status    
 
-            $return = $this->Db->table('FLXY_HK_ASSIGNED_TASK_DETAILS')->where(['HKATD_ASSIGNED_TASK_ID'=>$taskId])->update($logdata);
+                    if(!empty($roomResponse)){
+                        foreach($roomResponse as $rooms){
+                            $this->Db->table('FLXY_ROOM_STATUS_LOG')->where(['RM_STAT_ROOM_ID' => $rooms['HKATD_ROOM_ID']])->update(["RM_STAT_ROOM_STATUS"=>$room_status,"RM_STAT_UPDATED_BY"=>$user_id,"RM_STAT_UPDATED"=> date("Y-m-d H:i:s")]);
+                        }
+                    }
+                }
+                else if($role == 5){
+                    $room_status = ($new_status == 5 && $completed_time != '')? 1 : 2;
+                    if($new_status == 6) 
+                    $room_status = 3;
+                    else if($new_status == 7)
+                    $room_status = 2;
+                                 
+                    $inspected_time = ($new_status == 5 || $new_status == 7) ? '': date("Y-m-d H:i:s"); 
 
-            echo json_encode($this->responseJson("1", "0", $return, $response = $HKATD_COMPLETION_TIME));
+                    $logdata = [
+                        "HKATD_INSPECTED_STATUS_ID" => $new_status, "HKATD_INSPECTED_BY" => $user_id,
+                        "HKATD_UPDATED_BY" => $user_id, "HKATD_UPDATED_AT" => date("Y-m-d H:i:s"),"HKATD_INSPECTED_DATETIME"=> $inspected_time
+                    ];
+
+                /// update room status    
+
+                    if(!empty($roomResponse)){
+                        foreach($roomResponse as $rooms){
+                            $this->Db->table('FLXY_ROOM_STATUS_LOG')->where(['RM_STAT_ROOM_ID' => $rooms['HKATD_ROOM_ID']])->update(["RM_STAT_ROOM_STATUS"=>$room_status,"RM_STAT_UPDATED_BY"=>$user_id,"RM_STAT_UPDATED"=> date("Y-m-d H:i:s")]);
+                        }
+                    }
+                }
+
+                $return = $this->Db->table('FLXY_HK_ASSIGNED_TASK_DETAILS')->where(['HKATD_ASSIGNED_TASK_ID'=>$taskId])->update($logdata);
+
+                echo json_encode($this->responseJson("1", "0", $return, $response = $completion_time));
         } catch (\Exception $e) {
             echo json_encode($this->responseJson("-444", "db insert not successful"));
         }
@@ -722,6 +752,22 @@ class TaskAssignmentController extends BaseController
         
         $comments = $this->Db->query($sql)->getResultArray();
         return $this->respond(responseJson(200, false, ['msg' => 'comments'], $comments));
+    }
+
+    public function checkRoomAlreadyAssigned(){
+        $roomexists  = null; 
+        $HKAT_TASK_ID  = $this->request->getPost('HKAT_TASK_ID');
+        $HKARM_ROOM_ID = $this->request->getPost('HKARM_ID');  
+        $TASK_DATE     = $this->request->getPost('TASK_DATE');
+        $ROOM_ID       = '';
+
+        $sql = "SELECT HKARM_ROOM_ID
+        FROM FLXY_HK_TASK_ASSIGNED_ROOMS LEFT JOIN FLXY_HK_TASKASSIGNMENT_OVERVIEW ON HKTAO_ID = HKARM_TASK_ID WHERE HKTAO_TASK_DATE ='$TASK_DATE' AND HKARM_ROOM_ID = '$HKARM_ROOM_ID' AND HKTAO_ID = '$HKAT_TASK_ID'";
+        
+        $HKARM_ROOM_ID = $this->Db->query($sql)->getRow();
+        $ROOM_ID =  (!empty($HKARM_ROOM_ID)) ?$HKARM_ROOM_ID->HKARM_ROOM_ID : '';
+       
+        return $this->respond(responseJson(200, false, ['msg' => 'comments'], $ROOM_ID));
     }
 
 }
