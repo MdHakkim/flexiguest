@@ -157,6 +157,7 @@ class HouseKeepingController extends BaseController
         $user = $this->request->user;
         $subtask_ids = $this->request->getVar('subtask_ids');
 
+        $new_subtask_ids = [];
         foreach ($subtask_ids as $subtask_id) {
             $sub_task = $this->HKAssignedTaskDetail->find($subtask_id);
             if (empty($sub_task))
@@ -170,12 +171,16 @@ class HouseKeepingController extends BaseController
 
             if (in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_STATUS_ID'] == '1') // (admin || supervisor) && In Progress
                 return $this->respond(responseJson(202, true, ['msg' => 'Not All tasks are completed.']));
+            
+            if ($sub_task['HKATD_STATUS_ID'] == '1' || $sub_task['HKATD_INSPECTED_STATUS_ID'] == '5')
+                $new_subtask_ids[] = $subtask_id;
         }
 
         if ($user['USR_ROLE_ID'] == '3') {
             $data = [
                 'HKATD_STATUS_ID' => '2',
-                'HKATD_COMPLETION_TIME' => date('Y-m-d H:i:s')
+                'HKATD_COMPLETION_TIME' => date('Y-m-d H:i:s'),
+                'HKATD_INSPECTED_STATUS_ID' => '5',
             ];
         } else {
             $data = [
@@ -185,7 +190,7 @@ class HouseKeepingController extends BaseController
             ];
         }
 
-        $this->HKAssignedTaskDetail->whereIn('HKATD_ID', $subtask_ids)->set($data)->update();
+        $this->HKAssignedTaskDetail->whereIn('HKATD_ID', $new_subtask_ids)->set($data)->update();
 
         if (isset($assigned_task_id) && isset($room_id)) {
             $this->checkTasksCompleted($user, $assigned_task_id, $room_id);
@@ -275,11 +280,15 @@ class HouseKeepingController extends BaseController
 
         $status = $this->request->getVar('status');
         if ($user['USR_ROLE_ID'] == '3') {
+
+            $subtask['HKATD_COMPLETION_TIME'] = date('Y-m-d H:i:s');
+            $subtask['HKATD_INSPECTED_STATUS_ID'] = '5';
+            
             if ($status == 'Partially Completed')
                 $subtask['HKATD_STATUS_ID'] = 3;
             else
                 $subtask['HKATD_STATUS_ID'] = 4; // skipped
-
+            
             $this->checkTasksCompleted($user, $assigned_task_id, $room_id);
         } else {
             if ($subtask['HKATD_STATUS_ID'] == '1')
