@@ -546,6 +546,7 @@
 											<th class="all">Room</th>
 											<th class="all">Room Credits</th>
 											<th class="all">Room Instructions</th>
+											<th class="all">Start Time</th>
 											<th class="all">Completion Time</th>
 											<th class="all">Inspected By</th>	
 											<th class="all">Inspected Time</th>
@@ -1822,6 +1823,10 @@
 				data: 'HKARM_INSTRUCTIONS'
 			},
 			{
+				data: 'HKATD_START_TIME'
+			},
+			
+			{
 				data: 'HKATD_COMPLETION_TIME'
 			},			
 			{
@@ -1845,10 +1850,27 @@
 				class:'word-wrap',
 				targets:3,
 				},
+
+				{
+					data: 'HKATD_START_TIME',
+                    width: "10%",
+                    targets: 4,
+					render: function(data, type, row, meta) {
+							if (row['HKATD_START_TIME'] != null ) {							
+								var HKATD_START_TIME = row['HKATD_START_TIME'].split(".");
+								if (HKATD_START_TIME[0] == '1900-01-01 00:00:00') {
+									return '';
+								} else
+									return HKATD_START_TIME[0];
+							}else
+							return '';
+						
+                    }
+                },
                 {
 					data: 'HKATD_COMPLETION_TIME',
                     width: "10%",
-                    targets: 4,
+                    targets: 5,
 					render: function(data, type, row, meta) {
 						if(row['COMPLETED'] == row['TOT']){
 							if (row['HKATD_COMPLETION_TIME'] != null ) {							
@@ -1866,7 +1888,7 @@
                 },
                 {
 				data: 'HKATD_INSPECTED_DATETIME',
-				targets: 6,
+				targets: 7,
 				render: function(data, type, row, meta) {
 					if (row['HKATD_INSPECTED_DATETIME'] != null  ) {
 						var HKATD_INSPECTED_DATETIME = row['HKATD_INSPECTED_DATETIME'].split(".");
@@ -1879,7 +1901,7 @@
                 }
 			},{
 			data: '',
-			targets: 7,
+			targets: 8,
 				render: function(data, type, row, meta) {
 					if(row['COMPLETED'] == row['TOT']){
 						if(row['HKATD_COMPLETION_TIME'] != null){
@@ -1897,7 +1919,7 @@
 			},
 			{
 			data: 'TOTAL_TIME',
-			targets: 8,
+			targets: 9,
 				render: function(data, type, row, meta) {
 					if(row['COMPLETED'] == row['TOT']){
 						if(row['TOTAL_TIME'] != null){
