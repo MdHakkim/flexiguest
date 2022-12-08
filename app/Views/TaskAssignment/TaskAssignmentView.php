@@ -181,9 +181,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-				
-
-                 
                     <div class="card-header border-bottom">
                         <ul class="nav nav-pills" role="tablist">
                             <li class="nav-item">
@@ -553,6 +550,7 @@
 											<th class="all">Inspected By</th>	
 											<th class="all">Inspected Time</th>
 											<th class="all">Comments</th>
+											<th class="all">Total Time</th>
 										</tr>
 									</thead>
 								</table>
@@ -1122,9 +1120,9 @@
 			{
                 data: 'COMPLETION_TIME',
 				render: function(data, type, full, meta) {	
-				if (full['COMPLETION_TIME'] == null)
+				if (full['COMPLETION_TIME'] == null )
                         return '';
-                    else if (full['COMPLETION_TIME'] != '1900-01-01 00:00:00.000') {
+                    else if (full['STATS'] == 2 && full['COMPLETION_TIME'] != '1900-01-01 00:00:00.000') {
                         var COMPLETION_TIME = full['COMPLETION_TIME'].split('.');
                         return (COMPLETION_TIME[0]);
                     } else
@@ -1268,7 +1266,7 @@
     //     'serverSide': true,
     //     'serverMethod': 'post',
     //     'ajax': {
-    //         'url': '<?php echo base_url('/showTaskAssignedRooms') ?>',
+    //         'url': '<?php //echo base_url('/showTaskAssignedRooms') ?>',
     //         'data': {
     //             "HKTAO_ID": task_id
     //         }
@@ -1835,6 +1833,9 @@
 			{
 				data: null
 			},
+			{
+				data: 'TOTAL_TIME'
+			},
 			
 		],
 		columnDefs: [
@@ -1849,14 +1850,18 @@
                     width: "10%",
                     targets: 4,
 					render: function(data, type, row, meta) {
-                        if (row['HKATD_COMPLETION_TIME'] != null ) {							
-                            var HKATD_COMPLETION_TIME = row['HKATD_COMPLETION_TIME'].split(".");
-                            if (HKATD_COMPLETION_TIME[0] == '1900-01-01 00:00:00') {
-                                return '';
-                            } else
-                                return HKATD_COMPLETION_TIME[0];
-                        }else
-						 return '';
+						if(row['COMPLETED'] == row['TOT']){
+							if (row['HKATD_COMPLETION_TIME'] != null ) {							
+								var HKATD_COMPLETION_TIME = row['HKATD_COMPLETION_TIME'].split(".");
+								if (HKATD_COMPLETION_TIME[0] == '1900-01-01 00:00:00') {
+									return '';
+								} else
+									return HKATD_COMPLETION_TIME[0];
+							}else
+							return '';
+						}
+						else 
+						return '';
                     }
                 },
                 {
@@ -1876,17 +1881,34 @@
 			data: '',
 			targets: 7,
 				render: function(data, type, row, meta) {
-
-					if(row['HKATD_COMPLETION_TIME'] != null){
-						return '<a href="javascript:;" data-room_id="' + row['HKARM_ROOM_ID'] +
-							'" data-tasksheet_id="' + row['HKAT_TASK_SHEET_ID'] +
-							'" data-assigned_taskid="' + row['HKATD_ASSIGNED_TASK_ID'] +
-							'" class="text-primary view_comments"><i class="fa-solid fa-eye "></i> </a>';
-						}	
-						else
-						return '';
+					if(row['COMPLETED'] == row['TOT']){
+						if(row['HKATD_COMPLETION_TIME'] != null){
+							return '<a href="javascript:;" data-room_id="' + row['HKARM_ROOM_ID'] +
+								'" data-tasksheet_id="' + row['HKAT_TASK_SHEET_ID'] +
+								'" data-assigned_taskid="' + row['HKATD_ASSIGNED_TASK_ID'] +
+								'" class="text-primary view_comments"><i class="fa-solid fa-eye "></i> </a>';
+							}	
+							else
+							return '';
+					}
+					else
+					   return '';
+				}
+			},
+			{
+			data: 'TOTAL_TIME',
+			targets: 8,
+				render: function(data, type, row, meta) {
+					if(row['COMPLETED'] == row['TOT']){
+						if(row['TOTAL_TIME'] != null){
+							return toHoursAndMinutes(row['TOTAL_TIME']);
+						}
+						else return '';		
+					}
+					else return '';				
 				}
 			}
+
             ],
 		"order": [
 			[0, "asc"]
@@ -1899,6 +1921,26 @@
 		});
 	});
 
+
+	function getCompletedTime(){
+		$.ajax({
+		url: '<?php echo base_url('/getCompletedTime') ?>',
+		type: "post",
+		data:{task_overview_id:task_overview_id,task_overview_date:task_overview_date, task_assigned_id:task_assigned_id} ,
+		headers: {
+			'X-Requested-With': 'XMLHttpRequest'
+		},
+		async: false,
+		success: function(respn) {
+			if (respn > 0) {				
+			    window.open('<?= base_url('/printTaskSheet') ?>', '_blank');			
+
+			}
+
+		}
+
+	});
+	}
 
 $(document).on('click', '.printTaskAssignment', function() {
 	var task_overview_id    =  $("#HKAT_TASK_ID").val();
@@ -1925,6 +1967,17 @@ $(document).on('click', '.printTaskAssignment', function() {
 
 });
 
+function toHoursAndMinutes(totalMinutes) {
+  const minutes = totalMinutes % 60;
+  const hours = Math.floor(totalMinutes / 60);
+
+  return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}`;
+}
+
+function padTo2Digits(num) {
+  return num.toString().padStart(2, '0');
+}
+
 
 $(document).on('click', '.view_comments', function() {
 	
@@ -1944,8 +1997,11 @@ $(document).on('click', '.view_comments', function() {
                     let html = '';
 					if(comments.length > 0){
 						for (let comment of comments) {
+
+							var comment_time = `${comment.ATN_CREATED_AT}`;
+							$comment_time = comment_time.split('.')
 							html += `
-								<b>${comment.USER_NAME} (${comment.ATN_CREATED_AT})</b></br>
+								<b>${comment.USER_NAME} (${comment_time[0]})</b></br>
 								<span class="">${comment.ATN_NOTE}</span></br>
 							`;
 						}
