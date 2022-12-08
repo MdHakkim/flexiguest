@@ -546,8 +546,8 @@
 											<th class="all">Room</th>
 											<th class="all">Room Credits</th>
 											<th class="all">Room Instructions</th>
-											<th class="all">Start Time</th>
-											<th class="all">Completion Time</th>
+											<th class="all">Start At</th>
+											<th class="all">Completed At</th>
 											<th class="all">Inspected By</th>	
 											<th class="all">Inspected Time</th>
 											<th class="all">Comments</th>
