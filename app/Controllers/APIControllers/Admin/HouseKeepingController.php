@@ -172,7 +172,7 @@ class HouseKeepingController extends BaseController
             if (in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_STATUS_ID'] == '1') // (admin || supervisor) && In Progress
                 return $this->respond(responseJson(202, true, ['msg' => 'Not All tasks are completed.']));
             
-            if (($user['USR_ROLE_ID'] == '3' && $sub_task['HKATD_STATUS_ID'] == '1') || (in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_INSPECTED_STATUS_ID'] == '5'))
+            if (($user['USR_ROLE_ID'] == '3' && in_array($sub_task['HKATD_STATUS_ID'], ['1', '3', '4'])) || (in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_INSPECTED_STATUS_ID'] == '5'))
                 $new_subtask_ids[] = $subtask_id;
         }
 
