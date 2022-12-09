@@ -11,6 +11,7 @@ class Restaurant extends Model
     protected $allowedFields = [
         'RE_RESTAURANT',
         'RE_IMAGE_URL',
+        'RE_SEATING_CAPACITY',
         'RE_CREATED_BY',
         'RE_UPDATED_BY',
     ];

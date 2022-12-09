@@ -922,13 +922,13 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->delete('delete-order', 'RestaurantController::deleteOrder');
         });
 
-        $routes->group('table', function ($routes) {
-            $routes->get('', 'RestaurantTableController::table');
-            $routes->post('all-tables', 'RestaurantTableController::allTables');
-            $routes->post('store', 'RestaurantTableController::store');
-            $routes->post('edit', 'RestaurantTableController::edit');
-            $routes->delete('delete', 'RestaurantTableController::delete');
-        });
+        // $routes->group('table', function ($routes) {
+        //     $routes->get('', 'RestaurantTableController::table');
+        //     $routes->post('all-tables', 'RestaurantTableController::allTables');
+        //     $routes->post('store', 'RestaurantTableController::store');
+        //     $routes->post('edit', 'RestaurantTableController::edit');
+        //     $routes->delete('delete', 'RestaurantTableController::delete');
+        // });
 
         $routes->group('reservation-slot', function ($routes) {
             $routes->get('', 'RestaurantReservationSlotController::reservationSlot');

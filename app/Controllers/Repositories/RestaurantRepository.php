@@ -38,6 +38,7 @@ class RestaurantRepository extends BaseController
     {
         $rules = [
             'RE_RESTAURANT' => ['label' => 'restaurant name', 'rules' => 'required'],
+            'RE_SEATING_CAPACITY' => ['label' => 'seating capacity', 'rules' => 'required|greater_than[0]'],
         ];
 
         if (empty($data['id']) || !empty($data['RE_IMAGE_URL']))
@@ -53,7 +54,7 @@ class RestaurantRepository extends BaseController
     {
         $mine = new ServerSideDataTable();
         $tableName = 'FLXY_RESTAURANTS';
-        $columns = 'RE_ID,RE_RESTAURANT,RE_IMAGE_URL,RE_CREATED_AT';
+        $columns = 'RE_ID,RE_RESTAURANT,RE_IMAGE_URL,RE_SEATING_CAPACITY,RE_CREATED_AT';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
