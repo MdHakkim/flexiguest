@@ -2030,13 +2030,13 @@ $(document).on('click', '.view_comments', function() {
 						for (let comment of comments) {
 							var ATNA_URL =  '';
 							var comment_time = `${comment.ATN_CREATED_AT}`;
-							if(comment.ATNA_URL != '' )
-							ATNA_URL = comment.ATNA_URL;
+							if(comment.ATNA_URL != '' && comment.ATNA_URL != null)
+							ATNA_URL = '<img onClick="displayImagePopup("<?= base_url() ?>/${comment.ATNA_URL}")" src="${comment.ATNA_URL}" width="80" height="80"/>';
 							$comment_time = comment_time.split('.')
 							html += `
 								<b>${comment.USER_NAME} (${comment_time[0]})</b></br>
-								<span class="">${comment.ATN_NOTE}</span></br>
-								<img onClick='displayImagePopup("<?= base_url() ?>/${ATNA_URL}")' src='${ATNA_URL}' width='80' height='80'/>								
+								<span class="">${comment.ATN_NOTE}</span></br>${ATNA_URL}
+																
 							`;
 						}
 					}
