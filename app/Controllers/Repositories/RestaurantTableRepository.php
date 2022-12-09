@@ -3,13 +3,6 @@
 namespace App\Controllers\Repositories;
 
 use App\Controllers\BaseController;
-use App\Libraries\ServerSideDataTable;
-use App\Models\MealType;
-use App\Models\MenuCategory;
-use App\Models\MenuItem;
-use App\Models\Restaurant;
-use App\Models\RestaurantOrder;
-use App\Models\RestaurantOrderDetail;
 use App\Models\RestaurantTable;
 use CodeIgniter\API\ResponseTrait;
 
@@ -17,24 +10,10 @@ class RestaurantTableRepository extends BaseController
 {
     use ResponseTrait;
 
-    private $Restaurant;
-    private $MenuCategory;
-    private $MenuItem;
-    private $MealType;
-    private $RestaurantOrder;
-    private $RestaurantOrderDetail;
-
     private $RestaurantTable;
 
     public function __construct()
     {
-        $this->Restaurant = new Restaurant();
-        $this->MenuCategory = new MenuCategory();
-        $this->MenuItem = new MenuItem();
-        $this->MealType = new MealType();
-        $this->RestaurantOrder = new RestaurantOrder();
-        $this->RestaurantOrderDetail = new RestaurantOrderDetail();
-
         $this->RestaurantTable = new RestaurantTable();
     }
 

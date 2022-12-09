@@ -929,6 +929,14 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('edit', 'RestaurantTableController::edit');
             $routes->delete('delete', 'RestaurantTableController::delete');
         });
+
+        $routes->group('reservation-slot', function ($routes) {
+            $routes->get('', 'RestaurantReservationSlotController::reservationSlot');
+            $routes->post('all-reservation-slots', 'RestaurantReservationSlotController::allReservationSlots');
+            $routes->post('store', 'RestaurantReservationSlotController::store');
+            $routes->post('edit', 'RestaurantReservationSlotController::edit');
+            $routes->delete('delete', 'RestaurantReservationSlotController::delete');
+        });
     });
 
     $routes->group('asset', function ($routes) {

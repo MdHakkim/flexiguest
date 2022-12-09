@@ -2,11 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Controllers\Repositories\DepartmentRepository;
-use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\RestaurantRepository;
 use App\Controllers\Repositories\RestaurantTableRepository;
-use App\Controllers\Repositories\UserRepository;
 use App\Libraries\ServerSideDataTable;
 use CodeIgniter\API\ResponseTrait;
 
@@ -15,19 +12,11 @@ class RestaurantTableController extends BaseController
 
     use ResponseTrait;
 
-    private $ReservationRepository;
-    private $UserRepository;
-    private $DepartmentRepository;
-
     private $RestaurantRepository;
     private $RestaurantTableRepository;
 
     public function __construct()
     {
-        $this->ReservationRepository = new ReservationRepository();
-        $this->UserRepository = new UserRepository();
-        $this->DepartmentRepository = new DepartmentRepository();
-
         $this->RestaurantRepository = new RestaurantRepository();
         $this->RestaurantTableRepository = new RestaurantTableRepository();
     }
