@@ -1785,7 +1785,7 @@
 		$('input[name="HKARM_TASK_SHEET_ID"]').val($(this).data('tasksheet_id'));
 		HKARM_TASK_SHEET_ID = $(this).data('tasksheet_id');
 		var task_id      = $("#HKAT_TASK_ID").val();
-		
+		var task_overview_date  = $('input[name="TASK_ASSIGNMENT_DATE"]').val();
 		$('#Taskassignment_room_view').DataTable().destroy();
 		$('#Taskassignment_room_view').DataTable({
 		'processing': true,
@@ -1796,7 +1796,8 @@
 			'url': '<?php echo base_url('/viewTaskAssignedRooms') ?>',
 			'data': {
 				"HKTAO_ID": task_id,
-				"HKARM_TASK_SHEET_ID":HKARM_TASK_SHEET_ID
+				"HKARM_TASK_SHEET_ID":HKARM_TASK_SHEET_ID,
+				"TASK_DATE":task_overview_date
 			}
 		},
 		'columns': [{
