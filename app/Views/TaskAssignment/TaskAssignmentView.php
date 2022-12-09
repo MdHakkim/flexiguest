@@ -281,7 +281,7 @@
 														<th class="all">Status</th>
                                                         <th class="all">Inspected Status</th>
 														<th class="all">Task Instructions</th>
-														<th class="all">Completed On</th>
+														<th class="all">Inspected On</th>
 														
                                                         
                                                     </tr>
@@ -550,7 +550,7 @@
 											<th class="all">Room</th>
 											<th class="all">Room Credits</th>
 											<th class="all">Room Instructions</th>
-											<th class="all">Start At</th>
+											<th class="all">Started At</th>
 											<th class="all">Completed At</th>
 											<th class="all">Inspected By</th>	
 											<th class="all">Inspected Time</th>
@@ -866,10 +866,13 @@
 
 	// Show Add Task Assigment
 	function addForm() {
-		$('#submitForm').not('[type="radio"],[type="checkbox"]').val('').prop('checked', false).prop('selected', false);
+		// $("#HKTAO_TASK_DATE").val(new Date())
+		$('.dt-date').datepicker('update','');
+		$('#submitForm').not('[type="text"],[type="radio"],[type="checkbox"]').val('').prop('checked', false).prop('selected', false);
 		$('.select2').val(null).trigger('change');		
 		$('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
 		$('#popModalWindowlabel').html('New Task Assigment');
+		$("#HKTAO_TASK_DATE").val('');
 		taskCodelist();
 		$('#popModalWindow').modal('show');
 	}
@@ -1123,13 +1126,13 @@
 				
             },
 			{
-                data: 'COMPLETION_TIME',
+                data: 'INSPECTED_DATETIME',
 				render: function(data, type, full, meta) {	
-				if (full['COMPLETION_TIME'] == null )
+				if (full['INSPECTED_DATETIME'] == null )
                         return '';
-                    else if (full['STATS'] == 2 && full['COMPLETION_TIME'] != '1900-01-01 00:00:00.000') {
-                        var COMPLETION_TIME = full['COMPLETION_TIME'].split('.');
-                        return (COMPLETION_TIME[0]);
+                    else if (full['STATS'] == 2 && full['INSPECTED_DATETIME'] != '1900-01-01 00:00:00.000') {
+                        var INSPECTED_DATETIME = full['INSPECTED_DATETIME'].split('.');
+                        return (INSPECTED_DATETIME[0]);
                     } else
                         return "";
 				}
@@ -2025,15 +2028,15 @@ $(document).on('click', '.view_comments', function() {
                     let html = '';
 					if(comments.length > 0){
 						for (let comment of comments) {
-
+							var ATNA_URL =  '';
 							var comment_time = `${comment.ATN_CREATED_AT}`;
+							if(comment.ATNA_URL != '')
+							ATNA_URL = comment.ATNA_URL;
 							$comment_time = comment_time.split('.')
 							html += `
 								<b>${comment.USER_NAME} (${comment_time[0]})</b></br>
 								<span class="">${comment.ATN_NOTE}</span></br>
-								<img onClick='displayImagePopup("<?= base_url() ?>/${comment.ATNA_URL}")' src='${comment.ATNA_URL}' width='80' height='80'/>
-
-								
+								<img onClick='displayImagePopup("<?= base_url() ?>/${ATNA_URL}")' src='${comment.ATNA_URL}' width='80' height='80'/>								
 							`;
 						}
 					}
