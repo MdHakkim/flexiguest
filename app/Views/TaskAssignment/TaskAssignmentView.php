@@ -2036,7 +2036,7 @@ $(document).on('click', '.view_comments', function() {
 							$comment_time = comment_time.split('.')
 							html += `
 								<b>${comment.USER_NAME} (${comment_time[0]})</b></br>
-								<span class="">${comment.ATN_NOTE}</span></br>`+ATNA_URL+`/br>
+								<span class="">${comment.ATN_NOTE}</span></br>`+ATNA_URL+`</br>
 																
 							`;
 						}
