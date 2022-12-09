@@ -2,6 +2,7 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<?= $this->include('Layout/image_modal') ?>
 <style>
 	.Reservation,
 	.Guest {
