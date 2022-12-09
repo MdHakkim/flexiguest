@@ -27,6 +27,9 @@
 	.float-right{
 		float:right;
 	}
+	#image-popup{
+		z-index : 1200 !important;
+	}
 
 </style>
 
@@ -2029,13 +2032,15 @@ $(document).on('click', '.view_comments', function() {
 								<b>${comment.USER_NAME} (${comment_time[0]})</b></br>
 								<span class="">${comment.ATN_NOTE}</span></br>
 								<img onClick='displayImagePopup("<?= base_url() ?>/${comment.ATNA_URL}")' src='${comment.ATNA_URL}' width='80' height='80'/>
+
+								
 							`;
 						}
 					}
 
                     if(!html)
                         html = `<b>No Comments!</b>`;
-						
+					$("#image-popup").css('z-index', '9999999');
                     $('#comment-modal .modal-body').html(html);
                     $('#comment-modal').modal('show');
                 }
