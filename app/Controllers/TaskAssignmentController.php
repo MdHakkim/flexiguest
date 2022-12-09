@@ -290,7 +290,7 @@ class TaskAssignmentController extends BaseController
             $HKAT_SHEET_INSTRUCTIONS = $this->request->getPost('instructions');
 
             $validate = $this->validate([
-                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required|taskSheetExists[HKAT_TASK_ID,HKAT_TASK_SHEET_ID]', 'errors' => ['taskSheetExists' => 'Task sheet for the attendant is already assigned to this date']],               
+                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required|taskSheetExists[HKAT_TASK_ID,HKAT_TASK_SHEET_ID]', 'errors' => ['taskSheetExists' => 'Task sheet for the attendant is already assigned to this task and date']],               
             ]);
 
             if (!$validate) {
@@ -778,10 +778,12 @@ class TaskAssignmentController extends BaseController
         $HKAT_TASK_ID  = $this->request->getPost('HKAT_TASK_ID');
         $HKARM_ROOM_ID = $this->request->getPost('HKARM_ID');  
         $TASK_DATE     = $this->request->getPost('TASK_DATE');
+        $TASK_CODE     = $this->request->getPost('TASK_CODE');
+        
         $ROOM_ID       = '';
 
         $sql = "SELECT HKARM_ROOM_ID
-        FROM FLXY_HK_TASK_ASSIGNED_ROOMS LEFT JOIN FLXY_HK_TASKASSIGNMENT_OVERVIEW ON HKTAO_ID = HKARM_TASK_ID WHERE HKTAO_TASK_DATE ='$TASK_DATE' AND HKARM_ROOM_ID = '$HKARM_ROOM_ID' AND HKTAO_ID = '$HKAT_TASK_ID'";
+        FROM FLXY_HK_TASK_ASSIGNED_ROOMS LEFT JOIN FLXY_HK_TASKASSIGNMENT_OVERVIEW ON HKTAO_ID = HKARM_TASK_ID WHERE HKTAO_TASK_DATE ='$TASK_DATE' AND HKARM_ROOM_ID = '$HKARM_ROOM_ID'";
         
         $HKARM_ROOM_ID = $this->Db->query($sql)->getRow();
         $ROOM_ID =  (!empty($HKARM_ROOM_ID)) ?$HKARM_ROOM_ID->HKARM_ROOM_ID : '';

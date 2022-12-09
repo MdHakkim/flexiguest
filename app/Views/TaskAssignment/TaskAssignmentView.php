@@ -1365,7 +1365,7 @@
 
 	
 	$(document).on('click', '.save-taskroom-detail', function() {
-		var TASK_ID              = $("#TASK_ID").val();
+		var TASK_CODE              = $("#TASK_ID").val();
 		var HKAT_TASK_ID         = $("#HKAT_TASK_ID").val();
 		var HKARM_TASK_SHEET_ID  = $("#HKARM_TASK_SHEET_ID").val();
 		var HKARM_ROOM_ID        = $("#HKARM_ROOM_ID").val();
@@ -1373,7 +1373,7 @@
 		var HKARM_INSTRUCTIONS   = $("#HKARM_INSTRUCTIONS").val();
 		var TASK_DATE            = $('input[name="TASK_ASSIGNMENT_DATE"]').val();		
 
-		room_exists = checkRoomAlreadyAssigned(HKAT_TASK_ID,HKARM_ROOM_ID,TASK_DATE);
+		room_exists = checkRoomAlreadyAssigned(TASK_CODE,HKAT_TASK_ID,HKARM_ROOM_ID,TASK_DATE);
 		
 		if(room_exists == null){
 			
@@ -1381,7 +1381,7 @@
 			$.ajax({
 				url: url,
 				type: "post",
-				data: {TASK_ID:TASK_ID,HKAT_TASK_ID:HKAT_TASK_ID,HKARM_TASK_SHEET_ID:HKARM_TASK_SHEET_ID,HKARM_ROOM_ID:HKARM_ROOM_ID,HKARM_CREDITS:HKARM_CREDITS,HKARM_INSTRUCTIONS:HKARM_INSTRUCTIONS},
+				data: {TASK_ID:TASK_CODE,HKAT_TASK_ID:HKAT_TASK_ID,HKARM_TASK_SHEET_ID:HKARM_TASK_SHEET_ID,HKARM_ROOM_ID:HKARM_ROOM_ID,HKARM_CREDITS:HKARM_CREDITS,HKARM_INSTRUCTIONS:HKARM_INSTRUCTIONS},
 				headers: {
 					'X-Requested-With': 'XMLHttpRequest'
 				},
@@ -1417,7 +1417,7 @@
 
 
 
-	function checkRoomAlreadyAssigned(HKAT_TASK_ID,HKARM_ROOM_ID,TASK_DATE) {
+	function checkRoomAlreadyAssigned(TASK_CODE, HKAT_TASK_ID,HKARM_ROOM_ID,TASK_DATE) {
 		$.ajax({
 			url: '<?php echo base_url('/checkRoomAlreadyAssigned') ?>',
 			type: 'POST',
@@ -1426,6 +1426,7 @@
 				'X-Requested-With': 'XMLHttpRequest'
 			},
 			data: {
+					TASK_CODE: TASK_CODE,
 					HKARM_ID: HKARM_ROOM_ID,
 					HKAT_TASK_ID: HKAT_TASK_ID,
 					TASK_DATE: TASK_DATE,
