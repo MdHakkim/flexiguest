@@ -766,8 +766,8 @@ class TaskAssignmentController extends BaseController
         $HKAT_TASK_ASSIGNED_ID  = $this->request->getPost('HKAT_TASK_ASSIGNED_ID');
         $HKAT_ROOM_ID           = $this->request->getPost('HKAT_ROOM_ID');  
 
-        $sql = "SELECT ATN_NOTE,ATN_CREATED_AT,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME) AS USER_NAME
-        FROM FLXY_HK_ASSIGNED_TASK_NOTES LEFT JOIN FLXY_USERS ON ATN_USER_ID = USR_ID WHERE ATN_ASSIGNED_TASK_ID ='$HKAT_TASK_ASSIGNED_ID' AND ATN_ROOM_ID = '$HKAT_ROOM_ID'";
+        $sql = "SELECT ATN_NOTE,ATN_CREATED_AT,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME) AS USER_NAME, ATNA_NAME, ATNA_URL
+        FROM FLXY_HK_ASSIGNED_TASK_NOTES LEFT JOIN FLXY_USERS ON ATN_USER_ID = USR_ID LEFT JOIN FLXY_HK_ASSIGNED_TASK_NOTE_ATTACHMENTS ON ATNA_NOTE_ID = ATN_ID WHERE ATN_ASSIGNED_TASK_ID ='$HKAT_TASK_ASSIGNED_ID' AND ATN_ROOM_ID = '$HKAT_ROOM_ID' ";
         
         $comments = $this->Db->query($sql)->getResultArray();
         return $this->respond(responseJson(200, false, ['msg' => 'comments'], $comments));

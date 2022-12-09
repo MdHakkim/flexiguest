@@ -551,7 +551,7 @@
 											<th class="all">Inspected By</th>	
 											<th class="all">Inspected Time</th>
 											<th class="all">Comments</th>
-											<th class="all">Total Time</th>
+											<th class="all">Total Time(HH:MM)</th>
 										</tr>
 									</thead>
 								</table>
@@ -2027,6 +2027,7 @@ $(document).on('click', '.view_comments', function() {
 							html += `
 								<b>${comment.USER_NAME} (${comment_time[0]})</b></br>
 								<span class="">${comment.ATN_NOTE}</span></br>
+								<img onClick='displayImagePopup("<?= base_url() ?>/${comment.ATNA_URL}")' src='${comment.ATNA_URL}' width='80' height='80'/>
 							`;
 						}
 					}
