@@ -2031,7 +2031,7 @@ $(document).on('click', '.view_comments', function() {
 							var ATNA_URL =  '';
 							var comment_time = `${comment.ATN_CREATED_AT}`;
 							if(comment.ATNA_URL != null){
-							ATNA_URL = '</br><img onClick="displayImagePopup("<?= base_url() ?>/${comment.ATNA_URL}")" src="${comment.ATNA_URL}" width="80" height="80"/>';
+							ATNA_URL = `</br><img onClick="displayImagePopup("<?= base_url() ?>/${comment.ATNA_URL}")" src="${comment.ATNA_URL}" width="80" height="80"/>`;
 							}
 							$comment_time = comment_time.split('.')
 							html += `
