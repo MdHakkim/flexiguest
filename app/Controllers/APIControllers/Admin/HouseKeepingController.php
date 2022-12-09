@@ -171,8 +171,8 @@ class HouseKeepingController extends BaseController
 
             if (in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_STATUS_ID'] == '1') // (admin || supervisor) && In Progress
                 return $this->respond(responseJson(202, true, ['msg' => 'Not All tasks are completed.']));
-            
-            if (($user['USR_ROLE_ID'] == '3' && in_array($sub_task['HKATD_STATUS_ID'], ['1', '3', '4'])) || (in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_INSPECTED_STATUS_ID'] == '5'))
+
+            if (($user['USR_ROLE_ID'] == '3' && in_array($sub_task['HKATD_STATUS_ID'], ['1'])) || (in_array($user['USR_ROLE_ID'], ['1', '5']) && $sub_task['HKATD_INSPECTED_STATUS_ID'] == '5'))
                 $new_subtask_ids[] = $subtask_id;
         }
 
@@ -279,18 +279,20 @@ class HouseKeepingController extends BaseController
         $this->HKAssignedTaskDetailNote->insert($data);
 
         $status = $this->request->getVar('status');
-        if ($user['USR_ROLE_ID'] == '3') {
+        // if ($user['USR_ROLE_ID'] == '3') {
 
-            $subtask['HKATD_COMPLETION_TIME'] = date('Y-m-d H:i:s');
-            $subtask['HKATD_INSPECTED_STATUS_ID'] = '5';
+        // $subtask['HKATD_COMPLETION_TIME'] = date('Y-m-d H:i:s');
+        // $subtask['HKATD_INSPECTED_STATUS_ID'] = '5';
+
+        // if ($status == 'Partially Completed')
+        //     $subtask['HKATD_STATUS_ID'] = 3;
+        // else
+        //     $subtask['HKATD_STATUS_ID'] = 4; // skipped
+
+        // $this->checkTasksCompleted($user, $assigned_task_id, $room_id);
+        // } else {
             
-            if ($status == 'Partially Completed')
-                $subtask['HKATD_STATUS_ID'] = 3;
-            else
-                $subtask['HKATD_STATUS_ID'] = 4; // skipped
-            
-            $this->checkTasksCompleted($user, $assigned_task_id, $room_id);
-        } else {
+        if (in_array($user['USR_ROLE_ID'], ['1', '5'])) {
             if ($subtask['HKATD_STATUS_ID'] == '1')
                 return $this->respond(responseJson(202, true, ['msg' => 'This task is not completed yet.']));
 
@@ -307,8 +309,9 @@ class HouseKeepingController extends BaseController
 
                 $this->RoomRepository->updateRoomStatus($user, $room_id, 2);
             }
+
+            $this->HKAssignedTaskDetail->save($subtask);
         }
-        $this->HKAssignedTaskDetail->save($subtask);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Note submitted successfully.']));
     }
@@ -328,7 +331,7 @@ class HouseKeepingController extends BaseController
             $pending_tasks = $this->HKAssignedTaskDetail
                 ->where("HKATD_ASSIGNED_TASK_ID = $assigned_task_id 
                     AND HKATD_ROOM_ID = $room_id 
-                    AND (HKATD_INSPECTED_STATUS_ID = 5 OR HKATD_INSPECTED_STATUS_ID = 7)" )
+                    AND (HKATD_INSPECTED_STATUS_ID = 5 OR HKATD_INSPECTED_STATUS_ID = 7)")
                 ->findAll();
 
             if (empty($pending_tasks))
