@@ -31,6 +31,9 @@
 		z-index : 1200 !important;
 	}
 
+	#task_status_id, #supervisor_status{
+		pointer-events: none;
+	}
 </style>
 
 <!-- Content wrapper -->
@@ -1615,7 +1618,7 @@
 			return $status_name;
 		}
 
-		var $statButton = '<button type="button" class="btn btn-sm ' + $status[
+		var $statButton = '<button type="button" class="readonly btn btn-sm ' + $status[
 				$status_id]
 			.class + ' dropdown-toggle"' +
 			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="supervisor_status">' +
@@ -1668,7 +1671,7 @@
 			return $status_name;
 		}
 
-		var $statButton = '<button type="button" id="task_status_id" class="btn btn-sm ' + $status[
+		var $statButton = '<button type="button" id="task_status_id" readonly class="btn btn-sm ' + $status[
 			$status_id]
 			.class + ' dropdown-toggle"' +
 			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" rel="'+$status[
@@ -1684,7 +1687,7 @@
 			$.each($status, function(statText) {
 				if (statText == $status_id || statText == 4 || statText == 5) $statButton += '';
 				else $statButton +=
-					'<li><a class="dropdown-item changeTaskStatus" data-role="3" data-task-id="' + taskId + '"' +
+					'<li><a class="dropdown-item changeTaskStatus" readonly data-role="3" data-task-id="' + taskId + '"' +
 					' data-task-new-stat="' + statText + '"' +
 					' data-task-new-statName="' + $status[statText].title + '"' +
 					' data-task-old-stat="' + $status_id + '"' +
