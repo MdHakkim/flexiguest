@@ -1099,6 +1099,10 @@
 					if( full['SUPER_STATUSCODE'] != null){
 						var match       = full['INSP_STATS'].split(',');
 						var status_text = full['SUPER_STATUSCODE'].split(',');
+						if(match.includes('7')){
+							match.push('5');
+							status_text.push('Not Inspected');
+						}
 						for (var a in match)
 						{
 							var status_id = match[a];
