@@ -69,6 +69,10 @@ $routes->group("api/admin", ["filter" => "authapi:Admin", 'namespace' => 'App\Co
         $routes->post('assign-driver', 'EValetController::assignDriver');
         $routes->post('ready-to-collect', 'EValetController::readyToCollect');
     });
+
+    $routes->group('dashboard', function ($routes) {
+        $routes->get('get-stats', 'AdminDashboardController::getStats');
+    });
 });
 
 /*****************************  Admin + Guest *****************************/

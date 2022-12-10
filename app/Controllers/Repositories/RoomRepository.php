@@ -20,9 +20,9 @@ class RoomRepository extends BaseController
         $this->RoomStatusLog = new RoomStatusLog();
     }
 
-    public function allRooms()
+    public function allRooms($where_condition = "1 = 1")
     {
-        return $this->Room->findAll();
+        return $this->Room->where($where_condition)->findAll();
     }
 
     public function updateRoomStatus($user, $room_id, $status_id)
