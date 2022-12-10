@@ -1099,7 +1099,11 @@
 					if( full['SUPER_STATUSCODE'] != null){
 						var match       = full['INSP_STATS'].split(',');
 						var status_text = full['SUPER_STATUSCODE'].split(',');
+						console.log(match)
+						console.log(status_text)
+						console.log('break')
 						if(match.includes(7)){
+							console.log('sdfsdf')
 							match.push(5);
 							status_text.push('Not Inspected');
 						}
