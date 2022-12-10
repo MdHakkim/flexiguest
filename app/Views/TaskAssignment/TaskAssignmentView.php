@@ -1861,33 +1861,33 @@
 				},
 
 				{
-					data: 'HKATD_START_TIME',
+					data: 'START_TIME',
                     width: "10%",
                     targets: 4,
 					render: function(data, type, row, meta) {
-							if (row['HKATD_START_TIME'] != null ) {							
-								var HKATD_START_TIME = row['HKATD_START_TIME'].split(".");
-								if (HKATD_START_TIME[0] == '1900-01-01 00:00:00') {
+							if (row['START_TIME'] != null ) {							
+								var START_TIME = row['START_TIME'].split(".");
+								if (START_TIME[0] == '1900-01-01 00:00:00') {
 									return '';
 								} else
-									return HKATD_START_TIME[0];
+									return START_TIME[0];
 							}else
 							return '';
 						
                     }
                 },
                 {
-					data: 'HKATD_COMPLETION_TIME',
+					data: 'COMPLETE_TIME',
                     width: "10%",
                     targets: 5,
 					render: function(data, type, row, meta) {
 						if(row['COMPLETED'] == row['TOT']){
-							if (row['HKATD_COMPLETION_TIME'] != null ) {							
-								var HKATD_COMPLETION_TIME = row['HKATD_COMPLETION_TIME'].split(".");
-								if (HKATD_COMPLETION_TIME[0] == '1900-01-01 00:00:00') {
+							if (row['COMPLETE_TIME'] != null ) {							
+								var COMPLETE_TIME = row['COMPLETE_TIME'].split(".");
+								if (COMPLETE_TIME[0] == '1900-01-01 00:00:00') {
 									return '';
 								} else
-									return HKATD_COMPLETION_TIME[0];
+									return COMPLETE_TIME[0];
 							}else
 							return '';
 						}
@@ -1895,25 +1895,42 @@
 						return '';
                     }
                 },
-                {
-				data: 'HKATD_INSPECTED_DATETIME',
-				targets: 7,
+				{
+				data: 'INSPECTED_NAME',
+				targets: 6,
 				render: function(data, type, row, meta) {
-					if (row['HKATD_INSPECTED_DATETIME'] != null  ) {
-						var HKATD_INSPECTED_DATETIME = row['HKATD_INSPECTED_DATETIME'].split(".");
-						if (HKATD_INSPECTED_DATETIME[0] == '1900-01-01 00:00:00') {
-							return '';
-						} else
-							return HKATD_INSPECTED_DATETIME[0];
+					if(row['INSPECTED'] == row['TOT']){
+						if (row['INSPECTED_NAME'] != null  ) {							
+							return row['INSPECTED_NAME'];							
+						}else
+						return '';
 					}else
 					return '';
                 }
-			},{
+			},
+                {
+				data: 'INSPECTEDTIME',
+				targets: 7,
+				render: function(data, type, row, meta) {
+					if(row['INSPECTED'] == row['TOT']){
+						if (row['INSPECTEDTIME'] != null  ) {
+							var INSPECTEDTIME = row['INSPECTEDTIME'].split(".");
+							if (INSPECTEDTIME[0] == '1900-01-01 00:00:00') {
+								return '';
+							} else
+								return INSPECTEDTIME[0];
+						}else
+						return '';
+					}else
+					return '';
+                }
+			},
+			{
 			data: '',
 			targets: 8,
 				render: function(data, type, row, meta) {
 					if(row['COMPLETED'] == row['TOT']){
-						if(row['HKATD_COMPLETION_TIME'] != null){
+						if(row['COMPLETE_TIME'] != null){
 							return '<a href="javascript:;" data-room_id="' + row['HKARM_ROOM_ID'] +
 								'" data-tasksheet_id="' + row['HKAT_TASK_SHEET_ID'] +
 								'" data-assigned_taskid="' + row['HKATD_ASSIGNED_TASK_ID'] +
