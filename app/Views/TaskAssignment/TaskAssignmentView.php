@@ -1848,7 +1848,7 @@
 				data: null
 			},
 			{
-				data: 'TOTAL_TIME'
+				data: 'TOT_TIME'
 			},
 			
 		],
@@ -1944,12 +1944,12 @@
 				}
 			},
 			{
-			data: 'TOTAL_TIME',
+			data: 'TOT_TIME',
 			targets: 9,
 				render: function(data, type, row, meta) {
 					if(row['COMPLETED'] == row['TOT']){
-						if(row['TOTAL_TIME'] != null){
-							return toHoursAndMinutes(row['TOTAL_TIME']);
+						if(row['TOT_TIME'] != null){
+							return toHoursAndMinutes(row['TOT_TIME']);
 						}
 						else return '';		
 					}
