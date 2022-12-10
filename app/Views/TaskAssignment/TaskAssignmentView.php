@@ -1832,17 +1832,17 @@
 				data: 'HKARM_INSTRUCTIONS'
 			},
 			{
-				data: 'HKATD_START_TIME'
+				data: 'START_TIME'
 			},
 			
 			{
-				data: 'HKATD_COMPLETION_TIME'
+				data: 'COMPLETE_TIME'
 			},			
 			{
 				data: 'INSPECTED_NAME'
 			},
 			{
-				data: 'HKATD_INSPECTED_DATETIME'
+				data: 'INSPECTEDTIME'
 			},
 			{
 				data: null
