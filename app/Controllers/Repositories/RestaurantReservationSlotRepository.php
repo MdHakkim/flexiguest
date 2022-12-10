@@ -27,7 +27,7 @@ class RestaurantReservationSlotRepository extends BaseController
         return $rules;
     }
 
-    public function checkReservationConflict($data)
+    public function checkSlotConflict($data)
     {
         return $this->RestaurantReservationSlot
             ->where("('{$data['RRS_FROM_TIME']}' between RRS_FROM_TIME and RRS_TO_TIME) OR ('{$data['RRS_TO_TIME']}' between RRS_FROM_TIME and RRS_TO_TIME)")
@@ -36,7 +36,7 @@ class RestaurantReservationSlotRepository extends BaseController
 
     public function storeReservationSlot($user, $data)
     {
-        $check = $this->checkReservationConflict($data);
+        $check = $this->checkSlotConflict($data);
         if(!empty($check))
             return responseJson(202, true, ['msg' => "Conflict with a reservation slot from {$check['RRS_FROM_TIME']} to {$check['RRS_TO_TIME']}"]);
 
@@ -62,5 +62,10 @@ class RestaurantReservationSlotRepository extends BaseController
     public function deleteReservationSlot($id)
     {
         return $this->RestaurantReservationSlot->delete($id);
+    }
+
+    public function reservationSlots()
+    {
+        return $this->RestaurantReservationSlot->orderBy('RRS_DISPLAY_SEQUENCE', 'asc')->findAll();
     }
 }

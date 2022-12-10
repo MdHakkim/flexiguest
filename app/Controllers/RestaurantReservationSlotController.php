@@ -71,4 +71,11 @@ class RestaurantReservationSlotController extends BaseController
 
         return $this->respond($result);
     }
+
+    public function reservationSlots()
+    {
+        $slots = $this->RestaurantReservationSlotRepository->reservationSlots();
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Slots'], $slots));
+    }
 }

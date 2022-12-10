@@ -6,6 +6,7 @@ use App\Controllers\Repositories\DepartmentRepository;
 use App\Controllers\Repositories\PaymentRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\RestaurantRepository;
+use App\Controllers\Repositories\RestaurantReservationRepository;
 use App\Controllers\Repositories\UserRepository;
 use CodeIgniter\API\ResponseTrait;
 
@@ -19,6 +20,7 @@ class RestaurantController extends BaseController
     private $PaymentRepository;
     private $UserRepository;
     private $DepartmentRepository;
+    private $RestaurantReservationRepository;
 
     public function __construct()
     {
@@ -27,6 +29,7 @@ class RestaurantController extends BaseController
         $this->PaymentRepository = new PaymentRepository();
         $this->UserRepository = new UserRepository();
         $this->DepartmentRepository = new DepartmentRepository();
+        $this->RestaurantReservationRepository = new RestaurantReservationRepository();
     }
 
     /** ------------------------------Restaurant------------------------------ */
@@ -332,11 +335,44 @@ class RestaurantController extends BaseController
         if (!$this->validate($this->RestaurantRepository->placeOrderValidationRules($data)))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
-        $result = $this->RestaurantRepository->placeOrder($user, $data);
-        if (!isWeb() && empty($data['RO_ID']) && $result['SUCCESS'] == 200 && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
-            $data = $result['RESPONSE']['OUTPUT'];
-            $result = $this->PaymentRepository->createPaymentIntent($user, $data);
+        if ($data['RO_ORDER_TYPE'] == 'Dine-In') {
+            $restaurant_id = null;
+
+            foreach ($data['RO_ITEMS'] as $index => $item) {
+                $menu_item = $this->RestaurantRepository->menuItemById($item['MI_ID']);
+                if (empty($menu_item))
+                    return $this->respond(responseJson(202, true, ['msg' => "Item is not available."]));
+
+                if ($restaurant_id != null && $restaurant_id != $menu_item['MI_RESTAURANT_ID'])
+                    return $this->respond(responseJson(202, true, ['msg' => "For Dine-In you can order food from only one restaurant."]));
+
+                $restaurant_id = $menu_item['MI_RESTAURANT_ID'];
+                $data['RE_SEATING_CAPACITY'] = $menu_item['RE_SEATING_CAPACITY'];
+            }
+
+            $conflict = $this->RestaurantReservationRepository->checkReservationConflict($data);
+            if ($conflict)
+                return $this->respond(responseJson(202, true, ['msg' => 'This slot is already fully reserved.']));
+
+            $slot_id = $data['RR_SLOT_ID'];
+            $no_of_guests = $data['RR_NO_OF_GUESTS'];
+            unset($data['RR_SLOT_ID']);
+            unset($data['RR_NO_OF_GUESTS']);
+            unset($data['RE_SEATING_CAPACITY']);
         }
+
+        $result = $this->RestaurantRepository->placeOrder($user, $data);
+        $data = $result['RESPONSE']['OUTPUT'];
+
+        if (empty($data['RO_ID']) && $data['RO_ORDER_TYPE'] == 'Dine-In')
+            $this->RestaurantReservationRepository->makeReservation([
+                'RR_ORDER_ID' => $data['model_id'],
+                'RR_SLOT_ID' => $slot_id,
+                'RR_NO_OF_GUESTS' => $no_of_guests
+            ]);
+
+        if (!isWeb() && empty($data['RO_ID']) && $result['SUCCESS'] == 200 && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card')
+            $result = $this->PaymentRepository->createPaymentIntent($user, $data);
 
         return $this->respond($result);
     }
@@ -390,7 +426,7 @@ class RestaurantController extends BaseController
         if (empty($order))
             return $this->respond(responseJson(404, true, ['msg' => "Order not found"]));
 
-        if($order['RO_DELIVERY_STATUS'] == 'Cancelled')
+        if ($order['RO_DELIVERY_STATUS'] == 'Cancelled')
             return $this->respond(responseJson(202, true, ['msg' => 'Can\'t change the status beacuse this order is cancelled.']));
 
         //  for guest
