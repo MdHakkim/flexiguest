@@ -379,6 +379,7 @@
     function submitForm() {
         hideModalAlerts();
         var fd = new FormData($(`${form_id}`)[0]);
+        fd.append('RO_ORDER_TYPE', 'Room Service');
 
         $.ajax({
             url: '<?= base_url('/restaurant/order/place-order') ?>',

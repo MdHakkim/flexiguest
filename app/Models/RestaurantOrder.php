@@ -17,6 +17,8 @@ class RestaurantOrder extends Model
         'RO_PAYMENT_METHOD', // Pay at Reception, Samsung Pay, Credit/Debit card
         'RO_PAYMENT_STATUS', // UnPaid, Paid
         'RO_DELIVERY_STATUS', // New, Processing, Delivered, Cancelled
+        'RO_ASSIGNED_AT',
+        'RO_ORDER_TYPE', // Room Service, Dine-In
         'RO_CREATED_BY',
         'RO_UPDATED_BY',
     ];
