@@ -227,7 +227,7 @@ class RestaurantRepository extends BaseController
 
     public function menuItemById($id)
     {
-        return $this->MenuItem->find($id);
+        return $this->MenuItem->join('FLXY_RESTAURANTS', 'MI_RESTAURANT_ID = RE_ID', 'left')->find($id);
     }
 
     public function storeMenuItem($user_id, $data)
@@ -387,6 +387,14 @@ class RestaurantRepository extends BaseController
             ]
         ];
 
+        if (!isWeb())
+            $rules['RO_ORDER_TYPE'] = [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Please select a order type.'
+                ]
+            ];
+
         if (isWeb()) {
             $rules['RO_CUSTOMER_ID'] = [
                 'rules' => 'required',
@@ -462,9 +470,10 @@ class RestaurantRepository extends BaseController
             $this->createUpdateOrderDetail($item_data);
         }
 
-        if (empty($data['RO_ID']))
+        if (empty($data['RO_ID'])) {
+            $data['model_id'] = $order_id;
             $this->generateOrderInvoice($order_id);
-
+        }
 
         if (!isWeb() && empty($data['RO_ID']) && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
             $data = [
