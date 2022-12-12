@@ -107,6 +107,8 @@ class AdminDashboardController extends BaseController
                 $data['out_of_order_rooms'] += 1;
         }
 
+        $data['ready_for_sell'] = $data['inspected_rooms'];
+
         $data['maintenance_requests'] = count($this->MaintenanceRepository->allMaintenanceRequest());
         $data['amenities_orders'] = count($this->LaundryAmenitiesRepository->getLAOrders());
         $data['restaurant_orders'] = count($this->RestaurantRepository->orderList($user));
