@@ -40,6 +40,7 @@ class AdminDashboardController extends BaseController
 
     public function getStats()
     {
+        $user = session('user');
         $today = date('Y-m-d');
 
         // Reservations
@@ -59,16 +60,16 @@ class AdminDashboardController extends BaseController
 
         $data['last_seven_dates'] = $this->lastSevenDates();
 
-        $hightest_checkins_count = $lowest_checkins_count = 0;
-        $data['hightest_checkins'] = $data['lowest_checkins'] = null;
+        $highest_checkins_count = $lowest_checkins_count = 0;
+        $data['highest_checkins'] = $data['lowest_checkins'] = null;
         foreach ($data['last_seven_dates'] as $index => $date) {
             $where_condition = "RESV_ARRIVAL_DT = '{$date['date']}' and RESV_STATUS in ('Checked-In', 'Check-Out-Requested', 'Checked-Out')";
             $checkins_count = count($this->ReservationRepository->allReservations($where_condition));
             $data['last_seven_dates'][$index]['checkins'] = $checkins_count;
             
-            if($hightest_checkins_count < $checkins_count) {
-                $hightest_checkins_count = $checkins_count;
-                $data['hightest_checkins'] = ['count' => $checkins_count, 'day' => $date['day']];
+            if($highest_checkins_count < $checkins_count) {
+                $highest_checkins_count = $checkins_count;
+                $data['highest_checkins'] = ['count' => $checkins_count, 'day' => $date['day']];
             }
 
             if($lowest_checkins_count > $checkins_count) {
