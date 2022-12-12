@@ -82,7 +82,7 @@ class AdminDashboardController extends BaseController
         }
 
         $data['total_guests'] = $this->ReservationRepository->totalGuests();
-        $data['all_rooms'] = count($this->RoomRepository->allRooms());
+        $data['total_rooms'] = count($this->RoomRepository->allRooms());
 
         $data['maintenance_requests'] = count($this->MaintenanceRepository->allMaintenanceRequest());
         $data['amenities_orders'] = count($this->LaundryAmenitiesRepository->getLAOrders());
