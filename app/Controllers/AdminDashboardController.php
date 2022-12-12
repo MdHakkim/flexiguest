@@ -43,7 +43,7 @@ class AdminDashboardController extends BaseController
 
     public function getStats()
     {
-        $user = session('user');
+        $user = $this->request->user;
         $today = date('Y-m-d');
 
         // Reservations
@@ -81,7 +81,7 @@ class AdminDashboardController extends BaseController
             }
         }
 
-        $data['total_guests'] = count($this->ReservationRepository->totalGuests());
+        $data['total_guests'] = $this->ReservationRepository->totalGuests();
         $data['all_rooms'] = count($this->RoomRepository->allRooms());
 
         $data['maintenance_requests'] = count($this->MaintenanceRepository->allMaintenanceRequest());

@@ -98,6 +98,6 @@ class ReservationRepository extends BaseController
 
     public function totalGuests()
     {
-        return $this->Reservation->select('(sum(RESV_ADULTS) + sum(RESV_CHILDREN)) as total_guests')->first();
+        return $this->Reservation->select('(sum(RESV_ADULTS) + sum(RESV_CHILDREN)) as total_guests')->first()['total_guests'];
     }
 }
