@@ -357,7 +357,7 @@ class RestaurantRepository extends BaseController
     }
 
     /** ***************Place Order*************** */
-    public function placeOrderValidationRules()
+    public function placeOrderValidationRules($data)
     {
         $rules = [
             'RO_RESERVATION_ID' => [
@@ -387,13 +387,22 @@ class RestaurantRepository extends BaseController
             ]
         ];
 
-        if (!isWeb())
+        if (!isWeb()) {
             $rules['RO_ORDER_TYPE'] = [
-                'rules' => 'required',
+                'label' => 'order type',
+                'rules' => "required|customInArray[Dine-In,Room Service]",
                 'errors' => [
-                    'required' => 'Please select a order type.'
+                    'required' => 'Please select a order type.',
+                    'customInArray' => 'invalid Order type'
                 ]
             ];
+
+            if (isset($data['RO_ORDER_TYPE']) && $data['RO_ORDER_TYPE'] == 'Dine-In')
+                $rules = array_merge($rules, [
+                    'RR_SLOT_ID' => ['label' => 'slot', 'rules' => 'required', 'errors' => ['required' => 'Please select a slot.']],
+                    'RR_NO_OF_GUESTS' => ['label' => 'no of guests', 'rules' => 'required'],
+                ]);
+        }
 
         if (isWeb()) {
             $rules['RO_CUSTOMER_ID'] = [
