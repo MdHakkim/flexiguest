@@ -7,6 +7,7 @@ use App\Controllers\Repositories\PaymentRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\RestaurantRepository;
 use App\Controllers\Repositories\RestaurantReservationRepository;
+use App\Controllers\Repositories\RestaurantReservationSlotRepository;
 use App\Controllers\Repositories\UserRepository;
 use CodeIgniter\API\ResponseTrait;
 
@@ -21,6 +22,7 @@ class RestaurantController extends BaseController
     private $UserRepository;
     private $DepartmentRepository;
     private $RestaurantReservationRepository;
+    private $RestaurantReservationSlotRepository;
 
     public function __construct()
     {
@@ -30,6 +32,7 @@ class RestaurantController extends BaseController
         $this->UserRepository = new UserRepository();
         $this->DepartmentRepository = new DepartmentRepository();
         $this->RestaurantReservationRepository = new RestaurantReservationRepository();
+        $this->RestaurantReservationSlotRepository = new RestaurantReservationSlotRepository();
     }
 
     /** ------------------------------Restaurant------------------------------ */
@@ -359,21 +362,25 @@ class RestaurantController extends BaseController
             unset($data['RR_SLOT_ID']);
             unset($data['RR_NO_OF_GUESTS']);
             unset($data['RE_SEATING_CAPACITY']);
+
+            $check = $this->RestaurantReservationSlotRepository->reservationSlotById($slot_id);
+            if(empty($check))
+                return $this->respond(responseJson(202, true, ['msg' => "Invalid Slot selected."]));
         }
 
         $result = $this->RestaurantRepository->placeOrder($user, $data);
-        $data = $result['RESPONSE']['OUTPUT'];
-
+        $response = $result['RESPONSE']['OUTPUT'];
+        
         if (empty($data['RO_ID']) && $data['RO_ORDER_TYPE'] == 'Dine-In')
             $this->RestaurantReservationRepository->makeReservation([
                 'RR_RESTAURANT_ID' => $restaurant_id,
-                'RR_ORDER_ID' => $data['model_id'],
+                'RR_ORDER_ID' => $response['model_id'],
                 'RR_SLOT_ID' => $slot_id,
                 'RR_NO_OF_GUESTS' => $no_of_guests
             ]);
 
         if (!isWeb() && empty($data['RO_ID']) && $result['SUCCESS'] == 200 && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card')
-            $result = $this->PaymentRepository->createPaymentIntent($user, $data);
+            $result = $this->PaymentRepository->createPaymentIntent($user, $response);
 
         return $this->respond($result);
     }

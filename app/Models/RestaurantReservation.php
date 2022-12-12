@@ -11,8 +11,8 @@ class RestaurantReservation extends Model
     protected $allowedFields = [
         'RR_RESTAURANT_ID',
         'RR_ORDER_ID',
-        'RR_TABLE_ID',
         'RR_SLOT_ID',
+        'RR_NO_OF_GUESTS',
         'RR_CREATED_BY',
         'RR_UPDATED_BY',
     ];

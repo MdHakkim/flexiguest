@@ -3,36 +3,35 @@
 namespace App\Controllers\Repositories;
 
 use App\Controllers\BaseController;
-use App\Models\RestaurantReservationSlot;
+use App\Models\RestaurantReservation;
 use CodeIgniter\API\ResponseTrait;
 
 class RestaurantReservationRepository extends BaseController
 {
     use ResponseTrait;
 
-    private $RestaurantReservationSlot;
+    private $RestaurantReservation;
 
     public function __construct()
     {
-        $this->RestaurantReservationSlot = new RestaurantReservationSlot();
+        $this->RestaurantReservation = new RestaurantReservation();
     }
 
     public function checkReservationConflict($data)
     {
-        $check = $this->RestaurantReservationSlot
+        $check = $this->RestaurantReservation
             ->select('sum(RR_NO_OF_GUESTS) as RESERVED_SEATS')
             ->where('RR_SLOT_ID', $data['RR_SLOT_ID'])
-            ->where('RR_NO_OF_GUESTS', )
             ->first();
 
         if(($check['RESERVED_SEATS'] + $data['RR_NO_OF_GUESTS']) > $data['RE_SEATING_CAPACITY'])
-            return false;
+            return true;
 
-        return true;
+        return false;
     }
 
     public function makeReservation($data)
     {
-        return $this->RestaurantReservationSlot->save($data);
+        return $this->RestaurantReservation->save($data);
     }
 }
