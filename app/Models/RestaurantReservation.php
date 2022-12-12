@@ -9,6 +9,7 @@ class RestaurantReservation extends Model
     protected $table      = 'FLXY_RESTAURANT_RESERVATIONS';
     protected $primaryKey = 'RR_ID';
     protected $allowedFields = [
+        'RR_RESTAURANT_ID',
         'RR_ORDER_ID',
         'RR_TABLE_ID',
         'RR_SLOT_ID',

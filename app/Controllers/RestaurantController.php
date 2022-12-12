@@ -366,6 +366,7 @@ class RestaurantController extends BaseController
 
         if (empty($data['RO_ID']) && $data['RO_ORDER_TYPE'] == 'Dine-In')
             $this->RestaurantReservationRepository->makeReservation([
+                'RR_RESTAURANT_ID' => $restaurant_id,
                 'RR_ORDER_ID' => $data['model_id'],
                 'RR_SLOT_ID' => $slot_id,
                 'RR_NO_OF_GUESTS' => $no_of_guests
