@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\Repositories\LaundryAmenitiesRepository;
 use App\Controllers\Repositories\MaintenanceRepository;
 use App\Controllers\Repositories\ReservationRepository;
+use App\Controllers\Repositories\RestaurantRepository;
 use App\Controllers\Repositories\RoomRepository;
 use CodeIgniter\API\ResponseTrait;
 
@@ -17,6 +18,7 @@ class AdminDashboardController extends BaseController
     private $RoomRepository;
     private $MaintenanceRepository;
     private $LaundryAmenitiesRepository;
+    private $RestaurantRepository;
 
     public function __construct()
     {
@@ -24,6 +26,7 @@ class AdminDashboardController extends BaseController
         $this->RoomRepository = new RoomRepository();
         $this->MaintenanceRepository = new MaintenanceRepository();
         $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
+        $this->RestaurantRepository = new RestaurantRepository();
     }
 
     public function lastSevenDates()
@@ -78,11 +81,12 @@ class AdminDashboardController extends BaseController
             }
         }
 
-        // Rooms
+        $data['total_guests'] = count($this->ReservationRepository->totalGuests());
         $data['all_rooms'] = count($this->RoomRepository->allRooms());
 
-        $data['all_maintenance_requests'] = count($this->MaintenanceRepository->allMaintenanceRequest());
-        $data['all_laundry_amenities_orders'] = count($this->LaundryAmenitiesRepository->getLAOrders());
+        $data['maintenance_requests'] = count($this->MaintenanceRepository->allMaintenanceRequest());
+        $data['amenities_orders'] = count($this->LaundryAmenitiesRepository->getLAOrders());
+        $data['restaurant_orders'] = count($this->RestaurantRepository->orderList($user));
 
         return $this->respond(responseJson(200, false, ['msg' => 'Stats'], $data));
     }

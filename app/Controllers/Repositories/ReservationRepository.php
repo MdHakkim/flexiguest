@@ -79,14 +79,14 @@ class ReservationRepository extends BaseController
 
         $sql = "select * from FLXY_DOCUMENTS where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:";
         $response = $this->DB->query($sql, $params)->getResultArray();
-        if(empty($response))
+        if (empty($response))
             return responseJson(403, true, ['msg' => 'No documents uploaded yet.']);
 
         // $sql = "select * from FLXY_VACCINE_DETAILS where VACC_CUST_ID = :customer_id: and VACC_RESV_ID = :reservation_id:";
         // $response = $this->DB->query($sql, $params)->getResultArray();
         // if(empty($response))
         //     return responseJson(403, true, ['msg' => 'Vaccination details are not uploaded yet.']);
-        
+
         $sql = "update FLXY_DOCUMENTS set DOC_IS_VERIFY = 1 where DOC_CUST_ID = :customer_id: and DOC_RESV_ID = :reservation_id:";
         $this->DB->query($sql, $params);
 
@@ -94,5 +94,10 @@ class ReservationRepository extends BaseController
         // $this->DB->query($sql, $params);
 
         return responseJson(200, false, ['msg' => 'Documents are verified.']);
+    }
+
+    public function totalGuests()
+    {
+        return $this->Reservation->select('(sum(RESV_ADULTS) + sum(RESV_CHILDREN)) as total_guests')->first();
     }
 }
