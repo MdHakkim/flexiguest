@@ -34,4 +34,9 @@ class MaintenanceRepository extends BaseController
 
         return $comments;
     }
+
+    public function allMaintenanceRequest($where_condition = "1 = 1")
+    {
+        return $this->Maintenance->where($where_condition)->findAll();
+    }
 }

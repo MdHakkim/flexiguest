@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Controllers\Repositories\LaundryAmenitiesRepository;
+use App\Controllers\Repositories\MaintenanceRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\RoomRepository;
 use CodeIgniter\API\ResponseTrait;
@@ -13,11 +15,15 @@ class AdminDashboardController extends BaseController
 
     private $ReservationRepository;
     private $RoomRepository;
+    private $MaintenanceRepository;
+    private $LaundryAmenitiesRepository;
 
     public function __construct()
     {
         $this->ReservationRepository = new ReservationRepository();
         $this->RoomRepository = new RoomRepository();
+        $this->MaintenanceRepository = new MaintenanceRepository();
+        $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
     }
 
     public function lastSevenDates()
@@ -54,7 +60,7 @@ class AdminDashboardController extends BaseController
         $data['last_seven_dates'] = $this->lastSevenDates();
 
         $hightest_checkins_count = $lowest_checkins_count = 0;
-        $data['hightest_checkins'] = $data['lowest_checkins'] = [];
+        $data['hightest_checkins'] = $data['lowest_checkins'] = null;
         foreach ($data['last_seven_dates'] as $index => $date) {
             $where_condition = "RESV_ARRIVAL_DT = '{$date['date']}' and RESV_STATUS in ('Checked-In', 'Check-Out-Requested', 'Checked-Out')";
             $checkins_count = count($this->ReservationRepository->allReservations($where_condition));
@@ -73,6 +79,9 @@ class AdminDashboardController extends BaseController
 
         // Rooms
         $data['all_rooms'] = count($this->RoomRepository->allRooms());
+
+        $data['all_maintenance_requests'] = count($this->MaintenanceRepository->allMaintenanceRequest());
+        $data['all_laundry_amenities_orders'] = count($this->LaundryAmenitiesRepository->getLAOrders());
 
         return $this->respond(responseJson(200, false, ['msg' => 'Stats'], $data));
     }
