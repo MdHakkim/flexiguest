@@ -37,7 +37,7 @@ class RestaurantReservationSlotRepository extends BaseController
     public function storeReservationSlot($user, $data)
     {
         $check = $this->checkSlotConflict($data);
-        if(!empty($check))
+        if (!empty($check))
             return responseJson(202, true, ['msg' => "Conflict with a reservation slot from {$check['RRS_FROM_TIME']} to {$check['RRS_TO_TIME']}"]);
 
         if (empty($data['RRS_ID'])) {
@@ -66,6 +66,12 @@ class RestaurantReservationSlotRepository extends BaseController
 
     public function reservationSlots()
     {
-        return $this->RestaurantReservationSlot->orderBy('RRS_DISPLAY_SEQUENCE', 'asc')->findAll();
+        $slots = $this->RestaurantReservationSlot->select('')->orderBy('RRS_DISPLAY_SEQUENCE', 'asc')->findAll();
+        foreach ($slots as $index => $slot) {
+            $slots[$index]['RRS_FROM_TIME'] = date('h:i A', strtotime($slot['RRS_FROM_TIME']));
+            $slots[$index]['RRS_TO_TIME'] = date('h:i A', strtotime($slot['RRS_TO_TIME']));
+        }
+
+        return $slots;
     }
 }
