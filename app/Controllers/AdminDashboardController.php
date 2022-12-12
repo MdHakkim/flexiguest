@@ -49,6 +49,9 @@ class AdminDashboardController extends BaseController
         // Reservations
         $data['all_reservations'] = count($this->ReservationRepository->allReservations());
 
+        $where_condition = "RESV_ARRIVAL_DT = '$today' and RESV_CREATE_DT = '$today'";
+        $data['walkin_reservations'] = count($this->ReservationRepository->allReservations($where_condition));
+
         $where_condition = "RESV_ARRIVAL_DT = '$today' and RESV_STATUS in ('Checked-In')";
         $data['checkins_today'] = count($this->ReservationRepository->allReservations($where_condition));
 
@@ -69,20 +72,40 @@ class AdminDashboardController extends BaseController
             $where_condition = "RESV_ARRIVAL_DT = '{$date['date']}' and RESV_STATUS in ('Checked-In', 'Check-Out-Requested', 'Checked-Out')";
             $checkins_count = count($this->ReservationRepository->allReservations($where_condition));
             $data['last_seven_dates'][$index]['checkins'] = $checkins_count;
-            
-            if($highest_checkins_count < $checkins_count) {
+
+            if ($highest_checkins_count < $checkins_count) {
                 $highest_checkins_count = $checkins_count;
                 $data['highest_checkins'] = ['count' => $checkins_count, 'day' => $date['day']];
             }
 
-            if($lowest_checkins_count > $checkins_count) {
+            if ($lowest_checkins_count > $checkins_count) {
                 $lowest_checkins_count = $checkins_count;
                 $data['lowest_checkins'] = ['count' => $checkins_count, 'day' => $date['day']];
             }
         }
 
         $data['total_guests'] = $this->ReservationRepository->totalGuests();
-        $data['total_rooms'] = count($this->RoomRepository->allRooms());
+
+        $rooms = $this->RoomRepository->roomsWithStatus();
+        $data['total_rooms'] = count($rooms);
+        $data['clean_rooms'] = $data['dirty_rooms'] = $data['inspected_rooms'] = $data['out_of_service_rooms'] = $data['out_of_order_rooms'] = 0;
+
+        foreach ($rooms as $room) {
+            if ($room['ROOM_STATUS_ID'] == 1)
+                $data['clean_rooms'] += 1;
+
+            else if (is_null($room['ROOM_STATUS_ID']) || $room['ROOM_STATUS_ID'] == 2)
+                $data['dirty_rooms'] += 1;
+
+            else if ($room['ROOM_STATUS_ID'] == 3)
+                $data['inspected_rooms'] += 1;
+
+            else if ($room['ROOM_STATUS_ID'] == 4)
+                $data['out_of_service_rooms'] += 1;
+
+            else if ($room['ROOM_STATUS_ID'] == 5)
+                $data['out_of_order_rooms'] += 1;
+        }
 
         $data['maintenance_requests'] = count($this->MaintenanceRepository->allMaintenanceRequest());
         $data['amenities_orders'] = count($this->LaundryAmenitiesRepository->getLAOrders());
