@@ -569,16 +569,18 @@ class UserController extends BaseController
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
 
-            $userId   = $this->Db->insertID();
-            $userDept = $this->request->getPost('USR_DEPARTMENT');
+            if ($this->request->getPost("USR_ROLE_ID") == 3 && $this->request->getPost("SUPER_USER_ID") == ''){
+                $userId   = $this->Db->insertID();
+                $userDept = $this->request->getPost('USR_DEPARTMENT');
 
-            $super_data = [
-                'USER_ID'   => $userId,
-                'SUPER_ID'  => $this->request->getPost('SUPER_USER_ID'),
-                'SUPER_DEPT'=> $userDept ?? '',
-                'USER_SUPER_CREATED' => date("Y-m-d H:i:s"),
-            ];  
-            $this->Db->table('FLXY_USER_SUPER')->insert($super_data);
+                $super_data = [
+                    'USER_ID'   => $userId,
+                    'SUPER_ID'  => $this->request->getPost('SUPER_USER_ID'),
+                    'SUPER_DEPT'=> $userDept ?? '',
+                    'USER_SUPER_CREATED' => date("Y-m-d H:i:s"),
+                ];  
+                $this->Db->table('FLXY_USER_SUPER')->insert($super_data);
+            }
 
 
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
