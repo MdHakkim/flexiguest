@@ -1106,6 +1106,7 @@ $(document).on('change', '#USR_DEPARTMENT', function() {
             USR_DEPARTMENT: department,
         },
         success: function(respn) {
+            $('#SUPER_USER_ID').html('');
             $('#SUPER_USER_ID').html(respn);
 
         }

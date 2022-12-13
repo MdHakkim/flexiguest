@@ -578,9 +578,11 @@ class UserController extends BaseController
                     'SUPER_ID'  => $this->request->getPost('SUPER_USER_ID'),
                     'SUPER_DEPT'=> $userDept ?? '',
                     'USER_SUPER_CREATED' => date("Y-m-d H:i:s"),
-                ];  
+                ]; 
+                
+                $userIDExists = checkValueinTable('USER_ID', $userId, 'FLXY_USER_SUPER');
               
-                $returnSuper = !empty($sysid) ? $this->Db->table('FLXY_USER_SUPER')->where('USER_ID', $sysid)->update($super_data) : $this->Db->table('FLXY_USER_SUPER')->insert($super_data);
+                $returnSuper = ($userIDExists) ? $this->Db->table('FLXY_USER_SUPER')->where('USER_ID', $userId)->update($super_data) : $this->Db->table('FLXY_USER_SUPER')->insert($super_data);
             }
 
 
