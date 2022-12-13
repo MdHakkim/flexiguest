@@ -53,22 +53,67 @@ class AdminDashboardController extends BaseController
         $today = date('Y-m-d');
 
         // Reservations
-        $data['all_reservations'] = count($this->ReservationRepository->allReservations());
+        $data = [
+            'all_reservations' => 0,
+            'walkin_reservations' => 0,
+            'checkins_today' => 0,
+            'checkouts_today' => 0,
+            'arrivals_today' => 0,
+            'cancelled_today' => 0,
+            'in_house_rooms' => 0,
+            'arrival_expected_rooms' => 0,
+            'departure_expected_rooms' => 0,
+            'complementary_arrivals' => 0,
+            'complementary_departures' => 0,
+            'complementary_checkedins' => 0,
+            'room_revenue' => 0,
+        ];
 
-        $where_condition = "RESV_SOURCE = 'WLK'";
-        $data['walkin_reservations'] = count($this->ReservationRepository->allReservations($where_condition));
+        $reservations = $this->ReservationRepository->allReservations();
+        $data['all_reservations'] = count($reservations);
 
-        $where_condition = "RESV_ARRIVAL_DT = '$today' and RESV_STATUS in ('Checked-In')";
-        $data['checkins_today'] = count($this->ReservationRepository->allReservations($where_condition));
+        foreach ($reservations as $reservation) {
+            if ($reservation['RESV_SOURCE'] == 'WLK')
+                $data['walkin_reservations']++;
 
-        $where_condition = "RESV_DEPARTURE = '$today' and RESV_STATUS in ('Checked-Out')";
-        $data['checkouts_today'] = count($this->ReservationRepository->allReservations($where_condition));
+            if ($reservation['RESV_ARRIVAL_DT'] == $today && in_array($reservation['RESV_STATUS'], ['Checked-In']))
+                $data['checkins_today']++;
 
-        $where_condition = "RESV_ARRIVAL_DT = '$today' and RESV_STATUS in ('Due Pre Check-In', 'Pre Checked-In')";
-        $data['arrivals_today'] = count($this->ReservationRepository->allReservations($where_condition));
+            if ($reservation['RESV_DEPARTURE'] == $today && in_array($reservation['RESV_STATUS'], ['Checked-Out']))
+                $data['checkouts_today']++;
 
-        $where_condition = "RESV_STATUS in ('Cancelled')";
-        $data['cancelled_today'] = count($this->ReservationRepository->allReservations($where_condition));
+            if ($reservation['RESV_ARRIVAL_DT'] == $today && in_array($reservation['RESV_STATUS'], ['Due Pre Check-In', 'Pre Checked-In']))
+                $data['arrivals_today']++;
+
+            if (in_array($reservation['RESV_STATUS'], ['Cancelled']))
+                $data['cancelled_today']++;
+
+            if (in_array($reservation['RESV_STATUS'], ['Checked-In', 'Check-Out-Requested']))
+                $data['in_house_rooms']++;
+
+            if ($reservation['RESV_ARRIVAL_DT'] == $today && in_array($reservation['RESV_STATUS'], ['Due Pre Check-In', 'Pre Checked-In']) && !empty($reservation['RESV_ROOM']))
+                $data['arrival_expected_rooms']++;
+
+            if ($reservation['RESV_DEPARTURE'] == $today && in_array($reservation['RESV_STATUS'], ['Checked-In', 'Check-Out-Requested']))
+                $data['departure_expected_rooms']++;
+
+            if ($reservation['RESV_RATE_CODE'] == 'COMP' && $reservation['RESV_ARRIVAL_DT'] == $today && in_array($reservation['RESV_STATUS'], ['Due Pre Check-In', 'Pre Checked-In']))
+                $data['complementary_arrivals']++;
+
+            if ($reservation['RESV_RATE_CODE'] == 'COMP' && $reservation['RESV_DEPARTURE'] == $today && in_array($reservation['RESV_STATUS'], ['Checked-In', 'Check-Out-Requested', 'Checked-Out']))
+                $data['complementary_departures']++;
+
+            if ($reservation['RESV_RATE_CODE'] == 'COMP' && in_array($reservation['RESV_STATUS'], ['Checked-In', 'Check-Out-Requested']))
+                $data['complementary_checkedins']++;
+
+            if(!empty($reservation['RESV_RATE']))
+                $data['room_revenue'] += doubleval($reservation['RESV_RATE']);
+        }
+
+        $data['departure_rooms'] = $data['checkouts_today'];
+
+        $total_guests = $this->ReservationRepository->totalGuests();
+        $data['total_guests'] = $total_guests['total_adults'] . '/' . $total_guests['total_children'];
 
         $data['last_seven_dates'] = $this->lastSevenDates();
 
@@ -90,14 +135,10 @@ class AdminDashboardController extends BaseController
             }
         }
 
-        $where_condition = "RESV_STATUS in ('Checked-In', 'Check-Out-Requested')";
-        $data['in_house_rooms'] = $data['currently_checkedin'] = count($this->ReservationRepository->allReservations($where_condition));
-
-        $total_guests = $this->ReservationRepository->totalGuests();
-        $data['total_guests'] = $total_guests['total_adults'] . '/' . $total_guests['total_children'];
-
         $rooms = $this->RoomRepository->roomsWithStatus();
         $data['total_rooms'] = count($rooms);
+        $data['average_room_revenue'] = $data['room_revenue'] / $data['total_rooms'];
+        
         $data['clean_rooms'] = $data['dirty_rooms'] = $data['inspected_rooms'] = $data['out_of_service_rooms'] = $data['out_of_order_rooms'] = 0;
 
         foreach ($rooms as $room) {
@@ -117,22 +158,13 @@ class AdminDashboardController extends BaseController
                 $data['out_of_order_rooms'] += 1;
         }
 
-        $where_condition = "RESV_DEPARTURE = '$today' and RESV_STATUS in ('Checked-Out')";
-        $data['departure_rooms'] = count($this->ReservationRepository->allReservations($where_condition));
-
-        $where_condition = "RESV_DEPARTURE = '$today' and RESV_STATUS in ('Checked-In', 'Check-Out-Requested')";
-        $data['departure_expected_rooms'] = count($this->ReservationRepository->allReservations($where_condition));
-
-        $where_condition = "RESV_DEPARTURE = '$today' and RESV_STATUS in ('Checked-In', 'Check-Out-Requested')";
-        $data['arrival_expected_rooms'] = count($this->ReservationRepository->allReservations($where_condition));
-
         $data['ready_for_sell'] = (($data['total_rooms'] - $data['out_of_order_rooms']) - $data['in_house_rooms']);
 
         $data['maintenance_requests'] = count($this->MaintenanceRepository->allMaintenanceRequest("MAINT_STATUS in ('New', 'Assigned', 'In Progress')"));
-        
+
         $data['amenities_orders'] = count($this->LaundryAmenitiesRepository->getLAOrders());
         $data['amenities_revenue'] = $this->LaundryAmenitiesRepository->laundryAmenitiesRevenue();
-        
+
         $data['concierge_revenue'] = doubleval($this->ConciergeRepository->conciergeRevenue());
 
         $data['transport_request_revenue'] = doubleval($this->TransportRequestRepository->transportRequestRevenue());
