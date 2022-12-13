@@ -326,7 +326,8 @@ class RestaurantController extends BaseController
 
     public function allOrder()
     {
-        $this->RestaurantRepository->allOrder();
+        $data = $this->request->getPost();
+        $this->RestaurantRepository->allOrder($data);
     }
 
     public function placeOrder()
@@ -338,7 +339,7 @@ class RestaurantController extends BaseController
         if (!$this->validate($this->RestaurantRepository->placeOrderValidationRules($data)))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
-        if ($data['RO_ORDER_TYPE'] == 'Dine-In') {
+        if (!empty($data['RO_ORDER_TYPE']) && $data['RO_ORDER_TYPE'] == 'Dine-In') {
             $restaurant_id = null;
 
             foreach ($data['RO_ITEMS'] as $index => $item) {
@@ -371,7 +372,7 @@ class RestaurantController extends BaseController
         $result = $this->RestaurantRepository->placeOrder($user, $data);
         $response = $result['RESPONSE']['OUTPUT'];
         
-        if (empty($data['RO_ID']) && $data['RO_ORDER_TYPE'] == 'Dine-In')
+        if (empty($data['RO_ID']) && !empty($data['RO_ORDER_TYPE']) && $data['RO_ORDER_TYPE'] == 'Dine-In')
             $this->RestaurantReservationRepository->makeReservation([
                 'RR_RESTAURANT_ID' => $restaurant_id,
                 'RR_ORDER_ID' => $response['model_id'],

@@ -15,13 +15,38 @@
         <div class="card">
             <!-- <h5 class="card-header">Responsive Datatable</h5> -->
             <div class="container-fluid table-responsive" style="padding: 16px 16px 6px 16px">
+
+                <form class="search-form mb-2" method="POST">
+                    <div class="border rounded p-3 mb-3">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Order Type</b></label>
+                                <select name="order_type" class="select2 form-select">
+                                    <option value="">Select Order Type</option>
+                                    <option>Room Service</option>
+                                    <option>Dine-In</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-12 text-end">
+                                <button type="button" class="btn btn-primary submit-search-form">
+                                    <i class='bx bx-search'></i> Search
+                                </button>
+
+                                <button type="button" class="btn btn-secondary clear-search-form">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
                 <table id="dataTable_view" class="dt-responsive table table-striped display nowrap" style="width:100%">
                     <thead>
                         <tr>
                             <th></th>
                             <th>ID</th>
-                            <th class="all">Room</th>
-                            <th class="all">Guest Name</th>
+                            <th>Order Type</th>
+                            <th>Room</th>
+                            <th>Guest Name</th>
                             <th>Reservation</th>
                             <th>Delivery Status</th>
                             <th>Payment Status</th>
@@ -221,13 +246,23 @@
             'serverSide': true,
             'serverMethod': 'post',
             'ajax': {
-                'url': '<?php echo base_url('/restaurant/order/all-order') ?>'
+                'url': '<?php echo base_url('/restaurant/order/all-order') ?>',
+                'type': 'POST',
+                'data': function(d) {
+                    var form_data = $('form.search-form').serializeArray();
+                    $(form_data).each(function(i, field) {
+                        d[field.name] = field.value;
+                    });
+                },
             },
             'columns': [{
                     data: ''
                 },
                 {
                     data: 'RO_ID'
+                },
+                {
+                    data: 'RO_ORDER_TYPE'
                 },
                 {
                     data: 'RM_NO'
@@ -379,7 +414,10 @@
     function submitForm() {
         hideModalAlerts();
         var fd = new FormData($(`${form_id}`)[0]);
-        fd.append('RO_ORDER_TYPE', 'Room Service');
+
+        let order_id = $(`${form_id} input[name='RO_ID']`).val();
+        if (!order_id)
+            fd.append('RO_ORDER_TYPE', 'Room Service');
 
         $.ajax({
             url: '<?= base_url('/restaurant/order/place-order') ?>',
@@ -725,6 +763,15 @@
         $(`${form_id} input[name="RO_ROOM_ID"]`).val(room_id);
         $(`${form_id} input[name="RO_ROOM_NO"]`).val(room_no);
     }
+
+    $(document).on('click', '.submit-search-form', function() {
+        $('#dataTable_view').dataTable().fnDraw();
+    });
+
+    $(document).on('click', '.clear-search-form', function() {
+        $(`.search-form select`).val('').trigger('change');
+        $('#dataTable_view').dataTable().fnDraw();
+    });
 
 
     // bootstrap-maxlength & repeater (jquery)

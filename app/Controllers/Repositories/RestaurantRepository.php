@@ -585,12 +585,17 @@ class RestaurantRepository extends BaseController
         return $this->RestaurantOrder->where($where_condition)->findAll();
     }
 
-    public function allOrder()
+    public function allOrder($data)
     {
         $mine = new ServerSideDataTable();
         $tableName = 'FLXY_RESTAURANT_ORDERS left join FLXY_ROOM on RO_ROOM_ID = RM_ID left join FLXY_CUSTOMER on RO_CUSTOMER_ID = CUST_ID';
-        $columns = 'RO_ID,RO_RESERVATION_ID,RO_ROOM_ID,RO_CUSTOMER_ID,RO_TOTAL_PAYABLE,RO_DELIVERY_STATUS,RO_PAYMENT_STATUS,RO_PAYMENT_METHOD,RO_CREATED_AT,RM_NO,CUST_FIRST_NAME,CUST_LAST_NAME';
-        $mine->generate_DatatTable($tableName, $columns);
+        $columns = 'RO_ID,RO_RESERVATION_ID,RO_ROOM_ID,RO_CUSTOMER_ID,RO_TOTAL_PAYABLE,RO_DELIVERY_STATUS,RO_ORDER_TYPE,RO_PAYMENT_STATUS,RO_PAYMENT_METHOD,RO_CREATED_AT,RM_NO,CUST_FIRST_NAME,CUST_LAST_NAME';
+
+        $init_cond = [];
+        if(isset($data['order_type']))
+            $init_cond['RO_ORDER_TYPE like '] = "'%{$data['order_type']}%'";
+
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
 
