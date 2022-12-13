@@ -831,8 +831,8 @@ function submitForm(id) {
 
 
 function editUser(sysid) {
-    countryList();
-    roleList();
+    
+    
     $('.dtr-bs-modal').modal('hide');
 
     $('#USR_ID').val(sysid);
@@ -845,6 +845,8 @@ function editUser(sysid) {
     $(".statusCheck").show();
 
     $('#popModalWindow').modal('show');
+    roleList();
+    countryList();
 
     var url = '<?php echo base_url('/editUser') ?>';
 
