@@ -139,7 +139,20 @@
                                                 required>
                                                 <?= $departmentList ?>
                                             </select>
+                                        </div>     
+
+                                        <div class="col-md-4 super-user-col mt-3"  >
+                                            <label for="html5-text-input" class="col-form-label"><b>Super User
+                                                    *</b></label>
+                                            <select id="SUPER_USER_ID" name="SUPER_USER_ID"
+                                                class="select2 form-select form-select-lg" data-allow-clear="true"
+                                                required>
+                                            </select>
                                         </div>
+                                        
+                                                                         
+
+
                                     </div>
 
                                     <div class="row mb-3">
@@ -295,6 +308,10 @@
 
 <script>
 $(document).ready(function() {
+
+    $(".super-user-col").hide();
+
+    $(".display_none").css('display','none')
 
     $('#USR_DOB').datepicker({
         format: 'd-M-yyyy',
@@ -848,14 +865,19 @@ function editUser(sysid) {
                 $.each(data, function(fields, datavals) {
                     var field = $.trim(fields); //fields.trim();
                     var dataval = $.trim(
-                        datavals); //datavals.trim();                       
-
-
+                        datavals); //datavals.trim();   
+                        
+                        
                     if (field == 'USR_ROLE_ID' || field == 'USR_DEPARTMENT') {
 
-                        $('#' + field).select2("val", dataval);
+                    $('#' + field).select2("val", dataval);
 
-                    } else if ($('#' + field).attr('type') == 'checkbox') {
+                    }
+                    else  if(field == 'SUPER_ID'){    
+                                           
+                        $('#SUPER_USER_ID').val(dataval).trigger('change'); 
+                    }
+                    else if ($('#' + field).attr('type') == 'checkbox') {
 
                         $('#' + field).prop('checked', dataval == 1 ? true : false);
 
@@ -863,8 +885,6 @@ function editUser(sysid) {
 
                         $('#' + field + '_' + dataval).prop('checked', true);
                     } else if (field == 'USR_CITY') {
-
-
                         city_val = dataval;
 
                     } else if (field == 'USR_STATE') {
@@ -1047,6 +1067,50 @@ function roleList() {
     });
 
 }
+
+
+$("#USR_ROLE_ID").change(function(e) {
+    var role = $(this).val();
+    $(".super-user-col").hide();
+    if(role == 3)
+    $(".super-user-col").show();
+    else
+    return;
+    var department = $("#USR_DEPARTMENT").val();
+    $.ajax({
+        url: '<?php echo base_url('/allUsersList')?>',
+        type: "post",
+        async: false,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            USR_DEPARTMENT: department,
+        },
+        success: function(respn) {
+            $('#SUPER_USER_ID').html(respn);
+
+        }
+    });
+});
+$(document).on('change', '#USR_DEPARTMENT', function() {
+    var department = $(this).val();
+    $.ajax({
+        url: '<?php echo base_url('/allUsersList')?>',
+        type: "post",
+        async: false,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            USR_DEPARTMENT: department,
+        },
+        success: function(respn) {
+            $('#SUPER_USER_ID').html(respn);
+
+        }
+    });
+});
 </script>
 
 <?= $this->endSection() ?>
