@@ -178,9 +178,9 @@ class ConciergeRepository extends BaseController
     public function generateConciergeInvoice($concierge_request_id, $transaction_id = null)
     {
         $concierge_request = $this->getConciergeRequest("CR_ID = $concierge_request_id");
-        if(empty($concierge_request))
+        if (empty($concierge_request))
             return null;
-            
+
         $concierge_request['transaction_id'] = $transaction_id;
 
         $view = 'Templates/concierge_invoice_template';
@@ -191,5 +191,13 @@ class ConciergeRepository extends BaseController
 
         generateInvoice($file_name, $view, ['data' => $concierge_request]);
         return $file_name;
+    }
+
+    public function conciergeRevenue()
+    {
+        return $this->ConciergeRequest
+            ->select('sum(CR_TOTAL_AMOUNT) as revenue')
+            ->where("CR_PAYMENT_STATUS = 'Paid'")
+            ->first()['revenue'];
     }
 }

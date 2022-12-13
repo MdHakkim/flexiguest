@@ -2,11 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Controllers\Repositories\ConciergeRepository;
 use App\Controllers\Repositories\LaundryAmenitiesRepository;
 use App\Controllers\Repositories\MaintenanceRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\RestaurantRepository;
 use App\Controllers\Repositories\RoomRepository;
+use App\Controllers\Repositories\TransportRequestRepository;
 use CodeIgniter\API\ResponseTrait;
 
 class AdminDashboardController extends BaseController
@@ -19,6 +21,8 @@ class AdminDashboardController extends BaseController
     private $MaintenanceRepository;
     private $LaundryAmenitiesRepository;
     private $RestaurantRepository;
+    private $ConciergeRepository;
+    private $TransportRequestRepository;
 
     public function __construct()
     {
@@ -27,6 +31,8 @@ class AdminDashboardController extends BaseController
         $this->MaintenanceRepository = new MaintenanceRepository();
         $this->LaundryAmenitiesRepository = new LaundryAmenitiesRepository();
         $this->RestaurantRepository = new RestaurantRepository();
+        $this->ConciergeRepository = new ConciergeRepository();
+        $this->TransportRequestRepository = new TransportRequestRepository();
     }
 
     public function lastSevenDates()
@@ -49,7 +55,7 @@ class AdminDashboardController extends BaseController
         // Reservations
         $data['all_reservations'] = count($this->ReservationRepository->allReservations());
 
-        $where_condition = "RESV_ARRIVAL_DT = '$today' and RESV_CREATE_DT = '$today'";
+        $where_condition = "RESV_SOURCE = 'WLK'";
         $data['walkin_reservations'] = count($this->ReservationRepository->allReservations($where_condition));
 
         $where_condition = "RESV_ARRIVAL_DT = '$today' and RESV_STATUS in ('Checked-In')";
@@ -84,7 +90,11 @@ class AdminDashboardController extends BaseController
             }
         }
 
-        $data['total_guests'] = $this->ReservationRepository->totalGuests();
+        $where_condition = "RESV_STATUS in ('Checked-In', 'Check-Out-Requested')";
+        $data['in_house_rooms'] = $data['currently_checkedin'] = count($this->ReservationRepository->allReservations($where_condition));
+
+        $total_guests = $this->ReservationRepository->totalGuests();
+        $data['total_guests'] = $total_guests['total_adults'] . '/' . $total_guests['total_children'];
 
         $rooms = $this->RoomRepository->roomsWithStatus();
         $data['total_rooms'] = count($rooms);
@@ -107,11 +117,29 @@ class AdminDashboardController extends BaseController
                 $data['out_of_order_rooms'] += 1;
         }
 
-        $data['ready_for_sell'] = $data['inspected_rooms'];
+        $where_condition = "RESV_DEPARTURE = '$today' and RESV_STATUS in ('Checked-Out')";
+        $data['departure_rooms'] = count($this->ReservationRepository->allReservations($where_condition));
 
-        $data['maintenance_requests'] = count($this->MaintenanceRepository->allMaintenanceRequest());
+        $where_condition = "RESV_DEPARTURE = '$today' and RESV_STATUS in ('Checked-In', 'Check-Out-Requested')";
+        $data['departure_expected_rooms'] = count($this->ReservationRepository->allReservations($where_condition));
+
+        $where_condition = "RESV_DEPARTURE = '$today' and RESV_STATUS in ('Checked-In', 'Check-Out-Requested')";
+        $data['arrival_expected_rooms'] = count($this->ReservationRepository->allReservations($where_condition));
+
+        $data['ready_for_sell'] = (($data['total_rooms'] - $data['out_of_order_rooms']) - $data['in_house_rooms']);
+
+        $data['maintenance_requests'] = count($this->MaintenanceRepository->allMaintenanceRequest("MAINT_STATUS in ('New', 'Assigned', 'In Progress')"));
+        
         $data['amenities_orders'] = count($this->LaundryAmenitiesRepository->getLAOrders());
+        $data['amenities_revenue'] = $this->LaundryAmenitiesRepository->laundryAmenitiesRevenue();
+        
+        $data['concierge_revenue'] = doubleval($this->ConciergeRepository->conciergeRevenue());
+
+        $data['transport_request_revenue'] = doubleval($this->TransportRequestRepository->transportRequestRevenue());
+
         $data['restaurant_orders'] = count($this->RestaurantRepository->orderList($user));
+        $data['f&b_revenue'] = doubleval($this->RestaurantRepository->restaurantRevenue());
+        $data['other_revenue'] = $data['amenities_revenue'] + $data['concierge_revenue'] + $data['transport_request_revenue'];
 
         return $this->respond(responseJson(200, false, ['msg' => 'Stats'], $data));
     }

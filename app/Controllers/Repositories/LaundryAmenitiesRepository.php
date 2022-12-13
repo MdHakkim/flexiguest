@@ -176,4 +176,18 @@ class LaundryAmenitiesRepository extends BaseController
         generateInvoice($file_name, $view, ['data' => $order]);
         return $file_name;
     }
+
+    public function laundryAmenitiesRevenue()
+    {
+        $revenue = 0;
+        $orders = $this->getLAOrders("LAO_PAYMENT_STATUS = 'Paid'");
+        foreach($orders as $order) {
+            $revenue += $this->LaundryAmenitiesOrderDetail
+                ->select('sum(LAOD_AMOUNT) as total_amount')
+                ->where("LAOD_ORDER_ID = {$order['LAO_ID']} and LAOD_DELIVERY_STATUS in ('New','Processing','Delivered','Acknowledged')")
+                ->first()['total_amount'];
+        }
+
+        return $revenue;
+    }
 }

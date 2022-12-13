@@ -200,9 +200,9 @@ class TransportRequestRepository extends BaseController
     public function generateTransportRequestInvoice($request_id, $transaction_id = null)
     {
         $transport_request = $this->getTransportRequest("TR_ID = $request_id");
-        if(empty($transport_request))
+        if (empty($transport_request))
             return null;
-            
+
         $transport_request['transaction_id'] = $transaction_id;
 
         $view = 'Templates/transport_request_invoice_template';
@@ -213,5 +213,13 @@ class TransportRequestRepository extends BaseController
 
         generateInvoice($file_name, $view, ['data' => $transport_request]);
         return $file_name;
+    }
+
+    public function transportRequestRevenue()
+    {
+        return $this->TransportRequest
+            ->select('sum(TR_TOTAL_AMOUNT) as revenue')
+            ->where("TR_PAYMENT_STATUS = 'Paid' and TR_STATUS in ('New', 'In Progress')")
+            ->first()['revenue'];
     }
 }
