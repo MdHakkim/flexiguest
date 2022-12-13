@@ -832,7 +832,6 @@ function submitForm(id) {
 
 function editUser(sysid) {
     
-    
     $('.dtr-bs-modal').modal('hide');
 
     $('#USR_ID').val(sysid);
@@ -894,9 +893,11 @@ function editUser(sysid) {
                         state_val = dataval;
 
                     } else if (field == 'USR_COUNTRY') {
-
-                        $('#USR_COUNTRY').val(dataval).trigger('change', state_val);
-                        $('#USR_STATE').val(state_val).trigger('change', city_val);
+                        if(dataval > 0)
+                            $('#USR_COUNTRY').val(dataval).trigger('change', state_val);
+                        if(state_val > 0)   
+                            $('#USR_STATE').val(state_val).trigger('change', city_val);
+                        
 
                     } else if (field == 'USR_PASSWORD') {
                         // $('#USR_PASSWORD').val(dataval);
@@ -952,8 +953,7 @@ function countryList() {
 
 
 }
-
-$("#USR_COUNTRY").change(function(e, param = 0) {
+$(document).on('change', '#USR_COUNTRY', function(e, param = 0) {
 
     var ccode = $(this).val();
     $.ajax({
@@ -974,7 +974,7 @@ $("#USR_COUNTRY").change(function(e, param = 0) {
     });
 });
 
-$("#USR_STATE").change(function(e, param = 0) {
+$(document).on('change', '#USR_STATE', function(e, param = 0) {
     var scode = $('#USR_STATE').val();
     var ccode = $('#USR_COUNTRY').val();
     $.ajax({
@@ -1069,9 +1069,7 @@ function roleList() {
     });
 
 }
-
-
-$("#USR_ROLE_ID").change(function(e) {
+$(document).on('change', '#USR_ROLE_ID', function() {
     var role = $(this).val();
     $(".super-user-col").hide();
     if(role == 3)
