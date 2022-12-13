@@ -579,7 +579,8 @@ class UserController extends BaseController
                     'SUPER_DEPT'=> $userDept ?? '',
                     'USER_SUPER_CREATED' => date("Y-m-d H:i:s"),
                 ];  
-                $this->Db->table('FLXY_USER_SUPER')->insert($super_data);
+              
+                $returnSuper = !empty($sysid) ? $this->Db->table('FLXY_USER_SUPER')->where('USER_ID', $sysid)->update($super_data) : $this->Db->table('FLXY_USER_SUPER')->insert($super_data);
             }
 
 
