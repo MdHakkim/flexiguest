@@ -110,6 +110,7 @@ class AdminDashboardController extends BaseController
                 $data['room_revenue'] += doubleval($reservation['RESV_RATE']);
         }
 
+        $data['room_revenue'] = strval($data['room_revenue']);
         $data['departure_rooms'] = $data['checkouts_today'];
 
         $total_guests = $this->ReservationRepository->totalGuests();
@@ -138,7 +139,7 @@ class AdminDashboardController extends BaseController
         $rooms = $this->RoomRepository->roomsWithStatus();
         $data['total_rooms'] = count($rooms);
         $data['average_room_revenue'] = $data['room_revenue'] / $data['total_rooms'];
-        
+
         $data['clean_rooms'] = $data['dirty_rooms'] = $data['inspected_rooms'] = $data['out_of_service_rooms'] = $data['out_of_order_rooms'] = 0;
 
         foreach ($rooms as $room) {
@@ -165,12 +166,12 @@ class AdminDashboardController extends BaseController
         $data['amenities_orders'] = count($this->LaundryAmenitiesRepository->getLAOrders());
         $data['amenities_revenue'] = $this->LaundryAmenitiesRepository->laundryAmenitiesRevenue();
 
-        $data['concierge_revenue'] = doubleval($this->ConciergeRepository->conciergeRevenue());
+        $data['concierge_revenue'] = strval($this->ConciergeRepository->conciergeRevenue());
 
-        $data['transport_request_revenue'] = doubleval($this->TransportRequestRepository->transportRequestRevenue());
+        $data['transport_request_revenue'] = strval($this->TransportRequestRepository->transportRequestRevenue());
 
         $data['restaurant_orders'] = count($this->RestaurantRepository->orderList($user));
-        $data['fnb_revenue'] = doubleval($this->RestaurantRepository->restaurantRevenue());
+        $data['fnb_revenue'] = strval($this->RestaurantRepository->restaurantRevenue());
         $data['other_revenue'] = $data['amenities_revenue'] + $data['concierge_revenue'] + $data['transport_request_revenue'];
 
         return $this->respond(responseJson(200, false, ['msg' => 'Stats'], $data));
