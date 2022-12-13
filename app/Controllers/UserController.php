@@ -570,7 +570,7 @@ class UserController extends BaseController
             $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
 
             if ($this->request->getPost("USR_ROLE_ID") == 3 && $this->request->getPost("SUPER_USER_ID") != ''){
-                $userId   = $this->Db->insertID();
+                $userId   = !empty($sysid) ? $sysid :  $this->Db->insertID();
                 $userDept = $this->request->getPost('USR_DEPARTMENT');
 
                 $super_data = [
