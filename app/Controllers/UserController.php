@@ -568,9 +568,9 @@ class UserController extends BaseController
             }
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
-
+            $userId   = !empty($sysid) ? $sysid :  $this->Db->insertID();
             if ($this->request->getPost("USR_ROLE_ID") == 3 && $this->request->getPost("SUPER_USER_ID") != ''){
-                $userId   = !empty($sysid) ? $sysid :  $this->Db->insertID();
+                
                 $userDept = $this->request->getPost('USR_DEPARTMENT');
 
                 $super_data = [
@@ -584,7 +584,8 @@ class UserController extends BaseController
               
                 $returnSuper = ($userIDExists) ? $this->Db->table('FLXY_USER_SUPER')->where('USER_ID', $userId)->update($super_data) : $this->Db->table('FLXY_USER_SUPER')->insert($super_data);
             }
-
+            else
+            $deleteSuper = $this->Db->table('FLXY_USER_SUPER')->delete(['USER_ID' => $userId]);
 
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
             if ($return && $sysid == session()->get('USR_ID')) {
