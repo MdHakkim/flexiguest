@@ -138,7 +138,7 @@ class AdminDashboardController extends BaseController
         $data['transport_request_revenue'] = doubleval($this->TransportRequestRepository->transportRequestRevenue());
 
         $data['restaurant_orders'] = count($this->RestaurantRepository->orderList($user));
-        $data['f&b_revenue'] = doubleval($this->RestaurantRepository->restaurantRevenue());
+        $data['fnb_revenue'] = doubleval($this->RestaurantRepository->restaurantRevenue());
         $data['other_revenue'] = $data['amenities_revenue'] + $data['concierge_revenue'] + $data['transport_request_revenue'];
 
         return $this->respond(responseJson(200, false, ['msg' => 'Stats'], $data));
