@@ -1016,7 +1016,7 @@ class UserController extends BaseController
         $USR_DEPARTMENT = null !== $this->request->getPost('USR_DEPARTMENT') && $this->request->getPost('USR_DEPARTMENT') != '' ? $this->request->getPost('USR_DEPARTMENT') : '';
         $option = '';
        
-        $sql = "SELECT USR_ID, CONCAT_WS(' ',USR_FIRST_NAME, USR_LAST_NAME) AS FULL_NAME FROM FLXY_USERS INNER JOIN FLXY_USER_ROLE ON ROLE_ID = USR_ROLE_ID WHERE USR_ROLE_ID = '5'";
+        $sql = "SELECT USR_ID, CONCAT_WS(' ',USR_FIRST_NAME, USR_LAST_NAME) AS FULL_NAME FROM FLXY_USERS INNER JOIN FLXY_USER_ROLE ON ROLE_ID = USR_ROLE_ID WHERE USR_ROLE_ID = '5' AND USR_STATUS = '1'";
 
         if ($USR_DEPARTMENT != '') {
             $sql .= " AND USR_DEPARTMENT = '". $USR_DEPARTMENT."'";
