@@ -88,10 +88,12 @@ class NotificationDataTable{
                        //echo "select DEPT_DESC from FLXY_DEPARTMENT where DEPT_ID in ($department_ids)";                                
                         $departments = $this->Db->query("select DEPT_DESC from FLXY_DEPARTMENT where DEPT_ID in ($department_ids)")->getResultArray();                        
                         $row[$name] = '';
+                        $department = [];
                         if(!empty($departments)){
                             foreach($departments as $department)
-                                $row[$name] .= $department['DEPT_DESC'] . ', ';
-                            
+                                $departmentt[] = $department['DEPT_DESC'];
+
+                            $row[$name] = implode(',',$departmentt);                            
                             $row[$name] = substr($row[$name], 0, 20). '...';
                         }
                     }
@@ -103,10 +105,12 @@ class NotificationDataTable{
                         $users = $this->Db->query("select concat(USR_FIRST_NAME, ' ', USR_LAST_NAME) as NAME from FLXY_USERS where USR_ID in ($user_ids)")->getResultArray();                       
                         
                         $row[$name] = '';
+                        $NAME = [];
                         if(!empty($users)){
                             foreach($users as $user)
-                                $row[$name] .= $user['NAME'] . ', ';
+                                $NAME[]= $user['NAME'];
 
+                            $row[$name] = implode(',',$NAME);
                             $row[$name] = substr($row[$name], 0, 20). '...';
                         }
                     }
