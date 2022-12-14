@@ -196,8 +196,8 @@ $routes->group("api/admin", ["filter" => "authapi:Admin", 'namespace' => 'App\Co
     });
 });
 
-/*****************************  Admin + Attendee *****************************/
-$routes->group("api/admin", ["filter" => "authapi:Admin,Attendee", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
+/*****************************  Admin + Attendee + Supervisor *****************************/
+$routes->group("api/admin", ["filter" => "authapi:Admin,Attendee,Supervisor", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
     $routes->group('housekeeping', function ($routes) {
         $routes->get("all-tasks", "HouseKeepingController::allTasks");
         $routes->post("task-details", "HouseKeepingController::taskDetails");
