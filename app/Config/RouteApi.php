@@ -122,7 +122,7 @@ $routes->group("api", ["filter" => "authapi:Admin,Guest", 'namespace' => 'App\Co
 });
 
 /*****************************  Admin + Guest + Attendee *****************************/
-$routes->group("api", ["filter" => "authapi:Admin,Guest,Attendee", 'namespace' => 'App\Controllers'], function ($routes) {
+$routes->group("api", ["filter" => "authapi:Admin,Guest,Attendee,Supervisor", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->post("logout", "APIController::logout");
 
     $routes->group('evalet', function ($routes) {
