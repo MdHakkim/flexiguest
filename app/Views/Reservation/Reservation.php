@@ -6349,8 +6349,8 @@ function getPackageList() {
 
 function getPackages() {
     getPackageList();
-    $('#RSV_PCKG_BEGIN_DATE').datepicker("setDate", $('.window-1').find('.RESV_ARRIVAL_DT').val());
-    $('#RSV_PCKG_END_DATE').datepicker("setDate", $('.window-1').find('.RESV_DEPARTURE').val());
+    $('#RSV_PCKG_BEGIN_DATE').datepicker("setDate", $('.window-2').find('.RESV_ARRIVAL_DT').val());
+    $('#RSV_PCKG_END_DATE').datepicker("setDate", $('.window-2').find('.RESV_DEPARTURE').val());
     $('#packagesModal').modal('show');
     resvID = $('#PCKG_RESV_ID').val();
     showPackages(resvID);
@@ -6454,9 +6454,9 @@ $(document).on('click', '.add-package-detail', function() {
                         $("#RSV_PCKG_ID").val('');
                         $('#Package_Details').find('tr.table-warning').removeClass(
                             'table-warning');
-                        $('#RSV_PCKG_BEGIN_DATE').datepicker("setDate", $('.window-1').find(
+                        $('#RSV_PCKG_BEGIN_DATE').datepicker("setDate", $('.window-2').find(
                             '.RESV_ARRIVAL_DT').val());
-                        $('#RSV_PCKG_END_DATE').datepicker("setDate", $('.window-1').find(
+                        $('#RSV_PCKG_END_DATE').datepicker("setDate", $('.window-2').find(
                             '.RESV_DEPARTURE').val());
 
                         //Disable Delete button
@@ -6544,6 +6544,10 @@ function showPackages(resvID) {
     if (resvID == '')
         resvID = $('#PCKG_RESV_ID').val();
     var rateCode = $('.clickPrice.active').parent('.ratePrice').find('#RT_DESCRIPTION').val();
+    var arrival = $('.window-2').is(':visible') ? $('.window-2').find('.RESV_ARRIVAL_DT').val() : $('.window-1')
+        .find('.RESV_ARRIVAL_DT').val();
+    var departure = $('.window-2').is(':visible') ? $('.window-2').find('.RESV_DEPARTURE').val() : $('.window-1')
+        .find('.RESV_DEPARTURE').val();
 
     $('#Package_Details').find('tr.table-warning').removeClass('table-warning');
 
@@ -6555,7 +6559,8 @@ function showPackages(resvID) {
         'ajax': {
             'url': '<?php echo base_url('/showPackages') ?>',
             'data': {
-                "RESV_ID": resvID
+                "RESV_ID": resvID,
+                "departure":departure
             }
         },
         'columns': [{
@@ -6628,7 +6633,7 @@ function showPackages(resvID) {
 $(document).on('click', '#Package_Details > tbody > tr', function() {
 
     var packageID = $(this).data('packageid');
-
+    var departure = $('.window-2').find('.RESV_DEPARTURE').val();
     $('#Package_Details').find('tr.table-warning').removeClass('table-warning');
     $(this).addClass('table-warning');
     $.when(loadPackageDetails(packageID))
@@ -6647,7 +6652,8 @@ $(document).on('click', '#Package_Details > tbody > tr', function() {
             'X-Requested-With': 'XMLHttpRequest'
         },
         data: {
-            packageID: packageID
+            packageID: packageID,
+            departure:departure
         },
         async: false,
         success: function(respn) {
@@ -6697,7 +6703,7 @@ function loadPackageDetails(packageID) {
         }
     });
 
-
+    var departure = $('.window-2').find('.RESV_DEPARTURE').val();
 
     $.ajax({
         url: '<?php echo base_url('/showSinglePackageDetails') ?>',
@@ -6706,7 +6712,8 @@ function loadPackageDetails(packageID) {
             'X-Requested-With': 'XMLHttpRequest'
         },
         data: {
-            packageID: packageID
+            packageID: packageID,
+            departure:departure
         },
         async: false,
         success: function(respn) {
