@@ -192,6 +192,7 @@
               <th width="15%">Confirmation No</th>
               <th width="15%">Rate</th>
               <th>Room Type</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -204,6 +205,7 @@
               <td><?= $guestDetails['RESV_NO']?></td>
               <td><?= $guestDetails['RESV_RATE']?></td>
               <td><?= $guestDetails['RESV_RM_TYPE']?></td>
+              <td><?= $guestDetails['RESV_STATUS']?></td>
             </tr>
             
            

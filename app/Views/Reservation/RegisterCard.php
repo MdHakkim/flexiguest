@@ -29,7 +29,7 @@
       <div class="d-flex flex-row justify-content-between">
         <div class="mb-4">
           <div class="svg-illustration gap-2 d-flex mb-3">
-            <a href="http://localhost/FlexiGuest" class="app-brand-link">
+            <a href="<?php echo base_url(); ?>" class="app-brand-link">
 
                 <?php /* ?>
 
@@ -211,6 +211,7 @@
               <th width="15%">Confirm: No</th>
               <th width="15%">Rate</th>
               <th width="15%">Room Type</th>
+              <th width="15%">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -223,6 +224,7 @@
               <td width="5%"><?= $guestDetails['RESV_NO']?></td>
               <td width="5%"><?= $guestDetails['RESV_RATE']?></td>
               <td width="5%"><?= $guestDetails['RESV_RM_TYPE']?></td>
+              <td width="5%"><?= $guestDetails['RESV_STATUS']?></td>
             </tr>
             
            
