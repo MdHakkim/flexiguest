@@ -30,6 +30,11 @@ class UpgradeRoomRequestRepository extends BaseController
         return $rules;
     }
 
+    public function getUpdgradeRequestById($id)
+    {
+        return $this->UpgradeRoomRequest->find($id);
+    }
+
     public function createOrUpdateUpgradeRequest($user, $data)
     {
         if ($user['USR_ROLE_ID'] == '2')
@@ -39,6 +44,13 @@ class UpgradeRoomRequestRepository extends BaseController
             $data['URR_CREATED_BY'] = $data['URR_UPDATED_BY'] = $user['USR_ID'];
             $msg = 'Request submitted successfully.';
         } else {
+            $request = $this->getUpdgradeRequestById($data['URR_ID']);
+            if (empty($request))
+                return responseJson(202, true, ['msg' => 'Invalid request.']);
+
+            if ($request['URR_STATUS'] == 'Approved' || $request['URR_STATUS'] == 'Rejected')
+                return responseJson(202, true, ['msg' => 'Status is already updated.']);
+
             $data['URR_UPDATED_BY'] = $user['USR_ID'];
             $msg = 'Request updated successfully.';
         }
