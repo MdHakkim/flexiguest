@@ -190,7 +190,7 @@ class TaskAssignmentController extends BaseController
         $UserID = session()->get('USR_ID');
         $mine = new  TaskAssignmentDataTable();
         $tableName = "(SELECT HKAT_ID,HKAT_TASK_ID,USR_FIRST_NAME,USR_LAST_NAME,HKAT_TASK_SHEET_ID,HKAT_ATTENDANT_ID, HKAT_CREDITS,HKAT_INSTRUCTIONS,
-		STATS, STATUSCODE, INSP_STATS, SUPER_STATUSCODE, COMPLETION_TIME
+		STATS, STATUSCODE, INSP_STATS, SUPER_STATUSCODE, COMPLETION_TIME, INSPECTED_DATETIME
 
         FROM FLXY_HK_ASSIGNED_TASKS INNER JOIN FLXY_USERS ON HKAT_ATTENDANT_ID = USR_ID 
         
@@ -224,15 +224,15 @@ class TaskAssignmentController extends BaseController
 
 
 		
-		LEFT JOIN (SELECT [HKATD_ASSIGNED_TASK_ID],COMPLETION_TIME
+		LEFT JOIN (SELECT [HKATD_ASSIGNED_TASK_ID],COMPLETION_TIME,INSPECTED_DATETIME
 		
 		FROM (
         
-        SELECT [HKATD_ASSIGNED_TASK_ID],MAX(HKATD_COMPLETION_TIME) AS COMPLETION_TIME FROM [FLXY_HK_ASSIGNED_TASK_DETAILS] 
+        SELECT [HKATD_ASSIGNED_TASK_ID],MAX(HKATD_COMPLETION_TIME) AS COMPLETION_TIME,MAX(HKATD_INSPECTED_DATETIME) AS INSPECTED_DATETIME FROM [FLXY_HK_ASSIGNED_TASK_DETAILS] 
 		
 		GROUP BY HKATD_ASSIGNED_TASK_ID)
         
-        TSKDET GROUP BY HKATD_ASSIGNED_TASK_ID,COMPLETION_TIME)
+        TSKDET GROUP BY HKATD_ASSIGNED_TASK_ID,COMPLETION_TIME,INSPECTED_DATETIME)
 		
 		SUPERTASK_PROG_TIME ON SUPERTASK_PROG_TIME.HKATD_ASSIGNED_TASK_ID = HKAT_ID
 
@@ -249,7 +249,7 @@ class TaskAssignmentController extends BaseController
         }
        // echo  $init_cond['HKAT_TASK_ID = '];exit;
 
-        $columns = "HKAT_ID,HKAT_TASK_ID,USR_FIRST_NAME,USR_LAST_NAME,HKAT_TASK_SHEET_ID,HKAT_ATTENDANT_ID,HKAT_CREDITS,HKAT_INSTRUCTIONS,STATS,STATUSCODE,INSP_STATS,SUPER_STATUSCODE,COMPLETION_TIME";
+        $columns = "HKAT_ID,HKAT_TASK_ID,USR_FIRST_NAME,USR_LAST_NAME,HKAT_TASK_SHEET_ID,HKAT_ATTENDANT_ID,HKAT_CREDITS,HKAT_INSTRUCTIONS,STATS,STATUSCODE,INSP_STATS,SUPER_STATUSCODE,COMPLETION_TIME,INSPECTED_DATETIME";
         $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
 
@@ -290,7 +290,7 @@ class TaskAssignmentController extends BaseController
             $HKAT_SHEET_INSTRUCTIONS = $this->request->getPost('instructions');
 
             $validate = $this->validate([
-                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required|taskSheetExists[HKAT_TASK_ID,HKAT_TASK_SHEET_ID]', 'errors' => ['taskSheetExists' => 'Task sheet for the attendant is already assigned to this date']],               
+                'attendant_id' => ['label' => 'Attendant', 'rules' => 'required|taskSheetExists[HKAT_TASK_ID,HKAT_TASK_SHEET_ID]', 'errors' => ['taskSheetExists' => 'Task sheet for the attendant is already assigned to this task and date']],               
             ]);
 
             if (!$validate) {
@@ -401,10 +401,57 @@ class TaskAssignmentController extends BaseController
     public function viewTaskAssignedRooms(){
         $UserID = session()->get('USR_ID');
         $mine   = new  TaskAssignmentDataTable();
-        $tableName = "(SELECT HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKATD_ASSIGNED_TASK_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,MAX(HKATD_COMPLETION_TIME) as HKATD_COMPLETION_TIME,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME) AS INSPECTED_NAME,MAX(HKATD_INSPECTED_DATETIME) as HKATD_INSPECTED_DATETIME  FROM FLXY_HK_TASK_ASSIGNED_ROOMS INNER JOIN FLXY_ROOM ON RM_ID = HKARM_ROOM_ID LEFT JOIN FLXY_HK_ASSIGNED_TASK_DETAILS ON HKARM_ROOM_ID = HKATD_ROOM_ID LEFT JOIN FLXY_USERS ON HKATD_INSPECTED_BY = USR_ID GROUP BY HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKATD_ASSIGNED_TASK_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,HKATD_INSPECTED_DATETIME,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME)) AS OUTPUT";
+        $data = $this->request->getPost();
+        // $tableName = "(SELECT HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKATD_ASSIGNED_TASK_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,HKATD_START_TIME,MAX(HKATD_COMPLETION_TIME) as HKATD_COMPLETION_TIME,
+        // CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME) AS INSPECTED_NAME,MAX(HKATD_INSPECTED_DATETIME) as 
+        // HKATD_INSPECTED_DATETIME,TIME_TAKEN.TOTAL_TIME AS TOTAL_TIME, COMPLETED,TOT FROM FLXY_HK_TASK_ASSIGNED_ROOMS
+        // INNER JOIN FLXY_ROOM ON RM_ID = HKARM_ROOM_ID
+        // LEFT JOIN FLXY_HK_TASKASSIGNMENT_OVERVIEW ON  HKTAO_ID = HKARM_TASK_ID
+        // LEFT JOIN FLXY_HK_ASSIGNED_TASK_DETAILS ON HKARM_ROOM_ID = HKATD_ROOM_ID
+        // LEFT JOIN FLXY_USERS ON HKATD_INSPECTED_BY = USR_ID
+        // LEFT JOIN (SELECT HKATD_ROOM_ID,DATEDIFF(MINUTE, MIN(HKATD_START_TIME), MAX(HKATD_COMPLETION_TIME)) AS TOTAL_TIME
+        // FROM FLXY_HK_ASSIGNED_TASK_DETAILS GROUP BY HKATD_ROOM_ID) AS TIME_TAKEN ON TIME_TAKEN.HKATD_ROOM_ID = HKARM_ROOM_ID 
+
+        // LEFT JOIN  (SELECT [HKATD_ROOM_ID],
+        // SUM(CASE WHEN HKATD_COMPLETION_TIME IS NOT NULL THEN 1 ELSE 0 END) AS COMPLETED,
+        // COUNT(*) AS TOT
+              
+        //        FROM [FLXY_HK_ASSIGNED_TASK_DETAILS] 
+        //        GROUP BY HKATD_ROOM_ID) COMPLETE ON COMPLETE.HKATD_ROOM_ID = HKARM_ROOM_ID
+        //  WHERE HKTAO_TASK_DATE = '".$data['TASK_DATE']."'
+        // GROUP BY HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKATD_ASSIGNED_TASK_ID,HKARM_CREDITS,
+        // HKARM_INSTRUCTIONS,RM_NO,RM_DESC,HKATD_START_TIME,HKATD_INSPECTED_DATETIME,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME),TIME_TAKEN.TOTAL_TIME,COMPLETE.COMPLETED,COMPLETE.TOT) AS OUTPUT";
+
+
+        $tableName = "(SELECT HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKATD_ASSIGNED_TASK_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,START_TIME,COMPLETE_TIME,INSPECTED_NAME,INSPECTEDTIME,INSPECTED,COMPLETED,TOT,TIME_TAKEN.TOTAL_TIME AS TOT_TIME FROM FLXY_HK_TASK_ASSIGNED_ROOMS        
+                INNER JOIN FLXY_ROOM ON RM_ID = HKARM_ROOM_ID          
+                LEFT JOIN FLXY_HK_TASKASSIGNMENT_OVERVIEW ON  HKTAO_ID = HKARM_TASK_ID        
+                LEFT JOIN FLXY_HK_ASSIGNED_TASK_DETAILS ON HKARM_ROOM_ID = HKATD_ROOM_ID         
+                LEFT JOIN (SELECT HKATD_ROOM_ID,MIN(HKATD_START_TIME) AS START_TIME,MAX(HKATD_COMPLETION_TIME) AS COMPLETE_TIME,DATEDIFF(MINUTE, MIN(HKATD_START_TIME), MAX(HKATD_COMPLETION_TIME)) AS TOTAL_TIME        
+                FROM FLXY_HK_ASSIGNED_TASK_DETAILS GROUP BY HKATD_ROOM_ID) AS TIME_TAKEN ON TIME_TAKEN.HKATD_ROOM_ID = HKARM_ROOM_ID        
+                LEFT JOIN (SELECT HKATD_ROOM_ID,MAX(HKATD_INSPECTED_DATETIME) AS INSPECTEDTIME       
+                FROM FLXY_HK_ASSIGNED_TASK_DETAILS GROUP BY HKATD_ROOM_ID) AS INSPECTED ON INSPECTED.HKATD_ROOM_ID = HKARM_ROOM_ID   
+                LEFT JOIN  (SELECT [HKATD_ROOM_ID],
+                SUM(CASE WHEN HKATD_COMPLETION_TIME IS NOT NULL THEN 1 ELSE 0 END) AS COMPLETED,
+                COUNT(*) AS TOT                      
+                       FROM [FLXY_HK_ASSIGNED_TASK_DETAILS] 
+                       GROUP BY HKATD_ROOM_ID) COMPLETE ON COMPLETE.HKATD_ROOM_ID = HKARM_ROOM_ID
+        
+                LEFT JOIN  (SELECT [HKATD_ROOM_ID],
+                SUM(CASE WHEN HKATD_INSPECTED_DATETIME IS NOT NULL THEN 1 ELSE 0 END) AS INSPECTED 
+                       FROM [FLXY_HK_ASSIGNED_TASK_DETAILS] 
+                       GROUP BY HKATD_ROOM_ID) INSPECT ON INSPECT.HKATD_ROOM_ID = HKARM_ROOM_ID        
+                LEFT JOIN  (SELECT [HKATD_ROOM_ID],CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME) AS INSPECTED_NAME                      
+                       FROM [FLXY_HK_ASSIGNED_TASK_DETAILS] INNER JOIN FLXY_USERS ON USR_ID=HKATD_INSPECTED_BY
+                       GROUP BY HKATD_ROOM_ID,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME)) INSPECTEDBY ON INSPECTEDBY.HKATD_ROOM_ID = HKARM_ROOM_ID    
+        
+                 WHERE HKTAO_TASK_DATE = '".$data['TASK_DATE']."'        
+                GROUP BY HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKATD_ASSIGNED_TASK_ID,HKARM_CREDITS,        
+                HKARM_INSTRUCTIONS,RM_NO,RM_DESC,START_TIME,COMPLETE_TIME,INSPECTEDTIME,INSPECTED_NAME,                
+                TIME_TAKEN.TOTAL_TIME,COMPLETE.COMPLETED,COMPLETE.TOT,INSPECTED) AS OUTPUT";
         $init_cond = [];
 
-        $data = $this->request->getPost();
+       
         if(isset($data['HKTAO_ID']) && $data['HKTAO_ID'] != ''){            
             $init_cond['HKARM_TASK_ID = '] = "'".$data['HKTAO_ID']."'";
         }
@@ -412,7 +459,7 @@ class TaskAssignmentController extends BaseController
             $init_cond['HKARM_TASK_SHEET_ID = '] = "'".$data['HKARM_TASK_SHEET_ID']."'";
         }
 
-        $columns = "HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKATD_ASSIGNED_TASK_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,HKATD_COMPLETION_TIME,INSPECTED_NAME,HKATD_INSPECTED_DATETIME";
+        $columns = "HKARM_ID,HKARM_TASK_ID,HKARM_TASK_SHEET_ID,HKARM_ROOM_ID,HKATD_ASSIGNED_TASK_ID,HKARM_CREDITS,HKARM_INSTRUCTIONS,RM_NO,RM_DESC,START_TIME,COMPLETE_TIME,INSPECTED_NAME,INSPECTEDTIME,INSPECTED,COMPLETED,TOT_TIME,TOT";
         $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
@@ -477,7 +524,7 @@ class TaskAssignmentController extends BaseController
 
 
             //// get Task Assigned id 
-            $cond = "HKAT_TASK_SHEET_ID = '".trim($HKARM_TASK_SHEET_ID)."'";
+            $cond = "HKAT_TASK_SHEET_ID = '".trim($HKARM_TASK_SHEET_ID)."' AND HKAT_TASK_ID = '".trim($HKAT_TASK_ID)."'";
             $HKATD_ASSIGNED_TASK_ID = getValueFromTable('HKAT_ID',$cond,'FLXY_HK_ASSIGNED_TASKS');
 
             $sql = "SELECT HKST_ID
@@ -498,13 +545,11 @@ class TaskAssignmentController extends BaseController
 
                 }
             }
-
             
             $return = !empty($sysid) ? $this->Db->table('FLXY_HK_TASK_ASSIGNED_ROOMS')->where('HKARM_ID', $sysid)->update($data) : $this->Db->table('FLXY_HK_TASK_ASSIGNED_ROOMS')->insert($data);
 
             $this->totalCredits($HKAT_TASK_ID);
             $this->totalRooms($HKAT_TASK_ID);
-
 
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
             echo json_encode($result);
@@ -520,16 +565,11 @@ class TaskAssignmentController extends BaseController
         $taskroom_id = $this->request->getPost('HKARM_ID');
         $task_id = $this->request->getPost('HKAT_TASK_ID');
 
-        
-
         try {
-
-       
                 $return = $this->Db->table('FLXY_HK_TASK_ASSIGNED_ROOMS')->delete(['HKARM_ID' => $taskroom_id]);             
                 $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-402", "Record not deleted");
                 $this->totalCredits($task_id);
-
-            echo json_encode($result);
+                echo json_encode($result);
         } catch (\Exception $e) {
             return $e->getMessage();
         }
@@ -575,32 +615,62 @@ class TaskAssignmentController extends BaseController
     public function updateTaskStatus()
     {
         try {
+                $role            = $this->request->getPost('role');
+                $taskId          = $this->request->getPost('taskId');
+                $new_status      = $this->request->getPost('new_status');
+                $completed_time = $this->request->getPost('completion_time');
+                
+                $user_id = session()->get('USR_ID');
+                $completion_time = '';
+                $room_status =  '';
+                $roomsSql = "SELECT HKATD_ROOM_ID
+                    FROM FLXY_HK_ASSIGNED_TASK_DETAILS
+                    WHERE HKATD_ASSIGNED_TASK_ID='$taskId'";        
+                $roomResponse = $this->Db->query($roomsSql)->getResultArray();
+                if($role == 3)
+                {                           
+                    $room_status = ($new_status == 1 || $new_status == 3)? 2:1;                     
+                    $completion_time = ($new_status == 1 || $new_status == 3) ? '': date("Y-m-d H:i:s"); 
 
-            $role = $this->request->getPost('role');
-            $taskId = $this->request->getPost('taskId');
-            $new_status = $this->request->getPost('new_status');
-            $user_id = session()->get('USR_ID');
-            $HKATD_COMPLETION_TIME = null;
-            if($role == 3)
-            {   
-                    
-                 $HKATD_COMPLETION_TIME = ($new_status == 2) ? date("Y-m-d H:i:s"): '';                
+                    $logdata = [
+                        "HKATD_STATUS_ID" => $new_status,
+                        "HKATD_UPDATED_BY" => $user_id, "HKATD_UPDATED_AT" => date("Y-m-d H:i:s"), "HKATD_COMPLETION_TIME" => $completion_time
+                    ];
 
-                $logdata = [
-                    "HKATD_STATUS_ID" => $new_status,
-                    "HKATD_UPDATED_BY" => $user_id, "HKATD_UPDATED_AT" => date("Y-m-d H:i:s"), "HKATD_COMPLETION_TIME" => $HKATD_COMPLETION_TIME
-                ];
-            }
-            else if($role == 5){
-                $logdata = [
-                    "HKATD_INSPECTED_STATUS_ID" => $new_status, "HKATD_INSPECTED_BY" => $user_id,
-                    "HKATD_UPDATED_BY" => $user_id, "HKATD_UPDATED_AT" => date("Y-m-d H:i:s"),"HKATD_INSPECTED_DATETIME"=> date("Y-m-d H:i:s")
-                ];
-            }
+                    /// update room status    
 
-            $return = $this->Db->table('FLXY_HK_ASSIGNED_TASK_DETAILS')->where(['HKATD_ASSIGNED_TASK_ID'=>$taskId])->update($logdata);
+                    if(!empty($roomResponse)){
+                        foreach($roomResponse as $rooms){
+                            $this->Db->table('FLXY_ROOM_STATUS_LOG')->where(['RM_STAT_ROOM_ID' => $rooms['HKATD_ROOM_ID']])->update(["RM_STAT_ROOM_STATUS"=>$room_status,"RM_STAT_UPDATED_BY"=>$user_id,"RM_STAT_UPDATED"=> date("Y-m-d H:i:s")]);
+                        }
+                    }
+                }
+                else if($role == 5){
+                    $room_status = ($new_status == 5 && $completed_time != '')? 1 : 2;
+                    if($new_status == 6) 
+                    $room_status = 3;
+                    else if($new_status == 7)
+                    $room_status = 2;
+                                 
+                    $inspected_time = ($new_status == 5 || $new_status == 7) ? '': date("Y-m-d H:i:s"); 
 
-            echo json_encode($this->responseJson("1", "0", $return, $response = $HKATD_COMPLETION_TIME));
+                    $logdata = [
+                        "HKATD_INSPECTED_STATUS_ID" => $new_status, "HKATD_INSPECTED_BY" => $user_id,
+                        "HKATD_UPDATED_BY" => $user_id, "HKATD_UPDATED_AT" => date("Y-m-d H:i:s"),"HKATD_INSPECTED_DATETIME"=> $inspected_time
+                    ];
+
+                /// update room status    
+
+                    if(!empty($roomResponse)){
+                        foreach($roomResponse as $rooms){
+                            $this->Db->table('FLXY_ROOM_STATUS_LOG')->where(['RM_STAT_ROOM_ID' => $rooms['HKATD_ROOM_ID']])->update(["RM_STAT_ROOM_STATUS"=>$room_status,"RM_STAT_UPDATED_BY"=>$user_id,"RM_STAT_UPDATED"=> date("Y-m-d H:i:s")]);
+                        }
+                    }
+                }
+
+                $return = $this->Db->table('FLXY_HK_ASSIGNED_TASK_DETAILS')->where(['HKATD_ASSIGNED_TASK_ID'=>$taskId])->update($logdata);
+
+                echo json_encode($this->responseJson("1", "0", $return, $response = $completion_time));
         } catch (\Exception $e) {
             echo json_encode($this->responseJson("-444", "db insert not successful"));
         }
@@ -689,7 +759,7 @@ class TaskAssignmentController extends BaseController
                 $DEFAULT_PAGE_BREAK = '<tr></tr><div style="margin-top:220px;margin-bottom:5px; page-break-after:always"></div></tr>';
             
                 $TABLE_CONTENTS.= '<tr >
-                <th width="15%;" style="text-align:center" class="text-center">'.$row['RM_NO'].'</td>
+                <th width="14%;" style="text-align:center" class="text-center">'.$row['RM_NO'].'</td>
                 <th width="10%;" style="text-align:center" class="text-center">'.$row['RM_TYPE'].'</td>
                 <th width="15%;" style="text-align:center" class="text-center">'.$row['RM_STATUS_CODE'].'</td>
                 <th width="10%;" style="text-align:center" class="text-center">'.$row['FO_STATUS'].'</td>
@@ -724,11 +794,29 @@ class TaskAssignmentController extends BaseController
         $HKAT_TASK_ASSIGNED_ID  = $this->request->getPost('HKAT_TASK_ASSIGNED_ID');
         $HKAT_ROOM_ID           = $this->request->getPost('HKAT_ROOM_ID');  
 
-        $sql = "SELECT ATN_NOTE,ATN_CREATED_AT,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME) AS USER_NAME
-        FROM FLXY_HK_ASSIGNED_TASK_NOTES LEFT JOIN FLXY_USERS ON ATN_USER_ID = USR_ID WHERE ATN_ASSIGNED_TASK_ID ='$HKAT_TASK_ASSIGNED_ID' AND ATN_ROOM_ID = '$HKAT_ROOM_ID'";
+        $sql = "SELECT ATN_ASSIGNED_TASK_ID,ATN_NOTE,ATN_CREATED_AT,CONCAT_WS(' ', USR_FIRST_NAME,USR_LAST_NAME) AS USER_NAME, ATNA_NAME, ATNA_URL
+        FROM FLXY_HK_ASSIGNED_TASK_NOTES LEFT JOIN FLXY_USERS ON ATN_USER_ID = USR_ID LEFT JOIN FLXY_HK_ASSIGNED_TASK_NOTE_ATTACHMENTS ON ATNA_NOTE_ID = ATN_ID WHERE ATN_ASSIGNED_TASK_ID ='$HKAT_TASK_ASSIGNED_ID' AND ATN_ROOM_ID = '$HKAT_ROOM_ID' ";
         
         $comments = $this->Db->query($sql)->getResultArray();
         return $this->respond(responseJson(200, false, ['msg' => 'comments'], $comments));
+    }
+
+    public function checkRoomAlreadyAssigned(){
+        $roomexists  = null; 
+        $HKAT_TASK_ID  = $this->request->getPost('HKAT_TASK_ID');
+        $HKARM_ROOM_ID = $this->request->getPost('HKARM_ID');  
+        $TASK_DATE     = $this->request->getPost('TASK_DATE');
+        $TASK_CODE     = $this->request->getPost('TASK_CODE');
+        
+        $ROOM_ID       = '';
+
+        $sql = "SELECT HKARM_ROOM_ID
+        FROM FLXY_HK_TASK_ASSIGNED_ROOMS LEFT JOIN FLXY_HK_TASKASSIGNMENT_OVERVIEW ON HKTAO_ID = HKARM_TASK_ID WHERE HKTAO_TASK_DATE ='$TASK_DATE' AND HKARM_ROOM_ID = '$HKARM_ROOM_ID'";
+        
+        $HKARM_ROOM_ID = $this->Db->query($sql)->getRow();
+        $ROOM_ID =  (!empty($HKARM_ROOM_ID)) ?$HKARM_ROOM_ID->HKARM_ROOM_ID : '';
+       
+        return $this->respond(responseJson(200, false, ['msg' => 'comments'], $ROOM_ID));
     }
 
 }

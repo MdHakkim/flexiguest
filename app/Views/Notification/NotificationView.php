@@ -330,10 +330,15 @@
 					},
 					{
 						data: 'RSV_ID',
-						render: function(data, type, full, meta) {
-							if (full['RSV_ID'] != '') {
+						render: function(data, type, full, meta) {							
+							if (full['RSV_ID'] != null) {
 								return full['RSV_ID'];
-							} else return '';
+							} 
+							else if(full['NOTIFICATION_RESERVATION_ID'] != null && full['NOTIFICATION_RESERVATION_ID'] != '')
+							{
+								return '<a href="javascript:;" onclick="viewAll(\'Reservation\',' + full['NOTIFICATION_ID'] + ')" title="View Reservations"  rel="">' + full['NOTIFICATION_RESERVATION_ID'] + '<br><span class="btn btn-sm btn-label-info">View</span></br></a>';
+							} else 
+							return '';
 						}
 					},
 					{

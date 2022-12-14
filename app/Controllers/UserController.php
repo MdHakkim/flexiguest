@@ -120,6 +120,7 @@ class UserController extends BaseController
         $data['session'] = $this->session;
         $data['roleList'] = $this->roleList();
         $data['departmentList'] = $this->departmentList();
+        //$data['allUsersList'] = $this->allUsersList();
         //$data['js_to_load'] = array("app-user-list.js");
         return view('Users/UsersList', $data);
     }
@@ -490,6 +491,8 @@ class UserController extends BaseController
                 ];
             }
 
+            if ($this->request->getPost("USR_ROLE_ID") == 3 && $this->request->getPost("SUPER_USER_ID") == '')
+              $rules['SUPER_USER_ID'] = ['label' => 'Supervisor', 'rules' => 'trim|required'];
             /*
 
             $submitted_image = $this->request->getFile('USR_IMAGE');
@@ -501,7 +504,7 @@ class UserController extends BaseController
                 $rules = array_merge($rules, [
                     'USR_IMAGE' => [
                         'label' => 'User Avatar',
-                        'rules' => ['uploaded[USR_IMAGE]', 'mime_in[USR_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[USR_IMAGE,2048]']
+                        'rules' => ['uploaded[USR_IMAGE]', 'mime_in[USR_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[USR_IMAGE,5120]']
                     ],
                 ]);
             */
@@ -543,6 +546,8 @@ class UserController extends BaseController
             if ($this->request->getPost("USR_PASSWORD") != '')
                 $data["USR_PASSWORD"] =  password_hash($this->request->getPost("USR_PASSWORD"), PASSWORD_DEFAULT);
 
+           
+
             /*
             if ($submitted_image->isValid()) {
                 $image = $this->request->getFile('USR_IMAGE');
@@ -563,6 +568,25 @@ class UserController extends BaseController
             }
 
             $return = !empty($sysid) ? $this->Db->table('FLXY_USERS')->where('USR_ID', $sysid)->update($data) : $this->Db->table('FLXY_USERS')->insert($data);
+            $userId   = !empty($sysid) ? $sysid :  $this->Db->insertID();
+            if ($this->request->getPost("USR_ROLE_ID") == 3 && $this->request->getPost("SUPER_USER_ID") != ''){
+                
+                $userDept = $this->request->getPost('USR_DEPARTMENT');
+
+                $super_data = [
+                    'USER_ID'   => $userId,
+                    'SUPER_ID'  => $this->request->getPost('SUPER_USER_ID'),
+                    'SUPER_DEPT'=> $userDept ?? '',
+                    'USER_SUPER_CREATED' => date("Y-m-d H:i:s"),
+                ]; 
+                
+                $userIDExists = checkValueinTable('USER_ID', $userId, 'FLXY_USER_SUPER');
+              
+                $returnSuper = ($userIDExists) ? $this->Db->table('FLXY_USER_SUPER')->where('USER_ID', $userId)->update($super_data) : $this->Db->table('FLXY_USER_SUPER')->insert($super_data);
+            }
+            else
+            $deleteSuper = $this->Db->table('FLXY_USER_SUPER')->delete(['USER_ID' => $userId]);
+
             $result = $return ? $this->responseJson("1", "0", $return, $response = '') : $this->responseJson("-444", "db insert not successful", $return);
             if ($return && $sysid == session()->get('USR_ID')) {
                 $model = new UserModel();
@@ -638,7 +662,7 @@ class UserController extends BaseController
     {
         $param = ['SYSID' => $this->request->getPost('sysid')];
 
-        $sql = "SELECT USR_NAME,USR_NUMBER,USR_FIRST_NAME,USR_LAST_NAME,USR_EMAIL,USR_PASSWORD,USR_ROLE_ID,USR_DEPARTMENT,FORMAT(USR_DOB, 'dd-MMM-yyyy') as USR_DOB,USR_ADDRESS,USR_CITY,USR_STATE,USR_COUNTRY,FORMAT(USR_DOJ, 'dd-MMM-yyyy') as USR_DOJ,USR_PHONE,USR_GENDER,USR_TEL_EXT,USR_STATUS,ROLE_NAME FROM FLXY_USERS LEFT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID LEFT JOIN COUNTRY ON FLXY_USERS.USR_COUNTRY = COUNTRY.id LEFT JOIN FLXY_DEPARTMENT ON USR_DEPARTMENT = DEPT_ID LEFT JOIN STATE ON FLXY_USERS.USR_STATE = STATE.id WHERE USR_ID=:SYSID:";
+        $sql = "SELECT USR_NAME,USR_NUMBER,USR_FIRST_NAME,USR_LAST_NAME,USR_EMAIL,USR_PASSWORD,USR_ROLE_ID,USR_DEPARTMENT,FORMAT(USR_DOB, 'dd-MMM-yyyy') as USR_DOB,USR_ADDRESS,USR_CITY,USR_STATE,USR_COUNTRY,FORMAT(USR_DOJ, 'dd-MMM-yyyy') as USR_DOJ,USR_PHONE,USR_GENDER,USR_TEL_EXT,USR_STATUS,ROLE_NAME,SUPER_ID,SUPER_DEPT FROM FLXY_USERS LEFT JOIN FLXY_USER_ROLE ON USR_ROLE_ID = ROLE_ID LEFT JOIN COUNTRY ON FLXY_USERS.USR_COUNTRY = COUNTRY.id LEFT JOIN FLXY_DEPARTMENT ON USR_DEPARTMENT = DEPT_ID LEFT JOIN STATE ON FLXY_USERS.USR_STATE = STATE.id LEFT JOIN FLXY_USER_SUPER UP ON UP.USER_ID = USR_ID WHERE USR_ID=:SYSID:";
 
         $response = $this->Db->query($sql, $param)->getResultArray();
         echo json_encode($response);
@@ -988,5 +1012,29 @@ class UserController extends BaseController
         $this->UserRepository->removeForgetPasswordToken($user['USR_ID']);
 
         return view('frontend/reset_password_form', array_merge($data, ['type' => 'success', 'messages' => ['Password updated successfully.']]));
+    }
+
+
+    public function allUsersList()
+    {
+        $USR_DEPARTMENT = null !== $this->request->getPost('USR_DEPARTMENT') && $this->request->getPost('USR_DEPARTMENT') != '' ? $this->request->getPost('USR_DEPARTMENT') : '';
+        $option = '';
+       
+        $sql = "SELECT USR_ID, CONCAT_WS(' ',USR_FIRST_NAME, USR_LAST_NAME) AS FULL_NAME FROM FLXY_USERS INNER JOIN FLXY_USER_ROLE ON ROLE_ID = USR_ROLE_ID WHERE USR_ROLE_ID = '5' AND USR_STATUS = '1'";
+
+        if ($USR_DEPARTMENT != '') {
+            $sql .= " AND USR_DEPARTMENT = '". $USR_DEPARTMENT."'";
+        }
+       
+        $response = $this->Db->query($sql)->getResultArray();
+        if(!empty($response )){
+            $option = '<option value="">Choose an Option</option>';
+            foreach ($response as $row) {
+                $option .= '<option value="' . $row['USR_ID'] . '">' . $row['FULL_NAME']  . '</option>';
+            }
+        }
+            echo $option;
+        
+        
     }
 }

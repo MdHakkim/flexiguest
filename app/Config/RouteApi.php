@@ -69,6 +69,10 @@ $routes->group("api/admin", ["filter" => "authapi:Admin", 'namespace' => 'App\Co
         $routes->post('assign-driver', 'EValetController::assignDriver');
         $routes->post('ready-to-collect', 'EValetController::readyToCollect');
     });
+
+    $routes->group('dashboard', function ($routes) {
+        $routes->get('get-stats', 'AdminDashboardController::getStats');
+    });
 });
 
 /*****************************  Admin + Guest *****************************/
@@ -118,7 +122,7 @@ $routes->group("api", ["filter" => "authapi:Admin,Guest", 'namespace' => 'App\Co
 });
 
 /*****************************  Admin + Guest + Attendee *****************************/
-$routes->group("api", ["filter" => "authapi:Admin,Guest,Attendee", 'namespace' => 'App\Controllers'], function ($routes) {
+$routes->group("api", ["filter" => "authapi:Admin,Guest,Attendee,Supervisor", 'namespace' => 'App\Controllers'], function ($routes) {
     $routes->post("logout", "APIController::logout");
 
     $routes->group('evalet', function ($routes) {
@@ -192,8 +196,8 @@ $routes->group("api/admin", ["filter" => "authapi:Admin", 'namespace' => 'App\Co
     });
 });
 
-/*****************************  Admin + Attendee *****************************/
-$routes->group("api/admin", ["filter" => "authapi:Admin,Attendee", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
+/*****************************  Admin + Attendee + Supervisor *****************************/
+$routes->group("api/admin", ["filter" => "authapi:Admin,Attendee,Supervisor", 'namespace' => 'App\Controllers\APIControllers\Admin'], function ($routes) {
     $routes->group('housekeeping', function ($routes) {
         $routes->get("all-tasks", "HouseKeepingController::allTasks");
         $routes->post("task-details", "HouseKeepingController::taskDetails");
@@ -217,6 +221,8 @@ $routes->group("api", ["filter" => "authapi:Guest", 'namespace' => 'App\Controll
         $routes->get("menu-categories", "RestaurantController::menuCategories");
         $routes->post("place-order", "RestaurantController::placeOrder");
         $routes->post("get-menu-items", "RestaurantController::getMenuItems");
+
+        $routes->get("reservation-slots", "RestaurantReservationSlotController::reservationSlots");
     });
 
     $routes->group('concierge', function ($routes) {

@@ -42,7 +42,7 @@ class PropertyInfoController extends BaseController
         $rules = [
             'PI_FILE' => [
                 'label' => 'file',
-                'rules' => ['uploaded[PI_FILE]', 'mime_in[PI_FILE,application/pdf]', 'max_size[PI_FILE, 5048]']
+                'rules' => ['uploaded[PI_FILE]', 'mime_in[PI_FILE,application/pdf]', 'max_size[PI_FILE,5120]']
             ],
         ];
 

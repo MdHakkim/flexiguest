@@ -22,7 +22,7 @@ class GalleryRepository extends BaseController
         return [
             'GI_IMAGE' => [
                 'label' => 'image',
-                'rules' => ['uploaded[GI_IMAGE]', 'mime_in[GI_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[GI_IMAGE,2048]']
+                'rules' => ['uploaded[GI_IMAGE]', 'mime_in[GI_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[GI_IMAGE,5120]']
             ],
         ];
     }

@@ -574,8 +574,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/addRolePermission', 'UserController::addRolePermission');
     $routes->match(['post'], '/editRolePermission', 'UserController::editRolePermission');
     $routes->get('/checkRolePermission', 'UserController::checkRolePermission');
-
     $routes->match(['post'], '/searchMenu', 'AdditionalController::searchMenu');
+
+    $routes->match(['post'], '/allUsersList', 'UserController::allUsersList');
 
     /// Reservation - Fixed Charges 
     $routes->match(['post'], '/transactionList', 'ApplicatioController::transactionList');
@@ -676,7 +677,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/deleteTask', 'HousekeepingController::deleteTask');
     $routes->get('/taskcodeList', 'HousekeepingController::taskcodeList');
     $routes->get('/allTaskcodeList', 'HousekeepingController::allTaskcodeList');
-    
+
     $routes->match(['post'], '/searchRooms', 'ReservationController::searchRooms');
 
 
@@ -713,7 +714,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/itemAvailability', 'ReservationController::itemAvailability');
     $routes->match(['post'], '/getResvNo', 'NotificationController::getResvNo');
     $routes->match(['post'], '/resolveNotification', 'NotificationController::resolveNotification');
-    $routes->match(['post'], '/notification-status', 'NotificationController::notificationStatus');    
+    $routes->match(['post'], '/notification-status', 'NotificationController::notificationStatus');
 
 
     $routes->get('/Notifications', 'NotificationController::Notifications');
@@ -738,13 +739,16 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/viewTaskAssignedRooms', 'TaskAssignmentController::viewTaskAssignedRooms');
 
     $routes->match(['post'], '/setTaskSheet', 'TaskAssignmentController::setTaskSheet');
-    $routes->get('/printTaskSheet', 'TaskAssignmentController::printTaskSheet');  
+    $routes->get('/printTaskSheet', 'TaskAssignmentController::printTaskSheet');
     $routes->match(['post'], '/getTaskComments', 'TaskAssignmentController::getTaskComments');
+    $routes->match(['post'], '/checkRoomAlreadyAssigned', 'TaskAssignmentController::checkRoomAlreadyAssigned');
 
-    
 
-    
-    
+
+
+
+
+
     //Subina Code (END)  
 
     // Deleep 
@@ -918,6 +922,27 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
             $routes->post('place-order', 'RestaurantController::placeOrder');
             $routes->post('edit-order', 'RestaurantController::editOrder');
             $routes->delete('delete-order', 'RestaurantController::deleteOrder');
+        });
+
+        // $routes->group('table', function ($routes) {
+        //     $routes->get('', 'RestaurantTableController::table');
+        //     $routes->post('all-tables', 'RestaurantTableController::allTables');
+        //     $routes->post('store', 'RestaurantTableController::store');
+        //     $routes->post('edit', 'RestaurantTableController::edit');
+        //     $routes->delete('delete', 'RestaurantTableController::delete');
+        // });
+
+        $routes->group('reservation-slot', function ($routes) {
+            $routes->get('', 'RestaurantReservationSlotController::reservationSlot');
+            $routes->post('all-reservation-slots', 'RestaurantReservationSlotController::allReservationSlots');
+            $routes->post('store', 'RestaurantReservationSlotController::store');
+            $routes->post('edit', 'RestaurantReservationSlotController::edit');
+            $routes->delete('delete', 'RestaurantReservationSlotController::delete');
+        });
+
+        $routes->group('reservation', function ($routes) {
+            $routes->get('', 'RestaurantReservationController::reservation');
+            $routes->post('all-reservations', 'RestaurantReservationController::allReservations');
         });
     });
 

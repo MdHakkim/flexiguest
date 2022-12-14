@@ -51,7 +51,7 @@ class AppUpdateController extends BaseController
             $rules = array_merge($rules, [
                 'AU_COVER_IMAGE' => [
                     'label' => 'Cover Image',
-                    'rules' => ['uploaded[AU_COVER_IMAGE]', 'mime_in[AU_COVER_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[AU_COVER_IMAGE,2048]']
+                    'rules' => ['uploaded[AU_COVER_IMAGE]', 'mime_in[AU_COVER_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[AU_COVER_IMAGE,5120]']
                 ],
             ]);
 

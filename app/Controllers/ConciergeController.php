@@ -91,7 +91,7 @@ class ConciergeController extends BaseController
             $rules = array_merge($rules, [
                 'CO_COVER_IMAGE' => [
                     'label' => 'Cover Image',
-                    'rules' => ['uploaded[CO_COVER_IMAGE]', 'mime_in[CO_COVER_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[CO_COVER_IMAGE,2048]']
+                    'rules' => ['uploaded[CO_COVER_IMAGE]', 'mime_in[CO_COVER_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[CO_COVER_IMAGE,5120]']
                 ],
             ]);
 
@@ -99,7 +99,7 @@ class ConciergeController extends BaseController
             $rules = array_merge($rules, [
                 'CO_PROVIDER_LOGO' => [
                     'label' => 'provider logo',
-                    'rules' => ['mime_in[CO_PROVIDER_LOGO,image/png,image/jpg,image/jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document]', 'max_size[CO_PROVIDER_LOGO, 2048]']
+                    'rules' => ['mime_in[CO_PROVIDER_LOGO,image/png,image/jpg,image/jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document]', 'max_size[CO_PROVIDER_LOGO,5120]']
                 ],
             ]);
 

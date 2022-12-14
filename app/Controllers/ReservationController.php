@@ -357,13 +357,15 @@ class ReservationController extends BaseController
 
     public function registerCards(){
         
-        $roomClassLists = $this->roomClassLists();
-        $membershipLists = $this->membershipLists();
-        $rateCodeLists = $this->rateCodeLists();
-        $vipCodeLists = $this->vipCodeLists();
+        $roomClassLists   = $this->roomClassLists();
+        $membershipLists  = $this->membershipLists();
+        $rateCodeLists    = $this->rateCodeLists();
+        $vipCodeLists     = $this->vipCodeLists();
+        $customerLists    = $this->customerLists();
     
         $data = [
             'roomClassLists' => $roomClassLists,
+            'customerLists'  => $customerLists,
             'membershipLists' => $membershipLists,
             'rateCodeLists' => $rateCodeLists,
             'vipCodeLists' => $vipCodeLists,
@@ -377,11 +379,11 @@ class ReservationController extends BaseController
     public function registerCardDataExists(){
         
         
-        $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, RESV_RATE, RESV_RM_TYPE, RESV_NAME, (SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY) RESV_COMPANY_DESC, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, (SELECT ctname FROM CITY WHERE id=CUST_CITY) CUST_CITY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_NATIONALITY) CUST_NATIONALITY_DESC, CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID";
+        $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, RESV_RATE, RESV_RM_TYPE, RESV_NAME, RESV_STATUS, (SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY) RESV_COMPANY_DESC, CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, (SELECT ctname FROM CITY WHERE id=CUST_CITY) CUST_CITY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC, (SELECT cname FROM COUNTRY WHERE ISO2=CUST_NATIONALITY) CUST_NATIONALITY_DESC, CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER, RESV_BLOCK FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID WHERE 1=1 ";
        
         if ($_SESSION['ARRIVAL_DATE'] != '') {
             $ARRIVAL_DATE = $_SESSION['ARRIVAL_DATE'];
-            $sql .= " WHERE RESV_ARRIVAL_DT LIKE '%$ARRIVAL_DATE%' ";                   
+            $sql .= " AND RESV_ARRIVAL_DT LIKE '%$ARRIVAL_DATE%' ";                   
         }
 
         if($_SESSION['ETA_FROM_TIME'] != '' && $_SESSION['ETA_TO_TIME'] !='')        
@@ -393,19 +395,35 @@ class ReservationController extends BaseController
         else if($_SESSION['ETA_TO_TIME'] != '')         
             $sql .= " AND RESV_ETA <= '".$_SESSION['ETA_TO_TIME']."'"; 
 
+        if ($_SESSION['GUEST_NAME'] != '') {
+                $GUEST_NAME = $_SESSION['GUEST_NAME'];
+                $sql .= " AND RESV_NAME LIKE '%$GUEST_NAME%' ";                   
+            }
+        if ($_SESSION['CONFIRM_NO'] != '') {
+                $CONFIRM_NO = $_SESSION['CONFIRM_NO'];
+                $sql .= " AND RESV_NO LIKE '%$CONFIRM_NO%' ";                   
+            }
+
         if($_SESSION['RESV_FROM_NAME'] != '')         
-            $sql .= " AND CUST_FIRST_NAME LIKE '%'".$_SESSION['RESV_FROM_NAME']."'%'"; 
+                $sql .= " AND CUST_FIRST_NAME LIKE '%".$_SESSION['RESV_FROM_NAME']."%'"; 
 
         if($_SESSION['ROOM_CLASS'] != '')         
-            $sql .= " AND RESV_ROOM_CLASS = '".$_SESSION['ROOM_CLASS']."'"; 
+                 $sql .= " AND RESV_ROOM_CLASS = '".$_SESSION['ROOM_CLASS']."'"; 
         
         if($_SESSION['RATE_CODE'] != '')         
-            $sql .= " AND RESV_RATE_CODE = '".$_SESSION['RATE_CODE']."'";
+                $sql .= " AND RESV_RATE_CODE = '".$_SESSION['RATE_CODE']."'";
         
         if($_SESSION['MEM_TYPE'] != '')         
-            $sql .= " AND RESV_MEMBER_TY = '".$_SESSION['MEM_TYPE']."'";
+                 $sql .= " AND RESV_MEMBER_TY = '".$_SESSION['MEM_TYPE']."'";
+        
+        if($_SESSION['IN_HOUSE_GUESTS'] != '')         
+                $sql .= " AND ( RESV_STATUS = 'Checked-In' OR RESV_STATUS = 'Check-Out-Requested')";
 
-          // echo $sql;
+        if($_SESSION['RESV_BLOCK'] != '')         
+                $sql .= " AND RESV_BLOCK != ''";
+
+
+           //echo $sql;
 
         $response['sql'] = $sql;
       
@@ -435,9 +453,11 @@ class ReservationController extends BaseController
     }
 
     public function registerCardSaveDetails(){
-        $_SESSION['ARRIVAL_DATE']  = date("Y-m-d",strtotime($this->request->getPost('ARRIVAL_DATE')));
+        $_SESSION['ARRIVAL_DATE']  = $this->request->getPost('ARRIVAL_DATE') ? date("Y-m-d",strtotime($this->request->getPost('ARRIVAL_DATE'))):'';
         $_SESSION['ETA_FROM_TIME'] = $this->request->getPost('ETA_FROM_TIME');
         $_SESSION['ETA_TO_TIME']   = $this->request->getPost('ETA_TO_TIME');
+        $_SESSION['GUEST_NAME']    = $this->request->getPost('GUEST_NAME');
+        $_SESSION['CONFIRM_NO']    = $this->request->getPost('CONFIRM_NO');
         $_SESSION['RESV_INDIV']    = $this->request->getPost('RESV_INDIV');
         $_SESSION['RESV_BLOCK']    = $this->request->getPost('RESV_BLOCK');
         $_SESSION['RESV_FROM_NAME']= $this->request->getPost('RESV_FROM_NAME');
@@ -555,12 +575,13 @@ class ReservationController extends BaseController
         $response = $this->registerCardData();  
         $data['title'] = getMethodName(); 
         $data['response'] = $response['response'];
+        $data['branding_logo'] = brandingLogo();
+        
         return view('Reservation/RegisterCard',$data);
     }
 
     public function registerCardData(){        
-        $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, 
-                        RESV_RATE, RESV_RM_TYPE, RESV_NAME, 
+        $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, RESV_RATE, RESV_RM_TYPE, RESV_NAME, RESV_STATUS, 
                         CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER,
                         CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, 
                         fd.DOC_FILE_PATH as SIGNATURE,
@@ -816,6 +837,8 @@ public function showPackages()
         $output    = '';
         $flag = $out = 0;
         $packageID = $this->request->getPost('packageID');
+        $departure = $this->request->getPost('departure');
+        $RESV_DEPARTURE = strtotime($departure);
 
         $sql = "SELECT RSV_PCKG_BEGIN_DATE, RSV_PCKG_END_DATE, PCKG_ID, RSV_PCKG_QTY       
                 FROM FLXY_RESERVATION_PACKAGES 
@@ -832,11 +855,22 @@ public function showPackages()
        
         $RSV_PCKG_BEGIN_DATE1    = strtotime($RSV_PCKG_BEGIN_DATE);
         $RSV_PCKG_END_DATE1      = strtotime($RSV_PCKG_END_DATE); 
-        $datediff = $RSV_PCKG_END_DATE1 - $RSV_PCKG_BEGIN_DATE1;
-        if($RSV_PCKG_END_DATE1 == $RSV_PCKG_BEGIN_DATE1)
+        if($RESV_DEPARTURE == $RSV_PCKG_END_DATE1){
+            $datediff = $RSV_PCKG_END_DATE1 - $RSV_PCKG_BEGIN_DATE1;
+            $RESERV_DAYS = round($datediff / (60 * 60 * 24));
+        }
+        else if($RSV_PCKG_END_DATE1 == $RSV_PCKG_BEGIN_DATE1)
         $RESERV_DAYS = 1;
-        else
-        $RESERV_DAYS = round($datediff / (60 * 60 * 24));
+        else if($RESV_DEPARTURE != $RSV_PCKG_END_DATE1)
+        {
+            $datediff = $RSV_PCKG_END_DATE1 - $RSV_PCKG_BEGIN_DATE1;
+            $RESERV_DAYS = 1 + round($datediff / (60 * 60 * 24));
+        }
+
+       
+       
+       
+        
 
         $ACTUAL_RSV_PCKG_END_DATE  = date("Y-m-d", strtotime("-1 day", strtotime($RSV_PCKG_END_DATE)));  
 
@@ -2424,7 +2458,7 @@ public function getRoomStatistics(){
         return $response;
     }
 
-    function itemAvailability(){
+    public function  itemAvailability(){
         $data['title'] = getMethodName();
         $data['session'] = $this->session;  
         $data['js_to_load'] = array("inventoryFormWizardNumbered.js","RoomPlan/FullCalendar/Core/main.min.js",
@@ -2436,6 +2470,17 @@ public function getRoomStatistics(){
          "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
 
         return view('Reservation/itemAvailability', $data);
+    }
+
+    public function customerLists(){
+
+        $sql = "SELECT CUST_ID,TRIM(CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME)) CUST_FULL_NAME FROM FLXY_CUSTOMER INNER JOIN FLXY_RESERVATION ON RESV_NAME = CUST_ID GROUP BY CUST_ID,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME)";
+        $response = $this->DB->query($sql)->getResultArray();
+        $option='';
+        foreach($response as $row){
+            $option.= '<option value="'.trim($row['CUST_ID']).'">'.$row['CUST_FULL_NAME'].'</option>';
+        }
+        return $option;
     }
 
 }

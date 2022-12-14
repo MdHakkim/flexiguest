@@ -415,7 +415,7 @@ class APIController extends BaseController
             'files' => [
                 'uploaded[files]',
                 'mime_in[files,image/png,image/jpeg,image/jpg,application/pdf]',
-                'max_size[files,50000]',
+                'max_size[files,5120]',
             ],
         ]);
 
@@ -748,7 +748,7 @@ class APIController extends BaseController
             'files' => [
                 'uploaded[files]',
                 'mime_in[files,image/png,image/jpeg,image/jpg,application/pdf]',
-                'max_size[files,50000]',
+                'max_size[files,5120]',
             ],
         ]);
 
@@ -906,7 +906,7 @@ class APIController extends BaseController
             'signature' =>  [
                 'uploaded[signature]',
 
-                'max_size[signature,50000]',
+                'max_size[signature,5120]',
             ],
         ]);
 

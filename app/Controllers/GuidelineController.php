@@ -55,7 +55,7 @@ class GuidelineController extends BaseController
             $rules = array_merge($rules, [
                 'GL_COVER_IMAGE' => [
                     'label' => 'Cover Image',
-                    'rules' => ['uploaded[GL_COVER_IMAGE]', 'mime_in[GL_COVER_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[GL_COVER_IMAGE,2048]']
+                    'rules' => ['uploaded[GL_COVER_IMAGE]', 'mime_in[GL_COVER_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[GL_COVER_IMAGE,5120]']
                 ],
             ]);
 
@@ -63,7 +63,7 @@ class GuidelineController extends BaseController
             $rules = array_merge($rules, [
                 'GL_FILES.*' => [
                     'label' => 'Files',
-                    'rules' => ['mime_in[GL_FILES,image/png,image/jpg,image/jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document]', 'max_size[GL_FILES, 2048]']
+                    'rules' => ['mime_in[GL_FILES,image/png,image/jpg,image/jpeg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document]', 'max_size[GL_FILES,5120]']
                 ],
             ]);
 

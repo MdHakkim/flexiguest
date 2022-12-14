@@ -29,7 +29,7 @@
       <div class="d-flex flex-row justify-content-between">
         <div class="mb-4">
           <div class="svg-illustration gap-2 d-flex mb-3">
-            <a href="http://localhost/FlexiGuest" class="app-brand-link">
+            <a href="<?php echo base_url(); ?>" class="app-brand-link">
 
                 <?php /* ?>
 
@@ -181,7 +181,7 @@
                     </span>
                     <span class="app-brand-text demo menu-text fw-bold ms-2" style="color:#5a8dee !important">FlexiGuest</span>
                                     <?php */ ?>
-                    <img src="<?= brandingLogo() ?>" width="190px;" />
+                    <img src="<?= $branding_logo ?>" width="190px;" />
                 </a>            
           </div>
         
@@ -211,6 +211,7 @@
               <th width="15%">Confirm: No</th>
               <th width="15%">Rate</th>
               <th width="15%">Room Type</th>
+              <th width="15%">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -223,6 +224,7 @@
               <td width="5%"><?= $guestDetails['RESV_NO']?></td>
               <td width="5%"><?= $guestDetails['RESV_RATE']?></td>
               <td width="5%"><?= $guestDetails['RESV_RM_TYPE']?></td>
+              <td width="5%"><?= $guestDetails['RESV_STATUS']?></td>
             </tr>
             
            
@@ -357,7 +359,9 @@ situation, which may cause you to vacate the premises</span
         </div>
       </div>
       <hr>
-      <div class="row row p-3">
+      <br/>
+      
+      <div class="row p-3">
         <div class="col-12">
           <span>
             <b>Guest Signature: </b>

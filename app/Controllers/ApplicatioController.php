@@ -4358,7 +4358,7 @@ class ApplicatioController extends BaseController
             if(empty($this->request->getPost("VACC_DOC_SAVED"))){
                 $rules['files'] = [
                     'label' => 'vaccine certificate', 
-                    'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg,application/pdf]', 'max_size[files,50000]'
+                    'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg,application/pdf]', 'max_size[files,5120]'
                 ];
             }
 
@@ -4548,17 +4548,14 @@ class ApplicatioController extends BaseController
                         left join FLXY_DOCUMENTS as fd on FLXY_RESERVATION.RESV_ID = fd.DOC_RESV_ID and fd.DOC_FILE_TYPE = 'SIGN'
                         WHERE RESV_ID = $sysid";
         $data['response'] = $this->Db->query($sql)->getResultArray();
+        $data['branding_logo'] = brandingLogo();
 
-        $dompdf = new \Dompdf\Dompdf();
-        $dompdf->loadHtml(view('Reservation/RegisterCard', $data));
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        
         $file_name = "assets/reservation-registration-cards/RES{$sysid}-RC.pdf";
-        file_put_contents($file_name, $dompdf->output());
+        $view = "Reservation/RegisterCard";
+        generateInvoice($file_name, $view, $data);
 
         echo json_encode($result);
-    }   
+    }
 
     function reservationCheckin(){
         $data['data']=array('RESV_ID'=>'','CUST_ID'=>'','CUST_COUNTRY'=>'','CUST_STATE'=>'','RESV_ACCP_TRM_CONDI'=>'','RESV_ACCP_TRM_CONDI'=>'', 'CUST_NATIONALITY' => '', 'RESV_STATUS' => '');

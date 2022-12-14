@@ -108,7 +108,7 @@ class FacilityController extends BaseController
             // 'MAINT_ATTACHMENT' => [
                 // 'uploaded[MAINT_ATTACHMENT]',
                 // 'mime_in[MAINT_ATTACHMENT,image/png,image/jpeg,image/jpg]',
-                // 'max_size[MAINT_ATTACHMENT,5000]',
+                // 'max_size[MAINT_ATTACHMENT,5120]',
             // ],
             'MAINT_STATUS' => [
                 'label' => 'Status',
@@ -485,7 +485,7 @@ class FacilityController extends BaseController
                 'HANDBOOK' =>  [
                     'uploaded[HANDBOOK]',
                     'mime_in[HANDBOOK,application/pdf]',
-                    // 'max_size[HANDBOOK,500]',
+                    // 'max_size[HANDBOOK,5120]',
                 ],
             ]);
             if (!$validate) {
@@ -580,7 +580,7 @@ class FacilityController extends BaseController
                     'rules' => [
                         'uploaded[SHUTL_ROUTE_IMG]',
                         'mime_in[SHUTL_ROUTE_IMG,image/png,image/jpeg,image/jpg]',
-                        'max_size[SHUTL_ROUTE_IMG,2048]',
+                        'max_size[SHUTL_ROUTE_IMG,5120]',
                     ]
                 ];
             }
@@ -722,7 +722,7 @@ class FacilityController extends BaseController
             if(empty($sysid) || !empty($this->request->getFile('SHUTL_STAGE_IMAGE')))
                 $rules['SHUTL_STAGE_IMAGE'] = [
                     'label' => 'stage image',
-                    'rules' => ['uploaded[SHUTL_STAGE_IMAGE]', 'mime_in[SHUTL_STAGE_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[SHUTL_STAGE_IMAGE,2048]']
+                    'rules' => ['uploaded[SHUTL_STAGE_IMAGE]', 'mime_in[SHUTL_STAGE_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[SHUTL_STAGE_IMAGE,5120]']
                 ];
                 
             if (!$this->validate($rules))

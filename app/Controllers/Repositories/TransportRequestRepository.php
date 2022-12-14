@@ -93,7 +93,7 @@ class TransportRequestRepository extends BaseController
         if (!empty($data['TR_GUEST_IMAGE']))
             $rules['TR_GUEST_IMAGE'] = [
                 'label' => 'guest image',
-                'rules' => ['uploaded[TR_GUEST_IMAGE]', 'mime_in[TR_GUEST_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[TR_GUEST_IMAGE,2048]']
+                'rules' => ['uploaded[TR_GUEST_IMAGE]', 'mime_in[TR_GUEST_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[TR_GUEST_IMAGE,5120]']
             ];
 
         if (isWeb()) {
@@ -200,20 +200,26 @@ class TransportRequestRepository extends BaseController
     public function generateTransportRequestInvoice($request_id, $transaction_id = null)
     {
         $transport_request = $this->getTransportRequest("TR_ID = $request_id");
-        if(empty($transport_request))
+        if (empty($transport_request))
             return null;
-            
+
         $transport_request['transaction_id'] = $transaction_id;
 
         $view = 'Templates/transport_request_invoice_template';
-        $data = $transport_request;
-
         if (empty($transaction_id))
             $file_name = "assets/invoices/transport-request-invoices/TR{$request_id}-Invoice.pdf";
         else
             $file_name = "assets/receipts/transport-request-receipts/TR{$request_id}-Receipt.pdf";
 
-        generateInvoice($file_name, $view, $data);
+        generateInvoice($file_name, $view, ['data' => $transport_request]);
         return $file_name;
+    }
+
+    public function transportRequestRevenue()
+    {
+        return $this->TransportRequest
+            ->select('sum(TR_TOTAL_AMOUNT) as revenue')
+            ->where("TR_PAYMENT_STATUS = 'Paid' and TR_STATUS in ('New', 'In Progress')")
+            ->first()['revenue'];
     }
 }

@@ -38,12 +38,13 @@ class RestaurantRepository extends BaseController
     {
         $rules = [
             'RE_RESTAURANT' => ['label' => 'restaurant name', 'rules' => 'required'],
+            'RE_SEATING_CAPACITY' => ['label' => 'seating capacity', 'rules' => 'required|greater_than[0]'],
         ];
 
         if (empty($data['id']) || !empty($data['RE_IMAGE_URL']))
             $rules['RE_IMAGE_URL'] = [
                 'label' => 'restaurant image',
-                'rules' => ['uploaded[RE_IMAGE_URL]', 'mime_in[RE_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[RE_IMAGE_URL,5048]']
+                'rules' => ['uploaded[RE_IMAGE_URL]', 'mime_in[RE_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[RE_IMAGE_URL,5120]']
             ];
 
         return $rules;
@@ -53,7 +54,7 @@ class RestaurantRepository extends BaseController
     {
         $mine = new ServerSideDataTable();
         $tableName = 'FLXY_RESTAURANTS';
-        $columns = 'RE_ID,RE_RESTAURANT,RE_IMAGE_URL,RE_CREATED_AT';
+        $columns = 'RE_ID,RE_RESTAURANT,RE_IMAGE_URL,RE_SEATING_CAPACITY,RE_CREATED_AT';
         $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
@@ -122,7 +123,7 @@ class RestaurantRepository extends BaseController
         if (empty($data['id']) || !empty($data['MC_IMAGE_URL']))
             $rules['MC_IMAGE_URL'] = [
                 'label' => 'category image',
-                'rules' => ['uploaded[MC_IMAGE_URL]', 'mime_in[MC_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MC_IMAGE_URL,5048]']
+                'rules' => ['uploaded[MC_IMAGE_URL]', 'mime_in[MC_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MC_IMAGE_URL,5120]']
             ];
 
         return $rules;
@@ -209,7 +210,7 @@ class RestaurantRepository extends BaseController
         if (empty($data['id']) || !empty($data['MI_IMAGE_URL']))
             $rules['MI_IMAGE_URL'] = [
                 'label' => 'item image',
-                'rules' => ['uploaded[MI_IMAGE_URL]', 'mime_in[MI_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MI_IMAGE_URL,5048]']
+                'rules' => ['uploaded[MI_IMAGE_URL]', 'mime_in[MI_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MI_IMAGE_URL,5120]']
             ];
 
         return $rules;
@@ -226,7 +227,7 @@ class RestaurantRepository extends BaseController
 
     public function menuItemById($id)
     {
-        return $this->MenuItem->find($id);
+        return $this->MenuItem->join('FLXY_RESTAURANTS', 'MI_RESTAURANT_ID = RE_ID', 'left')->find($id);
     }
 
     public function storeMenuItem($user_id, $data)
@@ -286,7 +287,7 @@ class RestaurantRepository extends BaseController
         if (empty($data['id']) || !empty($data['MT_IMAGE_URL']))
             $rules['MT_IMAGE_URL'] = [
                 'label' => 'meal type image',
-                'rules' => ['uploaded[MT_IMAGE_URL]', 'mime_in[MT_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MT_IMAGE_URL,5048]']
+                'rules' => ['uploaded[MT_IMAGE_URL]', 'mime_in[MT_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MT_IMAGE_URL,5120]']
             ];
 
         return $rules;
@@ -356,7 +357,7 @@ class RestaurantRepository extends BaseController
     }
 
     /** ***************Place Order*************** */
-    public function placeOrderValidationRules()
+    public function placeOrderValidationRules($data)
     {
         $rules = [
             'RO_RESERVATION_ID' => [
@@ -385,6 +386,23 @@ class RestaurantRepository extends BaseController
                 ]
             ]
         ];
+
+        if (!isWeb()) {
+            $rules['RO_ORDER_TYPE'] = [
+                'label' => 'order type',
+                'rules' => "required|customInArray[Dine-In,Room Service]",
+                'errors' => [
+                    'required' => 'Please select a order type.',
+                    'customInArray' => 'invalid Order type'
+                ]
+            ];
+
+            if (isset($data['RO_ORDER_TYPE']) && $data['RO_ORDER_TYPE'] == 'Dine-In')
+                $rules = array_merge($rules, [
+                    'RR_SLOT_ID' => ['label' => 'slot', 'rules' => 'required', 'errors' => ['required' => 'Please select a slot.']],
+                    'RR_NO_OF_GUESTS' => ['label' => 'no of guests', 'rules' => 'required'],
+                ]);
+        }
 
         if (isWeb()) {
             $rules['RO_CUSTOMER_ID'] = [
@@ -461,9 +479,10 @@ class RestaurantRepository extends BaseController
             $this->createUpdateOrderDetail($item_data);
         }
 
-        if (empty($data['RO_ID']))
+        if (empty($data['RO_ID'])) {
+            $data['model_id'] = $order_id;
             $this->generateOrderInvoice($order_id);
-
+        }
 
         if (!isWeb() && empty($data['RO_ID']) && $data['RO_PAYMENT_METHOD'] == 'Credit/Debit card') {
             $data = [
@@ -566,12 +585,17 @@ class RestaurantRepository extends BaseController
         return $this->RestaurantOrder->where($where_condition)->findAll();
     }
 
-    public function allOrder()
+    public function allOrder($data)
     {
         $mine = new ServerSideDataTable();
         $tableName = 'FLXY_RESTAURANT_ORDERS left join FLXY_ROOM on RO_ROOM_ID = RM_ID left join FLXY_CUSTOMER on RO_CUSTOMER_ID = CUST_ID';
-        $columns = 'RO_ID,RO_RESERVATION_ID,RO_ROOM_ID,RO_CUSTOMER_ID,RO_TOTAL_PAYABLE,RO_DELIVERY_STATUS,RO_PAYMENT_STATUS,RO_PAYMENT_METHOD,RO_CREATED_AT,RM_NO,CUST_FIRST_NAME,CUST_LAST_NAME';
-        $mine->generate_DatatTable($tableName, $columns);
+        $columns = 'RO_ID,RO_RESERVATION_ID,RO_ROOM_ID,RO_CUSTOMER_ID,RO_TOTAL_PAYABLE,RO_DELIVERY_STATUS,RO_ORDER_TYPE,RO_PAYMENT_STATUS,RO_PAYMENT_METHOD,RO_CREATED_AT,RM_NO,CUST_FIRST_NAME,CUST_LAST_NAME';
+
+        $init_cond = [];
+        if (isset($data['order_type']))
+            $init_cond['RO_ORDER_TYPE like '] = "'%{$data['order_type']}%'";
+
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
         exit;
     }
 
@@ -590,13 +614,20 @@ class RestaurantRepository extends BaseController
         $order['transaction_id'] = $transaction_id;
 
         $view = 'Templates/restaurant_order_invoice_template';
-        $data = $order;
         if (empty($transaction_id))
             $file_name = "assets/invoices/restaurant-order-invoices/RO{$order_id}-Invoice.pdf";
         else
             $file_name = "assets/receipts/restaurant-order-receipts/RO{$order_id}-Receipt.pdf";
 
-        generateInvoice($file_name, $view, $data);
+        generateInvoice($file_name, $view, ['data' => $order]);
         return $file_name;
+    }
+
+    public function restaurantRevenue()
+    {
+        return $this->RestaurantOrder
+            ->select('sum(RO_TOTAL_PAYABLE) as revenue')
+            ->where("RO_PAYMENT_STATUS = 'Paid' and RO_DELIVERY_STATUS in ('New', 'Processing', 'Delivered')")
+            ->first()['revenue'];
     }
 }

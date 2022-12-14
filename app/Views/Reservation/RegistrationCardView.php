@@ -36,11 +36,13 @@
                    
                     <div class="bs-stepper-content">
                     <form id="submitForm" class="needs-validation" novalidate>
+
+                  
                         
                         <div class="row g-3 mt-2">                           
 
                             <div class="col-md-5">
-                                <lable class="form-lable"><b>Arrival Date *</b></lable>
+                                <lable class="form-lable"><b>Arrival Date </b></lable>
                                 <div class="col-md-12">
                                 <div class="input-group">
                                     <input type="text" id="ARRIVAL_DATE" name="ARRIVAL_DATE" class="form-control" placeholder="DD-MM-YYYY" required>
@@ -54,14 +56,34 @@
                             </div> 
 
                             <div class="col-md-3">
-                                <lable class="form-lable"><b>ETA From *</b></lable>
+                                <lable class="form-lable"><b>ETA From </b></lable>
                                 <input type="time" name="ETA_FROM_TIME" id="ETA_FROM_TIME" class="form-control" required />                                
                             </div>
                             <div class="col-md-3">
-                                <lable class="form-lable"><b> To *</b></lable>
+                                <lable class="form-lable"><b> To </b></lable>
                                 <input type="time" name="ETA_TO_TIME" id="ETA_TO_TIME" class="form-control" required />                                
                             </div>   
                          
+                        </div>
+
+                        <div class="row g-3 mt-2">                           
+
+                        <div class="col-md-6">
+                            <lable class="form-lable"><b>Guest Name </b></lable>
+                            <div class="col-md-12">
+                           
+                                <select id="GUEST_NAME" name="GUEST_NAME" class="select2 form-select " data-allow-clear="true" > 
+                                <option value="">Select</option> 
+                                        <?= $customerLists;?>                        
+                                </select>  
+                            </div>                       
+                        </div> 
+                        <div class="col-md-3">
+                            <lable class="form-lable"><b>Confirm No:</b></lable>
+                            <input type="text" name="CONFIRM_NO" id="CONFIRM_NO" class="form-control" />                                
+                        </div>
+
+
                         </div>
                         <div class="row g-3 mt-2">  
                             <h5>Reservation Types                   
@@ -194,24 +216,23 @@ $(document).ready(function() {
     $('#ARRIVAL_DATE').datepicker({
         format: 'd-M-yyyy',
         autoclose: true,
-        startDate: '-0m',
+        // startDate: '-0m',
     });
 });
 
 function onClickPreview(action) { 
     $('#errorModal').hide();
     
-        if($('#ARRIVAL_DATE').val() == '' && ( !$('#RESV_INDIV').is(':checked') && !$('#RESV_BLOCK').is(':checked'))){
+        if($('#ARRIVAL_DATE').val() == '' && ( !$('#RESV_INDIV').is(':checked') && !$('#RESV_BLOCK').is(':checked') && !$('#IN_HOUSE_GUESTS').is(':checked')&& ($('#CONFIRM_NO').val() == ''))){
             $('#errorModal').show();        
             error = '<ul><li>Arrival date is required</li><li>Reservation type is required</li></ul>';   
             $('#formErrorMessage').html(error);
             
         }
-        else if($('#ARRIVAL_DATE').val() == ''){
+        else if($('#ARRIVAL_DATE').val() == '' && !$('#IN_HOUSE_GUESTS').is(':checked') && ($('#CONFIRM_NO').val() == '')){
             $('#errorModal').show();        
             error = '<ul><li>Arrival date is required</li></ul>';   
-            $('#formErrorMessage').html(error);
-            
+            $('#formErrorMessage').html(error);            
         }
     
         else if( !$('#RESV_INDIV').is(':checked') && !$('#RESV_BLOCK').is(':checked')){

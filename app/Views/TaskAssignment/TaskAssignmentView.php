@@ -2,6 +2,7 @@
 <?= $this->section("contentRender") ?>
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('Layout/SuccessReport') ?>
+<?= $this->include('Layout/image_modal') ?>
 <style>
 	.Reservation,
 	.Guest {
@@ -18,6 +19,20 @@
 	#Taskassignment_sheet_details .disabled{
 		opacity: 0.5;
         background: rgb(147 158 170 / 45%);
+	}
+	 td.word-wrap{
+		white-space: break-spaces;
+    	word-break: break-all;
+	}
+	.float-right{
+		float:right;
+	}
+	#image-popup{
+		z-index : 1200 !important;
+	}
+
+	#task_status_id, #supervisor_status{
+		pointer-events: none;
 	}
 </style>
 
@@ -76,7 +91,7 @@
 							<th class="all">Task Codes</th>
 							<th class="all">Created By</th>							
 							<th class="all">Created On</th>							
-							<th class="all">Auto</th>
+							<!-- <th class="all">Auto</th> -->
 							<th class="all">Total Sheets</th>
 							<th class="all">Total Rooms</th>
 							
@@ -135,7 +150,7 @@
                               <span class="switch-label"><b> New Task</b></span>
                           </label>
                           </div>
-                          <div class="col-12 col-sm-6 col-lg-4">
+                          <!-- <div class="col-12 col-sm-6 col-lg-4">
                           <label class="switch switch-md">
                             <input id="HKATO_AUTO2" name="HKATO_AUTO" type="radio" 
                                 class="switch-input"  value="1"/>
@@ -149,7 +164,7 @@
                             </span>
                             <span class="switch-label"><b>Auto Task</b></span>
                         </label>
-                          </div>
+                          </div> -->
 						</div>
                     
                     </form>
@@ -173,9 +188,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-				
-
-                 
                     <div class="card-header border-bottom">
                         <ul class="nav nav-pills" role="tablist">
                             <li class="nav-item">
@@ -250,7 +262,7 @@
 
                                     <div class="row g-3 ">
                                         <div class="col-md-3 mb-3">
-                                            <div class="col-md-8 float-right">
+                                            <div class="col-md-8 ">
                                                 <button type="button" class="btn btn-success save-tasksheet-detail">
                                                     <i class="fa-solid fa-floppy-disk"></i>&nbsp; Add
                                                 </button>&nbsp;
@@ -272,7 +284,7 @@
 														<th class="all">Status</th>
                                                         <th class="all">Inspected Status</th>
 														<th class="all">Task Instructions</th>
-														<th class="all">Completed On</th>
+														<th class="all">Inspected On</th>
 														
                                                         
                                                     </tr>
@@ -283,8 +295,8 @@
                                     </div>
                                 </div>
                                 
-                                    <button type="button" class="btn btn-secondary "
-                                        data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-secondary float-right"
+                                        data-bs-dismiss="modal" >Close</button>
                            
                                 </form>
                                 </div>
@@ -455,7 +467,7 @@
 
 						<div class="row g-3 ">
 							<div class="col-md-3 mb-3">
-								<div class="col-md-8 float-right">
+								<div class="col-md-8">
 									<button type="button" class="btn btn-success save-taskroom-detail">
 										<i class="fa-solid fa-floppy-disk"></i>&nbsp; Add
 									</button>&nbsp;
@@ -541,10 +553,12 @@
 											<th class="all">Room</th>
 											<th class="all">Room Credits</th>
 											<th class="all">Room Instructions</th>
-											<th class="all">Completion Time</th>
+											<th class="all">Started At</th>
+											<th class="all">Completed At</th>
 											<th class="all">Inspected By</th>	
 											<th class="all">Inspected Time</th>
 											<th class="all">Comments</th>
+											<th class="all">Total Time(HH:MM)</th>
 										</tr>
 									</thead>
 								</table>
@@ -593,7 +607,7 @@
 
 	var rooms = [];
 	$(document).ready(function() {
-
+		var rooms = [];
 		taskCodelist();
 		usersList();
 
@@ -716,14 +730,14 @@
 						}	
 						
 					},
-					{
-						data: 'HKATO_AUTO',
-						render: function(data, type, full, meta) {
-							var $status = full['HKATO_AUTO'];
-							return '<span class="badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';
-						}
+					// {
+					// 	data: 'HKATO_AUTO',
+					// 	render: function(data, type, full, meta) {
+					// 		var $status = full['HKATO_AUTO'];
+					// 		return '<span class="badge ' + statusObj[$status].class + '">' + statusObj[$status].title + '</span>';
+					// 	}
 
-					},
+					// },
 					{
 						data: 'HKATO_TOTAL_SHEETS',
 						render: function(data, type, full, meta) {
@@ -855,10 +869,13 @@
 
 	// Show Add Task Assigment
 	function addForm() {
-		$('#submitForm').not('[type="radio"],[type="checkbox"]').val('').prop('checked', false).prop('selected', false);
+		// $("#HKTAO_TASK_DATE").val(new Date())
+		$('.dt-date').datepicker('update','');
+		$('#submitForm').not('[type="text"],[type="radio"],[type="checkbox"]').val('').prop('checked', false).prop('selected', false);
 		$('.select2').val(null).trigger('change');		
 		$('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
 		$('#popModalWindowlabel').html('New Task Assigment');
+		$("#HKTAO_TASK_DATE").val('');
 		taskCodelist();
 		$('#popModalWindow').modal('show');
 	}
@@ -1085,6 +1102,11 @@
 					if( full['SUPER_STATUSCODE'] != null){
 						var match       = full['INSP_STATS'].split(',');
 						var status_text = full['SUPER_STATUSCODE'].split(',');
+					
+						if(match.indexOf('7') >= 0){
+							match.unshift('5');
+							status_text.unshift('Not Inspected');
+						}
 						for (var a in match)
 						{
 							var status_id = match[a];
@@ -1092,7 +1114,7 @@
 								for (var b in status_text)
 								{
 									var statText = status_text[b];
-									var statButton = showSuperTaskStatusChange(status_id,statText,full['HKAT_ID'],'5');
+									var statButton = showSuperTaskStatusChange(status_id,statText,full['HKAT_ID'],'5',full['COMPLETION_TIME']);
 									return statButton;
 								}
 							//}
@@ -1108,16 +1130,17 @@
                 }
             },
             {
-                data: 'HKAT_INSTRUCTIONS'
+                data: 'HKAT_INSTRUCTIONS',
+				
             },
 			{
-                data: 'COMPLETION_TIME',
+                data: 'INSPECTED_DATETIME',
 				render: function(data, type, full, meta) {	
-				if (full['COMPLETION_TIME'] == null)
+				if (full['INSPECTED_DATETIME'] == null )
                         return '';
-                    else if (full['COMPLETION_TIME'] != '1900-01-01 00:00:00.000') {
-                        var COMPLETION_TIME = full['COMPLETION_TIME'].split('.');
-                        return (COMPLETION_TIME[0]);
+                    else if (full['STATS'] == 2 && full['INSPECTED_DATETIME'] != '1900-01-01 00:00:00.000') {
+                        var INSPECTED_DATETIME = full['INSPECTED_DATETIME'].split('.');
+                        return (INSPECTED_DATETIME[0]);
                     } else
                         return "";
 				}
@@ -1127,6 +1150,15 @@
            
 
         ],
+		columnDefs: [
+
+			{
+				data: 'HKAT_INSTRUCTIONS',
+				width: "10%",
+				targets: 6,
+				class:'word-wrap'
+				},
+		],
         "order": [
             [0, "asc"]
         ],
@@ -1250,7 +1282,7 @@
     //     'serverSide': true,
     //     'serverMethod': 'post',
     //     'ajax': {
-    //         'url': '<?php echo base_url('/showTaskAssignedRooms') ?>',
+    //         'url': '<?php //echo base_url('/showTaskAssignedRooms') ?>',
     //         'data': {
     //             "HKTAO_ID": task_id
     //         }
@@ -1348,60 +1380,91 @@
 
 	
 	$(document).on('click', '.save-taskroom-detail', function() {
-		var TASK_ID              = $("#TASK_ID").val();
+		var TASK_CODE              = $("#TASK_ID").val();
 		var HKAT_TASK_ID         = $("#HKAT_TASK_ID").val();
 		var HKARM_TASK_SHEET_ID  = $("#HKARM_TASK_SHEET_ID").val();
 		var HKARM_ROOM_ID        = $("#HKARM_ROOM_ID").val();
 		var HKARM_CREDITS        = $("#HKARM_CREDITS").val();
 		var HKARM_INSTRUCTIONS   = $("#HKARM_INSTRUCTIONS").val();
-		console.log(rooms)
-		if(!rooms.includes(HKARM_ROOM_ID)){
-			rooms.push(HKARM_ROOM_ID);	
-		}
-		else{
-			var alertText =  '<li>Room is already assigned</li>';
-			showModalAlert('warning', alertText);
-			$("#HKARM_ROOM_ID").val(null).trigger('change');
-			$("#HKARM_CREDITS").val('');
-			$("#HKARM_INSTRUCTIONS").val('');
-			return;
-		}	
+		var TASK_DATE            = $('input[name="TASK_ASSIGNMENT_DATE"]').val();		
+
+		room_exists = checkRoomAlreadyAssigned(TASK_CODE,HKAT_TASK_ID,HKARM_ROOM_ID,TASK_DATE);
 		
-		var url = '<?php echo base_url('/insertTaskAssignmentRoom') ?>';
+		if(room_exists == null){
+			
+			var url = '<?php echo base_url('/insertTaskAssignmentRoom') ?>';
+			$.ajax({
+				url: url,
+				type: "post",
+				data: {TASK_ID:TASK_CODE,HKAT_TASK_ID:HKAT_TASK_ID,HKARM_TASK_SHEET_ID:HKARM_TASK_SHEET_ID,HKARM_ROOM_ID:HKARM_ROOM_ID,HKARM_CREDITS:HKARM_CREDITS,HKARM_INSTRUCTIONS:HKARM_INSTRUCTIONS},
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest'
+				},
+				dataType: 'json',
+				success: function(respn) {
+					var response = respn['SUCCESS'];
+					if (response != '1') {
+						var ERROR = respn['RESPONSE']['ERROR'];
+						var mcontent = '';
+						$.each(ERROR, function(ind, data) {
+							mcontent += '<li>' + data + '</li>';
+						});
+						showModalAlert('error', mcontent);
+						$('#loader_flex_bg').hide();
+					} else {								
+						
+						$("#HKARM_ROOM_ID").val(null).trigger('change');
+						$("#HKARM_CREDITS").val('');
+						$("#HKARM_INSTRUCTIONS").val('');
+						var alertText =  '<li>The room has been assigned</li>';
+						showModalAlert('success', alertText);
+						$('#loader_flex_bg').hide();
+						
+						$('#Taskassignment_room_details').dataTable().fnDraw();
+						$('#Taskassignment_sheet_details').dataTable().fnDraw();
+					}
+				}
+			});
+		}
+		else return;
+
+	});
+
+
+
+	function checkRoomAlreadyAssigned(TASK_CODE, HKAT_TASK_ID,HKARM_ROOM_ID,TASK_DATE) {
 		$.ajax({
-			url: url,
-			type: "post",
-			data: {TASK_ID:TASK_ID,HKAT_TASK_ID:HKAT_TASK_ID,HKARM_TASK_SHEET_ID:HKARM_TASK_SHEET_ID,HKARM_ROOM_ID:HKARM_ROOM_ID,HKARM_CREDITS:HKARM_CREDITS,HKARM_INSTRUCTIONS:HKARM_INSTRUCTIONS},
+			url: '<?php echo base_url('/checkRoomAlreadyAssigned') ?>',
+			type: 'POST',
+			async: false,
 			headers: {
 				'X-Requested-With': 'XMLHttpRequest'
 			},
-			dataType: 'json',
-			success: function(respn) {
-				var response = respn['SUCCESS'];
-				if (response != '1') {
-					var ERROR = respn['RESPONSE']['ERROR'];
-					var mcontent = '';
-					$.each(ERROR, function(ind, data) {
-						mcontent += '<li>' + data + '</li>';
-					});
-					showModalAlert('error', mcontent);
-					$('#loader_flex_bg').hide();
-				} else {								
-					
-					$("#HKARM_ROOM_ID").val(null).trigger('change');
-					$("#HKARM_CREDITS").val('');
-					$("#HKARM_INSTRUCTIONS").val('');
-					var alertText =  '<li>The room has been assigned</li>';
-					showModalAlert('success', alertText);
-					$('#loader_flex_bg').hide();
-					
-					$('#Taskassignment_room_details').dataTable().fnDraw();
-					$('#Taskassignment_sheet_details').dataTable().fnDraw();
-				}
-			}
-		});
+			data: {
+					TASK_CODE: TASK_CODE,
+					HKARM_ID: HKARM_ROOM_ID,
+					HKAT_TASK_ID: HKAT_TASK_ID,
+					TASK_DATE: TASK_DATE,
+				},
+			dataType: 'json'
 
-	});
+		}).done(function(response) {
+			if(response['RESPONSE']['OUTPUT'] != '' ){
+				var alertText =  '<li>Room is already assigned</li>';
+				showModalAlert('warning', alertText);
+				$("#HKARM_ROOM_ID").val(null).trigger('change');
+				$("#HKARM_CREDITS").val('');
+				$("#HKARM_INSTRUCTIONS").val('');
+				ret_val = 1;
+			}
+			else{
+				ret_val = null;
+			}
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			ret_val = null;
+		});
+		return ret_val;
+	}
 
 
 	$(document).on('click', '.delete_room_record', function() {
@@ -1488,6 +1551,7 @@
 			
 			{
 				data: 'HKARM_INSTRUCTIONS'
+				
 			},
 			
 
@@ -1507,6 +1571,13 @@
 		
 
 		],
+		columnDefs: [
+				{
+				data: 'HKARM_INSTRUCTIONS',
+				width: "10%",
+				class:'word-wrap',
+				targets:3,
+				}],
 		"order": [
 			[0, "asc"]
 		],
@@ -1526,7 +1597,7 @@
 
 	
 
-	function showSuperTaskStatusChange(curStatId, curStatName, taskId, roleId) {
+	function showSuperTaskStatusChange(curStatId, curStatName, taskId, roleId, completionTime) {
 		$status = '';
 		var $status_name = curStatName;
 		var $status_id = curStatId;
@@ -1547,10 +1618,10 @@
 			return $status_name;
 		}
 
-		var $statButton = '<button type="button" class="btn btn-sm ' + $status[
+		var $statButton = '<button type="button" class="readonly btn btn-sm ' + $status[
 				$status_id]
 			.class + ' dropdown-toggle"' +
-			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="supervisor_status">' +
 			$status_name + '</button>';
 
 		if ($status_id != '1' && $status_id != '2' && $status_id != '3' && $status_id != '4') {
@@ -1567,6 +1638,7 @@
 					' data-task-new-statName="' + $status[statText].title + '"' +
 					' data-task-old-stat="' + $status_id + '"' +
 					' data-task-old-statName="' + $status_name + '"' +
+					' data-completion-time="' + completionTime + '"' +
 					' href="javascript:void(0);">' + $status[statText].title + '</a></li>';
 			});
 
@@ -1585,9 +1657,11 @@
 		var $status_id = curStatId;
 		if(roleId == 3){
 			var $status = {
-				<?php foreach ($task_status_attendant_list as $task_status) { ?> '<?= $task_status['STATUS_ID'] ?>': {
+				<?php foreach ($task_status_attendant_list as $task_status) { ?> 
+					'<?= $task_status['STATUS_ID'] ?>': {
 					class: 'btn-<?= $task_status['STATUS_COLOR_CLASS'] ?>',
-					title: '<?= $task_status['STATUS_CODE'] ?>'
+					title: '<?= $task_status['STATUS_CODE'] ?>',
+					statusId: '<?= $task_status['STATUS_ID'] ?>',
 				},
 				<?php } ?>
 			};
@@ -1597,10 +1671,11 @@
 			return $status_name;
 		}
 
-		var $statButton = '<button type="button" class="btn btn-sm ' + $status[
-				$status_id]
+		var $statButton = '<button type="button" id="task_status_id" readonly class="btn btn-sm ' + $status[
+			$status_id]
 			.class + ' dropdown-toggle"' +
-			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+			'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" rel="'+$status[
+			$status_id].statusId+'" >' +
 			$status_name + '</button>';
 
 		if ($status_id != '4' && $status_id != '5') {
@@ -1612,7 +1687,7 @@
 			$.each($status, function(statText) {
 				if (statText == $status_id || statText == 4 || statText == 5) $statButton += '';
 				else $statButton +=
-					'<li><a class="dropdown-item changeTaskStatus" data-role="3" data-task-id="' + taskId + '"' +
+					'<li><a class="dropdown-item changeTaskStatus" readonly data-role="3" data-task-id="' + taskId + '"' +
 					' data-task-new-stat="' + statText + '"' +
 					' data-task-new-statName="' + $status[statText].title + '"' +
 					' data-task-old-stat="' + $status_id + '"' +
@@ -1637,11 +1712,23 @@
 		var current_statusName = $(this).attr('data-task-old-statName');
 		var new_status = $(this).attr('data-task-new-stat');
 		var new_statusName = $(this).attr('data-task-new-statName');
+		var completion_time = $(this).attr('data-completion-time');		
+
+		var task_status = $("#task_status_id").attr('rel');
+	
 
 		if(role == 3)
 			var clickedCol = $('.taskRow' + taskId).find('.taskStatusCol');
 	    if(role == 5)
-		    var clickedCol = $('.taskRow' + taskId).find('.supertaskStatusCol');
+		    var clickedCol = $('.taskRow' + taskId).find('.supertaskStatusCol');	
+			
+		if(role == 5 && (task_status == 1 || task_status == 3)){
+			showModalAlert('error',
+			`<li>The task is not completed.</li>`
+		);
+		return;
+
+		}
 
 		if (current_status == new_status) {
 			alert('The task status is already ' + current_statusName);
@@ -1668,7 +1755,8 @@
 							data: {
 								taskId: taskId,
 								role  : role,
-								new_status: new_status
+								new_status: new_status,
+								completion_time:completion_time
 							},
 							headers: {
 								'X-Requested-With': 'XMLHttpRequest'
@@ -1713,7 +1801,7 @@
 		$('input[name="HKARM_TASK_SHEET_ID"]').val($(this).data('tasksheet_id'));
 		HKARM_TASK_SHEET_ID = $(this).data('tasksheet_id');
 		var task_id      = $("#HKAT_TASK_ID").val();
-		
+		var task_overview_date  = $('input[name="TASK_ASSIGNMENT_DATE"]').val();
 		$('#Taskassignment_room_view').DataTable().destroy();
 		$('#Taskassignment_room_view').DataTable({
 		'processing': true,
@@ -1724,7 +1812,8 @@
 			'url': '<?php echo base_url('/viewTaskAssignedRooms') ?>',
 			'data': {
 				"HKTAO_ID": task_id,
-				"HKARM_TASK_SHEET_ID":HKARM_TASK_SHEET_ID
+				"HKARM_TASK_SHEET_ID":HKARM_TASK_SHEET_ID,
+				"TASK_DATE":task_overview_date
 			}
 		},
 		'columns': [{
@@ -1751,63 +1840,131 @@
 				data: 'HKARM_INSTRUCTIONS'
 			},
 			{
-				data: 'HKATD_COMPLETION_TIME'
+				data: 'START_TIME'
+			},
+			
+			{
+				data: 'COMPLETE_TIME'
 			},			
 			{
 				data: 'INSPECTED_NAME'
 			},
 			{
-				data: 'HKATD_INSPECTED_DATETIME'
+				data: 'INSPECTEDTIME'
 			},
 			{
 				data: null
 			},
+			{
+				data: 'TOT_TIME'
+			},
 			
 		],
 		columnDefs: [
-                {
-					data: 'HKATD_COMPLETION_TIME',
+				{
+				data: 'HKARM_INSTRUCTIONS',
+				width: "10%",
+				class:'word-wrap',
+				targets:3,
+				},
+
+				{
+					data: 'START_TIME',
                     width: "10%",
                     targets: 4,
 					render: function(data, type, row, meta) {
-                        if (row['HKATD_COMPLETION_TIME'] != null ) {							
-                            var HKATD_COMPLETION_TIME = row['HKATD_COMPLETION_TIME'].split(".");
-                            if (HKATD_COMPLETION_TIME[0] == '1900-01-01 00:00:00') {
-                                return '';
-                            } else
-                                return HKATD_COMPLETION_TIME[0];
-                        }else
-						 return '';
+							if (row['START_TIME'] != null ) {							
+								var START_TIME = row['START_TIME'].split(".");
+								if (START_TIME[0] == '1900-01-01 00:00:00') {
+									return '';
+								} else
+									return START_TIME[0];
+							}else
+							return '';
+						
                     }
                 },
                 {
-				data: 'HKATD_INSPECTED_DATETIME',
+					data: 'COMPLETE_TIME',
+                    width: "10%",
+                    targets: 5,
+					render: function(data, type, row, meta) {
+						if(row['COMPLETED'] == row['TOT']){
+							if (row['COMPLETE_TIME'] != null ) {							
+								var COMPLETE_TIME = row['COMPLETE_TIME'].split(".");
+								if (COMPLETE_TIME[0] == '1900-01-01 00:00:00') {
+									return '';
+								} else
+									return COMPLETE_TIME[0];
+							}else
+							return '';
+						}
+						else 
+						return '';
+                    }
+                },
+				{
+				data: 'INSPECTED_NAME',
 				targets: 6,
 				render: function(data, type, row, meta) {
-					if (row['HKATD_INSPECTED_DATETIME'] != null  ) {
-						var HKATD_INSPECTED_DATETIME = row['HKATD_INSPECTED_DATETIME'].split(".");
-						if (HKATD_INSPECTED_DATETIME[0] == '1900-01-01 00:00:00') {
-							return '';
-						} else
-							return HKATD_INSPECTED_DATETIME[0];
+					if(row['INSPECTED'] == row['TOT']){
+						if (row['INSPECTED_NAME'] != null  ) {							
+							return row['INSPECTED_NAME'];							
+						}else
+						return '';
 					}else
 					return '';
                 }
-			},{
-			data: '',
-			targets: 7,
+			},
+                {
+				data: 'INSPECTEDTIME',
+				targets: 7,
 				render: function(data, type, row, meta) {
-
-					if(row['HKATD_COMPLETION_TIME'] != null){
-						return '<a href="javascript:;" data-room_id="' + row['HKARM_ROOM_ID'] +
-							'" data-tasksheet_id="' + row['HKAT_TASK_SHEET_ID'] +
-							'" data-assigned_taskid="' + row['HKATD_ASSIGNED_TASK_ID'] +
-							'" class="text-primary view_comments"><i class="fa-solid fa-eye "></i> </a>';
-						}	
-						else
+					if(row['INSPECTED'] == row['TOT']){
+						if (row['INSPECTEDTIME'] != null  ) {
+							var INSPECTEDTIME = row['INSPECTEDTIME'].split(".");
+							if (INSPECTEDTIME[0] == '1900-01-01 00:00:00') {
+								return '';
+							} else
+								return INSPECTEDTIME[0];
+						}else
 						return '';
+					}else
+					return '';
+                }
+			},
+			{
+			data: '',
+			targets: 8,
+				render: function(data, type, row, meta) {
+					if(row['COMPLETED'] == row['TOT']){
+						if(row['COMPLETE_TIME'] != null){
+							return '<a href="javascript:;" data-room_id="' + row['HKARM_ROOM_ID'] +
+								'" data-tasksheet_id="' + row['HKAT_TASK_SHEET_ID'] +
+								'" data-assigned_taskid="' + row['HKATD_ASSIGNED_TASK_ID'] +
+								'" class="text-primary view_comments"><i class="fa-solid fa-eye "></i> </a>';
+							}	
+							else
+							return '';
+					}
+					else
+					   return '';
+				}
+			},
+			{
+			data: 'TOT_TIME',
+			targets: 9,
+				render: function(data, type, row, meta) {
+					if(row['COMPLETED'] == row['TOT']){
+						if(row['TOT_TIME'] != null){
+							return toHoursAndMinutes(row['TOT_TIME']);
+						}
+						else return '';		
+					}
+					else return '';				
 				}
 			}
+
             ],
 		"order": [
 			[0, "asc"]
@@ -1816,11 +1973,30 @@
 		destroy: true,
 		"ordering": true,
 		"searching": false,
-		autowidth: true,
 		responsive: true
 		});
 	});
 
+
+	function getCompletedTime(){
+		$.ajax({
+		url: '<?php echo base_url('/getCompletedTime') ?>',
+		type: "post",
+		data:{task_overview_id:task_overview_id,task_overview_date:task_overview_date, task_assigned_id:task_assigned_id} ,
+		headers: {
+			'X-Requested-With': 'XMLHttpRequest'
+		},
+		async: false,
+		success: function(respn) {
+			if (respn > 0) {				
+			    window.open('<?= base_url('/printTaskSheet') ?>', '_blank');			
+
+			}
+
+		}
+
+	});
+	}
 
 $(document).on('click', '.printTaskAssignment', function() {
 	var task_overview_id    =  $("#HKAT_TASK_ID").val();
@@ -1847,6 +2023,17 @@ $(document).on('click', '.printTaskAssignment', function() {
 
 });
 
+function toHoursAndMinutes(totalMinutes) {
+  const minutes = totalMinutes % 60;
+  const hours = Math.floor(totalMinutes / 60);
+
+  return `${padTo2Digits(hours)}:${padTo2Digits(minutes)}`;
+}
+
+function padTo2Digits(num) {
+  return num.toString().padStart(2, '0');
+}
+
 
 $(document).on('click', '.view_comments', function() {
 	
@@ -1862,20 +2049,27 @@ $(document).on('click', '.view_comments', function() {
 		dataType: 'json',
 		success: function(response) {
                 if (response['SUCCESS'] == 200) {
-                    let comments = response['RESPONSE']['OUTPUT'];
-                    
+                    let comments = response['RESPONSE']['OUTPUT'];                    
                     let html = '';
-                    for (let comment of comments) {
-                        html += `
-                            <b>${comment.USER_NAME} (${comment.ATN_CREATED_AT})</b></br>
-                            <span class="">${comment.ATN_NOTE}</span></br>
-                        `;
-                    }
+					if(comments.length > 0){
+						for (let comment of comments) {
+							var ATNA_URL =  '';
+							var comment_time = `${comment.ATN_CREATED_AT}`;
+							if(comment.ATNA_URL != null){
+								ATNA_URL = `</br><img onClick='displayImagePopup("<?= base_url() ?>/${comment.ATNA_URL}")' src='${comment.ATNA_URL}' width='80' height='80'/>`;
+							}
+							$comment_time = comment_time.split('.')
+							html += `
+								<b>${comment.USER_NAME} (${comment_time[0]})</b></br>
+								<span class="">${comment.ATN_NOTE}</span>`+ATNA_URL+`</br></br>
+																
+							`;
+						}
+					}
 
-                    if(html)
+                    if(!html)
                         html = `<b>No Comments!</b>`;
-
-                    //$('#comment-modal .modal-title').html(`Comments of Task# ${HKAT_TASK_ASSIGNED_ID}`);
+					$("#image-popup").css('z-index', '9999999');
                     $('#comment-modal .modal-body').html(html);
                     $('#comment-modal').modal('show');
                 }

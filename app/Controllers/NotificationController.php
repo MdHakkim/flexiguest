@@ -46,7 +46,7 @@ class NotificationController extends BaseController
 
         $UserID = session()->get('USR_ID');
         $mine = new NotificationDataTable();
-        $tableName = "( SELECT NOTIFICATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIF_TY_DESC,CONCAT_WS(' ',USR_FROM.USR_FIRST_NAME,USR_FROM.USR_LAST_NAME) AS NOTIFICATION_FROM_NAME,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,RSV_ID,NOTIFICATION_URL,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY,NOTIFICATION_TYPE, 
+        $tableName = "( SELECT NOTIFICATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIF_TY_DESC,CONCAT_WS(' ',USR_FROM.USR_FIRST_NAME,USR_FROM.USR_LAST_NAME) AS NOTIFICATION_FROM_NAME,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,RSV_ID,NOTIFICATION_RESERVATION_ID,NOTIFICATION_URL,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY,NOTIFICATION_TYPE, 
                         (select count(NOTIF_TRAIL_ID) as UNSEEN_COUNT from FLXY_NOTIFICATION_TRAIL where NOTIF_TRAIL_NOTIFICATION_ID = NOTIFICATION_ID and NOTIF_TRAIL_READ_STATUS = 0) as UNSEEN_COUNT,
                         (select count(NOTIF_TRAIL_ID) as SEEN_COUNT from FLXY_NOTIFICATION_TRAIL where NOTIF_TRAIL_NOTIFICATION_ID = NOTIFICATION_ID and NOTIF_TRAIL_READ_STATUS = 1) as SEEN_COUNT
                             FROM FLXY_NOTIFICATIONS
@@ -91,7 +91,7 @@ class NotificationController extends BaseController
         if(isset($data['notification_text']))
             $init_cond['NOTIFICATION_TEXT like '] = "'%{$data['notification_text']}%'";
     
-        $columns = 'NOTIFICATION_ID,NOTIFICATION_TYPE,NOTIF_TY_DESC,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_FROM_NAME,RSV_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_URL,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY,UNSEEN_COUNT,SEEN_COUNT';
+        $columns = 'NOTIFICATION_ID,NOTIFICATION_TYPE,NOTIF_TY_DESC,NOTIFICATION_DEPARTMENT,NOTIFICATION_TO_ID,NOTIFICATION_FROM_NAME,RSV_ID,NOTIFICATION_RESERVATION_ID,NOTIFICATION_GUEST_ID,NOTIFICATION_URL,NOTIFICATION_TEXT,NOTIFICATION_DATE_TIME,NOTIFICATION_READ_STATUS,NOTIFICATION_FROM_ID,RSV_TRACE_RESOLVED_BY,UNSEEN_COUNT,SEEN_COUNT';
         $mine->generate_DataTable($tableName, $columns, $init_cond);
         exit;
     }
@@ -548,11 +548,11 @@ class NotificationController extends BaseController
             $department_ids = implode(",",json_decode($NOTIFICATION_DEPARTMENT));  
 
             $departments = $this->Db->query("SELECT DEPT_DESC FROM FLXY_DEPARTMENT WHERE DEPT_ID IN ($department_ids)")->getResultArray(); 
-            $departmentsList = '';
+            $departmentsList = [];
             if(!empty($departments)){
                 foreach($departments as $department)
-                $departmentsList .= $department['DEPT_DESC'] . ', ';
-                echo $departmentsList;
+                $departmentsList[] = $department['DEPT_DESC'];
+                echo implode(",",$departmentsList);
             } 
 
 
@@ -563,11 +563,11 @@ class NotificationController extends BaseController
             $user_ids = implode(",",json_decode($NOTIFICATION_TO_ID));  
 
             $users = $this->Db->query("SELECT CONCAT_WS(' ', USR_FIRST_NAME, USR_LAST_NAME) AS NAME FROM FLXY_USERS WHERE USR_ID IN ($user_ids)")->getResultArray();  
-            $usersList = '';
+            $usersList = [];
             if(!empty($users)){
                 foreach($users as $user_id)
-                $usersList .= $user_id['NAME'] . ', ';
-                echo $usersList;
+                $usersList[] = $user_id['NAME'];
+                echo implode(",",$usersList);
             } 
         }
 
@@ -577,11 +577,11 @@ class NotificationController extends BaseController
             $reservation_ids = implode(",",json_decode($NOTIFICATION_RESERVATION_ID));  
 
             $reservations = $this->Db->query("select CONCAT_WS(' ', RESV_NO, RESV_STATUS) AS RESV_NAME FROM FLXY_RESERVATION WHERE RESV_ID IN ($reservation_ids)")->getResultArray();  
-            $reservationsList = '';
+            $reservationsList = [];
             if(!empty($reservations)){
                 foreach($reservations as $reservation)
-                $reservationsList .= $reservation['RESV_NAME'] . ', ';
-                echo $reservationsList;
+                $reservationsList[] = $reservation['RESV_NAME'];
+                echo implode(",",$reservationsList);
             } 
         }
 
@@ -591,16 +591,33 @@ class NotificationController extends BaseController
             $guest_ids = implode(",",json_decode($NOTIFICATION_GUEST_ID));  
 
             $guests = $this->Db->query("select CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULLNAME FROM FLXY_CUSTOMER WHERE CUST_ID in ($guest_ids)")->getResultArray();  
-            $guestList = '';
+            $guestList = [];
             if(!empty($guests)){
                 foreach($guests as $guest_id)
-                $guestList .= $guest_id['FULLNAME'] . ', ';
-                echo $guestList;
+                $guestList[]= $guest_id['FULLNAME'];
+                echo implode(',',$guestList);
             } 
         }
 
         else if($notificationType == 'Messages'){
             echo $NOTIFICATION_TEXT = $this->Db->query("SELECT NOTIFICATION_TEXT FROM FLXY_NOTIFICATIONS WHERE  NOTIFICATION_ID = $notificationId")->getRow()->NOTIFICATION_TEXT; 
+
+        }
+
+        else if($notificationType == 'Reservation'){
+
+            $NOTIFICATION_RESERVATION_ID = $this->Db->query("SELECT NOTIFICATION_RESERVATION_ID FROM FLXY_NOTIFICATIONS WHERE  NOTIFICATION_ID = $notificationId")->getRow()->NOTIFICATION_RESERVATION_ID; 
+
+            $reservation_ids = implode(",",json_decode($NOTIFICATION_RESERVATION_ID));  
+
+            $reservations = $this->Db->query("select RESV_NO FROM FLXY_RESERVATION WHERE RESV_ID IN ($reservation_ids)")->getResultArray(); 
+            $reservationsList = [];
+            if(!empty($reservations)){
+                foreach($reservations as $reservation)
+                $reservationsList[] = $reservation['RESV_NO'];
+                echo implode(",",$reservationsList);
+            } 
+
 
         }
     }

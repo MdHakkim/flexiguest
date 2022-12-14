@@ -486,8 +486,11 @@ function showTotalRevenueQuery()
 function generateInvoice($file_name, $view, $data)
 {
     try { 
-        $dompdf = new \Dompdf\Dompdf();
-        $dompdf->loadHtml(view($view, ['data' => $data]));
+        $options = new \Dompdf\Options();
+        $options->setIsRemoteEnabled(true);
+
+        $dompdf = new \Dompdf\Dompdf($options);
+        $dompdf->loadHtml(view($view, $data));
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 

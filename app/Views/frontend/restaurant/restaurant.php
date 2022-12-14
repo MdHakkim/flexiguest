@@ -22,6 +22,7 @@
                             <th>ID</th>
                             <th class="all">Restaurant</th>
                             <th>Image</th>
+                            <th>Seating Capacity</th>
                             <th>Created At</th>
                             <th class="all">Action</th>
                         </tr>
@@ -56,6 +57,11 @@
                             </div>
 
                             <div class="col-md-6">
+                                <label class="form-label"><b>Seating Capacity *</b></label>
+                                <input type="number" name="RE_SEATING_CAPACITY" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-12">
                                 <label class="form-label" for="RE_IMAGE_URL"><b>Restaurant Image *</b></label>
                                 <input type="file" name="RE_IMAGE_URL" id="RE_IMAGE_URL" class="form-control" />
                             </div>
@@ -119,6 +125,9 @@
                     render: function(data, type, row, meta) {
                         return (`<img onClick='displayImagePopup("<?= base_url() ?>/${data['RE_IMAGE_URL']}")' src='<?= base_url() ?>/${data['RE_IMAGE_URL']}' width='80' height='80'/>`);
                     }
+                },
+                {
+                    data: 'RE_SEATING_CAPACITY'
                 },
                 {
                     data: 'RE_CREATED_AT'
@@ -228,6 +237,8 @@
         $(`${form_id} input`).val('');
         $(`${form_id} textarea`).val('');
         $(`${form_id} select`).val('').trigger('change');
+
+        $(`${form_id} input[name='RE_SEATING_CAPACITY']`).val('1');
     }
 
     // Show Add Rate Class Form
