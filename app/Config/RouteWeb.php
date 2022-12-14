@@ -988,6 +988,11 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->delete('delete', 'GalleryController::delete');
     });
 
+    $routes->group('upgrade-room-request', function ($routes) {
+        $routes->get('', 'UpgradeRoomRequestController::upgradeRoomRequest');
+        $routes->post('all-requests', 'UpgradeRoomRequestController::allRequests');
+    });
+
     // ABUBAKAR CODE (END)
 });
 
