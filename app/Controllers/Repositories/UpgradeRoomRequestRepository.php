@@ -24,7 +24,7 @@ class UpgradeRoomRequestRepository extends BaseController
             'URR_ROOM_TYPE_ID' => ['label' => 'room type', 'rules' => 'required', 'errors' => ['required' => 'Please select a room type.']],
         ];
 
-        if(isWeb())
+        if (isWeb())
             $rules['URR_ID'] = ['label' => 'request id', 'rules' => 'required'];
 
         return $rules;
@@ -32,11 +32,19 @@ class UpgradeRoomRequestRepository extends BaseController
 
     public function createOrUpdateUpgradeRequest($user, $data)
     {
-        $data['URR_CUSTOMER_ID'] = $user['USR_CUST_ID'];
+        if ($user['USR_ROLE_ID'] == '2')
+            $data['URR_CUSTOMER_ID'] = $user['USR_CUST_ID'];
+
+        if (empty($data['URR_ID'])) {
+            $data['URR_CREATED_BY'] = $data['URR_UPDATED_BY'] = $user['USR_ID'];
+            $msg = 'Request submitted successfully.';
+        } else {
+            $data['URR_UPDATED_BY'] = $user['USR_ID'];
+            $msg = 'Request updated successfully.';
+        }
 
         $this->UpgradeRoomRequest->save($data);
-        
-        $msg = empty($data['URR_ID']) ? 'Request submitted successfully.' : 'Request updated successfully.';
+
         return responseJson(200, false, ['msg' => $msg]);
     }
 }

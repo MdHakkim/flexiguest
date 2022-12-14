@@ -46,4 +46,13 @@ class UpgradeRoomRequestController extends BaseController
         $result = $this->UpgradeRoomRequestRepository->createOrUpdateUpgradeRequest($user, $data);
         return $this->respond($result);
     }
+
+    public function updateStatus()
+    {
+        $user = session('user');
+        $data = json_decode(json_encode($this->request->getVar()), true);
+
+        $result = $this->UpgradeRoomRequestRepository->createOrUpdateUpgradeRequest($user, $data);
+        return $this->respond($result);
+    }
 }

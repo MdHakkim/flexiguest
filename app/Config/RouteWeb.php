@@ -991,6 +991,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->group('upgrade-room-request', function ($routes) {
         $routes->get('', 'UpgradeRoomRequestController::upgradeRoomRequest');
         $routes->post('all-requests', 'UpgradeRoomRequestController::allRequests');
+        $routes->post('update-status', 'UpgradeRoomRequestController::updateStatus');
     });
 
     // ABUBAKAR CODE (END)

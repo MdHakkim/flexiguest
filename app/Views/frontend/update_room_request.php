@@ -113,8 +113,20 @@
                         `;
 
                             return html;
-                        } else
-                            return data['URR_STATUS'];
+                        } else {
+                            let class_name = 'bg-label-secondary';
+
+                            if (data['URR_STATUS'] == 'Approved')
+                                class_name = ' bg-label-success';
+
+                            else if (data['URR_STATUS'] == 'Rejected')
+                                class_name = ' bg-label-danger';
+
+                            return (`
+                            <span class="badge rounded-pill ${class_name}">${data['URR_STATUS']}</span>
+                        `);
+                        }
+                        return data['URR_STATUS'];
                     }
                 },
                 {
@@ -183,7 +195,7 @@
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function(row) {
                             var data = row.data();
-                            return 'Details of ' + data['RE_ID'];
+                            return 'Details of ' + data['URR_ID'];
                         }
                     }),
                     type: 'column',
@@ -219,10 +231,39 @@
         // $("#dataTable_view_wrapper .row:first").before(
         //     '<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>'
         // );
-    });
 
-    $('.change-request-status', function() {
-        
+        $(document).on('click', '.change-request-status', function() {
+            let request_id = $(this).data('request_id');
+            let status = $(this).data('status');
+
+            let fd = new FormData();
+            fd.append('URR_ID', request_id);
+            fd.append('URR_STATUS', status);
+
+            $.ajax({
+                url: '<?= base_url('upgrade-room-request/update-status') ?>',
+                type: "post",
+                data: fd,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    var mcontent = '';
+                    $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                        mcontent += '<li>' + data + '</li>';
+                    });
+
+                    if (response['SUCCESS'] != 200) {
+                        showModalAlert('error', mcontent);
+                    } else {
+                        showModalAlert('success', mcontent);
+
+                        $('#popModalWindow').modal('hide');
+                        $('#dataTable_view').dataTable().fnDraw();
+                    }
+                }
+            });
+        });
     });
 
     // bootstrap-maxlength & repeater (jquery)
