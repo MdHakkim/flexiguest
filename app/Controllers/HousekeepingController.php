@@ -278,7 +278,6 @@ class HousekeepingController extends BaseController
 
     public function HkRoomView()
     {
-        $init_cond = [];
         $TODAYDATE = date('Y-m-d');
 
         $search_keys = [
@@ -329,6 +328,10 @@ class HousekeepingController extends BaseController
                                         $resv_cond[] = "( RESV_STATUS IN ('Not Reserved')) ";
                                         break;
                                 }
+                            }
+
+                            if (null !== $this->request->getPost('S_RESV_ID') && !empty($this->request->getPost('S_RESV_ID'))) {
+                                $resv_cond[] = "( RESV_ID = " . $this->request->getPost('S_RESV_ID') . ") ";
                             }
 
                             $init_cond[implode(" OR ", $resv_cond)] = "";
@@ -396,18 +399,26 @@ class HousekeepingController extends BaseController
 
     public function showRoomStatus()
     {
-        $param = ['SYSID' => $this->request->getPost('roomId')];
+        $param = ['SYSID' => $this->request->getPost('roomId'), 'CHECK_DATE' => null !== $this->request->getPost('search_date') ? $this->request->getPost('search_date') : date('Y-m-d')];
 
-        $sql = "SELECT RM_MAX_LOG_ID, RL.RM_STAT_ROOM_ID, RM_STAT_ROOM_STATUS, RM_STATUS_CODE 
-                FROM (  SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
+        $sql = "SELECT RM_MAX_LOG_ID, RM.RM_ID AS RM_STAT_ROOM_ID, ISNULL(RM_STAT_ROOM_STATUS, 2) AS RM_STAT_ROOM_STATUS, 
+                ISNULL(RM_STATUS_CODE, 'Dirty') AS RM_STATUS_CODE, ISNULL(RVN.RESV_STATUS, 'Not Reserved') AS RESV_STATUS 
+                FROM FLXY_ROOM RM
+                LEFT JOIN (  SELECT MAX(RM_STAT_LOG_ID) AS RM_MAX_LOG_ID, RM_STAT_ROOM_ID
                         FROM FLXY_ROOM_STATUS_LOG
-                        GROUP BY RM_STAT_ROOM_ID
-                        HAVING RM_STAT_ROOM_ID = :SYSID:) RM_STAT_LOG
+                        GROUP BY RM_STAT_ROOM_ID) RM_STAT_LOG ON RM.RM_ID = RM_STAT_LOG.RM_STAT_ROOM_ID 
                 LEFT JOIN FLXY_ROOM_STATUS_LOG RL ON RL.RM_STAT_LOG_ID = RM_STAT_LOG.RM_MAX_LOG_ID                        
-                LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS";
+                LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS
+                LEFT JOIN ( SELECT MAX(RESV_ID) AS RESV_MAX_ID, RESV_ROOM_ID AS RESV_ROOM
+                            FROM FLXY_RESERVATION
+                            WHERE :CHECK_DATE: BETWEEN RESV_ARRIVAL_DT AND RESV_DEPARTURE
+                            AND RESV_STATUS NOT IN ('Cancelled')
+                            GROUP BY RESV_ROOM_ID ) RESV ON RESV.RESV_ROOM = RM.RM_ID
+                LEFT JOIN FLXY_RESERVATION RVN ON RVN.RESV_ID = RESV.RESV_MAX_ID
+                WHERE RM.RM_ID = :SYSID:";
 
         $response = $this->Db->query($sql, $param)->getRowArray();
-        $response = !$response ? ['RM_STAT_ROOM_ID' => $param['SYSID'], 'RM_STAT_ROOM_STATUS' => 2, 'RM_STATUS_CODE' => 'Dirty'] : $response;
+        $response = !$response ? ['RM_STAT_ROOM_ID' => $param['SYSID'], 'RM_STAT_ROOM_STATUS' => 2, 'RM_STATUS_CODE' => 'Dirty', 'RESV_STATUS' => 'Not Reserved'] : $response;
 
         echo json_encode($response);
     }

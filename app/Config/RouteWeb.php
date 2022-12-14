@@ -38,6 +38,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/rateQueryDetailOption', 'ApplicatioController::rateQueryDetailOption');
 
     $routes->match(['post'], '/reservationChangesView', 'ApplicatioController::ReservationChangesView');
+    $routes->match(['post'], '/setUpdatedRateCode', 'ApplicatioController::setUpdatedRateCode');
 
     $routes->post('checkin/verify-documents', 'ApplicatioController::verifyDocuments');
 

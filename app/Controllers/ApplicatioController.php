@@ -53,6 +53,10 @@ class ApplicatioController extends BaseController
         $data['itemAvail'] = $this->ItemCalendar();
         $data['classList'] = $this->itemInventoryClassList();
         $data['FrequencyList'] = $this->frequencyList();  
+        
+        $data['room_status_list'] = $this->Db->table('FLXY_ROOM_STATUS_MASTER')->select('RM_STATUS_ID,RM_STATUS_CODE,RM_STATUS_COLOR_CLASS')->get()->getResultArray();
+        $data['room_class_list'] = $this->Db->table('FLXY_ROOM_CLASS')->select('RM_CL_ID,RM_CL_CODE,RM_CL_DESC')->get()->getResultArray();
+        
         $data['toggleButton_javascript'] = toggleButton_javascript();
         $data['clearFormFields_javascript'] = clearFormFields_javascript();
         $data['blockLoader_javascript'] = blockLoader_javascript();
@@ -301,7 +305,7 @@ class ApplicatioController extends BaseController
         RESV_PSEUDO,RESV_RATE_CLASS,RESV_RATE_CATEGORY,RESV_RATE_CODE,RESV_ROOM_CLASS,RESV_FEATURE,RESV_PURPOSE_STAY,RESV_NO,RESV_STATUS,RESV_RM_TYPE,RESV_C_O_TIME,RESV_TAX_TYPE,RESV_EXEMPT_NO,RESV_PICKUP_YN,RESV_TRANSPORT_TYP,RESV_STATION_CD,RESV_CARRIER_CD,RESV_TRANSPORT_NO,FORMAT(RESV_ARRIVAL_DT_PK,'dd-MMM-yyyy')RESV_ARRIVAL_DT_PK,RESV_PICKUP_TIME,RESV_DROPOFF_YN,RESV_TRANSPORT_TYP_DO,RESV_STATION_CD_DO,RESV_CARRIER_CD_DO,RESV_TRANSPORT_NO_DO,FORMAT(RESV_ARRIVAL_DT_DO,'dd-MMM-yyyy')RESV_ARRIVAL_DT_DO,RESV_DROPOFF_TIME,RESV_GUST_TY,RESV_EXT_PURP_STAY,RESV_ENTRY_PONT,RESV_PROFILE,RESV_NAME_ON_CARD,RESV_EXT_PRINT_RT,
         (SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RESV_RM_TYPE_DESC,
         (SELECT RM_DESC FROM FLXY_ROOM WHERE RM_NO=RESV_ROOM)RESV_ROOM_DESC,(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RTC) RESV_RTC_DESC,
-        RESV_ROOM,RESV_RATE,RESV_ETA,RESV_CO_TIME,RESV_RTC,RESV_FIXED_RATE,RESV_RESRV_TYPE,RESV_MARKET,RESV_SOURCE,RESV_ORIGIN,RESV_BOKR_LAST,RESV_BOKR_FIRST,RESV_BOKR_EMAIL,RESV_BOKR_PHONE,RESV_CONFIRM_YN,RESV_NO_POST FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:SYSID: AND CUST_ID=RESV_NAME";
+        RESV_ROOM,RESV_ROOM_ID,RESV_RATE,RESV_ETA,RESV_CO_TIME,RESV_RTC,RESV_FIXED_RATE,RESV_RESRV_TYPE,RESV_MARKET,RESV_SOURCE,RESV_ORIGIN,RESV_BOKR_LAST,RESV_BOKR_FIRST,RESV_BOKR_EMAIL,RESV_BOKR_PHONE,RESV_CONFIRM_YN,RESV_NO_POST FROM FLXY_RESERVATION,FLXY_CUSTOMER WHERE RESV_ID=:SYSID: AND CUST_ID=RESV_NAME";
         $response = $this->Db->query($sql,$param)->getResultArray();
         $response = $this->removeNullJson($response);
         echo json_encode($response);
@@ -3480,7 +3484,7 @@ class ApplicatioController extends BaseController
             $TODAYDATE = date('Y-m-d');
             $RESV_NIGHT = $this->request->getPost('RESV_NIGHT');
             $RESV_ADULTS = $this->request->getPost('RESV_ADULTS');
-            $RESV_CHILDREN = $this->request->getPost('RESV_CHILDREN');
+            $RESV_CHILDREN = !empty($this->request->getPost('RESV_CHILDREN')) ? $this->request->getPost('RESV_CHILDREN') : 0;
 
 
             $RESV_ROOM_CLASS = $this->request->getPost('RESV_ROOM_CLASS');
@@ -3558,10 +3562,10 @@ class ApplicatioController extends BaseController
             $response = $this->Db->query($sql,$param)->getResultArray();
             // print_r($response);exit;
             if($RESV_MODE=='AVG'){
-                $operation = ' CAST(AVG(ACTUAL_ADULT_PRICE)AS DECIMAL(10, 2))ACTUAL_ADULT_PRICE,COUNT(value) TOTAL';
+                $operation = ' CAST(AVG(ACTUAL_ADULT_PRICE + ACTUAL_CHILD_PRICE)AS DECIMAL(10, 2))ACTUAL_GUEST_PRICE,COUNT(value) TOTAL';
                 $groupby=' GROUP BY value,RT_CD_ID,RT_DESCRIPTION,RT_INFO ORDER BY RT_CD_ID,ROOM_TYPE ASC';
             }elseif($RESV_MODE=='TOT'){
-                $operation = ' CAST(SUM(ACTUAL_ADULT_PRICE)*'.$RESV_NIGHT.'AS DECIMAL(10, 2))ACTUAL_ADULT_PRICE,COUNT(value) TOTAL';
+                $operation = ' CAST(SUM(ACTUAL_ADULT_PRICE)*'.$RESV_NIGHT.' + SUM(ACTUAL_CHILD_PRICE)*'.$RESV_NIGHT.' AS DECIMAL(10, 2))ACTUAL_GUEST_PRICE,COUNT(value) TOTAL';
                 $groupby=' GROUP BY value,RT_CD_ID,RT_DESCRIPTION,RT_INFO ORDER BY RT_CD_ID,ROOM_TYPE ASC';
             }
 
@@ -3574,14 +3578,8 @@ class ApplicatioController extends BaseController
                         FROM (SELECT 
                                 (SELECT RT_CD_CODE FROM FLXY_RATE_CODE WHERE RATEQUERY.RT_CD_ID=RT_CD_ID)RT_DESCRIPTION, 
                                 (SELECT RT_CD_DESC FROM FLXY_RATE_CODE WHERE RATEQUERY.RT_CD_ID=RT_CD_ID)RT_INFO, RATEQUERY.*,
-                                CASE 
-                                    WHEN 1 = '$RESV_ADULTS' THEN CAST(RT_CD_DT_1_ADULT AS DECIMAL(10, 2))
-                                    WHEN 2 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_2_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
-                                    WHEN 3 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_3_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
-                                    WHEN 4 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_4_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
-                                    WHEN 5 = '$RESV_ADULTS' THEN CAST(ISNULL(RT_CD_DT_5_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))
-                                ELSE (CAST(ISNULL(RT_CD_DT_5_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2))+CAST(ISNULL(RT_CD_DT_EXTRA_ADULT,RT_CD_DT_1_ADULT) AS DECIMAL(10, 2)))
-                                END AS ACTUAL_ADULT_PRICE
+                                ".$this->queryActualPersonPrice('ADULT', $RESV_ADULTS).", 
+                                ".$this->queryActualPersonPrice('CHILD', $RESV_CHILDREN)."
                               FROM (
                                         SELECT * FROM FLXY_RATE_CODE_DETAIL RT_DETAIL 
                                         WHERE EXISTS(   SELECT RT_CD_ID FROM FLXY_RATE_CODE 
@@ -3655,15 +3653,16 @@ class ApplicatioController extends BaseController
                 
                 for($i=0;$i<$totalrmType;$i++){
                     if(!empty($data[$i])){                   
-                        if($ROOM_PLAN_ROOM_TYPE == $data[$i]['ROOM_TYPE'] && $j == 0){
+                        if($ROOM_PLAN_ROOM_TYPE && $ROOM_PLAN_ROOM_TYPE == $data[$i]['ROOM_TYPE'] && $j == 0){
                             $active = 'active';
                             $j++;
                         }                        
                         else
-                        $active = ($data[$i]['ACTUAL_ADULT_PRICE'] == $RESV_RATE && $data[$i]['ROOM_TYPE'] == $RESV_ROOM_TYPE) ? 'active' : '';
+                            $active = ($data[$i]['ACTUAL_GUEST_PRICE'] == $RESV_RATE && $data[$i]['ROOM_TYPE'] == $RESV_ROOM_TYPE) ? 'active' : '';
+
                         $trRow .='<td class="clickPrice '.$active.'" data-rate-info="'.$data[$i]['RT_INFO'].'">'
-                        .'<input type="hidden" id="ACTUAL_ADULT_PRICE" value="'.number_format($data[$i]['ACTUAL_ADULT_PRICE'], 2).'">'
-                        .'<input type="hidden" id="ROOMTYPE" value="'.$data[$i]['ROOM_TYPE'].'">'.number_format($data[$i]['ACTUAL_ADULT_PRICE'], 2).'</td>';
+                        .'<input type="hidden" id="ACTUAL_GUEST_PRICE" value="'.number_format($data[$i]['ACTUAL_GUEST_PRICE'], 2).'">'
+                        .'<input type="hidden" id="ROOMTYPE" value="'.$data[$i]['ROOM_TYPE'].'">'.number_format($data[$i]['ACTUAL_GUEST_PRICE'], 2).'</td>';
                     }else{
                         $trRow .='<td class=""></td>';
                     }
@@ -3675,6 +3674,72 @@ class ApplicatioController extends BaseController
         }catch (Exception $e){
             return $this->respond($e->errors());
         }
+    }
+
+    public function queryActualPersonPrice($type, $num)
+    {
+        $sel_field = "(CASE ";
+
+        $tot = $type == 'ADULT' ? 5 : 4;
+        $i = 1; 
+
+        while($i <= $tot){
+            $sel_field .= " WHEN $i = '$num' THEN CAST(".$this->queryRateCodeDetailPrice('RT_CD_DT_'.$i.'_'.$type.'', 'RT_CD_DT_1_'.$type.'', $i)." AS DECIMAL(10, 2))";
+            $i++;
+        }                        
+        $sel_field .= " ELSE CAST(".$this->queryRateCodeDetailPrice('RT_CD_DT_'.$tot.'_'.$type.'', 'RT_CD_DT_1_'.$type.'', $tot)."
+                                + 
+                             ".$this->queryRateCodeDetailPrice('RT_CD_DT_EXTRA_'.$type.'', 'RT_CD_DT_1_'.$type.'', $num-$tot)." AS DECIMAL(10, 2)) 
+                        END) AS ACTUAL_".$type."_PRICE";        
+
+        return $sel_field;
+    }
+
+    public function queryRateCodeDetailPrice($current_field, $default_field, $multiply)
+    {
+        $quer = "CASE 
+                    WHEN CAST(".$current_field." AS DECIMAL(10, 2)) > 0.00 
+                    THEN CAST(".$current_field." AS DECIMAL(10, 2)) 
+                    ELSE CAST(".$default_field." AS DECIMAL(10, 2)) * (".$multiply.") 
+                 END";        
+
+        return $quer;
+    }
+
+    public function setUpdatedRateCode()
+    {
+        $RESV_ARRIVAL_DT = date('Y-m-d', strtotime($this->request->getPost('arrivalDate')));
+        $RESV_DEPARTURE  = date('Y-m-d', strtotime($this->request->getPost('departureDate')));
+        $RESV_RATE_CODE  = $this->request->getPost('resv_rate_code');
+        $RESV_ROOM_TYPE = $this->request->getPost('resv_room_type');            
+        $RESV_ADULTS = $this->request->getPost('adults_num');
+        $RESV_CHILDREN = !empty($this->request->getPost('children_num')) ? $this->request->getPost('children_num') : 0;
+
+        $param = [  'ARRIVAL_DT'=> $RESV_ARRIVAL_DT,
+                    'DEPARTURE_DT'=> $RESV_DEPARTURE,
+                    'RESV_ADULTS'=> $RESV_ADULTS,
+                    'RESV_CHILDREN'=> $RESV_CHILDREN,
+                    'RESV_RATE_CODE'=> $RESV_RATE_CODE,
+                    'RESV_ROOM_TYPE'=> '%,'.$RESV_ROOM_TYPE.',%',                    
+                 ];
+
+        $sqlRate = "SELECT RT_CD_CODE, CAST(AVG(ACTUAL_ADULT_PRICE + ACTUAL_CHILD_PRICE) AS DECIMAL(10, 2)) ACTUAL_GUEST_PRICE
+                    FROM (  SELECT RC.RT_CD_CODE, 
+                           ".$this->queryActualPersonPrice('ADULT', $RESV_ADULTS).", 
+                           ".$this->queryActualPersonPrice('CHILD', $RESV_CHILDREN)."
+                            FROM FLXY_RATE_CODE_DETAIL RCDT
+                            LEFT JOIN FLXY_RATE_CODE RC ON RC.RT_CD_ID = RCDT.RT_CD_ID
+                            WHERE 1=1 AND ( :ARRIVAL_DT: BETWEEN RT_CD_START_DT AND RT_CD_END_DT 
+                                            AND :DEPARTURE_DT: BETWEEN RT_CD_START_DT AND RT_CD_END_DT )
+                            AND CONCAT(',', RCDT.RT_CD_DT_ROOM_TYPES, ',') LIKE :RESV_ROOM_TYPE:
+                            AND RC.RT_CD_NEGOTIATED != 1 
+                            AND RT_CD_DAY_USE != 1                            
+                        ) TEMP_QUERY
+                    GROUP BY RT_CD_CODE
+                    ORDER BY CASE WHEN RT_CD_CODE = :RESV_RATE_CODE: THEN 1 ELSE 2 END ASC";
+
+        $rateresult = $this->Db->query($sqlRate,$param)->getRowArray(); 
+        echo json_encode([$rateresult]);
     }
 
     public function overBooking(){

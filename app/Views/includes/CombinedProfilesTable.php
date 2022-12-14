@@ -118,7 +118,7 @@
                 </div>
 
                 <div class="row mb-3">
-                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Membership
+                    <label class="col-form-label col-md-4 d-flex justify-content-lg-end text-end justify-content-sm-start"><b>Membership
                             No:</b></label>
                     <div class="col-md-8">
                         <input type="text" id="S_MEMBERSHIP_NUMBER" name="S_MEMBERSHIP_NUMBER"

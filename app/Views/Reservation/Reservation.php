@@ -169,6 +169,10 @@
     z-index: 10000;
     width: 500px;
 }
+
+.my-swal {
+    z-index: 10000 !important;
+}
 </style>
 
 <!-- Content wrapper -->
@@ -275,8 +279,9 @@
                                         class="col-form-label col-md-4 d-flex justify-content-lg-end justify-content-sm-start"><b>Search
                                             Type:</b></label>
                                     <div class="col-md-8">
-                                        <select id="S_SEARCH_TYPE" name="S_SEARCH_TYPE" class="selectpicker w-100 dt-select"
-                                            data-column="1" data-style="btn-default">
+                                        <select id="S_SEARCH_TYPE" name="S_SEARCH_TYPE"
+                                            class="selectpicker w-100 dt-select" data-column="1"
+                                            data-style="btn-default">
                                             <option value="">View All</option>
                                             <option value="1" <?php echo ($show_arrivals) ? 'selected' : '';?>>Due In
                                             </option>
@@ -1034,8 +1039,8 @@
                                                         class="form-control RESV_NIGHT" placeholder="night" min="0"
                                                         required />
                                                     <input type="number" name="RESV_NO_F_ROOM" id="RESV_NO_F_ROOM"
-                                                        class="form-control" placeholder="no of room" min="1"
-                                                        required />
+                                                        class="form-control RESV_NO_F_ROOM" placeholder="no of room"
+                                                        min="1" required />
                                                 </div>
                                                 <div class="invalid-feedback">
                                                     Night required can't empty.
@@ -1049,14 +1054,14 @@
                                                 <div class="input-group mb-3 flxy_fxcolm">
                                                     <div class="flxy_join">
                                                         <input type="number" name="RESV_ADULTS" id="RESV_ADULTS"
-                                                            class="form-control" placeholder="adults" min="1"
-                                                            required />
+                                                            class="form-control RESV_ADULTS" placeholder="adults"
+                                                            min="1" required />
                                                         <div class="invalid-feedback">Adults required can't empty.</div>
                                                     </div>
                                                     <div class="flxy_join">
                                                         <input type="number" name="RESV_CHILDREN" id="RESV_CHILDREN"
-                                                            class="form-control" placeholder="children" value="0"
-                                                            min="0" />
+                                                            class="form-control RESV_CHILDREN" placeholder="children"
+                                                            value="0" min="0" />
                                                     </div>
                                                 </div>
 
@@ -1072,10 +1077,15 @@
                                             </div>
                                             <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Room</label>
-                                                <select name="RESV_ROOM" id="RESV_ROOM" data-width="100%"
-                                                    class="select2 form-select" data-allow-clear="true">
-                                                    <option value="">Select</option>
-                                                </select>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" readonly name="RESV_ROOM" id="RESV_ROOM"
+                                                        class="form-control" placeholder="Select Room" required
+                                                        readonly />
+                                                    <button type="button"
+                                                        class="btn flxi_btn btn-sm btn-primary assignRoom">
+                                                        <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
                                                 <input type="hidden" name="RESV_ROOM_ID" id="RESV_ROOM_ID" value=""
                                                     readonly />
                                             </div>
@@ -1086,8 +1096,8 @@
                                                         id="RESV_RATE_CODE" class="form-control" placeholder="rate"
                                                         required />
                                                     <button type="button" onClick="getRateQuery()"
-                                                        class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus"
-                                                            aria-hidden="true"></i></button>
+                                                        class="btn flxi_btn btn-sm btn-primary"><i
+                                                            class="fa fa-chevron-down" aria-hidden="true"></i></button>
                                                 </div>
                                                 <div class="invalid-feedback"> Rate Code required can't empty.</div>
                                             </div>
@@ -2977,7 +2987,9 @@
     <!-- /Modal Traces window -->
 
     <?= $this->include('includes/EditCustomerPopup') ?>
+
     <?= $this->include('includes/SharesPopup') ?>
+
     <?= $this->include('includes/SearchReservationPopup') ?>
 
     <?= $this->include('includes/CustomerMembershipPopup') ?>
@@ -2985,6 +2997,8 @@
     <?= $this->include('includes/CancelReservationPopup') ?>
 
     <?= $this->include('includes/ReservationsAttachmentsPopup') ?>
+
+    <?= $this->include('includes/AssignRoomPopup') ?>
 
     <div class="content-backdrop fade"></div>
 </div>
@@ -3422,6 +3436,17 @@ function next() {
     generateRateQuery();
     $('.rateRadio').prop('checked', false);
     $('.rateRadio:first').prop('checked', true);
+
+    // set rooms, adults and children
+    var nofroom = $('.window-1').find('.RESV_NO_F_ROOM').val();
+    $('.window-2').find('.RESV_NO_F_ROOM').val(nofroom)
+
+    var adult = $('.window-1').find('.RESV_ADULTS').val();
+    $('.window-2').find('.RESV_ADULTS').val(adult)
+
+    var children = $('.window-1').find('.RESV_CHILDREN').val();
+    $('.window-2').find('.RESV_CHILDREN').val(children)
+
     $('#rateQueryWindow').modal('show');
 }
 
@@ -3490,7 +3515,7 @@ function selectRate() {
 
     var activeRow = $('.clickPrice.active');
     var rmtype = $(activeRow).find('#ROOMTYPE').val();
-    var rmprice = $(activeRow).find('#ACTUAL_ADULT_PRICE').val();
+    var rmprice = $(activeRow).find('#ACTUAL_GUEST_PRICE').val();
     var rateCode = $(activeRow).parent('.ratePrice').find('#RT_DESCRIPTION').val();
     $('[name="RESV_RATE_CODE"]').val(rateCode);
     $('#RESV_RATE').val(rmprice);
@@ -3507,7 +3532,14 @@ function selectRate() {
         $('#errorModal').hide();
         $('#rateQueryWindow').modal('hide');
         $('.window-1,#nextbtn').hide();
-        $('.window-2,#previousbtn').show();
+        $('.window-2').show();
+
+        // Previous Button
+        if ($('#reservationDetail').find('#RESV_ID').val() == '')
+            $('#previousbtn').show();
+        else
+            $('#previousbtn').hide();
+
         $('#submitResrBtn').removeClass('submitResr');
         $('.window-2').find('.nav a:first').tab('show'); // Make first tab of Edit form active
 
@@ -3530,20 +3562,55 @@ function selectRate() {
                         'RM_TY_ROOM_CLASS']) +
                     '" value="' + dataSet['RM_TY_CODE'] + '">' + dataSet['RM_TY_DESC'] + '</option>';
                 //$('#RESV_RTC').html(option).selectpicker('refresh');
-                $('#RESV_RM_TYPE,#RESV_RTC').val(dataSet['RM_TY_CODE']).trigger('change');
+
+                if ($('#RESV_RM_TYPE').val() !== dataSet['RM_TY_CODE'])
+                    $('#RESV_RM_TYPE').val(dataSet['RM_TY_CODE']).trigger('change');
+
+                $('#RESV_RTC').val(dataSet['RM_TY_CODE']).trigger('change');
+
                 <?php  if(!empty($ROOM_ID)) { ?>
 
                 $("#RESV_RM_TYPE,#RESV_RTC").val('<?php echo $ROOM_TYPE; ?>');
-                $("#RESV_ROOM").val('<?php echo $ROOM_NO; ?>').trigger('change');
 
+                var roomResvStat = showRoomResvStat('<?php echo $ROOM_ID; ?>',
+                    '<?php echo $ARRIVAL_DATE ?>');
+
+                if (roomResvStat == 'Not Reserved') {
+                    $("#RESV_ROOM").val('<?php echo $ROOM_NO; ?>');
+                    $("#RESV_ROOM_ID").val('<?php echo $ROOM_ID; ?>');
+                }
                 <?php
                         }
-                        ?>
+                ?>
             }
         });
 
         $('#RESV_RESRV_TYPE').val(7).trigger('change');
     }
+}
+
+// Show Room Current Status
+function showRoomResvStat(rmId, search_date) {
+
+    $.ajax({
+        url: '<?php echo base_url('/showRoomStatus') ?>',
+        type: 'POST',
+        async: false,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            roomId: rmId,
+            search_date: search_date
+        },
+        dataType: 'json'
+    }).done(function(response) {
+        ret_val = response;
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        ret_val = null;
+    });
+
+    return ret_val.RESV_STATUS;
 }
 
 function previous() {
@@ -3733,7 +3800,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false).prop('disabled',
         false);
     $(':input', '#reservationForm').not(
-        '#CUST_FIRST_NAME,#RESV_MEMBER_NO,#RESV_GUST_BAL,#RESV_ROOM_ID,#RESV_RATE_CODE,#RESV_PACKAGE,#RESV_INV_ITEM,#PACKAGE_EXCLUDE,#RSV_PCKG_POST_RYTHM,RSV_PCKG_CALC_RULE'
+        '#CUST_FIRST_NAME,#RESV_MEMBER_NO,#RESV_GUST_BAL,#RESV_ROOM,#RESV_ROOM_ID,#RESV_RATE_CODE,#RESV_PACKAGE,#RESV_INV_ITEM,#PACKAGE_EXCLUDE,#RSV_PCKG_POST_RYTHM,RSV_PCKG_CALC_RULE'
     ).prop('readonly', false);
     $('#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
 
@@ -3882,12 +3949,16 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                     .prop('disabled', true);
                 $('#reservationForm .selectpicker').selectpicker('refresh');
                 $('.RESV_ARRIVAL_DT,.RESV_DEPARTURE').datepicker("destroy");
-            } else if ($('#RESV_STATUS').val() == 'Checked-In') {
-                $('.RESV_NAME,#CUST_FIRST_NAME,#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RESRV_TYPE,#RESV_RM_TYPE,#RESV_ROOM').prop('readonly', true);                
+                $('.assignRoom').prop('disabled', true);
+            } else if ($('#RESV_STATUS').val() == 'Checked-In' || $('#RESV_STATUS').val() ==
+                'Check-Out-Requested') {
+                $('.RESV_NAME,#CUST_FIRST_NAME,#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RESRV_TYPE,#RESV_RM_TYPE')
+                    .prop('readonly', true);
                 $('.RESV_ARRIVAL_DT').datepicker("destroy");
+                $('.assignRoom').prop('disabled', true);
             } else if ($('#RESV_STATUS').val() == 'Due Pre Check-In' || $('#RESV_STATUS').val() ==
                 'Pre Checked-In') {
-
+                $('.assignRoom').prop('disabled', false);
             }
         }
     });
@@ -4022,10 +4093,20 @@ function addResvation() {
     <?php } ?>
 
     $(':input', '#reservationForm').not(
-        '#CUST_FIRST_NAME,#RESV_MEMBER_NO,#RESV_GUST_BAL,#RESV_ROOM_ID,#RESV_RATE_CODE,#RESV_PACKAGE,#RESV_INV_ITEM,#PACKAGE_EXCLUDE,#RSV_PCKG_POST_RYTHM,RSV_PCKG_CALC_RULE'
+        '#CUST_FIRST_NAME,#RESV_MEMBER_NO,#RESV_GUST_BAL,#RESV_ROOM,#RESV_ROOM_ID,#RESV_RATE_CODE,#RESV_PACKAGE,#RESV_INV_ITEM,#PACKAGE_EXCLUDE,#RSV_PCKG_POST_RYTHM,RSV_PCKG_CALC_RULE'
     ).prop('readonly', false);
-    $(':input', '.profileSearch').val('').prop({'checked': false, 'selected': false, 'disabled': false, 'readonly': false});
-    $(':input', '#customerForm').val('').prop({'checked': false, 'selected': false, 'disabled': false, 'readonly': false});
+    $(':input', '.profileSearch').val('').prop({
+        'checked': false,
+        'selected': false,
+        'disabled': false,
+        'readonly': false
+    });
+    $(':input', '#customerForm').val('').prop({
+        'checked': false,
+        'selected': false,
+        'disabled': false,
+        'readonly': false
+    });
 
     $('#RESV_NIGHT,#RESV_NO_F_ROOM,#RESV_ADULTS').val('1');
     $('#RESV_CONFIRM_YN,#RESV_NO_POST,#RESV_PICKUP_YN,#RESV_DROPOFF_YN,#RESV_EXT_PRINT_RT,#RESV_FIXED_RATE').val('N');
@@ -4389,30 +4470,33 @@ $(document).on('change', '#RESV_RM_TYPE,#RESV_RTC', function() {
 
         var room_type = $(this).find('option:selected').data('room-type-id');
 
-        $.ajax({
-            url: '<?php echo base_url('/roomList') ?>',
-            async: false,
-            type: "post",
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            data: {
-                room_type: room_type
-            },
-            // dataType:'json',
-            success: function(respn) {
+        $('#RESV_ROOM').val("");
+        $('#RESV_ROOM_ID').val("");
 
-                $('*#RESV_ROOM').html(respn);
-            }
-        });
+        // $.ajax({
+        //     url: '<?php echo base_url('/roomList') ?>',
+        //     async: false,
+        //     type: "post",
+        //     headers: {
+        //         'X-Requested-With': 'XMLHttpRequest'
+        //     },
+        //     data: {
+        //         room_type: room_type
+        //     },
+        //     // dataType:'json',
+        //     success: function(respn) {
+
+        //         $('*#RESV_ROOM').html(respn);
+        //     }
+        // });
     }
 });
 
-$(document).on('change', '#RESV_ROOM', function() {
+// $(document).on('change', '#RESV_ROOM', function() {
 
-    var room_id = $(this).find('option:selected').data('room-id');
-    $('#RESV_ROOM_ID').val(room_id);
-});
+//     var room_id = $(this).find('option:selected').data('room-id');
+//     $('#RESV_ROOM_ID').val(room_id);
+// });
 
 /*
     $(document).on('keyup', '.RESV_BLOCK .form-control', function() {
@@ -4626,6 +4710,10 @@ function runInitializeConfig() {
                 var options = '<option value=\'\'>Select</option>' + option;
 
                 $('#' + idArray[ind]).html(options);
+
+                <?php if($create_walkin) { ?>
+                $('#RESV_SOURCE').val('WLK').trigger('change');
+                <?php } ?>
 
                 if ($(`#combine-popup select[name='${idArray[ind]}']`).length) {
                     $(`#combine-popup select[name='${idArray[ind]}']`).html(options);
@@ -6776,7 +6864,7 @@ $(document).on('click', '#traceButton', function() {
             $('#TRACE_ARRIVAL_DT').val(respn.RESV_ARRIVAL_DT);
             $('#TRACE_DEPARTURE_DT').val(respn.RESV_DEPARTURE);
             $('#RESERVATION_STATUS').val(respn.RESV_STATUS);
-    //alert(respn.RESV_ARRIVAL_DT);
+            //alert(respn.RESV_ARRIVAL_DT);
             $('#RSV_TRACE_DATE').datepicker({
                 format: 'd-M-yyyy',
                 autoclose: true
