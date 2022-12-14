@@ -331,9 +331,15 @@
 					{
 						data: 'RSV_ID',
 						render: function(data, type, full, meta) {
-							if (full['RSV_ID'] != '') {
+							
+							if (full['RSV_ID'] != null) {
 								return full['RSV_ID'];
-							} else return '';
+							} 
+							else if(full['NOTIFICATION_RESERVATION_ID'] != null)
+							{
+								return full['NOTIFICATION_RESERVATION_ID'];
+							} else 
+							return '';
 						}
 					},
 					{

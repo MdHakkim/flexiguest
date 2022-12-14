@@ -100,7 +100,7 @@ class NotificationDataTable{
                 if($name == "NOTIFICATION_TO_ID") {
                     if($row[$name] != ''){                                        
                         $user_ids = implode(',', json_decode($row[$name]));                                        
-                        $users = $this->Db->query("select concat(USR_FIRST_NAME, ' ', USR_LAST_NAME) as NAME from FlXY_USERS where USR_ID in ($user_ids)")->getResultArray();                       
+                        $users = $this->Db->query("select concat(USR_FIRST_NAME, ' ', USR_LAST_NAME) as NAME from FLXY_USERS where USR_ID in ($user_ids)")->getResultArray();                       
                         
                         $row[$name] = '';
                         if(!empty($users)){
@@ -112,8 +112,8 @@ class NotificationDataTable{
                     }
                 }
 
-                if($name == "RSV_ID") {
-                    if($row[$name] != ''){                                        
+                if($name == "RSV_ID"  ) {
+                    if($name == "RSV_ID" && $row[$name] != '' ){              
                         $reservation = $this->Db->query("select RESV_NO FROM FLXY_RESERVATION where RESV_ID = $row[$name]")->getRow()->RESV_NO;            
                         
                         $row[$name] = '';
@@ -123,6 +123,22 @@ class NotificationDataTable{
                         }
                     }
                 }
+
+                if($name == "NOTIFICATION_RESERVATION_ID"  &&  $row[$name] != ''){  
+                    //print_r(implode(',', json_decode($row[$name])));exit;
+                        $notifi_ids = implode(',', json_decode($row[$name]));                                        
+                    $reservationsNotifications = $this->Db->query("select RESV_NO FROM FLXY_RESERVATION where RESV_ID in ($notifi_ids)")->getResultArray();                       
+                    
+                    $row[$name] = '';
+                    $RESV_NO = [];
+                    if(!empty($reservationsNotifications)){
+                        foreach($reservationsNotifications as $notifications){
+                            $RESV_NO[] = $notifications['RESV_NO'];
+                        }
+                        $row[$name] = implode(",",$RESV_NO);            
+                    }
+                }
+                
 
                 if($name == "NOTIFICATION_GUEST_ID") {
                     if($row[$name] != ''){                                        
@@ -138,6 +154,22 @@ class NotificationDataTable{
                         }
                     }
                 }
+
+
+                // if($name == "NOTIFICATION_RESERVATION_ID") {
+                //     if($row[$name] != ''){                                        
+                //         $notifi_ids = implode(',', json_decode($row[$name]));                                        
+                //         $reservationsNotifications = $this->Db->query("select RESV_NO FROM FLXY_RESERVATION where RESV_ID in ($notifi_ids)")->getResultArray();                       
+                        
+                //         $row[$name] = '';
+                //         if(!empty($reservationsNotifications)){
+                //             foreach($reservationsNotifications as $notifications)
+                //                 $row[$name] .= $notifications['RESV_NO'];
+
+                //             $row[$name] = substr($row[$name], 0, 20). '...';
+                //         }
+                //     }
+                // }
 
                 
                
@@ -160,7 +192,7 @@ class NotificationDataTable{
             
             $return[]=$designArr;
         }
-        ##print_r($return);
+       ##print_r($return);
         ## Response
         $response = array(
           "draw" => intval($draw),
