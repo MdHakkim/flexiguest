@@ -29,11 +29,11 @@ class AuthAPI implements FilterInterface
                 }
             }
 
-            $result = responseJson(401, true, "User Unauthorized", []);
+            $result = responseJson(403, true, "You don't have permission to access.", []);
             echo json_encode($result);
             die;
         } catch (\Exception $ex) {
-            $result = responseJson(401, true, "User Unauthorized", []);
+            $result = responseJson(403, true, "You don't have permission to access.", []);
             echo json_encode($result);
             die;
         }
