@@ -504,7 +504,7 @@ class UserController extends BaseController
                 $rules = array_merge($rules, [
                     'USR_IMAGE' => [
                         'label' => 'User Avatar',
-                        'rules' => ['uploaded[USR_IMAGE]', 'mime_in[USR_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[USR_IMAGE,2048]']
+                        'rules' => ['uploaded[USR_IMAGE]', 'mime_in[USR_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[USR_IMAGE,5120]']
                     ],
                 ]);
             */

@@ -44,7 +44,7 @@ class RestaurantRepository extends BaseController
         if (empty($data['id']) || !empty($data['RE_IMAGE_URL']))
             $rules['RE_IMAGE_URL'] = [
                 'label' => 'restaurant image',
-                'rules' => ['uploaded[RE_IMAGE_URL]', 'mime_in[RE_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[RE_IMAGE_URL,5048]']
+                'rules' => ['uploaded[RE_IMAGE_URL]', 'mime_in[RE_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[RE_IMAGE_URL,5120]']
             ];
 
         return $rules;
@@ -123,7 +123,7 @@ class RestaurantRepository extends BaseController
         if (empty($data['id']) || !empty($data['MC_IMAGE_URL']))
             $rules['MC_IMAGE_URL'] = [
                 'label' => 'category image',
-                'rules' => ['uploaded[MC_IMAGE_URL]', 'mime_in[MC_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MC_IMAGE_URL,5048]']
+                'rules' => ['uploaded[MC_IMAGE_URL]', 'mime_in[MC_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MC_IMAGE_URL,5120]']
             ];
 
         return $rules;
@@ -210,7 +210,7 @@ class RestaurantRepository extends BaseController
         if (empty($data['id']) || !empty($data['MI_IMAGE_URL']))
             $rules['MI_IMAGE_URL'] = [
                 'label' => 'item image',
-                'rules' => ['uploaded[MI_IMAGE_URL]', 'mime_in[MI_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MI_IMAGE_URL,5048]']
+                'rules' => ['uploaded[MI_IMAGE_URL]', 'mime_in[MI_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MI_IMAGE_URL,5120]']
             ];
 
         return $rules;
@@ -287,7 +287,7 @@ class RestaurantRepository extends BaseController
         if (empty($data['id']) || !empty($data['MT_IMAGE_URL']))
             $rules['MT_IMAGE_URL'] = [
                 'label' => 'meal type image',
-                'rules' => ['uploaded[MT_IMAGE_URL]', 'mime_in[MT_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MT_IMAGE_URL,5048]']
+                'rules' => ['uploaded[MT_IMAGE_URL]', 'mime_in[MT_IMAGE_URL,image/png,image/jpg,image/jpeg]', 'max_size[MT_IMAGE_URL,5120]']
             ];
 
         return $rules;

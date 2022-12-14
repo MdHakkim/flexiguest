@@ -42,7 +42,7 @@ class BrandingLogoController extends BaseController
         $rules = [
             'BL_LOGO' => [
                 'label' => 'Logo',
-                'rules' => ['uploaded[BL_LOGO]', 'mime_in[BL_LOGO,image/png,image/jpg,image/jpeg,image/webp]', 'max_size[BL_LOGO, 2048]']
+                'rules' => ['uploaded[BL_LOGO]', 'mime_in[BL_LOGO,image/png,image/jpg,image/jpeg,image/webp]', 'max_size[BL_LOGO,5120]']
             ],
         ];
 

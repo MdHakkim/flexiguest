@@ -2739,7 +2739,7 @@ class AdditionalController extends BaseController
                 $rules = array_merge($rules, [
                     'PR_IMAGE' => [
                         'label' => 'Product Image',
-                        'rules' => ['uploaded[PR_IMAGE]', 'mime_in[PR_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[PR_IMAGE,2048]']
+                        'rules' => ['uploaded[PR_IMAGE]', 'mime_in[PR_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[PR_IMAGE,5120]']
                     ],
                 ]);
 

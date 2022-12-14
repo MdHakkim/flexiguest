@@ -93,7 +93,7 @@ class TransportRequestRepository extends BaseController
         if (!empty($data['TR_GUEST_IMAGE']))
             $rules['TR_GUEST_IMAGE'] = [
                 'label' => 'guest image',
-                'rules' => ['uploaded[TR_GUEST_IMAGE]', 'mime_in[TR_GUEST_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[TR_GUEST_IMAGE,2048]']
+                'rules' => ['uploaded[TR_GUEST_IMAGE]', 'mime_in[TR_GUEST_IMAGE,image/png,image/jpg,image/jpeg]', 'max_size[TR_GUEST_IMAGE,5120]']
             ];
 
         if (isWeb()) {

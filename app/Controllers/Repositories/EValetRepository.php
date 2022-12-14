@@ -39,7 +39,7 @@ class EValetRepository extends BaseController
         if (!empty($data['EV_CAR_IMAGES']))
             $rules['EV_CAR_IMAGES'] = [
                 'label' => 'car images',
-                'rules' => ['uploaded[EV_CAR_IMAGES]', 'max_size[EV_CAR_IMAGES,5048]', 'mime_in[EV_CAR_IMAGES,image/png,image/jpg,image/jpeg]']
+                'rules' => ['uploaded[EV_CAR_IMAGES]', 'max_size[EV_CAR_IMAGES,5120]', 'mime_in[EV_CAR_IMAGES,image/png,image/jpg,image/jpeg]']
             ];
 
         if (!empty($data['EV_EMAIL']))

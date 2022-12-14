@@ -4293,7 +4293,7 @@ class ApplicatioController extends BaseController
             if(empty($this->request->getPost("VACC_DOC_SAVED"))){
                 $rules['files'] = [
                     'label' => 'vaccine certificate', 
-                    'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg,application/pdf]', 'max_size[files,50000]'
+                    'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg,application/pdf]', 'max_size[files,5120]'
                 ];
             }
 

@@ -211,7 +211,7 @@ class HouseKeepingController extends BaseController
             $rules = array_merge($rules, [
                 'attachments.*' => [
                     'label' => 'attachments',
-                    'rules' => ['mime_in[attachments,image/png,image/jpg,image/jpeg]', 'max_size[attachments, 2048]']
+                    'rules' => ['mime_in[attachments,image/png,image/jpg,image/jpeg]', 'max_size[attachments,5120]']
                 ],
             ]);
 
