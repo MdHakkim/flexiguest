@@ -216,24 +216,23 @@ $(document).ready(function() {
     $('#ARRIVAL_DATE').datepicker({
         format: 'd-M-yyyy',
         autoclose: true,
-        startDate: '-0m',
+        // startDate: '-0m',
     });
 });
 
 function onClickPreview(action) { 
     $('#errorModal').hide();
     
-        if($('#ARRIVAL_DATE').val() == '' && ( !$('#RESV_INDIV').is(':checked') && !$('#RESV_BLOCK').is(':checked'))){
+        if($('#ARRIVAL_DATE').val() == '' && ( !$('#RESV_INDIV').is(':checked') && !$('#RESV_BLOCK').is(':checked') && !$('#IN_HOUSE_GUESTS').is(':checked')&& ($('#CONFIRM_NO').val() == ''))){
             $('#errorModal').show();        
             error = '<ul><li>Arrival date is required</li><li>Reservation type is required</li></ul>';   
             $('#formErrorMessage').html(error);
             
         }
-        else if($('#ARRIVAL_DATE').val() == ''){
+        else if($('#ARRIVAL_DATE').val() == '' && !$('#IN_HOUSE_GUESTS').is(':checked') && ($('#CONFIRM_NO').val() == '')){
             $('#errorModal').show();        
             error = '<ul><li>Arrival date is required</li></ul>';   
-            $('#formErrorMessage').html(error);
-            
+            $('#formErrorMessage').html(error);            
         }
     
         else if( !$('#RESV_INDIV').is(':checked') && !$('#RESV_BLOCK').is(':checked')){

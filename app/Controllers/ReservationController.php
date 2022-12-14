@@ -453,7 +453,7 @@ class ReservationController extends BaseController
     }
 
     public function registerCardSaveDetails(){
-        $_SESSION['ARRIVAL_DATE']  = date("Y-m-d",strtotime($this->request->getPost('ARRIVAL_DATE')));
+        $_SESSION['ARRIVAL_DATE']  = $this->request->getPost('ARRIVAL_DATE') ? date("Y-m-d",strtotime($this->request->getPost('ARRIVAL_DATE'))):'';
         $_SESSION['ETA_FROM_TIME'] = $this->request->getPost('ETA_FROM_TIME');
         $_SESSION['ETA_TO_TIME']   = $this->request->getPost('ETA_TO_TIME');
         $_SESSION['GUEST_NAME']    = $this->request->getPost('GUEST_NAME');
