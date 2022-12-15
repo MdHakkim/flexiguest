@@ -830,7 +830,8 @@ class APIController extends BaseController
         $customer_id = $this->request->getVar('VACC_CUST_ID');
         $reservation_id = $this->request->getVar('VACC_RESV_ID');
 
-        $validate = $this->validate([
+
+        $rules = [
             'VACC_CUST_ID' => [
                 'rules' => 'required',
                 'errors' => [
@@ -844,10 +845,16 @@ class APIController extends BaseController
                 ]
             ],
             'VACC_DETAILS' => 'required',
-            'VACC_LAST_DT' => 'required',
-            'VACC_TYPE' => 'required',
-            'VACC_ISSUED_COUNTRY' => 'required',
-        ]);
+        ];
+        if (!empty($this->request->getVar('VACC_DETAILS')) && $this->request->getVar('VACC_DETAILS') == 'vaccinated') {
+            $rules = array_merge($rules, [
+                'VACC_LAST_DT' => 'required',
+                'VACC_TYPE' => 'required',
+                'VACC_ISSUED_COUNTRY' => 'required',
+            ]);
+        }
+
+        $validate = $this->validate($rules);
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
