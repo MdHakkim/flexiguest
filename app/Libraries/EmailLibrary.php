@@ -11,10 +11,12 @@ class EmailLibrary{
         $toEmail = $rawparam[0]['CUST_EMAIL'];
         $paramraw['data'] = $rawparam[0];
         $paramraw['mode'] = $param;
+        $subject = ( $paramraw['mode'] == "QR" ) ? 'Pre Check-in Confirmation' : 'Pre Check-in Link';
         $html = view('EmailTemplates/ReservationTemplate',$paramraw);
         $this->email->setFrom('notifications@farnek.com', 'FLEXIGUEST | HITEK');
         $this->email->setTo($toEmail);
-        $this->email->setSubject('Pre Check-in Link');
+        
+        $this->email->setSubject($subject);
         $this->email->setMessage($html);//your message here
         if ($this->email->send()) {
             return 'Email successfully sent, please check';
