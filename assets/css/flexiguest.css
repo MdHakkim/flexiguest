@@ -675,6 +675,12 @@ td{
   .sliderclass {
     margin: 0;
   }
+  #successModal, #warningModal, #infoModal, #errorModal{
+    width:90% !important;
+  }
+  .flxy_cust_detil {
+    padding: 0px !important;
+}
 }
 
 @media only screen and (max-width: 575px) {

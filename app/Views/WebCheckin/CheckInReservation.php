@@ -959,7 +959,7 @@
                                 <input class="form-check-input" type="hidden" value="vaccinated" name="VACC_DETAILS" id="VACC_DETAILS">
 
                                 <div class="form-check">
-                                    <input class="form-check-input radioCheck" checked type="radio" id="VACC_DETL_1" name="VACC_DETL" method="vaccinated">
+                                    <input class="form-check-input radioCheck" type="radio" id="VACC_DETL_1" name="VACC_DETL" method="vaccinated">
                                     <label class="form-check-label" for="VACC_DETL_1">
                                         I have been fully vaccinated (Please attach the Vaccination certificate)
                                     </label>
@@ -1349,12 +1349,17 @@
                         var check = jsonFrmt.VACC_DETAILS;
 
                         if (check == 'vaccinated') {
+                            $('#VACC_DETAILS').val(check);
                             $('.radioCheck:eq(0)').prop('checked', true);
                         } else if (check == 'medicallyExempt') {
+                            $('#VACC_DETAILS').val(check);
                             $('.radioCheck:eq(1)').prop('checked', true);
                         } else if (check == 'vaccinationLater') {
+                            $('#VACC_DETAILS').val(check);
                             $('.radioCheck:eq(2)').prop('checked', true);
                         }
+                        
+                        
 
                         $('#VACC_LAST_DT').val(jsonFrmt.VACC_LAST_DT);
                         $('#VACC_TYPE').val(jsonFrmt.VACC_TYPE).selectpicker(
