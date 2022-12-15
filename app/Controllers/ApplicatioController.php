@@ -4378,18 +4378,16 @@ class ApplicatioController extends BaseController
                     'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg,application/pdf]', 'max_size[files,5120]'
                 ];
                 $validate = $this->validate($rules);
+                if(!$validate){
+                    $validate = $this->validator->getErrors();
+    
+                    $result = $this->responseJson(403, $validate);
+                    echo json_encode($result);
+                    exit;
+                }
 
             }
 
-           
-
-            if(!$validate){
-                $validate = $this->validator->getErrors();
-
-                $result = $this->responseJson(403, $validate);
-                echo json_encode($result);
-                exit;
-            }
 
             $this->deleteSpecificVaccine();
             $fileNames='';
