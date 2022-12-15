@@ -78,9 +78,11 @@ $(document).ready(function() {
                         '<li><a href="javascript:;" data_sysid="' + data['AGN_ID'] +
                         '" class="dropdown-item editWindow">Edit</a></li>' +
                         // '<li><a href="javascript:;" class="dropdown-item">Archive</a></li>' +
-                        '<div class="dropdown-divider"></div>' +
-                        '<li><a href="javascript:;" data_sysid="' + data['AGN_ID'] +
-                        '" class="dropdown-item text-danger delete-record">Delete</a></li>' +
+                        
+                        // '<div class="dropdown-divider"></div>' +
+                        // '<li><a href="javascript:;" data_sysid="' + data['AGN_ID'] +
+                        // '" class="dropdown-item text-danger delete-record">Delete</a></li>' +
+
                         '</ul>' +
                         '</div>'
                     );
