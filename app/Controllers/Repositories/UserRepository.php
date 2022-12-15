@@ -99,8 +99,11 @@ class UserRepository extends BaseController
         ]);
     }
 
-    public function getRegistrationIds($user_ids)
+    public function getRegistrationIds($user_ids, $customer_ids = null) // if customer_ids are not null then get user_ids from customer_ids otherwise use user_ids
     {
+        if(!empty($customer_ids))
+            $user_ids = $this->getUserIdsByCustomerIds($customer_ids);
+
         $registration_ids = [];
 
         $devices = $this->UserDevice->whereIn('UD_USER_ID', $user_ids)->findAll();
