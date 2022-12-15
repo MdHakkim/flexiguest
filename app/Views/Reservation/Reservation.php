@@ -173,6 +173,10 @@
 .my-swal {
     z-index: 10000 !important;
 }
+
+.input-group.is-invalid .bootstrap-select {
+    border-color: #dc3545;
+}
 </style>
 
 <!-- Content wrapper -->
@@ -864,20 +868,21 @@
                             <div class="row g-3">
                                 <div class="col-md-12 col-lg-3">
                                     <label class="form-label">Guest Name</label>
-                                    <div class="input-group mb-3">
+                                    <div class="input-group mb-2">
                                         <select name="RESV_NAME" id="RESV_NAME"
                                             class="selectpicker RESV_NAME activeName" data-style="btn btn-default"
                                             data-live-search="true" required>
                                             <option value="">Select</option>
-                                        </select>
-                                        <div class="invalid-feedback">
-                                            Guest Name required can't empty.
-                                        </div>
+                                        </select>                             
                                         <button type="button" onClick="childReservation('C')"
                                             class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus"
                                                 aria-hidden="true"></i></button>
+                                                
 
                                     </div>
+                                    <div class="invalid-feedback">
+                                            Guest Name required can't be empty.
+                                        </div>          
                                 </div>
                                 <div class="col-md-6 col-lg-3">
                                     <label class="form-label">Title / First Name</label>
@@ -904,7 +909,7 @@
                                         <input type="text" name="CUST_FIRST_NAME" id="CUST_FIRST_NAME"
                                             class="form-control" placeholder="first name" readonly />
                                         <div class="invalid-feedback">
-                                            Title required can't empty.
+                                            Title required can't be empty.
                                         </div>
                                     </div>
 
@@ -1011,7 +1016,7 @@
                                                                 </span>
                                                             </span>
                                                             <div class="invalid-feedback flxy_date_vald">Arrival Date
-                                                                required can't empty.</div>
+                                                                required can't be empty.</div>
                                                         </div>
 
                                                     </div>
@@ -1027,7 +1032,7 @@
                                                             </span>
                                                         </div>
                                                         <div class="invalid-feedback flxy_date_vald">Departure Date
-                                                            required can't empty.</div>
+                                                            required can't be empty.</div>
                                                     </div>
                                                 </div>
 
@@ -1043,10 +1048,10 @@
                                                         min="1" required />
                                                 </div>
                                                 <div class="invalid-feedback">
-                                                    Night required can't empty.
+                                                    Night required can't be empty.
                                                 </div>
                                                 <div class="invalid-feedback">
-                                                    No of room required can't empty.
+                                                    No of room required can't be empty.
                                                 </div>
                                             </div>
                                             <div class="col-md-6 col-lg-3">
@@ -1056,7 +1061,7 @@
                                                         <input type="number" name="RESV_ADULTS" id="RESV_ADULTS"
                                                             class="form-control RESV_ADULTS" placeholder="adults"
                                                             min="1" required />
-                                                        <div class="invalid-feedback">Adults required can't empty.</div>
+                                                        <div class="invalid-feedback">Adults required can't be empty.</div>
                                                     </div>
                                                     <div class="flxy_join">
                                                         <input type="number" name="RESV_CHILDREN" id="RESV_CHILDREN"
@@ -1099,13 +1104,13 @@
                                                         class="btn flxi_btn btn-sm btn-primary"><i
                                                             class="fa fa-chevron-down" aria-hidden="true"></i></button>
                                                 </div>
-                                                <div class="invalid-feedback"> Rate Code required can't empty.</div>
+                                                <div class="invalid-feedback"> Rate Code required can't be empty.</div>
                                             </div>
                                             <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Rate</label>
                                                 <input type="number" step="0.01" name="RESV_RATE" id="RESV_RATE"
                                                     class="form-control" placeholder="rate" min="0" required />
-                                                <div class="invalid-feedback"> Rate required can't empty.</div>
+                                                <div class="invalid-feedback"> Rate required can't be empty.</div>
                                             </div>
                                             <div class="col-md-6 col-lg-3 mt-4">
                                                 <label class="form-label"> Fixed Rate</label>
@@ -1189,7 +1194,7 @@
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <!-- <option value="">Select</option> -->
                                                 </select>
-                                                <div class="invalid-feedback"> Payment required can't empty.</div>
+                                                <div class="invalid-feedback"> Payment required can't be empty.</div>
                                             </div>
                                             <div class="col-md-6 col-lg-3 mt-2 selPickerDiv">
                                                 <label class="form-label" for="RESV_SPECIALS">Specials</label>
@@ -1216,7 +1221,7 @@
                                                         class="btn flxi_btn btn-sm btn-primary"><i class="fa fa-plus"
                                                             aria-hidden="true"></i></button>
                                                 </div>
-                                                <div class="invalid-feedback"> Item required can't empty.</div>
+                                                <div class="invalid-feedback"> Item required can't be empty.</div>
                                             </div>
 
 
@@ -1255,7 +1260,7 @@
                                                         class="form-control" placeholder="phone" />
                                                 </div>
                                             </div>
-                                            <div class="col-md-2 mt-4">
+                                            <!-- <div class="col-md-2 mt-4">
                                                 <label class="form-label" for="RESV_CONFIRM_YN_CHK">
                                                     Confirmation </label>
                                                 <label class="switch">
@@ -1272,7 +1277,7 @@
                                                         </span>
                                                     </span>
                                                 </label>
-                                            </div>
+                                            </div> -->
                                             <div class="col-md-2 mt-4">
                                                 <label class="form-label" for="RESV_NO_POST_CHK"> No Post </label>
                                                 <label class="switch switch-danger">
@@ -1293,7 +1298,7 @@
                                     </div>
                                     <div class="tab-pane fade" id="moreDetails">
                                         <div class="row">
-                                            <div class="col-md-6 col-lg-3 mb-3">
+                                            <!-- <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">C/O Time</label>
                                                 <input type="time" name="RESV_C_O_TIME" id="RESV_C_O_TIME"
                                                     class="form-control" placeholder="c/o time" />
@@ -1304,32 +1309,16 @@
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
-                                            </div>
+                                            </div> 
                                             <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Exempt No</label>
                                                 <input type="text" name="RESV_EXEMPT_NO" id="RESV_EXEMPT_NO"
                                                     class="form-control" placeholder="exempt no" />
-                                            </div>
-                                            <div class="col-md-6 col-lg-3"></div>
+                                            </div>-->
+                                            <!-- <div class="col-md-6 col-lg-3"></div> -->
 
-                                            <div class="col-md-6 col-lg-3 mt-4">
-                                                <label class="form-label">Pickup Requested ?</label>
-                                                <label class="switch">
-                                                    <input type="checkbox" class="switch-input"
-                                                        id="RESV_PICKUP_YN_CHK" />
-                                                    <input type="hidden" name="RESV_PICKUP_YN" value="N"
-                                                        id="RESV_PICKUP_YN" class="form-control" />
-                                                    <span class="switch-toggle-slider">
-                                                        <span class="switch-on">
-                                                            <i class="bx bx-check"></i>
-                                                        </span>
-                                                        <span class="switch-off">
-                                                            <i class="bx bx-x"></i>
-                                                        </span>
-                                                    </span>
-                                                </label>
-                                            </div>
-                                            <div class="col-md-6 col-lg-3 mb-3">
+                                           
+                                            <!-- <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Transport Type</label>
                                                 <select name="RESV_TRANSPORT_TYP" id="RESV_TRANSPORT_TYP"
                                                     class="select2 form-select" data-allow-clear="true">
@@ -1345,8 +1334,8 @@
                                                 <label class="form-label">Carrier Code</label>
                                                 <input type="text" name="RESV_CARRIER_CD" id="RESV_CARRIER_CD"
                                                     class="form-control" placeholder="carrier code" />
-                                            </div>
-                                            <div class="col-md-6 col-lg-3 mb-3">
+                                            </div> -->
+                                            <!-- <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Transport No</label>
                                                 <input type="text" name="RESV_TRANSPORT_NO" id="RESV_TRANSPORT_NO"
                                                     class="form-control" placeholder="tranport no" />
@@ -1367,26 +1356,10 @@
                                                 <label class="form-label">Pick up Time</label>
                                                 <input type="time" name="RESV_PICKUP_TIME" id="RESV_PICKUP_TIME"
                                                     class="form-control" placeholder="pickup time" />
-                                            </div>
-                                            <div class="col-md-6 col-lg-3"></div>
-                                            <div class="col-md-6 col-lg-3 mt-4">
-                                                <label class="form-label">Drop off Requested ?</label>
-                                                <label class="switch">
-                                                    <input type="checkbox" class="switch-input"
-                                                        id="RESV_DROPOFF_YN_CHK" />
-                                                    <input type="hidden" name="RESV_DROPOFF_YN" value="N"
-                                                        id="RESV_DROPOFF_YN" class="form-control" />
-                                                    <span class="switch-toggle-slider">
-                                                        <span class="switch-on">
-                                                            <i class="bx bx-check"></i>
-                                                        </span>
-                                                        <span class="switch-off">
-                                                            <i class="bx bx-x"></i>
-                                                        </span>
-                                                    </span>
-                                                </label>
-                                            </div>
-                                            <div class="col-md-6 col-lg-3 mb-3">
+                                            </div> -->
+                                            <!-- <div class="col-md-6 col-lg-3"></div> -->
+                                            
+                                            <!-- <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Transport Type</label>
                                                 <select name="RESV_TRANSPORT_TYP_DO" id="RESV_TRANSPORT_TYP_DO"
                                                     class="select2 form-select" data-allow-clear="true">
@@ -1397,8 +1370,8 @@
                                                 <label class="form-label">Station Code</label>
                                                 <input type="text" name="RESV_STATION_CD_DO" id="RESV_STATION_CD_DO"
                                                     class="form-control" placeholder="station code" />
-                                            </div>
-                                            <div class="col-md-6 col-lg-3 mb-3">
+                                            </div> -->
+                                            <!-- <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Carrier Code</label>
                                                 <input type="text" name="RESV_CARRIER_CD_DO" id="RESV_CARRIER_CD_DO"
                                                     class="form-control" placeholder="carrier code" />
@@ -1407,8 +1380,8 @@
                                                 <label class="form-label">Transport No</label>
                                                 <input type="text" name="RESV_TRANSPORT_NO_DO" id="RESV_TRANSPORT_NO_DO"
                                                     class="form-control" placeholder="transport no" />
-                                            </div>
-                                            <div class="col-md-6 col-lg-3 mb-3">
+                                            </div> -->
+                                            <!-- <div class="col-md-6 col-lg-3 mb-3">
                                                 <label class="form-label">Arrival Date</label>
                                                 <div class="input-group">
                                                     <input type="text" id="RESV_ARRIVAL_DT_DO" name="RESV_ARRIVAL_DT_DO"
@@ -1424,13 +1397,20 @@
                                                 <label class="form-label">Drop off Time</label>
                                                 <input type="time" name="RESV_DROPOFF_TIME" id="RESV_DROPOFF_TIME"
                                                     class="form-control" placeholder="drop off time" />
-                                            </div>
-                                            <div class="col-md-6 col-lg-3"></div>
+                                            </div> -->
+                                            <!-- <div class="col-md-6 col-lg-3"></div> -->
                                             <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Guest Type</label>
                                                 <select name="RESV_GUST_TY" id="RESV_GUST_TY"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 col-lg-3 selPickerDiv">
+                                                <label class="form-label">Features</label>
+                                                <select id="RESV_EXT_FEATURE" class="selectpicker" multiple data-style="btn btn-default"
+                                                    data-icon-base="bx" data-tick-icon="bx-check text-primary"
+                                                    data-live-search="true" data-allow-clear="true">
                                                 </select>
                                             </div>
                                             <div class="col-md-6 col-lg-3">
@@ -1447,18 +1427,56 @@
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-6 col-lg-3">
+                                            <div class="col-md-6 col-lg-3 mt-3">
                                                 <label class="form-label">Reserv. Profile</label>
                                                 <select name="RESV_PROFILE" id="RESV_PROFILE"
                                                     class="select2 form-select" data-allow-clear="true">
                                                     <option value="">Select</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-6 col-lg-3 mt-3">
+                                            <!-- <div class="col-md-6 col-lg-3 mt-3">
                                                 <label class="form-label">Name on Card</label>
                                                 <input type="text" name="RESV_NAME_ON_CARD" id="RESV_NAME_ON_CARD"
                                                     class="form-control" placeholder="name on code" />
+                                            </div> -->
+
+                                            <div class="col-md-6 col-lg-3 mt-5">
+                                                <label class="form-label">Pickup Requested ?</label>
+                                                <label class="switch">
+                                                    <input type="checkbox" class="switch-input"
+                                                        id="RESV_PICKUP_YN_CHK" />
+                                                    <input type="hidden" name="RESV_PICKUP_YN" value="N"
+                                                        id="RESV_PICKUP_YN" class="form-control" />
+                                                    <span class="switch-toggle-slider">
+                                                        <span class="switch-on">
+                                                            <i class="bx bx-check"></i>
+                                                        </span>
+                                                        <span class="switch-off">
+                                                            <i class="bx bx-x"></i>
+                                                        </span>
+                                                    </span>
+                                                </label>
                                             </div>
+
+                                            <div class="col-md-6 col-lg-3 mt-5">
+                                                <label class="form-label">Drop off Requested ?</label>
+                                                <label class="switch">
+                                                    <input type="checkbox" class="switch-input"
+                                                        id="RESV_DROPOFF_YN_CHK" />
+                                                    <input type="hidden" name="RESV_DROPOFF_YN" value="N"
+                                                        id="RESV_DROPOFF_YN" class="form-control" />
+                                                    <span class="switch-toggle-slider">
+                                                        <span class="switch-on">
+                                                            <i class="bx bx-check"></i>
+                                                        </span>
+                                                        <span class="switch-off">
+                                                            <i class="bx bx-x"></i>
+                                                        </span>
+                                                    </span>
+                                                </label>
+                                            </div>
+
+
                                             <div class="col-md-6 col-lg-3 mt-5">
                                                 <label class="form-label">Print Rate</label>
                                                 <label class="switch">
@@ -1601,7 +1619,7 @@
                                 <input type="text" name="CUST_FIRST_NAME" id="CUST_FIRST_NAME" class="form-control"
                                     placeholder="first name" required />
                                 <div class="invalid-feedback">
-                                    First name is required can't empty.
+                                    First name is required can't be empty.
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-3">
@@ -1678,7 +1696,7 @@
                                 <input type="text" name="CUST_ADDRESS_1" id="CUST_ADDRESS_1" class="form-control"
                                     placeholder="addresss 1" required />
                                 <div class="invalid-feedback">
-                                    address is required can't empty.
+                                    address is required can't be empty.
                                 </div>
                             </div>
 
@@ -1720,7 +1738,7 @@
                                     <option value="">Select</option>
                                 </select>
                                 <div class="invalid-feedback">
-                                    country is required can't empty.
+                                    country is required can't be empty.
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-3">
@@ -1743,7 +1761,7 @@
                                 <input type="text" name="CUST_EMAIL" id="CUST_EMAIL" class="form-control"
                                     placeholder="email" required />
                                 <div class="invalid-feedback">
-                                    Email is required can't empty.
+                                    Email is required can't be empty.
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-3">
@@ -1751,7 +1769,7 @@
                                 <input type="text" name="CUST_MOBILE" id="CUST_MOBILE" class="form-control"
                                     placeholder="mobile" required />
                                 <div class="invalid-feedback">
-                                    Mobile No is required can't empty.
+                                    Mobile No is required can't be empty.
                                 </div>
                             </div>
                             <div class="col-md-6 col-lg-3">
@@ -3125,6 +3143,11 @@ $(document).ready(function() {
                 render: function(data, type, row, meta) {
                     var statClass = data == 'Cancelled' ? 'flxy_status_cncl' :
                         'flxy_status_cls';
+                      var  today = moment().format('DD-MMM-YYYY');
+                     
+                    if((row['RESV_STATUS'] == 'Check-Out-Requested' || row['RESV_STATUS'] == 'Checked-In') && row['RESV_DEPARTURE'] == today){
+                        data = 'Due Out'
+                    }
                     return (
                         '<div class="' + statClass + '">' + data + '</div>'
                     );
@@ -3907,12 +3930,20 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                         if (field == 'RESV_SPECIALS') {
                             var dataval = dataval.split(',');
                         }
+                        
 
                         if (field == 'RESV_STATUS') {
                             $('#reservationWlable').append(' - ' + dataval);
                         }
 
                         $('*#' + field).val(dataval).trigger('change');
+
+                        if (field == 'RESV_FEATURE') {
+                            var dataval = dataval.split(',');
+                            $('#RESV_EXT_FEATURE').val(dataval).trigger('change');
+                            $('#RESV_EXT_FEATURE').selectpicker('refresh');
+                        }
+
                         if (field == 'CUST_COUNTRY' || field == 'RESV_SPECIALS') {
                             $('*#' + field).selectpicker('refresh');
                         }
@@ -4048,7 +4079,7 @@ function addResvation() {
     clearFormFields('#select_items');
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false).prop('disabled',
         false);
-    $('#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
+    $('*#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
     $('.select2').val(null).trigger('change');
 
     $('#reservationW').modal('show');
@@ -4195,12 +4226,20 @@ function reservationValidate(event, id, mode) {
         .checkValidity());
     if (mode == 'R') {
         var additionValid = checkSelectInvalid($('#RESV_PAYMENT_TYPE'));
+       
     } else {
         var additionValid = false;
     }
+
+    if (mode == 'R') {
+        var resvnameValid = checkResvNameInvalid($('.window-2 .RESV_NAME'));
+    } else {
+        var resvnameValid = false;
+    }
+
     form.classList.add('was-validated');
 
-    if (condition || additionValid || checkSelectInvalid($(
+    if (condition || additionValid || resvnameValid || checkSelectInvalid($(
             '#RESV_RM_TYPE'))) { // -- customize validate user validUsername
         return false;
     } else {
@@ -4219,8 +4258,21 @@ function checkPaymentValid() {
     }
 }
 
+function checkResvNameInvalid(elem) {
+    var selVal = $('.window-2 .RESV_NAME .filter-option-inner-inner').text();
+    
+    if (selVal == 'Select') {
+        elem.parent('div.input-group').removeClass('is-valid').addClass('is-invalid');
+        return true;
+    } else {
+        elem.parent('div.input-group').removeClass('is-invalid').addClass('is-valid');
+        return false;
+    }
+}
+
 function checkSelectInvalid(elem) {
     var selVal = elem.val();
+   
     if (selVal == '') {
         elem.parent('div').removeClass('is-valid').addClass('is-invalid');
         return true;
@@ -4670,6 +4722,7 @@ function runSupportingResevationLov() {
                     $('.CUST_VIP').html(option);
                 } else if (idArray[ind] == 'RESV_FEATURE') {
                     $('#RESV_FEATURE').html(option).selectpicker('refresh');
+                    $('#RESV_EXT_FEATURE').html(option).selectpicker('refresh');
                 } else if (idArray[ind] != 'RESV_MEMBER_TY') {
                     $('#' + idArray[ind]).html(option);
 
