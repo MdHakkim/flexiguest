@@ -4363,14 +4363,15 @@ class ApplicatioController extends BaseController
 
     public function updateVaccineReport(){
         try{
-            $rules = [
-                'VACC_DETL' => ['label' => 'Vaccine Detail', 'rules' => 'required'],
-                'VACC_LAST_DT' => ['label' => 'Vaccine Last Date', 'rules' => 'required'],
-                'VACC_TYPE' => ['label' => 'Vaccine Name', 'rules' => 'required'],
-                'VACC_ISSUED_COUNTRY' => ['label' => 'Vaccine issue country', 'rules' => 'required']
-            ];
-
-            if(empty($this->request->getPost("VACC_DOC_SAVED"))){
+            
+            if(empty($this->request->getPost("VACC_DOC_SAVED")) && $this->request->getPost("VACC_DETAILS") == "vaccinated" ){
+                $rules = [
+                    'VACC_DETL' => ['label' => 'Vaccine Detail', 'rules' => 'required'],
+                    'VACC_LAST_DT' => ['label' => 'Vaccine Last Date', 'rules' => 'required'],
+                    'VACC_TYPE' => ['label' => 'Vaccine Name', 'rules' => 'required'],
+                    'VACC_ISSUED_COUNTRY' => ['label' => 'Vaccine issue country', 'rules' => 'required']
+                ];
+    
                 $rules['files'] = [
                     'label' => 'vaccine certificate', 
                     'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg,application/pdf]', 'max_size[files,5120]'
