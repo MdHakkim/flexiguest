@@ -348,8 +348,9 @@
 
                                             <div class="card-body flxy_web_padd">
 
-                                                <h5 class="card-title">
-                                                    <?= $data['FULLNAME'] ?>
+                                                <h5 class="card-title d-flex justify-content-between">
+                                                    <span><?= $data['FULLNAME'] ?></span>
+                                                    <small>(Main)</small>
                                                 </h5>
 
                                                 <p class="card-text document-verified-status">
@@ -411,8 +412,9 @@
 
                                                 <div class="card-body flxy_web_padd">
 
-                                                    <h5 class="card-title">
-                                                        <?= $accompany_profile['FULLNAME'] ?>
+                                                    <h5 class="card-title d-flex justify-content-between">
+                                                        <span><?= $accompany_profile['FULLNAME'] ?></span>
+                                                        <small>(Accompany)</small>
                                                     </h5>
 
                                                     <p class="card-text document-verified-status">
