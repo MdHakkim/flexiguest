@@ -742,6 +742,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/printTaskSheet', 'TaskAssignmentController::printTaskSheet');
     $routes->match(['post'], '/getTaskComments', 'TaskAssignmentController::getTaskComments');
     $routes->match(['post'], '/checkRoomAlreadyAssigned', 'TaskAssignmentController::checkRoomAlreadyAssigned');
+    $routes->match(['post'], '/customerNotesView', 'ApplicatioController::customerNotesView');
+    
 
 
 

@@ -967,6 +967,21 @@ class ApplicatioController extends BaseController
         echo json_encode($customerMemberships);
     }
 
+    public function customerNotesView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array( "NOTIFICATION_TYPE = " => "2", 
+                            "NOTIF_TRAIL_GUEST = " => "'$sysid'"); // Add condition for Customer
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_NOTIFICATIONS INNER JOIN FLXY_NOTIFICATION_TRAIL ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID';
+        $columns = 'NOTIFICATION_ID,NOTIFICATION_TEXT,NOTIFICATION_URL,NOTIFICATION_DATE_TIME';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
+
     public function insertCustomerMembership()
     {
         try {

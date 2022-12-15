@@ -129,7 +129,6 @@
                             <thead>
                                 <tr>
                                     <th></th>
-                                    <th></th>
                                     <th class="all">Notes</th>
                                     <th class="all">URL</th>
                                     <th class="all">Date & Time</th>
@@ -247,131 +246,6 @@ $(document).on('click', '.show-cust-activity-log', function() {
     $('#customerChangesWindowLabel').html('Activity Log of Profile: ' + custName);
 
 });
-
-// profile notes
-
-$(document).on('click', '.profile-notes', function() {
-
-var custOptId = $(this).attr('data_sysid');
-var custName = $(this).attr('data_custname');
-
-$('#customerNotesWindow').modal('show');
-showCustomerNotes(custOptId);
-
-$('#customerNotesWindowLabel').html('Notes: ' + custName);
-
-});
-
-//Show notes table in modal
-
-function showCustomerNotes(custId = 0) {
-
-$('#customer_notes').DataTable({
-    'processing': true,   
-    'serverSide': true,
-    'serverMethod': 'post',
-    'ajax': {
-        'url': '<?php echo base_url('/customerNotesView')?>',
-        'data': {
-            "sysid": custId
-        }
-    },
-    'columns': [
-        {
-            data: ''
-        },
-        {
-            data: 'NOTIFICATION_ID',
-            "visible": false,
-        },
-        {
-            data: 'NOTIFICATION_TEXT'
-        },
-        {
-            data: 'NOTIFICATION_URL'
-        },
-        {
-            data: 'NOTIFICATION_DATE_TIME',
-            render: function(data, type, full, meta) {
-                    if (full['NOTIFICATION_DATE_TIME'] != '') {
-                        var NOTIFICATION_DATE_TIME = full['NOTIFICATION_DATE_TIME'].split(".");
-                        if (NOTIFICATION_DATE_TIME[0] == '1900-01-01 00:00:00') {
-                            return '';
-                        } else
-                            return NOTIFICATION_DATE_TIME[0];
-                    }
-                }
-        },       
-        
-    ],
-    columnDefs: [{
-        width: "7%",
-        className: 'control',
-        responsivePriority: 1,
-        orderable: false,
-        targets: 0,
-        searchable: false,
-        render: function(data, type, full, meta) {
-            return '';
-        }
-    }, {
-        width: "35%"
-    }, {
-        width: "15%"
-    }, {
-        width: "10%"
-    
-    }
-    , {
-        width: "10%"
-    
-    }
-],
-    "order": [
-        [1, "desc"]
-    ],
-    destroy: true,
-    dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end">>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-    language: {
-        emptyTable: 'There are no notes for this customer'
-    },
-    responsive: {
-        details: {
-            display: $.fn.dataTable.Responsive.display.modal({
-                header: function(row) {
-                    var data = row.data();
-                    return 'Notes of Customer Profile';
-                }
-            }),
-            type: 'column',
-            renderer: function(api, rowIdx, columns) {
-                var data = $.map(columns, function(col, i) {
-
-                    return col.title !==
-                        '' // ? Do not show row in modal popup if title is blank (for check box)
-                        ?
-                        '<tr data-dt-row="' +
-                        col.rowIndex +
-                        '" data-dt-column="' +
-                        col.columnIndex +
-                        '">' +
-                        '<td>' +
-                        col.title +
-                        ':' +
-                        '</td> ' +
-                        '<td>' +
-                        col.data +
-                        '</td>' +
-                        '</tr>' :
-                        '';
-                }).join('');
-
-                return data ? $('<table class="table"/><tbody />').append(data) : false;
-            }
-        }
-    }
-});
-}
 
 
 //Show Activity Log table in modal
