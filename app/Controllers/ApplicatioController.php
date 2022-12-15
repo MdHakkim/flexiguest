@@ -4363,6 +4363,7 @@ class ApplicatioController extends BaseController
 
     public function updateVaccineReport(){
         try{
+            $validate = null;
             
             if(empty($this->request->getPost("VACC_DOC_SAVED")) && $this->request->getPost("VACC_DETAILS") == "vaccinated" ){
                 $rules = [
