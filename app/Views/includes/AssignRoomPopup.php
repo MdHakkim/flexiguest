@@ -21,6 +21,16 @@
 </div>
 
 <script>
+var rmTypeIdVal, orig_room_type;
+
+
+$(document).on('select2:open', "#RESV_RM_TYPE", function() {
+    // Store the current value on focus and on change
+    rmTypeIdVal = $(this).find(":selected").data('room-type-id');
+    orig_room_type = rmTypeIdVal;
+    //alert(orig_room_type);
+});
+
 $(document).on('click', '.assignRoom', function() {
 
     var errMsg = '';
@@ -45,7 +55,7 @@ $(document).on('click', '.assignRoom', function() {
         $('.check_out_chk,.arriv_date_div').removeClass('d-none');
         $('.occ_chk').addClass('d-none');
         $('.fo_stat_search_div').removeClass('pb-4').addClass('pb-3');
-        
+
 
         resetRoomSelectButton('single');
 
@@ -57,8 +67,7 @@ $(document).on('click', '.assignRoom', function() {
                 field: '#S_RM_TYPES',
                 value: $('#RESV_RM_TYPE').val(),
                 status: '1'
-            },
-            {
+            }, {
                 field: '#S_RESV_ID',
                 value: $('#reservationDetail').find('#RESV_ID').val(),
                 status: '1'
@@ -79,6 +88,13 @@ $(document).on('click', '.assignRoom', function() {
 
 $(document).on('click', '.assign_selected_room', function() {
 
+    var selected_room_type = parseInt($('.assign_selected_room').attr(
+        'data-room-type-id'));
+    orig_room_type = orig_room_type === undefined ? parseInt($('#RESV_RM_TYPE').find(":selected").data(
+        'room-type-id')) : orig_room_type;
+
+    //alert(orig_room_type + ' ' + selected_room_type);
+
     Swal.fire({
         title: '',
         html: '<h4 class="lh-lg">Are you sure you want to assign Room No: ' + $('.assign_selected_room')
@@ -98,12 +114,6 @@ $(document).on('click', '.assign_selected_room', function() {
         if (result.value) {
 
             //If room with different room type selected 
-            var selected_room_type = parseInt($('.assign_selected_room').attr(
-                'data-room-type-id'));
-            var orig_room_type = parseInt($('#RESV_RM_TYPE').find(":selected").data(
-                'room-type-id'));
-
-            //alert(orig_room_type + ' ' + selected_room_type);
 
             if (selected_room_type != orig_room_type) { // if Room Type changed
                 $("#RESV_RM_TYPE option[data-room-type-id='" + selected_room_type + "']").prop(
@@ -157,7 +167,7 @@ function setUpdatedRate() {
     var currentRmTypeId = $('#RESV_RTC').data('room-type-id');
 
     var currentRate = $('#RESV_RATE').val();
-    var currentRateCode = $('#RESV_RATE_CODE').val();
+    var currentRateCode = $('[name="RESV_RATE_CODE"]').val();
 
     var custId = $('[name="RESV_NAME"]').find('option:selected').val();
 
@@ -210,9 +220,5 @@ function setUpdatedRate() {
     }).fail(function(jqXHR, textStatus, errorThrown) {
         showModalAlert('error', '<li>The Rate could not be changed. Please try again</li>');
     });
-
-
-
-
 }
 </script>

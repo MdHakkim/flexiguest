@@ -3802,7 +3802,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     $(':input', '#reservationForm').not(
         '#CUST_FIRST_NAME,#RESV_MEMBER_NO,#RESV_GUST_BAL,#RESV_ROOM,#RESV_ROOM_ID,#RESV_RATE_CODE,#RESV_PACKAGE,#RESV_INV_ITEM,#PACKAGE_EXCLUDE,#RSV_PCKG_POST_RYTHM,RSV_PCKG_CALC_RULE'
     ).prop('readonly', false);
-    $('#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
+    $('*#RESV_NAME').html('<option value="">Select Guest</option>').selectpicker('refresh');
 
     runSupportingResevationLov();
     runInitializeConfig();
@@ -4048,7 +4048,7 @@ function addResvation() {
     clearFormFields('#select_items');
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false).prop('disabled',
         false);
-    $('#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
+    $('*#RESV_NAME').html('<option value="">Select Guest</option>').selectpicker('refresh');
     $('.select2').val(null).trigger('change');
 
     $('#reservationW').modal('show');
@@ -7258,8 +7258,6 @@ $(document).on('hide.bs.modal', '#edit-customer', function() {
         $('.accompany-guests').trigger('click');
     }
 });
-
-
 
 
 // Display function clearFormFields
