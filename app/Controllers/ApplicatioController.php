@@ -4551,7 +4551,7 @@ class ApplicatioController extends BaseController
         $this->ReservationAssetRepository->attachAssetList(session('USR_ID'), $sysid);
 
         $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, 
-                    CAST(RESV_RATE AS VARCHAR)RESV_RATE, RESV_RM_TYPE, RESV_NAME, 
+                    CAST(RESV_RATE AS VARCHAR)RESV_RATE, RESV_RM_TYPE, RESV_NAME, RESV_STATUS
                     CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER,
                     CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, 
                     fd.DOC_FILE_PATH as SIGNATURE,
@@ -4569,8 +4569,9 @@ class ApplicatioController extends BaseController
         $file_name = "assets/reservation-registration-cards/RES{$sysid}-RC.pdf";
         $view = "Reservation/RegisterCard";
         generateInvoice($file_name, $view, $data);
-
+        
         echo json_encode($result);
+        die();
     }
 
     function reservationCheckin(){
