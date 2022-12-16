@@ -77,6 +77,7 @@ $routes->group("api/admin", ["filter" => "authapi:Admin", 'namespace' => 'App\Co
 
 /*****************************  Admin + Guest *****************************/
 $routes->group("api", ["filter" => "authapi:Admin,Guest", 'namespace' => 'App\Controllers'], function ($routes) {
+    $routes->post("log-upload", "APIController::logUpload");
 
     $routes->group('maintenance', function ($routes) {
         // API to get category list of maintenance
