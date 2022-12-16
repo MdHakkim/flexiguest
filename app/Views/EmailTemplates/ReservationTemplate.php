@@ -15,11 +15,11 @@
                             <td><img src="https://keysuite.farnek.com:9021/upload/assets/hotel-logo.png"/></td>
                           </tr>
                           <tr>
-                            <td style="padding: 10px 0px;"><h2>Hello <?php echo $data['FULLNAME'];?>,</h2></td>
+                            <td style="padding: 10px 0px;"><h3>Hello <?php echo $data['FULLNAME'];?>,</h2></td>
                           </tr>
                           <?php if($mode!='QR' ){ ?>
                           <tr>
-                            <td style="padding: 10px 0px;"><h2>Greetings from Hotel!</h2></td>
+                            <td style="padding: 10px 0px;"><h3>Greetings from Hotel!</h2></td>
                           </tr>
                           <?php } ?>
                           <tr>
@@ -27,7 +27,7 @@
                               <table style="width:100%">
                                 <tbody>
                                   <tr>
-                                    <td style="font-size:15px;">
+                                    <td style="font-size:14px;">
                                     <?php if($mode=='QR' && $status == 0){?>
                                       <h3>You have successfully completed your pre- check in process. Please show the below QR-Code to our friendly reception team in order to collect your apartment key. </h3>
                                     <?php }else if($mode=='QR' && $status == 1) {?>
@@ -115,14 +115,14 @@
                             <td>
                               <table style="width:100%">
                                 <tbody>
-                                  <tr style="padding-bottom:32px;">
-                                    <td style="font-size:15px;"><p>Regards,</p></td>
+                                  <tr style="padding-bottom:20px;">
+                                    <td><p style="font-size:14px;">Regards,</p></td>
                                   </tr>
                                   <tr style="padding-bottom:32px;">
-                                    <td style="font-size:15px;"><p>Hotel</p></td>
+                                    <td ><p style="font-size:14px;">Hotel</p></td>
                                   </tr>
                                   <tr style="padding-bottom:12px;">
-                                    <td style="font-size:15px;"><p>Deposit Policy: For additional services, we will require an advance payment by either cash or credit card.</p></td>
+                                    <td><p  style="font-size:13px;">Deposit Policy: For additional services, we will require an advance payment by either cash or credit card.</p></td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -139,14 +139,10 @@
                         <tbody>
                           <tr style="padding-bottom:12px;">
                             <td>
-                              <p>Dubai</p>
+                              <p>Dubai, </p>
                             </td>
-                          </tr>
-                          <tr style="padding-bottom:10px;">
+                         
                             <td>United Arab Emirates</td>
-                          </tr>
-                          <tr style="padding-bottom:32px;">
-                            <td>Contact us:</td>
                           </tr>
                         </tbody>
                       </table>
