@@ -366,9 +366,9 @@ situation, which may cause you to vacate the premises</span
           <span>
             <b>Guest Signature: </b>
             <?php
-              if($guestDetails['SIGNATURE']) {
+              if($guestDetails['GUEST_SIGNATURE']) {
             ?>
-              <img src="<?= base_url('assets/Uploads/UserDocuments/signature/'.$guestDetails['SIGNATURE']) ?>" width="auto" height="100"/>
+              <img src="<?= base_url('assets/Uploads/UserDocuments/signature/'.$guestDetails['GUEST_SIGNATURE']) ?>" width="auto" height="100"/>
             <?php
             }
             ?>
