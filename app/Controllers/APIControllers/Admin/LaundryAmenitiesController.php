@@ -33,6 +33,7 @@ class LaundryAmenitiesController extends BaseController
                 ->join('FLXY_LAUNDRY_AMENITIES_ORDERS as lao', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_ORDER_ID = lao.LAO_ID')
                 ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
                 ->join('FlXY_USERS', 'LAOD_ATTENDANT_ID = USR_ID', 'left')
+                ->join('FLXY_ROOM', 'LAO_ROOM_ID = RM_ID', 'left')
                 ->where('LAOD_ATTENDANT_ID', $user['USR_ID'])
                 ->orderBy('LAOD_ID', 'desc')
                 ->findAll();
@@ -42,6 +43,7 @@ class LaundryAmenitiesController extends BaseController
                 ->join('FLXY_LAUNDRY_AMENITIES_ORDERS as lao', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_ORDER_ID = lao.LAO_ID')
                 ->join('FLXY_PRODUCTS as pr', 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID = pr.PR_ID')
                 ->join('FlXY_USERS', 'LAOD_ATTENDANT_ID = USR_ID', 'left')
+                ->join('FLXY_ROOM', 'LAO_ROOM_ID = RM_ID', 'left')
                 ->orderBy('LAOD_ID', 'desc')
                 ->findAll();
         }
