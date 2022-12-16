@@ -4079,7 +4079,7 @@ function addResvation() {
     clearFormFields('#select_items');
     $(':input', '#reservationForm').val('').prop('checked', false).prop('selected', false).prop('disabled',
         false);
-    $('*#RESV_NAME').html('<option value="">Select</option>').selectpicker('refresh');
+    $('*#RESV_NAME').html('<option value="">Select Guest</option>').selectpicker('refresh');
     $('.select2').val(null).trigger('change');
 
     $('#reservationW').modal('show');
@@ -4231,8 +4231,8 @@ function reservationValidate(event, id, mode) {
         var additionValid = false;
     }
 
-    if (mode == 'R') {
-        var resvnameValid = checkResvNameInvalid($('.window-2 .RESV_NAME'));
+    if (mode == 'R') {       
+        var resvnameValid = checkResvNameInvalid($('[name="RESV_NAME"]'));       
     } else {
         var resvnameValid = false;
     }
@@ -4259,13 +4259,13 @@ function checkPaymentValid() {
 }
 
 function checkResvNameInvalid(elem) {
-    var selVal = $('.window-2 .RESV_NAME .filter-option-inner-inner').text();
+    var selVal = elem.val();
     
-    if (selVal == 'Select') {
-        elem.parent('div.input-group').removeClass('is-valid').addClass('is-invalid');
+    if (selVal == '') {
+        elem.closest('.input-group').removeClass('is-valid').addClass('is-invalid');
         return true;
     } else {
-        elem.parent('div.input-group').removeClass('is-invalid').addClass('is-valid');
+        elem.closest('.input-group').removeClass('is-invalid').addClass('is-valid');
         return false;
     }
 }
