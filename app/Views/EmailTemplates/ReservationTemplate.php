@@ -15,11 +15,11 @@
                             <td><img src="https://keysuite.farnek.com:9021/upload/assets/hotel-logo.png"/></td>
                           </tr>
                           <tr>
-                            <td style="padding: 10px 0px;"><h1>Hello <?php echo $data['FULLNAME'];?>,</h1></td>
+                            <td style="padding: 10px 0px;"><h2>Hello <?php echo $data['FULLNAME'];?>,</h2></td>
                           </tr>
                           <?php if($mode!='QR' ){ ?>
                           <tr>
-                            <td style="padding: 10px 0px;"><h1>Greetings from Hotel!</h1></td>
+                            <td style="padding: 10px 0px;"><h2>Greetings from Hotel!</h2></td>
                           </tr>
                           <?php } ?>
                           <tr>
@@ -28,9 +28,9 @@
                                 <tbody>
                                   <tr>
                                     <td style="font-size:15px;">
-                                    <?php if($mode=='QR'){?>
+                                    <?php if($mode=='QR' && $status == 0){?>
                                       <h3>You have successfully completed your pre- check in process. Please show the below QR-Code to our friendly reception team in order to collect your apartment key. </h3>
-                                    <?php }else if($status == 1) {?>
+                                    <?php }else if($mode=='QR' && $status == 1) {?>
                                       <h3>It is our pleasure to welcome you to Hotel</h3>
                                       <h3>We strive to provide you with a clean and comfortable apartment, providing all the comforts of home, supported with a dedicated, friendly team of hospitality professionals, who are on standby to address all of your concerns and requests.</h3>
                                       <h3>We trust your stay will be an enjoyable one and look forward to serving you during your visit to Dubai. </h3>
