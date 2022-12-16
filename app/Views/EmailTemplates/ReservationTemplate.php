@@ -17,7 +17,7 @@
                           <tr>
                             <td style="padding: 10px 0px;"><h1>Hello <?php echo $data['FULLNAME'];?>,</h1></td>
                           </tr>
-                          <?php if($mode!='QR'){ ?>
+                          <?php if($mode!='QR' ){ ?>
                           <tr>
                             <td style="padding: 10px 0px;"><h1>Greetings from Hotel!</h1></td>
                           </tr>
@@ -30,12 +30,17 @@
                                     <td style="font-size:15px;">
                                     <?php if($mode=='QR'){?>
                                       <h3>You have successfully completed your pre- check in process. Please show the below QR-Code to our friendly reception team in order to collect your apartment key. </h3>
-                                    <?php }else{ ?>
+                                    <?php }else if($status == 1) {?>
+                                      <h3>It is our pleasure to welcome you to Hotel</h3>
+                                      <h3>We strive to provide you with a clean and comfortable apartment, providing all the comforts of home, supported with a dedicated, friendly team of hospitality professionals, who are on standby to address all of your concerns and requests.</h3>
+                                      <h3>We trust your stay will be an enjoyable one and look forward to serving you during your visit to Dubai. </h3>
+                                    <?php } else{?>
                                       <h3>Please find your Reservation details below, download the Flexi Guest App to complete your online check-in and save time on arrival. </h3>
                                       <h3>A valid passport or Emirates ID (for UAE Nationals and Residents) is required upon Check-in. </h3>
                                     <?php } ?>
                                     </td>
                                   </tr>
+                                  <?php if($status != 1) { ?>
                                   <tr>
                                     <td style="font-size:16px;">
                                       <table border="0"  cellspacing="0" cellpadding="0" >
@@ -87,18 +92,21 @@
                                             </table>
                                           </td>
                                         </tr>
-                                        <?php }else{ ?>
+                                        <?php } ?>
+
+                                        
                                           <tr style="padding-bottom:6px;">
-                                            <td><div id="output"><img src="https://chart.googleapis.com/chart?cht=qr&chl=<?php echo $data['RESV_ID'];?>&chs=160x160&chld=L|0"/></div></td>
+                                            <td><p>Please show the below QR-Code to our friendly reception team. </p><div id="output"><img src="https://chart.googleapis.com/chart?cht=qr&chl=<?php echo $data['RESV_ID'];?>&chs=160x160&chld=L|0"/></div></td>
                                           </tr>
                                           <tr>
                                             <td><p>Have a safe journey ahead!</p></td>
                                           </tr>
-                                        <?php } ?>
+                                        <?php  ?>
                                         </tbody>
                                       </table>
                                     </td>
                                   </tr>
+                                  <?php } ?>
                                 </tbody>
                               </table>
                             </td>
