@@ -7,10 +7,14 @@ class EmailLibrary{
     public function __construct(){
         $this->email = \Config\Services::email();
     }
-    public function preCheckInEmail($rawparam,$param){
+    public function preCheckInEmail($rawparam,$param,$status){
         $toEmail = $rawparam[0]['CUST_EMAIL'];
         $paramraw['data'] = $rawparam[0];
         $paramraw['mode'] = $param;
+        $paramraw['status'] = $status;
+        if($status == 1)
+        $subject = 'Check-in Confirmation';
+        else if($status == 0)
         $subject = ( $paramraw['mode'] == "QR" ) ? 'Pre Check-in Confirmation' : 'Pre Check-in Link';
         $html = view('EmailTemplates/ReservationTemplate',$paramraw);
         $this->email->setFrom('notifications@farnek.com', 'FLEXIGUEST | HITEK');

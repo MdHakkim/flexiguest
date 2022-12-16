@@ -580,7 +580,7 @@ class ApplicatioController extends BaseController
 
                     $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update(array('RESV_NO' => 'RES'.$sysid));
                     addActivityLog(1, 10, $sysid, $log_action_desc);
-                    $this->triggerReservationEmail($sysid,'');
+                    $this->triggerReservationEmail($sysid,'',0);
                 }
                 else    // Update exisitng Reservation
                 {
@@ -599,7 +599,7 @@ class ApplicatioController extends BaseController
         }
     }
 
-    public function triggerReservationEmail($sysid,$parametr){
+    public function triggerReservationEmail($sysid,$parametr,$status){
         $param = ['SYSID'=> $sysid];
         $sql="SELECT RESV_ID,RESV_NO,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_RM_TYPE,(SELECT RM_TY_DESC FROM FLXY_ROOM_TYPE WHERE RM_TY_CODE=RESV_RM_TYPE)RM_TY_DESC,
         RESV_NO_F_ROOM,RESV_FEATURE,CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) FULLNAME,CUST_EMAIL FROM FLXY_RESERVATION,FLXY_CUSTOMER 
@@ -607,7 +607,7 @@ class ApplicatioController extends BaseController
         $reservationInfo = $this->Db->query($sql,$param)->getResultArray();
        // print_r($reservationInfo);exit;
         $emailCall = new EmailLibrary();
-        $emailResp = $emailCall->preCheckInEmail($reservationInfo,$parametr);
+        $emailResp = $emailCall->preCheckInEmail($reservationInfo,$parametr,$status);
     }
 
     public function updateCustomerData($custId) {
@@ -4534,17 +4534,21 @@ class ApplicatioController extends BaseController
 
     function confirmPrecheckinStatus(){
         $sysid = $this->request->getPost("DOC_RESV_ID");
+        $checkin_status = 0;
 
         $reservation_status = 'Pre Checked-In';
-        if(isset($this->session->USR_ROLE_ID) && $this->session->USR_ROLE_ID == '1')
+        if(isset($this->session->USR_ROLE_ID) && $this->session->USR_ROLE_ID == '1'){
+            $checkin_status = 1;
             $reservation_status = 'Checked-In';
+        }
+            
 
         $data = [
             "RESV_STATUS" => $reservation_status,
             "RESV_UPDATE_UID" => session()->get('USR_ID'),
             "RESV_UPDATE_DT" => date("d-M-Y")
         ];
-        $this->triggerReservationEmail($sysid,'QR');
+        $this->triggerReservationEmail($sysid,'QR',$checkin_status);
         $return = $this->Db->table('FLXY_RESERVATION')->where('RESV_ID', $sysid)->update($data);
         $result = $this->responseJson("1","0",$return,$response='');
 
