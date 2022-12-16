@@ -1109,7 +1109,7 @@
                                             <div class="col-md-6 col-lg-3">
                                                 <label class="form-label">Rate</label>
                                                 <input type="number" step="0.01" name="RESV_RATE" id="RESV_RATE"
-                                                    class="form-control" placeholder="rate" min="0" required />
+                                                    class="form-control" placeholder="rate" min="0.00" required />
                                                 <div class="invalid-feedback"> Rate required can't be empty.</div>
                                             </div>
                                             <div class="col-md-6 col-lg-3 mt-4">
