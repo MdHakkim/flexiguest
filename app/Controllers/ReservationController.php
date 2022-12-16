@@ -1133,8 +1133,10 @@ public function showPackages()
         try {
             $RSV_TRACE_ID           =  $this->request->getPost('RSV_TRACE_ID');
             $RSV_ID                 =  $this->request->getPost('TRACE_RESV_ID');
-            $RSV_TRACE_DATE         =  date('Y-m-d',strtotime($this->request->getPost('RSV_TRACE_DATE')));
-            $RSV_TRACE_TIME         =  $this->request->getPost('RSV_TRACE_TIME');
+            // $RSV_TRACE_DATE         =  date('Y-m-d',strtotime($this->request->getPost('RSV_TRACE_DATE')));
+            // $RSV_TRACE_TIME         =  $this->request->getPost('RSV_TRACE_TIME');
+            $RSV_TRACE_DATE         =  date('Y-m-d');
+            $RSV_TRACE_TIME         =  date('H:i:s');
             $RSV_TRACE_DEPT_NOTIFI  =  $this->request->getPost('RSV_TRACE_DEPARTMENT'); 
             $RSV_TRACE_DEPARTMENT   =  json_encode($this->request->getPost('RSV_TRACE_DEPARTMENT')); 
             $RSV_TRACE_TEXT         =  $this->request->getPost('RSV_TRACE_TEXT');   
@@ -1146,14 +1148,14 @@ public function showPackages()
                 "RSV_TRACE_DATE"          => $RSV_TRACE_DATE,
                 "RSV_TRACE_TIME"          => $RSV_TRACE_TIME,
                 "RSV_TRACE_ENTERED_BY"    => session()->get('USR_ID'),
-                "RSV_TRACE_RESOLVED_BY"   => 0,
+                // "RSV_TRACE_RESOLVED_BY"   => 0,
                 "RSV_TRACE_TEXT"          => $RSV_TRACE_TEXT,
                 "RSV_TRACE_STATUS"        => '1'                              
                 ];
 
             $rules = [  'RSV_TRACE_DEPARTMENT' => ['label' => 'Department code', 'rules' => 'required'],
-                        'RSV_TRACE_DATE' => ['label' => 'Date', 'rules' => 'required|checkReservationTraceDate[RSV_TRACE_DATE]', 'errors' => ['checkReservationTraceDate' => 'Trace Date should be between the Reservation dates']],
-                        'RSV_TRACE_TIME' => ['label' => 'Time', 'rules' => 'required'],
+                        // 'RSV_TRACE_DATE' => ['label' => 'Date', 'rules' => 'required|checkReservationTraceDate[RSV_TRACE_DATE]', 'errors' => ['checkReservationTraceDate' => 'Trace Date should be between the Reservation dates']],
+                        // 'RSV_TRACE_TIME' => ['label' => 'Time', 'rules' => 'required'],
                         'RSV_TRACE_TEXT' => ['label' => 'Trace Text', 'rules' => 'required']                             
                      ];          
 

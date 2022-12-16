@@ -2904,7 +2904,7 @@
                                     </div>
 
                                     <div class="row g-3 ">
-                                        <div class="col-md-4 mb-3">
+                                        <!-- <div class="col-md-4 mb-3">
                                             <label for="RSV_TRACE_DATE" class="col-form-label col-md-4"><b>Trace
                                                     Date *</b></label>
                                             <input class="form-control" type="text" placeholder="d-Mon-yyyy"
@@ -2916,8 +2916,9 @@
                                                     *</b></label>
                                             <input class="form-control" type="time" placeholder="12:00"
                                                 id="RSV_TRACE_TIME" name="RSV_TRACE_TIME" />
-                                        </div>
-                                        <div class="col-md-4">
+                                        </div> -->
+
+                                        <div class="col-md-12">
                                             <label for="RSV_TRACE_DEPARTMENT"
                                                 class="col-form-label col-md-5"><b>DEPARTMENT CODE *</b></label>
                                             <select id="RSV_TRACE_DEPARTMENT" name="RSV_TRACE_DEPARTMENT[]"
