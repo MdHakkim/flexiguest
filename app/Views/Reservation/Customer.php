@@ -324,9 +324,11 @@ $(document).ready(function() {
                         '<li><a href="javascript:;" data_sysid="' + data['CUST_ID'] +
                         '" data_custname="' + customer_fullname +
                         '" class="dropdown-item custOptions"><i class="fa-solid fa-align-justify"></i> Options</a></li>' +
-                        '<div class="dropdown-divider"></div>' +
-                        '<li><a href="javascript:;" data_sysid="' + data['CUST_ID'] +
-                        '" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>' +
+                        
+                        // '<div class="dropdown-divider"></div>' +
+                        // '<li><a href="javascript:;" data_sysid="' + data['CUST_ID'] +
+                        // '" class="dropdown-item text-danger delete-record"><i class="fas fa-trash"></i> Delete</a></li>' +
+
                         '</ul>' +
                         '</div>'
                     );

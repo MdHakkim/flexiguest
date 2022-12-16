@@ -742,6 +742,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->get('/printTaskSheet', 'TaskAssignmentController::printTaskSheet');
     $routes->match(['post'], '/getTaskComments', 'TaskAssignmentController::getTaskComments');
     $routes->match(['post'], '/checkRoomAlreadyAssigned', 'TaskAssignmentController::checkRoomAlreadyAssigned');
+    $routes->match(['post'], '/customerNotesView', 'ApplicatioController::customerNotesView');
+    
 
 
 
@@ -986,6 +988,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('store', 'GalleryController::store');
         $routes->post('edit', 'GalleryController::edit');
         $routes->delete('delete', 'GalleryController::delete');
+    });
+
+    $routes->group('upgrade-room-request', function ($routes) {
+        $routes->get('', 'UpgradeRoomRequestController::upgradeRoomRequest');
+        $routes->post('all-requests', 'UpgradeRoomRequestController::allRequests');
+        $routes->post('update-status', 'UpgradeRoomRequestController::updateStatus');
     });
 
     // ABUBAKAR CODE (END)

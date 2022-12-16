@@ -240,6 +240,12 @@ $routes->group("api", ["filter" => "authapi:Guest", 'namespace' => 'App\Controll
     $routes->group('reservation', function ($routes) {
         $routes->get("make-checkout-request/(:segment)", "CheckInOutController::makeCheckoutRequest/$1");
     });
+
+    $routes->group('upgrade-room-request', function ($routes) {
+        $routes->post('submit-request', 'UpgradeRoomRequestController::submitRequest');
+    });
+
+    $routes->get("room-types", "RoomTypeController::roomTypes");
 });
 
 /*****************************  Guest *****************************/

@@ -7,6 +7,8 @@ use App\Libraries\CurlRequestLibrary;
 use App\Models\Notification;
 use App\Models\NotificationTrail;
 use App\Models\ReservationTrace;
+use App\Models\UserDevice;
+use App\Models\UserModel;
 use CodeIgniter\API\ResponseTrait;
 
 class NotificationRepository extends BaseController
@@ -17,6 +19,8 @@ class NotificationRepository extends BaseController
 	private $NotificationTrail;
 	private $ReservationTrace;
 	private $CurlRequestLibrary;
+	private $UserDevice;
+	private $UserModel;
 
 	public function __construct()
 	{
@@ -24,6 +28,8 @@ class NotificationRepository extends BaseController
 		$this->NotificationTrail = new NotificationTrail();
 		$this->ReservationTrace = new ReservationTrace();
 		$this->CurlRequestLibrary = new CurlRequestLibrary();
+		$this->UserDevice = new UserDevice();
+		$this->UserModel = new UserModel();
 	}
 
 	public function sendNotification($data, $type = 'admin')
@@ -140,5 +146,62 @@ class NotificationRepository extends BaseController
 			->join('FlXY_USERS', 'NOTIF_TRAIL_USER = USR_ID', 'left')
 			->where('NOTIF_TRAIL_NOTIFICATION_ID', $notification_id)
 			->findAll();
+	}
+
+	public function sendNotificationToDevices($registration_ids, $notification_type, $notification_text)
+	{
+		if (!empty($registration_ids)) {
+			$response = $this->sendNotification([
+				'registration_ids' => $registration_ids,
+				'title' => 'Notification',
+				'body' => $notification_text,
+				'screen' => '',
+			], $notification_type);
+
+			error_log("Notification => " . json_encode($response));
+
+			$remove_registration_ids = [];
+			if (!empty($response['failure']) && $response['failure'] > 0) {
+				foreach ($response['results'] as $index => $res) {
+					if (!empty($res['error']) && ($res['error'] == 'NotRegistered' || $res['error'] == 'InvalidRegistration') && isset($registration_ids[$index])) {
+						$remove_registration_ids[] = $registration_ids[$index];
+					}
+				}
+			}
+
+			error_log("remove_registration_ids => " . json_encode($remove_registration_ids));
+			if (!empty($remove_registration_ids))
+				$this->UserDevice->whereIn('UD_REGISTRATION_ID', $remove_registration_ids)->delete();
+		}
+	}
+
+	public function storeNotificationTrail($data)
+	{
+		return $this->NotificationTrail->insert($data);
+	}
+
+	public function storeNotification($data, $user_ids)
+	{
+		$notification_id = $this->Notification->insert($data);
+
+		foreach ($user_ids as $user_id) {
+			$trail = [
+				'NOTIF_TRAIL_NOTIFICATION_ID' => $notification_id,
+				'NOTIF_TRAIL_USER' => $user_id,
+				'NOTIF_TRAIL_READ_STATUS' => 0,
+				'NOTIF_TRAIL_DATETIME' => date('Y-m-d H:i:s'),
+				'NOTIFICATION_TRAIL_SEND' => 1
+			];
+
+			if ($data['NOTIFICATION_TYPE']) {
+				$user = $this->UserModel->find($user_id);
+				if (!empty($user))
+					$trail['NOTIF_TRAIL_GUEST'] = $user['USR_CUST_ID'];
+			}
+
+			$this->storeNotificationTrail($trail);
+		}
+
+		return $notification_id;
 	}
 }

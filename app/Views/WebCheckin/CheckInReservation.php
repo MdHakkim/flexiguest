@@ -348,8 +348,9 @@
 
                                             <div class="card-body flxy_web_padd">
 
-                                                <h5 class="card-title">
-                                                    <?= $data['FULLNAME'] ?>
+                                                <h5 class="card-title d-flex justify-content-between">
+                                                    <span><?= $data['FULLNAME'] ?></span>
+                                                    <small>(Main)</small>
                                                 </h5>
 
                                                 <p class="card-text document-verified-status">
@@ -411,8 +412,9 @@
 
                                                 <div class="card-body flxy_web_padd">
 
-                                                    <h5 class="card-title">
-                                                        <?= $accompany_profile['FULLNAME'] ?>
+                                                    <h5 class="card-title d-flex justify-content-between">
+                                                        <span><?= $accompany_profile['FULLNAME'] ?></span>
+                                                        <small>(Accompany)</small>
                                                     </h5>
 
                                                     <p class="card-text document-verified-status">
@@ -957,7 +959,7 @@
                                 <input class="form-check-input" type="hidden" value="vaccinated" name="VACC_DETAILS" id="VACC_DETAILS">
 
                                 <div class="form-check">
-                                    <input class="form-check-input radioCheck" checked type="radio" id="VACC_DETL_1" name="VACC_DETL" method="vaccinated">
+                                    <input class="form-check-input radioCheck" type="radio" id="VACC_DETL_1" name="VACC_DETL" method="vaccinated">
                                     <label class="form-check-label" for="VACC_DETL_1">
                                         I have been fully vaccinated (Please attach the Vaccination certificate)
                                     </label>
@@ -1347,12 +1349,17 @@
                         var check = jsonFrmt.VACC_DETAILS;
 
                         if (check == 'vaccinated') {
+                            $('#VACC_DETAILS').val(check);
                             $('.radioCheck:eq(0)').prop('checked', true);
                         } else if (check == 'medicallyExempt') {
+                            $('#VACC_DETAILS').val(check);
                             $('.radioCheck:eq(1)').prop('checked', true);
                         } else if (check == 'vaccinationLater') {
+                            $('#VACC_DETAILS').val(check);
                             $('.radioCheck:eq(2)').prop('checked', true);
                         }
+                        
+                        
 
                         $('#VACC_LAST_DT').val(jsonFrmt.VACC_LAST_DT);
                         $('#VACC_TYPE').val(jsonFrmt.VACC_TYPE).selectpicker(

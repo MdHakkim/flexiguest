@@ -967,6 +967,21 @@ class ApplicatioController extends BaseController
         echo json_encode($customerMemberships);
     }
 
+    public function customerNotesView()
+    {
+        $sysid = $this->request->getPost('sysid');
+
+        $init_cond = array( "NOTIFICATION_TYPE = " => "2", 
+                            "NOTIF_TRAIL_GUEST = " => "'$sysid'"); // Add condition for Customer
+
+        $mine = new ServerSideDataTable(); // loads and creates instance
+        $tableName = 'FLXY_NOTIFICATIONS INNER JOIN FLXY_NOTIFICATION_TRAIL ON NOTIFICATION_ID = NOTIF_TRAIL_NOTIFICATION_ID';
+        $columns = 'NOTIFICATION_ID,NOTIFICATION_TEXT,NOTIFICATION_URL,NOTIFICATION_DATE_TIME';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond);
+        exit;
+    }
+
+
     public function insertCustomerMembership()
     {
         try {
@@ -4348,30 +4363,31 @@ class ApplicatioController extends BaseController
 
     public function updateVaccineReport(){
         try{
-            $rules = [
-                'VACC_DETL' => ['label' => 'Vaccine Detail', 'rules' => 'required'],
-                'VACC_LAST_DT' => ['label' => 'Vaccine Last Date', 'rules' => 'required'],
-                'VACC_TYPE' => ['label' => 'Vaccine Name', 'rules' => 'required'],
-                'VACC_ISSUED_COUNTRY' => ['label' => 'Vaccine issue country', 'rules' => 'required']
-            ];
-
-            if(empty($this->request->getPost("VACC_DOC_SAVED"))){
+            $validate = null;
+            
+            if(empty($this->request->getPost("VACC_DOC_SAVED")) && $this->request->getPost("VACC_DETAILS") == "vaccinated" ){
+                $rules = [
+                    'VACC_DETL' => ['label' => 'Vaccine Detail', 'rules' => 'required'],
+                    'VACC_LAST_DT' => ['label' => 'Vaccine Last Date', 'rules' => 'required'],
+                    'VACC_TYPE' => ['label' => 'Vaccine Name', 'rules' => 'required'],
+                    'VACC_ISSUED_COUNTRY' => ['label' => 'Vaccine issue country', 'rules' => 'required']
+                ];
+    
                 $rules['files'] = [
                     'label' => 'vaccine certificate', 
                     'rules' => 'uploaded[files]', 'mime_in[files,image/png,image/jpg,image/jpeg,application/pdf]', 'max_size[files,5120]'
                 ];
+                $validate = $this->validate($rules);
+                if(!$validate){
+                    $validate = $this->validator->getErrors();
+    
+                    $result = $this->responseJson(403, $validate);
+                    echo json_encode($result);
+                    exit;
+                }
+
             }
 
-            $validate = $this->validate($rules);
-
-
-            if(!$validate){
-                $validate = $this->validator->getErrors();
-
-                $result = $this->responseJson(403, $validate);
-                echo json_encode($result);
-                exit;
-            }
 
             $this->deleteSpecificVaccine();
             $fileNames='';

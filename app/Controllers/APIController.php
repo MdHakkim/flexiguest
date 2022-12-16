@@ -827,10 +827,13 @@ class APIController extends BaseController
     public function vaccineForm()
     {
         $user_id = $this->request->user['USR_ID'];
+        $data = json_decode(json_encode($this->request->getVar()), true);
+
         $customer_id = $this->request->getVar('VACC_CUST_ID');
         $reservation_id = $this->request->getVar('VACC_RESV_ID');
+        
 
-        $validate = $this->validate([
+        $rules = [
             'VACC_CUST_ID' => [
                 'rules' => 'required',
                 'errors' => [
@@ -844,10 +847,22 @@ class APIController extends BaseController
                 ]
             ],
             'VACC_DETAILS' => 'required',
-            'VACC_LAST_DT' => 'required',
-            'VACC_TYPE' => 'required',
-            'VACC_ISSUED_COUNTRY' => 'required',
-        ]);
+        ];
+
+        if (!empty($this->request->getVar('VACC_DETAILS')) && $this->request->getVar('VACC_DETAILS') == 'vaccinated') {
+            $rules = array_merge($rules, [
+                'VACC_LAST_DT' => 'required',
+                'VACC_TYPE' => 'required',
+                'VACC_ISSUED_COUNTRY' => 'required',
+            ]);
+        } else {
+            $data['VACC_LAST_DT'] = '';
+            $data['VACC_TYPE'] = '';
+            $data['VACC_ISSUED_COUNTRY'] = '';
+        }
+
+
+        $validate = $this->validate($rules);
 
         if (!$validate) {
             $validate = $this->validator->getErrors();
@@ -858,10 +873,10 @@ class APIController extends BaseController
 
         $data = [
             "VACC_CUST_ID" => $customer_id,
-            "VACC_DETAILS" => $this->request->getVar("VACC_DETAILS"), // values will be -- vaccinated, medicallyExempt, vaccinationLater 
-            "VACC_LAST_DT" => $this->request->getVar("VACC_LAST_DT"),
-            "VACC_TYPE" => $this->request->getVar("VACC_TYPE"),
-            "VACC_ISSUED_COUNTRY" => $this->request->getVar("VACC_ISSUED_COUNTRY"),
+            "VACC_DETAILS" => $data["VACC_DETAILS"], // values will be -- vaccinated, medicallyExempt, vaccinationLater 
+            "VACC_LAST_DT" => $data["VACC_LAST_DT"],
+            "VACC_TYPE" => $data["VACC_TYPE"],
+            "VACC_ISSUED_COUNTRY" => $data["VACC_ISSUED_COUNTRY"],
             "VACC_IS_VERIFY" => 0,
             "VACC_FILE_PATH" => '',
             "VACC_RESV_ID" => $reservation_id,
@@ -873,7 +888,9 @@ class APIController extends BaseController
         if (empty($vaccine_detail)) {
             $response = $this->VaccineDetail->insert($data);
         } else {
-            unset($data['VACC_FILE_PATH']);
+            if($data['VACC_DETAILS'] == 'vaccinated')
+                unset($data['VACC_FILE_PATH']);
+                
             unset($data['VACC_CREATE_UID']);
 
             $response = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->set($data)->update();

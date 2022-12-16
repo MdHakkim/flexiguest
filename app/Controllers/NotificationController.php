@@ -106,20 +106,25 @@ class NotificationController extends BaseController
             $NOTIFI = [];
             $sysid = $this->request->getPost('NOTIFICATION_ID');
             $NOTIFICATION_TYPE           = $this->request->getPost('NOTIFICATION_TYPE');
-            $NOTIFICATION_DEPARTMENT     = ($NOTIFICATION_TYPE == 1 || $NOTIFICATION_TYPE == 2 || $NOTIFICATION_TYPE == 4) ? $this->request->getPost('NOTIFICATION_DEPARTMENT'):'';
-            $NOTIFICATION_TO_ID          = ($NOTIFICATION_TYPE == 1 || $NOTIFICATION_TYPE == 2 || $NOTIFICATION_TYPE == 4 ) ? $this->request->getPost('NOTIFICATION_TO_ID'):'';
+            $NOTIFICATION_DEPARTMENT     = ($NOTIFICATION_TYPE == 1 || $NOTIFICATION_TYPE == 4) ? $this->request->getPost('NOTIFICATION_DEPARTMENT'):'';
+            $NOTIFICATION_TO_ID          = ($NOTIFICATION_TYPE == 1 || $NOTIFICATION_TYPE == 4 ) ? $this->request->getPost('NOTIFICATION_TO_ID'):'';
             $NOTIFICATION_RESERVATION_ID = ($NOTIFICATION_TYPE == 3 || $NOTIFICATION_TYPE == 4) ?$this->request->getPost('NOTIFICATION_RESERVATION_ID'):'';
-            $NOTIFICATION_GUEST_ID       = ($NOTIFICATION_TYPE == 3 ) ? $this->request->getPost('NOTIFICATION_GUEST_ID'):'';
-            $NOTIFICATION_URL            = ($NOTIFICATION_TYPE == 3 ) ? $this->request->getPost('NOTIFICATION_URL'):'';
+            
+            $NOTIFICATION_GUEST_ID       = ($NOTIFICATION_TYPE == 3 || $NOTIFICATION_TYPE == 2) ? $this->request->getPost('NOTIFICATION_GUEST_ID'):'';
+            $NOTIFICATION_URL            = ($NOTIFICATION_TYPE == 3 || $NOTIFICATION_TYPE == 2) ? $this->request->getPost('NOTIFICATION_URL'):'';
             $NOTIFICATION_DATE_TIME      = $this->request->getPost('NOTIFICATION_DATE_TIME');            
             $NOTIFICATION_TEXT           = strip_tags($this->request->getPost('NOTIFICATION_TEXT'));
             $NOTIFICATION_SEND_NOW       = $this->request->getPost('NOTIFICATION_SEND_NOW');
             $NOTIFICATION_OLD_TYPE       = $this->request->getPost('NOTIFICATION_OLD_TYPE');           
 
             
-            if(($NOTIFICATION_TYPE == 1 || $NOTIFICATION_TYPE == 2) && ((!isset($NOTIFICATION_DEPARTMENT) && empty($NOTIFICATION_DEPARTMENT)) && empty($NOTIFICATION_TO_ID))){               
+            if(($NOTIFICATION_TYPE == 1 ) && ((!isset($NOTIFICATION_DEPARTMENT) && empty($NOTIFICATION_DEPARTMENT)) && empty($NOTIFICATION_TO_ID))){               
                 $rules['NOTIFICATION_DEPARTMENT'] =  ['label' => 'Department/User', 'rules' => 'required'];                
             }
+            else if(($NOTIFICATION_TYPE == 2 ) && ((!isset($NOTIFICATION_GUEST_ID) && empty($NOTIFICATION_GUEST_ID)) && empty($NOTIFICATION_GUEST_ID))){               
+                $rules['NOTIFICATION_GUEST_ID'] =  ['label' => 'Guest', 'rules' => 'required'];                
+            }
+
             else if($NOTIFICATION_TYPE == 3 && ($NOTIFICATION_RESERVATION_ID == '' && $NOTIFICATION_GUEST_ID == '')){
                 $rules['NOTIFICATION_RESERVATION_ID'] = ['label' => 'Reservation/Guest', 'rules' => 'required'];
             }
@@ -150,7 +155,7 @@ class NotificationController extends BaseController
                 "NOTIFICATION_DEPARTMENT" => empty($NOTIFICATION_DEPARTMENT) ? '' : json_encode($NOTIFICATION_DEPARTMENT),
                 "NOTIFICATION_TO_ID"      => (!empty($NOTIFICATION_DEPARTMENT) || empty($NOTIFICATION_TO_ID)) ? '' : json_encode($NOTIFICATION_TO_ID),
                 "NOTIFICATION_GUEST_ID"   => (!empty($NOTIFICATION_GUEST_ID)) ? json_encode($NOTIFICATION_GUEST_ID):'',
-                "NOTIFICATION_URL"   => (!empty($NOTIFICATION_URL)) ? $NOTIFICATION_URL:'',                
+                "NOTIFICATION_URL"        => (!empty($NOTIFICATION_URL)) ? $NOTIFICATION_URL:'',                
                 "NOTIFICATION_RESERVATION_ID" => (!empty($NOTIFICATION_RESERVATION_ID)) ? json_encode($NOTIFICATION_RESERVATION_ID):'',
                 "NOTIFICATION_TEXT"       => $NOTIFICATION_TEXT,
                 "NOTIFICATION_DATE_TIME"  => isset($NOTIFICATION_SEND_NOW) ? date('Y-m-d H:i:s'):$NOTIFICATION_DATE_TIME,
@@ -236,7 +241,7 @@ class NotificationController extends BaseController
 
             $result = $return ? $this->responseJson("1", "0", $return, $response = $Notification_ID) : $this->responseJson("-444", "db insert not successful", $return);            
 
-            if($NOTIFICATION_TYPE == 1 || $NOTIFICATION_TYPE == 2 || $NOTIFICATION_TYPE == 4 )
+            if($NOTIFICATION_TYPE == 1 || $NOTIFICATION_TYPE == 4 )
             {
 
                 if($NOTIFICATION_TYPE == 4 ){
@@ -311,8 +316,21 @@ class NotificationController extends BaseController
                 }           
             }
 
-            else if($NOTIFICATION_TYPE == 4){
+            else if($NOTIFICATION_TYPE == 2){
+                if(isset($NOTIFICATION_GUEST_ID) && !empty($NOTIFICATION_GUEST_ID)){
+                    for($j=0; $j<count($NOTIFICATION_GUEST_ID);$j++){
 
+                        $NOTIFI['NOTIF_TRAIL_GUEST'] = $NOTIFICATION_GUEST_ID[$j];
+                        
+                        $cond = "USR_CUST_ID = '". $NOTIFI['NOTIF_TRAIL_GUEST']."'";
+                        $NOTIFI['NOTIF_TRAIL_USER']  = getValueFromTable('USR_ID',$cond,'FLXY_USERS');
+
+                        $NOTIFI['NOTIF_TRAIL_NOTIFICATION_ID'] = $RSV_TRACE_NOTIFICATION_ID;
+                        $NOTIFI['NOTIF_TRAIL_READ_STATUS']     = 0;
+                        $NOTIFI['NOTIF_TRAIL_DATETIME']        = $NOTIFICATION_DATE_TIME;
+                        $return1 = $this->Db->table('FLXY_NOTIFICATION_TRAIL')->insert($NOTIFI);
+                    }
+                } 
                 
             }
             // Send Notification 
@@ -552,7 +570,7 @@ class NotificationController extends BaseController
             if(!empty($departments)){
                 foreach($departments as $department)
                 $departmentsList[] = $department['DEPT_DESC'];
-                echo implode(",",$departmentsList);
+                echo implode(", ",$departmentsList);
             } 
 
 
@@ -567,7 +585,7 @@ class NotificationController extends BaseController
             if(!empty($users)){
                 foreach($users as $user_id)
                 $usersList[] = $user_id['NAME'];
-                echo implode(",",$usersList);
+                echo implode(", ",$usersList);
             } 
         }
 
@@ -581,7 +599,7 @@ class NotificationController extends BaseController
             if(!empty($reservations)){
                 foreach($reservations as $reservation)
                 $reservationsList[] = $reservation['RESV_NAME'];
-                echo implode(",",$reservationsList);
+                echo implode(", ",$reservationsList);
             } 
         }
 
@@ -595,7 +613,7 @@ class NotificationController extends BaseController
             if(!empty($guests)){
                 foreach($guests as $guest_id)
                 $guestList[]= $guest_id['FULLNAME'];
-                echo implode(',',$guestList);
+                echo implode(', ',$guestList);
             } 
         }
 
@@ -615,7 +633,7 @@ class NotificationController extends BaseController
             if(!empty($reservations)){
                 foreach($reservations as $reservation)
                 $reservationsList[] = $reservation['RESV_NO'];
-                echo implode(",",$reservationsList);
+                echo implode(", ",$reservationsList);
             } 
 
 

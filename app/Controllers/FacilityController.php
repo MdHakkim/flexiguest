@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\Repositories\DepartmentRepository;
+use App\Libraries\DataTables\FeedbackDataTable;
 use  App\Libraries\ServerSideDataTable;
 use  App\Libraries\EmailLibrary;
 use App\Models\ShutlStages;
@@ -465,10 +466,14 @@ class FacilityController extends BaseController
 
     public function feedbackList()
     {
-        $mine = new ServerSideDataTable(); // loads and creates instance
-        $tableName = 'FLXY_FEEDBACK_VIEW';
-        $columns = 'CUST_FULLNAME|FB_RATINGS|FB_DESCRIPTION|FORMAT(FB_CREATE_DT,\'dd-MMM-yyyy\')FB_CREATE_DT';
-        $mine->generate_DatatTable($tableName, $columns, [], '|');
+        $mine = new FeedbackDataTable(); // loads and creates instance
+        // $tableName = 'FLXY_FEEDBACK_VIEW';
+        // $columns = 'CUST_FULLNAME|FB_RATINGS|FB_DESCRIPTION|FORMAT(FB_CREATE_DT,\'dd-MMM-yyyy\')FB_CREATE_DT';
+        // $mine->generate_DatatTable($tableName, $columns, [], '|');
+
+        $tableName = 'FLXY_FEEDBACK left join FLXY_CUSTOMER on FB_CUST_ID = CUST_ID';
+        $columns = 'FB_ID,FB_CUST_ID,FB_RATINGS,FB_DESCRIPTION,FB_MODEL,FB_MODEL_ID,FB_CREATE_DT,CUST_FIRST_NAME,CUST_LAST_NAME';
+        $mine->generate_DatatTable($tableName, $columns);
         exit;
     }
 

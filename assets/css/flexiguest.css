@@ -662,11 +662,11 @@ td{
 
 @media only screen and (max-width: 1000px) {
   .activeslide .document-status-card{
-    width: 75% !important;
+    width: 100% !important;
   }
 
   .flxy_doc_block .flxy_doc_content .flxy_block_card {
-    width: 75%;
+    width: 100%;
   }
 }
 
@@ -675,6 +675,12 @@ td{
   .sliderclass {
     margin: 0;
   }
+  #successModal, #warningModal, #infoModal, #errorModal{
+    width:90% !important;
+  }
+  .flxy_cust_detil {
+    padding: 0px !important;
+}
 }
 
 @media only screen and (max-width: 575px) {

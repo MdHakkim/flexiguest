@@ -855,12 +855,18 @@
 			$(".Reservation").show();
 			$(".Guest").show();
 			guestList();
-		} else if ($(this).val() === '1' || $(this).val() === '2') {
+		} else if ($(this).val() === '1') {
 			$(".Department").show();
 			$(".Users").show();
 			$(".Reservation").hide();
 			$(".Guest").hide();
 
+		}
+		else if($(this).val() === '2'){
+			$(".Department").hide();
+			$(".Users").hide();
+			$(".Reservation").hide();
+			$(".Guest").show();
 		}
 	});
 
