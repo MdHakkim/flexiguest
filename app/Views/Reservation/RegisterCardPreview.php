@@ -340,9 +340,18 @@ situation, which may cause you to vacate the premises</span
         </div>
       </div>
       <hr>
-      <div class="row row p-3">
+      <div class="row p-3">
         <div class="col-12">
-          <span>Guest Signature: </span>
+          <span>
+            <b>Guest Signature: </b>
+            <?php
+              if($guestDetails['SIGNATURE']) {
+            ?>
+              <img src="<?= base_url('assets/Uploads/UserDocuments/signature/'.$guestDetails['SIGNATURE']) ?>" width="auto" height="100"/>
+            <?php
+            }
+            ?>
+          </span>
         </div></div>
     </div>
     <?php 
