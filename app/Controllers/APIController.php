@@ -831,7 +831,7 @@ class APIController extends BaseController
 
         $customer_id = $this->request->getVar('VACC_CUST_ID');
         $reservation_id = $this->request->getVar('VACC_RESV_ID');
-        
+
 
         $rules = [
             'VACC_CUST_ID' => [
@@ -888,9 +888,9 @@ class APIController extends BaseController
         if (empty($vaccine_detail)) {
             $response = $this->VaccineDetail->insert($data);
         } else {
-            if($data['VACC_DETAILS'] == 'vaccinated')
+            if ($data['VACC_DETAILS'] == 'vaccinated')
                 unset($data['VACC_FILE_PATH']);
-                
+
             unset($data['VACC_CREATE_UID']);
 
             $response = $this->VaccineDetail->where('VACC_CUST_ID', $customer_id)->where('VACC_RESV_ID', $reservation_id)->set($data)->update();
@@ -975,6 +975,8 @@ class APIController extends BaseController
             }
 
             $res_data = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resID)->update($dataRes);
+            if ($reservation_status == 'Checked-In')
+                $this->ReservationRepository->generateRegistrationCard($resID);
 
             if ($update_data &&  $res_data) {
                 $this->ReservationAssetRepository->attachAssetList($USR_ID, $resID);
@@ -1345,6 +1347,7 @@ class APIController extends BaseController
 
         $this->DB->query("update FLXY_RESERVATION set RESV_STATUS = 'Checked-In' where RESV_ID = :reservation_id:", $params);
         $this->ReservationAssetRepository->attachAssetList($user_id, $reservation_id);
+        $this->ReservationRepository->generateRegistrationCard($reservation_id);
 
         return $this->respond(responseJson(200, false, ['msg' => 'Guest checked-in successfully.']));
     }

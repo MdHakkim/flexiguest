@@ -4553,26 +4553,7 @@ class ApplicatioController extends BaseController
         $result = $this->responseJson("1","0",$return,$response='');
 
         $this->ReservationAssetRepository->attachAssetList(session('USR_ID'), $sysid);
-
-        $sql = "SELECT RESV_ARRIVAL_DT, RESV_ROOM, RESV_DEPARTURE, RESV_NIGHT, RESV_ADULTS, RESV_CHILDREN, RESV_NO, 
-                    CAST(RESV_RATE AS VARCHAR)RESV_RATE, RESV_RM_TYPE, RESV_NAME, RESV_STATUS
-                    CUST_FIRST_NAME, CUST_LAST_NAME, CUST_MOBILE, CUST_EMAIL, CUST_DOB, CUST_DOC_TYPE, CUST_DOC_NUMBER,
-                    CONCAT(CUST_ADDRESS_1, CUST_ADDRESS_2, CUST_ADDRESS_3) AS CUST_ADDRESS, 
-                    fd.DOC_FILE_PATH as SIGNATURE,
-                    (SELECT COM_ACCOUNT FROM FLXY_COMPANY_PROFILE WHERE COM_ID=RESV_COMPANY) RESV_COMPANY_DESC, 
-                    (SELECT ctname FROM CITY WHERE id=CUST_CITY) CUST_CITY_DESC, 
-                    (SELECT cname FROM COUNTRY WHERE ISO2=CUST_COUNTRY) CUST_COUNTRY_DESC, 
-                    (SELECT cname FROM COUNTRY WHERE ISO2=CUST_NATIONALITY) CUST_NATIONALITY_DESC
-                    FROM FLXY_RESERVATION 
-                        INNER JOIN FLXY_CUSTOMER ON FLXY_RESERVATION.RESV_NAME = FLXY_CUSTOMER.CUST_ID 
-                        left join FLXY_DOCUMENTS as fd on FLXY_RESERVATION.RESV_ID = fd.DOC_RESV_ID and fd.DOC_FILE_TYPE = 'SIGN'
-                        WHERE RESV_ID = $sysid";
-        $data['response'] = $this->Db->query($sql)->getResultArray();
-        $data['branding_logo'] = brandingLogo();
-
-        $file_name = "assets/reservation-registration-cards/RES{$sysid}-RC.pdf";
-        $view = "Reservation/RegisterCard";
-        generateInvoice($file_name, $view, $data);
+        $this->ReservationRepository->generateRegistrationCard($sysid);
         
         echo json_encode($result);
         die();
