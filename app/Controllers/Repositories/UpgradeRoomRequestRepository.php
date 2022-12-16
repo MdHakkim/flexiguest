@@ -32,7 +32,7 @@ class UpgradeRoomRequestRepository extends BaseController
 
     public function getUpdgradeRequestById($id)
     {
-        return $this->UpgradeRoomRequest->find($id);
+        return $this->UpgradeRoomRequest->join('FLXY_ROOM_TYPE', 'URR_ROOM_TYPE_ID = RM_TY_ID', 'left')->find($id);
     }
 
     public function createOrUpdateUpgradeRequest($user, $data)

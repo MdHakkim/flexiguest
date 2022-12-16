@@ -72,7 +72,7 @@ class UpgradeRoomRequestController extends BaseController
                 'NOTIFICATION_FROM_ID' => $user['USR_ID'],
                 'NOTIFICATION_RESERVATION_ID' => json_encode(["{$request['URR_RESERVATION_ID']}"]),
                 'NOTIFICATION_GUEST_ID' => json_encode(["{$request['URR_CUSTOMER_ID']}"]),
-                'NOTIFICATION_TEXT' => "Your request to upgrade room has been {$data['URR_STATUS']}.",
+                'NOTIFICATION_TEXT' => "Your request to upgrade to '{$request['RM_TY_DESC']}' has been {$data['URR_STATUS']}.",
                 'NOTIFICATION_DATE_TIME' => date('Y-m-d H:i:s'),
                 'NOTIFICATION_READ_STATUS' => 0,
             ];
