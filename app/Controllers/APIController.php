@@ -1373,4 +1373,30 @@ class APIController extends BaseController
         echo "OK";
         die();
     }
+
+    public function logUpload()
+    {
+        $rules = [
+            'log_files.*' => [
+                'label' => 'log file',
+                'rules' => ['uploaded[log_files]', 'mime_in[log_files,image/png,image/jpg,image/jpeg]', 'max_size[log_files,5120]']
+            ]
+        ];
+
+        if (!$this->validate($rules))
+            return $this->respond(responseJson("403", true, $this->validator->getErrors()));
+
+        $files = $this->request->getFileMultiple('log_files');
+
+        foreach ($files as $key => $file)
+            if (!$file->isValid())
+                return $this->respond(responseJson(500, true, ['msg' => "Please upload valid file. This file '{$file->getClientName()}' is not valid"]));
+
+        foreach ($files as $key => $file) {
+            $newName = $file->getName();
+            $file->move(ROOTPATH . 'assets/Uploads/log_files', $newName);
+        }
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Files uploaded.']));
+    }
 }
