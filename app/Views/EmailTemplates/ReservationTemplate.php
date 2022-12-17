@@ -1,5 +1,10 @@
 
 <html>
+  <style>
+    p,h3{
+      font-family: arial;
+    }
+  </style>
   <body style="width:100%;height:auto; font-family: arial;">
       <table width="100%" border="1" cellspacing="0" cellpadding="0" style='border: solid 1px #5c636a8c;font-family: arial; font-size: 13px; color: #000;' cellspacing='0' cellpadding='20' width='650' >
         <tbody>
@@ -15,11 +20,11 @@
                         </tr>
                          
                           <tr>
-                            <td style="padding-top: 10px;paddign-bottom:5px"><h3>Hello <?php echo $data['FULLNAME'];?>,<br></h3></td>
+                            <td style="padding-top: 10px;paddign-bottom:5px;font-family: arial;"><h3>Hello <?php echo $data['FULLNAME'];?>,<br></h3></td>
                           </tr>
                           <?php if($mode!='QR' ){ ?>
                           <tr>
-                            <td style="padding-bottom:5px"><h3>Greetings from Hotel!</h3></td>
+                            <td style="padding-bottom:5px;font-family: arial;"><h3>Greetings from Hotel!</h3></td>
                           </tr>
                           <?php } ?>
                           <tr>
@@ -27,7 +32,7 @@
                               <table style="width:100%">
                                 <tbody>
                                   <tr>
-                                    <td style="font-size:14px;">
+                                    <td style="font-size:14px;font-family: arial;">
                                     <?php if($mode=='QR' && $status == 0){?>
                                       <h3>You have successfully completed your pre- check in process. Please show the below QR-Code to our friendly reception team in order to collect your apartment key. </h3>
                                     <?php }else if($mode=='QR' && $status == 1) {?>
@@ -39,14 +44,14 @@
                                       <h3>A valid passport or Emirates ID (for UAE Nationals and Residents) is required upon Check-in. </h3>
                                     <?php } ?>
                                     </td>
-                                    <br>
+                                    
                                   </tr>
                                   <?php if($status != 1) { ?>
                                   <tr>
-                                    <td style="font-size:16px;">
+                                    <td style="font-size:16px;font-family: arial;">
                                       <table border="0"  cellspacing="0" cellpadding="0" >
                                         <tbody>
-                                        <tr style="padding-bottom:6px;">
+                                        <tr style="padding-bottom:6px;font-family: arial;">
                                           <td><p>Reservation No</p></td>
                                           <td><p>: <?php echo $data['RESV_NO'];?></p></td>
                                         </tr>
@@ -66,11 +71,12 @@
                                           <td><p>No. of Apartment Unit</p></td>
                                           <td><p>: <?php echo $data['RESV_NO_F_ROOM'];?></p></td>
                                         </tr>
+
                                         <tr style="padding-bottom:6px;">
-                                          <td><p>Apartment Details</p></td>
-                                          <td><p>: <?php echo $data['RM_TY_DESC'];?></p><br></td>
-                                          
+                                          <td><p>partment Details</p></td>
+                                          <td><p>: <?php echo $data['RM_TY_DESC'];?></p></td>
                                         </tr>
+                                       
                                         <?php if($mode!='QR'){ ?>                                        
                                         
                                         <tr style="padding-bottom:6px;">
