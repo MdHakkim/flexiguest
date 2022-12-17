@@ -49,6 +49,7 @@ class FacilityController extends BaseController
     // CODE BY ALEESHA  - Maintenance Request
     public function maintenanceRequest()
     {
+        $data['title'] = 'Maintenance Requests';
         $data['departments'] = $this->DepartmentRepository->allDepartments();
 
         return view('Maintenance/MaintenanceRequestView', $data);
@@ -58,7 +59,7 @@ class FacilityController extends BaseController
     {
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_MAINTENANCE_VIEW left join FLXY_CUSTOMER on FLXY_MAINTENANCE_VIEW.CUST_NAME = FLXY_CUSTOMER.CUST_ID left join FlXY_USERS on MAINT_ATTENDANT_ID = USR_ID';
-        $columns = 'MAINT_ID|MAINT_ROOM_NO|MAINT_TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_DT|cast(MAINT_PREFERRED_TIME as time)MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_COMPLETED_AT|MAINT_ATTACHMENT|MAINT_CREATE_DT|CUST_FIRST_NAME|CUST_LAST_NAME|CONCAT_WS(USR_FIRST_NAME, \' \', USR_LAST_NAME)MAINT_ATTENDANT_NAME';
+        $columns = 'MAINT_ID|MAINT_ROOM_NO|MAINT_TYPE|MAINT_CATEGORY|MAINT_SUBCATEGORY|MAINT_PREFERRED_DT|cast(MAINT_PREFERRED_TIME as time)MAINT_PREFERRED_TIME|MAINT_STATUS|MAINT_COMPLETED_AT|MAINT_ATTACHMENT|MAINT_CREATE_DT|CUST_FIRST_NAME|CUST_LAST_NAME|CONCAT_WS(\' \', USR_FIRST_NAME, USR_LAST_NAME)MAINT_ATTENDANT_NAME';
         $mine->generate_DatatTable($tableName, $columns, [], '|');
         exit;
     }
@@ -926,6 +927,7 @@ class FacilityController extends BaseController
         $data['productOptions'] = $this->productList();
         $data['reservationOptions'] = $this->reservationList();
         $data['js_to_load'] = array("amenitiesRequestForm.js");
+        $data['departments'] = $this->DepartmentRepository->allDepartments();
         
         return view('Amenities/AmenitiesRequestView', $data);
     }
@@ -1310,8 +1312,9 @@ class FacilityController extends BaseController
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS 
                       LEFT JOIN FLXY_PRODUCTS PR ON PR.PR_ID = FLXY_LAUNDRY_AMENITIES_ORDER_DETAILS.LAOD_PRODUCT_ID
-                      LEFT JOIN FLXY_PRODUCT_CATEGORIES PC ON PC.PC_ID = PR.PR_CATEGORY_ID';
-        $columns = 'LAOD_ID|LAOD_ORDER_ID|LAOD_PRODUCT_ID|PR_NAME|PR_IMAGE|PC_CATEGORY|LAOD_QUANTITY|LAOD_AMOUNT|FORMAT(LAOD_AMOUNT/LAOD_QUANTITY, \'N2\')UNIT_PRICE|LAOD_DELIVERY_STATUS|LAOD_EXPIRY_DATETIME|PR_PRICE|PR_QUANTITY|PR_ESCALATED_HOURS|PR_ESCALATED_MINS';
+                      LEFT JOIN FLXY_PRODUCT_CATEGORIES PC ON PC.PC_ID = PR.PR_CATEGORY_ID
+                      LEFT JOIN FlXY_USERS on LAOD_ATTENDANT_ID = USR_ID';
+        $columns = 'LAOD_ID|LAOD_ORDER_ID|LAOD_PRODUCT_ID|PR_NAME|PR_IMAGE|PC_CATEGORY|CONCAT_WS(\' \', USR_FIRST_NAME, USR_LAST_NAME)ATTENDANT_NAME|LAOD_ATTENDANT_ID|USR_DEPARTMENT|LAOD_QUANTITY|LAOD_AMOUNT|FORMAT(LAOD_AMOUNT/LAOD_QUANTITY, \'N2\')UNIT_PRICE|LAOD_DELIVERY_STATUS|LAOD_EXPIRY_DATETIME|PR_PRICE|PR_QUANTITY|PR_ESCALATED_HOURS|PR_ESCALATED_MINS';
         $mine->generate_DatatTable($tableName, $columns, $init_cond, '|');
         exit;
     }
@@ -1340,6 +1343,23 @@ class FacilityController extends BaseController
             $pay_method = $this->request->getPost('change_LAO_PAYMENT_METHOD');
 
             $return = $this->LaundryAmenitiesOrder->update($sysid, ['LAO_PAYMENT_METHOD' => $pay_method]);
+
+            echo json_encode($this->responseJson("1", "0", $return, $response = ''));
+        } catch (\Exception $e) {
+            echo json_encode($this->responseJson("-444", "db insert not successful", $return));
+        }
+    }
+
+    public function updateAmenityProdRequestUser()
+    {
+        try {
+             //echo json_encode(print_r($_POST));
+             //exit;
+
+            $sysid = $this->request->getPost('change_LAOD_ID');
+            $attendee_user = $this->request->getPost('LAOD_ATTENDANT_ID');
+
+            $return = $this->LaundryAmenitiesOrderDetail->update($sysid, ['LAOD_ATTENDANT_ID' => $attendee_user]);
 
             echo json_encode($this->responseJson("1", "0", $return, $response = ''));
         } catch (\Exception $e) {

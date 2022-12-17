@@ -168,7 +168,7 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Order ID</th>
+                                <th class="all">Order ID</th>
                                 <th class="all">Room No.</th>
                                 <th>Reservation No</th>
                                 <th class="all">Guest Name</th>
@@ -204,10 +204,12 @@
                                 class="dt-responsive table table-striped table-bordered display nowrap">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th class="all">Product Name</th>
-                                        <th class="all text-center">Quantity</th>
+                                        <th class="text-center">Quantity</th>
                                         <th class="text-center">Unit Rate</th>
                                         <th class="all text-center">Total Amount</th>
+                                        <th class="all">Assigned to</th>
                                         <th class="all text-center">Delivery Status</th>
                                     </tr>
                                 </thead>
@@ -653,6 +655,42 @@
         </div>
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="changeProdReqUserModal" data-bs-backdrop="static" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <form id="changeProdReqUser" class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="changeProdReqUserModalTitle">Choose Products for Request</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label"><b>Department</b></label>
+                            <select name="LAOD_DEPARTMENT_ID" class="select2 form-select">
+                                <?php foreach ($departments as $department) { ?>
+                                <option value="<?= $department['DEPT_ID'] ?>"><?= $department['DEPT_DESC'] ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label"><b>Attendee</b></label>
+                            <select name="LAOD_ATTENDANT_ID" class="select2 form-select">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer mt-3">
+                    <input type="hidden" name="change_LAO_ID" id="change_LAO_ID" value="" readonly />
+                    <input type="hidden" name="change_LAOD_ID" id="change_LAOD_ID" value="" readonly />
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary updateAmOrdProdReqUser">Assign</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
@@ -685,7 +723,6 @@ $(document).ready(function() {
             },
             {
                 data: 'LAO_ID',
-                "visible": false,
             },
             {
                 data: 'RM_NO',
@@ -1034,7 +1071,7 @@ $(document).on('click', '.changePaymentMethod', function() {
 
 // Change Request Order status
 $(document).on('click', '.updateAmOrdPaymentMethod', function() {
-    
+
     var formSerialization = $('#changePaymentMethod').serializeArray();
 
     bootbox.confirm({
@@ -1112,6 +1149,8 @@ function showAmenityOrderDetails(orderId) {
             }
         },
         'columns': [{
+                data: ''
+            }, {
                 data: 'PR_NAME',
                 render: function(data, type, full, meta) {
                     var $user_img = '<?= base_url() ?>/' + full['PR_IMAGE'],
@@ -1176,6 +1215,21 @@ function showAmenityOrderDetails(orderId) {
                 className: "text-center",
             },
             {
+                data: 'ATTENDANT_NAME',
+                className: "text-center",
+                render: function(data, type, full, meta) {
+
+                    var $status_name = full['LAOD_DELIVERY_STATUS'];
+                    var changeBtn = $status_name == 'New' ? (
+                        '<a href="javascript:;" data-order-detail-id="' + full['LAOD_ID'] +
+                        '" data-order-detail-dept="' + full['USR_DEPARTMENT'] +
+                        '" data-amord-id="' + full['LAOD_ORDER_ID'] +
+                        '" class="btn btn-sm btn-primary ms-2 assignAmenUser"><i class="fa-solid fa-pen-to-square"></i> ' +
+                        (full['ATTENDANT_NAME'] !== '' ? 'Change' : 'Assign') + '</a>') : '';
+                    return '<span class="me-2">' + full['ATTENDANT_NAME'] + '</span>' + changeBtn;
+                }
+            },
+            {
                 data: 'LAOD_DELIVERY_STATUS',
                 className: "text-center",
                 render: function(data, type, full, meta) {
@@ -1204,7 +1258,7 @@ function showAmenityOrderDetails(orderId) {
                         return data;
                     }
 
-                    var $statButton = '<button type="button" class="btn ' + $status[$status_name]
+                    var $statButton = '<button type="button" class="btn btn-sm ' + $status[$status_name]
                         .class + ' dropdown-toggle"' +
                         'data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
                         $status_name + '</button>' +
@@ -1214,7 +1268,7 @@ function showAmenityOrderDetails(orderId) {
                         '     </li><li><hr class="dropdown-divider"></li>';
 
                     $.each($status, function(statText) {
-                        if (statText == $status_name) $statButton += '';
+                        if (statText == $status_name || statText == 'New') $statButton += ''; // Remove setting option to 'New'
                         else $statButton +=
                             '<li><a class="dropdown-item changeAmDetStatus" data-amdet-id="' +
                             full['LAOD_ID'] + '"' + ' data-amord-id="' + full['LAOD_ORDER_ID'] +
@@ -1230,6 +1284,16 @@ function showAmenityOrderDetails(orderId) {
             },
         ],
         columnDefs: [{
+            width: "5%",
+            className: 'control',
+            responsivePriority: 1,
+            orderable: false,
+            targets: 0,
+            searchable: false,
+            render: function(data, type, full, meta) {
+                return '';
+            }
+        }, {
             // Avatar image/badge, Name and post
             width: "25%"
         }, {
@@ -1239,12 +1303,48 @@ function showAmenityOrderDetails(orderId) {
         }, {
             width: "10%"
         }, {
+            width: "15%"
+        }, {
             width: "20%"
         }],
         "order": [
-            [0, "asc"]
+            [1, "asc"]
         ],
-        responsive: true,
+        responsive: {
+            details: {
+                display: $.fn.dataTable.Responsive.display.modal({
+                    header: function(row) {
+                        var data = row.data();
+                        return 'Details of request';
+                    }
+                }),
+                type: 'column',
+                renderer: function(api, rowIdx, columns) {
+                    var data = $.map(columns, function(col, i) {
+
+                        return col.title !==
+                            '' // ? Do not show row in modal popup if title is blank (for check box)
+                            ?
+                            '<tr data-dt-row="' +
+                            col.rowIndex +
+                            '" data-dt-column="' +
+                            col.columnIndex +
+                            '">' +
+                            '<td>' +
+                            col.title +
+                            ':' +
+                            '</td> ' +
+                            '<td>' +
+                            col.data +
+                            '</td>' +
+                            '</tr>' :
+                            '';
+                    }).join('');
+
+                    return data ? $('<table class="table"/><tbody />').append(data) : false;
+                }
+            }
+        },
         destroy: true,
         dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6 d-flex justify-content-center justify-content-md-end"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
         language: {
@@ -1316,6 +1416,119 @@ $(document).on('click', '.changeAmDetStatus', function() {
     });
 
 });
+
+// Assign/Change Attendant to Product Request
+$(document).on('click', '.assignAmenUser', function() {
+
+    var orderDetailId = $(this).attr('data-order-detail-id');
+    var orderAttendDept = $(this).attr('data-order-detail-dept');
+    var orderId = $(this).attr('data-amord-id');
+
+    $('[name="LAOD_DEPARTMENT_ID"]').val(null).trigger('change');
+    $('[name="LAOD_ATTENDANT_ID"]').html('<option value="">Select</option>');
+
+    $('#changeProdReqUserModal').modal('show');
+    $('#changeProdReqUserModalTitle').html('Assign Attendant to Product Request');
+
+    $('#change_LAOD_ID').val(orderDetailId);
+    $('#change_LAO_ID').val(orderId);
+
+    if (orderAttendDept) {
+        $('[name="LAOD_DEPARTMENT_ID"]').val(orderAttendDept).trigger('change');
+    }
+});
+
+
+$(document).on('change', `[name='LAOD_DEPARTMENT_ID']`, function() {
+    let department_id = $(this).val();
+
+    if (department_id) {
+        $.ajax({
+            url: '<?= base_url('/user-by-department') ?>',
+            type: "post",
+            data: {
+                department_ids: [department_id]
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response['SUCCESS'] == 200) {
+                    let users = response['RESPONSE']['OUTPUT'];
+
+                    let html = '';
+                    for (let user of users) {
+                        html += `
+                            <option value="${user.USR_ID}">${user.USR_FIRST_NAME} ${user.USR_LAST_NAME}</option>
+                        `;
+                    }
+
+                    $(`[name='LAOD_ATTENDANT_ID']`).html(html ? html : '<option value="">Select</option>');
+                    $(`[name='LAOD_ATTENDANT_ID']`).trigger('change');
+                }
+            }
+        });
+    } else {
+        $('[name="LAOD_ATTENDANT_ID"]').html('<option value="">Select</option>');
+    }
+});
+
+// Change Product Request Attendant
+$(document).on('click', '.updateAmOrdProdReqUser', function() {
+
+    var formSerialization = $('#changeProdReqUser').serializeArray();
+
+    console.log(formSerialization);
+
+    if ($('[name="LAOD_ATTENDANT_ID"]').val() == '') {
+        showModalAlert('error', '<li>You need to select an Attendant User</li>');
+    } else {
+        bootbox.confirm({
+            message: "Are you sure you want to assign this user to the Product Request?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function(result) {
+                if (result) {
+                    $.ajax({
+                        url: '<?php echo base_url('/updateAmenityProdRequestUser') ?>',
+                        type: "post",
+                        data: formSerialization,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        dataType: 'json',
+                        success: function(respn) {
+                            var response = respn['SUCCESS'];
+                            if (response != '1') {
+                                var ERROR = respn['RESPONSE']['ERROR'];
+                                var mcontent = '';
+                                $.each(ERROR, function(ind, data) {
+
+                                    mcontent += '<li>' + data + '</li>';
+                                });
+                                showModalAlert('error', mcontent);
+                            } else {
+                                showModalAlert('success',
+                                    `<li>The Attendant has been assigned to the Product Request successfully.</li>`
+                                );
+
+                                $('#changeProdReqUserModal').modal('hide');
+                                showAmenityOrderDetails($('#change_LAO_ID').val());
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+});
+
 
 function showSearchProducts() {
     blockLoader('.showSearchProducts');
