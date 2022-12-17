@@ -23,19 +23,13 @@ class AuthAPI implements FilterInterface
 
             if (isset($decoded['table_info']['USR_ROLE_ID'])) {
                 $role_name = $decoded['table_info']['ROLE_NAME'];
+                $request->user = $user = $decoded['table_info'];
+                $url = uri_string();
 
-                if (isset($arguments) && $role_name == 'Guest' && (in_array($role_name, $arguments))) { // For Guests only
-                    $request->user = $decoded['table_info'];
+                if (isset($arguments) && (in_array($role_name, $arguments)) && ($role_name == 'Guest' || str_contains($url, "/notification/"))) // For Guests only
                     return $request;
-                } else {
-                    $data = $decoded['table_info'];
-                    $url = uri_string();
-
-                    if (hasPermission($data, $url)) {
-                        $request->user = $decoded['table_info'];
-                        return $request;
-                    }
-                }
+                else if (hasPermission($user, $url))
+                    return $request;
             }
 
             $result = responseJson(403, true, "You don't have permission to access.", []);
