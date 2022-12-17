@@ -15,7 +15,7 @@
                         </tr>
                          
                           <tr>
-                            <td style="padding-top: 10px;paddign-bottom:5px"><h3>Hello <?php echo $data['FULLNAME'];?>,</h3></td>
+                            <td style="padding-top: 10px;paddign-bottom:5px"><h3>Hello <?php echo $data['FULLNAME'];?>,<br></h3></td>
                           </tr>
                           <?php if($mode!='QR' ){ ?>
                           <tr>
