@@ -10,7 +10,7 @@
                  
                         <tr>
                         <td style='border-bottom:solid 2px #ccc;'>
-                            <img src="<?= $logo; ?>" width='150'>
+                          <img src="<?= brandingLogo() ?>"  width="150" />
                             <br>
                         </td>
                         </tr>
