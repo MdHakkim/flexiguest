@@ -12,6 +12,7 @@ class EmailLibrary{
         $paramraw['data'] = $rawparam[0];
         $paramraw['mode'] = $param;
         $paramraw['status'] = $status;
+        $paramraw['logo'] = brandingLogo();
         if($status == 1)
         $subject = 'Check-in Confirmation';
         else if($status == 0)
