@@ -1,5 +1,5 @@
 <html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="<?= base_url('assets') ?>/" data-template="vertical-menu-template">
-
+<link rel="icon" type="image/x-icon" href="https://flexiguest.hitekservices.com/assets/img/favicon/favicon.ico" />
 <head>
     <!-- <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar"></nav> -->
     <meta charset="utf-8" />

@@ -441,6 +441,7 @@ class ReservationController extends BaseController
         $data['title'] = getMethodName();
         $data['js_to_load'] = "app-invoice-print.js";
         $data['response'] = $response['data'];
+        $data['brandingLogo'] = brandingLogo();
         return view('Reservation/RegisterCard',$data);
 
     }
@@ -448,6 +449,7 @@ class ReservationController extends BaseController
         $response = $this->registerCardDataExists();  
         $data['title'] = getMethodName(); 
         $data['response'] = $response['data'];
+        $data['brandingLogo'] = brandingLogo();
         return view('Reservation/RegisterCardPreview',$data);
 
     }
