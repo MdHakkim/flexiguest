@@ -1,26 +1,25 @@
 
 <html>
   <body style="width:100%;height:auto;">
-      <table width="100%" border="1" cellspacing="0" cellpadding="0" style='border: solid 1px #ccc;font-family: arial; font-size: 13px; color: #000;' cellspacing='0' cellpadding='20' width='750' >
+      <table width="100%" border="1" cellspacing="0" cellpadding="0" style='border: solid 1px #5c636a8c;font-family: arial; font-size: 13px; color: #000;' cellspacing='0' cellpadding='20' width='650' >
         <tbody>
           <tr>
             <td align="center">
               <table >
-                <tbody>
-                 
+                <tbody>                 
                         <tr>
-                        <td style='border-bottom:solid 2px #ccc;'>
+                        <td style='border-bottom:solid 1px #5c636a8c;'>
                           <img src="<?= brandingLogo() ?>"  width="150" />
                             <br>
                         </td>
                         </tr>
                          
                           <tr>
-                            <td style="padding: 15px 10px ;"><h3>Hello <?php echo $data['FULLNAME'];?>,</h3></td>
+                            <td style="padding: 15px ;"><h3>Hello <?php echo $data['FULLNAME'];?>,</h3></td>
                           </tr>
                           <?php if($mode!='QR' ){ ?>
                           <tr>
-                            <td style="padding: 15px 10px"><h3>Greetings from Hotel!</h3></td>
+                            <td style="padding: 15px"><h3>Greetings from Hotel!</h3></td>
                           </tr>
                           <?php } ?>
                           <tr>
