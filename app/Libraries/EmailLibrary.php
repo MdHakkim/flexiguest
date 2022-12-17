@@ -6,6 +6,7 @@ class EmailLibrary{
     protected $email;
     public function __construct(){
         $this->email = \Config\Services::email();
+        helper(['form', 'common', 'custom']);
     }
     public function preCheckInEmail($rawparam,$param,$status){
         $toEmail = $rawparam[0]['CUST_EMAIL'];

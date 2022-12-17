@@ -1,11 +1,11 @@
 
 <html>
   <body style="width:100%;height:auto;">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+      <table width="100%" border="1" cellspacing="0" cellpadding="0" style='border: solid 1px #ccc;font-family: arial; font-size: 13px; color: #000;' cellspacing='0' cellpadding='20' width='750' >
         <tbody>
           <tr>
             <td align="center">
-              <table style='border: solid 1px #ccc;font-family: arial; font-size: 13px; color: #000;' cellspacing='0' cellpadding='20' width='750'>
+              <table >
                 <tbody>
                  
                         <tr>
@@ -16,11 +16,11 @@
                         </tr>
                          
                           <tr>
-                            <td style="padding: 15px 0px 10px;"><h3>Hello <?php echo $data['FULLNAME'];?>,</h3></td>
+                            <td style="padding: 15px 10px ;"><h3>Hello <?php echo $data['FULLNAME'];?>,</h3></td>
                           </tr>
                           <?php if($mode!='QR' ){ ?>
                           <tr>
-                            <td style="padding: 10px 0px;"><h3>Greetings from Hotel!</h3></td>
+                            <td style="padding: 15px 10px"><h3>Greetings from Hotel!</h3></td>
                           </tr>
                           <?php } ?>
                           <tr>
