@@ -73,6 +73,9 @@ class AdminDashboardController extends BaseController
         // $data['all_reservations'] = count($reservations);
 
         foreach ($reservations as $reservation) {
+            if (in_array($reservation['RESV_STATUS'], ['Checked-In', 'Check-Out-Requested']))
+                $data['all_reservations']++;
+
             if ($reservation['RESV_ARRIVAL_DT'] == $today && $reservation['RESV_SOURCE'] == 'WLK')
                 $data['walkin_reservations']++;
 
@@ -111,7 +114,6 @@ class AdminDashboardController extends BaseController
         }
 
         $data['departure_rooms'] = $data['checkouts_today'];
-        $data['all_reservations'] = $data['in_house_rooms'];
 
         $total_guests = $this->ReservationRepository->totalGuests();
         $data['total_guests'] = $total_guests['total_adults'] . '/' . $total_guests['total_children'];
