@@ -11,8 +11,19 @@
                     <td align="center" style="padding: 0;">
                       <table border="0" width="700" style="border-collapse:collapse;" cellspacing="0" cellpadding="0" >
                         <tbody>
+
+                        <tr>
+                        <td style='border-bottom:solid 2px #ccc;'>
+                            <img src='$template_logo' width='150'>
+                            <br>
+                        </td>
+                        </tr>
                           <tr>
-                            <td><img src="https://keysuite.farnek.com:9021/upload/assets/hotel-logo.png"/></td>
+                            <td><a href="<?php echo base_url('/') ?>" > 
+                            <img src="<?= $logo; ?>" width="100px;" />
+                          </a>
+                        
+                          <br><br></td>
                           </tr>
                           <tr>
                             <td style="padding: 10px 0px;"><h3>Hello <?php echo $data['FULLNAME'];?>,</h2></td>
@@ -39,6 +50,7 @@
                                       <h3>A valid passport or Emirates ID (for UAE Nationals and Residents) is required upon Check-in. </h3>
                                     <?php } ?>
                                     </td>
+                                    <br>
                                   </tr>
                                   <?php if($status != 1) { ?>
                                   <tr>
@@ -68,12 +80,9 @@
                                         <tr style="padding-bottom:6px;">
                                           <td><p>Apartment Details</p></td>
                                           <td><p>: <?php echo $data['RM_TY_DESC'];?></p></td>
+                                          <br>
                                         </tr>
-                                        <?php if($mode!='QR'){ ?>
-                                        <tr style="padding-bottom:6px;">
-                                          <td><p>Click here for Pre-Check-in</p></td>
-                                          <td><p>: </p></td>
-                                        </tr>
+                                        <?php if($mode!='QR'){ ?>                                        
                                         
                                         <tr style="padding-bottom:6px;">
                                           <td colspan="3">
@@ -82,8 +91,8 @@
                                                 <tr style="padding-bottom:32px;">
                                                   <td>
                                                     <div style="display: flex;">
-                                                      <div style=""><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//play-store.png"></a></div>
-                                                      <div style="margin-left: 12px;"><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//app-store.png"></a></div>
+                                                      <div style="float:left"><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//play-store.png"></a></div>
+                                                      <div style="margin-left: 12px;float:left"><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//app-store.png"></a></div>
                                                       <div style="background: #1f29bd;margin-left: 12px;padding: 2px;text-align: center;width: 160px;color: white;border-radius: 7px;line-height: 2.2;height: 39px;"><a style="color: white;text-decoration: none;" href="https://flexiguest.hitekservices.com/webline/ReservationDetail/<?php echo $data['RESV_ID'];?>">Pre Check-In Web</a></div>
                                                     </div>
                                                   </td>
@@ -96,10 +105,10 @@
 
                                         
                                           <tr style="padding-bottom:6px;">
-                                            <td><p>Please show the below QR-Code to our friendly reception team. </p><div id="output"><img src="https://chart.googleapis.com/chart?cht=qr&chl=<?php echo $data['RESV_ID'];?>&chs=160x160&chld=L|0"/></div></td>
+                                            <td><br><p>Please show the below QR-Code to our friendly reception team. </p><div id="output"><img src="https://chart.googleapis.com/chart?cht=qr&chl=<?php echo $data['RESV_ID'];?>&chs=160x160&chld=L|0"/></div></td>
                                           </tr>
                                           <tr>
-                                            <td><p>Have a safe journey ahead!</p></td>
+                                            <td><h3>Have a safe journey ahead!</h3></td>
                                           </tr>
                                         <?php  ?>
                                         </tbody>
@@ -116,12 +125,12 @@
                               <table style="width:100%">
                                 <tbody>
                                   <tr style="padding-bottom:20px;">
-                                    <td><p style="font-size:14px;">Regards,</p></td>
+                                    <td><p style="font-size:15px;"><strong>Regards,</strong></p></td>
                                   </tr>
                                   <tr style="padding-bottom:32px;">
-                                    <td ><p style="font-size:14px;">Hotel</p></td>
+                                    <td ><p style="font-size:15px;"><strong>Hotel</strong></p></td>
                                   </tr>
-                                  <tr style="padding-bottom:12px;">
+                                  <tr style="padding-bottom:13px;">
                                     <td><p  style="font-size:13px;">Deposit Policy: For additional services, we will require an advance payment by either cash or credit card.</p></td>
                                   </tr>
                                 </tbody>
@@ -134,19 +143,17 @@
                     </td>
                   </tr>
                   <tr>
-                    <td align="center" style="background:#5d5c5c;color:white;">
-                      <table border="0" width="300" style="text-align: center;" cellspacing="0" cellpadding="0" >
-                        <tbody>
-                          <tr style="padding-bottom:12px;">
-                            <td>
-                              <p>Dubai, </p>
-                            </td>
-                         
-                            <td>United Arab Emirates</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </td>
+
+                  <td style='font-family: arial;font-size: 13px;color: #fff;border-top:solid 1px #ccc;padding: 25px 10px 10px 10px;text-align:center;background: #0366ad;'>
+
+                      Copyright &copy; <?php echo date('Y')?>. All rights reserved.
+
+                      <br>
+
+                      <br>
+
+                  </td>
+
                   </tr>
                 </tbody>
               </table>
