@@ -28,7 +28,7 @@ class AuthAPI implements FilterInterface
 
                 if (isset($arguments) && (in_array($role_name, $arguments)) && ($role_name == 'Guest' || str_contains($url, "/notification/"))) // For Guests only
                     return $request;
-                else if (hasPermission($user, $url))
+                else if (hasPermission($user, $url, $arguments))
                     return $request;
             }
 
