@@ -78,8 +78,9 @@ class MaintenanceController extends BaseController
         return $this->respond(responseJson(200, false, ['msg' => 'Rooms list'], $rooms));
     }
 
-    public function reservationOfRoom($room_no)
+    public function reservationOfRoom()
     {
+        $room_no = $this->request->getVar('room_no');
         $sql = "SELECT concat(b.CUST_FIRST_NAME,' ',b.CUST_MIDDLE_NAME,' ',b.CUST_LAST_NAME) NAME, 
                     b.CUST_ID, 
                     a.RESV_ID, 

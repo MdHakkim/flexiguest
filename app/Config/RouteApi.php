@@ -156,7 +156,7 @@ $routes->group("api", ["filter" => "authapi:Admin,Attendee", 'namespace' => 'App
     $routes->group('maintenance', function ($routes) {
         $routes->get("maintenance-list", "MaintenanceController::maintenanceList");
         $routes->get("get-room-list", "MaintenanceController::getRoomList");
-        $routes->get("reservation-of-room/(:segment)", "MaintenanceController::reservationOfRoom/$1");
+        $routes->get("reservation-of-room", "MaintenanceController::reservationOfRoom");
         $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
 
         // work order
