@@ -3779,6 +3779,7 @@ function displayResvOptionButtons(ressysId) {
 
             if (respn.RESV_STATUS == 'Cancelled') {
                 $('.cancel-reservation').addClass('d-none').prop('disabled', true);
+                $('#Resv-Check-In').addClass('d-none').prop('disabled', true);
                 $('.reinstate-reservation').removeClass('d-none').prop('disabled', false);
                 $('.accompany-guests,#proformaButton,#registerCardButton,.shares-btn').prop(
                     'disabled', true);
