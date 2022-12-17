@@ -826,7 +826,7 @@
 
                                 <div class="form-check" style="display: flex;">
                                     <input class="form-check-input" type="checkbox" <?php echo (trim($data['RESV_ACCP_TRM_CONDI']) == 'Y' ? 'checked' : ''); ?> id="agreeTerms">
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault"> 
                                         I accept the terms and conditions
                                     </label>
                                 </div>
