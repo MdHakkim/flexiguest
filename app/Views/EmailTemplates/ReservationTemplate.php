@@ -15,11 +15,11 @@
                         </tr>
                          
                           <tr>
-                            <td style="padding: 15px 0;"><h3>Hello <?php echo $data['FULLNAME'];?>,</h3></td>
+                            <td style="padding-top: 10px"><h3>Hello <?php echo $data['FULLNAME'];?>,</h3></td>
                           </tr>
                           <?php if($mode!='QR' ){ ?>
                           <tr>
-                            <td style="padding: 15px 0" ><h3>Greetings from Hotel!</h3></td>
+                            <td><h3>Greetings from Hotel!</h3></td>
                           </tr>
                           <?php } ?>
                           <tr>
