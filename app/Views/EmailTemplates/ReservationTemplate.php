@@ -19,12 +19,11 @@
                         </td>
                         </tr>
                           <tr>
-                            <td><a href="<?php echo base_url('/') ?>" class="app-brand-link"> 
-                            <img src="<?= $logo; ?>" width="190px;" />
-
+                            <td><a href="<?php echo base_url('/') ?>" > 
+                            <img src="<?= $logo; ?>" width="100px;" />
                           </a>
                         
-                          <br></td>
+                          <br><br></td>
                           </tr>
                           <tr>
                             <td style="padding: 10px 0px;"><h3>Hello <?php echo $data['FULLNAME'];?>,</h2></td>
@@ -56,7 +55,7 @@
                                   <?php if($status != 1) { ?>
                                   <tr>
                                     <td style="font-size:16px;">
-                                      <table border="1"  cellspacing="0" cellpadding="0" >
+                                      <table border="0"  cellspacing="0" cellpadding="0" >
                                         <tbody>
                                         <tr style="padding-bottom:6px;">
                                           <td><p>Reservation No</p></td>
@@ -92,8 +91,8 @@
                                                 <tr style="padding-bottom:32px;">
                                                   <td>
                                                     <div style="display: flex;">
-                                                      <div style=""><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//play-store.png"></a></div>
-                                                      <div style="margin-left: 12px;"><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//app-store.png"></a></div>
+                                                      <div style="float:left"><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//play-store.png"></a></div>
+                                                      <div style="margin-left: 12px;float:left"><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//app-store.png"></a></div>
                                                       <div style="background: #1f29bd;margin-left: 12px;padding: 2px;text-align: center;width: 160px;color: white;border-radius: 7px;line-height: 2.2;height: 39px;"><a style="color: white;text-decoration: none;" href="https://flexiguest.hitekservices.com/webline/ReservationDetail/<?php echo $data['RESV_ID'];?>">Pre Check-In Web</a></div>
                                                     </div>
                                                   </td>
