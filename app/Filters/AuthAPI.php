@@ -19,13 +19,22 @@ class AuthAPI implements FilterInterface
 
             $token = explode(" ", getJWTFromRequest())[1];
 
-            $decoded  = validateJWTFromRequest($token);
+            $decoded = validateJWTFromRequest($token);
 
-            if (!empty($decoded)) {
-                if (isset($decoded['token_info']->data->ROLE_NAME) && isset($arguments) && (in_array($decoded['token_info']->data->ROLE_NAME, $arguments))) {
+            if (isset($decoded['table_info']['USR_ROLE_ID'])) {
+                $role_name = $decoded['table_info']['ROLE_NAME'];
 
+                if (isset($arguments) && $role_name == 'Guest' && (in_array($role_name, $arguments))) { // For Guests only
                     $request->user = $decoded['table_info'];
                     return $request;
+                } else {
+                    $data = $decoded['table_info'];
+                    $url = uri_string();
+
+                    if (hasPermission($data, $url)) {
+                        $request->user = $decoded['table_info'];
+                        return $request;
+                    }
                 }
             }
 
