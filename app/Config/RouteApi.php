@@ -160,6 +160,7 @@ $routes->group("api", ["filter" => "authapi:Admin,Attendee", 'namespace' => 'App
         $routes->post('create-update-maintenance-request', 'MaintenanceController::createUpdateMaintenanceRequest');
 
         // work order
+        $routes->get("work-order-list", "MaintenanceController::maintenanceList");
         $routes->post("assign-task", "MaintenanceController::assignTask");
         $routes->post("update-status", "MaintenanceController::updateStatus");
         $routes->post("add-comment", "MaintenanceController::addComment");

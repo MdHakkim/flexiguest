@@ -73,7 +73,7 @@ class AdminDashboardController extends BaseController
         $data['all_reservations'] = count($reservations);
 
         foreach ($reservations as $reservation) {
-            if ($reservation['RESV_SOURCE'] == 'WLK')
+            if ($reservation['RESV_ARRIVAL_DT'] == $today && $reservation['RESV_SOURCE'] == 'WLK')
                 $data['walkin_reservations']++;
 
             if ($reservation['RESV_ARRIVAL_DT'] == $today && in_array($reservation['RESV_STATUS'], ['Checked-In']))

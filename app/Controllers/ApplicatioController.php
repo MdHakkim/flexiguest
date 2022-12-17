@@ -4131,6 +4131,8 @@ class ApplicatioController extends BaseController
             $data['doc_types'] = $this->Db->query("select DT_ID as id, DT_NAME as label from FLXY_DOC_TYPES")->getResultArray();
             $data['vacc_types'] = $this->Db->query("select VT_ID as id, VT_NAME as label from FLXY_VACCINE_TYPES")->getResultArray();
 
+            $data['brandingLogo'] = brandingLogo();
+
             return view('WebCheckin/CheckInReservation', $data);
         // }catch (\Exception $e){
             // return $this->respond($e->getMessage());
@@ -4563,6 +4565,8 @@ class ApplicatioController extends BaseController
         $data['data']=array('RESV_ID'=>'','CUST_ID'=>'','CUST_COUNTRY'=>'','CUST_STATE'=>'','RESV_ACCP_TRM_CONDI'=>'','RESV_ACCP_TRM_CONDI'=>'', 'CUST_NATIONALITY' => '', 'RESV_STATUS' => '');
         $data['condition']='SUCC';
         $data['session'] = $this->session;
+
+        $data['brandingLogo'] = brandingLogo();
 
         return view('WebCheckin/CheckInReservation',$data);
     }

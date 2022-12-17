@@ -3779,6 +3779,7 @@ function displayResvOptionButtons(ressysId) {
 
             if (respn.RESV_STATUS == 'Cancelled') {
                 $('.cancel-reservation').addClass('d-none').prop('disabled', true);
+                $('#Resv-Check-In').addClass('d-none').prop('disabled', true);
                 $('.reinstate-reservation').removeClass('d-none').prop('disabled', false);
                 $('.accompany-guests,#proformaButton,#registerCardButton,.shares-btn').prop(
                     'disabled', true);
@@ -3984,7 +3985,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                 $('.assignRoom').prop('disabled', true);
             } else if ($('#RESV_STATUS').val() == 'Checked-In' || $('#RESV_STATUS').val() ==
                 'Check-Out-Requested') {
-                $('.RESV_NAME,#CUST_FIRST_NAME,#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RESRV_TYPE,#RESV_RM_TYPE')
+                $('.RESV_NAME,name["CUST_FIRST_NAME"],#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RESRV_TYPE,#RESV_RM_TYPE')
                     .prop('readonly', true);
                 $('.RESV_ARRIVAL_DT').datepicker("destroy");
                 $('.assignRoom').prop('disabled', true);

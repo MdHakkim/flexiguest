@@ -6,12 +6,14 @@ class EmailLibrary{
     protected $email;
     public function __construct(){
         $this->email = \Config\Services::email();
+        helper(['form', 'common', 'custom']);
     }
     public function preCheckInEmail($rawparam,$param,$status){
         $toEmail = $rawparam[0]['CUST_EMAIL'];
         $paramraw['data'] = $rawparam[0];
         $paramraw['mode'] = $param;
         $paramraw['status'] = $status;
+        
         if($status == 1)
         $subject = 'Check-in Confirmation';
         else if($status == 0)

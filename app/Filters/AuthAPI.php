@@ -19,14 +19,17 @@ class AuthAPI implements FilterInterface
 
             $token = explode(" ", getJWTFromRequest())[1];
 
-            $decoded  = validateJWTFromRequest($token);
+            $decoded = validateJWTFromRequest($token);
 
-            if (!empty($decoded)) {
-                if (isset($decoded['token_info']->data->ROLE_NAME) && isset($arguments) && (in_array($decoded['token_info']->data->ROLE_NAME, $arguments))) {
+            if (isset($decoded['table_info']['USR_ROLE_ID'])) {
+                $role_name = $decoded['table_info']['ROLE_NAME'];
+                $request->user = $user = $decoded['table_info'];
+                $url = uri_string();
 
-                    $request->user = $decoded['table_info'];
+                if (isset($arguments) && (in_array($role_name, $arguments)) && ($role_name == 'Guest' || str_contains($url, "/notification/"))) // For Guests only
                     return $request;
-                }
+                else if (hasPermission($user, $url, $arguments))
+                    return $request;
             }
 
             $result = responseJson(403, true, "You don't have permission to access.", []);
