@@ -70,7 +70,7 @@ class AdminDashboardController extends BaseController
         ];
 
         $reservations = $this->ReservationRepository->allReservations();
-        $data['all_reservations'] = count($reservations);
+        // $data['all_reservations'] = count($reservations);
 
         foreach ($reservations as $reservation) {
             if ($reservation['RESV_ARRIVAL_DT'] == $today && $reservation['RESV_SOURCE'] == 'WLK')
@@ -111,6 +111,7 @@ class AdminDashboardController extends BaseController
         }
 
         $data['departure_rooms'] = $data['checkouts_today'];
+        $data['all_reservations'] = $data['in_house_rooms'];
 
         $total_guests = $this->ReservationRepository->totalGuests();
         $data['total_guests'] = $total_guests['total_adults'] . '/' . $total_guests['total_children'];
