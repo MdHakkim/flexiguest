@@ -1,5 +1,3 @@
-
-
 <html lang="en" class="light-style layout-navbar-fixed layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="<?= base_url('assets') ?>/" data-template="vertical-menu-template">
 
 <head>
@@ -9,9 +7,101 @@
 
     <?= $this->include('Layout/HeaderScript') ?>
     <link rel="stylesheet" href="<?php echo base_url('assets/jquery.Jcrop.min.css'); ?>" />
+    <style>
+        /* Flexi Loder css */
+#loader_flex_bg{
+  width: 100%;
+  height: 100%;
+  background-color: rgba(83, 77, 77, 0.58);
+  position: fixed;
+  z-index: 2000;
+}
+#loader_flex_bg{
+  display: none;
+}
+#loader_flex_bg .loader_flexi{
+  position: fixed;
+  left: 50%;
+  top: 50%;
+}
+.loader_flexi  {
+  animation: rotate 1s infinite;  
+  height: 50px;
+  width: 50px;
+}
+.loader_flexi:before,
+.loader_flexi:after {   
+  border-radius: 50%;
+  content: '';
+  display: block;
+  height: 20px;  
+  width: 20px;
+}
+.loader_flexi:before {
+  animation: ball1 1s infinite;  
+  background-color: #cb2025;
+  box-shadow: 30px 0 0 #f8b334;
+  margin-bottom: 10px;
+}
+.loader_flexi:after {
+  animation: ball2 1s infinite; 
+  background-color: #00a096;
+  box-shadow: 30px 0 0 #97bf0d;
+}
+
+@keyframes rotate {
+  0% { 
+    -webkit-transform: rotate(0deg) scale(0.8); 
+    -moz-transform: rotate(0deg) scale(0.8);
+  }
+  50% { 
+    -webkit-transform: rotate(360deg) scale(1.2); 
+    -moz-transform: rotate(360deg) scale(1.2);
+  }
+  100% { 
+    -webkit-transform: rotate(720deg) scale(0.8); 
+    -moz-transform: rotate(720deg) scale(0.8);
+  }
+}
+
+@keyframes ball1 {
+  0% {
+    box-shadow: 30px 0 0 #f8b334;
+  }
+  50% {
+    box-shadow: 0 0 0 #f8b334;
+    margin-bottom: 0;
+    -webkit-transform: translate(15px,15px);
+    -moz-transform: translate(15px, 15px);
+  }
+  100% {
+    box-shadow: 30px 0 0 #f8b334;
+    margin-bottom: 10px;
+  }
+}
+
+@keyframes ball2 {
+  0% {
+    box-shadow: 30px 0 0 #97bf0d;
+  }
+  50% {
+    box-shadow: 0 0 0 #97bf0d;
+    margin-top: -20px;
+    -webkit-transform: translate(15px,15px);
+    -moz-transform: translate(15px, 15px);
+  }
+  100% {
+    box-shadow: 30px 0 0 #97bf0d;
+    margin-top: 0;
+  }
+}
+
+/* Flexi Loder css */
+    </style>
 </head>
 
 <body class="flex_body">
+<div id="loader_flex_bg"><div class="loader_flexi"></div></div>
 <?= $this->include('Layout/image_modal') ?>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">

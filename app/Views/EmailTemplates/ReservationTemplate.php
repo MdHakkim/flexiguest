@@ -5,7 +5,7 @@
         <tbody>
           <tr>
             <td align="center">
-              <table style='border: solid 1px #ccc;font-family: arial; font-size: 13px; color: #000;' cellspacing='0' cellpadding='20' width='1000'>
+              <table style='border: solid 1px #ccc;font-family: arial; font-size: 13px; color: #000;' cellspacing='0' cellpadding='20' width='750'>
                 <tbody>
                  
                         <tr>
@@ -16,11 +16,11 @@
                         </tr>
                          
                           <tr>
-                            <td style="padding: 10px 0px;"><h3>Hello <?php echo $data['FULLNAME'];?>,</h2></td>
+                            <td style="padding: 15px 0px 10px;"><h3>Hello <?php echo $data['FULLNAME'];?>,</h3></td>
                           </tr>
                           <?php if($mode!='QR' ){ ?>
                           <tr>
-                            <td style="padding: 10px 0px;"><h3>Greetings from Hotel!</h2></td>
+                            <td style="padding: 10px 0px;"><h3>Greetings from Hotel!</h3></td>
                           </tr>
                           <?php } ?>
                           <tr>
@@ -69,8 +69,8 @@
                                         </tr>
                                         <tr style="padding-bottom:6px;">
                                           <td><p>Apartment Details</p></td>
-                                          <td><p>: <?php echo $data['RM_TY_DESC'];?></p></td>
-                                          <br>
+                                          <td><p>: <?php echo $data['RM_TY_DESC'];?></p><br></td>
+                                          
                                         </tr>
                                         <?php if($mode!='QR'){ ?>                                        
                                         
@@ -79,7 +79,7 @@
                                             <table style="width:100%">
                                               <tbody>
                                                 <tr style="padding-bottom:32px;">
-                                                  <td>
+                                                  <td><br>
                                                     <div style="display: flex;">
                                                       <div style="float:left"><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//play-store.png"></a></div>
                                                       <div style="margin-left: 12px;float:left"><a href="https://play.google.com/store/apps/details?id=com.farnek.FkHospitality"><img src="https://keysuite.farnek.com:9021/upload/assets//app-store.png"></a></div>
