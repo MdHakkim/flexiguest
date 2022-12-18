@@ -436,6 +436,14 @@ function submitForm(id) {
                 error += '<ul>';
                 $('#formErrorMessage').html(error);
             } else {
+                var alertText = $('#OB_ID').val() == '' ? '<li>The Overbooking for Room Type \'' +
+                    $(
+                        '#OB_RM_TYPE')
+                    .val() + '\' has been added</li>' : '<li>The Overbooking for Room Type \'' + $(
+                        '#OB_RM_TYPE').val() +
+                    '\' has been updated</li>';
+                showModalAlert('success', alertText);
+
                 $('#popModalWindow').modal('hide');
                 $('#dataTable_view').dataTable().fnDraw();
             }

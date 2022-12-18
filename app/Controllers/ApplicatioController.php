@@ -3987,27 +3987,46 @@ class ApplicatioController extends BaseController
         $roomType = $this->request->getPost("roomType");
         $fromdate = date("Y-m-d", strtotime($fromdate));
         $uptodate = date("Y-m-d", strtotime($uptodate));
-        $result = $this->dateLoopBasedOnCustomze($fromdate, $uptodate);
+        $datesList = $this->dateLoopBasedOnCustomze($fromdate, $uptodate);
         $param = ['OB_RM_TYPE'=> $this->request->getPost("roomType"),'OB_FROM_DT'=>$fromdate,'OB_UPTO_DT'=>$uptodate];
-        $sql="SELECT * FROM FLXY_OVERBOOKING WHERE OB_RM_TYPE=:OB_RM_TYPE: AND (:OB_FROM_DT: BETWEEN OB_FROM_DT AND OB_UPTO_DT 
-        AND :OB_UPTO_DT: BETWEEN OB_FROM_DT AND OB_UPTO_DT)";
-        $response = $this->Db->query($sql,$param)->getResultArray();
+
         $table='';
         if(!empty($roomType)){
-            foreach($result as $date){
-                $OB_RM_TYPE='';
-                $OB_OVER_BK_COUNT='';
-                foreach($response as $row){
-                    if($date>=$row['OB_FROM_DT'] && $date<=$row['OB_UPTO_DT']){
-                        $OB_RM_TYPE=$row['OB_RM_TYPE'];
-                        $OB_OVER_BK_COUNT=$row['OB_OVER_BK_COUNT'];
-                        break;
-                    }
-                }
+
+            $dates_table = ''; $d = 0; $totDates = count($datesList);
+            foreach($datesList as $date){
+                $dates_table .= "SELECT :OB_RM_TYPE: AS CHKRMTYPE, '".$date."' AS CHKDATE ";
+                if($d < ($totDates-1))
+                    $dates_table .= " UNION ";
+                $d++;
+            }
+
+            $sql = "SELECT CHKDATE, CHKRMTYPE, (CASE WHEN OB_OVER_BK_COUNT IS NULL THEN 0 
+                                                        ELSE (CASE WHEN OB_DAYS LIKE '%ALL%' THEN OB_OVER_BK_COUNT 
+                                                                        ELSE (CASE 
+                                                                                WHEN OB_DAYS LIKE CONCAT('%', UPPER(FORMAT(CAST(CHKDATE AS DATE), 'ddd')) ,'%') THEN OB_OVER_BK_COUNT 
+                                                                                ELSE '0' END) 
+                                                                        END) 
+                                                        END) OB_OVER_BK_COUNT, 
+                            (CASE WHEN OB_DAYS IS NULL THEN 'ALL' ELSE OB_DAYS END) OB_DAYS, 
+                            UPPER(FORMAT(CAST(CHKDATE AS DATE), 'ddd')) AS CHKDAYS
+                    FROM 	  
+                    (   SELECT CHKRMTYPE, CHKDATE, SUM(OB_OVER_BK_COUNT) AS OB_OVER_BK_COUNT, STRING_AGG(OB_DAYS, ',') AS OB_DAYS 
+                        FROM ($dates_table) 
+                        OVRCHK
+                        LEFT JOIN FLXY_OVERBOOKING ON CHKRMTYPE = OB_RM_TYPE AND CHKDATE BETWEEN OB_FROM_DT AND OB_UPTO_DT
+                        GROUP BY CHKRMTYPE, CHKDATE
+                    ) OVRB";
+
+            $response = $this->Db->query($sql,$param)->getResultArray();
+
+
+            foreach($response as $row){
+                
                 $table.='<tr>'
-                .'<td>'.$date.'</td>'
-                .'<td>'.$OB_RM_TYPE.'</td>'
-                .'<td>'.$OB_OVER_BK_COUNT.'</td>'
+                .'<td>'.$row['CHKDATE'].'</td>'
+                .'<td>'.$row['CHKRMTYPE'].'</td>'
+                .'<td class="ps-5">'.$row['OB_OVER_BK_COUNT'].'</td>'
                 .'</tr>';
             }
         }else{
