@@ -98,7 +98,10 @@ class ReservationRepository extends BaseController
 
     public function totalGuests()
     {
-        return $this->Reservation->select('sum(RESV_ADULTS) as total_adults, sum(RESV_CHILDREN) as total_children, (sum(RESV_ADULTS) + sum(RESV_CHILDREN)) as total_guests')->first();
+        return $this->Reservation
+            ->select('sum(RESV_ADULTS) as total_adults, sum(RESV_CHILDREN) as total_children, (sum(RESV_ADULTS) + sum(RESV_CHILDREN)) as total_guests')
+            ->where("RESV_STATUS in ('Checked-In', 'Check-Out-Requested')")
+            ->first();
     }
 
     public function generateRegistrationCard($reservation_id)

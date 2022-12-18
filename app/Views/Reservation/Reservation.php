@@ -446,6 +446,7 @@
                                 <th>Guest Email</th>
                                 <th>Guest Mobile</th>
                                 <th>Guest Phone</th>
+                                <th>Adults/Children</th>
                             </tr>
                         </thead>
 
@@ -3175,6 +3176,12 @@ $(document).ready(function() {
             {
                 data: 'CUST_PHONE'
             },
+            {
+                data: null,
+                render: function(data, type, row, meta) {
+                    return `${data['RESV_ADULTS']}/${data['RESV_CHILDREN']}`
+                }
+            }
         ],
         'autowidth': true,
         'order': [

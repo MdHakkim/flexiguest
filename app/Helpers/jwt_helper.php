@@ -81,10 +81,10 @@ function hasPermission($user, $url, $arguments)
 {
     $DB = \Config\Database::connect();
 
-    $sql = "select * from FLXY_MENU where MENU_URL like '$url'";
-    $data = $DB->query($sql)->getResultArray();
-    if(empty($data) && in_array($user['ROLE_NAME'], $arguments)) // if menu url is not in DB then match Role from Routes with User's Role
-        return true;
+    // $sql = "select * from FLXY_MENU where MENU_URL like '$url'";
+    // $data = $DB->query($sql)->getResultArray();
+    // if(empty($data) && in_array($user['ROLE_NAME'], $arguments)) // if menu url is not in DB then match Role from Routes with User's Role
+    //     return true;
 
     $sql = "select * from FlXY_USERS 
                 inner join FLXY_USER_ROLE_PERMISSION on USR_ROLE_ID = ROLE_ID

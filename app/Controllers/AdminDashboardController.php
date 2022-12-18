@@ -70,9 +70,12 @@ class AdminDashboardController extends BaseController
         ];
 
         $reservations = $this->ReservationRepository->allReservations();
-        $data['all_reservations'] = count($reservations);
+        // $data['all_reservations'] = count($reservations);
 
         foreach ($reservations as $reservation) {
+            if (in_array($reservation['RESV_STATUS'], ['Checked-In', 'Check-Out-Requested']))
+                $data['all_reservations']++;
+
             if ($reservation['RESV_ARRIVAL_DT'] == $today && $reservation['RESV_SOURCE'] == 'WLK')
                 $data['walkin_reservations']++;
 
