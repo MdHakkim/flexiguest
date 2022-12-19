@@ -712,8 +712,8 @@
                                         <?php } ?>
                                     </div>
                                 </div>
-                                <div class="row">
-                                <h4 class="text-start">Terms and Conditions</h4>
+
+                                <h4 class="text-start mt-3">Terms and Conditions</h4>
                                 <p class="text-align:right;">
                                 <ol class="text-start">
                                     <li>Property facilities such as swimming pool and gym are available for guests and may
@@ -767,7 +767,6 @@
                                     </li>
                                 </ol>
                                 </p>
-                                </div>
 
                                 <div class="form-check" style="display: flex;">
                                     <input class="form-check-input" type="checkbox" <?php echo (trim($data['RESV_ACCP_TRM_CONDI']) == 'Y' ? 'checked' : ''); ?> id="agreeTerms">
