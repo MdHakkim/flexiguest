@@ -698,7 +698,7 @@
                                             <div class="col-md-3 col-6"><?= $data['CUST_NATIONALITY'] ?></div>
                                         </div>
                                         <?php
-                                            if ($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' || (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1')) {}else{
+                                            if (($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' ) && (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1')) {}else{
                                             ?>
                                         <div class="row">
                                             <div class="col-md-4 text-start">
