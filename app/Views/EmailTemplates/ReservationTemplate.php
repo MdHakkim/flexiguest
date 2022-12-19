@@ -24,7 +24,7 @@
                           </tr>
                           <?php if($mode!='QR' ){ ?>
                           <tr>
-                            <td style="padding-bottom:5px;font-family: arial;"><h3>Greetings from Hotel!</h3></td>
+                            <td style="padding-bottom:5px;font-family: arial;"><h3>Greetings!!</h3></td>
                           </tr>
                           <?php } ?>
                           <tr>
@@ -32,7 +32,7 @@
                               <table style="width:100%">
                                 <tbody>
                                   <tr>
-                                    <td style="font-size:14px;font-family: arial;">
+                                    <td style="font-size:13px;font-family: arial;">
                                     <?php if($mode=='QR' && $status == 0){?>
                                       <h3>You have successfully completed your pre- check in process. Please show the below QR-Code to our friendly reception team in order to collect your apartment key. </h3>
                                     <?php }else if($mode=='QR' && $status == 1) {?>
@@ -48,11 +48,11 @@
                                   </tr>
                                   <?php if($status != 1) { ?>
                                   <tr>
-                                    <td style="font-size:16px;font-family: arial;">
+                                    <td style="font-size:14px;font-family: arial;">
                                       <table border="0"  cellspacing="0" cellpadding="0" >
                                         <tbody>
                                         <tr style="padding-bottom:6px;font-family: arial;">
-                                          <td><p>Reservation No</p></td>
+                                          <td><br><p>Reservation No</p></td>
                                           <td><p>: <?php echo $data['RESV_NO'];?></p></td>
                                         </tr>
                                         <tr style="padding-bottom:6px;">
@@ -73,7 +73,7 @@
                                         </tr>
 
                                         <tr style="padding-bottom:6px;">
-                                          <td><p>partment Details</p></td>
+                                          <td><p>Apartment Details</p></td>
                                           <td><p>: <?php echo $data['RM_TY_DESC'];?></p></td>
                                         </tr>
                                        

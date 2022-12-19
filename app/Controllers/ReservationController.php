@@ -2487,4 +2487,46 @@ public function getRoomStatistics(){
         return $option;
     }
 
+    public function assignRoomFromOptions(){
+        $room_no        = $this->request->getPost('room_no');
+        $room_id        = $this->request->getPost('room_id');
+        $resv_rate      = $this->request->getPost('resv_rate');
+        $resv_rate_code = $this->request->getPost('resv_rate_code');
+        $room_type      = $this->request->getPost('room_type');
+        $room_type_id   = $this->request->getPost('room_type_id');
+        $resv_id        = $this->request->getPost('resv_id');
+        
+        $update = ['RESV_ROOM' => $room_no,'RESV_ROOM_ID'=>$room_id,'RESV_RM_TYPE'=> $room_type,'RESV_RM_TYPE_ID'=> $room_type_id 
+        ];
+
+        if($resv_rate != ''){
+            $update['RESV_RATE']       =  $resv_rate;
+            $update['RESV_RATE_CODE']  =  $resv_rate_code;
+        }  
+
+        // if($room_type != ''){
+        //     $update['RESV_RM_TYPE']    =  $room_type;
+        //     $update['RESV_RM_TYPE_ID'] =  $room_type_id;
+        // }   
+        
+        
+        $return = $this->DB->table('FLXY_RESERVATION')->where('RESV_ID', $resv_id)->update($update);
+        $data['status'] = ($return == 1) ? '1': '2';  
+        $data['status_message'] = ($return == 1) ? 'Successfully moved': 'Failed';    
+        echo json_encode($data);  
+    }
+
+    public function checkRoomAssigned(){
+        try {
+            $resv_id        = $this->request->getPost('resv_id');
+            $sql = "SELECT RESV_ROOM_ID FROM FLXY_RESERVATION WHERE RESV_ID = '$resv_id'";
+            $RESV_ROOM_ID = $this->DB->query($sql)->getRow()->RESV_ROOM_ID;
+        
+            $result = $RESV_ROOM_ID ? $this->responseJson("1", "0", $RESV_ROOM_ID) : $this->responseJson("-402", "Room is not assigned");
+            echo json_encode($result);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+    
 }

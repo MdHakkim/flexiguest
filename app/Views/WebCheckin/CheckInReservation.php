@@ -697,7 +697,9 @@
                                             <div class="col-md-3 col-6"><b>Nationality</b></div>
                                             <div class="col-md-3 col-6"><?= $data['CUST_NATIONALITY'] ?></div>
                                         </div>
-
+                                        <?php
+                                            if (($data['RESV_STATUS'] == 'Due Pre Check-In' || $data['RESV_STATUS'] == 'Pre Checked-In' ) && (isset($session->USR_ROLE_ID) && $session->USR_ROLE_ID == '1')) {}else{
+                                            ?>
                                         <div class="row">
                                             <div class="col-md-4 text-start">
                                                 <label class="form-label">Please update your expected time of arrival</label>
@@ -707,10 +709,11 @@
                                             <div class="col-md-4"></div>
                                             <div class="col-md-4"></div>
                                         </div>
+                                        <?php } ?>
                                     </div>
                                 </div>
 
-                                <h4 class="text-start">Terms and Conditions</h4>
+                                <h4 class="text-start mt-3">Terms and Conditions</h4>
                                 <p class="text-align:right;">
                                 <ol class="text-start">
                                     <li>Property facilities such as swimming pool and gym are available for guests and may

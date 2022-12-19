@@ -3726,9 +3726,9 @@ class ApplicatioController extends BaseController
         $RESV_ARRIVAL_DT = date('Y-m-d', strtotime($this->request->getPost('arrivalDate')));
         $RESV_DEPARTURE  = date('Y-m-d', strtotime($this->request->getPost('departureDate')));
         $RESV_RATE_CODE  = $this->request->getPost('resv_rate_code');
-        $RESV_ROOM_TYPE = $this->request->getPost('resv_room_type');            
-        $RESV_ADULTS = $this->request->getPost('adults_num');
-        $RESV_CHILDREN = !empty($this->request->getPost('children_num')) ? $this->request->getPost('children_num') : 0;
+        $RESV_ROOM_TYPE  = $this->request->getPost('resv_room_type');            
+        $RESV_ADULTS     = $this->request->getPost('adults_num');
+        $RESV_CHILDREN   = !empty($this->request->getPost('children_num')) ? $this->request->getPost('children_num') : 0;
 
         $param = [  'ARRIVAL_DT'=> $RESV_ARRIVAL_DT,
                     'DEPARTURE_DT'=> $RESV_DEPARTURE,
@@ -4942,12 +4942,12 @@ class ApplicatioController extends BaseController
         try{           
             $response = NULL; 
             $result = NULL;   
-            $sql = "SELECT RESV_ARRIVAL_DT,RESV_NIGHT,RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULL_NAME, RESV_NO, RESV_STATUS  FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID WHERE RESV_ID = '".$reservID."'";                 
+            $sql = "SELECT RESV_ARRIVAL_DT,RESV_NIGHT,RESV_DEPARTURE, CONCAT_WS(' ', CUST_FIRST_NAME, CUST_MIDDLE_NAME, CUST_LAST_NAME) AS FULL_NAME, RESV_NO, RESV_STATUS, RESV_ROOM_ID FROM FLXY_RESERVATION INNER JOIN FLXY_CUSTOMER ON RESV_NAME = CUST_ID WHERE RESV_ID = '".$reservID."'";                 
             $responseCount = $this->Db->query($sql)->getNumRows();
             if($responseCount > 0) {
                 $response = $this->Db->query($sql)->getResultArray(); 
                 foreach($response as $row){            
-                    $result = ['RESV_ARRIVAL_DT' => $row['RESV_ARRIVAL_DT'],'RESV_NIGHT' => $row['RESV_NIGHT'],'RESV_DEPARTURE' => $row['RESV_DEPARTURE'],'FULL_NAME' => $row['FULL_NAME'], 'RESV_NO' => $row['RESV_NO'], 'RESV_STATUS' => $row['RESV_STATUS'] ];
+                    $result = ['RESV_ARRIVAL_DT' => $row['RESV_ARRIVAL_DT'],'RESV_NIGHT' => $row['RESV_NIGHT'],'RESV_DEPARTURE' => $row['RESV_DEPARTURE'],'FULL_NAME' => $row['FULL_NAME'], 'RESV_NO' => $row['RESV_NO'], 'RESV_STATUS' => $row['RESV_STATUS'],'RESV_ROOM_ID'=>$row['RESV_ROOM_ID'] ];
                 }
             }
           
