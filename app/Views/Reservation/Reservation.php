@@ -3992,8 +3992,14 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                 $('.assignRoom').prop('disabled', true);
             } else if ($('#RESV_STATUS').val() == 'Checked-In' || $('#RESV_STATUS').val() ==
                 'Check-Out-Requested') {
-                $('.RESV_NAME,name["CUST_FIRST_NAME"],#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RESRV_TYPE,#RESV_RM_TYPE')
-                    .prop('readonly', true);
+                    $('#RESV_RM_TYPE').attr('disabled', true);
+                    $('.RESV_NAME').attr('disabled', true);
+                    $('.RESV_NAME').prop('readonly', true);
+                // $('.RESV_NAME,name["CUST_FIRST_NAME"],#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RESRV_TYPE,#RESV_RM_TYPE')
+                //     .prop('readonly', true);
+                // $('.RESV_NAME,name["CUST_FIRST_NAME"],#RESV_NO_F_ROOM,#RESV_ETA,#RESV_RESRV_TYPE,.#RESV_RM_TYPE')
+                // .attr('disabled', 'disabled');
+
                 $('.RESV_ARRIVAL_DT').datepicker("destroy");
                 $('.assignRoom').prop('disabled', true);
             } else if ($('#RESV_STATUS').val() == 'Due Pre Check-In' || $('#RESV_STATUS').val() ==
