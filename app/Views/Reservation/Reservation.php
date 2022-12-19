@@ -479,6 +479,7 @@
                             <button type="button" class="btn btn-primary cancel-reservation d-none" data_sysid=""
                                 data_custId="">Cancel</button>
                             <button type="button" class="btn btn-primary show-activity-log">Changes</button>
+                            <button type="button" class="btn btn-primary assignRoom d-none" id="room_assign" rel="1">Room Assign</button>
                             <button type="button" class="btn btn-primary web-link-btn d-none" id="Resv-Check-In"> Check
                                 In</button>
                             <button type="button" class="btn btn-primary checkout-reservation"
@@ -1089,7 +1090,7 @@
                                                         readonly />
                                                     <button type="button"
                                                         class="btn flxi_btn btn-sm btn-primary assignRoom">
-                                                        <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                                                        <i class="fa fa-chevron-down" aria-hidden="true" rel="0"></i>
                                                     </button>
                                                 </div>
                                                 <input type="hidden" name="RESV_ROOM_ID" id="RESV_ROOM_ID" value=""
@@ -3742,6 +3743,7 @@ $(document).on('click', '.reserOption', function() {
 
     $('#registerCardButton').attr('data_sysid', ressysId);
     $('#fixedChargeButton').attr('data_sysid', ressysId);
+    $('#room_assign').attr('data_sysid', ressysId);
     $('#proformaButton').attr('data_sysid', ressysId);
     $('#rateInfoButton').attr('data_sysid', ressysId);
     $('#traceButton').attr('data_sysid', ressysId);
@@ -3786,7 +3788,8 @@ function displayResvOptionButtons(ressysId) {
 
             if (respn.RESV_STATUS == 'Cancelled') {
                 $('.cancel-reservation').addClass('d-none').prop('disabled', true);
-                $('#Resv-Check-In').addClass('d-none').prop('disabled', true);
+                $('#Resv-Check-In').addClass('d-none').prop('disabled', true);                
+                $('#room_assign').addClass('d-none').prop('disabled', true);
                 $('.reinstate-reservation').removeClass('d-none').prop('disabled', false);
                 $('.accompany-guests,#proformaButton,#registerCardButton,.shares-btn').prop(
                     'disabled', true);
@@ -3797,12 +3800,14 @@ function displayResvOptionButtons(ressysId) {
                     'Pre Checked-In') {
                     $('.cancel-reservation').removeClass('d-none').prop('disabled', false);
                     $('#Resv-Check-In').removeClass('d-none').prop('disabled', false);
+                    $('#room_assign').removeClass('d-none').prop('disabled', false);
 
                 } else {
                     $('.cancel-reservation').addClass('d-none').prop('disabled', true);
                     if (respn.RESV_STATUS == 'Checked-In' || respn.RESV_STATUS ==
                         'Check-Out-Requested') {
                         $('#Resv-Check-In').removeClass('d-none').prop('disabled', true);
+                        $('#room_assign').removeClass('d-none').prop('disabled', true);
                         $('.checkout-reservation').removeClass('d-none');
                         if (currentDate >= departureDate) {
                             $('.checkout-reservation').prop('disabled', false);
@@ -3812,6 +3817,7 @@ function displayResvOptionButtons(ressysId) {
                         $('.accompany-guests,#proformaButton').prop(
                             'disabled', true);
                         $('#Resv-Check-In').removeClass('d-none').prop('disabled', true);
+                        $('#room_assign').removeClass('d-none').prop('disabled', true);
                     }
                 }
             }
@@ -5392,7 +5398,21 @@ function reservationCheckout() {
 }
 
 $('.web-link-btn').click(function() {
-    window.location.href = `<?= base_url('webline/ReservationDetail') ?>/${ressysId}`;
+    $.ajax({
+        url: `<?= base_url('/checkRoomAssigned') ?>`,
+        type: 'post',
+        dataType: 'json',
+        data:{resv_id:`${ressysId}`},
+        success: function(response) {
+            if (response['SUCCESS'] == 1) {
+                window.location.href = `<?= base_url('webline/ReservationDetail') ?>/${ressysId}`;
+               
+            } else {
+                showModalAlert('info', `<li>Please assign room to this reservation</li>`);
+            }
+        }
+    });
+   
 });
 
 $(document).on('click', '#registerCardButton', function() {

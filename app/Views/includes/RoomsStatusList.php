@@ -1,4 +1,7 @@
 <form class="dt_adv_rm_search mb-2" method="POST">
+    <input type="hidden" id="RESV_RATE_OPTIONS" >
+    <input type="hidden" id="RESV_RATE_CODE_OPTIONS" >
+
     <div class="row g-3 mb-2">
         <div class="col-12 col-sm-4 col-lg-4 d-none arriv_date_div">
             <div class="row border rounded p-3 pb-4 m-1">
@@ -437,7 +440,7 @@
                                 class="fa-solid fa-pen-to-square"></i>&nbsp;&nbsp;Quick
                             Change</button>
                         <button type="button" class="btn btn-dark assign_selected_room d-none" data-room-no=""
-                            data-room-id="" data-room-type-id="" disabled><i
+                            data-room-id="" data-room-type-id="" data-room-type="" disabled><i
                                 class="fa-solid fa-square-check"></i>&nbsp;&nbsp;Assign
                             Room</button>
 
@@ -498,6 +501,7 @@ $(document).ready(function() {
         var room_chk_str = $(this).attr('data-room-id') ? parseInt($(this).attr('data-room-id')) : '';
         var room_no_str = $(this).attr('data-room-no') ? $(this).attr('data-room-no') : '';
         var room_type_str = $(this).attr('data-room-type-id') ? $(this).attr('data-room-type-id') : '';
+        var room_type_id_str = $(this).attr('data-room-type') ? $(this).attr('data-room-type') : '';
 
         //If value in array
         if (jQuery.inArray(room_chk_str, clicked_room_ids) !== -1) {
@@ -519,7 +523,8 @@ $(document).ready(function() {
                 $('.assign_selected_room').attr({
                     'data-room-no': '',
                     'data-room-id': '',
-                    'data-room-type-id': ''
+                    'data-room-type-id': '',
+                    'data-room-type': ''
                 })
             } else {
                 $('.use_selected_rooms').html(
@@ -532,7 +537,8 @@ $(document).ready(function() {
                 $('.assign_selected_room').attr({
                     'data-room-no': room_no_str,
                     'data-room-id': room_chk_str,
-                    'data-room-type-id': room_type_str
+                    'data-room-type-id': room_type_str,
+                    'data-room-type': room_type_id_str
                 })
             } else {
                 $('.use_selected_rooms').html(
@@ -756,6 +762,7 @@ function loadRoomsTable(filterData) {
             $(row).attr('data-room-id', data['RM_ID']);
             $(row).attr('data-room-no', data['RM_NO']);
             $(row).attr('data-room-type-id', data['RM_TYPE_REF_ID']);
+            $(row).attr('data-room-type', data['RM_TYPE']);
 
             $(row).addClass('roomRow' + data['RM_ID']);
 

@@ -35,6 +35,9 @@ $(document).on('click', '.assignRoom', function() {
 
     var errMsg = '';
 
+    var assign_room = $(".assignRoom").attr('rel');
+
+
     if ($('[name="RESV_ARRIVAL_DT"]').val() == '')
         errMsg += '<li>You must select an arrival date before assigning a room</li>';
     if ($('[name="RESV_NIGHT"]').val() == '')
@@ -42,7 +45,7 @@ $(document).on('click', '.assignRoom', function() {
     if ($('#RESV_RM_TYPE').val() == null)
         errMsg += '<li>You must select a room type before assigning a room</li>';
 
-    if (errMsg != '') {
+    if (errMsg != '' && assign_room == 0 ) {
         showModalAlert('error', errMsg);
     } else {
 
@@ -88,6 +91,9 @@ $(document).on('click', '.assignRoom', function() {
 
 $(document).on('click', '.assign_selected_room', function() {
 
+    var assign_room = $(".assignRoom").attr('rel');
+    var resv_id = $('#room_assign').attr('data_sysid');
+   
     var selected_room_type = parseInt($('.assign_selected_room').attr(
         'data-room-type-id'));
     orig_room_type = orig_room_type === undefined ? parseInt($('#RESV_RM_TYPE').find(":selected").data(
@@ -151,6 +157,15 @@ $(document).on('click', '.assign_selected_room', function() {
 
             $('#RESV_ROOM').val($('.assign_selected_room').attr('data-room-no'));
             $('#RESV_ROOM_ID').val($('.assign_selected_room').attr('data-room-id'));
+            
+
+            if(assign_room == 1)
+            {
+
+                // alert('roomno:'+$('.assign_selected_room').attr('data-room-no')+'  room_id'+$('.assign_selected_room').attr('data-room-id')+'  rate:'+$('#RESV_RATE_OPTIONS').val()+'  rate_code:'+$('#RESV_RATE_CODE_OPTIONS').val()+'  room_type:'+$('.assign_selected_room').attr('data-room-type-id')+'  resv_id:'+resv_id)
+
+                updateRoomFromOptions($('.assign_selected_room').attr('data-room-no'),$('.assign_selected_room').attr('data-room-id'),$('.assign_selected_room').attr('data-room-type'),$('.assign_selected_room').attr('data-room-type-id'),$('#RESV_RATE_OPTIONS').val(),$('#RESV_RATE_CODE_OPTIONS').val(),resv_id);
+            }
 
             clicked_room_ids = [];
 
@@ -160,6 +175,22 @@ $(document).on('click', '.assign_selected_room', function() {
     });
 
 });
+
+function updateRoomFromOptions(RESV_ROOM,RESV_ROOM_ID,RESV_RM_TYPE,RESV_RM_TYPE_ID,RESV_RATE,RESV_RATE_CODE,RESV_ID){
+    
+    $.ajax({
+        url: '<?php echo base_url('/assignRoomFromOptions') ?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data:{room_no:RESV_ROOM,room_id:RESV_ROOM_ID,room_type:RESV_RM_TYPE,room_type_id:RESV_RM_TYPE_ID,resv_rate:RESV_RATE,resv_rate_code:RESV_RATE_CODE,resv_id:RESV_ID},
+        async: false,
+        success: function(respn) {
+            $('#dataTable_view').dataTable().fnDraw();
+        }
+    });
+}
 
 function setUpdatedRate() {
 
@@ -201,8 +232,10 @@ function setUpdatedRate() {
         if (response) {
 
             $(response).each(function(inx, data) {
-                $('[name="RESV_RATE_CODE"]').val(data.RT_CD_CODE);
-                $('#RESV_RATE').val(data.ACTUAL_GUEST_PRICE);
+                $('[name="RESV_RATE_CODE"],#RESV_RATE_CODE_OPTIONS').val(data.RT_CD_CODE);
+                $('#RESV_RATE,#RESV_RATE_OPTIONS').val(data.ACTUAL_GUEST_PRICE);             
+
+
             });
 
             Swal.fire({

@@ -683,6 +683,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
 
     $routes->match(['post'], '/floorsList', 'ReservationController::floorsList');
+    $routes->match(['post'], '/assignRoomFromOptions', 'ReservationController::assignRoomFromOptions');
+    
 
     //Subina Code (END)  
     $routes->match(['post'], '/roomTypeSearchList', 'ReservationController::roomTypeSearchList');
@@ -744,13 +746,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/getTaskComments', 'TaskAssignmentController::getTaskComments');
     $routes->match(['post'], '/checkRoomAlreadyAssigned', 'TaskAssignmentController::checkRoomAlreadyAssigned');
     $routes->match(['post'], '/customerNotesView', 'ApplicatioController::customerNotesView');
-    
-
-
-
-
-
-
+    $routes->match(['post'], '/checkRoomAssigned', 'ReservationController::checkRoomAssigned');
 
     //Subina Code (END)  
 
