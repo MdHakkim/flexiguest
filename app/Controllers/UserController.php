@@ -1037,4 +1037,19 @@ class UserController extends BaseController
         
         
     }
+
+    public function confirmPassword()
+    {
+        $user = session('user');
+        $data = $this->request->getPost();
+
+        if(password_verify($data['password'], $user['USR_PASSWORD'])) {
+           session()->set(['confirm_password' => true]);
+
+           $result = responseJson(200, false, ['msg' => 'Valid']);
+        } else
+            $result = responseJson(202, true, ['msg' => 'Invalid Password']);
+
+        return $this->respond($result);
+    }
 }

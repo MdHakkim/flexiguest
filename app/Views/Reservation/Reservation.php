@@ -498,6 +498,7 @@
                             <button type="button" class="btn btn-primary shares-btn">Shares</button>
                             <button type="button" class="btn btn-primary" id="traceButton" data_sysid="">Traces</button>
 
+                            <button type="button" class="btn btn-primary billing-btn" data-reservation_id="">Billing</button>
                         </div>
                     </div>
                 </div>
@@ -3745,6 +3746,7 @@ $(document).on('click', '.reserOption', function() {
     $('#proformaButton').attr('data_sysid', ressysId);
     $('#rateInfoButton').attr('data_sysid', ressysId);
     $('#traceButton').attr('data_sysid', ressysId);
+    $('.billing-btn').attr('data-reservation_id', ressysId);
     $('.resv-attachments').attr('data_sysid', ressysId);
 
     $('.cancel-reservation,.reinstate-reservation').attr({
@@ -6948,6 +6950,11 @@ $(document).on('click', '#traceButton', function() {
 
         }
     });
+});
+
+$(document).on('click', '.billing-btn', function() {
+    let reservation_id = $('.billing-btn').data('reservation_id');
+    window.location.href = '<?= base_url('/billing?reservation_id=') ?>' + reservation_id;
 });
 
 function departmentList() {

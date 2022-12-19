@@ -997,6 +997,14 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('update-status', 'UpgradeRoomRequestController::updateStatus');
     });
 
+    $routes->group('billing', function ($routes) {
+        $routes->get('', 'BillingController::billing');
+    });
+
+    $routes->group('user', function ($routes) {
+        $routes->post('confirm-password', 'UserController::confirmPassword');
+    });
+
     // ABUBAKAR CODE (END)
 });
 
