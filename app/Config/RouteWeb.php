@@ -995,6 +995,8 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
     $routes->group('billing', function ($routes) {
         $routes->get('', 'BillingController::billing');
+        $routes->post('post-transaction', 'BillingController::postTransaction');
+        $routes->post('load-windows-data', 'BillingController::loadWindowsData');
     });
 
     $routes->group('user', function ($routes) {
