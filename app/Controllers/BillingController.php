@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\Repositories\BillingRepository;
+use App\Controllers\Repositories\PaymentMethodRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use App\Controllers\Repositories\TransactionCodeRepository;
 use CodeIgniter\API\ResponseTrait;
@@ -15,12 +16,14 @@ class BillingController extends BaseController
     private $BillingRepository;
     private $ReservationRepository;
     private $TransactionCodeRepository;
+    private $PaymentMethodRepository;
 
     public function __construct()
     {
         $this->BillingRepository = new BillingRepository();
         $this->ReservationRepository = new ReservationRepository();
         $this->TransactionCodeRepository = new TransactionCodeRepository();
+        $this->PaymentMethodRepository = new PaymentMethodRepository();
     }
 
     public function billing()
@@ -34,21 +37,21 @@ class BillingController extends BaseController
 
         $data['reservation'] = $this->ReservationRepository->reservationById($data['reservation_id']);
         $data['transaction_codes'] = $this->TransactionCodeRepository->transactionCodes();
+        $data['payment_methods'] = $this->PaymentMethodRepository->paymentMethods();
 
         return view('frontend/accounts/billing', $data);
     }
 
-    public function postTransaction()
+    public function postOrPayment()
     {
         $user = session('user');
 
         $data = $this->request->getPost();
-        $data['RTR_TRANSACTION_TYPE'] = 'Credited';
 
-        if (!$this->validate($this->BillingRepository->postTransactionValidationRules($data)))
+        if (!$this->validate($this->BillingRepository->postOrPaymentValidationRules($data)))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
-        $result = $this->BillingRepository->postTransaction($user, $data);
+        $result = $this->BillingRepository->postOrPayment($user, $data);
         return $this->respond($result);
     }
 

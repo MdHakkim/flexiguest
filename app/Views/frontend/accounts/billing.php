@@ -4,6 +4,7 @@
 <?= $this->include('Layout/ErrorReport') ?>
 <?= $this->include('includes/confirm_password_popup') ?>
 <?= $this->include('includes/post_transaction_popup') ?>
+<?= $this->include('includes/payment_popup') ?>
 
 <style>
     .text-right {
@@ -28,7 +29,7 @@ if ($confirm_password) {
                 <div class="container-fluid table-responsive" style="padding: 16px 16px 6px 16px">
                     <div class="row">
                         <div class="col-md-2"><b>Balance</b></div>
-                        <div class="col-md-2"></div>
+                        <div class="col-md-2 total-balance">0.00</div>
 
                         <div class="col-md-2"><b>Arrival</b></div>
                         <div class="col-md-2"><?= $reservation['RESV_ARRIVAL_DT'] ?></div>
@@ -88,8 +89,8 @@ if ($confirm_password) {
                         <span class="window-number">(1)</span>
                         <?= $reservation['CUST_NAME'] ?>
                     </span>
-                    <span>CA</span>
-                    <span>0.00</span>
+                    <span><?= $reservation['RESV_PAYMENT_TYPE'] ?></span>
+                    <span class="window-total-balance">0.00</span>
                 </div>
 
                 <div class="container-fluid table-responsive" style="padding: 16px 16px 6px 16px">
@@ -115,6 +116,7 @@ if ($confirm_password) {
 
                     <div class="text-right function-btns">
                         <button class="btn btn-primary post-btn">Post</button>
+                        <button class="btn btn-primary payment-btn">Payment</button>
                         <button class="btn btn-secondary">Back</button>
                     </div>
                 </div>
@@ -165,6 +167,10 @@ if ($confirm_password) {
             showPostTransactionModal();
         });
 
+        $(document).on('click', '.function-btns .payment-btn', function() {
+            showPaymentModal();
+        });
+
         loadWindowsData(); // call on load
 
     });
@@ -206,21 +212,27 @@ if ($confirm_password) {
 
                     let max_window_number = 1;
                     let html = '';
+                    let total_balance = 0, window_total_balance = 0;
+
 
                     $.each(data, function(index, item) {
+                        total_balance += parseFloat(item.RTR_AMOUNT);
+                        
                         if (item.RTR_WINDOW > max_window_number)
                             max_window_number = item.RTR_WINDOW;
 
                         if (item.RTR_WINDOW == active_window) {
+                            window_total_balance += parseFloat(item.RTR_AMOUNT);
+
                             html += `
                                 <tr>
                                     <td>${index+1}</td>
                                     <td>${item.RTR_CREATED_AT}</td>
-                                    <td>${item.TR_CD_CODE}</td>
-                                    <td>${item.TR_CD_DESC}</td>
+                                    <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.TR_CD_CODE : item.PYM_CODE}</td>
+                                    <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.TR_CD_DESC : item.PYM_DESC}</td>
                                     <td>${item.RTR_AMOUNT}</td>
-                                    <td>${item.RTR_SUPPLEMENT}</td>
-                                    <td>${item.RTR_REFERENCE}</td>
+                                    <td>${item.RTR_SUPPLEMENT || ''}</td>
+                                    <td>${item.RTR_REFERENCE || ''}</td>
                                     <td>
                                         <div class="d-inline-block">
                                             <a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
@@ -256,6 +268,9 @@ if ($confirm_password) {
                         }
                         $('.windows .nav-tabs').html(window_tabs_html);
                     }
+
+                    $('.windows .window-total-balance').html(window_total_balance.toFixed(2));
+                    $('.total-balance').html(total_balance.toFixed(2));
 
                     if (!html)
                         html = '<tr><td colspan="8" class="text-center">No data available!</td></tr>';

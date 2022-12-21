@@ -94,9 +94,10 @@
         $(document).on('click', `${post_transaction_form} .submit-btn`, function() {
             var fd = new FormData($(`${post_transaction_form}`)[0]);
             fd.append('RTR_RESERVATION_ID', <?= $reservation_id ?>);
+            fd.append('RTR_TRANSACTION_TYPE', 'Debited');
 
             $.ajax({
-                url: '<?= base_url('billing/post-transaction') ?>',
+                url: '<?= base_url('billing/post-or-payment') ?>',
                 type: "post",
                 data: fd,
                 processData: false,

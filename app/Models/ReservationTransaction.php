@@ -11,6 +11,7 @@ class ReservationTransaction extends Model
     protected $allowedFields = [
         'RTR_RESERVATION_ID',
         'RTR_TRANSACTION_CODE_ID',
+        'RTR_PAYMENT_METHOD_ID',
         'RTR_TRANSACTION_TYPE',
         'RTR_AMOUNT',
         'RTR_QUANTITY',
