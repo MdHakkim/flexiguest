@@ -112,7 +112,7 @@ class NotificationController extends BaseController
             
             $NOTIFICATION_GUEST_ID       = ($NOTIFICATION_TYPE == 3 || $NOTIFICATION_TYPE == 2) ? $this->request->getPost('NOTIFICATION_GUEST_ID'):'';
             $NOTIFICATION_URL            = ($NOTIFICATION_TYPE == 3 || $NOTIFICATION_TYPE == 2) ? $this->request->getPost('NOTIFICATION_URL'):'';
-            $NOTIFICATION_DATE_TIME      = $this->request->getPost('NOTIFICATION_DATE_TIME');            
+            $NOTIFICATION_DATE_TIME      = ($NOTIFICATION_TYPE == 2) ? date('Y-m-d H:i:s') : $this->request->getPost('NOTIFICATION_DATE_TIME');            
             $NOTIFICATION_TEXT           = strip_tags($this->request->getPost('NOTIFICATION_TEXT'));
             $NOTIFICATION_SEND_NOW       = $this->request->getPost('NOTIFICATION_SEND_NOW');
             $NOTIFICATION_OLD_TYPE       = $this->request->getPost('NOTIFICATION_OLD_TYPE');           
@@ -136,7 +136,7 @@ class NotificationController extends BaseController
                 $rules['NOTIFICATION_TEXT'] = ['label' => 'Message', 'rules' => 'required'];
             }
 
-            if(!isset($NOTIFICATION_SEND_NOW) && $NOTIFICATION_DATE_TIME == ''){
+            if($NOTIFICATION_TYPE != 2 && !isset($NOTIFICATION_SEND_NOW) && $NOTIFICATION_DATE_TIME == ''){
                 $rules['NOTIFICATION_DATE_TIME'] = ['label' => 'Date and Time', 'rules' => 'required'];
             };
              
@@ -334,7 +334,7 @@ class NotificationController extends BaseController
                 
             }
             // Send Notification 
-            if(isset($NOTIFICATION_SEND_NOW)){
+            if(isset($NOTIFICATION_SEND_NOW) && $NOTIFICATION_TYPE != 2){
 
                 $dataa =  $this->triggerNotificationEmail($Notification_ID); 
 
@@ -836,7 +836,7 @@ class NotificationController extends BaseController
                 else if($NOTIFICATION_TYPE_ID == 3) {$start = 'You have a ';$end = ''; }
                 else if($NOTIFICATION_TYPE_ID == 4) {$start = 'You have a ';$end = ' message'; }
 
-                if($NOTIFICATION_TYPE_ID == 1 || $NOTIFICATION_TYPE_ID == 2 || $NOTIFICATION_TYPE_ID == 4){
+                if($NOTIFICATION_TYPE_ID == 1 || $NOTIFICATION_TYPE_ID == 4){
 
                     if($NOTIFICATION_TYPE_ID == 4){
                         $sql="SELECT RESV_NO FROM FLXY_RESERVATION 

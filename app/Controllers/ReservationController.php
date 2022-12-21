@@ -2496,7 +2496,7 @@ public function getRoomStatistics(){
         $room_type_id   = $this->request->getPost('room_type_id');
         $resv_id        = $this->request->getPost('resv_id');
         
-        $update = ['RESV_ROOM' => $room_no,'RESV_ROOM_ID'=>$room_id,'RESV_RM_TYPE'=> $room_type,'RESV_RM_TYPE_ID'=> $room_type_id 
+        $update = ['RESV_ROOM' => $room_no,'RESV_ROOM_ID'=>$room_id,'RESV_RM_TYPE'=> $room_type,'RESV_RM_TYPE_ID'=> $room_type_id, 'RESV_RTC_ID' =>$room_type_id, 'RESV_RTC' => $room_type
         ];
 
         if($resv_rate != ''){
@@ -2527,6 +2527,15 @@ public function getRoomStatistics(){
         } catch (\Exception $e) {
             return $e->getMessage();
         }
+    }
+
+
+    public function uploadReservationAttachments()
+    {
+        $fileName = $this->request->getPost('filename');
+        echo $fileName;
+        
+       
     }
     
 }

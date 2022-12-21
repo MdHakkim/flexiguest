@@ -156,7 +156,7 @@
 											<input type="text" id="NOTIFICATION_URL" name="NOTIFICATION_URL" class="form-control" placeholder="">
 										</div>
 									</div>
-									<div class="row mb-3">
+									<div class="row mb-3 NOT_SEND_TIME">
 										<div class="col-md-6">
 											<label for="html5-text-input" class="col-form-label"><b>NOTIFICATION DATE & TIME
 												</b></label>
@@ -844,18 +844,21 @@
 
 	$(document).on('click', '[name=NOTIFICATION_TYPE]', function() {
 		if ($(this).val() === '4') {
+			$(".NOT_SEND_TIME").show();
 			$(".Reservation").show();
 			$(".Department").show();
 			$(".Users").hide();
 			$(".Guest").hide();
 			$('#NOTIFICATION_RESERVATION_ID').val(null).trigger('change');
 		} else if ($(this).val() === '3') {
+			$(".NOT_SEND_TIME").show();
 			$(".Department").hide();
 			$(".Users").hide();
 			$(".Reservation").show();
 			$(".Guest").show();
 			guestList();
 		} else if ($(this).val() === '1') {
+			$(".NOT_SEND_TIME").show();
 			$(".Department").show();
 			$(".Users").show();
 			$(".Reservation").hide();
@@ -863,6 +866,7 @@
 
 		}
 		else if($(this).val() === '2'){
+			$(".NOT_SEND_TIME").hide();
 			$(".Department").hide();
 			$(".Users").hide();
 			$(".Reservation").hide();
