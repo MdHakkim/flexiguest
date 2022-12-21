@@ -2154,8 +2154,8 @@ public function getRoomStatistics(){
                 'ROOMS' => ['label' => 'Room', 'rules' => 'required|is_unique[FLXY_ROOM_OOOS.ROOMS,OOOS_ID,' . $sysid . ']'],
                 'ROOM_STATUS' => ['label' => 'Status', 'rules' => 'required'],  
                 'ROOM_RETURN_STATUS' => ['label' => 'Return Status', 'rules' => 'required'],   
-                'STATUS_FROM_DATE' => ['label' => 'From Date', 'rules' => 'required'],               
-                'STATUS_TO_DATE' => ['label' => 'To Date', 'rules' => 'required'], 
+                'STATUS_FROM_DATE' => ['label' => 'From Date', 'rules' => 'required'], 
+                'STATUS_TO_DATE' => ['label' => 'To Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Date should be after Begin Date']], 
                 'ROOM_CHANGE_REASON' => ['label' => 'Reason ', 'rules' => 'required']                     
                 
             ]);
