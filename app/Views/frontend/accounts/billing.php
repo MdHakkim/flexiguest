@@ -5,6 +5,7 @@
 <?= $this->include('includes/confirm_password_popup') ?>
 <?= $this->include('includes/post_transaction_popup') ?>
 <?= $this->include('includes/payment_popup') ?>
+<?= $this->include('includes/move_transaction_popup') ?>
 
 <style>
     .text-right {
@@ -98,7 +99,7 @@ if ($confirm_password) {
                     <table class="billing-table table table-striped" style="width:100%">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th>ID</th>
                                 <th>Date</th>
                                 <th>Code</th>
                                 <th>Description</th>
@@ -163,6 +164,11 @@ if ($confirm_password) {
             loadWindowsData();
         });
 
+        $(document).on('click', '.transaction-btns .move-transaction-btn', function() {
+            let transaction_id = $(this).data('transaction_id');
+            showMoveTransactionModal(transaction_id);
+        });
+
         $(document).on('click', '.function-btns .post-btn', function() {
             showPostTransactionModal();
         });
@@ -175,11 +181,20 @@ if ($confirm_password) {
 
     });
 
+    function changeActiveWindow(window_number)
+    {
+        active_window = window_number;
+        $('.windows .nav-tabs .nav-link').removeClass('active');
+        $(`.windows .nav-tabs .nav-item:nth-child(${window_number})`).click();
+    }
+
     function displayWindowLoader() {
         let html = `
                 <tr>
                     <td colspan="8" class="text-center">
-                        <i class="fas fa-circle-notch fa-spin"></i>
+                        <div class="spinner-border text-primary" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
                     </td>
                 </tr>
             `;
@@ -212,12 +227,13 @@ if ($confirm_password) {
 
                     let max_window_number = 1;
                     let html = '';
-                    let total_balance = 0, window_total_balance = 0;
+                    let total_balance = 0,
+                        window_total_balance = 0;
 
 
                     $.each(data, function(index, item) {
                         total_balance += parseFloat(item.RTR_AMOUNT);
-                        
+
                         if (item.RTR_WINDOW > max_window_number)
                             max_window_number = item.RTR_WINDOW;
 
@@ -239,16 +255,18 @@ if ($confirm_password) {
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </a>
 
-                                            <ul class="dropdown-menu dropdown-menu-end">
+                                            <ul class="dropdown-menu transaction-btns" role="menu">
                                                 <li>
-                                                    <a href="javascript:;" class="dropdown-item text-secondary">
+                                                    <a href="javascript:void(0);" class="dropdown-item move-transaction-btn" data-transaction_id="${item.RTR_ID}">
                                                         Move Transaction
                                                     </a>
                                                 </li>
+                                                
                                                 <div class="dropdown-divider"></div>
+
                                                 <li>
-                                                    <a href="javascript:;" class="dropdown-item text-secondary">
-                                                        Delete
+                                                    <a href="javascript:;" class="dropdown-item">
+                                                        
                                                     </a>
                                                 </li>
                                             </ul>

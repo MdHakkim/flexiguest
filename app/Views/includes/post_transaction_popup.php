@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label"><b>Windows *</b></label>
+                            <label class="form-label"><b>Window *</b></label>
                             <select class="form-control select2" name="RTR_WINDOW">
                                 <option>1</option>
                                 <option>2</option>

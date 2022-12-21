@@ -3,7 +3,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h4 class="modal-title" id="popModalWindowlabel">Transaction Posting</h4>
+                <h4 class="modal-title" id="popModalWindowlabel">Payment</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
             </div>
 
@@ -32,10 +32,6 @@
                             <label class="form-label">Referenece</label>
                             <textarea class="form-control" name="RTR_REFERENCE"></textarea>
                         </div>
-                    </div>
-
-                    <div class="row">
-                        
                     </div>
                 </div>
 

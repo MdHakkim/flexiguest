@@ -62,4 +62,21 @@ class BillingController extends BaseController
         $response = $this->BillingRepository->reservationTransactions("RTR_RESERVATION_ID = $reservation_id");
         return $this->respond(responseJson(200, false, ['msg' => 'transactions'], $response));
     }
+
+    public function moveTransaction()
+    {
+        $data = $this->request->getPost();
+        $data = [
+            'RTR_ID' => $data['RTR_ID'],
+            'RTR_WINDOW' => $data['RTR_WINDOW']
+        ];
+
+        if($data['RTR_WINDOW'] < 1 || $data['RTR_WINDOW'] > 8)
+            return $this->respond(responseJson(403, true, ['msg' => 'Invalid window selected.']));
+
+        $response = $this->BillingRepository->updateReservationTransaction($data);
+        $result = $response ? responseJson(200, false, ['msg' => 'Transaction moved successfully.']) : responseJson(202, true, ['msg' => 'Unable to move the transaction.']);
+        
+        return $this->respond($result);
+    }
 }

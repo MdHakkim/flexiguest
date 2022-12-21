@@ -23,7 +23,7 @@ class BillingRepository extends BaseController
             'RTR_RESERVATION_ID' => ['label' => 'reservation id', 'rules' => 'required'],
             'RTR_TRANSACTION_TYPE' => ['label' => 'transaction type', 'rules' => 'required'],
             'RTR_AMOUNT' => ['label' => 'amount', 'rules' => 'required'],
-            'RTR_WINDOW' => ['label' => 'window', 'rules' => 'required', 'errors' => ['required' => 'Please select a window.']],
+            'RTR_WINDOW' => ['label' => 'window', 'rules' => 'required|less_than_equal_to[1]|greater_than_equal_to[8]', 'errors' => ['required' => 'Please select a window.']],
         ];
 
         if ($data['RTR_TRANSACTION_TYPE'] == 'Credited')
@@ -63,5 +63,10 @@ class BillingRepository extends BaseController
             ->where($where_condition)
             ->orderBy('RTR_ID', 'desc')
             ->findAll();
+    }
+
+    public function updateReservationTransaction($data)
+    {
+        return $this->ReservationTransaction->save($data);
     }
 }
