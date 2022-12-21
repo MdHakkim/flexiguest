@@ -514,52 +514,50 @@ function toggleButton(elem, currentClass, replaceClass, disabled = false) {
                 
                     $(elem).prop('disabled', disabled);
                 }
-function clearFormFields_javascript()
-    {
-        return function clearFormFields(elem) {
+function clearFormFields(elem) {
 
-                    var formSerialization = $(elem).find("input,select,textarea").serialize();
-                    // alert(formSerialization);
-                
-                    $(elem).find('input,select,textarea').each(function() {
-                
-                        if ($(this).hasClass('dateField')) {
-                            $(this).datepicker("setDate", new Date());
-                            return true;
-                        }
-                
-                        switch ($(this).attr('type')) {
-                            case 'password':
-                            case 'text':
-                            case 'textarea':
-                            case 'file':
-                            case 'date':
-                            case 'number':
-                            case 'tel':
-                            case 'date':
-                            case 'hidden':
-                            case 'email':
-                                    $(this).val('');
-                                break;
-                            case 'checkbox':
-                                $(this).prop('checked', false);
-                                break;
-                            case 'radio':
-                                //this.checked = false;
-                                break;
-                            case 'submit':
-                                    break;
-                            default:
-                                if (!$(this).closest(".table-responsive").length)
-                                    $(this).val(null).trigger('change');
-                                break;
-                        }
-                    });
-                }
+        var formSerialization = $(elem).find("input,select,textarea").serialize();
+        // alert(formSerialization);
+    
+        $(elem).find('input,select,textarea').each(function() {
+    
+            if ($(this).hasClass('dateField')) {
+                $(this).datepicker("setDate", new Date());
+                return true;
+            }
+    
+            switch ($(this).attr('type')) {
+                case 'password':
+                case 'text':
+                case 'textarea':
+                case 'file':
+                case 'date':
+                case 'number':
+                case 'tel':
+                case 'date':
+                case 'hidden':
+                case 'email':
+                        $(this).val('');
+                    break;
+                case 'checkbox':
+                    $(this).prop('checked', false);
+                    break;
+                case 'radio':
+                    //this.checked = false;
+                    break;
+                case 'submit':
+                        break;
+                default:
+                    if (!$(this).closest(".table-responsive").length)
+                        $(this).val(null).trigger('change');
+                    break;
+            }
+        });
     }
+   
 
 
-    function blockLoader_javascript()
+    function blockLoader()
     {
         return function blockLoader(elem, duration = 500, alert = '') {
                     $(elem).block({
