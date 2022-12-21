@@ -30,26 +30,26 @@
                                         </div>
                                         <div class="col-md-4 mb-3">
                                             <label for="STATUS_FROM_DATE" class="col-form-label col-md-4"><b>
-                                                    From Date</b></label>
+                                                    From Date *</b></label>
                                             <input type="text" name="STATUS_FROM_DATE" id="STATUS_FROM_DATE"
                                                 class="form-control" />
                                         </div>
                                         <div class="col-md-4 mb-3">
                                             <label for="STATUS_TO_DATE" class="col-form-label col-md-4"><b>
-                                                    Through Date</b></label>
+                                                    Through Date *</b></label>
                                             <input type="text" name="STATUS_TO_DATE" id="STATUS_TO_DATE" class="form-control"
                                                  />
                                         </div>
                                         <div class="col-md-4 mb-3">                                        
                                         <label for="ROOM_STATUS"
-                                            class="col-form-label col-md-5"><b>Status </b></label>
+                                            class="col-form-label col-md-5"><b>Status *</b></label>
                                         <select id="ROOM_STATUS" name="ROOM_STATUS"
                                             class="select2 form-select form-select-lg"></select>                                   
                                        </div>
 
                                        <div class="col-md-4 mb-3">                                        
                                         <label for="ROOM_RETURN_STATUS"
-                                            class="col-form-label col-md-5"><b>Return Status </b></label>
+                                            class="col-form-label col-md-5"><b>Return Status *</b></label>
                                         <select id="ROOM_RETURN_STATUS" name="ROOM_RETURN_STATUS"
                                             class="select2 form-select form-select-lg">
                                           </select>                                   

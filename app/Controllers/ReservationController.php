@@ -2137,7 +2137,7 @@ public function getRoomStatistics(){
         
         $tableName = '( SELECT OOOS_ID,ROOMS,RM_NO,STATUS_FROM_DATE,STATUS_TO_DATE,ROOM_STATUS,ROOM_RETURN_STATUS,ROOM_CHANGE_REASON,RSM.RM_STATUS_CODE AS RSM_RM_STATUS_CODE,SM.RM_STATUS_CODE AS SM_RM_STATUS_CODE,RM_STATUS_CHANGE_DESC,RM_STATUS_CHANGE_CODE,ROOM_REMARKS
         FROM
-        FLXY_ROOM_OOOS INNER JOIN FLXY_ROOM_STATUS_CHANGE_REASON ON RM_STATUS_CHANGE_ID = ROOM_CHANGE_REASON INNER JOIN FLXY_ROOM ON RM_ID = ROOMS INNER JOIN FLXY_ROOM_STATUS_MASTER RSM ON RSM.RM_STATUS_ID = ROOM_STATUS LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = ROOM_RETURN_STATUS) STATUS_LIST';
+        FLXY_ROOM_OOOS INNER JOIN FLXY_ROOM_STATUS_CHANGE_REASON ON RM_STATUS_CHANGE_ID = ROOM_CHANGE_REASON INNER JOIN FLXY_ROOM ON RM_ID = ROOMS LEFT JOIN FLXY_ROOM_STATUS_MASTER RSM ON RSM.RM_STATUS_ID = ROOM_STATUS LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = ROOM_RETURN_STATUS) STATUS_LIST';
     
         $columns = 'OOOS_ID,ROOMS,RM_NO,STATUS_FROM_DATE,STATUS_TO_DATE,RSM_RM_STATUS_CODE,SM_RM_STATUS_CODE,RM_STATUS_CHANGE_CODE,RM_STATUS_CHANGE_DESC,ROOM_REMARKS';
         $mine->generate_DatatTable($tableName, $columns);
@@ -2152,6 +2152,8 @@ public function getRoomStatistics(){
 
             $validate = $this->validate([
                 'ROOMS' => ['label' => 'Room', 'rules' => 'required|is_unique[FLXY_ROOM_OOOS.ROOMS,OOOS_ID,' . $sysid . ']'],
+                'ROOM_STATUS' => ['label' => 'Status', 'rules' => 'required'],  
+                'ROOM_RETURN_STATUS' => ['label' => 'Return Status', 'rules' => 'required'],   
                 'STATUS_FROM_DATE' => ['label' => 'From Date', 'rules' => 'required'],               
                 'STATUS_TO_DATE' => ['label' => 'To Date', 'rules' => 'required'], 
                 'ROOM_CHANGE_REASON' => ['label' => 'Reason ', 'rules' => 'required']                     
