@@ -87,7 +87,7 @@
                             /
                             Postal Code:</b></label>
                     <div class="col-md-5" style="padding-right:  0;">
-                        <input type="text" id="S_PROFILE_CITY" name="S_PROFILE_CITY"
+                        <input type="text" id="S_CITY_NAME" name="S_CITY_NAME"
                             class="form-control dt-input dt-city" data-column="4" placeholder="" />
                     </div>
                     <div class="col-md-3">

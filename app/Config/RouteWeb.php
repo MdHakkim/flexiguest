@@ -1022,3 +1022,5 @@ $routes->group('laundry-amenities', function ($routes) {
 $routes->get('evalet/qr/(:segment)', 'EValetController::qr/$1');
 
 $routes->post('webhook', 'PaymentController::webhook');
+
+$routes->match(['post'], '/uploadReservationAttachments', 'ReservationController::uploadReservationAttachments',["filter" => "noauth"]);

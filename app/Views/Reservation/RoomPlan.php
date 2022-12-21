@@ -430,7 +430,7 @@
         </div>
     </div>
 
-        <!-- OOO/OOS Modal window -->
+        <!-- OOO/OOS Modal window
         <div class="modal fade" id="OOOSRoom" data-backdrop="static" data-keyboard="false"
         aria-labelledby="popModalWindowlabel">
         <div class="modal-dialog modal-xl">
@@ -547,7 +547,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- /Modal OOS window --> 
 
@@ -1387,14 +1387,14 @@ function roomPlanFunc(){
 
     //////// OOO/OOS Functions
 
-$(document).on('click', '#showRoomOSModal', function() {
-    $('#OOOSRoom').modal('show');    
-    roomsList();
-    roomsStatus();
-    roomsReturnStatus();
-    roomsChangeReason();    
-    showRoomStatus();
-});
+// $(document).on('click', '#showRoomOSModal', function() {
+//     $('#OOOSRoom').modal('show');    
+//     roomsList();
+//     roomsStatus();
+//     roomsReturnStatus();
+//     roomsChangeReason();    
+//     showRoomStatus();
+// });
 
 
 function roomsList() {

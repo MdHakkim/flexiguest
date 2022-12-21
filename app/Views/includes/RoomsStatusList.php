@@ -1,6 +1,7 @@
 <form class="dt_adv_rm_search mb-2" method="POST">
     <input type="hidden" id="RESV_RATE_OPTIONS" >
     <input type="hidden" id="RESV_RATE_CODE_OPTIONS" >
+    
 
     <div class="row g-3 mb-2">
         <div class="col-12 col-sm-4 col-lg-4 d-none arriv_date_div">
@@ -1354,14 +1355,16 @@ function showQuickStatChange(curStatId, curStatName) {
 }
 
 function setRmAssignSearchDefault() {
+    arrival = $(".assignRoom").attr('data_arrival');
+    nights = $(".assignRoom").attr('data_night');
     return [{
             field: '#S_ARRIVAL_DATE',
-            value: $('[name="RESV_ARRIVAL_DT"]').val(),
+            value: arrival ?? $('[name="RESV_ARRIVAL_DT"]').val(),
             status: '1'
         },
         {
             field: '#S_NIGHTS',
-            value: $('[name="RESV_NIGHT"]').val(),
+            value: nights ?? $('[name="RESV_NIGHT"]').val(),
             status: '1'
         },
         {

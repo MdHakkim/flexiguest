@@ -312,6 +312,7 @@
 </div>
 
 <?= $this->include('includes/RoomStatisticsPopup') ?>
+<?= $this->include('includes/RoomOOSPopup') ?>
 
 <script>
 $(document).on('click', '#ViewAllNotifs', function() {

@@ -1,4 +1,11 @@
 <!-- Option window -->
+<style> 
+
+#customerNotesWindow .word-wrap{
+		white-space: break-spaces !important;
+	}
+    
+    </style>
 <div class="modal fade" id="custOptionsWindow" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-md">
@@ -115,6 +122,7 @@
 <!-- Changes Log window -->
 <div class="modal fade" id="customerNotesWindow" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -285,10 +293,14 @@ $('#customer_notes').DataTable({
             "visible": false,
         },
         {
-            data: 'NOTIFICATION_TEXT'
+            data: 'NOTIFICATION_TEXT',
+            "orderable": false,
+
+            
         },
         {
-            data: 'NOTIFICATION_URL'
+            data: 'NOTIFICATION_URL',
+            "orderable": false,
         },
         {
             data: 'NOTIFICATION_DATE_TIME',
@@ -315,9 +327,10 @@ $('#customer_notes').DataTable({
             return '';
         }
     }, {
-        width: "35%"
     }, {
-        width: "15%"
+        width: "25%",
+        class:'word-wrap',
+        targets:2
     }, {
         width: "10%"
     
