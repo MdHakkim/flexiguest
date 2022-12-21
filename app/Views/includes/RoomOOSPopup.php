@@ -273,7 +273,7 @@ $(document).on('click', '.add-room-status', function() {
 });
 
 $(document).on('click', '.save-roomstatus-details', function() {
-  $('#ROOMS').prop("disabled", false);
+  $('#ROOMS').attr("disabled", false);
     hideModalAlerts();
     var formSerialization = $('#ooos-submit-form').serializeArray();
     var url = '<?php echo base_url('/insertRoomOOS') ?>';
@@ -319,7 +319,7 @@ $(document).on('click', '.save-roomstatus-details', function() {
 
 
 function showRoomStatus() {
-
+    $('#ROOMS').prop("disabled", false);
     $('#Status_Details').find('tr.table-warning').removeClass('table-warning');
 
     $('#Status_Details').DataTable({
