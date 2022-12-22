@@ -6,6 +6,7 @@ use App\Controllers\Repositories\ReservationRepository;
 use  App\Libraries\ServerSideDataTable;
 use  App\Libraries\EmailLibrary;
 use App\Models\Documents;
+use App\Models\PaymentMethod;
 use App\Models\Reservation;
 use App\Models\ReservationRoomAsset;
 use App\Models\RoomAsset;
@@ -25,6 +26,7 @@ class ApplicatioController extends BaseController
     private $Reservation;
     private $RoomAsset;
     private $ReservationRoomAsset;
+    private $PaymentMethod;
     private $ReservationRepository;
     private $ReservationAssetRepository;
 
@@ -39,6 +41,7 @@ class ApplicatioController extends BaseController
         $this->Reservation = new Reservation();
         $this->RoomAsset = new RoomAsset();
         $this->ReservationRoomAsset = new ReservationRoomAsset();
+        $this->PaymentMethod = new PaymentMethod();
         $this->ReservationRepository = new ReservationRepository();
         $this->ReservationAssetRepository = new ReservationAssetRepository();
     }
@@ -3422,53 +3425,44 @@ class ApplicatioController extends BaseController
     public function PaymentView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
         $tableName = 'FLXY_PAYMENT';
-        $columns = 'PYM_ID,PYM_CODE,PYM_DESC,PYM_TXN_CODE';
+        $columns = 'PYM_ID,PYM_CODE,PYM_DESC,PYM_TXN_CODE,PYM_CREDIT_LIMIT,PYM_CARD_LENGTH,PYM_CARD_PREFIX,PYM_ENABLE_DISABLE,PYM_DISPLAY_SEQUENCE,PYM_CREATED_AT';
         $mine->generate_DatatTable($tableName,$columns);
         exit;
     }
 
     public function insertPayment(){
         try{
-            $validate = $this->validate([
-                'PYM_CODE' => ['label' => 'Payment Code', 'rules' => 'required']
-            ]);
-            if(!$validate){
-                $validate = $this->validator->getErrors();
-                $result["SUCCESS"] = "-402";
-                $result[]["ERROR"] = $validate;
-                $result = $this->responseJson("-402",$validate);
-                echo json_encode($result);
-                exit;
+            $user = session('user');
+            $data = $this->request->getPost();
+
+            $rules = [
+                'PYM_CODE' => ['label' => 'Payment Method', 'rules' => 'required'],
+                'PYM_DESC' => ['label' => 'description', 'rules' => 'required'],
+                'PYM_TXN_CODE' => ['label' => 'transaction code', 'rules' => 'required'],
+                'PYM_CREDIT_LIMIT' => ['label' => 'credit limit', 'rules' => 'required|greater_than_equal_to[1]'],
+            ];
+
+            if(!$this->validate($rules))
+                return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+            
+            if(empty($data['PYM_ID'])) {
+                unset($data['PYM_ID']);
+                $data['PYM_CREATED_BY'] = $data['PYM_UPDATED_BY'] = $user['USR_ID'];
             }
-            $sysid = $this->request->getPost("PYM_ID");
-            if(!empty($sysid)){
-                $data = ["PYM_CODE" => $this->request->getPost("PYM_CODE"),
-                    "PYM_DESC" => $this->request->getPost("PYM_DESC"),
-                    "PYM_TXN_CODE" => $this->request->getPost("PYM_TXN_CODE")
-                ];
-            $return = $this->Db->table('FLXY_PAYMENT')->where('PYM_ID', $sysid)->update($data); 
-            }else{
-                $data = ["PYM_CODE" => $this->request->getPost("PYM_CODE"),
-                    "PYM_DESC" => $this->request->getPost("PYM_DESC"),
-                    "PYM_TXN_CODE" => $this->request->getPost("PYM_TXN_CODE")
-                ];
-                $return = $this->Db->table('FLXY_PAYMENT')->insert($data); 
-            }
-            if($return){
-                $result = $this->responseJson("1","0",$return,$response='');
-                echo json_encode($result);
-            }else{
-                $result = $this->responseJson("-444","db insert not success",$return);
-                echo json_encode($result);
-            }
-        }catch (Exception $e){
-            return $this->respond($e->errors());
+            else 
+                $data['PYM_UPDATED_BY'] = $user['USR_ID'];
+
+            $response = $this->PaymentMethod->save($data);
+            return $this->respond(responseJson(200, false, ['msg' => 'Payment method created/updated successfully.']));
+
+        }catch (\Exception $e){
+            return $this->respond($e->getMessage());
         }
     }
 
     public function editPayment(){
         $param = ['SYSID'=> $this->request->getPost("sysid")];
-        $sql = "SELECT PYM_ID,PYM_CODE,PYM_DESC,PYM_TXN_CODE FROM FLXY_PAYMENT WHERE PYM_ID=:SYSID:";
+        $sql = "SELECT * FROM FLXY_PAYMENT WHERE PYM_ID=:SYSID:";
         $response = $this->Db->query($sql,$param)->getResultArray();
         echo json_encode($response);
     }

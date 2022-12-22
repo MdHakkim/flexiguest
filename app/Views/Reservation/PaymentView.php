@@ -1,293 +1,312 @@
-
-
-
-<?=$this->extend("Layout/AppView")?>
-<?=$this->section("contentRender")?>
+<?= $this->extend("Layout/AppView") ?>
+<?= $this->section("contentRender") ?>
 <?= $this->include('Layout/SuccessReport') ?>
 <?= $this->include('Layout/ErrorReport') ?>
 
-  <!-- Content wrapper -->
-          <div class="content-wrapper">
-            <!-- Content -->
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <!-- Content -->
 
-            <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Reservations /</span> Payment Types</h4>
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="breadcrumb-wrapper py-3 mb-4"><span class="text-muted fw-light">Masters /</span> Payment Methods</h4>
 
-              <!-- DataTable with Buttons -->
-              <div class="card">
-                <!-- <h5 class="card-header">Responsive Datatable</h5> -->
-                <div class="container-fluid p-3">
-                  <table id="dataTable_view" class="table table-striped">
+        <!-- DataTable with Buttons -->
+        <div class="card">
+            <!-- <h5 class="card-header">Responsive Datatable</h5> -->
+            <div class="container-fluid p-3">
+                <table id="dataTable_view" class="table table-striped">
                     <thead>
-                      <tr>
-                        <th>Payment Id</th>
-                        <th>Payment Description</th>
-                        <th>Txn code</th>
-                        <th>Action</th>
-                      </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Enable/Disable</th>
+                            <th>Code</th>
+                            <th>Payment Description</th>
+                            <th>Transaction code</th>
+                            <th>Credit Limit</th>
+                            <th>Display Sequence</th>
+                            <th>Action</th>
+                        </tr>
                     </thead>
-                    
-                  </table>
-                </div>
-              </div>
-             
-              <!--/ Multilingual -->
-            </div>
-            <!-- / Content -->
 
-            <!-- Modal Window -->
-           
-            <div class="modal fade" id="popModalWindow" tabindex="-1" aria-lableledby="popModalWindowlable" aria-hidden="true">
-              <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="popModalWindowlable">Payment</h5>
+                </table>
+            </div>
+        </div>
+
+        <!--/ Multilingual -->
+    </div>
+    <!-- / Content -->
+
+    <!-- Modal Window -->
+
+    <div class="modal fade" id="popModalWindow" tabindex="-1" aria-lableledby="popModalWindowlable" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="popModalWindowlable">Add Payment Method</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form id="submitForm">
-                      <div class="row g-3">
-                        <input type="hidden" name="PYM_ID" id="PYM_ID" class="form-control"/>
-                        <div class="col-md-12">
-                          <lable class="form-lable">Payment Type</lable>
-                          <input type="text" name="PYM_CODE" id="PYM_CODE" class="form-control" placeholder="reservation type" />
-                        </div>
-                        <div class="col-md-12">
-                          <lable class="form-lable">Payment Description</lable>
-                          <input type="text" name="PYM_DESC" id="PYM_DESC" class="form-control" placeholder="reservation desc." />
-                        </div>
-                        <div class="col-md-12">
-                          <lable class="form-lable">Txn Code</lable>
-                            <div class="input-group mb-3">
-                              <select  id="PYM_TXN_CODE" name="PYM_TXN_CODE"  data-width="100%" class="selectpicker PYM_TXN_CODE" data-live-search="true">
-                                <option value="">Select</option>
-                              </select>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                          <lable class="form-lable">Credit Limit</lable>
-                          <input type="text" class="form-control" placeholder="reservation type" />
-                        </div>
-                        <div class="col-md-12">
-                          <lable class="form-lable">IFC CC Type</lable>
-                            <div class="input-group mb-3">
-                              <select  data-width="100%" class="selectpicker PYM_TXN_CODE" data-live-search="true">
-                                <option value="">Select</option>
-                                <option value="AB">Australian Bank Card</option>
-                                <option value="AM">Amaco</option>
-                                <option value="AX">American Express</option>
-                              </select>
-                            </div>
-                        </div>
-                        <div class="col-md-12">
-                          <lable class="form-lable">Merchant Number</lable>
-                          <input type="text" class="form-control" placeholder="reservation type" />
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="submitBtn" onClick="submitForm('submitForm')" class="btn btn-primary">Save</button>
-                  </div>
                 </div>
-              </div>
+                <div class="modal-body">
+                    <form id="submitForm">
+                        <div class="row g-3">
+
+                            <input type="hidden" name="PYM_ID" id="PYM_ID" class="form-control" />
+
+                            <div class="col-md-6">
+                                <lable class="form-lable">Payment Method</lable>
+                                <input type="text" name="PYM_CODE" class="form-control" placeholder="payment method" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <lable class="form-lable">Description</lable>
+                                <input type="text" name="PYM_DESC" class="form-control" placeholder="description" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <lable class="form-lable">Transaction Code</lable>
+                                <input type="number" name="PYM_TXN_CODE" class="form-control" placeholder="transaction code" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <lable class="form-lable">Credit Limit</lable>
+                                <input type="number" name="PYM_CREDIT_LIMIT" class="form-control" placeholder="credit limit" />
+                            </div>
+
+                            <h6 class="mb-1">Validations</h6>
+
+                            <div class="col-md-6">
+                                <lable class="form-lable">Card Lenght</lable>
+                                <input type="text" name="PYM_CARD_LENGTH" class="form-control" placeholder="card length" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <lable class="form-lable">Card Prefix</lable>
+                                <input type="text" name="PYM_CARD_PREFIX" class="form-control" placeholder="card prefix" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <lable class="form-lable">Display Sequence</lable>
+                                <input type="number" name="PYM_DISPLAY_SEQUENCE" class="form-control" placeholder="display sequence" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label"><b>Enable/Disable *</b></label>
+                                <select class="select2" name="PYM_ENABLE_DISABLE">
+                                    <option value="1">Enabled</option>
+                                    <option value="0">Disable</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="submitBtn" onClick="submitForm()" class="btn btn-primary">Save</button>
+                </div>
             </div>
-            <!-- /Modal window -->
-            
-            <div class="content-backdrop fade"></div>
-          </div>
-          <!-- Content wrapper -->
+        </div>
+    </div>
+    <!-- /Modal window -->
+
+    <div class="content-backdrop fade"></div>
+</div>
+<!-- Content wrapper -->
+<?= $this->endSection() ?>
+
+<?= $this->section('script') ?>
 <script>
-  var compAgntMode='';
-  var linkMode='';
-  $(document).ready(function() {
-    linkMode='EX';
-    $('#dataTable_view').DataTable({
-        'processing': true,
-        'serverSide': true,
-        'serverMethod': 'post',
-        'ajax': {
-            'url':'<?php echo base_url('/paymentView')?>'
-        },
-        'columns': [
-          { data: 'PYM_CODE' },
-          { data: 'PYM_DESC' },
-          { data: 'PYM_TXN_CODE' },
-          { data: null, className: "text-center", "orderable": false, render : function ( data, type, row, meta ) {
-            return (
-              '<div class="d-inline-block">' +
-                '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
-                '<ul class="dropdown-menu dropdown-menu-end">' +
-                  '<li><a href="javascript:;" data_sysid="'+data['PYM_ID']+'" class="dropdown-item editWindow">Edit</a></li>' +
-                  '<div class="dropdown-divider"></div>' +
-                  '<li><a href="javascript:;" data_sysid="'+data['PYM_ID']+'" class="dropdown-item text-danger delete-record">Delete</a></li>' +
-                '</ul>' +
-              '</div>'
-            );
-          }},
-        ],
-        autowidth:true
-      
-    });
-    $("#dataTable_view_wrapper .row:first").before('<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>');
+    var form_id = '#submitForm';
+    var compAgntMode = '';
+    var linkMode = '';
 
-  });
-
-  function runInitialLevel(){
-    $.ajax({
-      url: '<?php echo base_url('/getSupportingRoomClassLov')?>',
-      type: "post",
-      headers: {'X-Requested-With': 'XMLHttpRequest'},
-      dataType:'json',
-      async:false,
-      success:function(respn){
-        var memData = respn[0];
-        var idArray = ['RM_TY_PUBLIC_RATE_CODE','RM_TY_FEATURE'];
-        $(respn).each(function(ind,data){
-          var option = '<option value="">Select</option>';
-          $.each(data,function(i,valu){
-            var value = $.trim(valu['CODE']);//fields.trim();
-            var desc = $.trim(valu['DESCS']);//datavals.trim();
-            option += '<option value="'+value+'">'+desc+'</option>';
-          });
-          $('#'+idArray[ind]).html(option);
-        });
-      }
-    });
-  }
-
-  $(document).on('click','.flxCheckBox',function(){
-    var checked = $(this).is(':checked');
-    var parent = $(this).parent();
-    if(checked){
-      parent.find('input[type=hidden]').val('Y');
-    }else{
-      parent.find('input[type=hidden]').val('N');
-    }
-  });
-
-  function addForm(){
-    $(':input','#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
-    $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-    $('#popModalWindow').modal('show');
-  }
-
-  $(document).on('click','.delete-record',function(){
-    var sysid = $(this).attr('data_sysid');
-      bootbox.confirm({
-        message: "Are you sure you want to delete this record?",
-        buttons: {
-            confirm: {
-                label: 'Yes',
-                className: 'btn-success'
+    $(document).ready(function() {
+        linkMode = 'EX';
+        $('#dataTable_view').DataTable({
+            'processing': true,
+            'serverSide': true,
+            'serverMethod': 'post',
+            'ajax': {
+                'url': '<?php echo base_url('/paymentView') ?>'
             },
-            cancel: {
-                label: 'No',
-                className: 'btn-danger'
-            }
-        },
-        callback: function (result) {
-            if(result){
-              $.ajax({
-                url: '<?php echo base_url('/deletePayment')?>',
-                type: "post",
-                data: {sysid:sysid},
-                headers: {'X-Requested-With': 'XMLHttpRequest'},
-                dataType:'json',
-                success:function(respn){
-                  
-                  $('#dataTable_view').dataTable().fnDraw();
+            'columns': [{
+                    data: 'PYM_ID'
+                },
+                {
+                    data: null,
+                    render: function(data, type, row, meta) {
+                        if (data['PYM_ENABLE_DISABLE'])
+                            return `<span class="badge rounded-pill bg-label-success">Enabled</span>`;
+                        else
+                            return `<span class="badge rounded-pill bg-label-danger">Disabled</span>`;
+                    }
+                },
+                {
+                    data: 'PYM_CODE'
+                },
+                {
+                    data: 'PYM_DESC'
+                },
+                {
+                    data: 'PYM_TXN_CODE'
+                },
+                {
+                    data: 'PYM_CREDIT_LIMIT'
+                },
+                {
+                    data: 'PYM_DISPLAY_SEQUENCE'
+                },
+                {
+                    data: null,
+                    className: "text-center",
+                    "orderable": false,
+                    render: function(data, type, row, meta) {
+                        return (
+                            '<div class="d-inline-block">' +
+                            '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
+                            '<ul class="dropdown-menu dropdown-menu-end">' +
+                            '<li><a href="javascript:;" data_sysid="' + data['PYM_ID'] + '" class="dropdown-item editWindow">Edit</a></li>' +
+                            '<div class="dropdown-divider"></div>' +
+                            '<li><a href="javascript:;" data_sysid="' + data['PYM_ID'] + '" class="dropdown-item text-danger delete-record">Delete</a></li>' +
+                            '</ul>' +
+                            '</div>'
+                        );
+                    }
+                },
+            ],
+            autowidth: true
+
+        });
+        $("#dataTable_view_wrapper .row:first").before('<div class="row flxi_pad_view"><div class="col-md-3 ps-0"><button type="button" class="btn btn-primary" onClick="addForm()"><i class="fa-solid fa-plus fa-lg"></i> Add</button></div></div>');
+
+    });
+
+    function resetForm() {
+        $(`${form_id} input`).val('');
+        $(`${form_id} textarea`).val('');
+        $(`${form_id} select`).val('').trigger('change');
+
+        $(`${form_id} input[name='PYM_DISPLAY_SEQUENCE']`).val('1');
+        $(`${form_id} select[name='PYM_ENABLE_DISABLE']`).val('1').trigger('change');
+    }
+
+    function addForm() {
+        resetForm();
+        // $(':input', '#submitForm').not('[type="radio"]').val('').prop('checked', false).prop('selected', false);
+        $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
+        $('#popModalWindow').modal('show');
+    }
+
+    function submitForm() {
+        hideModalAlerts();
+
+        var fd = new FormData($(`${form_id}`)[0]);
+
+        var url = '<?php echo base_url('/insertPayment') ?>';
+        $.ajax({
+            url: url,
+            type: "post",
+            data: fd,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function(response) {
+
+                var mcontent = '';
+                $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                    mcontent += '<li>' + data + '</li>';
+                });
+
+                if (response['SUCCESS'] != 200) {
+                    showModalAlert('error', mcontent);
+                } else {
+                    showModalAlert('success', mcontent);
+
+                    $('#popModalWindow').modal('hide');
+                    $('#dataTable_view').dataTable().fnDraw();
                 }
-              });
             }
-        }
-    });
-  });
+        });
+    }
 
-  $(document).on('keyup','.RM_TY_ROOM_CLASS .form-control',function(){
-    var search = $(this).val();
-    $.ajax({
-        url: '<?php echo base_url('/roomClassList')?>',
-        type: "post",
-        headers: {'X-Requested-With': 'XMLHttpRequest'},
-        data:{search:search},
-        // dataType:'json',
-        success:function(respn){
-          
-          $('#RM_TY_ROOM_CLASS').html(respn).selectpicker('refresh');
-        }
-    });
-  });
+    $(document).on('click', '.editWindow', function() {
+        resetForm();
 
-  $(document).on('click','.editWindow',function(){
-    runInitialLevel();
-    var sysid = $(this).attr('data_sysid');
-    $('#popModalWindow').modal('show');
-    var url = '<?php echo base_url('/editPayment')?>';
-    $.ajax({
-        url: url,
-        type: "post",
-        headers: {'X-Requested-With': 'XMLHttpRequest'},
-        data:{sysid:sysid},
-        dataType:'json',
-        success:function(respn){
-          $(respn).each(function(inx,data){
-            $.each(data,function(fields,datavals){
-              var field = $.trim(fields);//fields.trim();
-              var dataval = $.trim(datavals);//datavals.trim();
-              if(field=='RM_TY_ROOM_CLASS'){
-                var option = '<option value="'+dataval+'">'+data[field+'_DESC']+'</option>';
-                $('#'+field).html(option).selectpicker('refresh');
-              }else if(field=='RM_TY_PSEUDO_RM' || field=='RM_TY_HOUSEKEEPING' || field=='RM_TY_SEND_T_INTERF'){
-                if(dataval=='Y'){
-                  $('#'+field+'_CHK').prop('checked',true);
-                }else{
-                  $('#'+field+'_CHK').prop('checked',false)
+        var sysid = $(this).attr('data_sysid');
+        $('#popModalWindow').modal('show');
+
+        var url = '<?php echo base_url('/editPayment') ?>';
+        $.ajax({
+            url: url,
+            type: "post",
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            data: {
+                sysid: sysid
+            },
+            dataType: 'json',
+            success: function(respn) {
+                $(respn).each(function(inx, data) {
+                    $.each(data, function(field, val) {
+                        if ($(`${form_id} input[name='${field}'][type!='file']`).length)
+                            $(`${form_id} input[name='${field}']`).val(val);
+
+                        else if ($(`${form_id} textarea[name='${field}']`).length)
+                            $(`${form_id} textarea[name='${field}']`).val(val);
+
+                        else if ($(`${form_id} select[name='${field}']`).length)
+                            $(`${form_id} select[name='${field}']`).val(val).trigger('change');
+                    });
+                });
+
+                $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
+            }
+        });
+    });
+
+    $(document).on('click', '.delete-record', function() {
+        hideModalAlerts();
+
+        var sysid = $(this).attr('data_sysid');
+        bootbox.confirm({
+            message: "Are you sure you want to delete this record?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
                 }
-              }else if(field=='RM_TY_FEATURE'){
-                var feture = dataval.split(',');
-                $('#'+field).val(feture).trigger('change');
-              }else{
-                $('#'+field).val(dataval);
-              }
-            });
-          });
-          $('#submitBtn').removeClass('btn-primary').addClass('btn-success').text('Update');
-        }
-    });
-  });
+            },
+            callback: function(result) {
+                if (result) {
+                    $.ajax({
+                        url: '<?php echo base_url('/deletePayment') ?>',
+                        type: "post",
+                        data: {
+                            sysid: sysid
+                        },
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        dataType: 'json',
+                        success: function(response) {
 
-  function submitForm(id){
-    $('#errorModal').hide();
-    var formSerialization = $('#'+id).serializeArray();
-    var url = '<?php echo base_url('/insertPayment')?>';
-    $.ajax({
-        url: url,
-        type: "post",
-        data: formSerialization,
-        headers: {'X-Requested-With': 'XMLHttpRequest'},
-        dataType:'json',
-        success:function(respn){
-          
-          var response = respn['SUCCESS'];
-          if(response!='1'){
-            $('#errorModal').show();
-            var ERROR = respn['RESPONSE']['ERROR'];
-            var error='<ul>';
-            $.each(ERROR,function(ind,data){
-              
-              error+='<li>'+data+'</li>';
-            });
-            error+='<ul>';
-            $('#formErrorMessage').html(error);
-          }else{
-            $('#popModalWindow').modal('hide');
-            $('#dataTable_view').dataTable().fnDraw();
-          }
-        }
+                            if (response['SUCCESS'] != 200) {
+                                showModalAlert('error', response['RESPONSE']['REPORT_RES']['msg']);
+                            } else {
+                                showModalAlert('success', response['RESPONSE']['REPORT_RES']['msg']);
+
+                                $('#dataTable_view').dataTable().fnDraw();
+                            }
+                        }
+                    });
+                }
+            }
+        });
     });
-  }
 </script>
 
-<?=$this->endSection()?>
+<?= $this->endSection() ?>
