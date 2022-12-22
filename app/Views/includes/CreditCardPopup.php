@@ -107,7 +107,7 @@
 <script>
 $(document).on('change', '#RESV_PAYMENT_TYPE', function(e) {   
 		var payment_type = $(this).val();
-        alert(payment_type)
+        // alert(payment_type)
         var resv_id = $("#RESV_ID").val();
         //$("#editCCModal").modal('hide');
         $("#editCCModal").modal('hide');
@@ -124,7 +124,7 @@ $(document).on('change', '#RESV_PAYMENT_TYPE', function(e) {
                 async: false,
                 dataType:'json',
                 success: function(respn) {  
-                    alert(respn)
+                    //alert(respn)
                     if(respn != ''){
                         $(respn).each(function(inx, data) {
                             $.each(data, function(fields, datavals) {                   
