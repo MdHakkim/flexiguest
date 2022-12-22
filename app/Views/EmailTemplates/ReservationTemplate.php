@@ -34,14 +34,14 @@
                                   <tr>
                                     <td style="font-size:13px;font-family: arial;">
                                     <?php if($mode=='QR' && $status == 0){?>
-                                      <h3>You have successfully completed your pre- check in process. Please show the below QR-Code to our friendly reception team in order to collect your apartment key. </h3>
+                                      <h3>You have successfully completed your pre- check in process. Please show the below QR-Code to our friendly reception team in order to collect your apartment key.<br> </h3>
                                     <?php }else if($mode=='QR' && $status == 1) {?>
                                       <h3>It is our pleasure to welcome you to Hotel</h3>
                                       <h3>We strive to provide you with a clean and comfortable apartment, providing all the comforts of home, supported with a dedicated, friendly team of hospitality professionals, who are on standby to address all of your concerns and requests.</h3>
-                                      <h3>We trust your stay will be an enjoyable one and look forward to serving you during your visit to Dubai. </h3>
+                                      <h3>We trust your stay will be an enjoyable one and look forward to serving you during your visit to Dubai.<br> </h3>
                                     <?php } else{?>
                                       <h3>Please find your Reservation details below, download the Flexi Guest App to complete your online check-in and save time on arrival. </h3>
-                                      <h3>A valid passport or Emirates ID (for UAE Nationals and Residents) is required upon Check-in. </h3>
+                                      <h3>A valid passport or Emirates ID (for UAE Nationals and Residents) is required upon Check-in. <br></h3>
                                     <?php } ?>
                                     </td>
                                     
@@ -52,7 +52,7 @@
                                       <table border="0"  cellspacing="0" cellpadding="0" >
                                         <tbody>
                                         <tr style="padding-bottom:6px;font-family: arial;">
-                                          <td><br><p>Reservation No</p></td>
+                                          <td><p>Reservation No</p></td>
                                           <td><p>: <?php echo $data['RESV_NO'];?></p></td>
                                         </tr>
                                         <tr style="padding-bottom:6px;">

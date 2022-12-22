@@ -2349,7 +2349,7 @@ class MastersController extends BaseController
         */
 
         $search_keys = [
-            'S_PROFILE_NAME', 'S_PROFILE_FIRST_NAME', 'S_PROFILE_COMMUNICATION', 'S_PROFILE_TYPE', 'S_PROFILE_CITY',
+            'S_PROFILE_NAME', 'S_PROFILE_FIRST_NAME', 'S_PROFILE_COMMUNICATION', 'S_PROFILE_TYPE', 'S_CITY_NAME','S_PROFILE_POSTAL_CODE',
             'S_MEMBERSHIP_TYPE', 'S_MEMBERSHIP_NUMBER', 'S_PROFILE_PASSPORT', 'S_PROFILE_NUMBER',
             'S_AGN_IATA', 'S_COM_CORP_ID', 'S_REMOVE_PROFILES'
         ];
@@ -2361,9 +2361,11 @@ class MastersController extends BaseController
                 if (null !== $this->request->getPost($search_key) && !empty(trim($this->request->getPost($search_key)))) {
                     $value = trim($this->request->getPost($search_key));
 
+                    
+
                     switch ($search_key) {
                         case 'S_PROFILE_COMMUNICATION':
-                            $init_cond["(PROFILE_NUMBER LIKE '%$value%' OR PROFILE_MOBILE LIKE '%$value%')"] = "";
+                            $init_cond["(PROFILE_NUMBER LIKE '%$value%' OR PROFILE_MOBILE LIKE '%$value%' OR PROFILE_EMAIL LIKE '%$value%')"] = "";
                             break;
                         case 'S_MEMBERSHIP_TYPE':
                             $init_cond["(SELECT COUNT(*) FROM FLXY_CUSTOMER_MEMBERSHIP WHERE CUST_ID = PROFILE_ID AND MEM_ID = '$value' AND CM_STATUS = 1) = "] = "1";

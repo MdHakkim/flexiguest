@@ -1138,7 +1138,7 @@
                                 <label class="form-label"><b>Begin Date *</b></label>
                                 <div class="input-group mb-6">
                                     <input type="text" id="NG_RT_START_DT" name="NG_RT_START_DT"
-                                        class="form-control dateField" placeholder="d-Mon-yyyy" required />
+                                        class="form-control dateField" placeholder="d-Mon-yyyy" required readonly/>
                                     <span class="input-group-append">
                                         <span class="input-group-text bg-light d-block">
                                             <i class="fa fa-calendar"></i>
@@ -1150,7 +1150,7 @@
                                 <label class="form-label">End Date</label>
                                 <div class="input-group mb-6">
                                     <input type="text" id="NG_RT_END_DT" name="NG_RT_END_DT"
-                                        class="form-control dateField" placeholder="d-Mon-yyyy" />
+                                        class="form-control dateField" placeholder="d-Mon-yyyy" readonly/>
                                     <span class="input-group-append">
                                         <span class="input-group-text bg-light d-block">
                                             <i class="fa fa-calendar"></i>
@@ -1720,9 +1720,11 @@ $(document).ready(function() {
 
         $('#neg_PROFILE_IDS').val(clicked_profile_ids);
         $("#NG_RT_ID").val("");
-        $("#NG_RT_START_DT").datepicker("setDate", new Date(<?php date('d-M-Y'); ?>));
-        $("#NG_RT_END_DT").datepicker("setDate", new Date(
-            <?php date('d-M-Y', strtotime('+1 day')); ?>));
+        $("#NG_RT_START_DT").datepicker("setDate",$("#RT_CD_BEGIN_SELL_DT").val())
+        $("#NG_RT_END_DT").datepicker("setDate",$("#RT_CD_END_SELL_DT").val())
+        // $("#NG_RT_START_DT").datepicker("setDate", new Date(<?php date('d-M-Y'); ?>));
+        // $("#NG_RT_END_DT").datepicker("setDate", new Date(
+        //     <?php // date('d-M-Y', strtotime('+1 day')); ?>));
         $("#NG_RT_DIS_SEQ").val("");
 
         clicked_profile_ids = [];

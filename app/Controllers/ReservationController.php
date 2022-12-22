@@ -2137,7 +2137,7 @@ public function getRoomStatistics(){
         
         $tableName = '( SELECT OOOS_ID,ROOMS,RM_NO,STATUS_FROM_DATE,STATUS_TO_DATE,ROOM_STATUS,ROOM_RETURN_STATUS,ROOM_CHANGE_REASON,RSM.RM_STATUS_CODE AS RSM_RM_STATUS_CODE,SM.RM_STATUS_CODE AS SM_RM_STATUS_CODE,RM_STATUS_CHANGE_DESC,RM_STATUS_CHANGE_CODE,ROOM_REMARKS
         FROM
-        FLXY_ROOM_OOOS INNER JOIN FLXY_ROOM_STATUS_CHANGE_REASON ON RM_STATUS_CHANGE_ID = ROOM_CHANGE_REASON INNER JOIN FLXY_ROOM ON RM_ID = ROOMS INNER JOIN FLXY_ROOM_STATUS_MASTER RSM ON RSM.RM_STATUS_ID = ROOM_STATUS LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = ROOM_RETURN_STATUS) STATUS_LIST';
+        FLXY_ROOM_OOOS INNER JOIN FLXY_ROOM_STATUS_CHANGE_REASON ON RM_STATUS_CHANGE_ID = ROOM_CHANGE_REASON INNER JOIN FLXY_ROOM ON RM_ID = ROOMS LEFT JOIN FLXY_ROOM_STATUS_MASTER RSM ON RSM.RM_STATUS_ID = ROOM_STATUS LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = ROOM_RETURN_STATUS) STATUS_LIST';
     
         $columns = 'OOOS_ID,ROOMS,RM_NO,STATUS_FROM_DATE,STATUS_TO_DATE,RSM_RM_STATUS_CODE,SM_RM_STATUS_CODE,RM_STATUS_CHANGE_CODE,RM_STATUS_CHANGE_DESC,ROOM_REMARKS';
         $mine->generate_DatatTable($tableName, $columns);
@@ -2152,8 +2152,10 @@ public function getRoomStatistics(){
 
             $validate = $this->validate([
                 'ROOMS' => ['label' => 'Room', 'rules' => 'required|is_unique[FLXY_ROOM_OOOS.ROOMS,OOOS_ID,' . $sysid . ']'],
-                'STATUS_FROM_DATE' => ['label' => 'From Date', 'rules' => 'required'],               
-                'STATUS_TO_DATE' => ['label' => 'To Date', 'rules' => 'required'], 
+                'ROOM_STATUS' => ['label' => 'Status', 'rules' => 'required'],  
+                'ROOM_RETURN_STATUS' => ['label' => 'Return Status', 'rules' => 'required'],   
+                'STATUS_FROM_DATE' => ['label' => 'From Date', 'rules' => 'required'], 
+                'STATUS_TO_DATE' => ['label' => 'To Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Date should be after Begin Date']], 
                 'ROOM_CHANGE_REASON' => ['label' => 'Reason ', 'rules' => 'required']                     
                 
             ]);
@@ -2496,7 +2498,7 @@ public function getRoomStatistics(){
         $room_type_id   = $this->request->getPost('room_type_id');
         $resv_id        = $this->request->getPost('resv_id');
         
-        $update = ['RESV_ROOM' => $room_no,'RESV_ROOM_ID'=>$room_id,'RESV_RM_TYPE'=> $room_type,'RESV_RM_TYPE_ID'=> $room_type_id 
+        $update = ['RESV_ROOM' => $room_no,'RESV_ROOM_ID'=>$room_id,'RESV_RM_TYPE'=> $room_type,'RESV_RM_TYPE_ID'=> $room_type_id, 'RESV_RTC_ID' =>$room_type_id, 'RESV_RTC' => $room_type
         ];
 
         if($resv_rate != ''){
@@ -2528,5 +2530,67 @@ public function getRoomStatistics(){
             return $e->getMessage();
         }
     }
+
+
+    public function uploadReservationAttachments()
+    {
+        $fileName = $this->request->getPost('filename');
+        echo $fileName;
+        
+       
+    }
+
+    public function getCreditCardDetails(){
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+        $sql = "SELECT RESERVATION_CARD_RESVID, RESERVATION_CARD_NUMBER, RESERVATION_CARD_NAME, RESERVATION_CARD_EXPIRY,
+                RESERVATION_CARD_CVV
+                FROM FLXY_RESERVATION_CARDS
+                WHERE RESERVATION_CARD_RESVID=:SYSID: ";
+
+        $response = $this->DB->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+
+    public function insertCard()
+    {
+        try {
+            $sysid   = $this->request->getPost('RESERVATION_CARD_RESVID');
+
+            $validate = $this->validate([
+                'RESERVATION_CARD_NUMBER' => ['label' => 'Room', 'rules' => 'required|is_unique[FLXY_RESERVATION_CARDS.  RESERVATION_CARD_NUMBER,RESERVATION_CARD_RESVID,' . $sysid . ']'],
+                'RESERVATION_CARD_NAME' => ['label' => 'Card Name', 'rules' => 'required'],  
+                'RESERVATION_CARD_EXPIRY' => ['label' => 'Card Expiry', 'rules' => 'required'],   
+                'RESERVATION_CARD_CVV' => ['label' => 'CVV', 'rules' => 'required'] 
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $data = [
+                "RESERVATION_CARD_RESVID" => trim($this->request->getPost('RESERVATION_CARD_RESVID')),
+                "RESERVATION_CARD_NUMBER" => trim($this->request->getPost('RESERVATION_CARD_NUMBER')),
+                "RESERVATION_CARD_NAME" => trim($this->request->getPost('RESERVATION_CARD_NAME')),                
+                "RESERVATION_CARD_EXPIRY" => trim($this->request->getPost('RESERVATION_CARD_EXPIRY')),
+                "RESERVATION_CARD_CVV" => trim($this->request->getPost('RESERVATION_CARD_CVV')),
+            ];   
+            
+           
+
+           $return = !empty($sysid) ? $this->DB->table('FLXY_RESERVATION_CARDS')->where('RESERVATION_CARD_RESVID', $sysid)->update($data) : $this->DB->table('FLXY_RESERVATION_CARDS')->insert($data);
+                  
+
+           $result = $return ? $this->responseJson("1", "0", $return, !empty($sysid) ? $sysid : $this->DB->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     
 }

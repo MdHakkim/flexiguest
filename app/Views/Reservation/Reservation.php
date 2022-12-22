@@ -1194,10 +1194,15 @@
                                             <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Payment</label>
                                                 <select name="RESV_PAYMENT_TYPE" id="RESV_PAYMENT_TYPE"
-                                                    class="select2 form-select" data-allow-clear="true">
+                                                    class="select2 form-select" data-allow-clear="true" >
                                                     <!-- <option value="">Select</option> -->
                                                 </select>
                                                 <div class="invalid-feedback"> Payment required can't be empty.</div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-3 mt-2">
+                                                <label class="form-label">Deposit</label>
+                                                <input type="text" name="RESV_DEPOSIT" id="RESV_DEPOSIT"
+                                                        class="form-control" placeholder="2000.00" />                                                
                                             </div>
                                             <div class="col-md-6 col-lg-3 mt-2 selPickerDiv">
                                                 <label class="form-label" for="RESV_SPECIALS">Specials</label>
@@ -1245,7 +1250,7 @@
                                             <!-- End Item Inventory  -->
 
 
-                                            <div class="col-md-6 col-lg-3">
+                                            <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Booker Last / First</label>
                                                 <div class="flxi_flex">
                                                     <input type="text" name="RESV_BOKR_LAST" id="RESV_BOKR_LAST"
@@ -1254,7 +1259,7 @@
                                                         class="form-control" placeholder="booker first" />
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-lg-3">
+                                            <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Booker Email/Phone</label>
                                                 <div class="flxi_flex">
                                                     <input type="text" name="RESV_BOKR_EMAIL" id="RESV_BOKR_EMAIL"
@@ -1953,8 +1958,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-2"><button type="button" onclick="selectRate(event)"
-                                    class="btn btn-primary">Ok</button></div>
+                            <div class="col-md-2">
+                                <button type="button" onclick="selectRate(event)"
+                                    class="btn btn-primary">Ok</button><br><br><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button></div>
+                            
                         </div>
                     </div>
                 </div>
@@ -3022,6 +3029,8 @@
 
     <?= $this->include('includes/AssignRoomPopup') ?>
 
+    <?= $this->include('includes/CreditCardPopup') ?>
+
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
@@ -3100,8 +3109,14 @@ $(document).ready(function() {
                         '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
                         '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
                             'RM_TY_DESC'] + '" data-reservation_customer_id = "' + data[
-                            'CUST_ID'] +
-                        '"  class="dropdown-item reserOption text-success"><i class="fa-solid fa-align-justify"></i> Options</a></li>';
+                            'CUST_ID'] +'" data-arrival  = "' + data[
+                            'RESV_ARRIVAL_DT'] +'" data-departure  = "' + data[
+                            'RESV_DEPARTURE'] +'" data-night  = "' + data[
+                            'RESV_NIGHT'] +'" data-adults  = "' + data[
+                            'RESV_ADULTS'] +'" data-children  = "' + data[
+                            'RESV_CHILDREN'] +'" data-rate  = "' + data[
+                            'RESV_RATE'] +' " data-rate-code  = "' + data[
+                            'RESV_RATE_CODE'] +'"  class="dropdown-item reserOption text-success"><i class="fa-solid fa-align-justify"></i> Options</a></li>';
 
                     if ($.inArray(data['RESV_STATUS'], ["Checked-In", "Checked-Out"]) == -1)
                         resvListButtons += '<div class="dropdown-divider"></div>' +
@@ -3729,6 +3744,14 @@ $(document).on('click', '.reserOption', function() {
     roomTypedesc = $(this).attr('rmtypedesc');
     reservation_customer_id = $(this).data('reservation_customer_id');
 
+    arrival = $(this).attr('data-arrival');
+    departure = $(this).attr('data-departure');
+    night = $(this).attr('data-night');
+    adults = $(this).attr('data-adults');
+    children = $(this).attr('data-children');
+    rate = $(this).attr('data-rate');
+    ratecode = $(this).attr('data-rate-code');
+
     $('#optionsResrBtn').attr({
         'data-reservation_customer_id': reservation_customer_id
     });
@@ -3745,6 +3768,13 @@ $(document).on('click', '.reserOption', function() {
     $('#registerCardButton').attr('data_sysid', ressysId);
     $('#fixedChargeButton').attr('data_sysid', ressysId);
     $('#room_assign').attr('data_sysid', ressysId);
+    $('#room_assign').attr('data_arrival', arrival);
+    $('#room_assign').attr('data_departure', departure);
+    $('#room_assign').attr('data_night', night);
+    $('#room_assign').attr('data_adults', adults);
+    $('#room_assign').attr('data_children', children);
+    $('#room_assign').attr('data_rate', rate);
+    $('#room_assign').attr('data_rate_code', ratecode);
     $('#proformaButton').attr('data_sysid', ressysId);
     $('#rateInfoButton').attr('data_sysid', ressysId);
     $('#traceButton').attr('data_sysid', ressysId);
@@ -3905,7 +3935,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                     if (field == 'RESV_NAME_DESC' || field == 'RESV_COMPANY_DESC' ||
                         field == 'RESV_AGENT_DESC' || field == 'RESV_BLOCK_DESC' ||
                         field == 'RESV_NO') {
-                        if (field == 'RESV_NO')
+                        if (field == 'RESV_NO' && mode !='CPY')
                             $('#reservationWlable').html('Edit Reservation ' +
                                 dataval);
 
@@ -3949,11 +3979,11 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                         }
                         
 
-                        if (field == 'RESV_STATUS') {
+                        if (field == 'RESV_STATUS' && mode !='CPY') {
                             $('#reservationWlable').append(' - ' + dataval);
                         }
 
-                        $('*#' + field).val(dataval).trigger('change');
+                       
 
                         if (field == 'RESV_FEATURE') {
                             var dataval = dataval.split(',');
@@ -3964,6 +3994,13 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                         if (field == 'CUST_COUNTRY' || field == 'RESV_SPECIALS') {
                             $('*#' + field).selectpicker('refresh');
                         }
+                        if (field == 'RESV_PAYMENT_TYPE' && mode !='CPY') {
+                            $('#RESV_PAYMENT_TYPE').select2("val", dataval);
+                           // $('#RESV_PAYMENT_TYPE').select2('destroy');
+                            //$('#RESV_PAYMENT_TYPE').val(dataval).select2();
+                        }
+                        else
+                        $('*#' + field).val(dataval).trigger('change');
                     }
                 });
             });
@@ -3990,16 +4027,16 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
             $('.RESV_ARRIVAL_DT,.RESV_DEPARTURE').removeClass('is-valid');
 
             // Disable all fields if 'Cancelled'
-            if ($('#RESV_STATUS').val() == 'Cancelled' || $('#RESV_STATUS').val() ==
-                'Checked-Out') {
+            if (mode != 'CPY' && ($('#RESV_STATUS').val() == 'Cancelled' || $('#RESV_STATUS').val() ==
+                'Checked-Out')) {
                 $(':input', '#reservationForm').prop('readonly', true);
                 $('#reservationForm .select2,#reservationForm .selectpicker,#reservationForm input[type=checkbox],#reservationForm .flxi_btn,#reservationForm #submitResrBtn')
                     .prop('disabled', true);
                 $('#reservationForm .selectpicker').selectpicker('refresh');
                 $('.RESV_ARRIVAL_DT,.RESV_DEPARTURE').datepicker("destroy");
                 $('.assignRoom').prop('disabled', true);
-            } else if ($('#RESV_STATUS').val() == 'Checked-In' || $('#RESV_STATUS').val() ==
-                'Check-Out-Requested') {
+            } else if (mode != 'CPY' && ($('#RESV_STATUS').val() == 'Checked-In' || $('#RESV_STATUS').val() ==
+                'Check-Out-Requested')) {
                     $('#RESV_RM_TYPE').attr('disabled', true);
                     $('.RESV_NAME').attr('disabled', true);
                     $('.RESV_NAME').prop('readonly', true);
@@ -4010,8 +4047,8 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
 
                 $('.RESV_ARRIVAL_DT').datepicker("destroy");
                 $('.assignRoom').prop('disabled', true);
-            } else if ($('#RESV_STATUS').val() == 'Due Pre Check-In' || $('#RESV_STATUS').val() ==
-                'Pre Checked-In') {
+            } else if (mode != 'CPY' && ($('#RESV_STATUS').val() == 'Due Pre Check-In' || $('#RESV_STATUS').val() ==
+                'Pre Checked-In')) {
                 $('.assignRoom').prop('disabled', false);
             }
         }
@@ -5410,6 +5447,10 @@ $('.web-link-btn').click(function() {
                 window.location.href = `<?= base_url('webline/ReservationDetail') ?>/${ressysId}`;
                
             } else {
+                // var clickResv = $(".editReserWindow");
+
+                // clickResv.attr('data_sysid', `${ressysId}`);
+                // clickResv.click();
                 showModalAlert('info', `<li>Please assign room to this reservation</li>`);
             }
         }
