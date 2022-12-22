@@ -254,7 +254,7 @@ class ApplicatioController extends BaseController
     {
         $param = ['SYSID' => $id];
 
-        $addColumnCopty='RESV_ID,RESV_PAYMENT_TYPE,RESV_SPECIALS,RESV_COMMENTS,RESV_PACKAGES,RESV_ITEM_INVT,RESV_NAME,(CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME))RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
+        $addColumnCopty='RESV_ID,RESV_PAYMENT_TYPE,RESV_DEPOSIT,RESV_SPECIALS,RESV_COMMENTS,RESV_PACKAGES,RESV_ITEM_INVT,RESV_NAME,(CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME))RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
                         (SELECT CNAME FROM COUNTRY WHERE ISO2=CUST_COUNTRY)CUST_COUNTRY_DESC,CUST_VIP,CUST_PHONE';
 
         $sql = "SELECT $addColumnCopty,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_MEMBER_TY,RESV_CUST_MEMBERSHIP,
@@ -295,7 +295,7 @@ class ApplicatioController extends BaseController
                 }
             }
         }else{
-            $addColumnCopty='RESV_ID,RESV_PAYMENT_TYPE,RESV_SPECIALS,RESV_COMMENTS,RESV_PACKAGES,RESV_ITEM_INVT,RESV_NAME,(CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME))RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
+            $addColumnCopty='RESV_ID,RESV_PAYMENT_TYPE,RESV_DEPOSIT,RESV_SPECIALS,RESV_COMMENTS,RESV_PACKAGES,RESV_ITEM_INVT,RESV_NAME,(CONCAT_WS(\' \', CUST_FIRST_NAME, CUST_LAST_NAME))RESV_NAME_DESC,CUST_FIRST_NAME,CUST_TITLE,CUST_COUNTRY,
             (SELECT CNAME FROM COUNTRY WHERE ISO2=CUST_COUNTRY)CUST_COUNTRY_DESC,CUST_VIP,CUST_PHONE';
         }
         $sql = "SELECT $addColumnCopty,FORMAT(RESV_ARRIVAL_DT,'dd-MMM-yyyy')RESV_ARRIVAL_DT,RESV_NIGHT,RESV_ADULTS,RESV_CHILDREN,FORMAT(RESV_DEPARTURE,'dd-MMM-yyyy')RESV_DEPARTURE,RESV_NO_F_ROOM,RESV_MEMBER_TY,RESV_CUST_MEMBERSHIP,
@@ -397,6 +397,7 @@ class ApplicatioController extends BaseController
                 "RESV_SOURCE" => $this->request->getPost("RESV_SOURCE"),
                 "RESV_ORIGIN" => $this->request->getPost("RESV_ORIGIN"),
                 "RESV_PAYMENT_TYPE" => $this->request->getPost("RESV_PAYMENT_TYPE"),
+                "RESV_DEPOSIT" => $this->request->getPost("RESV_DEPOSIT"),
                 "RESV_COMMENTS" => $this->request->getPost("RESV_COMMENTS"),
                 "RESV_ITEM_INVT" => $this->request->getPost("RESV_ITEM_INVT"),
                 "RESV_BOKR_LAST" => $this->request->getPost("RESV_BOKR_LAST"),
@@ -505,6 +506,7 @@ class ApplicatioController extends BaseController
                     "RESV_SOURCE" => $this->request->getPost("RESV_SOURCE"),
                     "RESV_ORIGIN" => $this->request->getPost("RESV_ORIGIN"),
                     "RESV_PAYMENT_TYPE" => $this->request->getPost("RESV_PAYMENT_TYPE"),
+                    "RESV_DEPOSIT" => $this->request->getPost("RESV_DEPOSIT"),
                     "RESV_COMMENTS" => $this->request->getPost("RESV_COMMENTS"),
                     "RESV_ITEM_INVT" => $this->request->getPost("RESV_ITEM_INVT"),
                     "RESV_BOKR_LAST" => $this->request->getPost("RESV_BOKR_LAST"),

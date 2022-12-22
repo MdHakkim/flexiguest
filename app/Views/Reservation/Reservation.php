@@ -1193,10 +1193,15 @@
                                             <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Payment</label>
                                                 <select name="RESV_PAYMENT_TYPE" id="RESV_PAYMENT_TYPE"
-                                                    class="select2 form-select" data-allow-clear="true">
+                                                    class="select2 form-select" data-allow-clear="true" >
                                                     <!-- <option value="">Select</option> -->
                                                 </select>
                                                 <div class="invalid-feedback"> Payment required can't be empty.</div>
+                                            </div>
+                                            <div class="col-md-6 col-lg-3 mt-2">
+                                                <label class="form-label">Deposit</label>
+                                                <input type="text" name="RESV_DEPOSIT" id="RESV_DEPOSIT"
+                                                        class="form-control" placeholder="2000.00" />                                                
                                             </div>
                                             <div class="col-md-6 col-lg-3 mt-2 selPickerDiv">
                                                 <label class="form-label" for="RESV_SPECIALS">Specials</label>
@@ -1244,7 +1249,7 @@
                                             <!-- End Item Inventory  -->
 
 
-                                            <div class="col-md-6 col-lg-3">
+                                            <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Booker Last / First</label>
                                                 <div class="flxi_flex">
                                                     <input type="text" name="RESV_BOKR_LAST" id="RESV_BOKR_LAST"
@@ -1253,7 +1258,7 @@
                                                         class="form-control" placeholder="booker first" />
                                                 </div>
                                             </div>
-                                            <div class="col-md-6 col-lg-3">
+                                            <div class="col-md-6 col-lg-3 mt-2">
                                                 <label class="form-label">Booker Email/Phone</label>
                                                 <div class="flxi_flex">
                                                     <input type="text" name="RESV_BOKR_EMAIL" id="RESV_BOKR_EMAIL"
@@ -3023,6 +3028,8 @@
 
     <?= $this->include('includes/AssignRoomPopup') ?>
 
+    <?= $this->include('includes/CreditCardPopup') ?>
+
     <div class="content-backdrop fade"></div>
 </div>
 <!-- Content wrapper -->
@@ -3974,7 +3981,7 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                             $('#reservationWlable').append(' - ' + dataval);
                         }
 
-                        $('*#' + field).val(dataval).trigger('change');
+                       
 
                         if (field == 'RESV_FEATURE') {
                             var dataval = dataval.split(',');
@@ -3985,6 +3992,13 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
                         if (field == 'CUST_COUNTRY' || field == 'RESV_SPECIALS') {
                             $('*#' + field).selectpicker('refresh');
                         }
+                        if (field == 'RESV_PAYMENT_TYPE' && mode !='CPY') {
+                            $('#RESV_PAYMENT_TYPE').select2("val", dataval);
+                           // $('#RESV_PAYMENT_TYPE').select2('destroy');
+                            //$('#RESV_PAYMENT_TYPE').val(dataval).select2();
+                        }
+                        else
+                        $('*#' + field).val(dataval).trigger('change');
                     }
                 });
             });

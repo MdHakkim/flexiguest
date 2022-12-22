@@ -747,6 +747,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/checkRoomAlreadyAssigned', 'TaskAssignmentController::checkRoomAlreadyAssigned');
     $routes->match(['post'], '/customerNotesView', 'ApplicatioController::customerNotesView');
     $routes->match(['post'], '/checkRoomAssigned', 'ReservationController::checkRoomAssigned');
+    $routes->match(['post'], '/getCreditCardDetails', 'ReservationController::getCreditCardDetails');
+    $routes->match(['post'], '/insertCard', 'ReservationController::insertCard');
+    
+
+
+    
 
     //Subina Code (END)  
 

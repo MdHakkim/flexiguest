@@ -2539,5 +2539,58 @@ public function getRoomStatistics(){
         
        
     }
+
+    public function getCreditCardDetails(){
+        $param = ['SYSID' => $this->request->getPost('sysid')];
+        $sql = "SELECT RESERVATION_CARD_RESVID, RESERVATION_CARD_NUMBER, RESERVATION_CARD_NAME, RESERVATION_CARD_EXPIRY,
+                RESERVATION_CARD_CVV
+                FROM FLXY_RESERVATION_CARDS
+                WHERE RESERVATION_CARD_RESVID=:SYSID: ";
+
+        $response = $this->DB->query($sql, $param)->getResultArray();
+        echo json_encode($response);
+    }
+
+
+    public function insertCard()
+    {
+        try {
+            $sysid   = $this->request->getPost('RESERVATION_CARD_RESVID');
+
+            $validate = $this->validate([
+                'RESERVATION_CARD_NUMBER' => ['label' => 'Room', 'rules' => 'required|is_unique[FLXY_RESERVATION_CARDS.  RESERVATION_CARD_NUMBER,RESERVATION_CARD_RESVID,' . $sysid . ']'],
+                'RESERVATION_CARD_NAME' => ['label' => 'Card Name', 'rules' => 'required'],  
+                'RESERVATION_CARD_EXPIRY' => ['label' => 'Card Expiry', 'rules' => 'required'],   
+                'RESERVATION_CARD_CVV' => ['label' => 'CVV', 'rules' => 'required'] 
+            ]);
+            if (!$validate) {
+                $validate = $this->validator->getErrors();
+                $result["SUCCESS"] = "-402";
+                $result[]["ERROR"] = $validate;
+                $result = $this->responseJson("-402", $validate);
+                echo json_encode($result);
+                exit;
+            }
+
+            $data = [
+                "RESERVATION_CARD_RESVID" => trim($this->request->getPost('RESERVATION_CARD_RESVID')),
+                "RESERVATION_CARD_NUMBER" => trim($this->request->getPost('RESERVATION_CARD_NUMBER')),
+                "RESERVATION_CARD_NAME" => trim($this->request->getPost('RESERVATION_CARD_NAME')),                
+                "RESERVATION_CARD_EXPIRY" => trim($this->request->getPost('RESERVATION_CARD_EXPIRY')),
+                "RESERVATION_CARD_CVV" => trim($this->request->getPost('RESERVATION_CARD_CVV')),
+            ];   
+            
+           
+
+           $return = !empty($sysid) ? $this->DB->table('FLXY_RESERVATION_CARDS')->where('RESERVATION_CARD_RESVID', $sysid)->update($data) : $this->DB->table('FLXY_RESERVATION_CARDS')->insert($data);
+                  
+
+           $result = $return ? $this->responseJson("1", "0", $return, !empty($sysid) ? $sysid : $this->DB->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
+            echo json_encode($result);
+        } catch(\Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
     
 }
