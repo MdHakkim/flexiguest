@@ -85,7 +85,16 @@
 
     });
 
+    function resetMoveTransactionForm() {
+        $(`${move_transaction_form} input`).val('');
+        $(`${move_transaction_form} textarea`).val('');
+        $(`${move_transaction_form} select`).val('').trigger('change');
+
+        $(`${move_transaction_form} select[name='RTR_WINDOW']`).val('1').trigger('change');
+    }
+
     function showMoveTransactionModal(transaction_id) {
+        resetMoveTransactionForm();
         $(`${move_transaction_form} [name='RTR_ID']`).val(transaction_id);
         $('.move-transaction-modal').modal('show');
     }

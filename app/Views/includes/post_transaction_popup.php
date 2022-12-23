@@ -36,7 +36,7 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="form-label">Check No</label>
+                            <label class="form-label"><b>Check No</b></label>
                             <input type="text" name="RTR_CHECK_NO" class="form-control" placeholder="Check No">
                         </div>
 
@@ -57,12 +57,12 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="form-label">Supplement</label>
+                            <label class="form-label"><b>Supplement</b></label>
                             <textarea class="form-control" name="RTR_SUPPLEMENT"></textarea>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Referenece</label>
+                            <label class="form-label"><b>Referenece</b></label>
                             <textarea class="form-control" name="RTR_REFERENCE"></textarea>
                         </div>
                     </div>
@@ -123,7 +123,16 @@
         });
     });
 
+    function resetPostTransactionForm() {
+        $(`${post_transaction_form} input`).val('');
+        $(`${post_transaction_form} textarea`).val('');
+        $(`${post_transaction_form} select`).val('').trigger('change');
+
+        $(`${post_transaction_form} select[name='RTR_WINDOW']`).val('1').trigger('change');
+    }
+
     function showPostTransactionModal() {
+        resetPostTransactionForm();
         $('.post-transaction-modal').modal('show');
     }
 

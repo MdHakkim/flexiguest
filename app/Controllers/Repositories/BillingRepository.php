@@ -42,7 +42,7 @@ class BillingRepository extends BaseController
                 if ($payment_method['PYM_TXN_CODE'] != 9000 && $payment_method['PYM_TXN_CODE'] != 9004)
                     $rules = array_merge($rules, [
                         'RTR_CARD_NUMBER' => [
-                            'label' => 'card number', 
+                            'label' => 'card number',
                             'rules' => "required|validateCardNumberLength[$lengths]|validateCardNumberPrefix[$prefixes]",
                             'errors' => [
                                 'validateCardNumberLength' => "Card number length should be any of these $lengths.",
@@ -50,11 +50,8 @@ class BillingRepository extends BaseController
                             ]
                         ],
                         'RTR_CARD_EXPIRY' => [
-                            'label' => 'card expiry date', 
-                            'rules' => 'required|afterToday[RTR_CARD_EXPIRY]',
-                            'errors' => [
-                                'afterToday' => 'Card is expired.'
-                            ]
+                            'label' => 'card expiry date',
+                            'rules' => 'required'
                         ],
                     ]);
             }
@@ -67,12 +64,26 @@ class BillingRepository extends BaseController
         return $rules;
     }
 
+    public function encryptCardNumber($card_number)
+    {
+        $card_length = strlen($card_number);
+
+        $new_number = '';
+        foreach (range(1, $card_length - 4) as $i)
+            $new_number .= 'X';
+
+        return $new_number . substr($card_number, $card_length - 4, 4);
+    }
+
     public function postOrPayment($user, $data)
     {
         $data['RTR_CREATED_BY'] = $data['RTR_UPDATED_BY'] = $user['USR_ID'];
 
         if ($data['RTR_TRANSACTION_TYPE'] == 'Credited')
             $data['RTR_AMOUNT'] = -$data['RTR_AMOUNT'];
+
+        if (isset($data['RTR_CARD_NUMBER']))
+            $data['RTR_CARD_NUMBER'] = $this->encryptCardNumber($data['RTR_CARD_NUMBER']);
 
         foreach ($data as $index => $row)
             if (empty($row))

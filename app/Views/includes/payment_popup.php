@@ -34,12 +34,12 @@
                         </div>
 
                         <div class="col-md-6 card-details d-none">
-                            <label class="form-label"><b>Card Expiry Date *</b></label>
-                            <input type="date" name="RTR_CARD_EXPIRY" class="form-control" placeholder="card expiry date">
+                            <label class="form-label" for="paymentExpiryDate"><b>Card Expiry Date *</b></label>
+                            <input type="text" name="RTR_CARD_EXPIRY" id="paymentExpiryDate" class="form-control expiry-date-mask" placeholder="MM/YY" />
                         </div>
 
                         <div class="col-md-12">
-                            <label class="form-label">Referenece</label>
+                            <label class="form-label"><b>Referenece</b></label>
                             <textarea class="form-control" name="RTR_REFERENCE"></textarea>
                         </div>
                     </div>
@@ -108,9 +108,25 @@
             else
                 $('.card-details').removeClass('d-none');
         });
+
+        let expiry_date_mask = document.querySelector(`${payment_form} [name='RTR_CARD_EXPIRY']`);
+        new Cleave(expiry_date_mask, {
+            date: true,
+            delimiter: '/',
+            datePattern: ['m', 'y']
+        });
     });
 
+    function resetPaymentModalForm() {
+        $(`${payment_form} input`).val('');
+        $(`${payment_form} textarea`).val('');
+        $(`${payment_form} select`).val('').trigger('change');
+        
+        $('.card-details').addClass('d-none');
+    }
+
     function showPaymentModal() {
+        resetPaymentModalForm();
         $('.payment-modal').modal('show');
     }
 
