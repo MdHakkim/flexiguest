@@ -28,12 +28,12 @@
                             <input type="number" name="RTR_AMOUNT" class="form-control" placeholder="Amount">
                         </div>
 
-                        <div class="col-md-6 card-details d-none">
+                        <div class="col-md-8 card-details d-none">
                             <label class="form-label"><b>Card Number *</b></label>
                             <input type="number" name="RTR_CARD_NUMBER" class="form-control" placeholder="card number">
                         </div>
 
-                        <div class="col-md-6 card-details d-none">
+                        <div class="col-md-4 card-details d-none">
                             <label class="form-label" for="paymentExpiryDate"><b>Card Expiry Date *</b></label>
                             <input type="text" name="RTR_CARD_EXPIRY" id="paymentExpiryDate" class="form-control expiry-date-mask" placeholder="MM/YY" />
                         </div>
