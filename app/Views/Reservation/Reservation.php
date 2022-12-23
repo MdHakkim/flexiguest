@@ -7015,7 +7015,7 @@ $(document).on('click', '#traceButton', function() {
 
 $(document).on('click', '.billing-btn', function() {
     let reservation_id = $('.billing-btn').data('reservation_id');
-    window.location.href = '<?= base_url('/billing?reservation_id=') ?>' + reservation_id;
+    window.open('<?= base_url('/billing?reservation_id=') ?>' + reservation_id, '_blank');
 });
 
 function departmentList() {

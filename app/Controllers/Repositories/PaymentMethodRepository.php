@@ -21,4 +21,9 @@ class PaymentMethodRepository extends BaseController
     {
         return $this->PaymentMethod->findAll();
     }
+
+    public function paymentMethodById($id)
+    {
+        return $this->PaymentMethod->find($id);
+    }
 }

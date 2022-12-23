@@ -16,6 +16,8 @@ class ReservationTransaction extends Model
         'RTR_AMOUNT',
         'RTR_QUANTITY',
         'RTR_CHECK_NO',
+        'RTR_CARD_NUMBER',
+        'RTR_CARD_EXPIRY',
         'RTR_WINDOW',
         'RTR_SUPPLEMENT',
         'RTR_REFERENCE',

@@ -244,7 +244,7 @@ if ($confirm_password) {
                                 <tr>
                                     <td>${index+1}</td>
                                     <td>${item.RTR_CREATED_AT}</td>
-                                    <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.TR_CD_CODE : item.PYM_CODE}</td>
+                                    <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.TR_CD_CODE : item.PYM_TXN_CODE}</td>
                                     <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.TR_CD_DESC : item.PYM_DESC}</td>
                                     <td>${item.RTR_AMOUNT}</td>
                                     <td>${item.RTR_SUPPLEMENT || ''}</td>

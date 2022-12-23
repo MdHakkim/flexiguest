@@ -48,8 +48,13 @@ class BillingController extends BaseController
 
         $data = $this->request->getPost();
 
+        if (isset($data['RTR_PAYMENT_METHOD_ID']))
+            $data['payment_method'] = $this->PaymentMethodRepository->paymentMethodById($data['RTR_PAYMENT_METHOD_ID']);
+
         if (!$this->validate($this->BillingRepository->postOrPaymentValidationRules($data)))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
+
+        unset($data['payment_method']);
 
         $result = $this->BillingRepository->postOrPayment($user, $data);
         return $this->respond($result);
@@ -71,12 +76,12 @@ class BillingController extends BaseController
             'RTR_WINDOW' => $data['RTR_WINDOW']
         ];
 
-        if($data['RTR_WINDOW'] < 1 || $data['RTR_WINDOW'] > 8)
+        if ($data['RTR_WINDOW'] < 1 || $data['RTR_WINDOW'] > 8)
             return $this->respond(responseJson(403, true, ['msg' => 'Invalid window selected.']));
 
         $response = $this->BillingRepository->updateReservationTransaction($data);
         $result = $response ? responseJson(200, false, ['msg' => 'Transaction moved successfully.']) : responseJson(202, true, ['msg' => 'Unable to move the transaction.']);
-        
+
         return $this->respond($result);
     }
 }

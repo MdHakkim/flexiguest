@@ -2,19 +2,22 @@
 namespace App\Validation;
 
 
-class CommonValidation{
+class CommonValidation
+{
     public $Db;
-    public function __construct(){
+    public function __construct()
+    {
         $this->Db = \Config\Database::connect();
     }
 
-    public function emailVerification(string $str, string $fields, array $data){
+    public function emailVerification(string $str, string $fields, array $data)
+    {
         $email = $data['CUST_EMAIL'];
         $cust_id = !empty($data['CUST_ID']) ? $data['CUST_ID'] : 0;
 
-        $sql="SELECT CUST_EMAIL FROM FLXY_CUSTOMER WHERE CUST_EMAIL='$email' and CUST_ID != $cust_id";
+        $sql = "SELECT CUST_EMAIL FROM FLXY_CUSTOMER WHERE CUST_EMAIL='$email' and CUST_ID != $cust_id";
         $response = $this->Db->query($sql)->getNumRows();
-        return ($response==0 ? true : false);
+        return ($response == 0 ? true : false);
     }
 
     public function strongPassword(string $str, string $field, array $data)
@@ -31,9 +34,9 @@ class CommonValidation{
     {
         $fields = explode(',', $field);
         $date = date("Y-m-d", strtotime($data[$fields[0]]));
-        
+
         $date_now = date("Y-m-d"); // this format is string comparable
-        if($date < $date_now)
+        if ($date < $date_now)
             return false;
     }
 
@@ -43,26 +46,56 @@ class CommonValidation{
         $datetime = date("Y-m-d H:i:s", strtotime($data[$fields[0]] . " " . $data[$fields[1]]));
 
         $date_now = date("Y-m-d H:i:s"); // this format is string comparable
-        if($date_now >= $datetime)
+        if ($date_now >= $datetime)
             return false;
     }
 
     public function afterDateTime(string $str, string $field, array $data)
     {
         $fields = explode(',', $field);
-        
+
         $datetime = date("Y-m-d H:i:s", strtotime($data[$fields[0]] . " " . $data[$fields[1]]));
         $datetime2 = date("Y-m-d H:i:s", strtotime($data[$fields[2]] . " " . $data[$fields[3]]));
 
-        if($datetime >= $datetime2)
+        if ($datetime >= $datetime2)
             return false;
+    }
+
+    public function afterToday(string $str, string $field, array $data)
+    {
+        $date = date('Y-m-d', strtotime($str));
+        if($date <= date('Y-m-d'))
+            return false;
+
+        return true;
     }
 
     public function customInArray(string $str, string $field, array $data)
     {
         $possible_values = explode(',', $field);
-        if(in_array($str, $possible_values))
+        if (in_array($str, $possible_values))
             return true;
+
+        return false;
+    }
+
+    public function validateCardNumberLength(string $str, string $field, array $data)
+    {
+        $lengths = explode(",", $field);
+
+        if (!in_array(strlen($str), $lengths))
+            return false;
+
+        return true;
+    }
+
+    public function validateCardNumberPrefix(string $str, string $field, array $data)
+    {
+        $prefixes = explode(",", $field);
+
+        foreach ($prefixes as $prefix)
+            if (str_starts_with($str, $prefix))
+                return true;
 
         return false;
     }

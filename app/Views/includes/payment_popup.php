@@ -16,7 +16,7 @@
                             <select class="form-control select2" name="RTR_PAYMENT_METHOD_ID">
                                 <option value="">Select</option>
                                 <?php foreach ($payment_methods as $payment_method) : ?>
-                                    <option value="<?= $payment_method['PYM_ID'] ?>">
+                                    <option value="<?= $payment_method['PYM_ID'] ?>" data-code="<?= $payment_method['PYM_TXN_CODE'] ?>">
                                         <?= $payment_method['PYM_DESC'] ?>
                                     </option>
                                 <?php endforeach ?>
@@ -26,6 +26,16 @@
                         <div class="col-md-6">
                             <label class="form-label"><b>Amount *</b></label>
                             <input type="number" name="RTR_AMOUNT" class="form-control" placeholder="Amount">
+                        </div>
+
+                        <div class="col-md-6 card-details d-none">
+                            <label class="form-label"><b>Card Number *</b></label>
+                            <input type="number" name="RTR_CARD_NUMBER" class="form-control" placeholder="card number">
+                        </div>
+
+                        <div class="col-md-6 card-details d-none">
+                            <label class="form-label"><b>Card Expiry Date *</b></label>
+                            <input type="date" name="RTR_CARD_EXPIRY" class="form-control" placeholder="card expiry date">
                         </div>
 
                         <div class="col-md-12">
@@ -90,6 +100,14 @@
             });
         });
 
+        $(document).on('change', `${payment_form} [name='RTR_PAYMENT_METHOD_ID']`, function() {
+            let code = $(this).find(":selected").data('code');
+
+            if (code == '9000' || code == '9004')
+                $('.card-details').addClass('d-none');
+            else
+                $('.card-details').removeClass('d-none');
+        });
     });
 
     function showPaymentModal() {
