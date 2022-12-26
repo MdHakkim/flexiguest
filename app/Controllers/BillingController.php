@@ -84,4 +84,22 @@ class BillingController extends BaseController
 
         return $this->respond($result);
     }
+
+    public function deleteWindow()
+    {
+        $reservation_id = $this->request->getPost('reservation_id');
+        $window_number = $this->request->getPost('window_number');
+
+        if ($reservation_id && $window_number) {
+            $where_condition = "RTR_RESERVATION_ID = $reservation_id and RTR_WINDOW = $window_number";
+            $transactions = $this->BillingRepository->reservationTransactions($where_condition);
+            if (!empty($transactions))
+                return $this->respond(responseJson(202, true, ['msg' => 'This window is not empty.']));
+
+            $where_condition = "RTR_RESERVATION_ID = $reservation_id and RTR_WINDOW > $window_number";
+            $this->BillingRepository->deleteWindow($where_condition);
+
+            return $this->respond(responseJson(200, false, ['msg' => 'Window deleted successfully.']));
+        }
+    }
 }

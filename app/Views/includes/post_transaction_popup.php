@@ -115,8 +115,10 @@
                         showModalAlert('success', mcontent);
                         hidePostTransactionModal();
 
-                        if(typeof loadWindowsData == 'function')
-                            loadWindowsData();
+                        if (typeof loadWindowsData == 'function') {
+                            let window_number = parseInt($(`${post_transaction_form} [name='RTR_WINDOW']`).val());
+                            loadWindowsData(window_number);
+                        }
                     }
                 }
             });

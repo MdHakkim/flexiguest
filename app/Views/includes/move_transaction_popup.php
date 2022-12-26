@@ -74,9 +74,9 @@
                         showModalAlert('success', mcontent);
                         hideMoveTransactionModal();
 
-                        if (typeof changeActiveWindow == 'function') {
+                        if (typeof loadWindowsData == 'function') {
                             let window_number = parseInt($(`${move_transaction_form} [name='RTR_WINDOW']`).val());
-                            changeActiveWindow(window_number);
+                            loadWindowsData(window_number);
                         }
                     }
                 }

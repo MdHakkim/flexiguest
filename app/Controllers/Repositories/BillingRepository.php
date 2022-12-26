@@ -108,4 +108,9 @@ class BillingRepository extends BaseController
     {
         return $this->ReservationTransaction->save($data);
     }
+
+    public function deleteWindow($where_condition)
+    {
+        return $this->ReservationTransaction->set('RTR_WINDOW', 'RTR_WINDOW-1', false)->where($where_condition)->update();
+    }
 }

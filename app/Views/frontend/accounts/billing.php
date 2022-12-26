@@ -118,7 +118,7 @@ if ($confirm_password) {
                     <div class="text-right function-btns">
                         <button class="btn btn-primary post-btn">Post</button>
                         <button class="btn btn-primary payment-btn">Payment</button>
-                        <button class="btn btn-secondary">Back</button>
+                        <button class="btn btn-danger delete-btn">Delete Window</button>
                     </div>
                 </div>
             </div>
@@ -177,15 +177,21 @@ if ($confirm_password) {
             showPaymentModal();
         });
 
+        $(document).on('click', '.function-btns .delete-btn', function() {
+            deleteWindow();
+        });
+
         loadWindowsData(); // call on load
 
     });
 
-    function changeActiveWindow(window_number)
-    {
+    function changeActiveWindow(window_number) {
         active_window = window_number;
-        $('.windows .nav-tabs .nav-link').removeClass('active');
-        $(`.windows .nav-tabs .nav-item:nth-child(${window_number})`).click();
+
+        if ($(`.windows .nav-tabs .nav-item:nth-child(${window_number})`).length) {
+            $('.windows .nav-tabs .nav-link').removeClass('active');
+            $(`.windows .nav-tabs .nav-item:nth-child(${window_number})`).click();
+        }
     }
 
     function displayWindowLoader() {
@@ -201,7 +207,7 @@ if ($confirm_password) {
         $('.windows table tbody').html(html);
     }
 
-    function loadWindowsData() {
+    function loadWindowsData(window_number = null) {
         displayWindowLoader();
 
         let fd = new FormData();
@@ -242,7 +248,7 @@ if ($confirm_password) {
 
                             html += `
                                 <tr>
-                                    <td>${index+1}</td>
+                                    <td>${item.RTR_ID}</td>
                                     <td>${item.RTR_CREATED_AT}</td>
                                     <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.TR_CD_CODE : item.PYM_TXN_CODE}</td>
                                     <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.TR_CD_DESC : item.PYM_DESC}</td>
@@ -294,9 +300,42 @@ if ($confirm_password) {
                         html = '<tr><td colspan="8" class="text-center">No data available!</td></tr>';
 
                     $('.windows table tbody').html(html);
+
+                    if (window_number)
+                        changeActiveWindow(window_number);
                 }
             }
         });
+    }
+
+    function deleteWindow() {
+        let fd = new FormData();
+        fd.append('reservation_id', <?= $reservation_id ?>);
+        fd.append('window_number', active_window);
+
+        if (active_window)
+            $.ajax({
+                url: '<?= base_url('billing/delete-window') ?>',
+                type: "post",
+                data: fd,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    var mcontent = '';
+                    $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                        mcontent += '<li>' + data + '</li>';
+                    });
+
+                    if (response['SUCCESS'] != 200)
+                        showModalAlert('error', mcontent);
+                    else {
+                        showModalAlert('success', mcontent);
+
+                        loadWindowsData(active_window);
+                    }
+                }
+            });
     }
 </script>
 
