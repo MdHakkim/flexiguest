@@ -1007,6 +1007,10 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('delete-window', 'BillingController::deleteWindow');
     });
 
+    $routes->group('deposit', function ($routes) {
+        $routes->get('', 'DepositController::deposit');
+    });
+
     $routes->group('user', function ($routes) {
         $routes->post('confirm-password', 'UserController::confirmPassword');
     });

@@ -42,6 +42,12 @@
                             <label class="form-label"><b>Referenece</b></label>
                             <textarea class="form-control" name="RTR_REFERENCE"></textarea>
                         </div>
+
+                        <?php if (isset($title) && $title == 'deposit') : ?>
+                            <div class="col-md-4">
+                                
+                            </div>
+                        <?php endif ?>
                     </div>
                 </div>
 
@@ -121,7 +127,7 @@
         $(`${payment_form} input`).val('');
         $(`${payment_form} textarea`).val('');
         $(`${payment_form} select`).val('').trigger('change');
-        
+
         $('.card-details').addClass('d-none');
     }
 

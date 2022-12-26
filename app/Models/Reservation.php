@@ -33,7 +33,7 @@ class Reservation extends Model
         'RESV_FEATURE',
         'RESV_PACKAGES',
         'RESV_PURPOSE_STAY',
-        'RESV_STATUS',
+        'RESV_STATUS', // Due Pre Check-In, Pre Checked-In, Checked-In, Check-Out-Requested, Checked-Out, Cancelled, No Show
         'RESV_RM_TYPE',
         'RESV_ROOM',
         'RESV_RATE',

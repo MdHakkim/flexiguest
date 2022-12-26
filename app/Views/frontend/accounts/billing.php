@@ -18,7 +18,7 @@
 </style>
 
 <?php
-if ($confirm_password) {
+if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STATUS'], ['Checked-In', 'Check-Out-Requested'])) {
 ?>
 
     <div class="content-wrapper">
@@ -136,66 +136,73 @@ if ($confirm_password) {
 <?= $this->section("script") ?>
 
 <script>
-    var active_window = 1;
-
     $(document).ready(function() {
-        <?php
-        if (!$confirm_password) {
-        ?>
+        <?php if (empty($reservation)) : ?>
+            alert('Invalid reservation.');
+
+        <?php elseif (!in_array($reservation['RESV_STATUS'], ['Checked-In', 'Check-Out-Requested'])) : ?>
+            alert("Reservation status should be 'Checked-In' or 'Check-Out-Requested'.");
+
+        <?php elseif (!$confirm_password) : ?>
             showConfirmPasswordModal();
-        <?php
-        }
-        ?>
-
-
-        $('.billing-table').DataTable({
-            paging: false,
-            searching: false,
-            ordering: false,
-            info: false
-        });
-
-        $(document).on('click', '.windows .nav-tabs .nav-item', function() {
-            $('.windows .nav-tabs .nav-link').removeClass('active');
-            $(this).children().addClass('active');
-
-            active_window = $(this).data('window_tab');
-            $('.window-number').html(`(${active_window})`);
-            loadWindowsData();
-        });
-
-        $(document).on('click', '.transaction-btns .move-transaction-btn', function() {
-            let transaction_id = $(this).data('transaction_id');
-            showMoveTransactionModal(transaction_id);
-        });
-
-        $(document).on('click', '.function-btns .post-btn', function() {
-            showPostTransactionModal();
-        });
-
-        $(document).on('click', '.function-btns .payment-btn', function() {
-            showPaymentModal();
-        });
-
-        $(document).on('click', '.function-btns .delete-btn', function() {
-            deleteWindow();
-        });
-
-        loadWindowsData(); // call on load
-
+        <?php endif ?>
     });
 
-    function changeActiveWindow(window_number) {
-        active_window = window_number;
+    <?php
+    if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STATUS'], ['Checked-In', 'Check-Out-Requested'])) {
+    ?>
 
-        if ($(`.windows .nav-tabs .nav-item:nth-child(${window_number})`).length) {
-            $('.windows .nav-tabs .nav-link').removeClass('active');
-            $(`.windows .nav-tabs .nav-item:nth-child(${window_number})`).click();
+        var active_window = 1;
+
+        $(document).ready(function() {
+            $('.billing-table').DataTable({
+                paging: false,
+                searching: false,
+                ordering: false,
+                info: false
+            });
+
+            $(document).on('click', '.windows .nav-tabs .nav-item', function() {
+                $('.windows .nav-tabs .nav-link').removeClass('active');
+                $(this).children().addClass('active');
+
+                active_window = $(this).data('window_tab');
+                $('.window-number').html(`(${active_window})`);
+                loadWindowsData();
+            });
+
+            $(document).on('click', '.transaction-btns .move-transaction-btn', function() {
+                let transaction_id = $(this).data('transaction_id');
+                showMoveTransactionModal(transaction_id);
+            });
+
+            $(document).on('click', '.function-btns .post-btn', function() {
+                showPostTransactionModal();
+            });
+
+            $(document).on('click', '.function-btns .payment-btn', function() {
+                showPaymentModal();
+            });
+
+            $(document).on('click', '.function-btns .delete-btn', function() {
+                deleteWindow();
+            });
+
+            loadWindowsData(); // call on load
+
+        });
+
+        function changeActiveWindow(window_number) {
+            active_window = window_number;
+
+            if ($(`.windows .nav-tabs .nav-item:nth-child(${window_number})`).length) {
+                $('.windows .nav-tabs .nav-link').removeClass('active');
+                $(`.windows .nav-tabs .nav-item:nth-child(${window_number})`).click();
+            }
         }
-    }
 
-    function displayWindowLoader() {
-        let html = `
+        function displayWindowLoader() {
+            let html = `
                 <tr>
                     <td colspan="8" class="text-center">
                         <div class="spinner-border text-primary" role="status">
@@ -204,49 +211,49 @@ if ($confirm_password) {
                     </td>
                 </tr>
             `;
-        $('.windows table tbody').html(html);
-    }
+            $('.windows table tbody').html(html);
+        }
 
-    function loadWindowsData(window_number = null) {
-        displayWindowLoader();
+        function loadWindowsData(window_number = null) {
+            displayWindowLoader();
 
-        let fd = new FormData();
-        fd.append('reservation_id', <?= $reservation_id ?>)
+            let fd = new FormData();
+            fd.append('reservation_id', <?= $reservation_id ?>)
 
-        $.ajax({
-            url: '<?= base_url('billing/load-windows-data') ?>',
-            type: "post",
-            data: fd,
-            processData: false,
-            contentType: false,
-            dataType: 'json',
-            success: function(response) {
-                var mcontent = '';
-                $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
-                    mcontent += '<li>' + data + '</li>';
-                });
+            $.ajax({
+                url: '<?= base_url('billing/load-windows-data') ?>',
+                type: "post",
+                data: fd,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(response) {
+                    var mcontent = '';
+                    $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                        mcontent += '<li>' + data + '</li>';
+                    });
 
-                if (response['SUCCESS'] != 200)
-                    showModalAlert('error', mcontent);
-                else {
-                    let data = response['RESPONSE']['OUTPUT'];
+                    if (response['SUCCESS'] != 200)
+                        showModalAlert('error', mcontent);
+                    else {
+                        let data = response['RESPONSE']['OUTPUT'];
 
-                    let max_window_number = 1;
-                    let html = '';
-                    let total_balance = 0,
-                        window_total_balance = 0;
+                        let max_window_number = 1;
+                        let html = '';
+                        let total_balance = 0,
+                            window_total_balance = 0;
 
 
-                    $.each(data, function(index, item) {
-                        total_balance += parseFloat(item.RTR_AMOUNT);
+                        $.each(data, function(index, item) {
+                            total_balance += parseFloat(item.RTR_AMOUNT);
 
-                        if (item.RTR_WINDOW > max_window_number)
-                            max_window_number = item.RTR_WINDOW;
+                            if (item.RTR_WINDOW > max_window_number)
+                                max_window_number = item.RTR_WINDOW;
 
-                        if (item.RTR_WINDOW == active_window) {
-                            window_total_balance += parseFloat(item.RTR_AMOUNT);
+                            if (item.RTR_WINDOW == active_window) {
+                                window_total_balance += parseFloat(item.RTR_AMOUNT);
 
-                            html += `
+                                html += `
                                 <tr>
                                     <td>${item.RTR_ID}</td>
                                     <td>${item.RTR_CREATED_AT}</td>
@@ -279,64 +286,67 @@ if ($confirm_password) {
                                         </div>
                                     </td>
                                 </tr>`;
-                        }
-                    });
+                            }
+                        });
 
-                    if ($('.windows .nav-tabs').children().length != max_window_number) {
-                        window_tabs_html = '';
-                        for (let i = 1; i <= max_window_number; i++) {
-                            window_tabs_html += `
+                        if ($('.windows .nav-tabs').children().length != max_window_number) {
+                            window_tabs_html = '';
+                            for (let i = 1; i <= max_window_number; i++) {
+                                window_tabs_html += `
                                 <li class="nav-item" data-window_tab='${i}'>
                                     <a class="nav-link ${i == 1 ? 'active' : ''}" href="javascript:void(0)">${i}</a>
                                 </li>`;
+                            }
+                            $('.windows .nav-tabs').html(window_tabs_html);
                         }
-                        $('.windows .nav-tabs').html(window_tabs_html);
-                    }
 
-                    $('.windows .window-total-balance').html(window_total_balance.toFixed(2));
-                    $('.total-balance').html(total_balance.toFixed(2));
+                        $('.windows .window-total-balance').html(window_total_balance.toFixed(2));
+                        $('.total-balance').html(total_balance.toFixed(2));
 
-                    if (!html)
-                        html = '<tr><td colspan="8" class="text-center">No data available!</td></tr>';
+                        if (!html)
+                            html = '<tr><td colspan="8" class="text-center">No data available!</td></tr>';
 
-                    $('.windows table tbody').html(html);
+                        $('.windows table tbody').html(html);
 
-                    if (window_number)
-                        changeActiveWindow(window_number);
-                }
-            }
-        });
-    }
-
-    function deleteWindow() {
-        let fd = new FormData();
-        fd.append('reservation_id', <?= $reservation_id ?>);
-        fd.append('window_number', active_window);
-
-        if (active_window)
-            $.ajax({
-                url: '<?= base_url('billing/delete-window') ?>',
-                type: "post",
-                data: fd,
-                processData: false,
-                contentType: false,
-                dataType: 'json',
-                success: function(response) {
-                    var mcontent = '';
-                    $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
-                        mcontent += '<li>' + data + '</li>';
-                    });
-
-                    if (response['SUCCESS'] != 200)
-                        showModalAlert('error', mcontent);
-                    else {
-                        showModalAlert('success', mcontent);
-
-                        loadWindowsData(active_window);
+                        if (window_number)
+                            changeActiveWindow(window_number);
                     }
                 }
             });
+        }
+
+        function deleteWindow() {
+            let fd = new FormData();
+            fd.append('reservation_id', <?= $reservation_id ?>);
+            fd.append('window_number', active_window);
+
+            if (active_window)
+                $.ajax({
+                    url: '<?= base_url('billing/delete-window') ?>',
+                    type: "post",
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        var mcontent = '';
+                        $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                            mcontent += '<li>' + data + '</li>';
+                        });
+
+                        if (response['SUCCESS'] != 200)
+                            showModalAlert('error', mcontent);
+                        else {
+                            showModalAlert('success', mcontent);
+
+                            loadWindowsData(active_window);
+                        }
+                    }
+                });
+        }
+    <?php
     }
+    ?>
 </script>
 
 <?= $this->endSection() ?>

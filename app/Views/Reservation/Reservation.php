@@ -499,6 +499,7 @@
                             <button type="button" class="btn btn-primary shares-btn">Shares</button>
                             <button type="button" class="btn btn-primary" id="traceButton" data_sysid="">Traces</button>
 
+                            <button type="button" class="btn btn-primary deposit-btn" data-reservation_id="">Deposit</button>
                             <button type="button" class="btn btn-primary billing-btn" data-reservation_id="">Billing</button>
                         </div>
                     </div>
@@ -3096,27 +3097,45 @@ $(document).ready(function() {
                 className: "text-center",
                 "orderable": false,
                 render: function(data, type, row, meta) {
-                    var resvListButtons =
-                        '<div class="d-inline-block flxy_option_view dropend">' +
-                        '<a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></a>' +
-                        '<ul class="dropdown-menu dropdown-menu-end">' +
-                        '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
-                        '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
-                            'RM_TY_DESC'] + '" data-reservation_customer_id = "' + data[
-                            'CUST_ID'] +
-                        '"  class="dropdown-item editReserWindow text-primary"><i class="fas fa-edit"></i> Edit</a></li>' +
-                        '<div class="dropdown-divider"></div>' +
-                        '<li><a href="javascript:;" data_sysid="' + data['RESV_ID'] +
-                        '" rmtype="' + data['RESV_RM_TYPE'] + '" rmtypedesc="' + data[
-                            'RM_TY_DESC'] + '" data-reservation_customer_id = "' + data[
-                            'CUST_ID'] +'" data-arrival  = "' + data[
-                            'RESV_ARRIVAL_DT'] +'" data-departure  = "' + data[
-                            'RESV_DEPARTURE'] +'" data-night  = "' + data[
-                            'RESV_NIGHT'] +'" data-adults  = "' + data[
-                            'RESV_ADULTS'] +'" data-children  = "' + data[
-                            'RESV_CHILDREN'] +'" data-rate  = "' + data[
-                            'RESV_RATE'] +' " data-rate-code  = "' + data[
-                            'RESV_RATE_CODE'] +'"  class="dropdown-item reserOption text-success"><i class="fa-solid fa-align-justify"></i> Options</a></li>';
+                    var resvListButtons =`
+                        <div class="d-inline-block flxy_option_view dropend">
+                            <a href="javascript:;" class="btn btn-sm btn-primary btn-icon rounded-pill dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                <i class="bx bx-dots-vertical-rounded"></i>
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a href="javascript:;" 
+                                        data_sysid = "${data['RESV_ID']}"
+                                        rmtype = "${data['RESV_RM_TYPE']}" 
+                                        rmtypedesc = "${data['RM_TY_DESC']}" 
+                                        data-reservation_customer_id = "${data['CUST_ID']}"
+                                        class="dropdown-item editReserWindow text-primary">
+                                            <i class="fas fa-edit"></i> 
+                                            Edit
+                                    </a>
+                                </li>
+
+                                <div class="dropdown-divider"></div>
+                                <li>
+                                    <a href="javascript:;" 
+                                        data_sysid = "${data['RESV_ID']}"
+                                        rmtype = "${data['RESV_RM_TYPE']}" 
+                                        rmtypedesc = "${data['RM_TY_DESC']}" 
+                                        data-reservation_customer_id = "${data['CUST_ID']}"
+                                        data-arrival = "${data['RESV_ARRIVAL_DT']}"
+                                        data-departure = "${data['RESV_DEPARTURE']}"
+                                        data-night = "${data['RESV_NIGHT']}"
+                                        data-adults = "${data['RESV_ADULTS']}" 
+                                        data-children = "${data['RESV_CHILDREN']}" 
+                                        data-rate = "${data['RESV_RATE']}" 
+                                        data-rate-code = "${data['RESV_RATE_CODE']}"
+                                        data-status = "${data['RESV_STATUS']}"
+                                        class="dropdown-item reserOption text-success">
+                                            <i class="fa-solid fa-align-justify"></i> 
+                                            Options
+                                    </a>
+                                </li>`;
 
                     if ($.inArray(data['RESV_STATUS'], ["Checked-In", "Checked-Out"]) == -1)
                         resvListButtons += '<div class="dropdown-divider"></div>' +
@@ -3751,6 +3770,7 @@ $(document).on('click', '.reserOption', function() {
     children = $(this).attr('data-children');
     rate = $(this).attr('data-rate');
     ratecode = $(this).attr('data-rate-code');
+    let reservation_status = $(this).data('status');
 
     $('#optionsResrBtn').attr({
         'data-reservation_customer_id': reservation_customer_id
@@ -3778,7 +3798,20 @@ $(document).on('click', '.reserOption', function() {
     $('#proformaButton').attr('data_sysid', ressysId);
     $('#rateInfoButton').attr('data_sysid', ressysId);
     $('#traceButton').attr('data_sysid', ressysId);
+    
+    $('.deposit-btn').attr('data-reservation_id', ressysId);
     $('.billing-btn').attr('data-reservation_id', ressysId);
+
+    if(['Due Pre Check-In', 'Pre Checked-In'].includes(reservation_status))
+        $('.deposit-btn').removeClass('disabled');
+    else
+        $('.deposit-btn').addClass('disabled');
+
+    if(['Checked-In', 'Check-Out-Requested'].includes(reservation_status))
+        $('.billing-btn').removeClass('disabled');
+    else
+        $('.billing-btn').addClass('disabled');
+
     $('.resv-attachments').attr('data_sysid', ressysId);
 
     $('.cancel-reservation,.reinstate-reservation').attr({
@@ -7015,7 +7048,14 @@ $(document).on('click', '#traceButton', function() {
 
 $(document).on('click', '.billing-btn', function() {
     let reservation_id = $('.billing-btn').data('reservation_id');
-    window.open('<?= base_url('/billing?reservation_id=') ?>' + reservation_id, '_blank');
+    if(reservation_id)
+        window.open('<?= base_url('/billing?reservation_id=') ?>' + reservation_id, '_blank');
+});
+
+$(document).on('click', '.deposit-btn', function() {
+    let reservation_id = $('.deposit-btn').data('reservation_id');
+    if(reservation_id)
+        window.open('<?= base_url('/deposit?reservation_id=') ?>' + reservation_id, '_blank');
 });
 
 function departmentList() {
