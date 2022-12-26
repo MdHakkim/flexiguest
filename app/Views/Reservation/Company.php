@@ -17,6 +17,7 @@
                     <thead>
                         <tr>
                             <th>Account</th>
+                            <th>Account Owner</th>
                             <th>Country</th>
                             <th>Email</th>
                             <th>Corp ID</th>
@@ -52,6 +53,12 @@ $(document).ready(function() {
         },
         'columns': [{
                 data: 'COM_ACCOUNT'
+            },
+            {
+                data: 'COM_ACCOUNT_OWNER',
+                render: function(data, type, full, meta) {
+                    return full['USR_FIRST_NAME']+' '+full['USR_LAST_NAME'];
+                }
             },
             {
                 data: 'COM_COUNTRY'
@@ -118,12 +125,14 @@ $(window).on('load', function(){
 function addForm() {
     $(':input', '#compnayAgentForm').val('').prop('checked', false).prop('selected', false);
     $('#submitBtn').removeClass('btn-success').addClass('btn-primary').text('Save');
-    $('#COM_COUNTRY,#COM_STATE,#COM_CITY').html('<option value="">Select</option>').selectpicker('refresh');
+    $('#COM_ACCOUNT_OWNER,#COM_COUNTRY,#COM_STATE,#COM_CITY').html('<option value="">Select</option>').selectpicker('refresh');
+    $(".COM_ACCOUNT_OWNER").removeClass('is-invalid').addClass('is-valid');
     $('#compnayAgentWindow').modal('show');
     $('#compnayAgentWindowLable').html('Add Company');
     $('.companyData').show();
     $('.agentData').hide();
     $('#COM_TYPE').val(compAgntMode);
+    companyOwnerList();
     runCountryListExdClass();
 }
 

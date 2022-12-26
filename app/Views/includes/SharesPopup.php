@@ -319,9 +319,15 @@ function enableDisableButtons() {
     }
 }
 
-function displaySharePopup() {
-    setBtnsAttr(ressysId);
-    getReservationDetails();
+function displaySharePopup(resv_id = 0) {
+    if(resv_id > 0){
+        setBtnsAttr(ressysId);
+        getReservationDetails(resv_id);
+    }
+    else{
+        setBtnsAttr(ressysId);
+        getReservationDetails();
+    }
     $("#shares-popup").modal('show');
 }
 
@@ -329,10 +335,12 @@ function hideSharePopup() {
     $("#shares-popup").modal('hide');
 }
 
-function getReservationDetails() {
+function getReservationDetails(resv_id) {
     // ressysId, roomType, roomTypedesc;
+
+    var resv_id = resv_id > 0 ? resv_id : ressysId;
     let data = {
-        'reservation_id': ressysId
+        'reservation_id': resv_id
     };
 
     $.ajax({
@@ -349,7 +357,7 @@ function getReservationDetails() {
                 $('.reservation-arrival-details').html(output.reservation_arrival_details);
 
                 enableDisableButtons();
-                setBtnsAttr(ressysId);
+                setBtnsAttr(resv_id);
             }
         }
     });

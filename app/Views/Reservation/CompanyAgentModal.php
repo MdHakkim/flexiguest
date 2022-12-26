@@ -18,7 +18,17 @@
                             <input type="text" name="COM_ACCOUNT" id="COM_ACCOUNT" class="form-control"
                                 placeholder="account" required />
                             <div class="invalid-feedback">
-                                Account required can't empty.
+                                Account required can't be empty.
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <lable class="form-lable">Account Owner</lable>                            
+                            <select name="COM_ACCOUNT_OWNER" id="COM_ACCOUNT_OWNER" data-width="100%"
+                                class="COM_ACCOUNT_OWNER"  required>
+                                <option value="">Select</option>
+                            </select>
+                            <div class="invalid-feedback">
+                             Account Owner required can't be empty.
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -26,7 +36,7 @@
                             <input type="text" name="COM_ADDRESS1" id="COM_ADDRESS1" class="form-control"
                                 placeholder="addresss 1" required />
                             <div class="invalid-feedback">
-                                Address required can't empty.
+                                Address required can't be empty.
                             </div>
                         </div>
                         <div class="col-md-3 flx_top_lb">
@@ -46,7 +56,7 @@
                                 <option value="">Select</option>
                             </select>
                             <div class="invalid-feedback">
-                                Country required can't empty.
+                                Country required can'tbe empty.
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -89,7 +99,7 @@
                             <input type="text" name="COM_CONTACT_EMAIL" id="COM_CONTACT_EMAIL" class="form-control"
                                 placeholder="client email id" required />
                             <div class="invalid-feedback">
-                                Email required can't empty.
+                                Email required can't be empty.
                             </div>
                         </div>
                         <div class="col-md-3 companyData">
@@ -160,6 +170,10 @@ $(document).on('click', '.flxCheckBox', function() {
 });
 
 function submitForm(id, mode) {
+    var validate = companyProfileValidate(event, id, mode);
+    if (!validate) {
+        return false;
+    }
     var formSerialization = $('#' + id).serializeArray();
     // if(mode=='R'){
     //   var url = '<?php echo base_url('/insertReservation')?>';
@@ -179,6 +193,45 @@ function submitForm(id, mode) {
 
             $('#compnayAgentWindow').modal('hide');
             $('#dataTable_view').dataTable().fnDraw();
+        }
+    });
+}
+
+
+function companyProfileValidate(event, id, mode) {
+    // event.preventDefault();
+    // var compAccountOwnerValid = checkCompOwnerInvalid($('[name="COM_ACCOUNT_OWNER"]'));
+    // alert(compAccountOwnerValid)
+    // if (compAccountOwnerValid) { 
+    //     return false;
+    // } else {
+    //     return true;
+    // }
+}
+
+function checkCompOwnerInvalid(elem) {
+    var selVal = elem.val();
+    if (selVal == '') {
+        elem.closest('div.COM_ACCOUNT_OWNER').removeClass('is-valid').addClass('is-invalid');
+        return true;
+    } else {
+        elem.closest('div.COM_ACCOUNT_OWNER').removeClass('is-invalid').addClass('is-valid');
+        return false;
+    }
+}
+
+
+function companyOwnerList() {
+    $.ajax({
+        url: '<?php echo base_url('/getCompanyOwner')?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        async: false,
+        // dataType:'json',
+        success: function(respn) {
+            $('#COM_ACCOUNT_OWNER').html(respn).selectpicker('refresh');
         }
     });
 }
@@ -248,7 +301,11 @@ function editComp(sysid, compAgntMode = 'COMPANY') {
     }
 
     $('#COM_TYPE').val(compAgntMode);
+    companyOwnerList();
     runCountryListExdClass();
+
+    $(".COM_ACCOUNT_OWNER").removeClass('is-invalid').addClass('is-valid');
+
     mode = 'E';
 
     $('#compnayAgentWindow').modal('show');
@@ -294,6 +351,9 @@ function editComp(sysid, compAgntMode = 'COMPANY') {
                         if (field == 'COM_COUNTRY') {
                             $('#' + field).selectpicker('refresh');
                         }
+                        if (field == 'COM_ACCOUNT_OWNER') {
+                            $('#' + field).selectpicker('refresh');
+                        }
                     }
 
                 });
@@ -314,7 +374,17 @@ function companyAgentValidate(event, id) {
     event.preventDefault();
     var form = document.getElementById(id);
     form.classList.add('was-validated');
-    if (!form.checkValidity()) {
+    var compAccountOwnerValid = checkCompOwnerInvalid($('[name="COM_ACCOUNT_OWNER"]'));
+   
+    
+    if (compAccountOwnerValid) { 
+        return false;
+    } else {
+        return true;
+    }
+
+    
+    if (!form.checkValidity() || compAccountOwnerValid) {
         return false;
     } else {
         return true;

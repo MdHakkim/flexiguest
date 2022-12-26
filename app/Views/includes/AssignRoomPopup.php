@@ -107,7 +107,7 @@ $(document).on('click', '.assign_selected_room', function() {
     orig_room_type = orig_room_type === undefined ? parseInt($('#RESV_RM_TYPE').find(":selected").data(
         'room-type-id')) : orig_room_type;
 
-    //alert(orig_room_type + ' ' + selected_room_type);
+   // alert(orig_room_type + ' ' + selected_room_type);
 
     Swal.fire({
         title: '',
@@ -167,18 +167,7 @@ $(document).on('click', '.assign_selected_room', function() {
             $('#RESV_ROOM_ID').val($('.assign_selected_room').attr('data-room-id'));
             
 
-            if(assign_room == 1)
-            {
-
-                 
-                 var room_no      = $('.assign_selected_room').attr('data-room-no');
-                 var room_id      = $('.assign_selected_room').attr('data-room-id');
-                 var room_type    = $('.assign_selected_room').attr('data-room-type');
-                 var room_type_id = $('.assign_selected_room').attr('data-room-type-id');
-                 var room_rate    = $('.assign_selected_room').attr('data_rate');
-                 var room_rate_code = $('.assign_selected_room').attr('data_rate_code');
-                updateRoomFromOptions(room_no,room_id,room_type,room_type_id,room_rate,room_rate_code,resv_id);
-            }
+            
 
             clicked_room_ids = [];
 
@@ -206,6 +195,10 @@ function updateRoomFromOptions(RESV_ROOM,RESV_ROOM_ID,RESV_RM_TYPE,RESV_RM_TYPE_
 }
 
 function setUpdatedRate() {
+    var assign_room = $(".assignRoom").attr('rel');
+
+    var resv_id = $('#room_assign').attr('data_sysid');
+
     var room_rate = $('.assign_selected_room').attr('data_rate');
     var room_rate_code = $('.assign_selected_room').attr('data_rate_code');
 
@@ -250,10 +243,23 @@ function setUpdatedRate() {
                 $('[name="RESV_RATE_CODE"]').val(data.RT_CD_CODE);
                 $('#RESV_RATE_CODE_OPTIONS').val(data.RT_CD_CODE);
                 $('#RESV_RATE').val(data.ACTUAL_GUEST_PRICE);  
-                $('#RESV_RATE_OPTIONS').val(data.ACTUAL_GUEST_PRICE);              
+                $('#RESV_RATE_OPTIONS').val(data.ACTUAL_GUEST_PRICE);  
+                
+                rate_code = data.RT_CD_CODE;
+                resv_rate = data.ACTUAL_GUEST_PRICE;
 
 
             });
+
+            if(assign_room == 1)
+            {                 
+                 var room_no      = $('.assign_selected_room').attr('data-room-no');
+                 var room_id      = $('.assign_selected_room').attr('data-room-id');
+                 var room_type    = $('.assign_selected_room').attr('data-room-type');
+                 var room_type_id = $('.assign_selected_room').attr('data-room-type-id');
+                
+                updateRoomFromOptions(room_no,room_id,room_type,room_type_id,resv_rate,rate_code,resv_id);
+            }
 
             Swal.fire({
                 title: '',

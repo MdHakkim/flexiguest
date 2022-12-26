@@ -932,7 +932,10 @@ public function showPackages()
 
         $output    = '';
         $RESV_RATE_TOTAL = $STAY_TOTAL = $DEPOSIT =  $FIXED_CHARGES = 0 ;
-        $resvID = $this->request->getPost('resvID');
+        $resvID       = $this->request->getPost('resvID');
+        $resvRate     = $this->request->getPost('resvRate');
+        $rateCodeType = $this->request->getPost('rateCodeType');
+        
 
         $sql = "SELECT RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_RATE, RESV_RATE_CODE     
                 FROM FLXY_RESERVATION 
@@ -941,8 +944,8 @@ public function showPackages()
         foreach ($response as $row) {
             $RESV_ARRIVAL_DT    = $row['RESV_ARRIVAL_DT'];
             $RESV_DEPARTURE     = $row['RESV_DEPARTURE'];
-            $RESV_RATE_CODE     = $row['RESV_RATE_CODE'];            
-            $RESV_RATE          = $row['RESV_RATE'];
+            $RESV_RATE_CODE     = $rateCodeType ?? $row['RESV_RATE_CODE'];            
+            $RESV_RATE          = $resvRate ?? $row['RESV_RATE'];
         }
 
         $RESV_ARRIVAL_DT1    = strtotime($RESV_ARRIVAL_DT);
@@ -2590,6 +2593,16 @@ public function getRoomStatistics(){
         } catch(\Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    public function checkSharedReservation(){
+        $RESV_ID = $this->request->getPost('sysid');
+        $sql = "SELECT FSR_ID
+                FROM FLXY_SHARE_RESERVATIONS
+                WHERE FSR_RESERVATION_ID = '$RESV_ID' OR FSR_OTHER_RESERVATION_ID = '$RESV_ID'";
+
+        $response = $this->DB->query($sql)->getNumRows();
+        echo json_encode($response);
     }
 
     
