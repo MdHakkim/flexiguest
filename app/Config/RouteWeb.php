@@ -1004,6 +1004,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('post-or-payment', 'BillingController::postOrPayment');
         $routes->post('load-windows-data', 'BillingController::loadWindowsData');
         $routes->post('move-transaction', 'BillingController::moveTransaction');
+        $routes->post('delete-transaction', 'BillingController::deleteTransaction');
         $routes->post('delete-window', 'BillingController::deleteWindow');
     });
 

@@ -58,7 +58,7 @@ class BillingRepository extends BaseController
         } else
             $rules = array_merge($rules, [
                 'RTR_TRANSACTION_CODE_ID' => ['label' => 'transaction code', 'rules' => 'required', 'errors' => ['required' => 'Please select a transaction code.']],
-                'RTR_QUANTITY' => ['label' => 'quantity', 'rules' => 'required'],
+                'RTR_QUANTITY' => ['label' => 'quantity', 'rules' => 'required|greater_than_equal_to[1]'],
             ]);
 
         return $rules;
@@ -94,8 +94,11 @@ class BillingRepository extends BaseController
         return $response ? responseJson(200, false, ['msg' => 'Transaction posted successfully.']) : responseJson(202, true, ['msg' => 'Unable to post the transaction.']);
     }
 
-    public function reservationTransactions($where_condition)
+    public function reservationTransactions($where_condition = "1 = 1", $with_deleted = false)
     {
+        if(!$with_deleted)
+            $where_condition = "RTR_DELETED_AT is null and $where_condition";
+
         return $this->ReservationTransaction
             ->join('FLXY_TRANSACTION_CODE', 'RTR_TRANSACTION_CODE_ID = TR_CD_ID', 'left')
             ->join('FLXY_PAYMENT', 'RTR_PAYMENT_METHOD_ID = PYM_ID', 'left')

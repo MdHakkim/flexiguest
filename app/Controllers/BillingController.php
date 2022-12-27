@@ -54,14 +54,14 @@ class BillingController extends BaseController
         if (!$this->validate($this->BillingRepository->postOrPaymentValidationRules($data)))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
-        if(isset($data['RESV_RESRV_TYPE']))
+        if (isset($data['RESV_RESRV_TYPE']))
             $reservation_type = $data['RESV_RESRV_TYPE'];
 
         unset($data['payment_method']);
         unset($data['RESV_RESRV_TYPE']);
 
         $result = $this->BillingRepository->postOrPayment($user, $data);
-        if($result['SUCCESS'] == 200 && isset($reservation_type))
+        if ($result['SUCCESS'] == 200 && isset($reservation_type))
             $this->ReservationRepository->updateReservation(['RESV_RESRV_TYPE' => $reservation_type], "RESV_ID = {$data['RTR_RESERVATION_ID']}");
 
         return $this->respond($result);
@@ -108,5 +108,20 @@ class BillingController extends BaseController
 
             return $this->respond(responseJson(200, false, ['msg' => 'Window deleted successfully.']));
         }
+    }
+
+    public function deleteTransaction()
+    {
+        $user = session('user');
+        $transaction_id = $this->request->getVar('RTR_ID');
+
+        if (!empty($transaction_id))
+            $this->BillingRepository->updateReservationTransaction([
+                'RTR_ID' => $transaction_id,
+                'RTR_DELETED_AT' => date('Y-m-d H:i:s'),
+                'RTR_DELETED_BY' => $user['USR_ID']
+            ]);
+
+        return $this->respond(responseJson(200, false, ['msg' => 'Transaction deleted successfully.']));
     }
 }

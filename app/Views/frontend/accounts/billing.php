@@ -162,6 +162,8 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                 info: false
             });
 
+            loadWindowsData(); // call on load
+
             $(document).on('click', '.windows .nav-tabs .nav-item', function() {
                 $('.windows .nav-tabs .nav-link').removeClass('active');
                 $(this).children().addClass('active');
@@ -176,6 +178,11 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                 showMoveTransactionModal(transaction_id);
             });
 
+            $(document).on('click', '.transaction-btns .delete-transaction-btn', function() {
+                let transaction_id = $(this).data('transaction_id');
+                deleteTransaction(transaction_id);
+            });
+
             $(document).on('click', '.function-btns .post-btn', function() {
                 showPostTransactionModal();
             });
@@ -187,17 +194,18 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
             $(document).on('click', '.function-btns .delete-btn', function() {
                 deleteWindow();
             });
-
-            loadWindowsData(); // call on load
-
         });
 
         function changeActiveWindow(window_number) {
             active_window = window_number;
 
-            if ($(`.windows .nav-tabs .nav-item:nth-child(${window_number})`).length) {
-                $('.windows .nav-tabs .nav-link').removeClass('active');
+            $('.windows .nav-tabs .nav-link').removeClass('active');
+
+            if ($(`.windows .nav-tabs .nav-item:nth-child(${window_number})`).length)
                 $(`.windows .nav-tabs .nav-item:nth-child(${window_number})`).click();
+            else {
+                $(`.windows .nav-tabs .nav-item:nth-child(${window_number-1})`).click();
+                active_window = window_number - 1;
             }
         }
 
@@ -278,8 +286,8 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                                                 <div class="dropdown-divider"></div>
 
                                                 <li>
-                                                    <a href="javascript:;" class="dropdown-item">
-                                                        
+                                                    <a href="javascript:void(0);" class="dropdown-item delete-transaction-btn" data-transaction_id="${item.RTR_ID}">
+                                                        Delete Transaction                                                        
                                                     </a>
                                                 </li>
                                             </ul>
@@ -343,6 +351,50 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                         }
                     }
                 });
+        }
+
+        function deleteTransaction(transaction_id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then(function(result) {
+                if (result.value) {
+                    let fd = new FormData();
+                    fd.append('RTR_ID', transaction_id);
+
+                    if (transaction_id)
+                        $.ajax({
+                            url: '<?= base_url('billing/delete-transaction') ?>',
+                            type: "post",
+                            data: fd,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json',
+                            success: function(response) {
+                                var mcontent = '';
+                                $.each(response['RESPONSE']['REPORT_RES'], function(ind, data) {
+                                    mcontent += '<li>' + data + '</li>';
+                                });
+
+                                if (response['SUCCESS'] != 200)
+                                    showModalAlert('error', mcontent);
+                                else {
+                                    showModalAlert('success', mcontent);
+
+                                    loadWindowsData(active_window);
+                                }
+                            }
+                        });
+                }
+            });
         }
     <?php
     }

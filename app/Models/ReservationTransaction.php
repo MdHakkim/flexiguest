@@ -23,6 +23,8 @@ class ReservationTransaction extends Model
         'RTR_REFERENCE',
         'RTR_CREATED_BY',
         'RTR_UPDATED_BY',
+        'RTR_DELETED_AT',
+        'RTR_DELETED_BY',
     ];
 
     protected $useAutoIncrement = true;
