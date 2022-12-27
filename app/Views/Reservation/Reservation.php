@@ -3130,7 +3130,6 @@ $(document).ready(function() {
                                         data-children = "${data['RESV_CHILDREN']}" 
                                         data-rate = "${data['RESV_RATE']}" 
                                         data-rate-code = "${data['RESV_RATE_CODE']}"
-                                        data-status = "${data['RESV_STATUS']}"
                                         class="dropdown-item reserOption text-success">
                                             <i class="fa-solid fa-align-justify"></i> 
                                             Options
@@ -3770,8 +3769,7 @@ $(document).on('click', '.reserOption', function() {
     children = $(this).attr('data-children');
     rate = $(this).attr('data-rate');
     ratecode = $(this).attr('data-rate-code');
-    let reservation_status = $(this).data('status');
-
+    
     $('#optionsResrBtn').attr({
         'data-reservation_customer_id': reservation_customer_id
     });
@@ -3801,16 +3799,6 @@ $(document).on('click', '.reserOption', function() {
     
     $('.deposit-btn').attr('data-reservation_id', ressysId);
     $('.billing-btn').attr('data-reservation_id', ressysId);
-
-    if(['Due Pre Check-In', 'Pre Checked-In'].includes(reservation_status))
-        $('.deposit-btn').removeClass('disabled');
-    else
-        $('.deposit-btn').addClass('disabled');
-
-    if(['Checked-In', 'Check-Out-Requested'].includes(reservation_status))
-        $('.billing-btn').removeClass('disabled');
-    else
-        $('.billing-btn').addClass('disabled');
 
     $('.resv-attachments').attr('data_sysid', ressysId);
 
@@ -3886,6 +3874,16 @@ function displayResvOptionButtons(ressysId) {
                     }
                 }
             }
+
+            if(['Due Pre Check-In', 'Pre Checked-In'].includes(respn.RESV_STATUS))
+                $('.deposit-btn').removeClass('disabled');
+            else
+                $('.deposit-btn').addClass('disabled');
+
+            if(['Checked-In', 'Check-Out-Requested'].includes(respn.RESV_STATUS))
+                $('.billing-btn').removeClass('disabled');
+            else
+                $('.billing-btn').addClass('disabled');
         }
     });
 }
