@@ -29,13 +29,22 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                                 <th>Code</th>
                                 <th>Description</th>
                                 <th>Amount</th>
-                                <th>Supplement</th>
                                 <th>Refernce</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
 
-                        <tbody></tbody>
+                        <tbody>
+                            <?php foreach ($reservation_transactions as $reservation_transaction) : ?>
+                                <tr>
+                                    <td><?= $reservation_transaction['RTR_ID'] ?></td>
+                                    <td><?= $reservation_transaction['RTR_CREATED_AT'] ?></td>
+                                    <td><?= $reservation_transaction['PYM_TXN_CODE'] ?></td>
+                                    <td><?= $reservation_transaction['PYM_DESC'] ?></td>
+                                    <td><?= $reservation_transaction['RTR_AMOUNT'] ?></td>
+                                    <td><?= $reservation_transaction['RTR_REFERENCE'] ?></td>
+                                </tr>
+                            <?php endforeach ?>
+                        </tbody>
                     </table>
                 </div>
             </div>

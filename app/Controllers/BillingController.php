@@ -54,9 +54,16 @@ class BillingController extends BaseController
         if (!$this->validate($this->BillingRepository->postOrPaymentValidationRules($data)))
             return $this->respond(responseJson(403, true, $this->validator->getErrors()));
 
+        if(isset($data['RESV_RESRV_TYPE']))
+            $reservation_type = $data['RESV_RESRV_TYPE'];
+
         unset($data['payment_method']);
+        unset($data['RESV_RESRV_TYPE']);
 
         $result = $this->BillingRepository->postOrPayment($user, $data);
+        if($result['SUCCESS'] == 200 && isset($reservation_type))
+            $this->ReservationRepository->updateReservation(['RESV_RESRV_TYPE' => $reservation_type], "RESV_ID = {$data['RTR_RESERVATION_ID']}");
+
         return $this->respond($result);
     }
 

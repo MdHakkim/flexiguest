@@ -3,7 +3,9 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h4 class="modal-title" id="popModalWindowlabel">Payment</h4>
+                <h4 class="modal-title" id="popModalWindowlabel">
+                    <?= (isset($title) && strtolower($title) == 'deposit') ? 'Deposit' : 'Payment' ?>
+                </h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
             </div>
 
@@ -43,9 +45,15 @@
                             <textarea class="form-control" name="RTR_REFERENCE"></textarea>
                         </div>
 
-                        <?php if (isset($title) && $title == 'deposit') : ?>
+                        <?php if (isset($title) && strtolower($title) == 'deposit') : ?>
                             <div class="col-md-4">
-                                
+                                <label class="form-label"><b>Reservation Type *</b></label>
+                                <select class="form-control select2" name="RESV_RESRV_TYPE">
+                                    <option value="">Select</option>
+                                    <?php foreach ($reservation_types as $reservation_type) : ?>
+                                        <option value="<?= $reservation_type['RESV_TY_ID'] ?>"><?= $reservation_type['RESV_TY_DESC'] ?></option>
+                                    <?php endforeach ?>
+                                </select>
                             </div>
                         <?php endif ?>
                     </div>
@@ -99,8 +107,12 @@
                         showModalAlert('success', mcontent);
                         hidePaymentModal();
 
-                        if (typeof loadWindowsData == 'function')
-                            loadWindowsData();
+                        <?php if (isset($title) && strtolower($title) == 'deposit') : ?>
+                            window.reload();
+                        <?php else : ?>
+                            if (typeof loadWindowsData == 'function')
+                                loadWindowsData();
+                        <?php endif ?>
                     }
                 }
             });
