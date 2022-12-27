@@ -105,88 +105,88 @@
 </div>
 <!--/ Add New Credit Card Modal -->
 <script>
-$(document).on('change', '#RESV_PAYMENT_TYPE', function(e) {   
-		var payment_type = $(this).val();
-        // alert(payment_type)
-        var resv_id = $("#RESV_ID").val();
-        //$("#editCCModal").modal('hide');
-        $("#editCCModal").modal('hide');
-        if(payment_type === "MSCARD" && resv_id == ''){
-            $("#editCCModal").modal('show');
-        }else if(payment_type === "MSCARD") {
-            $.ajax({
-                url: '<?php echo base_url('/getCreditCardDetails') ?>',
-                type: "post",
-                data:{sysid:resv_id},
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                async: false,
-                dataType:'json',
-                success: function(respn) {  
-                    //alert(respn)
-                    if(respn != ''){
-                        $(respn).each(function(inx, data) {
-                            $.each(data, function(fields, datavals) {                   
-                                var field = $.trim(fields);
-                                var dataval = $.trim(datavals);    
-                                    $('#' + field).val(dataval);
-                            });
+// $(document).on('change', '#RESV_PAYMENT_TYPE', function(e) {   
+// 		var payment_type = $(this).val();
+//         // alert(payment_type)
+//         var resv_id = $("#RESV_ID").val();
+//         //$("#editCCModal").modal('hide');
+//         $("#editCCModal").modal('hide');
+//         if(payment_type === "MSCARD" && resv_id == ''){
+//             $("#editCCModal").modal('show');
+//         }else if(payment_type === "MSCARD") {
+//             $.ajax({
+                // url: '<?php /*echo base_url('/getCreditCardDetails') */?>',
+//                 type: "post",
+//                 data:{sysid:resv_id},
+//                 headers: {
+//                     'X-Requested-With': 'XMLHttpRequest'
+//                 },
+//                 async: false,
+//                 dataType:'json',
+//                 success: function(respn) {  
+//                     //alert(respn)
+//                     if(respn != ''){
+//                         $(respn).each(function(inx, data) {
+//                             $.each(data, function(fields, datavals) {                   
+//                                 var field = $.trim(fields);
+//                                 var dataval = $.trim(datavals);    
+//                                     $('#' + field).val(dataval);
+//                             });
 
-                        });
+//                         });
                         
-                    }
-                    $("#editCCModal").modal('show');
+//                     }
+//                     $("#editCCModal").modal('show');
                 
-                }
-            });
+//                 }
+//             });
             
 
-        }
-	});
+//         }
+// 	});
 
-$(document).on('click', '#savecard', function() {
+// $(document).on('click', '#savecard', function() {
   
-    hideModalAlerts();
-    var formSerialization = $('#editCCForm').serializeArray();
-    var url = '<?php echo base_url('/insertCard') ?>';
-    $.ajax({
-        url: url,
-        type: "post",
-        data: formSerialization,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        dataType: 'json',
-        success: function(respn) {
+//     hideModalAlerts();
+//     var formSerialization = $('#editCCForm').serializeArray();
+//     var url = '<?php /*echo base_url('/insertCard')*/ ?>';
+//     $.ajax({
+//         url: url,
+//         type: "post",
+//         data: formSerialization,
+//         headers: {
+//             'X-Requested-With': 'XMLHttpRequest'
+//         },
+//         dataType: 'json',
+//         success: function(respn) {
           
-            var response = respn['SUCCESS'];
-            if (response == '2') {
-                mcontent = '<li>Something went wrong</li>';
-                showModalAlert('error', mcontent);
-            } else if (response != '1') {
-                var ERROR = respn['RESPONSE']['ERROR'];
-                var mcontent = '';
-                $.each(ERROR, function(ind, data) {
-                    //console.log(data, "SDF");
-                    mcontent += '<li>' + data + '</li>';
-                });
-                showModalAlert('error', mcontent);
-            } else {
-                var alertText = $('#RESERVATION_CARD_RESVID').val() == '' ?
-                    '<li>Successfully added</li>' :
-                    '<li>Successfully updated</li>';
-                hideModalAlerts();
-                showModalAlert('success', alertText);
+//             var response = respn['SUCCESS'];
+//             if (response == '2') {
+//                 mcontent = '<li>Something went wrong</li>';
+//                 showModalAlert('error', mcontent);
+//             } else if (response != '1') {
+//                 var ERROR = respn['RESPONSE']['ERROR'];
+//                 var mcontent = '';
+//                 $.each(ERROR, function(ind, data) {
+//                     //console.log(data, "SDF");
+//                     mcontent += '<li>' + data + '</li>';
+//                 });
+//                 showModalAlert('error', mcontent);
+//             } else {
+//                 var alertText = $('#RESERVATION_CARD_RESVID').val() == '' ?
+//                     '<li>Successfully added</li>' :
+//                     '<li>Successfully updated</li>';
+//                 hideModalAlerts();
+//                 showModalAlert('success', alertText);
 
 
-                if (respn['RESPONSE']['OUTPUT'] != '') {                  
-                    $('#RESERVATION_CARD_RESVID').val(respn['RESPONSE']['OUTPUT']);   
-                }
-            }
-        }
-    });
-});
+//                 if (respn['RESPONSE']['OUTPUT'] != '') {                  
+//                     $('#RESERVATION_CARD_RESVID').val(respn['RESPONSE']['OUTPUT']);   
+//                 }
+//             }
+//         }
+//     });
+// });
 
 
 
