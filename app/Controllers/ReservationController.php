@@ -1444,7 +1444,7 @@ public function showPackages()
         if($SEARCH_ROOM_TYPE != '' || $SEARCH_ROOM != '' || $SEARCH_ROOM_STATUS != '' || $SEARCH_ROOM_FLOOR != '')
         {            
             $cond .= ($SEARCH_ROOM_TYPE != '') ?" AND RM_TYPE_REF_ID = '".$SEARCH_ROOM_TYPE."'":'';
-            $cond .= ($SEARCH_ROOM_STATUS != '')?" AND RM_STATUS_ID = '".$SEARCH_ROOM_STATUS."'":'';
+            $cond .= $SEARCH_ROOM_STATUS != '' ? (($SEARCH_ROOM_STATUS == 4 || $SEARCH_ROOM_STATUS == 5) ? " AND ROOM_STATUS = '".$SEARCH_ROOM_STATUS."'": " AND RM_STATUS_ID = '".$SEARCH_ROOM_STATUS."'"):'';
             $cond .= ($SEARCH_ROOM != '')?" AND RM_ID = '".$SEARCH_ROOM."'":'';
             $cond .= ($SEARCH_ROOM_FLOOR != '')?" AND RM.RM_FL_ID = '".$SEARCH_ROOM_FLOOR."'":'';
         } 
@@ -1480,6 +1480,8 @@ public function showPackages()
         LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
 
         LEFT JOIN FLXY_ROOM_FLOOR RM ON RM.RM_FL_CODE = RM_FLOOR_PREFERN 
+
+        LEFT JOIN FLXY_ROOM_OOOS on ROOMS = RM_ID
          ".$join.$cond.$where."
 
         GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
@@ -1499,6 +1501,9 @@ public function showPackages()
         LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
 
         LEFT JOIN FLXY_ROOM_FLOOR RM ON RM.RM_FL_CODE = RM_FLOOR_PREFERN 
+
+        LEFT JOIN FLXY_ROOM_OOOS on ROOMS = RM_ID
+
          ".$join.$cond.$where."
 
         GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
@@ -2155,10 +2160,10 @@ public function getRoomStatistics(){
 
             $validate = $this->validate([
                 'ROOMS' => ['label' => 'Room', 'rules' => 'required|is_unique[FLXY_ROOM_OOOS.ROOMS,OOOS_ID,' . $sysid . ']'],
-                'ROOM_STATUS' => ['label' => 'Status', 'rules' => 'required'],  
-                'ROOM_RETURN_STATUS' => ['label' => 'Return Status', 'rules' => 'required'],   
-                'STATUS_FROM_DATE' => ['label' => 'From Date', 'rules' => 'required'], 
-                'STATUS_TO_DATE' => ['label' => 'To Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Date should be after Begin Date']], 
+                'ROOM_STATUS' => ['label' => 'Status', 'rules' => 'required'],     
+                'ROOM_RETURN_STATUS' => ['label' => 'Return Status', 'rules' => 'required'],     
+                'STATUS_FROM_DATE' => ['label' => 'From Date', 'rules' => 'required'],               
+                'STATUS_TO_DATE' => ['label' => 'To Date', 'rules' => 'required'], 
                 'ROOM_CHANGE_REASON' => ['label' => 'Reason ', 'rules' => 'required']                     
                 
             ]);
@@ -2602,6 +2607,16 @@ public function getRoomStatistics(){
                 WHERE FSR_RESERVATION_ID = '$RESV_ID' OR FSR_OTHER_RESERVATION_ID = '$RESV_ID'";
 
         $response = $this->DB->query($sql)->getNumRows();
+        echo json_encode($response);
+    }
+
+    public function getRateCodeDateRange(){
+        $neg_RT_CD_ID = $this->request->getPost('neg_RT_CD_ID');
+        $sql = "SELECT RT_CD_BEGIN_SELL_DT,RT_CD_END_SELL_DT
+                FROM FLXY_RATE_CODE
+                WHERE RT_CD_ID = '$neg_RT_CD_ID'";
+
+        $response = $this->DB->query($sql)->getResultArray();
         echo json_encode($response);
     }
 

@@ -1460,7 +1460,7 @@ function roomPlanFunc(){
 //     $('.dtr-bs-modal').modal('hide'); 
 
 //     bootbox.dialog({
-//         message: "Do you want to update room status?",
+//         //message: "Do you want to add room status?",
 //         buttons: {
 //             ok: {
 //                 label: 'Yes',
@@ -1500,7 +1500,7 @@ function roomPlanFunc(){
 //   $('#ROOMS').prop("disabled", false);
 //     hideModalAlerts();
 //     var formSerialization = $('#ooos-submit-form').serializeArray();
-//     var url = '<?php echo base_url('/insertRoomOOS') ?>';
+//     var url = '<?php echo //base_url('/insertRoomOOS') ?>';
 //     $.ajax({
 //         url: url,
 //         type: "post",
@@ -1552,7 +1552,7 @@ function roomPlanFunc(){
 //         'serverSide': true,
 //         'serverMethod': 'post',
 //         'ajax': {
-//             'url': '<?php echo base_url('/roomOOSList') ?>',
+//             'url': '<?php //echo base_url('/roomOOSList') ?>',
            
 //         },
 //         'columns': [{
@@ -1623,7 +1623,7 @@ function roomPlanFunc(){
 
 // function loadRoomStatusDetails(OOOS_ID) {
 //   $('#ROOMS').prop("disabled", true);
-//     var url = '<?php echo base_url('/showRoomStatusDetails') ?>';
+//     var url = '<?php// echo base_url('/showRoomStatusDetails') ?>';
 //     $.ajax({
 //         url: url,
 //         type: "post",
@@ -1682,7 +1682,7 @@ function roomPlanFunc(){
 //         callback: function(result) {
 //             if (result) {
 //                 $.ajax({
-//                     url: '<?php echo base_url('/deleteRoomOOS') ?>',
+//                     url: '<?php///echo base_url('/deleteRoomOOS') ?>',
 //                     type: "post",
 //                     data: {
 //                       OOOS_ID: status_id,
