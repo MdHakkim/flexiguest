@@ -141,7 +141,6 @@ class ReservationController extends BaseController
             'RESV_RESRV_TYPE' => $this->request->getVar('RESV_RESRV_TYPE'),
             'RESV_ORIGIN' => $other_reservation['RESV_ORIGIN'],
             'RESV_PAYMENT_TYPE' => $this->request->getVar('RESV_PAYMENT_TYPE'),
-
             'RESV_CREATE_UID' => $user_id,
             'RESV_UPDATE_UID' => $user_id,
         ];
@@ -2540,13 +2539,7 @@ public function getRoomStatistics(){
     }
 
 
-    public function uploadReservationAttachments()
-    {
-        $fileName = $this->request->getPost('filename');
-        echo $fileName;
-        
-       
-    }
+   
 
     public function getCreditCardDetails(){
         $param = ['SYSID' => $this->request->getPost('sysid')];
@@ -2619,6 +2612,85 @@ public function getRoomStatistics(){
         $response = $this->DB->query($sql)->getResultArray();
         echo json_encode($response);
     }
+
+    public function getReservationAttachments()
+    { 
+        $mine = new ServerSideDataTable(); // loads and creates instance
+
+        //Reservation ID 
+        $RESV_ID = $this->request->getPost('resvId');
+
+        if($RESV_ID > 0)
+        $init_cond = array("RESV_ATTACH_RESV_ID = " => $RESV_ID);        
+        
+        $tableName = 'FLXY_RESERVATION_ATTACHMENTS';
+        $columns = 'RESV_ATTACH_ID,RESV_ATTACH_FILE_NAME,RESV_ATTACH_FILE_TYPE';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond); 
+        exit;
+    }
+
+    public function uploadReservationFiles()
+    {        
+        $flag = 0;
+        $resvId = $this->request->getPost('resvId');
+        $data['reservation_file'] = $this->request->getFileMultiple('reservation_file') ?? [];
+        $rules = [
+            'reservation_file' => [
+                'label' => 'file',
+                'rules' => ['uploaded[reservation_file]', 'mime_in[reservation_file,image/png,image/jpg,image/jpeg,application/pdf]', 'max_size[reservation_file,5120]']
+            ],
+        ];
+
+        $validate =$this->validate($rules);
+
+        if (!$validate) {
+            $validate = $this->validator->getErrors();
+            $result["SUCCESS"] = "-402";
+            $result[]["ERROR"] = $validate;
+            $result = $this->responseJson("-402", $validate);
+            echo json_encode($result);
+            exit;
+        }        
+
+        
+        $directory = "assets/Uploads/Reservation";
+        if (!file_exists($directory)) 
+            mkdir($directory, 0777);
+            
+        foreach ($data['reservation_file'] as $image) {
+            $image_name = trim($image->getName());
+            $image_type = trim($image->getMimeType());            
+
+            //$response = documentUpload($image, $image_name, $resvId, $directory);
+
+            $temp = explode(".", $image_name);
+            $name_without_ext = implode(' ', array_slice($temp, 0, -1));
+            $newfilename = round(microtime(true)) . '-' . $resvId . '-' . $name_without_ext . '.' . end($temp);
+
+            if ($image->move($directory, $newfilename)) {
+                $flag = 1;              
+               //echo json_encode(responseJson(500, true, ['msg' => "Successfully uploaded"]));
+            } else {       
+               
+               //echo json_encode(responseJson(200, true, ['msg' => "Failed to upload image"]));
+            }
+
+
+            if($flag == 1){
+
+                $file_data['RESV_ATTACH_RESV_ID']     = $resvId;
+                $file_data['RESV_ATTACH_FILE_NAME']   = $directory.'/'.$newfilename;
+                $file_data['RESV_ATTACH_FILE_TYPE']   = $image_type;
+                $return = $this->DB->table('FLXY_RESERVATION_ATTACHMENTS')->insert($file_data);
+                //if($return == 1)
+               // echo json_encode(responseJson(500, true, ['msg' => "Successfully added"]));
+            }
+           
+        }
+        echo json_encode(responseJson(500, true, ['msg' => "Successfully added"]));
+
+   }
+    
 
     
 }
