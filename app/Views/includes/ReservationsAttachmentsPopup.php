@@ -164,15 +164,18 @@ $('#Resv_attachment').DataTable({
             dataType: 'json',
            
             success: function(response) {
-                if (response['SUCCESS'] != 500) {
 
-                    var ERROR = response['RESPONSE']['REPORT_RES'];
-                    var mcontent = '';
-                    $.each(ERROR, function(ind, data) {
-
-                        mcontent += '<li>' + data + '</li>';
-                    });
+                if (response['SUCCESS'] == -402) {
+                  
+                    var mcontent = '';  
+                    mcontent += '<li>Invalid File</li>';
                     showModalAlert('error', mcontent);
+                }
+                else if (response['SUCCESS'] != 500) {
+
+                    var alertText = response['RESPONSE']['REPORT_RES']['msg'];
+
+                    showModalAlert('error', alertText);
                 } else {
                     var alertText = response['RESPONSE']['REPORT_RES']['msg'];
 
