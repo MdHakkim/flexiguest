@@ -22,7 +22,7 @@ class BillingRepository extends BaseController
         $rules = [
             'RTR_RESERVATION_ID' => ['label' => 'reservation id', 'rules' => 'required'],
             'RTR_TRANSACTION_TYPE' => ['label' => 'transaction type', 'rules' => 'required'],
-            'RTR_AMOUNT' => ['label' => 'amount', 'rules' => 'required'],
+            'RTR_AMOUNT' => ['label' => 'amount', 'rules' => 'required|greater_than_equal_to[1]'],
             'RTR_WINDOW' => ['label' => 'window', 'rules' => 'required|greater_than_equal_to[1]|less_than_equal_to[8]', 'errors' => ['required' => 'Please select a window.']],
         ];
 
@@ -77,17 +77,34 @@ class BillingRepository extends BaseController
 
     public function postOrPayment($user, $data)
     {
+        foreach ($data as $index => $row)
+            if (empty($row))
+                $data[$index] = null;
+
         $data['RTR_CREATED_BY'] = $data['RTR_UPDATED_BY'] = $user['USR_ID'];
 
         if ($data['RTR_TRANSACTION_TYPE'] == 'Credited')
             $data['RTR_AMOUNT'] = -$data['RTR_AMOUNT'];
 
-        if (isset($data['RTR_CARD_NUMBER']))
-            $data['RTR_CARD_NUMBER'] = $this->encryptCardNumber($data['RTR_CARD_NUMBER']);
+        if (!empty($data['RTR_ID'])) {
+            $update_data = [
+                'RTR_ID' => $data['RTR_ID'],
+                'RTR_REFERENCE' => $data['RTR_REFERENCE'],
+            ];
 
-        foreach ($data as $index => $row)
-            if (empty($row))
-                $data[$index] = null;
+            if ($data['RTR_TRANSACTION_TYPE'] == 'Debited') {
+                $update_data['RTR_AMOUNT'] = $data['RTR_AMOUNT'];
+                $update_data['RTR_QUANTITY'] = $data['RTR_QUANTITY'];
+                $update_data['RTR_SUPPLEMENT'] = $data['RTR_SUPPLEMENT'];
+            }
+
+            $data = $update_data;
+        } else {
+            unset($data['RTR_ID']);
+
+            if (isset($data['RTR_CARD_NUMBER']))
+                $data['RTR_CARD_NUMBER'] = $this->encryptCardNumber($data['RTR_CARD_NUMBER']);
+        }
 
         $response = $this->ReservationTransaction->save($data);
 
@@ -96,7 +113,7 @@ class BillingRepository extends BaseController
 
     public function reservationTransactions($where_condition = "1 = 1", $with_deleted = false)
     {
-        if(!$with_deleted)
+        if (!$with_deleted)
             $where_condition = "RTR_DELETED_AT is null and $where_condition";
 
         return $this->ReservationTransaction

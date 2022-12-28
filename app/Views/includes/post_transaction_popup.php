@@ -8,6 +8,8 @@
             </div>
 
             <form>
+                <input type="hidden" name="RTR_ID" />
+
                 <div class="modal-body">
 
                     <div class="row">
@@ -23,14 +25,19 @@
                             </select>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label"><b>Amount *</b></label>
                             <input type="number" name="RTR_AMOUNT" class="form-control" placeholder="Amount">
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label class="form-label"><b>Quantity *</b></label>
                             <input type="number" name="RTR_QUANTITY" class="form-control" placeholder="Quantity">
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label"><b>Total Amount *</b></label>
+                            <input type="number" name="RTR_TOTAL_AMOUNT" class="form-control" placeholder="Total Amount" disabled>
                         </div>
                     </div>
 
@@ -91,6 +98,13 @@
             e.preventDefault();
         });
 
+        $(document).on('change', `${post_transaction_form} [name='RTR_AMOUNT'], ${post_transaction_form} [name='RTR_QUANTITY']`, function() {
+            let amount = $(`${post_transaction_form} [name='RTR_AMOUNT']`).val();
+            let quantity = $(`${post_transaction_form} [name='RTR_QUANTITY']`).val();
+
+            $(`${post_transaction_form} [name='RTR_TOTAL_AMOUNT']`).val(amount * (quantity || 1));
+        });
+
         $(document).on('click', `${post_transaction_form} .submit-btn`, function() {
             var fd = new FormData($(`${post_transaction_form}`)[0]);
             fd.append('RTR_RESERVATION_ID', <?= $reservation_id ?>);
@@ -129,16 +143,57 @@
         $(`${post_transaction_form} input`).val('');
         $(`${post_transaction_form} textarea`).val('');
         $(`${post_transaction_form} select`).val('').trigger('change');
+        $(`${post_transaction_form} [name='RTR_QUANTITY']`).val(1);
 
         $(`${post_transaction_form} select[name='RTR_WINDOW']`).val('1').trigger('change');
+
+        $(`${post_transaction_form} [name='RTR_CHECK_NO']`).attr('readonly', false);
+
+        $(`${post_transaction_form} input[name='RTR_TRANSACTION_CODE_ID']`).remove();
+        $(`${post_transaction_form} input[name='RTR_WINDOW']`).remove();
+
+        $(`${post_transaction_form} select[name='RTR_TRANSACTION_CODE_ID']`).attr('disabled', false);
+        $(`${post_transaction_form} select[name='RTR_WINDOW']`).attr('disabled', false);
     }
 
-    function showPostTransactionModal() {
+    function showPostTransactionModal(transaction = null) {
         resetPostTransactionForm();
+
+        if (transaction)
+            editTransaction(transaction);
         $('.post-transaction-modal').modal('show');
     }
 
     function hidePostTransactionModal() {
         $('.post-transaction-modal').modal('hide');
+    }
+
+    function editTransaction(transaction) {
+        $(transaction).each(function(inx, data) {
+            $.each(data, function(field, val) {
+
+                if ($(`${post_transaction_form} input[name='${field}'][type!='file']`).length)
+                    $(`${post_transaction_form} input[name='${field}']`).val(val);
+
+                else if ($(`${post_transaction_form} textarea[name='${field}']`).length)
+                    $(`${post_transaction_form} textarea[name='${field}']`).val(val);
+
+                else if ($(`${post_transaction_form} select[name='${field}']`).length)
+                    $(`${post_transaction_form} select[name='${field}']`).val(val).trigger('change');
+
+                if (['RTR_CHECK_NO'].includes(field))
+                    $(`${post_transaction_form} input[name='${field}']`).attr('readonly', true);
+
+                else if (['RTR_TRANSACTION_CODE_ID', 'RTR_WINDOW'].includes(field)) {
+                    $(`${post_transaction_form} select[name='${field}']`).attr('disabled', true);
+
+                    $(`${post_transaction_form}`).prepend(
+                        `<input type='hidden' name='${field}' value='${val}'/>`
+                    );
+                }
+            });
+        });
+
+        $(`${post_transaction_form} [name='RTR_AMOUNT']`).trigger('change');
     }
 </script>

@@ -10,6 +10,8 @@
             </div>
 
             <form>
+                <input type="hidden" name="RTR_ID" />
+
                 <div class="modal-body">
 
                     <div class="row">
@@ -141,14 +143,52 @@
         $(`${payment_form} select`).val('').trigger('change');
 
         $('.card-details').addClass('d-none');
+
+        $(`${payment_form} [name='RTR_AMOUNT']`).attr('readonly', false);
+
+        $(`${payment_form} input[name='RTR_PAYMENT_METHOD_ID']`).remove();
+        $(`${payment_form} [name='RTR_PAYMENT_METHOD_ID']`).attr('disabled', false);
     }
 
-    function showPaymentModal() {
+    function showPaymentModal(payment = null) {
         resetPaymentModalForm();
+
+        if (payment)
+            editPayment(payment);
         $('.payment-modal').modal('show');
     }
 
     function hidePaymentModal() {
         $('.payment-modal').modal('hide');
+    }
+
+    function editPayment(payment) {
+        $(payment).each(function(inx, data) {
+            $.each(data, function(field, val) {
+
+                if (field == 'RTR_AMOUNT' && $(`${payment_form} input[name='${field}'][type!='file']`).length)
+                    $(`${payment_form} input[name='${field}']`).val(Math.abs(val));
+
+                else if ($(`${payment_form} input[name='${field}'][type!='file']`).length)
+                    $(`${payment_form} input[name='${field}']`).val(val);
+
+                else if ($(`${payment_form} textarea[name='${field}']`).length)
+                    $(`${payment_form} textarea[name='${field}']`).val(val);
+
+                else if ($(`${payment_form} select[name='${field}']`).length)
+                    $(`${payment_form} select[name='${field}']`).val(val).trigger('change');
+
+                if (['RTR_AMOUNT'].includes(field))
+                    $(`${payment_form} [name='${field}']`).attr('readonly', true);
+
+                else if (['RTR_PAYMENT_METHOD_ID'].includes(field)) {
+                    $(`${payment_form} [name='${field}']`).attr('disabled', true);
+
+                    $(`${payment_form}`).prepend(
+                        `<input type='hidden' name='${field}' value='${val}'/>`
+                    );
+                }
+            });
+        });
     }
 </script>

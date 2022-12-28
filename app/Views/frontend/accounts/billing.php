@@ -178,6 +178,15 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                 showMoveTransactionModal(transaction_id);
             });
 
+            $(document).on('click', '.transaction-btns .edit-transaction-btn', function() {
+                let transaction = $(this).data('transaction');
+
+                if(transaction.RTR_TRANSACTION_TYPE == 'Debited')
+                    showPostTransactionModal(transaction);
+                else
+                    showPaymentModal(transaction);
+            });
+
             $(document).on('click', '.transaction-btns .delete-transaction-btn', function() {
                 let transaction_id = $(this).data('transaction_id');
                 deleteTransaction(transaction_id);
@@ -267,7 +276,7 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                                     <td>${item.RTR_CREATED_AT}</td>
                                     <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.TR_CD_CODE : item.PYM_TXN_CODE}</td>
                                     <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.TR_CD_DESC : item.PYM_DESC}</td>
-                                    <td>${item.RTR_AMOUNT}</td>
+                                    <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.RTR_AMOUNT * item.RTR_QUANTITY : item.RTR_AMOUNT}</td>
                                     <td>${item.RTR_SUPPLEMENT || ''}</td>
                                     <td>${item.RTR_REFERENCE || ''}</td>
                                     <td>
@@ -279,15 +288,24 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                                             <ul class="dropdown-menu transaction-btns" role="menu">
                                                 <li>
                                                     <a href="javascript:void(0);" class="dropdown-item move-transaction-btn" data-transaction_id="${item.RTR_ID}">
-                                                        Move Transaction
+                                                        Move
                                                     </a>
                                                 </li>
                                                 
                                                 <div class="dropdown-divider"></div>
 
                                                 <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item edit-transaction-btn" 
+                                                        data-transaction='${JSON.stringify(item)}'>
+                                                        Edit
+                                                    </a>
+                                                </li>
+
+                                                <div class="dropdown-divider"></div>
+
+                                                <li>
                                                     <a href="javascript:void(0);" class="dropdown-item delete-transaction-btn" data-transaction_id="${item.RTR_ID}">
-                                                        Delete Transaction                                                        
+                                                        Delete
                                                     </a>
                                                 </li>
                                             </ul>
