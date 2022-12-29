@@ -749,6 +749,12 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
     $routes->match(['post'], '/checkRoomAssigned', 'ReservationController::checkRoomAssigned');
     $routes->match(['post'], '/getCreditCardDetails', 'ReservationController::getCreditCardDetails');
     $routes->match(['post'], '/insertCard', 'ReservationController::insertCard');
+    $routes->match(['post'], '/getCompanyOwner', 'ApplicatioController::getCompanyOwner');
+    $routes->match(['post'], '/checkSharedReservation', 'ReservationController::checkSharedReservation');
+    $routes->match(['post'], '/getRateCodeDateRange', 'ReservationController::getRateCodeDateRange');
+    $routes->match(['post'], '/getReservationAttachments','ReservationController::getReservationAttachments');
+    $routes->match(['post'], '/uploadReservationFiles','ReservationController::uploadReservationFiles');
+    
     
 
 

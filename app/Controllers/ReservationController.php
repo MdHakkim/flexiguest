@@ -141,7 +141,6 @@ class ReservationController extends BaseController
             'RESV_RESRV_TYPE' => $this->request->getVar('RESV_RESRV_TYPE'),
             'RESV_ORIGIN' => $other_reservation['RESV_ORIGIN'],
             'RESV_PAYMENT_TYPE' => $this->request->getVar('RESV_PAYMENT_TYPE'),
-
             'RESV_CREATE_UID' => $user_id,
             'RESV_UPDATE_UID' => $user_id,
         ];
@@ -932,7 +931,10 @@ public function showPackages()
 
         $output    = '';
         $RESV_RATE_TOTAL = $STAY_TOTAL = $DEPOSIT =  $FIXED_CHARGES = 0 ;
-        $resvID = $this->request->getPost('resvID');
+        $resvID       = $this->request->getPost('resvID');
+        $resvRate     = $this->request->getPost('resvRate');
+        $rateCodeType = $this->request->getPost('rateCodeType');
+        
 
         $sql = "SELECT RESV_ARRIVAL_DT, RESV_DEPARTURE, RESV_RATE, RESV_RATE_CODE     
                 FROM FLXY_RESERVATION 
@@ -941,8 +943,8 @@ public function showPackages()
         foreach ($response as $row) {
             $RESV_ARRIVAL_DT    = $row['RESV_ARRIVAL_DT'];
             $RESV_DEPARTURE     = $row['RESV_DEPARTURE'];
-            $RESV_RATE_CODE     = $row['RESV_RATE_CODE'];            
-            $RESV_RATE          = $row['RESV_RATE'];
+            $RESV_RATE_CODE     = $rateCodeType ?? $row['RESV_RATE_CODE'];            
+            $RESV_RATE          = $resvRate ?? $row['RESV_RATE'];
         }
 
         $RESV_ARRIVAL_DT1    = strtotime($RESV_ARRIVAL_DT);
@@ -1441,7 +1443,7 @@ public function showPackages()
         if($SEARCH_ROOM_TYPE != '' || $SEARCH_ROOM != '' || $SEARCH_ROOM_STATUS != '' || $SEARCH_ROOM_FLOOR != '')
         {            
             $cond .= ($SEARCH_ROOM_TYPE != '') ?" AND RM_TYPE_REF_ID = '".$SEARCH_ROOM_TYPE."'":'';
-            $cond .= ($SEARCH_ROOM_STATUS != '')?" AND RM_STATUS_ID = '".$SEARCH_ROOM_STATUS."'":'';
+            $cond .= $SEARCH_ROOM_STATUS != '' ? (($SEARCH_ROOM_STATUS == 4 || $SEARCH_ROOM_STATUS == 5) ? " AND ROOM_STATUS = '".$SEARCH_ROOM_STATUS."'": " AND RM_STATUS_ID = '".$SEARCH_ROOM_STATUS."'"):'';
             $cond .= ($SEARCH_ROOM != '')?" AND RM_ID = '".$SEARCH_ROOM."'":'';
             $cond .= ($SEARCH_ROOM_FLOOR != '')?" AND RM.RM_FL_ID = '".$SEARCH_ROOM_FLOOR."'":'';
         } 
@@ -1477,6 +1479,8 @@ public function showPackages()
         LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
 
         LEFT JOIN FLXY_ROOM_FLOOR RM ON RM.RM_FL_CODE = RM_FLOOR_PREFERN 
+
+        LEFT JOIN FLXY_ROOM_OOOS on ROOMS = RM_ID
          ".$join.$cond.$where."
 
         GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
@@ -1496,6 +1500,9 @@ public function showPackages()
         LEFT JOIN FLXY_ROOM_STATUS_MASTER SM ON SM.RM_STATUS_ID = RL.RM_STAT_ROOM_STATUS 
 
         LEFT JOIN FLXY_ROOM_FLOOR RM ON RM.RM_FL_CODE = RM_FLOOR_PREFERN 
+
+        LEFT JOIN FLXY_ROOM_OOOS on ROOMS = RM_ID
+
          ".$join.$cond.$where."
 
         GROUP BY RM_ID,RM_NO,RM_STATUS_CODE,RM_TYPE,RM_STAT_UPDATED 
@@ -2152,10 +2159,10 @@ public function getRoomStatistics(){
 
             $validate = $this->validate([
                 'ROOMS' => ['label' => 'Room', 'rules' => 'required|is_unique[FLXY_ROOM_OOOS.ROOMS,OOOS_ID,' . $sysid . ']'],
-                'ROOM_STATUS' => ['label' => 'Status', 'rules' => 'required'],  
-                'ROOM_RETURN_STATUS' => ['label' => 'Return Status', 'rules' => 'required'],   
-                'STATUS_FROM_DATE' => ['label' => 'From Date', 'rules' => 'required'], 
-                'STATUS_TO_DATE' => ['label' => 'To Date', 'rules' => 'required|compareDate', 'errors' => ['compareDate' => 'The End Date should be after Begin Date']], 
+                'ROOM_STATUS' => ['label' => 'Status', 'rules' => 'required'],     
+                'ROOM_RETURN_STATUS' => ['label' => 'Return Status', 'rules' => 'required'],     
+                'STATUS_FROM_DATE' => ['label' => 'From Date', 'rules' => 'required'],               
+                'STATUS_TO_DATE' => ['label' => 'To Date', 'rules' => 'required'], 
                 'ROOM_CHANGE_REASON' => ['label' => 'Reason ', 'rules' => 'required']                     
                 
             ]);
@@ -2532,13 +2539,7 @@ public function getRoomStatistics(){
     }
 
 
-    public function uploadReservationAttachments()
-    {
-        $fileName = $this->request->getPost('filename');
-        echo $fileName;
-        
-       
-    }
+   
 
     public function getCreditCardDetails(){
         $param = ['SYSID' => $this->request->getPost('sysid')];
@@ -2591,6 +2592,105 @@ public function getRoomStatistics(){
             return $e->getMessage();
         }
     }
+
+    public function checkSharedReservation(){
+        $RESV_ID = $this->request->getPost('sysid');
+        $sql = "SELECT FSR_ID
+                FROM FLXY_SHARE_RESERVATIONS
+                WHERE FSR_RESERVATION_ID = '$RESV_ID' OR FSR_OTHER_RESERVATION_ID = '$RESV_ID'";
+
+        $response = $this->DB->query($sql)->getNumRows();
+        echo json_encode($response);
+    }
+
+    public function getRateCodeDateRange(){
+        $neg_RT_CD_ID = $this->request->getPost('neg_RT_CD_ID');
+        $sql = "SELECT RT_CD_BEGIN_SELL_DT,RT_CD_END_SELL_DT
+                FROM FLXY_RATE_CODE
+                WHERE RT_CD_ID = '$neg_RT_CD_ID'";
+
+        $response = $this->DB->query($sql)->getResultArray();
+        echo json_encode($response);
+    }
+
+    public function getReservationAttachments()
+    { 
+        $mine = new ServerSideDataTable(); // loads and creates instance
+
+        //Reservation ID 
+        $RESV_ID = $this->request->getPost('resvId');
+
+        if($RESV_ID > 0)
+        $init_cond = array("RESV_ATTACH_RESV_ID = " => $RESV_ID);        
+        
+        $tableName = 'FLXY_RESERVATION_ATTACHMENTS';
+        $columns = 'RESV_ATTACH_ID,RESV_ATTACH_FILE_NAME,RESV_ATTACH_FILE_TYPE';
+        $mine->generate_DatatTable($tableName, $columns, $init_cond); 
+        exit;
+    }
+
+    public function uploadReservationFiles()
+    {        
+        $flag = 0;
+        $resvId = $this->request->getPost('resvId');
+        $data['reservation_file'] = $this->request->getFileMultiple('reservation_file') ?? [];
+        $rules = [
+            'reservation_file' => [
+                'label' => 'file',
+                'rules' => ['uploaded[reservation_file]', 'mime_in[reservation_file,image/png,image/jpg,image/jpeg,application/pdf]', 'max_size[reservation_file,5120]']
+            ],
+        ];
+
+        $validate =$this->validate($rules);
+
+        if (!$validate) {
+            $validate = $this->validator->getErrors();
+            $result["SUCCESS"] = "-402";
+            $result[]["ERROR"] = $validate;
+            $result = $this->responseJson("-402", $validate);
+            echo json_encode($result);
+            exit;
+        }        
+
+        
+        $directory = "assets/Uploads/Reservation";
+        if (!file_exists($directory)) 
+            mkdir($directory, 0777);
+            
+        foreach ($data['reservation_file'] as $image) {
+            $image_name = trim($image->getName());
+            $image_type = trim($image->getMimeType());            
+
+            //$response = documentUpload($image, $image_name, $resvId, $directory);
+
+            $temp = explode(".", $image_name);
+            $name_without_ext = implode(' ', array_slice($temp, 0, -1));
+            $newfilename = round(microtime(true)) . '-' . $resvId . '-' . $name_without_ext . '.' . end($temp);
+
+            if ($image->move($directory, $newfilename)) {
+                $flag = 1;              
+               //echo json_encode(responseJson(500, true, ['msg' => "Successfully uploaded"]));
+            } else {       
+               
+               //echo json_encode(responseJson(200, true, ['msg' => "Failed to upload image"]));
+            }
+
+
+            if($flag == 1){
+
+                $file_data['RESV_ATTACH_RESV_ID']     = $resvId;
+                $file_data['RESV_ATTACH_FILE_NAME']   = $directory.'/'.$newfilename;
+                $file_data['RESV_ATTACH_FILE_TYPE']   = $image_type;
+                $return = $this->DB->table('FLXY_RESERVATION_ATTACHMENTS')->insert($file_data);
+                //if($return == 1)
+               // echo json_encode(responseJson(500, true, ['msg' => "Successfully added"]));
+            }
+           
+        }
+        echo json_encode(responseJson(500, true, ['msg' => "Successfully added"]));
+
+   }
+    
 
     
 }

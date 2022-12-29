@@ -69,7 +69,7 @@ class ApplicatioController extends BaseController
         $data['js_to_load'] = array("inventoryFormWizardNumbered.js","RoomPlan/FullCalendar/Core/main.min.js",
                                     "RoomPlan/FullCalendar/Interaction/main.min.js", "RoomPlan/FullCalendar/Timeline/main.min.js", 
                                     "RoomPlan/FullCalendar/ResourceCommon/main.min.js","RoomPlan/FullCalendar/ResourceTimeline/main.min.js",
-                                    "resv-attachment-file-upload.js");
+                                    "resv-attachment-file-upload.js,modal-edit-cc.js");
 
         $data['css_to_load'] = array("RoomPlan/FullCalendar/Core/main.min.css", "RoomPlan/FullCalendar/Timeline/main.min.css", 
                                      "RoomPlan/FullCalendar/ResourceTimeline/main.min.css");
@@ -206,8 +206,15 @@ class ApplicatioController extends BaseController
 
                     switch($search_key)
                     {
-                        case 'S_GUEST_NAME': $init_cond["CONCAT_WS(' ', CUST_FIRST_NAME, CUST_LAST_NAME) LIKE "] = "'%$value%'"; break;
-                        case 'S_CUST_FIRST_NAME': $init_cond["CUST_FIRST_NAME LIKE "] = "'%$value%'"; break;
+                        case 'S_GUEST_NAME': $init_cond["(CUST_FIRST_NAME LIKE '%$value%' OR ( RESV_ID IN ( SELECT ACCOMP_REF_RESV_ID FROM FLXY_ACCOMPANY_PROFILE ACC
+                        LEFT JOIN FLXY_CUSTOMER ACUST ON ACUST.CUST_ID = ACC.ACCOMP_CUST_ID
+        
+                        WHERE CONCAT_WS(' ', ACUST.CUST_FIRST_NAME, ACUST.CUST_LAST_NAME) LIKE '%$value%' ) ))"] =""; break;
+                        case 'S_CUST_FIRST_NAME': $init_cond["(CUST_FIRST_NAME LIKE '%$value%' OR ( RESV_ID IN ( SELECT ACCOMP_REF_RESV_ID FROM FLXY_ACCOMPANY_PROFILE ACC
+
+                        LEFT JOIN FLXY_CUSTOMER ACUST ON ACUST.CUST_ID = ACC.ACCOMP_CUST_ID
+        
+                        WHERE CONCAT_WS(' ', ACUST.CUST_FIRST_NAME, ACUST.CUST_LAST_NAME) LIKE '%$value%' ) ))"] =""; break;
                         
                         //case 'S_GUEST_FIRST_NAME': $init_cond["SUBSTRING(FULLNAME,1,(CHARINDEX(' ',FULLNAME + ' ')-1)) LIKE "] = "'%$value%'"; break;
                         case 'S_GUEST_PHONE': $init_cond["(CUST_MOBILE LIKE '%$value%' OR CUST_PHONE LIKE '%$value%')"] = ""; break;
@@ -643,6 +650,16 @@ class ApplicatioController extends BaseController
 
         $this->Db->table('FLXY_CUSTOMER')->where('CUST_ID', $custId)->update($data); 
         return true;
+    }
+
+    public function getCompanyOwner(){
+        $response = $this->Db->table('FLXY_USERS')->select('USR_ID, USR_FIRST_NAME, USR_LAST_NAME')->where(['USR_STATUS'=> 1, 'USR_ROLE_ID'=> 1 ])->get()->getResultArray();
+        $option='<option value="">Select Owner</option>';
+        foreach($response as $row){
+            $option.= '<option value="'.$row['USR_ID'].'">'.$row['USR_FIRST_NAME'].' '.$row['USR_LAST_NAME'].'</option>';
+        }
+        echo $option;
+        die();
     }
 
     public function countryList(){
@@ -1488,7 +1505,8 @@ class ApplicatioController extends BaseController
     function insertCompany(){
         try{
             $validate = $this->validate([
-                'COM_ACCOUNT' => ['label' => 'Account', 'rules' => 'required|min_length[3]'],
+                
+                'COM_ACCOUNT_OWNER' => ['label' => 'Account Owner', 'rules' => 'required'],
                 'COM_CONTACT_EMAIL' => ['label' => 'Contact Email', 'rules' => 'required|valid_email'],
                 'COM_COUNTRY' => ['label' => 'Country', 'rules' => 'required']
             ]);
@@ -1503,6 +1521,7 @@ class ApplicatioController extends BaseController
             $sysid = $this->request->getPost("COM_ID");
             if(!empty($sysid)){
                 $data = ["COM_ACCOUNT" => $this->request->getPost("COM_ACCOUNT"),
+                    "COM_ACCOUNT_OWNER" => $this->request->getPost("COM_ACCOUNT_OWNER"),
                     "COM_ADDRESS1" => $this->request->getPost("COM_ADDRESS1"),
                     "COM_ADDRESS2" => $this->request->getPost("COM_ADDRESS2"),
                     "COM_ADDRESS3" => $this->request->getPost("COM_ADDRESS3"),
@@ -1525,6 +1544,7 @@ class ApplicatioController extends BaseController
             $return = $this->Db->table('FLXY_COMPANY_PROFILE')->where('COM_ID', $sysid)->update($data); 
             }else{
                 $data = ["COM_ACCOUNT" => $this->request->getPost("COM_ACCOUNT"),
+                    "COM_ACCOUNT_OWNER" => $this->request->getPost("COM_ACCOUNT_OWNER"),
                     "COM_ADDRESS1" => $this->request->getPost("COM_ADDRESS1"),
                     "COM_ADDRESS2" => $this->request->getPost("COM_ADDRESS2"),
                     "COM_ADDRESS3" => $this->request->getPost("COM_ADDRESS3"),
@@ -1664,15 +1684,15 @@ class ApplicatioController extends BaseController
 
     public function companyView(){
         $mine = new ServerSideDataTable(); // loads and creates instance
-        $tableName = 'FLXY_COMPANY_PROFILE';
-        $columns = 'COM_ID,COM_ACCOUNT,COM_COUNTRY,COM_CONTACT_EMAIL,COM_CORP_ID,COM_CONTACT_NO';
+        $tableName = 'FLXY_COMPANY_PROFILE INNER JOIN FLXY_USERS ON COM_ACCOUNT_OWNER = USR_ID';
+        $columns = 'COM_ID,COM_ACCOUNT,COM_ACCOUNT_OWNER,USR_FIRST_NAME,USR_LAST_NAME,COM_COUNTRY,COM_CONTACT_EMAIL,COM_CORP_ID,COM_CONTACT_NO';
         $mine->generate_DatatTable($tableName,$columns);
         exit;
     }
 
     function editCompany(){
         $param = ['SYSID'=> $this->request->getPost("sysid")];
-        $sql = "SELECT COM_ID,COM_ACCOUNT,COM_ADDRESS1,COM_ADDRESS2,COM_ADDRESS3,
+        $sql = "SELECT COM_ID,COM_ACCOUNT,COM_ACCOUNT_OWNER,COM_ADDRESS1,COM_ADDRESS2,COM_ADDRESS3,
         COM_COUNTRY,(SELECT cname FROM COUNTRY WHERE ISO2=COM_COUNTRY) COM_COUNTRY_DESC
         ,COM_STATE,(SELECT sname FROM STATE WHERE STATE_CODE=COM_STATE AND COUNTRY_CODE=COM_COUNTRY)COM_STATE_DESC
         ,COM_CITY,(SELECT ctname FROM CITY WHERE ID=COM_CITY)COM_CITY_DESC
@@ -3673,7 +3693,7 @@ class ApplicatioController extends BaseController
 
                         $trRow .='<td class="clickPrice '.$active.'" data-rate-info="'.$data[$i]['RT_INFO'].'">'
                         .'<input type="hidden" id="ACTUAL_GUEST_PRICE" value="'.number_format($data[$i]['ACTUAL_GUEST_PRICE'], 2).'">'
-                        .'<input type="hidden" id="ROOMTYPE" value="'.$data[$i]['ROOM_TYPE'].'">'.number_format($data[$i]['ACTUAL_GUEST_PRICE'], 2).'</td>';
+                        .'<input type="hidden" id="ROOMTYPE" value="'.$data[$i]['ROOM_TYPE'].'"><input type="hidden" id="RT_DESCRIPTION" value="'.trim($key).'">'.number_format($data[$i]['ACTUAL_GUEST_PRICE'], 2).'</td>';
                     }else{
                         $trRow .='<td class=""></td>';
                     }

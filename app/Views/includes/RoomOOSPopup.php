@@ -236,7 +236,7 @@ $(document).on('click', '.add-room-status', function() {
     $('.dtr-bs-modal').modal('hide'); 
 
     bootbox.dialog({
-        message: "Do you want to update room status?",
+        message: "Do you want to add room status?",
         buttons: {
             ok: {
                 label: 'Yes',

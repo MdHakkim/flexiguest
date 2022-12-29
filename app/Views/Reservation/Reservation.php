@@ -177,6 +177,13 @@
 .input-group.is-invalid .bootstrap-select {
     border-color: #dc3545;
 }
+
+.flxy_border_over .btnName{
+    min-width: 130px;
+}
+.shared{
+    color:#0000ff;
+}
 </style>
 
 <!-- Content wrapper -->
@@ -1201,7 +1208,7 @@
                                                 <div class="invalid-feedback"> Payment required can't be empty.</div>
                                             </div>
                                             <div class="col-md-6 col-lg-3 mt-2">
-                                                <label class="form-label">Deposit</label>
+                                                <label class="form-label">Guest Balance</label>
                                                 <input type="text" name="RESV_DEPOSIT" id="RESV_DEPOSIT"
                                                         class="form-control" placeholder="2000.00" />                                                
                                             </div>
@@ -1508,6 +1515,12 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row mb-3">
+                                <div class="col-md-12 col-lg-6 shared">
+                                                                  
+                                </div>
+                            </div>
                         <div class="flxyFooter flxy_space">
                             <button type="button" id="previousbtn" onClick="previous()" class="btn btn-primary"><i
                                     class="fa-solid fa-angle-left"></i> Previous</button>
@@ -1876,10 +1889,12 @@
                             </div>
                             <div class="col-md-2 flxy_border_over">
                                 <button type="button" onClick="detailOption('OB')"
-                                    class="btn btn-secondary d-grid gap-2  mx-auto"><span class="btnName">Overbooking
-                                        Detail</span></button>
-                                <!-- <button type="button" onClick="submitForm('customerForm','C',event)" class="btn btn-primary">Save</button> -->
+                                    class="btn btn-secondary d-grid gap-2  mx-auto mt-4 "><span class="btnName">Overbooking
+                                        Detail</span></button>      
+                                <button type="button" 
+                                    class="btn btn-secondary d-grid gap-2  mx-auto mt-2" onclick="getRateInfo()" id="rateInfoResvButton"><span class="btnName">Rate Info</span></button>                           
                             </div>
+                           
                         </div>
                     </form>
                 </div>
@@ -2059,13 +2074,13 @@
     </div>
     <!-- option window end -->
 
-    <!-- RateQuery Detail window -->
+    <!-- Rate info window -->
     <div class="modal fade" id="reteQueryDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="rateQueryWindowLable">Overbooking Details</h5>
+                    <h5 class="modal-title" id="rateQueryWindowLable">Rate info details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-lable="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -2093,6 +2108,9 @@
         </div>
     </div>
     <!--  RateQuery Detail window end -->
+
+
+       
 
     <!-- Modal Window Item Inventory -->
     <div class="modal fade" id="ItemInventory" data-backdrop="static" data-keyboard="false"
@@ -3029,6 +3047,7 @@
     <?= $this->include('includes/ReservationsAttachmentsPopup') ?>
 
     <?= $this->include('includes/AssignRoomPopup') ?>
+    
 
     <?= $this->include('includes/CreditCardPopup') ?>
 
@@ -3184,6 +3203,9 @@ $(document).ready(function() {
                      
                     if((row['RESV_STATUS'] == 'Check-Out-Requested' || row['RESV_STATUS'] == 'Checked-In') && row['RESV_DEPARTURE'] == today){
                         data = 'Due Out'
+                    }
+                    if((row['RESV_STATUS'] == 'Due Pre Check-In' || row['RESV_STATUS'] == 'Pre Checked-In') && row['RESV_ARRIVAL_DT'] < today){
+                        data = 'No Show'
                     }
                     return (
                         '<div class="' + statClass + '">' + data + '</div>'
@@ -3946,6 +3968,27 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     }
 
     $.ajax({
+        url: '<?php echo base_url('/checkSharedReservation')?>',
+        type: "post",
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        data: {
+            sysid: sysid,
+        },
+        // dataType:'json',
+        success: function(respn) {           
+            $(".shared").html('')
+            if(respn > 0){
+                var sharedLink = 'This reservation is a shared one. Please <a href="#"  rel="'+sysid+'" class="shares-btn" >click here</a> to see the shared reservations';
+                $(".shared").html(sharedLink)
+            }
+        }
+    });
+
+
+
+    $.ajax({
         url: '<?php echo base_url('/editReservation') ?>',
         type: "post",
         headers: {
@@ -4086,6 +4129,12 @@ $(document).on('click', '.editReserWindow,#triggCopyReserv', function(event, par
     });
 });
 
+
+$(document).on('click', '.shares-btn', function() {
+    var Resv_id = $(this).attr('rel');
+
+    displaySharePopup(Resv_id)
+});
 $(document).on('click', '.delete-record', function() {
     var sysid = $(this).attr('data_sysid');
     bootbox.confirm({
@@ -4877,6 +4926,7 @@ function companyAgentClick(type) {
         $('.companyData').hide();
         $('.agentData').show();
     }
+    companyOwnerList();
     runCountryListExdClass();
     $('#COM_TYPE').val(compAgntMode);
     $(':input', '#compnayAgentForm').val('').prop('checked', false).prop('selected', false);
@@ -5212,6 +5262,7 @@ function detailOption(mode) {
         },
         dataType: 'json',
         success: function(respn) {
+            alert( respn['table'])
             var respone = respn['table'];
             $('#reteQueryDetailTd').html(respone);
         }
@@ -6977,7 +7028,12 @@ function loadPackageDetails(packageID) {
 }
 
 function getRateInfo() {
-    resvID = $('#rateInfoButton').attr('data_sysid');
+   
+   var resvID       = $('#rateInfoButton').attr('data_sysid')=='' ? $('#RESV_ID').val():$('#rateInfoButton').attr('data_sysid');
+   var resvRate     = $(".clickPrice.active").find('#ACTUAL_GUEST_PRICE').val();
+   var roomType = $(".clickPrice.active").find('#ROOMTYPE').val();
+   var rateCodeType = $(".clickPrice.active").find('#RT_DESCRIPTION').val();
+   
     $('#RateInfoModal').modal('show');
     $.ajax({
         url: '<?php echo base_url('/rateInfoDetails') ?>',
@@ -6986,7 +7042,10 @@ function getRateInfo() {
             'X-Requested-With': 'XMLHttpRequest'
         },
         data: {
-            resvID: resvID
+            resvID: resvID,
+            resvRate:resvRate,
+            roomType:roomType,
+            rateCodeType:rateCodeType
         },
         async: false,
         dataType: 'json',
@@ -6995,8 +7054,6 @@ function getRateInfo() {
 
             $('#Rate_info_total > tbody').html(respn.total_output);
         }
-
-
     });
 }
 

@@ -214,16 +214,13 @@ function showCustomerNegotiatedRates(custId = 0) {
 const rateCodeList = <?php echo json_encode($rateCodeOptions); ?>;
 
 $(document).on('click', '.edit-negotiated-rate', function() {
-
     hideModalAlerts();
-
     $('#NG_RT_ID').val($(this).attr('data_sysid'));
     $('#neg_PROFILE_ID').val('profile_chk_1_' + $(this).attr('data-profile-id'));
     $('#neg_RT_CD_ID').val($(this).attr('data-ratecode-id')).trigger('change');
     $("#NG_RT_START_DT").datepicker("setDate", new Date($(this).attr('data-start-date')));
     $("#NG_RT_END_DT").datepicker("setDate", new Date($(this).attr('data-edit-date')));
     $("#NG_RT_DIS_SEQ").val($(this).attr('data-display-seq'));
-
     $('#addNegotiatedRatelabel').html('Edit Negotiated Rate');
 
     $('#customerNegotiatedRatesWindow').modal('hide');
@@ -231,18 +228,48 @@ $(document).on('click', '.edit-negotiated-rate', function() {
 });
 
 function addNegotiatedForm() {
-
     $("#NG_RT_ID").val("");
     $('#neg_RT_CD_ID').val(null).trigger('change');
     $("#NG_RT_START_DT").datepicker("setDate", new Date(<?php date('d-M-Y'); ?>));
     $("#NG_RT_END_DT").datepicker("setDate", new Date(<?php date('d-M-Y', strtotime('+1 day')); ?>));
     $("#NG_RT_DIS_SEQ").val("");
-
     $('#addNegotiatedRatelabel').html('Add New Negotiated Rate');
-
     $('#customerNegotiatedRatesWindow').modal('hide');
     $('#addNegotiatedRate').modal('show');
 }
+
+$(document).on('change', '#neg_RT_CD_ID', function() {
+   var neg_RT_CD_ID =  $(this).val();
+    $.ajax({
+        url: '<?php echo base_url('/getRateCodeDateRange') ?>',
+        type: "post",
+        data: {neg_RT_CD_ID:neg_RT_CD_ID},
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        dataType: 'json',
+        success: function(respn) {
+
+            $(respn).each(function(inx, data) {
+                $.each(data, function(fields, datavals) {
+                   
+                    var field = $.trim(fields);
+                    var dataval = $.trim(datavals);
+
+                    if(field == 'RT_CD_BEGIN_SELL_DT')
+                    $("#NG_RT_START_DT").datepicker("setDate", new Date(dataval));
+                    if(field == 'RT_CD_END_SELL_DT')
+                    $("#NG_RT_END_DT").datepicker("setDate", new Date(dataval)); 
+                    $("#NG_RT_START_DT").prop('readonly','readonly') 
+                    $("#NG_RT_END_DT").prop('readonly','readonly')               
+                    
+                });
+            });
+
+        }
+    });
+
+});
 
 // Add / Edit Negotiated Rate
 
