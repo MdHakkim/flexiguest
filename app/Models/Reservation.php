@@ -16,6 +16,7 @@ class Reservation extends Model
         'RESV_DEPARTURE',
         'RESV_NO_F_ROOM',
         'RESV_NAME',
+        'RESV_CUST_MEMBERSHIP',
         'RESV_MEMBER_TY',
         'RESV_COMPANY',
         'RESV_AGENT',
@@ -36,6 +37,7 @@ class Reservation extends Model
         'RESV_STATUS', // Due Pre Check-In, Pre Checked-In, Checked-In, Check-Out-Requested, Checked-Out, Cancelled, No Show
         'RESV_RM_TYPE',
         'RESV_ROOM',
+        'RESV_ROOM_ID',
         'RESV_RATE',
         'RESV_ETA',
         'RESV_CO_TIME',
@@ -83,8 +85,14 @@ class Reservation extends Model
         'RESV_PROFILE',
         'RESV_NAME_ON_CARD',
         'RESV_EXT_PRINT_RT',
+        'RESV_ACCP_TRM_CONDI',
+        'RESV_SINGATURE_URL',
         'RESV_SHARE_RATE',
-        'RESV_PAYMENT_STATUS'
+        'RESV_NO_POST',
+        'RESV_RM_TYPE_ID',
+        'RESV_RTC_ID',
+        'RESV_PAYMENT_STATUS',
+        'RESV_DEPOSIT',
     ];
 
     protected $useAutoIncrement = true;
