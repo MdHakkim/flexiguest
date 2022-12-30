@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Controllers\Repositories\BillingRepository;
 use App\Controllers\Repositories\ReservationAssetRepository;
 use App\Controllers\Repositories\ReservationRepository;
 use  App\Libraries\ServerSideDataTable;
@@ -29,6 +30,7 @@ class ApplicatioController extends BaseController
     private $PaymentMethod;
     private $ReservationRepository;
     private $ReservationAssetRepository;
+    private $BillingRepository;
 
     public function __construct(){
         $this->Db = \Config\Database::connect();
@@ -44,6 +46,7 @@ class ApplicatioController extends BaseController
         $this->PaymentMethod = new PaymentMethod();
         $this->ReservationRepository = new ReservationRepository();
         $this->ReservationAssetRepository = new ReservationAssetRepository();
+        $this->BillingRepository = new BillingRepository();
     }
 
     public function Reservation(){   
@@ -4841,6 +4844,8 @@ class ApplicatioController extends BaseController
     public function updateFixedCharges()
     {
         try {
+            $user = session('user');
+
             $FIXD_CHRG_WEEKLY       = '';
             $FIXD_CHRG_MONTHLY      = '';
             $FIXD_CHRG_QUARTERLY    = '';
@@ -4918,7 +4923,33 @@ class ApplicatioController extends BaseController
            
             $return = !empty($FIXD_CHRG_ID) ? $this->Db->table('FLXY_FIXED_CHARGES')->where('FIXD_CHRG_ID', $FIXD_CHRG_ID)->update($data) : $this->Db->table('FLXY_FIXED_CHARGES')->insert($data);
 
-            $result = $return ? $this->responseJson("1", "0", $return, !empty($FIXD_CHRG_ID) ? $FIXD_CHRG_ID : $this->Db->insertID()) : $this->responseJson("-444", "db insert not successful", $return);
+            // billing (start)
+            $transaction_data = [
+                'RTR_RESERVATION_ID' => $FIXD_CHRG_RESV_ID,
+                'RTR_TRANSACTION_CODE_ID' => $FIXD_CHRG_TRNCODE,
+                'RTR_TRANSACTION_TYPE' => 'Debited',
+                'RTR_AMOUNT' => $FIXD_CHRG_AMT,
+                'RTR_QUANTITY' => $FIXD_CHRG_QTY,
+                'RTR_MODEL' => 'FLXY_FIXED_CHARGES',
+                'RTR_REFERENCE' => 'Fixed Charges'
+            ];
+
+            if(empty($FIXD_CHRG_ID)) {
+                $transaction_data['RTR_MODEL_ID'] = $FIXD_CHRG_ID = $this->Db->insertID();
+                $transaction_data['RTR_WINDOW'] = 1;
+
+                $this->BillingRepository->postOrPayment($user, $transaction_data);
+
+            } else {
+                $transaction_data['RTR_MODEL_ID'] = $FIXD_CHRG_ID;
+                $transaction_data['RTR_UPDATED_BY'] = $user['USR_ID'];
+
+                $where_condition = "RTR_MODEL = 'FLXY_FIXED_CHARGES' and RTR_MODEL_ID = $FIXD_CHRG_ID";
+                $this->BillingRepository->updateWhereReservationTransaction($transaction_data, $where_condition);
+            }
+            // billing (end)
+
+            $result = $return ? $this->responseJson("1", "0", $return, $FIXD_CHRG_ID) : $this->responseJson("-444", "db insert not successful", $return);
 
 
             if(!$return)
@@ -4940,11 +4971,27 @@ class ApplicatioController extends BaseController
 
     public function deleteFixedcharge()
     {
+        $user = session('user');
         $FIXD_CHRG_ID = $this->request->getPost('FIXD_CHRG_ID');
 
         try {
             $return = $this->Db->table('FLXY_FIXED_CHARGES')->delete(['FIXD_CHRG_ID' => $FIXD_CHRG_ID]); 
-            $result = $return ? $this->responseJson("1", "0", $return) : $this->responseJson("-402", "Record not deleted");
+
+            if($return) {
+                $result = $this->responseJson("1", "0", $return);
+
+                // billing (start)
+                $transaction_data = [
+                    'RTR_DELETED_AT' => date('Y-m-d H:i:s'),
+                    'RTR_DELETED_BY' => $user['USR_ID']
+                ];
+
+                $where_condition = "RTR_MODEL = 'FLXY_FIXED_CHARGES' and RTR_MODEL_ID = $FIXD_CHRG_ID";
+                $this->BillingRepository->updateWhereReservationTransaction($transaction_data, $where_condition);
+                // billing (end)
+            } else
+                $result = $this->responseJson("-402", "Record not deleted");
+
             echo json_encode($result);
         } catch (\Exception $e) {
             return $this->respond($e->getMessage());

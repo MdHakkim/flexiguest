@@ -105,7 +105,7 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                                 <th>Description</th>
                                 <th>Amount</th>
                                 <th>Supplement</th>
-                                <th>Refernce</th>
+                                <th>Reference</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -181,7 +181,7 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
             $(document).on('click', '.transaction-btns .edit-transaction-btn', function() {
                 let transaction = $(this).data('transaction');
 
-                if(transaction.RTR_TRANSACTION_TYPE == 'Debited')
+                if (transaction.RTR_TRANSACTION_TYPE == 'Debited')
                     showPostTransactionModal(transaction);
                 else
                     showPaymentModal(transaction);
@@ -292,8 +292,10 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                                                     </a>
                                                 </li>
                                                 
-                                                <div class="dropdown-divider"></div>
-
+                                                ${!item.RTR_MODEL
+                                                    ?
+                                                `<div class="dropdown-divider"></div>
+                                                
                                                 <li>
                                                     <a href="javascript:void(0);" class="dropdown-item edit-transaction-btn" 
                                                         data-transaction='${JSON.stringify(item)}'>
@@ -307,7 +309,10 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                                                     <a href="javascript:void(0);" class="dropdown-item delete-transaction-btn" data-transaction_id="${item.RTR_ID}">
                                                         Delete
                                                     </a>
-                                                </li>
+                                                </li>` 
+                                                : 
+                                                ``}
+                                                
                                             </ul>
                                         </div>
                                     </td>

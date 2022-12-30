@@ -87,6 +87,13 @@ class BillingRepository extends BaseController
             $data['RTR_AMOUNT'] = -$data['RTR_AMOUNT'];
 
         if (!empty($data['RTR_ID'])) {
+            $transaction = $this->reservationTransactionById($data['RTR_ID']);
+            if (empty($transaction))
+                return responseJson(202, true, ['msg' => 'Transaction not found!']);
+
+            if (!empty($transaction['RTR_MODEL'])) // only update manually posted transactions
+                return responseJson(202, true, ['msg' => 'Invalid request.']);
+
             $update_data = [
                 'RTR_ID' => $data['RTR_ID'],
                 'RTR_REFERENCE' => $data['RTR_REFERENCE'],
@@ -132,5 +139,15 @@ class BillingRepository extends BaseController
     public function deleteWindow($where_condition)
     {
         return $this->ReservationTransaction->set('RTR_WINDOW', 'RTR_WINDOW-1', false)->where($where_condition)->update();
+    }
+
+    public function updateWhereReservationTransaction($data, $where_condition)
+    {
+        return $this->ReservationTransaction->set($data)->where($where_condition)->update();
+    }
+
+    public function reservationTransactionById($id)
+    {
+        return $this->ReservationTransaction->find($id);
     }
 }

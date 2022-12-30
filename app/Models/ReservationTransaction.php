@@ -21,6 +21,8 @@ class ReservationTransaction extends Model
         'RTR_WINDOW',
         'RTR_SUPPLEMENT',
         'RTR_REFERENCE',
+        'RTR_MODEL',
+        'RTR_MODEL_ID',
         'RTR_CREATED_BY',
         'RTR_UPDATED_BY',
         'RTR_DELETED_AT',

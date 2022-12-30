@@ -115,12 +115,20 @@ class BillingController extends BaseController
         $user = session('user');
         $transaction_id = $this->request->getVar('RTR_ID');
 
-        if (!empty($transaction_id))
+        if (!empty($transaction_id)) {
+            $transaction = $this->BillingRepository->reservationTransactionById($transaction_id);
+            if (empty($transaction))
+                return responseJson(202, true, ['msg' => 'Transaction not found!']);
+
+            if (!empty($transaction['RTR_MODEL'])) // can delete only manually posted transactions
+                return responseJson(202, true, ['msg' => 'Invalid request.']);
+
             $this->BillingRepository->updateReservationTransaction([
                 'RTR_ID' => $transaction_id,
                 'RTR_DELETED_AT' => date('Y-m-d H:i:s'),
                 'RTR_DELETED_BY' => $user['USR_ID']
             ]);
+        }
 
         return $this->respond(responseJson(200, false, ['msg' => 'Transaction deleted successfully.']));
     }
