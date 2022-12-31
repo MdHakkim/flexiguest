@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Controllers\Repositories\ReservationRepository;
 use CodeIgniter\API\ResponseTrait;
 use App\Models\Reservation;
 use App\Models\ShareReservations;
@@ -18,6 +19,7 @@ class ReservationController extends BaseController
     private $DB;
     private $Reservation;
     private $ShareReservations;
+    private $ReservationRepository;
 
     public function __construct()
     {
@@ -28,6 +30,8 @@ class ReservationController extends BaseController
         $this->ShareReservations = new ShareReservations();
         $this->session = \Config\Services::session();
         helper(['form', 'common', 'custom']);
+
+        $this->ReservationRepository = new ReservationRepository();
     }
 
     public function getReservationDetails()
@@ -2690,7 +2694,19 @@ public function getRoomStatistics(){
         echo json_encode(responseJson(500, true, ['msg' => "Successfully added"]));
 
    }
-    
 
-    
+   public function updatePreviliges()
+   {    
+        $data = $this->request->getPost();
+
+        if(!empty($data['RESV_ID']) && !empty($data['RESV_NO_POST']) && !empty($data['RESV_POST_STAY_CHARGES'])) {
+            $data = [
+                'RESV_NO_POST' => $data['RESV_NO_POST'],
+                'RESV_POST_STAY_CHARGES' => $data['RESV_POST_STAY_CHARGES']
+            ];
+
+            $where_condition = "RESV_ID = {$data['RESV_ID']}";
+            $this->ReservationRepository->updateWhereReservation($data, $where_condition);
+        }
+   }
 }

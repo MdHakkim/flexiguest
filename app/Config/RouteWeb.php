@@ -44,8 +44,9 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
 
     $routes->group('reservation', function ($routes) {
         $routes->post('search-reservation', 'ReservationController::searchReservation');
-
         $routes->post('checkout/(:segment)', 'CheckInOutController::checkout/$1');
+        
+        $routes->post('update-previliges', 'ReservationController::updatePreviliges');
 
         $routes->group('shares', function ($routes) {
             $routes->get('get-reservation-details', 'ReservationController::getReservationDetails');

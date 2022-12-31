@@ -6,6 +6,7 @@
 <?= $this->include('includes/post_transaction_popup') ?>
 <?= $this->include('includes/payment_popup') ?>
 <?= $this->include('includes/move_transaction_popup') ?>
+<?= $this->include('includes/priviliges_popup') ?>
 
 <style>
     .text-right {
@@ -118,6 +119,7 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                     <div class="text-right function-btns">
                         <button class="btn btn-primary post-btn">Post</button>
                         <button class="btn btn-primary payment-btn">Payment</button>
+                        <button class="btn btn-primary priviliges-btn">Priviliges</button>
                         <button class="btn btn-danger delete-btn">Delete Window</button>
                     </div>
                 </div>
@@ -198,6 +200,10 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
 
             $(document).on('click', '.function-btns .payment-btn', function() {
                 showPaymentModal();
+            });
+
+            $(document).on('click', '.function-btns .priviliges-btn', function() {
+                showPriviligesModal();
             });
 
             $(document).on('click', '.function-btns .delete-btn', function() {
@@ -295,7 +301,7 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                                                 ${!item.RTR_MODEL
                                                     ?
                                                 `<div class="dropdown-divider"></div>
-                                                
+
                                                 <li>
                                                     <a href="javascript:void(0);" class="dropdown-item edit-transaction-btn" 
                                                         data-transaction='${JSON.stringify(item)}'>

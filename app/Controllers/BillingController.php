@@ -62,7 +62,7 @@ class BillingController extends BaseController
 
         $result = $this->BillingRepository->postOrPayment($user, $data);
         if ($result['SUCCESS'] == 200 && isset($reservation_type))
-            $this->ReservationRepository->updateReservation(['RESV_RESRV_TYPE' => $reservation_type], "RESV_ID = {$data['RTR_RESERVATION_ID']}");
+            $this->ReservationRepository->updateWhereReservation(['RESV_RESRV_TYPE' => $reservation_type], "RESV_ID = {$data['RTR_RESERVATION_ID']}");
 
         return $this->respond($result);
     }

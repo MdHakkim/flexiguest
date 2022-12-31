@@ -223,7 +223,7 @@ class PaymentController extends BaseController
             $this->TransportRequestRepository->generateTransportRequestInvoice($meta_data->model_id, $balance_transaction_id);
         } else if ($meta_data->model == 'FLXY_RESERVATION') {
 
-            $this->ReservationRepository->updateReservation([
+            $this->ReservationRepository->updateWhereReservation([
                 'RESV_PAYMENT_STATUS' => 'Paid',
                 'RESV_UPDATE_DT' => date('Y-m-d H:i:s'),
                 'RESV_UPDATE_UID' => $meta_data->user_id,

@@ -65,7 +65,7 @@ class ReservationRepository extends BaseController
             ->findAll();
     }
 
-    public function updateReservation($data, $where_condition)
+    public function updateWhereReservation($data, $where_condition)
     {
         return $this->Reservation->where($where_condition)->set($data)->update();
     }
