@@ -89,6 +89,7 @@ class Reservation extends Model
         'RESV_SINGATURE_URL',
         'RESV_SHARE_RATE',
         'RESV_NO_POST',
+        'RESV_POST_STAY_CHARGES',
         'RESV_RM_TYPE_ID',
         'RESV_RTC_ID',
         'RESV_PAYMENT_STATUS',

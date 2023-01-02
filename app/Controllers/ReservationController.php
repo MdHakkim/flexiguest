@@ -2695,18 +2695,22 @@ public function getRoomStatistics(){
 
    }
 
-   public function updatePreviliges()
+   public function updatePrivileges()
    {    
         $data = $this->request->getPost();
 
-        if(!empty($data['RESV_ID']) && !empty($data['RESV_NO_POST']) && !empty($data['RESV_POST_STAY_CHARGES'])) {
-            $data = [
+        if(isset($data['RESV_ID']) && isset($data['RESV_NO_POST']) && isset($data['RESV_POST_STAY_CHARGES'])) {
+            $update_data = [
                 'RESV_NO_POST' => $data['RESV_NO_POST'],
-                'RESV_POST_STAY_CHARGES' => $data['RESV_POST_STAY_CHARGES']
+                'RESV_POST_STAY_CHARGES' => $data['RESV_NO_POST'] == 'Y' ? 0 : $data['RESV_POST_STAY_CHARGES']
             ];
 
             $where_condition = "RESV_ID = {$data['RESV_ID']}";
-            $this->ReservationRepository->updateWhereReservation($data, $where_condition);
+            $this->ReservationRepository->updateWhereReservation($update_data, $where_condition);
+
+            return $this->respond(responseJson(200, false, ['msg' => 'Privileges updated.']));
         }
+
+        return $this->respond(responseJson(202, true, ['msg' => 'Unable to update.']));
    }
 }

@@ -6,7 +6,7 @@
 <?= $this->include('includes/post_transaction_popup') ?>
 <?= $this->include('includes/payment_popup') ?>
 <?= $this->include('includes/move_transaction_popup') ?>
-<?= $this->include('includes/priviliges_popup') ?>
+<?= $this->include('includes/privileges_popup') ?>
 
 <style>
     .text-right {
@@ -119,7 +119,7 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                     <div class="text-right function-btns">
                         <button class="btn btn-primary post-btn">Post</button>
                         <button class="btn btn-primary payment-btn">Payment</button>
-                        <button class="btn btn-primary priviliges-btn">Priviliges</button>
+                        <button class="btn btn-primary privileges-btn">Privileges</button>
                         <button class="btn btn-danger delete-btn">Delete Window</button>
                     </div>
                 </div>
@@ -202,8 +202,8 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                 showPaymentModal();
             });
 
-            $(document).on('click', '.function-btns .priviliges-btn', function() {
-                showPriviligesModal();
+            $(document).on('click', '.function-btns .privileges-btn', function() {
+                showPrivilegesModal();
             });
 
             $(document).on('click', '.function-btns .delete-btn', function() {
