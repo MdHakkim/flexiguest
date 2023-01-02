@@ -83,6 +83,6 @@ class TranslationController extends BaseController
             file_put_contents($file_name, json_encode($translated_words));
         }
 
-        return $this->respond(responseJson(200, false, ['msg' => 'translated file.'], json_encode($translated_words)));
+        return $this->respond(responseJson(200, false, ['msg' => 'translated file.'], $translated_words));
     }
 }
