@@ -17,6 +17,10 @@ $routes->group("api", function ($routes) {
     $routes->post("forget-password", "UserController::forgetPassword");
 });
 
+$routes->group("api", ["filter" => "authapi"], function ($routes) {
+    $routes->post("translate", "TranslationController::translate");
+});
+
 $routes->group("api", ["filter" => "authapi:Guest"], function ($routes) {
     $routes->get("profile", "APIController::profileAPI"); // user profile 
     //----------------------------------------------------------------------------- CHECK-IN --------------------------------------------------------------------//
