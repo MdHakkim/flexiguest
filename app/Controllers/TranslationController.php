@@ -57,6 +57,9 @@ class TranslationController extends BaseController
         $target = $this->request->getGet('target') ?? 'en';
         $words = json_decode(json_encode($this->request->getVar()), true);
 
+        if(empty($words))
+            return $this->respond(responseJson(202, true, ['msg' => 'Something went wrong.']));
+
         $file_name = "assets/language/translations/$target.json";
 
         if (file_exists($file_name)) {
@@ -82,7 +85,7 @@ class TranslationController extends BaseController
                 $new_words_translated = $this->translateWords($new_words, $target);
 
                 if (empty($new_words_translated))
-                    return $this->respond(responseJson(200, false, ['msg' => 'Something went wrong.']));
+                    return $this->respond(responseJson(202, true, ['msg' => 'Something went wrong.']));
 
                 $translated_words = array_merge($translated_words, $new_words_translated);
                 file_put_contents($file_name, json_encode($translated_words));
@@ -90,7 +93,7 @@ class TranslationController extends BaseController
         } else {
             $translated_words = $this->translateWords($words, $target);
             if (empty($translated_words))
-                return $this->respond(responseJson(200, false, ['msg' => 'Something went wrong.']));
+                return $this->respond(responseJson(202, true, ['msg' => 'Something went wrong.']));
 
             file_put_contents($file_name, json_encode($translated_words));
         }
