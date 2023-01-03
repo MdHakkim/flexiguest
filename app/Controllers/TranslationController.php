@@ -37,6 +37,10 @@ class TranslationController extends BaseController
 
         $response = $this->CurlRequestLibrary->makeRequest($data);
         $response =  json_decode(json_encode($response), true);
+
+        if (empty($response['data']) || empty($response['data']['translations']))
+            return [];
+
         $translated_words = $response['data']['translations'];
 
         $i = 0;
@@ -75,11 +79,19 @@ class TranslationController extends BaseController
             }
 
             if (!empty($new_words)) {
-                $translated_words = array_merge($translated_words, $this->translateWords($new_words, $target));
+                $new_words_translated = $this->translateWords($new_words, $target);
+
+                if (empty($new_words_translated))
+                    return $this->respond(responseJson(200, false, ['msg' => 'Something went wrong.']));
+
+                $translated_words = array_merge($translated_words, $new_words_translated);
                 file_put_contents($file_name, json_encode($translated_words));
             }
         } else {
             $translated_words = $this->translateWords($words, $target);
+            if (empty($translated_words))
+                return $this->respond(responseJson(200, false, ['msg' => 'Something went wrong.']));
+
             file_put_contents($file_name, json_encode($translated_words));
         }
 
