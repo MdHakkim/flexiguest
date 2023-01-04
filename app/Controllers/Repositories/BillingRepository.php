@@ -124,6 +124,8 @@ class BillingRepository extends BaseController
             $where_condition = "RTR_DELETED_AT is null and $where_condition";
 
         return $this->ReservationTransaction
+            ->join('FLXY_RESERVATION', 'RTR_RESERVATION_ID = RESV_ID', 'left')
+            ->join('FLXY_ROOM', 'RESV_ROOM_ID = RM_ID', 'left')
             ->join('FLXY_TRANSACTION_CODE', 'RTR_TRANSACTION_CODE_ID = TR_CD_ID', 'left')
             ->join('FLXY_PAYMENT', 'RTR_PAYMENT_METHOD_ID = PYM_ID', 'left')
             ->where($where_condition)

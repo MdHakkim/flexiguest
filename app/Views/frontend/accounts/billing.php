@@ -104,6 +104,8 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                                 <th>Date</th>
                                 <th>Code</th>
                                 <th>Description</th>
+                                <th>Rate</th>
+                                <th>Quantity</th>
                                 <th>Amount</th>
                                 <th>Supplement</th>
                                 <th>Reference</th>
@@ -119,6 +121,7 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                     <div class="text-right function-btns">
                         <button class="btn btn-primary post-btn">Post</button>
                         <button class="btn btn-primary payment-btn">Payment</button>
+                        <button class="btn btn-primary folio-btn">Folio</button>
                         <button class="btn btn-primary privileges-btn">Privileges</button>
                         <button class="btn btn-danger delete-btn">Delete Window</button>
                     </div>
@@ -202,6 +205,10 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                 showPaymentModal();
             });
 
+            $(document).on('click', '.function-btns .folio-btn', function() {
+                window.open(`<?= base_url("billing/preview-folio?reservation_id=$reservation_id&window=") ?>${active_window}`, '_blank');
+            });
+
             $(document).on('click', '.function-btns .privileges-btn', function() {
                 showPrivilegesModal();
             });
@@ -282,6 +289,8 @@ if ($confirm_password && isset($reservation) && in_array($reservation['RESV_STAT
                                     <td>${item.RTR_CREATED_AT}</td>
                                     <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.TR_CD_CODE : item.PYM_TXN_CODE}</td>
                                     <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.TR_CD_DESC : item.PYM_DESC}</td>
+                                    <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.RTR_AMOUNT : ''}</td>
+                                    <td>${item.RTR_QUANTITY ?? ''}</td>
                                     <td>${item.RTR_TRANSACTION_TYPE == 'Debited' ? item.RTR_AMOUNT * item.RTR_QUANTITY : item.RTR_AMOUNT}</td>
                                     <td>${item.RTR_SUPPLEMENT || ''}</td>
                                     <td>${item.RTR_REFERENCE || ''}</td>

@@ -1013,6 +1013,7 @@ $routes->group("/", ["filter" => "auth"], function ($routes) {
         $routes->post('move-transaction', 'BillingController::moveTransaction');
         $routes->post('delete-transaction', 'BillingController::deleteTransaction');
         $routes->post('delete-window', 'BillingController::deleteWindow');
+        $routes->get('preview-folio', 'BillingController::previewFolio');
     });
 
     $routes->group('deposit', function ($routes) {

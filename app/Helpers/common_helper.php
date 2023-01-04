@@ -483,9 +483,11 @@ function showTotalRevenueQuery()
     return $query;          
 }
 
-function generateInvoice($file_name, $view, $data)
+function generateInvoice($file_name, $view, $data, $stream_or_store = 'store')
 {
     try { 
+        $data['branding_logo'] = brandingLogo();
+
         $options = new \Dompdf\Options();
         $options->setIsRemoteEnabled(true);
 
@@ -494,7 +496,10 @@ function generateInvoice($file_name, $view, $data)
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        file_put_contents($file_name, $dompdf->output());
+        if($stream_or_store == 'store')
+            file_put_contents($file_name, $dompdf->output());
+        else
+            $dompdf->stream($file_name);
     } catch(\Exception $e) {
         // $e->getMessage();
     }

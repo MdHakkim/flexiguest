@@ -132,4 +132,26 @@ class BillingController extends BaseController
 
         return $this->respond(responseJson(200, false, ['msg' => 'Transaction deleted successfully.']));
     }
+
+    public function previewFolio()
+    {
+        $data = $this->request->getGet();
+
+        if (isset($data['window']) && isset($data['reservation_id'])) {
+
+            $view_data = $this->ReservationRepository->reservationById($data['reservation_id']);
+            
+            $where_condition = "RTR_WINDOW = {$data['window']} and RTR_RESERVATION_ID = {$data['reservation_id']} and RTR_TRANSACTION_TYPE = 'Debited'";
+            $view_data['debited_transactions'] = $this->BillingRepository->reservationTransactions($where_condition);
+
+            $where_condition = "RTR_WINDOW = {$data['window']} and RTR_RESERVATION_ID = {$data['reservation_id']} and RTR_TRANSACTION_TYPE = 'Credited'";
+            $view_data['credited_transactions'] = $this->BillingRepository->reservationTransactions($where_condition);
+
+            $file_name = 'folio.pdf';
+            $view = 'Templates/billing_invoice_template';
+            generateInvoice($file_name, $view, ['data' => $view_data], 'stream');
+        }
+
+        return;
+    }
 }
